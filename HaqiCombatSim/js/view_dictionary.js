@@ -1,3 +1,4 @@
+import {watchTreeText} from './language_tree_capture.js';
 import {createCardFace} from './view_adventure_card.js';
 import {showHanziAnimation} from './view_hanzi_animation.js';
 import {dictionaryEntryStatus,dictionaryDailyProgress,dictionarySpellingClue} from './dictionary_core.js';
@@ -13,13 +14,14 @@ import {tr} from './locale_runtime.js';
 const el=(tag,cls='',text='')=>{const n=document.createElement(tag);n.className=cls;n.textContent=text;return n;};
 const button=(text,fn,cls='secondary')=>{const b=el('button',cls,text);b.type='button';b.onclick=fn;return b;};
 export function createDictionaryView(root,cb){
+    let disposeTree=()=>{},treeSerial=0;
     let dismissPlayer=()=>{},disconnectAnimation=()=>{},animationSerial=0;
     const browsing=new Map(),tutorDrafts=new Map(),practiceDrafts=new Map();
     let tutorEntryButtons=[],attemptHelp=null,tutorKey=null,practiceKey=null,savePracticeDraft=()=>{};
     let dailyProgress=null,revealFocusedInput=()=>{};
     let shell,body,notice,completionHost,writing,frame,frameTrigger,tutor,revealEntry=()=>{},showMeaningAccepted=()=>{},showPracticeFeedback=()=>{},showWritingFeedback=()=>{},setContextBusy=()=>{},showContextFeedback=()=>{},setSpeechState=()=>{},setSpeechError=()=>false,setLearningStatus=()=>{},setRecordingState=()=>{},cleanup=()=>{};
     function dismissFrame(){dismissPlayer();dismissPlayer=()=>{};disconnectAnimation();disconnectAnimation=()=>{};if(!frame)return;frame.remove();frame=null;for(const child of shell.children){child.inert=false;child.removeAttribute('aria-hidden');}(body?.querySelector('.dictionary-completion button')||frameTrigger)?.focus({preventScroll:true});frameTrigger=null;}
-    function clear(){dismissPlayer();dismissPlayer=()=>{};disconnectAnimation();disconnectAnimation=()=>{};tutorEntryButtons=[];attemptHelp=null;savePracticeDraft();savePracticeDraft=()=>{};practiceKey=null;if(tutor&&tutorKey)tutorDrafts.set(tutorKey,tutor.snapshot());tutorKey=null;dailyProgress=null;showMeaningAccepted=()=>{};showPracticeFeedback=()=>{};setRecordingState=()=>{};completionHost=null;setLearningStatus=()=>{};setSpeechState=()=>{};setSpeechError=()=>false;showContextFeedback=()=>{};setContextBusy=()=>{};showWritingFeedback=()=>{};revealEntry=()=>{};tutor=null;writing?.dispose();writing=null;frame?.remove();frame=null;cleanup();cleanup=()=>{};revealFocusedInput=()=>{};}
+    function clear(){treeSerial++;disposeTree();disposeTree=()=>{};dismissPlayer();dismissPlayer=()=>{};disconnectAnimation();disconnectAnimation=()=>{};tutorEntryButtons=[];attemptHelp=null;savePracticeDraft();savePracticeDraft=()=>{};practiceKey=null;if(tutor&&tutorKey)tutorDrafts.set(tutorKey,tutor.snapshot());tutorKey=null;dailyProgress=null;showMeaningAccepted=()=>{};showPracticeFeedback=()=>{};setRecordingState=()=>{};completionHost=null;setLearningStatus=()=>{};setSpeechState=()=>{};setSpeechError=()=>false;showContextFeedback=()=>{};setContextBusy=()=>{};showWritingFeedback=()=>{};revealEntry=()=>{};tutor=null;writing?.dispose();writing=null;frame?.remove();frame=null;cleanup();cleanup=()=>{};revealFocusedInput=()=>{};}
     function base(title,headExtra=null,onDismiss=cb.close){
         clear();shell=el('section','modal dictionary-shell');shell.lang='zh-CN';shell.setAttribute('role','dialog');shell.setAttribute('aria-modal','true');shell.setAttribute('aria-label','语言字典');shell.tabIndex=-1;
         const head=el('header','modal-header');head.append(el('h2','',title));if(headExtra)head.append(headExtra);head.append(createCloseButton(onDismiss,'关闭字典'));
@@ -51,8 +53,10 @@ export function createDictionaryView(root,cb){
         const startTask=kind=>{saved.scroll=0;saved.anchor=null;cb.task(kind);};
         let battleOnly=false;
         const tabs=el('nav','gui-tabs dictionary-lang-tabs');
-        const battleTab=button('战斗文字卡',()=>{battleOnly=true;list();body.scrollTop=0;for(const tab of tabs.children)tab.setAttribute('aria-pressed',String(tab===battleTab));});battleTab.setAttribute('aria-pressed','false');tabs.append(battleTab);
+        const battleTab=button('战斗文字卡',()=>{leaveTree();battleOnly=true;list();body.scrollTop=0;for(const tab of tabs.children)tab.setAttribute('aria-pressed',String(tab===battleTab));});battleTab.setAttribute('aria-pressed','false');tabs.append(battleTab);
         for(const [id,name] of [['zh','中文 · 汉字'],['en','英文 · Word']]){const b=button(name,()=>{saved.scroll=battleOnly?0:body.scrollTop;saved.anchor=null;cb.language(id);});b.setAttribute('aria-pressed',String(id===data.language));tabs.append(b);}
+        let treeHost=null;
+        const leaveTree=()=>{treeSerial++;disposeTree();disposeTree=()=>{};treeHost?.remove();treeHost=null;};
         base('字典',tabs);
         const hero=el('section','dictionary-hero'),p=row.plan,progress=dictionaryDailyProgress(p),nextKind=progress.next;
         hero.append(el('h3','sr-only',data.title),el('p','dictionary-daily-progress',`今日进度 ${progress.completed} / ${progress.total}`));
@@ -103,7 +107,9 @@ export function createDictionaryView(root,cb){
         search.onkeydown=event=>{if(event.isComposing||event.keyCode===229)return;if(event.key==='Escape'&&search.value){event.preventDefault();event.stopPropagation();clearSearch();return;}if(event.key!=='Enter'||!search.value.trim())return;event.preventDefault();const matches=grid.querySelectorAll('button.dictionary-word');if(matches.length===1&&!suggestedMatches)matches[0].click();else if(matches.length){matches[0].focus({preventScroll:true});matches[0].scrollIntoView({block:'nearest'});}};
         search.oninput=()=>{saved.query=search.value;saved.anchor=null;list();};
         const toolbar=el('div','dictionary-toolbar');toolbar.append(search,reset,filters);
-        body.append(toolbar,results,expandSearch,grid);list();message(warning||'');body.scrollTop=saved.scroll;if(saved.anchor){const target=[...grid.children].find(n=>n.dataset.entryId===saved.anchor);target?.focus({preventScroll:true});}
+        body.append(toolbar,results,expandSearch,grid);list();message(warning||'');body.scrollTop=saved.scroll;
+        if(cb.languageTree){for(const node of [toolbar,results,expandSearch,grid])node.remove();treeHost=el('div','dictionary-tree-host');body.append(treeHost);const serial=++treeSerial;void Promise.resolve(cb.languageTree(treeHost,{data,onUnknown:word=>{const e=data.entries.find(e=>e.text.toLowerCase()===word);if(e){cb.entry(e.id);return true;}return false;}})).then(dispose=>{if(serial!==treeSerial)dispose?.();else disposeTree=dispose||(()=>{});}).catch(error=>{if(serial===treeSerial)treeHost.textContent=error.message;});}
+        if(saved.anchor){const target=[...grid.children].find(n=>n.dataset.entryId===saved.anchor);target?.focus({preventScroll:true});}
     }
     function entry({data,speechRate=1,entry:e,tutorHistory=[],tutorMode,review,phase,mode,options,warning,views,progress,learning}){
         const learningNote=el('p','dictionary-learning-status');learningNote.setAttribute('role','status');
@@ -113,6 +119,7 @@ export function createDictionaryView(root,cb){
         if(practiceDraft)body.append(el('small','dictionary-draft-note','已恢复本次打开字典时的练习草稿，尚未提交。'));
         const layout=el('div','dictionary-entry'),copy=el('section',`dictionary-page dictionary-card-showcase ${data.language==='zh'?'is-zh':'is-en'}`),practice=el('section','dictionary-page dictionary-practice-panel');completionHost=practice;
         const exampleEl=el('p','dictionary-example',e.example);
+        watchTreeText(exampleEl,{source:`dictionary:${e.id}`,label:`学习：${e.text}`,locale:data.language,text:e.example,zh:e.translation||''});
         copy.append(el('div',data.language==='zh'?'dictionary-glyph':'dictionary-english',e.text),el('p','dictionary-pronunciation',e.pronunciation),el('h3','',e.meaning),exampleEl);
         if(e.translation)copy.append(el('p','dictionary-translation',e.translation));
         copy.querySelector('div').lang=data.language==='en'?'en':'zh-CN';exampleEl.lang=data.language==='en'?'en':'zh-CN';

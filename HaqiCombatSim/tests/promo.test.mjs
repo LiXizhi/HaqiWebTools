@@ -63,13 +63,13 @@ test('宣传片转弯、停止和倒退跳转的朝向保持确定性',()=>{
     assert.deepEqual(samplePromoMotion(world,origin,path,0),{position:origin,facing:0,moving:false});
 });
 test('宣传片战斗特效使用游戏事件时长，不按镜头均分',()=>{
-    assert.equal(presentationEventDurationMs({type:'cast'},{effects,card:quick}),550);
-    assert.equal(presentationEventDurationMs({type:'cast'},{effects,card:spell}),1800);
-    assert.equal(presentationEventDurationMs({type:'cast'},{effects,card:spell,reducedMotion:true}),500);
-    assert.equal(presentationEventDurationMs({type:'damage'},{hp:40}),220);
-    assert.equal(presentationEventDurationMs({type:'damage'},{hp:0}),600);
-    assert.equal(presentationEventDurationMs({type:'fizzle'}),600);
-    assert.equal(presentationEventDurationMs({type:'heal'}),600);
+    assert.equal(presentationEventDurationMs({type:'cast'},{effects,card:quick}),1500);
+    assert.equal(presentationEventDurationMs({type:'cast'},{effects,card:spell}),1900+1800*1.65*.88);
+    assert.equal(presentationEventDurationMs({type:'cast'},{effects,card:spell,reducedMotion:true}),1900+500*.88);
+    assert.equal(presentationEventDurationMs({type:'damage'},{hp:40}),650);
+    assert.equal(presentationEventDurationMs({type:'damage'},{hp:0}),900);
+    assert.equal(presentationEventDurationMs({type:'fizzle'}),2100);
+    assert.equal(presentationEventDurationMs({type:'heal'}),1000);
     assert.equal(presentationEventDurationMs(null),0);
     assert.equal(presentationEventDurationMs({type:'combat_end'}),0);
     const frames=[{duration:0},{duration:550},{duration:220},{duration:1800},{duration:600},{duration:0}];

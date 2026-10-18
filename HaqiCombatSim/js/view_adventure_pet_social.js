@@ -1,7 +1,7 @@
 import {socialActions} from './adventure_social_actions_core.js';
 import {petAppearanceStage} from './adventure_pets_core.js';
 import {petInteractionParams} from './adventure_pet_interactions_core.js';
-import {drawPetMood} from './view_adventure_pet_mood.js';
+import {drawPetMood,petIdleLift} from './view_adventure_pet_mood.js';
 // Called in depth order by the world renderer. Uses existing pet sheets only.
 export function drawSocialPet(ctx,assets,row,effects,time,reduced,at=Date.now()){
     const {pet,position}=row;if(!pet)return;
@@ -9,7 +9,7 @@ export function drawSocialPet(ctx,assets,row,effects,time,reduced,at=Date.now())
     const phase=(time/1000),turn=effect?.ids.indexOf(pet.id)||0;
     const scale=row.scale||1,size=64*scale;
     const playing=!!effect,mood=playing?'happy':row.mood||'idle';
-    const hop=reduced||mood==='sleeping'?0:playing?Math.max(0,Math.sin(phase*5+turn*Math.PI))*14:row.moving?Math.abs(Math.sin(row.phase))*5:Math.sin(phase*2)*1.5;
+    const hop=reduced||mood==='sleeping'?0:playing?Math.max(0,Math.sin(phase*5+turn*Math.PI))*14:row.moving?Math.abs(Math.sin(row.phase))*5:petIdleLift(time,reduced);
     ctx.save();ctx.translate(position.x,position.y);
     ctx.fillStyle='#294c3733';ctx.beginPath();ctx.ellipse(0,0,18*scale,5*scale,0,0,Math.PI*2);ctx.fill();
     ctx.save();ctx.translate(reduced||!playing?0:Math.sin(phase*4+turn*Math.PI)*6,-hop);ctx.scale(row.facing||1,1);

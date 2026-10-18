@@ -6,6 +6,7 @@ import {equipmentAttributes,equipmentCards,EQUIPMENT_SLOTS} from './adventure_eq
 import {equipmentRequirements} from './adventure_item_rules_core.js';
 import {SCHOOL_NAMES} from './adventure_core.js';
 import {createMountPreview} from './view_adventure_mount_preview.js';
+import {watchTreeText} from './language_tree_capture.js';
 
 // Read-only item inspection, usable before acquisition and independent of claims.
 export class ItemDetails extends DetailDialog {
@@ -38,7 +39,7 @@ export class ItemDetails extends DetailDialog {
             if(unsupportedEquipmentStats(item).length)this.body.append(el('p','equipment-warning','这件装备还有未接入的原版属性，当前预览仅包含已支持部分。'));
         }
         const rune=runeStatus(item,c,assets.dataset);
-        if(item.description&&!rune)this.body.append(el('p','',String(item.description).replace(/[|#]/g,' ').replace(/\s+/g,' ').trim()));
+        if(item.description&&!rune){const description=String(item.description).replace(/[|#]/g,' ').replace(/\s+/g,' ').trim(),node=el('p','',description);this.body.append(node);watchTreeText(node,{source:`item:${item.id}`,label:item.name,zh:description});}
         if(rune){
             this.body.append(el('p',rune.available?'muted':'equipment-warning',rune.catch?'抓宠符文 · 所有存活怪物均可捕捉，难度各异。血量越低越容易成功，成功或失败都消耗一张':rune.available?'战斗符文 · 成功施法消耗一张，失误不消耗':rune.reason));
             const obtain=runeObtainLines(c,item.id);

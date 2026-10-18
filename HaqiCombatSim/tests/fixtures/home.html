@@ -1,0 +1,16 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_world_map.css"><link rel="stylesheet" href="css/home.css"><title>家园隔离验收</title></head><body><div id="overlay"></div><script type="module">
+import {openHomeSystem} from './js/home_app.js';
+import {createHomeStore} from './js/home_store.js';
+import {homeScope} from './js/home_core.js';
+if(!['localhost','127.0.0.1'].includes(location.hostname))throw Error('隔离验收仅限本机');
+const catalog=await fetch('data/adventure/home/catalog.json').then(r=>r.json()),definitions=await fetch('data/adventure/pets.json').then(r=>r.json());
+const save={pets:Object.fromEntries(Object.values(definitions.pets).slice(0,40).map((p,i)=>[`qa-${i}`,{id:`qa-${i}`,speciesId:p.id,level:1}])),languageLearning:{target:'en'}},context={owner:null,roleId:'qa-home',save,content:{pets:definitions.pets},active:true};
+const store=createHomeStore(homeScope(null,'qa-home'),{name:'haqi-home-qa-only'}),mutate=store.mutate;
+// Keep automated drag targets clear of autonomous pet hit boxes. The production
+// spawn arrangement is covered independently; all 40 residents remain available.
+const create=store.create;store.create=async home=>{await create(home);const result=await mutate(home.id,['residents'],(_,parts)=>{Object.values(save.pets).forEach((pet,i)=>{parts.residents[pet.id]={x:(i%7-3)*3,y:7+Math.floor(i/7)*3};});});return result.home;};
+let fail=false;store.mutate=(...args)=>fail?Promise.reject(new DOMException('测试磁盘已满','QuotaExceededError')):mutate(...args);
+window.homeQA={store,context,fail:value=>fail=value,ready:false};
+const voice={start:async()=>{},finish:async()=> 'I want a chair.',cancel:async()=>{},speak:async()=>{}};
+window.homeQA.app=await openHomeSystem({root:document.getElementById('overlay'),getContext:()=>context,close:()=>{},switchWorld:()=>{},catalog,store,voice});window.homeQA.ready=true;
+</script></body></html>

@@ -1,0 +1,11 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><style>body{margin:0}#one,#two{width:620px;height:650px;display:inline-block}#pending{width:100px;height:100px}</style><p id="sentinel">宿主页面保留</p><div id="one"></div><div id="two"></div><div id="pending"></div><script type="module">
+import {WordTree} from '../../js/word_tree.js';
+import {emptyLanguageTree} from '../../js/language_tree_core.js';
+import {seedDictionaryTree} from '../../js/language_tree_dictionary_core.js';
+const data=await (await fetch('../../data/adventure/dictionary/en.json')).json();
+function options(key){const state=seedDictionaryTree(emptyLanguageTree(),data);return {key,data,online:()=>false,store:{async read(){return {state:structuredClone(state),persisted:true};},async update(key,reduce){const result=reduce(state);return {state:structuredClone(state),result,persisted:true};}}};}
+window.keysReachedHost=0;document.addEventListener('keydown',()=>keysReachedHost++);
+window.trees=[new WordTree(document.querySelector('#one'),options('one')),new WordTree(document.querySelector('#two'),options('two'))];
+const pending=new WordTree(document.querySelector('#pending'),options('pending'));pending.dispose();await pending.ready;window.pendingDisposed=true;
+await Promise.all(trees.map(t=>t.ready));window.libraryReady=true;
+</script></html>

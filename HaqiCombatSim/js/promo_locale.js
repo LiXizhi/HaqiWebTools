@@ -15,6 +15,7 @@ const english={
   "魔法哈奇": "Magic Haqi",
   "放映室": "Screening Room",
   "同一段冒险，每次都能重新讲述。": "One adventure, a new story every time.",
+  "序章 · 互动故事": "Prologue · Interactive Story",
   "进入游戏": "Enter game",
   "宣传片画面": "Promo screen",
   "魔法哈奇演示舞台": "Magic Haqi demo stage",

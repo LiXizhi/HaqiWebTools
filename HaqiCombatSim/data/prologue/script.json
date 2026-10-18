@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "id": "lost-light",
+  "title": { "zh-CN": "失落的光", "en": "The Lost Light" },
+  "note": "New writing for the web prologue (2026-10-18). Not original game content. See docs/story/prologue-lost-light.md.",
+  "speakers": {
+    "narrator": { "zh-CN": "青龙", "en": "Qinglong", "school": "life" },
+    "qinglong": { "zh-CN": "青龙", "en": "Qinglong", "school": "life" },
+    "master-fire": { "zh-CN": "烈火大师", "en": "Master of Fire", "school": "fire" },
+    "master-ice": { "zh-CN": "寒冰大师", "en": "Master of Ice", "school": "ice" },
+    "master-storm": { "zh-CN": "风暴大师", "en": "Master of Storm", "school": "storm" },
+    "master-life": { "zh-CN": "生命大师", "en": "Master of Life", "school": "life" },
+    "dark-lord": { "zh-CN": "黑暗魔王", "en": "The Dark Lord", "school": "death" },
+    "child": { "zh-CN": "迷路的孩子", "en": "Lost child" },
+    "imp": { "zh-CN": "暗影小鬼", "en": "Shadow Imp", "school": "death" }
+  },
+  "scenes": [
+    {
+      "id": "cold-open",
+      "beats": [
+        { "type": "art", "art": "word-tree", "move": "push-in" },
+        { "type": "fx", "name": "word-leaves" },
+        { "type": "line", "speaker": "qinglong", "text": { "zh-CN": "很久以前，哈奇岛的每一句咒语都由文字写成，最亮的一个字叫“光”。", "en": "Long ago, every spell in Haqi was written in words, and the brightest word was \"Light\"." } }
+      ]
+    },
+    {
+      "id": "steal-light",
+      "beats": [
+        { "type": "title", "text": { "zh-CN": "第一幕 · 黑暗降临", "en": "Act 1 · Darkness Falls" } },
+        { "type": "art", "art": "dark-lord-steals", "move": "pan-right" },
+        { "type": "fx", "name": "darken" },
+        { "type": "line", "speaker": "dark-lord", "text": { "zh-CN": "最亮的“光”，现在归我了！", "en": "The brightest word, Light, is mine now!" } },
+        { "type": "art", "art": "blank-signposts", "move": "push-in" },
+        { "type": "line", "speaker": "child", "text": { "zh-CN": "灯灭了，路牌上的字也不见了……我找不到回家的路。", "en": "The lamps went out and the signpost words are gone... I can't find my way home." } },
+        { "type": "art", "art": "masters-assemble", "move": "pan-left" },
+        { "type": "line", "speaker": "qinglong", "text": { "zh-CN": "烈火、寒冰、风暴、生命——四系大师齐聚营地！我们联手把“光”夺回来！", "en": "Fire, Ice, Storm, Life — the four masters are here! Let's team up and take Light back!" } }
+      ]
+    },
+    {
+      "id": "masters-battle",
+      "beats": [
+        {
+          "type": "battle-scripted",
+          "battle": "masters",
+          "art": "camp-night-battle-bg",
+          "autoSeconds": 15,
+          "lines": {
+            "start": [
+              { "speaker": "dark-lord", "text": { "zh-CN": "四个人？尝尝死亡系的魔法！", "en": "Four of you? Taste the magic of Death!" } }
+            ],
+            "end": [
+              { "speaker": "dark-lord", "text": { "zh-CN": "没有光，你们的咒语也念不出来！", "en": "Without Light, your spells can't be spoken!" } }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "shatter",
+      "beats": [
+        { "type": "art", "art": "light-shatters", "move": "pull-out" },
+        { "type": "fx", "name": "shatter", "glyph": "光" },
+        { "type": "line", "speaker": "qinglong", "text": { "zh-CN": "魔王被击退时，“光”碎成一笔一笔，散落到群岛与远方的城市。", "en": "As the Dark Lord was pushed back, Light shattered into strokes across the islands and distant cities." } },
+        { "type": "art", "art": "blank-cards", "move": "push-in" },
+        { "type": "line", "speaker": "master-life", "text": { "zh-CN": "糟糕，没有文字，我们的卡牌变成空白了！", "en": "Oh no, without words, our cards went blank!" } }
+      ]
+    },
+    {
+      "id": "spark",
+      "beats": [
+        { "type": "title", "text": { "zh-CN": "第二幕 · 一点火花", "en": "Act 2 · A Spark Falls" } },
+        { "type": "art", "art": "spark-in-hand", "move": "push-in" },
+        { "type": "line", "speaker": "qinglong", "text": { "zh-CN": "有一笔光，落到了好奇的你面前。", "en": "One stroke of light fell right in front of you." } },
+        { "type": "catch-spark", "autoSeconds": 12, "prompt": { "zh-CN": "点一下，接住这一笔光", "en": "Tap to catch the stroke of light" } },
+        { "type": "line", "speaker": "qinglong", "text": { "zh-CN": "你能看见失落的文字！帮我们把这一笔写回去吧。", "en": "You can see the lost words! Help us write this stroke back." } }
+      ]
+    },
+    {
+      "id": "light",
+      "beats": [
+        { "type": "title", "text": { "zh-CN": "第三幕 · 找回光", "en": "Act 3 · Bringing Back the Light" } },
+        { "type": "line", "speaker": "qinglong", "text": { "zh-CN": "写出“光”，它就会化作真正的魔法文字卡！", "en": "Write Light, and it will become a real magic word card!" } },
+        { "type": "hanzi", "page": "hanzi/hanzi_guang.html", "entryId": "guang",
+          "wordCard": { "zh-CN": "zh:guang", "en": "en:sun" },
+          "reveal": { "glyph": "光", "word": "light", "pinyin": "guāng" } },
+        { "type": "card-forge" },
+        { "type": "line", "speaker": "qinglong", "text": { "zh-CN": "太棒了！“光”回来了，大师们的卡牌也重新亮起来了！", "en": "Wonderful! Light is back, and the masters' cards are shining again!" } }
+      ]
+    },
+    {
+      "id": "together",
+      "beats": [
+        { "type": "title", "text": { "zh-CN": "第四幕 · 再次出击", "en": "Act 4 · Strike Again" } },
+        { "type": "line", "speaker": "dark-lord", "text": { "zh-CN": "小鬼们，去把那点光扑灭！", "en": "Go, my imps! Put out that little light!" } },
+        { "type": "line", "speaker": "master-fire", "text": { "zh-CN": "我们的三张招牌魔法回来了，还多了你亲手写出的“光”之文字卡！", "en": "Our three signature spells are back, plus the Light word card you wrote!" } },
+        {
+          "type": "battle-live",
+          "battle": "finale",
+          "art": "camp-night-battle-bg",
+          "autoSeconds": 18,
+          "lines": {
+            "hint": [
+              { "speaker": "qinglong", "text": { "zh-CN": "再来一场 4 对 2！除了之前的 3 张卡，还可以点选你写的“光”之文字卡！", "en": "Let's fight 4 vs 2! Besides the 3 cards from before, you can also pick the Light word card you wrote!" } }
+            ],
+            "word": [
+              { "speaker": "qinglong", "text": { "zh-CN": "这就是你写的“光”！", "en": "That's the Light you wrote!" } }
+            ],
+            "win": [
+              { "speaker": "qinglong", "text": { "zh-CN": "干得好！小鬼们被击退了。", "en": "Well done! The imps ran away." } }
+            ],
+            "lose": [
+              { "speaker": "qinglong", "text": { "zh-CN": "别灰心，小鬼们已经被光吓跑了！", "en": "Don't worry, the light already scared the imps away!" } }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "epilogue",
+      "beats": [
+        { "type": "art", "art": "dawn-signpost", "move": "push-in" },
+        { "type": "fx", "name": "dawn" },
+        { "type": "line", "speaker": "child", "text": { "zh-CN": "路牌又亮了！我知道怎么回家了！", "en": "The sign is shining again! Now I know the way home!" } },
+        { "type": "art", "art": "two-worlds-pullback", "move": "pull-out" },
+        { "type": "line", "speaker": "qinglong", "text": { "zh-CN": "还有许多字散落在群岛和城市里。每找回一个字，你的魔法就强一分！", "en": "Many words are still lost across the islands and cities. Every word you find makes your magic stronger!" } },
+        { "type": "art", "art": "title", "move": "still" },
+        { "type": "end", "text": { "zh-CN": "魔法哈奇", "en": "Magic Haqi" }, "action": { "zh-CN": "创建我的魔法师", "en": "Create my magician" } }
+      ]
+    }
+  ]
+}

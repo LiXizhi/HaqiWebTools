@@ -1,4 +1,5 @@
 import {configureLearningReport} from './learning_report.js';
+import {configureLanguageTreeCapture,setLanguageTreeVocabulary} from './language_tree_capture.js';
 import {openWordCardForCast} from './word_card_cast.js';
 import {resolveParams} from './combat_params_core.js';
 import {createWordCardPractice} from './word_card_practice.js';
@@ -8,7 +9,7 @@ import {hanziAnimationActive} from './view_hanzi_animation.js';
 import {createHanziMemory} from './adventure_hanzi_memory.js';
 import {learningModeForced,enforceLearningMode} from './learning_mode_policy.js';
 const learningForced=learningModeForced(globalThis.location?.search);
-import {restoreVisibleFocus} from './view_adventure_controls.js';
+import {restoreVisibleFocus,createCloseButton} from './view_adventure_controls.js';
 import {locationSnapshot,mapCoordinateVersion} from './adventure_coordinates_core.js';
 import {createIslandHeroNavigation} from './island_hero_navigation.js';
 import {timeScrollCity} from './adventure_time_scroll_core.js';
@@ -61,6 +62,7 @@ import {startCoopRun} from './adventure_coop_core.js';
 import {learningParams} from './language_adventure_core.js';
 import {mapDialogue} from './dialogue_mapping.js';
 import {captureBattlePresentation,battleStatusChanges} from './view_battle_presentation.js';
+import {resolveRecordedBattleRound} from './battle_round_transaction.js';
 import {createLanguageAdventure} from './language_adventure.js';
 import {createLearningVoice} from './language_adventure_voice.js';
 import {createAutoSave} from './adventure_autosave.js';
@@ -92,7 +94,7 @@ import { createSpellSound } from './spell_sound.js';
 import {rewardSound,battleEventSound} from './game_sound_core.js';
 import { castHitReactions } from './actor_animation_core.js';
 import { withBattlePointer,nextBattlePointer } from './battle_pointer_core.js';
-import { presentationEventDurationMs } from './battle_presentation_core.js';
+import { presentationEventDurationMs,presentationEventProgress,presentationEffectDuration } from './battle_presentation_core.js';
 import {presentedEnvironment} from './spell_environment_core.js';
 import * as A from './adventure_core.js';
 import {catalogAcceptBlock,catalogGoalRows,catalogQuestReady,catalogQuestsForNpc,catalogTalksForNpc,trackedQuestIds} from './adventure_catalog_quests_core.js';
@@ -147,7 +149,15 @@ async function getEarth(){
     return earthServiceTask;
 }
 let atlasView=null,atlasPortalFocus=null;
-function switchWorldMap(id){atlasPortalFocus=null;openPanel(id==='earth'?'earthmap':'worldmap');}
+function switchWorldMap(id){atlasPortalFocus=null;openPanel(id==='home'?'home':id==='earth'?'earthmap':'worldmap');}
+let homeView=null,homeTicket=0;
+async function openHomePanel(){
+    if(stage!=='world')return;close({silent:true});panel='home';const ticket=++homeTicket;
+    try{const {openHomeSystem}=await import('./home_app.js');if(ticket!==homeTicket||panel!=='home')return;
+        const view=await openHomeSystem({root:nodes.overlay,close,switchWorld:switchWorldMap,cloud:cloudClient,assetMode:assets.mode,drawTree:(ctx,x,y,size,variant)=>assets.environmentArt?.draw(ctx,'campTrees',['tallPine','layeredPine','cypressPine','blossomTree'][variant%4],x-size*.56,y-size*1.06,size*1.12,size*1.08),drawHero:(ctx,hero,x,y,time,moving,scale,options)=>assets.hero.drawSave(ctx,hero,x,y,time,moving,scale,options),onScene:active=>{nodes.hud.hidden=active;nodes.world.hidden=active;},getContext:()=>({owner:roleStore.owner,roleId:roleStore.catalog.activeId,save,content:assets.content,active:panel==='home'&&stage==='world'&&ticket===homeTicket})});
+        if(ticket!==homeTicket||panel!=='home'){view.dispose();return;}homeView=view;
+    }catch(e){if(ticket===homeTicket){close();toast(e.message);}}
+}
 function browseWorldPortal(portal,target){
     // This is map navigation only: never prepare an arrival or change the save.
     atlasPortalFocus=portal.id;
@@ -472,11 +482,12 @@ function persist() {
     const indicator=document.querySelector('.save-indicator');if(indicator){setText(indicator,storageWarning?'存档未保存':'');indicator.hidden=!storageWarning;}
     lastSave=performance.now();
 }
-function close({silent=false}={}) {earthLoadingView.hide();earthLoadingRetry=null;earthLoadingExit=null;wordPractice.close();hanziMemory.close();dictionaryTicket++;dictionary?.close();dictionary=null;timeScrollTicket++;timeScrollLoad?.abort();timeScrollLoad=null;timeScroll?.close();timeScroll=null;hanziTicket++;hanziIsland?.close();nodes.overlay.disposeMap?.();atlasView?.dispose();atlasView=null;earthPractice?.close();earthViewTicket++;earthView?.dispose();earthView=null;if(earthTraveling){earthService?.cancelPending();earthTraveling=false;}battleIntro.close();dungeonStory.close();if(stage==='world')nodes.hud.hidden=false;if(!silent&&(panel||dialog))spellSound.play('close');characterChat.close();secondCharacterChat?.close();islandSocial.close();fishingLoadEpoch++;languageAdventure.close();fishingApproach=null;talkApproach=null;sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
+function close({silent=false}={}) {if(!silent&&homeView&&!homeView.canClose())return;homeTicket++;homeView?.dispose();homeView=null;earthLoadingView.hide();earthLoadingRetry=null;earthLoadingExit=null;wordPractice.close();hanziMemory.close();dictionaryTicket++;dictionary?.close();dictionary=null;timeScrollTicket++;timeScrollLoad?.abort();timeScrollLoad=null;timeScroll?.close();timeScroll=null;hanziTicket++;hanziIsland?.close();nodes.overlay.disposeMap?.();atlasView?.dispose();atlasView=null;earthPractice?.close();earthViewTicket++;earthView?.dispose();earthView=null;if(earthTraveling){earthService?.cancelPending();earthTraveling=false;}battleIntro.close();dungeonStory.close();if(stage==='world')nodes.hud.hidden=false;if(!silent&&(panel||dialog))spellSound.play('close');characterChat.close();secondCharacterChat?.close();islandSocial.close();fishingLoadEpoch++;languageAdventure.close();fishingApproach=null;talkApproach=null;sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
 // Streaming/social updates repaint the HUD during held movement; only explicit
 // cancellation (panel transitions, blur, pointer release) may clear that input.
 function paintHud() {V.renderHud(nodes.hud,model(),{panel:openPanel,playerPanel:(owner,kind)=>localPlay.openPanel(owner,kind),playerMountToggle:owner=>localPlay.toggleMount(owner),membership:()=>openPanel('membership'),cloud:()=>void loginRoles(),track,untrack,leaveDungeon:exitDungeon,interact:interactNearest,mountToggle:()=>performAction({type:'mount-visibility',hidden:!save?.mountHidden})});}
 function paintPanel() {
+    if(panel==='home')return;
     if(panel==='hanzi-memory'||panel==='hanzi'||panel==='dictionary'||panel==='time-scroll')return;
     if(panel==='map')panel='localmap';
     if(panel==='localmap'&&world.isEarth){earthView?.dispose();earthView=renderEarthLocalMap(nodes.overlay,world,save,{close,switchWorld:switchWorldMap,travel:travelEarth,viewport:bounds=>getEarth().then(service=>service.localViewport(bounds)),draw:(canvas,options)=>renderer.minimap(canvas,world,save,options)});return;}
@@ -511,6 +522,7 @@ function paintPanel() {
 }
 function openPanel(kind,options={}) {
     if(stage!=='world')return;
+    if(kind==='home'){void openHomePanel();return;}
     if(kind==='hanzi'&&assets.content.islandPacks?.some(p=>p.island.id===save.zone&&p.memory)){openMemory();return;}
     if(kind==='dictionary'||kind==='hanzi'){void openDictionary(options.character?'zh':null,options.character);return;}
     if(kind==='time-scroll'){void openTimeScroll();return;}
@@ -723,6 +735,37 @@ async function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
     if(ids.every(hasLocale)){configureLocale({locale:storedLocalePref()||save.locale,languageLearning:save.languageLearning});reveal();return;}
     return loadLocaleFiles(ids).then(()=>{if(save!==newSave)return;configureLocale({locale:storedLocalePref()||save.locale,languageLearning:save.languageLearning});reveal();});
 }
+// Prologue 《失落的光》 (docs/prologue.md): lazily loaded, shares loaded assets and locale, needs no login
+// and never writes a role save. Auto-played when no roles exist, or offered via confirmation modal before creating a new role.
+const PROLOGUE_SEEN_KEY='haqi.prologue.seen.v1';
+let prologueRun=null,prologueOffered=false;
+async function setPrologueLocale(native,target){
+    if(!isLocaleId(native))return;
+    try{localStorage.setItem(LOCALE_PREF_KEY,native);}catch{}
+    if(isLocaleId(target)&&target!==native)rememberSecondLocale(target);
+    await loadLocaleFiles([native,target].filter(id=>isLocaleId(id)&&id!=='zh-CN'));
+    configureLocale({locale:native,languageLearning:{...(save?.languageLearning||{}),native,target}});
+    document.documentElement.lang=native;
+}
+function runPrologue({fromUrl=false,scene=null,lang=null,second=null}={}){
+    if(prologueRun)return prologueRun;
+    const native=isLocaleId(lang)?lang:displayLocale(),target=isLocaleId(second)&&second!==native?second:secondLocaleFor(native);
+    prologueRun=(async()=>{
+        try{
+            if(lang&&lang!==displayLocale())await setPrologueLocale(native,target);
+            const {mountPrologue}=await import('./prologue_app.js');
+            const handle=await mountPrologue(document.body,{assets,renderer,spellSound,locale:native,second:target,start:scene,onLocaleChange:setPrologueLocale});
+            const result=await handle.exited;
+            try{localStorage.setItem(PROLOGUE_SEEN_KEY,'1');}catch{}
+            return result;
+        }catch(error){console.error('序章加载失败',error);document.querySelector('.prologue-layer')?.remove();toast('序章暂时无法播放，可以直接开始冒险。');return null;}
+        finally{
+            prologueRun=null;
+            if(fromUrl){const url=new URL(location.href);for(const key of ['prologue','scene','lang','second'])url.searchParams.delete(key);history.replaceState(history.state,'',url);}
+        }
+    })();
+    return prologueRun;
+}
 async function showTitle() {
     wordRecordings.clear();stopWordAudio();
     roles.duoSelection=null;
@@ -738,6 +781,11 @@ async function showTitle() {
     world=W.createWorld(save.zone==='earth'?'camp':save.zone,assets.content,save.zone==='earth'?null:save);
     titleView=roleStore.catalog.roles.length||roleStore.recovering||roles.localOnly?'roles':'create';
     if(titleView==='create')roleDraft=null;paintTitle();
+    if(titleView==='create'&&!roleStore.catalog.roles.length&&!prologueOffered&&!prologueRun){
+        prologueOffered=true;
+        const result=await runPrologue();
+        if(result&&stage==='title')paintTitle();
+    }
 }
 function deleteCurrentRole() {
     if (roles.busy || cloud.busy || roles.conflict || stage !== 'world' || save?.pendingEncounter) {
@@ -808,7 +856,8 @@ function paintRoles() {
             roles.message=roleStore.recovering?roleRecoveryMessage:'本地角色已恢复。';
             if(!roleStore.recovering&&roles.conflict)await reconcileRoles(roles.conflict);
         }):null,
-        refresh:()=>roleOperation('正在读取角色…',async()=>{const remote=await cloudClient.roles({refresh:true});await reconcileRoles(remote);roles.localOnly=false;if(!roles.conflict&&remote.partsStale?.length)await syncRoles(true);}),
+        refresh:()=>roleOperation('正在读取角色…',async()=>{const remote=await cloudClient.roles({refresh:true});await reconcileRoles(remote);
+        if(roleStore.catalog.activeId)void import('./home_app.js').then(m=>m.primeHomeDirectory(cloudClient,roleStore.catalog.activeId));roles.localOnly=false;if(!roles.conflict&&remote.partsStale?.length)await syncRoles(true);}),
         useRemote:()=>roleOperation('正在备份并加载云端…',async()=>{
             if(!roles.conflict)return;
             localStorage.setItem(`haqi.roles.conflict.${encodeURIComponent(roleStore.owner)}.${Date.now()}`,JSON.stringify(roleStore.catalog));
@@ -829,6 +878,7 @@ function activateRole(id) {
     let restored;
     try{restored=checkedRoleProgress(row.save,assets.content,assets.dataset);}catch(error){console.warn('角色恢复失败',error);throw Error(roleRecoveryMessage);}
     autoSave.reset();roleStore.select(id);roleStorage=roleStore.scoped();
+    if(roleStore.owner)void import('./home_app.js').then(m=>m.primeHomeDirectory(cloudClient,id));
     selected=null;discarded=[];shopView.page=0;petView.selected=null;
     return enterWorld(restored.save,restored.battle);
 }
@@ -844,10 +894,38 @@ function beginOriginalImport() {
             roleStore.create(imported,{isVip:accountIsVip()});titleView='roles';toast('角色已导入并保存在本机，可从角色列表进入。');
         },onClose:()=>paintTitle()});
 }
+function openCreationForm(){
+    titleView='create';roleDraft=null;paintCreation();
+}
+function promptPrologueBeforeCreate(){
+    const closePrompt=()=>{nodes.overlay.className='overlay';nodes.overlay.replaceChildren();};
+    const modal=V.el('div','modal prologue-confirm-modal',
+        V.el('div','modal-header',
+            V.el('div','',V.el('div','eyebrow','NEW HERO · PROLOGUE'),V.el('h2','','新建角色')),
+            createCloseButton(closePrompt,'关闭'),
+        ),
+        V.el('div','modal-body',
+            V.el('p','','新建角色前，是否播放开场动画《失落的光》？'),
+            V.el('div','cloud-actions',
+                V.button('播放开场动画',()=>{
+                    closePrompt();
+                    void runPrologue().then(()=>{if(stage==='title')openCreationForm();});
+                },'primary'),
+                V.button('直接创建角色',()=>{
+                    closePrompt();
+                    openCreationForm();
+                },'secondary'),
+            ),
+        ),
+    );
+    nodes.overlay.replaceChildren(modal);
+    nodes.overlay.className='overlay visible';
+}
 function newRoleForm() {
     if(roles.busy)return;
     if(roleStore.catalog.roles.length>=currentRoleLimit()){toast(roleLimitReachedMessage(accountIsVip()));return;}
-    titleView='create';roleDraft=null;paintCreation();
+    if(roleStore.catalog.roles.length){promptPrologueBeforeCreate();return;}
+    openCreationForm();
 }
 function paintCreation() {
     creationPreview?.stop();
@@ -1321,13 +1399,20 @@ function playRound(decision,readyAnalysis=null) {
         decision={...decision,aiVersion:1,...(chatRequest&&!battle.redMushroom?{chatRequest}:{})};
         const hp=Object.fromEntries(Object.values(battle.unitsById).map(u=>[u.id,u.hp])),aura=battle.aura?{...battle.aura}:null;
         const hand=cardsInHand(battle.sides.near[0]),previous=nextBattlePointer(battle);
-        const playback=captureBattlePresentation(battle,()=>battle.redMushroom?islandSocial.playArena(decision):P.playPveRound(battle,decision));
+        const round=battle.redMushroom
+            ?{playback:captureBattlePresentation(battle,()=>islandSocial.playArena(decision))}
+            :resolveRecordedBattleRound({save,battle,resolve:()=>P.playPveRound(battle,decision),
+                record:()=>A.recordDecision(save,battle.lastDecision||decision,battle),
+                restore:checkpoint=>P.restorePveBattle(assets.dataset,assets.content,checkpoint)});
+        if(round.error){battle=round.battle;paintBattle();console.error('战斗回合已恢复：',round.error);throw new Error('本回合未完成，已恢复到出牌前。请重新选择目标。',{cause:round.error});}
+        const playback=round.playback;
         battleChatRequests.delete(battle);
-        if(battle.finished)stopBattleChatVoice();
-        if(!battle.redMushroom){A.recordDecision(save,battle.lastDecision||decision,battle);persist();}selected=null;discarded=[];petCardsOpen=false;runeCardsOpen=false;
+        selected=null;discarded=[];petCardsOpen=false;runeCardsOpen=false;
         const events=playback.events;
         // Preserve surviving hand IDs while hidden, so only new cards deal in after ALL events.
         animation={events:withBattlePointer(events.map(e=>({...e,periodic:e.type==='dot'||e.type==='hot',type:e.type==='dot'?'damage':e.type==='hot'?'heal':e.type})),previous,nextBattlePointer(battle)),pointer:previous,index:0,start:performance.now(),hp,aura,status:playback.initial,pips:playback.initialPips,statusFeedback:[],entered:-1,hand:hand.filter(h=>(decision.pass||decision.capture||h.seq!==decision.seq)&&!decision.discardSeqs?.includes(h.seq))};paintBattle();
+        if(!battle.redMushroom)persist();
+        if(battle.finished)stopBattleChatVoice();
     });
 }
 function tickAnimation(now) {
@@ -1349,11 +1434,11 @@ function tickAnimation(now) {
     }
     a.statusFeedback=a.statusFeedback.filter(change=>now-change.start<700);
     const duration=presentationEventDurationMs(e,{effects:assets.effects,card:battle.resolved.cards[e.card],hp:a.hp[e.target],reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
-    const progress=Math.min(1,(now-a.start)/duration);
+    const progress=presentationEventProgress(e,Math.min(1,(now-a.start)/duration),{effects:assets.effects,card:battle.resolved.cards[e.card],reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
     const card=battle.resolved.cards[e.card],spec=card&&assets.effects.bases[assets.effects.cards[card.key]?.base];
     const impact=spec?.kind==='summon'?assets.effects.timeline.summonImpact:assets.effects.timeline.impact;
     a.aura=presentedEnvironment(a.aura,a.events,a.index,progress,impact);
-    const reactions=castHitReactions(a.events,a.index,progress,duration,impact);
+    const reactions=castHitReactions(a.events,a.index,progress,e.type==='cast'?presentationEffectDuration(assets.effects,card,matchMedia('(prefers-reduced-motion: reduce)').matches):duration,impact);
     a.recoiledEvents??=new Set();for(const reaction of reactions)a.recoiledEvents.add(reaction.eventIndex);
     const recoilPlayed=a.recoiledEvents.has(a.index);
     if(e.type==='cast'||e.type==='fizzle')spellSound.track(assets.effects,battle.resolved.cards[e.card],progress,{active:!document.hidden&&a.index>(a.silentThrough??-1),failed:e.type==='fizzle',reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,instance:String(a.index)});
@@ -1499,10 +1584,10 @@ function frame(now) {
     void autoSave.tick();
     dungeonStory.tick();
     battleIntro.tick(now,{paused:document.hidden});
-    let scenePaused=backgroundScenePaused();
+    let scenePaused=panel==='home'||backgroundScenePaused();
     languageAdventure.tick(now);
-    if(stage==='world'&&!document.hidden&&now-lastCare>1000){lastCare=now;setTimeout(()=>{
-        if(stage!=='world'||!save||document.hidden||hanziAnimationActive())return;
+    if(stage==='world'&&panel!=='home'&&!document.hidden&&now-lastCare>1000){lastCare=now;setTimeout(()=>{
+        if(stage!=='world'||panel==='home'||!save||document.hidden||hanziAnimationActive())return;
         const started=perf.enabled?performance.now():0;
         tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),true);updatePetStatus(document,save,assets.content);V.updateHeroHealth(nodes.hud.querySelector('[data-player="1"]')||nodes.hud,save,assets.content);if(localPlay.second){const title=nodes.hud.querySelector('[data-player="2"]');if(title)V.updateHeroHealth(title,localPlay.second,assets.content);}V.updateCheckin(nodes.hud,model());if(panel==='checkin')V.updateCheckin(nodes.overlay,model());if(performance.now()-lastSave>10000)persist();
         if(started)perf.record(world.isEarth?'earth-care':'island-care',performance.now()-started);
@@ -1575,7 +1660,7 @@ function frame(now) {
         }else if(!path.length){talkApproach=null;toast('这里暂时走不过去，试试旁边的小路。');}
     }
     characterChat.tick();secondCharacterChat?.tick();earthPractice?.tick();
-    scenePaused=backgroundScenePaused();
+    scenePaused=panel==='home'||backgroundScenePaused();
     let earthPhaseStart=earthFrameStart?performance.now():0;
     if(earthFrameStart)perf.record(phasePrefix+'update',earthPhaseStart-earthFrameStart);
     localPlay.tick(now,dt);
@@ -1639,6 +1724,8 @@ let wordCardRows=null,wordCardLoading=null;
 const wordRecordings=new Map();let wordAudio=null,wordAudioUrl=null;
 const dictionaryCardKey=()=>JSON.stringify([roleStore?.owner||'guest',roleStore?.catalog.activeId]);
 configureLearningReport(()=>roleStore?.catalog.activeId?dictionaryCardKey():null);
+configureLanguageTreeCapture(()=>roleStore?.catalog.activeId?{key:dictionaryCardKey(),privateNames:[save?.name,save?.pet?.name],onWarning:toast}:null);
+void fetch(new URL('../data/adventure/dictionary/en.json',import.meta.url)).then(r=>r.ok?r.json():null).then(data=>{if(data)setLanguageTreeVocabulary(data.entries);}).catch(()=>{});
 async function loadWordCards(){
     if(wordCardRows)return wordCardRows;
     if(!wordCardLoading)wordCardLoading=fetch(new URL('../data/adventure/dictionary/word-cards.json',import.meta.url)).then(r=>{if(!r.ok)throw Error('文字卡暂时无法加载');return r.json();}).then(data=>wordCardRows=validateWordCards(data.cards,assets.dataset.cards)).finally(()=>{wordCardLoading=null;});
@@ -1695,7 +1782,7 @@ async function openDictionary(language=null,entryId=null,returnTarget=document.a
         const module=await import('./adventure_dictionary.js');
         if(ticket!==dictionaryTicket||role!==roleStore.catalog.activeId||owner!==roleStore.owner)return;
         if(!document.getElementById('dictionary-style')){const link=document.createElement('link');link.id='dictionary-style';link.rel='stylesheet';link.href=new URL('../css/dictionary.css',import.meta.url).href;document.head.append(link);}
-        dictionary=module.createDictionary({root:nodes.overlay,loadBattleCards:loadWordCards,getState:()=>({save,assets,content:assets.content,stage,owner:roleStore.owner,role:roleStore.catalog.activeId}),onClose:returnToScene,onPractice:state=>applyWordLearning(state),onRewards:()=>openPanel('learning-mode'),onBuff:(buff,reward)=>{
+        dictionary=module.createDictionary({root:nodes.overlay,onLanguageTree:async (host,options)=>{const {mountDictionaryWordTree}=await import('./word_tree_dictionary.js');const key=dictionaryCardKey();return mountDictionaryWordTree({root:host,key,...options,owner:roleStore.owner,role:roleStore.catalog.activeId,getKey:()=>panel==='dictionary'&&stage==='world'?dictionaryCardKey():null,online:()=>!!roleStore.owner,request:(messages,signal)=>dialogueVoice.judge(messages,signal,{maxTokens:2200})});},loadBattleCards:loadWordCards,getState:()=>({save,assets,content:assets.content,stage,owner:roleStore.owner,role:roleStore.catalog.activeId}),onClose:returnToScene,onPractice:state=>applyWordLearning(state),onRewards:()=>openPanel('learning-mode'),onBuff:(buff,reward)=>{
             if(role!==roleStore.catalog.activeId||owner!==roleStore.owner)return;
             save.dailyLanguageBuff=structuredClone(buff);persist();paintHud();
             if(reward)globalReward.show({title:'学习加成已生效',lines:[['{name} +1%',{name:DAILY_BUFF_NAMES[reward.key]}],['今日累计 {total} 层',{total:reward.total}]]});
@@ -1737,6 +1824,11 @@ async function boot(){
         // Keep the loading screen until session restoration chooses the final screen.
         // Rendering the guest title first briefly exposes creation/role selection.
         const direct=directSignInRequested(location.search);
+        const query=new URLSearchParams(location.search);
+        if(query.has('prologue')){
+            setText($('load-status'),'正在准备序章…');
+            await runPrologue({fromUrl:true,scene:query.get('scene'),lang:query.get('lang'),second:query.get('second')});
+        }
         if(localStorage.getItem(LAST_ACCOUNT_KEY)){
             setText($('load-status'),'正在恢复账号与角色…');
             await connectRoles(false,{enter:direct});

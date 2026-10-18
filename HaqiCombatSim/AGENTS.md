@@ -42,6 +42,8 @@ AIChat 及其 `school-teacher` 技能的唯一维护源位于 apps 仓库的 `of
 | 通过 Keepwork SDK CLI 压缩 WebP、上传用户 CDN、预览实际发布 URL | `.github/skills/keepwork-copilot/SKILL.md` |
 | 使用现有七牛配置上传文件到 Keepwork CDN | `.github/skills/upload-deploy-cdn-files/SKILL.md` |
 
+透明美术优先使用当前 Codex／agent harness 已提供的原生透明图像生成工具及技能（例如 `image_gen` 显式设置 `transparent_background: true`），批量任务也遵循此规则；不要在已有原生透明能力时改走 JPEG／白底生成再抠色的旧管线。保留生成结果的 alpha，直接转换 WebP；核验浅色、深色和实际场景底色上的边缘及完整轮廓。图集按完整物件的已核验边界重新打包，不盲切等分格线。仅原生能力不可用或用户明确指定时考虑旧管线；失败回退遵守所用工具／技能的规则并说明，不能静默降级。
+
 SDK 源码可在 `lxzsrc/keepworkSDK/`（本机 `/Users/mac/lxzsrc/keepworkSDK`）核对；重点看 `src/store/PersonalPageStore*.ts`、`src/store/CloudDrive.ts`。技能和源码中的现有接口是依据，不猜接口或 CDN 地址。凭据按工具既有安全流程使用，不写进仓库、客户端代码、存档或日志。遵守所用技能的上传预览、确认和结果核验流程。
 
 ### 游戏图片与本地副本
@@ -113,3 +115,15 @@ Three.js 两种版本二选一，插件必须匹配所选版本；当前 Canvas 
 ## 新岛屿与导航地图制作
 
 新增或重绘哈奇岛屿时，先读 [新岛屿制作流程](docs/island-expansion.md#新岛屿制作流程2026-10-13) 与 [地图美术](docs/world-map-art.md)。先确定并生成游戏地图，再用真实布局参考与已核验的风格 WebP 生成每岛独立透明插画；保持完整画布坐标，文字和动态角色由程序叠加。正式清单使用 `detailStyle: illustration`，加载中及失败均不生成基础地形。必须核验道路/地标对齐、WebP预算、CDN和正式渲染入口，独立预览不代表已接入。当前准备及安装脚本的岛屿范围有限，扩展前核对实际参数，不能假定支持任意新ID或单岛安装。
+
+## 汉字象形故事动画（`hanzi/`，用户约定 2026-10-18）
+
+新增或重制 `hanzi/hanzi_*.html` 汉字故事动画前，必读 [hanzi/AGENTS.md](hanzi/AGENTS.md)：
+- **先写设计文档**：先在 `hanzi/docs/*.md` 生成详细分镜与象形字源规划文档，再**逐字（one char after another）**实现与验证。
+- **品质与时长对齐《森》《光》**：每个字必须用 2D 或 3D 完整讲述 1–3 分钟的象形文字故事（含书法开场、多幕情景交互、甲骨文/金文→小篆→楷书演进与部件拆解、逐笔描红、三组词意、自由余韵）。
+- **单文件完全独立**：每个 `hanzi_<拼音>.html` 必须像 `hanzi_guang.html`、`hanzi_sen.html` 一样无外部本地 `.js` 文件依赖，单文件可直接独立打开运行。
+
+## 互动序章（`Haqi.html?prologue`）
+
+修改开场互动电影《失落的光》、双语剧本 `data/prologue/script.json`、插画清单 `data/prologue/art.json` 或序章四系大师／文字卡战斗前，先读 [docs/prologue.md](docs/prologue.md) 与 [docs/story/prologue-lost-light.md](docs/story/prologue-lost-light.md)。
+

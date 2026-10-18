@@ -1,0 +1,1855 @@
+{
+  "version": 1,
+  "atlases": [
+    {
+      "atlasId": "home-atlas-01",
+      "grid": {
+        "cols": 4,
+        "rows": 4
+      },
+      "cells": [
+        {
+          "cell": 0,
+          "row": 1,
+          "col": 1,
+          "id": "bed",
+          "en": "bed",
+          "zh": "床",
+          "category": "bedroom",
+          "layer": "solid",
+          "shape": "bed"
+        },
+        {
+          "cell": 1,
+          "row": 1,
+          "col": 2,
+          "id": "bunk-bed",
+          "en": "bunk bed",
+          "zh": "双层床",
+          "category": "bedroom",
+          "layer": "solid",
+          "shape": "bed"
+        },
+        {
+          "cell": 2,
+          "row": 1,
+          "col": 3,
+          "id": "cradle",
+          "en": "cradle",
+          "zh": "摇篮",
+          "category": "bedroom",
+          "layer": "solid",
+          "shape": "bed"
+        },
+        {
+          "cell": 3,
+          "row": 1,
+          "col": 4,
+          "id": "hammock",
+          "en": "hammock",
+          "zh": "吊床",
+          "category": "bedroom",
+          "layer": "solid",
+          "shape": "bed"
+        },
+        {
+          "cell": 4,
+          "row": 2,
+          "col": 1,
+          "id": "sleeping-bag",
+          "en": "sleeping bag",
+          "zh": "睡袋",
+          "category": "bedroom",
+          "layer": "solid",
+          "shape": "bed"
+        },
+        {
+          "cell": 5,
+          "row": 2,
+          "col": 2,
+          "id": "wardrobe",
+          "en": "wardrobe",
+          "zh": "衣柜",
+          "category": "bedroom",
+          "layer": "solid",
+          "shape": "cabinet"
+        },
+        {
+          "cell": 6,
+          "row": 2,
+          "col": 3,
+          "id": "dresser",
+          "en": "dresser",
+          "zh": "梳妆台",
+          "category": "bedroom",
+          "layer": "solid",
+          "shape": "desk"
+        },
+        {
+          "cell": 7,
+          "row": 2,
+          "col": 4,
+          "id": "nightstand",
+          "en": "nightstand",
+          "zh": "床头柜",
+          "category": "bedroom",
+          "layer": "solid",
+          "shape": "table"
+        },
+        {
+          "cell": 8,
+          "row": 3,
+          "col": 1,
+          "id": "alarm-clock",
+          "en": "alarm clock",
+          "zh": "闹钟",
+          "category": "bedroom",
+          "layer": "top",
+          "shape": "clock"
+        },
+        {
+          "cell": 9,
+          "row": 3,
+          "col": 2,
+          "id": "pillow",
+          "en": "pillow",
+          "zh": "枕头",
+          "category": "bedroom",
+          "layer": "solid",
+          "shape": "cushion"
+        },
+        {
+          "cell": 10,
+          "row": 3,
+          "col": 3,
+          "id": "blanket",
+          "en": "blanket",
+          "zh": "毯子",
+          "category": "bedroom",
+          "layer": "ground",
+          "shape": "rug"
+        },
+        {
+          "cell": 11,
+          "row": 3,
+          "col": 4,
+          "id": "quilt",
+          "en": "quilt",
+          "zh": "被子",
+          "category": "bedroom",
+          "layer": "ground",
+          "shape": "rug"
+        },
+        {
+          "cell": 12,
+          "row": 4,
+          "col": 1,
+          "id": "slippers",
+          "en": "slippers",
+          "zh": "拖鞋",
+          "category": "bedroom",
+          "layer": "solid",
+          "shape": "shoes"
+        },
+        {
+          "cell": 13,
+          "row": 4,
+          "col": 2,
+          "id": "bedside-lamp",
+          "en": "bedside lamp",
+          "zh": "床头灯",
+          "category": "bedroom",
+          "layer": "solid",
+          "shape": "lamp"
+        },
+        {
+          "cell": 14,
+          "row": 4,
+          "col": 3,
+          "id": "mirror",
+          "en": "mirror",
+          "zh": "镜子",
+          "category": "bedroom",
+          "layer": "solid",
+          "shape": "mirror"
+        },
+        {
+          "cell": 15,
+          "row": 4,
+          "col": 4,
+          "id": "clothes-rack",
+          "en": "clothes rack",
+          "zh": "衣架",
+          "category": "bedroom",
+          "layer": "solid",
+          "shape": "rack"
+        }
+      ]
+    },
+    {
+      "atlasId": "home-atlas-02",
+      "grid": {
+        "cols": 4,
+        "rows": 4
+      },
+      "cells": [
+        {
+          "cell": 0,
+          "row": 1,
+          "col": 1,
+          "id": "laundry-basket",
+          "en": "laundry basket",
+          "zh": "洗衣篮",
+          "category": "bedroom",
+          "layer": "solid",
+          "shape": "basket"
+        },
+        {
+          "cell": 1,
+          "row": 1,
+          "col": 2,
+          "id": "toy-chest",
+          "en": "toy chest",
+          "zh": "玩具箱",
+          "category": "bedroom",
+          "layer": "solid",
+          "shape": "chest"
+        },
+        {
+          "cell": 2,
+          "row": 1,
+          "col": 3,
+          "id": "bedroom-rug",
+          "en": "bedroom rug",
+          "zh": "卧室地毯",
+          "category": "bedroom",
+          "layer": "ground",
+          "shape": "rug"
+        },
+        {
+          "cell": 3,
+          "row": 1,
+          "col": 4,
+          "id": "dream-catcher",
+          "en": "dream catcher",
+          "zh": "捕梦网",
+          "category": "bedroom",
+          "layer": "solid",
+          "shape": "ornament"
+        },
+        {
+          "cell": 4,
+          "row": 2,
+          "col": 1,
+          "id": "table",
+          "en": "table",
+          "zh": "桌子",
+          "category": "kitchen",
+          "layer": "solid",
+          "shape": "table"
+        },
+        {
+          "cell": 5,
+          "row": 2,
+          "col": 2,
+          "id": "chair",
+          "en": "chair",
+          "zh": "椅子",
+          "category": "kitchen",
+          "layer": "solid",
+          "shape": "chair"
+        },
+        {
+          "cell": 6,
+          "row": 2,
+          "col": 3,
+          "id": "refrigerator",
+          "en": "refrigerator",
+          "zh": "冰箱",
+          "category": "kitchen",
+          "layer": "solid",
+          "shape": "cabinet"
+        },
+        {
+          "cell": 7,
+          "row": 2,
+          "col": 4,
+          "id": "oven",
+          "en": "oven",
+          "zh": "烤箱",
+          "category": "kitchen",
+          "layer": "solid",
+          "shape": "oven"
+        },
+        {
+          "cell": 8,
+          "row": 3,
+          "col": 1,
+          "id": "stove",
+          "en": "stove",
+          "zh": "炉灶",
+          "category": "kitchen",
+          "layer": "solid",
+          "shape": "stove"
+        },
+        {
+          "cell": 9,
+          "row": 3,
+          "col": 2,
+          "id": "kitchen-sink",
+          "en": "kitchen sink",
+          "zh": "厨房水槽",
+          "category": "kitchen",
+          "layer": "solid",
+          "shape": "sink"
+        },
+        {
+          "cell": 10,
+          "row": 3,
+          "col": 3,
+          "id": "kitchen-cabinet",
+          "en": "kitchen cabinet",
+          "zh": "橱柜",
+          "category": "kitchen",
+          "layer": "solid",
+          "shape": "cabinet"
+        },
+        {
+          "cell": 11,
+          "row": 3,
+          "col": 4,
+          "id": "kettle",
+          "en": "kettle",
+          "zh": "水壶",
+          "category": "kitchen",
+          "layer": "top",
+          "shape": "kettle"
+        },
+        {
+          "cell": 12,
+          "row": 4,
+          "col": 1,
+          "id": "cup",
+          "en": "cup",
+          "zh": "杯子",
+          "category": "kitchen",
+          "layer": "top",
+          "shape": "cup"
+        },
+        {
+          "cell": 13,
+          "row": 4,
+          "col": 2,
+          "id": "plate",
+          "en": "plate",
+          "zh": "盘子",
+          "category": "kitchen",
+          "layer": "top",
+          "shape": "plate"
+        },
+        {
+          "cell": 14,
+          "row": 4,
+          "col": 3,
+          "id": "bowl",
+          "en": "bowl",
+          "zh": "碗",
+          "category": "kitchen",
+          "layer": "top",
+          "shape": "bowl"
+        },
+        {
+          "cell": 15,
+          "row": 4,
+          "col": 4,
+          "id": "teapot",
+          "en": "teapot",
+          "zh": "茶壶",
+          "category": "kitchen",
+          "layer": "top",
+          "shape": "kettle"
+        }
+      ]
+    },
+    {
+      "atlasId": "home-atlas-03",
+      "grid": {
+        "cols": 4,
+        "rows": 4
+      },
+      "cells": [
+        {
+          "cell": 0,
+          "row": 1,
+          "col": 1,
+          "id": "toaster",
+          "en": "toaster",
+          "zh": "烤面包机",
+          "category": "kitchen",
+          "layer": "solid",
+          "shape": "oven"
+        },
+        {
+          "cell": 1,
+          "row": 1,
+          "col": 2,
+          "id": "bread-basket",
+          "en": "bread basket",
+          "zh": "面包篮",
+          "category": "kitchen",
+          "layer": "solid",
+          "shape": "basket"
+        },
+        {
+          "cell": 2,
+          "row": 1,
+          "col": 3,
+          "id": "fruit-basket",
+          "en": "fruit basket",
+          "zh": "水果篮",
+          "category": "kitchen",
+          "layer": "solid",
+          "shape": "basket"
+        },
+        {
+          "cell": 3,
+          "row": 1,
+          "col": 4,
+          "id": "cutting-board",
+          "en": "cutting board",
+          "zh": "砧板",
+          "category": "kitchen",
+          "layer": "solid",
+          "shape": "board"
+        },
+        {
+          "cell": 4,
+          "row": 2,
+          "col": 1,
+          "id": "cooking-pot",
+          "en": "cooking pot",
+          "zh": "汤锅",
+          "category": "kitchen",
+          "layer": "top",
+          "shape": "bowl"
+        },
+        {
+          "cell": 5,
+          "row": 2,
+          "col": 2,
+          "id": "frying-pan",
+          "en": "frying pan",
+          "zh": "平底锅",
+          "category": "kitchen",
+          "layer": "solid",
+          "shape": "pan"
+        },
+        {
+          "cell": 6,
+          "row": 2,
+          "col": 3,
+          "id": "dining-bench",
+          "en": "dining bench",
+          "zh": "餐椅长凳",
+          "category": "kitchen",
+          "layer": "solid",
+          "shape": "bench"
+        },
+        {
+          "cell": 7,
+          "row": 2,
+          "col": 4,
+          "id": "picnic-table",
+          "en": "picnic table",
+          "zh": "野餐桌",
+          "category": "kitchen",
+          "layer": "solid",
+          "shape": "table"
+        },
+        {
+          "cell": 8,
+          "row": 3,
+          "col": 1,
+          "id": "bathtub",
+          "en": "bathtub",
+          "zh": "浴缸",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "bath"
+        },
+        {
+          "cell": 9,
+          "row": 3,
+          "col": 2,
+          "id": "shower",
+          "en": "shower",
+          "zh": "淋浴间",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "shower"
+        },
+        {
+          "cell": 10,
+          "row": 3,
+          "col": 3,
+          "id": "washbasin",
+          "en": "washbasin",
+          "zh": "洗脸盆",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "sink"
+        },
+        {
+          "cell": 11,
+          "row": 3,
+          "col": 4,
+          "id": "toilet",
+          "en": "toilet",
+          "zh": "马桶",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "toilet"
+        },
+        {
+          "cell": 12,
+          "row": 4,
+          "col": 1,
+          "id": "towel-rack",
+          "en": "towel rack",
+          "zh": "毛巾架",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "rack"
+        },
+        {
+          "cell": 13,
+          "row": 4,
+          "col": 2,
+          "id": "soap",
+          "en": "soap",
+          "zh": "肥皂",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "soap"
+        },
+        {
+          "cell": 14,
+          "row": 4,
+          "col": 3,
+          "id": "toothbrush",
+          "en": "toothbrush",
+          "zh": "牙刷",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "brush"
+        },
+        {
+          "cell": 15,
+          "row": 4,
+          "col": 4,
+          "id": "toothpaste",
+          "en": "toothpaste",
+          "zh": "牙膏",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "tube"
+        }
+      ]
+    },
+    {
+      "atlasId": "home-atlas-04",
+      "grid": {
+        "cols": 4,
+        "rows": 4
+      },
+      "cells": [
+        {
+          "cell": 0,
+          "row": 1,
+          "col": 1,
+          "id": "bath-mat",
+          "en": "bath mat",
+          "zh": "浴室垫",
+          "category": "bathroom",
+          "layer": "ground",
+          "shape": "rug"
+        },
+        {
+          "cell": 1,
+          "row": 1,
+          "col": 2,
+          "id": "rubber-duck",
+          "en": "rubber duck",
+          "zh": "小黄鸭",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "duck"
+        },
+        {
+          "cell": 2,
+          "row": 1,
+          "col": 3,
+          "id": "bath-stool",
+          "en": "bath stool",
+          "zh": "浴室凳",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "stool"
+        },
+        {
+          "cell": 3,
+          "row": 1,
+          "col": 4,
+          "id": "bathroom-mirror",
+          "en": "bathroom mirror",
+          "zh": "浴室镜",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "mirror"
+        },
+        {
+          "cell": 4,
+          "row": 2,
+          "col": 1,
+          "id": "shampoo",
+          "en": "shampoo",
+          "zh": "洗发水",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "bottle"
+        },
+        {
+          "cell": 5,
+          "row": 2,
+          "col": 2,
+          "id": "hair-dryer",
+          "en": "hair dryer",
+          "zh": "吹风机",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "dryer"
+        },
+        {
+          "cell": 6,
+          "row": 2,
+          "col": 3,
+          "id": "laundry-machine",
+          "en": "laundry machine",
+          "zh": "洗衣机",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "washer"
+        },
+        {
+          "cell": 7,
+          "row": 2,
+          "col": 4,
+          "id": "laundry-hamper",
+          "en": "laundry hamper",
+          "zh": "脏衣筐",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "basket"
+        },
+        {
+          "cell": 8,
+          "row": 3,
+          "col": 1,
+          "id": "sponge",
+          "en": "sponge",
+          "zh": "海绵",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "soap"
+        },
+        {
+          "cell": 9,
+          "row": 3,
+          "col": 2,
+          "id": "bathrobe",
+          "en": "bathrobe",
+          "zh": "浴袍",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "robe"
+        },
+        {
+          "cell": 10,
+          "row": 3,
+          "col": 3,
+          "id": "hot-spring",
+          "en": "hot spring",
+          "zh": "温泉池",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "pool"
+        },
+        {
+          "cell": 11,
+          "row": 3,
+          "col": 4,
+          "id": "water-barrel",
+          "en": "water barrel",
+          "zh": "水桶",
+          "category": "bathroom",
+          "layer": "solid",
+          "shape": "barrel"
+        },
+        {
+          "cell": 12,
+          "row": 4,
+          "col": 1,
+          "id": "sofa",
+          "en": "sofa",
+          "zh": "沙发",
+          "category": "living",
+          "layer": "solid",
+          "shape": "sofa"
+        },
+        {
+          "cell": 13,
+          "row": 4,
+          "col": 2,
+          "id": "armchair",
+          "en": "armchair",
+          "zh": "扶手椅",
+          "category": "living",
+          "layer": "solid",
+          "shape": "chair"
+        },
+        {
+          "cell": 14,
+          "row": 4,
+          "col": 3,
+          "id": "coffee-table",
+          "en": "coffee table",
+          "zh": "茶几",
+          "category": "living",
+          "layer": "solid",
+          "shape": "table"
+        },
+        {
+          "cell": 15,
+          "row": 4,
+          "col": 4,
+          "id": "bookshelf",
+          "en": "bookshelf",
+          "zh": "书架",
+          "category": "living",
+          "layer": "solid",
+          "shape": "shelf"
+        }
+      ]
+    },
+    {
+      "atlasId": "home-atlas-05",
+      "grid": {
+        "cols": 4,
+        "rows": 4
+      },
+      "cells": [
+        {
+          "cell": 0,
+          "row": 1,
+          "col": 1,
+          "id": "book",
+          "en": "book",
+          "zh": "书",
+          "category": "living",
+          "layer": "top",
+          "shape": "book"
+        },
+        {
+          "cell": 1,
+          "row": 1,
+          "col": 2,
+          "id": "desk",
+          "en": "desk",
+          "zh": "书桌",
+          "category": "living",
+          "layer": "solid",
+          "shape": "desk"
+        },
+        {
+          "cell": 2,
+          "row": 1,
+          "col": 3,
+          "id": "desk-lamp",
+          "en": "desk lamp",
+          "zh": "台灯",
+          "category": "living",
+          "layer": "solid",
+          "shape": "lamp"
+        },
+        {
+          "cell": 3,
+          "row": 1,
+          "col": 4,
+          "id": "television",
+          "en": "television",
+          "zh": "电视",
+          "category": "living",
+          "layer": "solid",
+          "shape": "tv"
+        },
+        {
+          "cell": 4,
+          "row": 2,
+          "col": 1,
+          "id": "radio",
+          "en": "radio",
+          "zh": "收音机",
+          "category": "living",
+          "layer": "top",
+          "shape": "radio"
+        },
+        {
+          "cell": 5,
+          "row": 2,
+          "col": 2,
+          "id": "piano",
+          "en": "piano",
+          "zh": "钢琴",
+          "category": "living",
+          "layer": "solid",
+          "shape": "piano"
+        },
+        {
+          "cell": 6,
+          "row": 2,
+          "col": 3,
+          "id": "guitar",
+          "en": "guitar",
+          "zh": "吉他",
+          "category": "living",
+          "layer": "solid",
+          "shape": "guitar"
+        },
+        {
+          "cell": 7,
+          "row": 2,
+          "col": 4,
+          "id": "globe",
+          "en": "globe",
+          "zh": "地球仪",
+          "category": "living",
+          "layer": "top",
+          "shape": "globe"
+        },
+        {
+          "cell": 8,
+          "row": 3,
+          "col": 1,
+          "id": "wall-clock",
+          "en": "wall clock",
+          "zh": "挂钟",
+          "category": "living",
+          "layer": "top",
+          "shape": "clock"
+        },
+        {
+          "cell": 9,
+          "row": 3,
+          "col": 2,
+          "id": "fireplace",
+          "en": "fireplace",
+          "zh": "壁炉",
+          "category": "living",
+          "layer": "solid",
+          "shape": "fireplace"
+        },
+        {
+          "cell": 10,
+          "row": 3,
+          "col": 3,
+          "id": "cushion",
+          "en": "cushion",
+          "zh": "坐垫",
+          "category": "living",
+          "layer": "solid",
+          "shape": "cushion"
+        },
+        {
+          "cell": 11,
+          "row": 3,
+          "col": 4,
+          "id": "aquarium",
+          "en": "aquarium",
+          "zh": "鱼缸",
+          "category": "living",
+          "layer": "solid",
+          "shape": "aquarium"
+        },
+        {
+          "cell": 12,
+          "row": 4,
+          "col": 1,
+          "id": "painting",
+          "en": "painting",
+          "zh": "画框",
+          "category": "living",
+          "layer": "solid",
+          "shape": "painting"
+        },
+        {
+          "cell": 13,
+          "row": 4,
+          "col": 2,
+          "id": "floor-lamp",
+          "en": "floor lamp",
+          "zh": "落地灯",
+          "category": "living",
+          "layer": "solid",
+          "shape": "lamp"
+        },
+        {
+          "cell": 14,
+          "row": 4,
+          "col": 3,
+          "id": "magazine-rack",
+          "en": "magazine rack",
+          "zh": "杂志架",
+          "category": "living",
+          "layer": "solid",
+          "shape": "rack"
+        },
+        {
+          "cell": 15,
+          "row": 4,
+          "col": 4,
+          "id": "rocking-chair",
+          "en": "rocking chair",
+          "zh": "摇椅",
+          "category": "living",
+          "layer": "solid",
+          "shape": "chair"
+        }
+      ]
+    },
+    {
+      "atlasId": "home-atlas-06",
+      "grid": {
+        "cols": 4,
+        "rows": 4
+      },
+      "cells": [
+        {
+          "cell": 0,
+          "row": 1,
+          "col": 1,
+          "id": "flower",
+          "en": "flower",
+          "zh": "花",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "flower"
+        },
+        {
+          "cell": 1,
+          "row": 1,
+          "col": 2,
+          "id": "tree",
+          "en": "tree",
+          "zh": "树",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "tree"
+        },
+        {
+          "cell": 2,
+          "row": 1,
+          "col": 3,
+          "id": "apple-tree",
+          "en": "apple tree",
+          "zh": "苹果树",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "tree"
+        },
+        {
+          "cell": 3,
+          "row": 1,
+          "col": 4,
+          "id": "palm-tree",
+          "en": "palm tree",
+          "zh": "棕榈树",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "palm"
+        },
+        {
+          "cell": 4,
+          "row": 2,
+          "col": 1,
+          "id": "bush",
+          "en": "bush",
+          "zh": "灌木",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "bush"
+        },
+        {
+          "cell": 5,
+          "row": 2,
+          "col": 2,
+          "id": "flower-bed",
+          "en": "flower bed",
+          "zh": "花坛",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "flowers"
+        },
+        {
+          "cell": 6,
+          "row": 2,
+          "col": 3,
+          "id": "vegetable-patch",
+          "en": "vegetable patch",
+          "zh": "菜地",
+          "category": "garden",
+          "layer": "ground",
+          "shape": "patch"
+        },
+        {
+          "cell": 7,
+          "row": 2,
+          "col": 4,
+          "id": "watering-can",
+          "en": "watering can",
+          "zh": "浇水壶",
+          "category": "garden",
+          "layer": "top",
+          "shape": "kettle"
+        },
+        {
+          "cell": 8,
+          "row": 3,
+          "col": 1,
+          "id": "fountain",
+          "en": "fountain",
+          "zh": "喷泉",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "fountain"
+        },
+        {
+          "cell": 9,
+          "row": 3,
+          "col": 2,
+          "id": "pond",
+          "en": "pond",
+          "zh": "池塘",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "pool"
+        },
+        {
+          "cell": 10,
+          "row": 3,
+          "col": 3,
+          "id": "birdhouse",
+          "en": "birdhouse",
+          "zh": "鸟屋",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "house"
+        },
+        {
+          "cell": 11,
+          "row": 3,
+          "col": 4,
+          "id": "birdbath",
+          "en": "birdbath",
+          "zh": "鸟浴盆",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "fountain"
+        },
+        {
+          "cell": 12,
+          "row": 4,
+          "col": 1,
+          "id": "garden-bench",
+          "en": "garden bench",
+          "zh": "花园长凳",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "bench"
+        },
+        {
+          "cell": 13,
+          "row": 4,
+          "col": 2,
+          "id": "wheelbarrow",
+          "en": "wheelbarrow",
+          "zh": "独轮车",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "cart"
+        },
+        {
+          "cell": 14,
+          "row": 4,
+          "col": 3,
+          "id": "planter",
+          "en": "planter",
+          "zh": "花盆",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "pot"
+        },
+        {
+          "cell": 15,
+          "row": 4,
+          "col": 4,
+          "id": "rose-bush",
+          "en": "rose bush",
+          "zh": "玫瑰丛",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "flowers"
+        }
+      ]
+    },
+    {
+      "atlasId": "home-atlas-07",
+      "grid": {
+        "cols": 4,
+        "rows": 4
+      },
+      "cells": [
+        {
+          "cell": 0,
+          "row": 1,
+          "col": 1,
+          "id": "sunflower",
+          "en": "sunflower",
+          "zh": "向日葵",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "flower"
+        },
+        {
+          "cell": 1,
+          "row": 1,
+          "col": 2,
+          "id": "mushroom",
+          "en": "mushroom",
+          "zh": "蘑菇",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "mushroom"
+        },
+        {
+          "cell": 2,
+          "row": 1,
+          "col": 3,
+          "id": "garden-lantern",
+          "en": "garden lantern",
+          "zh": "花园灯笼",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "lantern"
+        },
+        {
+          "cell": 3,
+          "row": 1,
+          "col": 4,
+          "id": "greenhouse",
+          "en": "greenhouse",
+          "zh": "温室",
+          "category": "garden",
+          "layer": "solid",
+          "shape": "house"
+        },
+        {
+          "cell": 4,
+          "row": 2,
+          "col": 1,
+          "id": "swing",
+          "en": "swing",
+          "zh": "秋千",
+          "category": "play",
+          "layer": "solid",
+          "shape": "swing"
+        },
+        {
+          "cell": 5,
+          "row": 2,
+          "col": 2,
+          "id": "slide",
+          "en": "slide",
+          "zh": "滑梯",
+          "category": "play",
+          "layer": "solid",
+          "shape": "slide"
+        },
+        {
+          "cell": 6,
+          "row": 2,
+          "col": 3,
+          "id": "ball",
+          "en": "ball",
+          "zh": "球",
+          "category": "play",
+          "layer": "solid",
+          "shape": "ball"
+        },
+        {
+          "cell": 7,
+          "row": 2,
+          "col": 4,
+          "id": "sandbox",
+          "en": "sandbox",
+          "zh": "沙坑",
+          "category": "play",
+          "layer": "solid",
+          "shape": "sandbox"
+        },
+        {
+          "cell": 8,
+          "row": 3,
+          "col": 1,
+          "id": "seesaw",
+          "en": "seesaw",
+          "zh": "跷跷板",
+          "category": "play",
+          "layer": "solid",
+          "shape": "seesaw"
+        },
+        {
+          "cell": 9,
+          "row": 3,
+          "col": 2,
+          "id": "trampoline",
+          "en": "trampoline",
+          "zh": "蹦床",
+          "category": "play",
+          "layer": "solid",
+          "shape": "trampoline"
+        },
+        {
+          "cell": 10,
+          "row": 3,
+          "col": 3,
+          "id": "climbing-frame",
+          "en": "climbing frame",
+          "zh": "攀爬架",
+          "category": "play",
+          "layer": "solid",
+          "shape": "climb"
+        },
+        {
+          "cell": 11,
+          "row": 3,
+          "col": 4,
+          "id": "toy-train",
+          "en": "toy train",
+          "zh": "玩具火车",
+          "category": "play",
+          "layer": "solid",
+          "shape": "train"
+        },
+        {
+          "cell": 12,
+          "row": 4,
+          "col": 1,
+          "id": "teddy-bear",
+          "en": "teddy bear",
+          "zh": "泰迪熊",
+          "category": "play",
+          "layer": "solid",
+          "shape": "bear"
+        },
+        {
+          "cell": 13,
+          "row": 4,
+          "col": 2,
+          "id": "dollhouse",
+          "en": "dollhouse",
+          "zh": "玩具屋",
+          "category": "play",
+          "layer": "solid",
+          "shape": "house"
+        },
+        {
+          "cell": 14,
+          "row": 4,
+          "col": 3,
+          "id": "toy-car",
+          "en": "toy car",
+          "zh": "玩具汽车",
+          "category": "play",
+          "layer": "solid",
+          "shape": "car"
+        },
+        {
+          "cell": 15,
+          "row": 4,
+          "col": 4,
+          "id": "kite",
+          "en": "kite",
+          "zh": "风筝",
+          "category": "play",
+          "layer": "solid",
+          "shape": "kite"
+        }
+      ]
+    },
+    {
+      "atlasId": "home-atlas-08",
+      "grid": {
+        "cols": 4,
+        "rows": 4
+      },
+      "cells": [
+        {
+          "cell": 0,
+          "row": 1,
+          "col": 1,
+          "id": "puzzle",
+          "en": "puzzle",
+          "zh": "拼图",
+          "category": "play",
+          "layer": "solid",
+          "shape": "board"
+        },
+        {
+          "cell": 1,
+          "row": 1,
+          "col": 2,
+          "id": "building-blocks",
+          "en": "building blocks",
+          "zh": "积木",
+          "category": "play",
+          "layer": "solid",
+          "shape": "blocks"
+        },
+        {
+          "cell": 2,
+          "row": 1,
+          "col": 3,
+          "id": "rocking-horse",
+          "en": "rocking horse",
+          "zh": "木马",
+          "category": "play",
+          "layer": "solid",
+          "shape": "horse"
+        },
+        {
+          "cell": 3,
+          "row": 1,
+          "col": 4,
+          "id": "scooter",
+          "en": "scooter",
+          "zh": "滑板车",
+          "category": "play",
+          "layer": "solid",
+          "shape": "scooter"
+        },
+        {
+          "cell": 4,
+          "row": 2,
+          "col": 1,
+          "id": "bicycle",
+          "en": "bicycle",
+          "zh": "自行车",
+          "category": "play",
+          "layer": "solid",
+          "shape": "bike"
+        },
+        {
+          "cell": 5,
+          "row": 2,
+          "col": 2,
+          "id": "basketball-hoop",
+          "en": "basketball hoop",
+          "zh": "篮球架",
+          "category": "play",
+          "layer": "solid",
+          "shape": "hoop"
+        },
+        {
+          "cell": 6,
+          "row": 2,
+          "col": 3,
+          "id": "goal",
+          "en": "goal",
+          "zh": "球门",
+          "category": "play",
+          "layer": "solid",
+          "shape": "goal"
+        },
+        {
+          "cell": 7,
+          "row": 2,
+          "col": 4,
+          "id": "play-tent",
+          "en": "play tent",
+          "zh": "游戏帐篷",
+          "category": "play",
+          "layer": "solid",
+          "shape": "tent"
+        },
+        {
+          "cell": 8,
+          "row": 3,
+          "col": 1,
+          "id": "dance-floor",
+          "en": "dance floor",
+          "zh": "舞池",
+          "category": "party",
+          "layer": "ground",
+          "shape": "tiles"
+        },
+        {
+          "cell": 9,
+          "row": 3,
+          "col": 2,
+          "id": "speaker",
+          "en": "speaker",
+          "zh": "音箱",
+          "category": "party",
+          "layer": "solid",
+          "shape": "speaker"
+        },
+        {
+          "cell": 10,
+          "row": 3,
+          "col": 3,
+          "id": "balloon",
+          "en": "balloon",
+          "zh": "气球",
+          "category": "party",
+          "layer": "solid",
+          "shape": "balloon"
+        },
+        {
+          "cell": 11,
+          "row": 3,
+          "col": 4,
+          "id": "birthday-cake",
+          "en": "birthday cake",
+          "zh": "生日蛋糕",
+          "category": "party",
+          "layer": "top",
+          "shape": "cake"
+        },
+        {
+          "cell": 12,
+          "row": 4,
+          "col": 1,
+          "id": "party-hat",
+          "en": "party hat",
+          "zh": "派对帽",
+          "category": "party",
+          "layer": "solid",
+          "shape": "hat"
+        },
+        {
+          "cell": 13,
+          "row": 4,
+          "col": 2,
+          "id": "gift-box",
+          "en": "gift box",
+          "zh": "礼物盒",
+          "category": "party",
+          "layer": "solid",
+          "shape": "gift"
+        },
+        {
+          "cell": 14,
+          "row": 4,
+          "col": 3,
+          "id": "bunting",
+          "en": "bunting",
+          "zh": "彩旗",
+          "category": "party",
+          "layer": "solid",
+          "shape": "flags"
+        },
+        {
+          "cell": 15,
+          "row": 4,
+          "col": 4,
+          "id": "disco-ball",
+          "en": "disco ball",
+          "zh": "迪斯科球",
+          "category": "party",
+          "layer": "solid",
+          "shape": "disco"
+        }
+      ]
+    },
+    {
+      "atlasId": "home-atlas-09",
+      "grid": {
+        "cols": 4,
+        "rows": 4
+      },
+      "cells": [
+        {
+          "cell": 0,
+          "row": 1,
+          "col": 1,
+          "id": "microphone",
+          "en": "microphone",
+          "zh": "麦克风",
+          "category": "party",
+          "layer": "solid",
+          "shape": "microphone"
+        },
+        {
+          "cell": 1,
+          "row": 1,
+          "col": 2,
+          "id": "drum",
+          "en": "drum",
+          "zh": "鼓",
+          "category": "party",
+          "layer": "solid",
+          "shape": "drum"
+        },
+        {
+          "cell": 2,
+          "row": 1,
+          "col": 3,
+          "id": "picnic-blanket",
+          "en": "picnic blanket",
+          "zh": "野餐毯",
+          "category": "party",
+          "layer": "ground",
+          "shape": "rug"
+        },
+        {
+          "cell": 3,
+          "row": 1,
+          "col": 4,
+          "id": "picnic-basket",
+          "en": "picnic basket",
+          "zh": "野餐篮",
+          "category": "party",
+          "layer": "solid",
+          "shape": "basket"
+        },
+        {
+          "cell": 4,
+          "row": 2,
+          "col": 1,
+          "id": "lemonade-stand",
+          "en": "lemonade stand",
+          "zh": "柠檬水摊",
+          "category": "party",
+          "layer": "solid",
+          "shape": "stall"
+        },
+        {
+          "cell": 5,
+          "row": 2,
+          "col": 2,
+          "id": "ice-cream-cart",
+          "en": "ice cream cart",
+          "zh": "冰淇淋车",
+          "category": "party",
+          "layer": "solid",
+          "shape": "cart"
+        },
+        {
+          "cell": 6,
+          "row": 2,
+          "col": 3,
+          "id": "candy-jar",
+          "en": "candy jar",
+          "zh": "糖果罐",
+          "category": "party",
+          "layer": "top",
+          "shape": "jar"
+        },
+        {
+          "cell": 7,
+          "row": 2,
+          "col": 4,
+          "id": "popcorn-machine",
+          "en": "popcorn machine",
+          "zh": "爆米花机",
+          "category": "party",
+          "layer": "solid",
+          "shape": "popcorn"
+        },
+        {
+          "cell": 8,
+          "row": 3,
+          "col": 1,
+          "id": "party-table",
+          "en": "party table",
+          "zh": "派对桌",
+          "category": "party",
+          "layer": "solid",
+          "shape": "table"
+        },
+        {
+          "cell": 9,
+          "row": 3,
+          "col": 2,
+          "id": "garland",
+          "en": "garland",
+          "zh": "花环",
+          "category": "party",
+          "layer": "solid",
+          "shape": "wreath"
+        },
+        {
+          "cell": 10,
+          "row": 3,
+          "col": 3,
+          "id": "string-lights",
+          "en": "string lights",
+          "zh": "灯串",
+          "category": "party",
+          "layer": "solid",
+          "shape": "lights"
+        },
+        {
+          "cell": 11,
+          "row": 3,
+          "col": 4,
+          "id": "stage",
+          "en": "stage",
+          "zh": "舞台",
+          "category": "party",
+          "layer": "solid",
+          "shape": "stage"
+        },
+        {
+          "cell": 12,
+          "row": 4,
+          "col": 1,
+          "id": "wood-floor",
+          "en": "wood floor",
+          "zh": "木地板",
+          "category": "building",
+          "layer": "ground",
+          "shape": "planks"
+        },
+        {
+          "cell": 13,
+          "row": 4,
+          "col": 2,
+          "id": "stone-path",
+          "en": "stone path",
+          "zh": "石板路",
+          "category": "building",
+          "layer": "ground",
+          "shape": "pavers"
+        },
+        {
+          "cell": 14,
+          "row": 4,
+          "col": 3,
+          "id": "brick-path",
+          "en": "brick path",
+          "zh": "砖路",
+          "category": "building",
+          "layer": "ground",
+          "shape": "bricks"
+        },
+        {
+          "cell": 15,
+          "row": 4,
+          "col": 4,
+          "id": "grass-patch",
+          "en": "grass patch",
+          "zh": "草坪",
+          "category": "building",
+          "layer": "ground",
+          "shape": "grass"
+        }
+      ]
+    },
+    {
+      "atlasId": "home-atlas-10",
+      "grid": {
+        "cols": 4,
+        "rows": 4
+      },
+      "cells": [
+        {
+          "cell": 0,
+          "row": 1,
+          "col": 1,
+          "id": "sand-patch",
+          "en": "sand patch",
+          "zh": "沙地",
+          "category": "building",
+          "layer": "ground",
+          "shape": "sand"
+        },
+        {
+          "cell": 1,
+          "row": 1,
+          "col": 2,
+          "id": "gravel-path",
+          "en": "gravel path",
+          "zh": "碎石路",
+          "category": "building",
+          "layer": "ground",
+          "shape": "gravel"
+        },
+        {
+          "cell": 2,
+          "row": 1,
+          "col": 3,
+          "id": "wall",
+          "en": "wall",
+          "zh": "墙",
+          "category": "building",
+          "layer": "solid",
+          "shape": "wall"
+        },
+        {
+          "cell": 3,
+          "row": 1,
+          "col": 4,
+          "id": "fence",
+          "en": "fence",
+          "zh": "围栏",
+          "category": "building",
+          "layer": "solid",
+          "shape": "fence"
+        },
+        {
+          "cell": 4,
+          "row": 2,
+          "col": 1,
+          "id": "gate",
+          "en": "gate",
+          "zh": "门",
+          "category": "building",
+          "layer": "solid",
+          "shape": "gate"
+        },
+        {
+          "cell": 5,
+          "row": 2,
+          "col": 2,
+          "id": "archway",
+          "en": "archway",
+          "zh": "拱门",
+          "category": "building",
+          "layer": "solid",
+          "shape": "arch"
+        },
+        {
+          "cell": 6,
+          "row": 2,
+          "col": 3,
+          "id": "bridge",
+          "en": "bridge",
+          "zh": "桥",
+          "category": "building",
+          "layer": "solid",
+          "shape": "bridge"
+        },
+        {
+          "cell": 7,
+          "row": 2,
+          "col": 4,
+          "id": "stepping-stones",
+          "en": "stepping stones",
+          "zh": "踏脚石",
+          "category": "building",
+          "layer": "ground",
+          "shape": "stones"
+        },
+        {
+          "cell": 8,
+          "row": 3,
+          "col": 1,
+          "id": "hedge",
+          "en": "hedge",
+          "zh": "树篱",
+          "category": "building",
+          "layer": "solid",
+          "shape": "hedge"
+        },
+        {
+          "cell": 9,
+          "row": 3,
+          "col": 2,
+          "id": "window",
+          "en": "window",
+          "zh": "窗户",
+          "category": "building",
+          "layer": "solid",
+          "shape": "window"
+        },
+        {
+          "cell": 10,
+          "row": 3,
+          "col": 3,
+          "id": "door",
+          "en": "door",
+          "zh": "房门",
+          "category": "building",
+          "layer": "solid",
+          "shape": "door"
+        },
+        {
+          "cell": 11,
+          "row": 3,
+          "col": 4,
+          "id": "signpost",
+          "en": "signpost",
+          "zh": "路牌",
+          "category": "building",
+          "layer": "solid",
+          "shape": "sign"
+        },
+        {
+          "cell": 12,
+          "row": 4,
+          "col": 1,
+          "id": "mailbox",
+          "en": "mailbox",
+          "zh": "信箱",
+          "category": "building",
+          "layer": "solid",
+          "shape": "mailbox"
+        },
+        {
+          "cell": 13,
+          "row": 4,
+          "col": 2,
+          "id": "street-lamp",
+          "en": "street lamp",
+          "zh": "路灯",
+          "category": "building",
+          "layer": "solid",
+          "shape": "lamp"
+        },
+        {
+          "cell": 14,
+          "row": 4,
+          "col": 3,
+          "id": "porch",
+          "en": "porch",
+          "zh": "门廊",
+          "category": "building",
+          "layer": "solid",
+          "shape": "porch"
+        },
+        {
+          "cell": 15,
+          "row": 4,
+          "col": 4,
+          "id": "gazebo",
+          "en": "gazebo",
+          "zh": "凉亭",
+          "category": "building",
+          "layer": "solid",
+          "shape": "gazebo"
+        }
+      ]
+    }
+  ]
+}

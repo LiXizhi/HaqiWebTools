@@ -7,7 +7,7 @@ import {createPveBattle,playPveRound} from '../js/combat_pve_core.js';
 import {validTargets} from '../js/combat_arena_core.js';
 import {cardsInHand} from '../js/combat_unit_core.js';
 const dataset=JSON.parse(fs.readFileSync(new URL('../data/adventure/combat.json',import.meta.url)));
-for(const zoom of [.75,1,1.25,2])for(const scale of [.65,1])test(`live canvas binding → legal self buff → enemy attack, zoom ${zoom}, scene scale ${scale}`,()=>{
+for(const zoom of [.75,1,1.25,2])for(const scale of [.65,1,1.5,3])test(`live canvas binding → legal self buff → enemy attack, zoom ${zoom}, scene scale ${scale}`,()=>{
  const player={id:'hero',school:'fire',level:10,slot:0,deck:[{key:'Fire_FireDamageBlade',count:1},{key:'Fire_SingleAttack_Level0_120_adv',count:1}]};
  const battle=createPveBattle({dataset,player,monsters:[{id:'foe',name:'敌人',school:'fire',level:1,hp:5000,attributes:{},pool:[],sequences:[],genes:[],cardsets:{}}],seed:3});
  const hero=battle.sides.near[0],enemy=battle.sides.far[0],positions={hero:{x:220,y:560},[enemy.id]:{x:370,y:420}};

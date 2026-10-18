@@ -30,7 +30,7 @@ test('cast impact recoils only actual damaged targets and does not repeat at HP 
     assert.equal(reactions.length,1);assert.equal(reactions[0].target,'mob0');assert.equal(reactions[0].eventIndex,1);
     assert.ok(Math.abs(reactions[0].progress-.2)<1e-10);
     assert.ok(Math.abs(actorPose('hit',reactions[0].progress,-1).x)>10);
-    assert.deepEqual(castHitReactions(events,0,.9,duration,impact),[]);
+    assert.deepEqual(castHitReactions(events,0,impact+HIT_DURATION_MS/duration+.01,duration,impact),[]);
     assert.equal(battleActorAction('mob0',50,{...events[1],recoilPlayed:true},.2).action,'idle');
     assert.equal(battleActorAction('mob0',50,events[1],.2).action,'hit');
     assert.equal(battleActorAction('mob0',0,{...events[1],recoilPlayed:true},.2).action,'death');

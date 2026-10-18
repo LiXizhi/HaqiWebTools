@@ -3,7 +3,7 @@ import {renderRoles} from './view_adventure_roles.js';
 import {createCompanionChatView} from './view_companion_chat.js';
 import {createLocalPeerControl} from './view_local_peer_controls.js';
 import {createPromoDuoBattle,samplePromoDuoMotion} from './promo_duo_core.js';
-import {presentationEventDurationMs,samplePresentationClock} from './battle_presentation_core.js';
+import {presentationEventDurationMs,presentationEventProgress,samplePresentationClock} from './battle_presentation_core.js';
 
 // Only the film's input script and saves are staged. All visible panels are production views.
 export async function createPromoDuo({assets,save,second,world,origin,path,nodes,renderer,model,callbacks,locale,check,aimPointer}){
@@ -79,7 +79,7 @@ export async function createPromoDuo({assets,save,second,world,origin,path,nodes
                 renderer.render(world,save,elapsed*1000,{localSecond:second,moving:leader.moving,localSecondMoving:partner.moving,socialActors:[]});return;
             }
             let frame=null;
-            if(playback.length){const sample=samplePresentationClock(playback,elapsed-playbackAt);frame=playback[sample.index];if(painted!==sample.index){paintBattle(frame.arena,sample.index<playback.length-1);painted=sample.index;}frame={...frame,progress:sample.progress};}
+            if(playback.length){const sample=samplePresentationClock(playback,elapsed-playbackAt);frame=playback[sample.index];if(painted!==sample.index){paintBattle(frame.arena,sample.index<playback.length-1);painted=sample.index;}frame={...frame,progress:presentationEventProgress(frame.event,sample.progress,{effects:assets.effects,card:frame.arena.resolved.cards[frame.event?.card]})};}
             const canvas=root.querySelector('canvas.battle-canvas');if(canvas)renderer.renderBattle(canvas,frame?.arena||round.battle,save,elapsed*1000,{event:frame?.event,progress:frame?.progress});
         },
         dispose(){chat.root.remove();peer.node.remove();document.body.classList.remove('local-duo');for(const node of root.querySelectorAll('.local-battle-half,.local-battle-shared')){node.disposeHandGesture?.();node.disposeStatusTooltips?.();node.battleLayoutObserver?.disconnect();}},

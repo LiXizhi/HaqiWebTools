@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><title>家园图集透明度验收</title>
+<style>body{margin:20px;background:#eee4d2;font:14px sans-serif}section{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}article{text-align:center;border:1px solid #ad9d81;padding:8px}canvas{width:100%;height:120px;object-fit:contain}h2{grid-column:1/-1}.dark{background:#233127;color:white}.grass{background:#8eb768}.light{background:#fff9ec}</style>
+<h1>家园图集透明度验收</h1><main></main>
+<script type="module">
+import {drawHomeObject} from '../../js/view_home_art.js';
+const data=await fetch('../../data/adventure/home/catalog.json').then(r=>r.json());
+const local=new URL(location.href).searchParams.has('local'),cache=new Map();
+window.artQA={ready:false,count:0,errors:[]};
+for(const item of data.items){
+ const src=local?'../../'+item.art.local:item.art.cdn;
+ if(!cache.has(src))cache.set(src,new Promise((resolve,reject)=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>resolve(img);img.onerror=()=>reject(Error(src));img.src=src;}));
+}
+try{
+ for(const atlas of [...new Set(data.items.map(i=>i.art.atlas))]){
+  const section=document.createElement('section'),title=document.createElement('h2');title.textContent=atlas;section.id=atlas;section.append(title);document.querySelector('main').append(section);
+  for(const item of data.items.filter(i=>i.art.atlas===atlas)){
+   const card=document.createElement('article'),label=document.createElement('div');label.textContent=item.zh;card.append(label);
+   for(const background of ['light','dark','grass']){
+    const canvas=document.createElement('canvas');canvas.width=200;canvas.height=140;canvas.className=background;
+    const image=await cache.get(local?'../../'+item.art.local:item.art.cdn);
+    drawHomeObject(canvas.getContext('2d'),item,{active:false},20,15,160,110,image,0,true);
+    canvas.getContext('2d').getImageData(0,0,1,1);card.append(canvas);
+   }
+   section.append(card);window.artQA.count++;
+  }
+ }
+ window.artQA.ready=true;
+}catch(e){window.artQA.errors.push(e.message);throw e;}
+</script></html>

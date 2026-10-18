@@ -685,6 +685,7 @@ export function renderDialogue(root,model,dialog,cb) {
     box.append(portrait,content,close);root.append(box);
     const dialogueText=content.querySelector('.dialogue-text');
     bindDialogue(root,box,dialogueText,hint,content.querySelector('button.primary')||content.querySelector('button'),{
+        languageSource:`npc:${npc.id||npc.name||'dialogue'}`,languageLabel:npc.name?`${npc.name}的对白`:'NPC对白',
         lines:dialogueLearningLines(dialogueText.dataset.zh||dialogueText.textContent,save.languageLearning),autoReadDialogue:save.languageLearning.enabled&&save.languageLearning.autoReadDialogue!==false,readAloud:(text,locale,signal)=>cb.readDialogue(text,locale,signal,npc),mapWords:cb.mapDialogue,targetLocale:save.languageLearning.target,close:cb.close,
     });
 }

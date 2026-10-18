@@ -1,3 +1,5 @@
+import {watchTreeText} from './language_tree_capture.js';
+import {waitForDialogueReveal} from './dialogue_reveal.js';
 import {createDialogueReveal} from './dialogue_reveal.js';
 import {createBilingualDialogue} from './view_bilingual_dialogue.js';
 import {el,button} from './view_adventure.js';
@@ -73,6 +75,8 @@ export function createDungeonStoryView(root,cb){
             }else{activeBubble=null;feedbackBox=null;}
             ringFill.style.transition='none';ringFill.style.strokeDashoffset='100';ringFill.getBoundingClientRect();ringFill.style.transition='';
             log.append(row);while(log.children.length>4){const oldest=log.firstElementChild;lineViews.find(item=>item.row===oldest)?.view.dispose();lineViews=lineViews.filter(item=>item.row!==oldest);oldest.remove();}log.scrollTop=log.scrollHeight;reveal.start([{node:activeLine?.textNode||script,translation:gloss}]);
+            const presented=activeLine?.textNode||script,source=`story:${portraitModel.dungeon.id}:${line.role}`,label=portraitModel.dungeon.name;
+            void waitForDialogueReveal(presented).then(()=>{if(!presented.isConnected)return;watchTreeText(presented,{source,label,text:target,locale,zh:native==='zh-CN'?translation:locale==='zh-CN'?target:''});if(gloss)watchTreeText(gloss,{source,label,text:translation,locale:native,zh:locale==='zh-CN'?target:''});});
             mic.hidden=!(learning&&line.role==='player');setText(next,index===total-1?'开始探索':'继续');
         },
         update({message,phase,loginRequired,rewardKey,buffs,claimed=false,feedback,practiceCount=0,practiceTarget=3,practiceProgress=0,minSpeechAccuracy=0.3}){

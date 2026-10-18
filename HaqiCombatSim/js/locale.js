@@ -1,6 +1,6 @@
 import {speakBrowserText} from './browser_speech.js';
 import { LOCALES, lookup, parseLocaleFile, speechCode } from './locale_core.js';
-import { setTranslator } from './locale_runtime.js';
+import { setTranslator,notifyTranslation } from './locale_runtime.js';
 
 const dictionaries = {};
 const loading = new Map();
@@ -46,11 +46,11 @@ export function learningPair() { return learning; }
 export function localeChoices() { return LOCALES; }
 
 function applyTranslator() {
-    setTranslator(source => lookup(source, display, dictionaries));
+    setTranslator(source => lookup(source, display, dictionaries),display);
 }
 
 export function textFor(source, locale) {
-    return lookup(String(source ?? ''), locale, dictionaries);
+    const zh=String(source??''),text=lookup(zh,locale,dictionaries);notifyTranslation(zh,text,locale);return text;
 }
 
 export function dialogueLearningLines(source, settings) {

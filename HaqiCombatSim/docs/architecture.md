@@ -1,3 +1,72 @@
+## 2026-10-18：世界树唯一 JS 类库
+
+公开入口 `js/word_tree.js` 的 `WordTree` 类；字典通过 `word_tree_dictionary.js` 直接挂载；独立预览页面与构建入口已删除，测试夹具仅在 tests/fixtures。使用 Shadow DOM 隔离当前组件 CSS，不用 iframe，也不加载页面壳。纯布局与学习核心保持独立可测试。旧侧栏、六叉导航、模拟遗忘曲线与专用压力页面已删除。API 与模块表见 [世界树](word-tree.md)。
+
+```mermaid
+flowchart LR
+  Dictionary[字典中文 / 英文页签] --> Adapter[word_tree_dictionary]
+  Adapter --> Tree[WordTree 类 / 原生 DOM + Shadow DOM]
+  Tree --> Canvas[view_word_tree / 唯一 Canvas 渲染器]
+  Canvas --> Layout[word_tree_layout_core / 纯布局]
+  Tree --> Session[language_tree_session / 学习逻辑]
+  Session --> Local[角色隔离 IndexedDB]
+  Tree -->|不认识| Card[原有学习卡]
+  Session -->|首次彻底掌握| Sync[掌握词清单同步器]
+  Sync --> Cloud[Keepwork / 仅 en 与 zh 清单]
+```
+
+## 2026-10-18：摄影机投影与统一受击反馈修正
+
+摄影机从标准正交机位到特写机位时，先插值焦点、yaw、pitch、zoom和透视强度，再对全部地面点使用同一个齐次分母；不再混合两个机位投影后的屏幕坐标。地面方位保持一致，实际yaw限于约±45°，俯视角最低约18°；近裁剪面外不逐顶点钳制深度，避免圆盘折叠。人物仍为按深度缩放的直立精灵。
+
+播放时钟统一使用1900ms名称前段，技能后段时长×1.65且基础演出至少1500ms；跳过/Miss为2100ms，受击650ms、致命受击900ms、治疗1000ms。音效、命中预测、序章及双人宣传片复用同一进度与时长函数。减少动态效果模式保留可读文案而不新增震动。
+
+```mermaid
+flowchart LR
+    Damage[真实damage / dot事件 / cast命中反应] --> Feedback[battle_damage_feedback_core]
+    Feedback --> Shake[单个有界场景震动 / 群体不叠加幅度]
+    Feedback --> Pulse[目标冲击圈 / 原受击姿态和伤害数字]
+    Shake --> Anchors[同偏移的点击矩形 / 状态图标 / 对白]
+```
+
+震动由真实伤害驱动，覆盖0费攻击、反伤和持续伤害；失误、治疗与零伤害不伪造扣血冲击。镜头不再按技能类型提前制造一次假命中。已在技能命中时完成后仰的事件，结算阶段只补较轻震动与伤害反馈；致命伤害先冲击再倒下。
+
+## 2026-10-18：大招摄影机
+
+```mermaid
+flowchart LR
+    Playback[既有事件队列 / 200ms movearrow] --> Shot[battle_camera_core：四套镜头 / 纯采样]
+    Effects[技能费用 / 编舞 / attack与impact] --> Shot
+    Layout[view_battle_camera：可用视口 / 临时隐藏手牌] --> Shot
+    Shot --> Floor[地面符文与指针透视投影]
+    Shot --> Actors[直立精灵 / 朝向 / 深度排序]
+    Shot --> FX[技能锚点 / 按深度缩放]
+    Actors --> Anchors[对白 / 状态 / 目标点击矩形]
+```
+
+数值型 `pipcost >= 1` 的施法，以及跳过/失误事件使用镜头；反射补播、持续伤害和减少动态效果模式保持标准镜头。模板为追击、群体、召唤、辅助；依据儿童版原版 `CombatCameraView.lua` 与 `Cameras.xml` 的 caster/target/ground 镜头结构，采用 Canvas 2D 透视地面与直立精灵，不加载三维库。单视角怪物维持原素材。
+
+共用冒险渲染入口覆盖普通冒险、竞技场、序章。序章播放适配器补齐同样的200ms指针事件；新增可读前段：施法名称在人物头顶大字展示，前12%进度用1400ms播放，后续特效保持原速度；跳过/失误展示1600ms，文字为“跳过”/“miss”。共享播放时钟统一重映射渲染、音效和命中反馈，战斗事件不变。摄影机不会写存档或消耗引擎随机数。演出中的手牌、阵容信息和宠物建议暂隐，撤退按钮保留；按顶端操作区测量安全取景区域，结束恢复。没有新增用户设置，复用系统减少动态效果偏好。
+
+验收入口：`tests/fixtures/battle-camera.html`，仅内存数据；`scripts/check_battle_camera.mjs` 接收 `--playwright`、`--executable`、`--url`、`--out`，截图与性能结果写入临时目录。原实验室SVG战场不变。
+
+## 2026-10-18：互动序章《失落的光》（`Haqi.html?prologue`）
+
+```mermaid
+flowchart LR
+    Entry["Haqi.html?prologue / 标题页新访客自动弹出 / 观看序章按钮"] --> Lazy["按需加载 js/prologue_app.js"]
+    Lazy --> Script["data/prologue/script.json + prologue_script_core"]
+    Lazy --> Art["data/prologue/art.json + prologue_cinema"]
+    Script --> Stage["prologue_stage / view_prologue_dialog"]
+    Stage --> Battle1["prologue_battle_core：四系大师 vs 黑暗魔王 (4v1)"]
+    Stage --> Hanzi["hanzi/hanzi_guang.html (connectHanziAnimation)"]
+    Hanzi --> Forge["文字卡铸造 (zh:guang / en:sun)"]
+    Forge --> Battle2["prologue_battle_core：主角+双大师 vs 暗影小鬼"]
+    Stage --> Draft["返回所选学系与外貌预填角色草稿"]
+```
+
+复用 `Haqi.html` 已加载资源、战斗渲染器、语音朗读与 `hanzi_guang.html` 书写协议，不依赖登录、不写存档；详见 [互动序章](prologue.md) 与 [序章剧本](story/prologue-lost-light.md)。
+
 ## 2026-10-18：30字独立动画
 
 ```mermaid
@@ -66,6 +135,20 @@ flowchart LR
 # HaqiCombatSim — 技术架构
 
 ## 架构图
+
+### 战斗设计尺寸（2026-10-18）
+
+```mermaid
+flowchart LR
+    Size[Canvas CSS宽高] --> Viewport[battle_viewport_core：1024×640设计尺寸]
+    Viewport --> Scale[等比场景缩放 / 小屏沿用紧凑布局]
+    Scale --> Draw[adventure_renderer：法阵、角色、特效、头顶状态共用Canvas变换]
+    Draw --> Pixels[DPR仅控制栅格清晰度]
+    Scale --> Hits[目标与状态区域转回CSS坐标]
+    Draw --> Speech[实际角色头部矩阵转回CSS对白锚点]
+```
+
+大屏倍率取宽/1024与高/640的较小值，取消场景倍率不超过1的限制；小屏保留原倍率（高度不足270时缩小）。普通冒险与序章复用同一渲染入口，手牌和HUD保持原DOM布局。
 
 ### 角色读取失败与恢复（2026-10-12）
 
@@ -1085,3 +1168,65 @@ flowchart LR
 字源岛守护怪物由现有 `stepMonsterWander → takeAutoInteraction → interact` 链路开战；文字记忆控制器只维护较长的采集计时与守护期间的结算阻止，不再拥有独立开战回调。
 
 文字记忆任务由 `memoryBatch` 计算当前两字批次，`chooseMemoryWord` 与 `catalogVisibleGoalRows` 复用此结果；`catalogGoalRows` 仍返回全部目标供任务完成与奖励判定使用。
+
+## 2026-10-18：回合记录失败时恢复选牌
+
+普通冒险的 `playRound` 通过 `battle_round_transaction.js` 将战斗结算、演出快照和决定记录衔接起来。结算或记录抛错时，恢复出牌前的遭遇检查点及 revision，用既有重演重建 battle（包括随机数状态），重新绘制并提示重试；避免已扣血/已结束的引擎状态滞留在旧选牌界面。成功后先建立动画状态并绘制，再持久化及停止战斗对白。
+
+```mermaid
+flowchart LR
+    Pick[选牌与目标] --> Snapshot[保存出牌前检查点]
+    Snapshot --> Resolve[结算并捕获演出]
+    Resolve --> Record[记录决定]
+    Record --> Playback[建立动画并重绘]
+    Playback --> Save[本地持久化]
+    Resolve -->|异常| Restore[恢复检查点并重演]
+    Record -->|异常| Restore
+    Restore --> Retry[重新绘制选牌并提示重试]
+```
+
+## 2026-10-18：独立家园世界
+
+世界地图第三页和宠物菜单按需进入家园，沿用当前角色身份；不写冒险成长或坐标。详见[家园](home.md)。
+
+```mermaid
+flowchart LR
+    Entry[世界地图 / 宠物菜单] --> App[home_app 会话控制]
+    App --> Rules[home_core / home_actions_core]
+    App --> View[view_home / view_home_art]
+    App --> Local[home_store IndexedDB 事务]
+    Local --> Parts[目录 / 库存 / 居民 / 32×32分块 / 回执]
+    App --> Voice[现有 Keepwork 语音 / 本地文字匹配]
+    App --> Manual[用户主动同步]
+    Manual --> Cloud[home_cloud 版本分文件]
+    Cloud --> Cache[adventure_cloud homeRead/homeWrite / Cache]
+```
+
+只有视口及周边分块驻留，近处宠物限量模拟，地表按seed确定性生成。云端只同步变化分文件、最后更新目录；失败保留dirty，冲突保存副本。
+
+### 家园场景切换
+
+```mermaid
+flowchart LR
+  Map[世界地图家园目录] --> Home[home_app 独立家园会话]
+  Home --> Walk[home_walk_core 家园移动与碰撞]
+  Home --> View[view_home 全屏 Canvas 与专用底栏]
+  View --> Art[冒险角色绘制与营地树木图集]
+  Home --> Scene[onScene 隐藏原世界与 HUD]
+  Scene --> Return[退出恢复原冒险坐标]
+```
+
+目录仍是地图弹窗；进入家园后独占游戏画面。原世界不在背后继续渲染或模拟附近宠物。家园使用独立角色坐标和按需分块，既有本地/云端分文件协议保持不变。
+
+## 2026-10-19：家园自动寻路
+
+```mermaid
+flowchart LR
+  Input[view_home 点击地面 / 查找宠物] --> App[home_app 路线队列]
+  App --> Path[home_walk_core / 有界 A*]
+  Path --> Collision[home_core 家具占地 / 河流与桥]
+  App --> Step[stepHomeWalk 逐段移动]
+  Manual[按住鼠标 / 方向键] --> Step
+```
+
+路线只计算已加载区块，复用 path_queue_core 优先队列与家园既有碰撞；新增目标替换路线，直接控制取消路线，家具和区块变化重新规划。家园坐标不写入冒险存档。

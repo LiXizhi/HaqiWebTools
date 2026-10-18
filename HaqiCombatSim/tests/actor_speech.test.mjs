@@ -1,6 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createActorSpeech,speechPlacement} from '../js/view_actor_speech.js';
+
+test('pet speech stays near its owner instead of jumping above a distant hero status',()=>{
+    const hero={x:410,y:70,width:28,height:28},pet={x:180,y:420,width:60,height:28};
+    const place=obstacles=>speechPlacement({x:345,y:460},{width:280,height:50},{width:1100,height:920},obstacles);
+    const result=place([hero,pet]);
+    assert.ok(result.y>300,'balloon must remain near the pet');
+    assert.deepEqual(result,place([pet,hero]),'actor render order must not move speech');
+});
 test('all actor types speak concurrently with independent queues and clearing',()=>{
     const speech=createActorSpeech();
     for(const id of ['hero','pet','ally','mob0'])assert.equal(speech.say(id,id,{duration:100}),true);

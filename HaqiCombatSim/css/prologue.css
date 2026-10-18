@@ -1,0 +1,141 @@
+/* Prologue 《失落的光》 — cinematic layer inside Haqi.html. Everything is scoped under .prologue-layer. */
+.prologue-layer{position:fixed;inset:0;z-index:400;background:#05070d;color:#fff8e6;font-family:inherit;overflow:hidden;outline:0}
+.prologue-layer .pl-stage{position:absolute;inset:0;overflow:hidden}
+.prologue-layer .pl-loading{position:absolute;inset:auto 0 45% 0;text-align:center;font-size:18px;letter-spacing:.2em;color:#e8d9a8;animation:pl-pulse 1.6s ease-in-out infinite}
+@keyframes pl-pulse{50%{opacity:.4}}
+
+/* Key art with Ken Burns moves (anchored at top-center so upper subjects are never clipped) */
+.prologue-layer .pl-art-host{position:absolute;inset:0}
+.prologue-layer .pl-art{position:absolute;inset:0;background:center top/cover no-repeat;opacity:0;transform-origin:50% 0%;transition:opacity 1.2s ease;will-change:transform,opacity}
+.prologue-layer .pl-art.shown{opacity:1}
+.prologue-layer .pl-art.move-push-in{animation:pl-push 18s ease-out forwards}
+.prologue-layer .pl-art.move-pull-out{animation:pl-pull 18s ease-out forwards}
+.prologue-layer .pl-art.move-pan-left{animation:pl-pan-left 20s linear forwards}
+.prologue-layer .pl-art.move-pan-right{animation:pl-pan-right 20s linear forwards}
+@keyframes pl-push{from{transform:scale(1)}to{transform:scale(1.06)}}
+@keyframes pl-pull{from{transform:scale(1.06)}to{transform:scale(1)}}
+@keyframes pl-pan-left{from{transform:scale(1.05) translateX(2%)}to{transform:scale(1.05) translateX(-2%)}}
+@keyframes pl-pan-right{from{transform:scale(1.05) translateX(-2%)}to{transform:scale(1.05) translateX(2%)}}
+.prologue-layer .pl-fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.prologue-layer .pl-veil{position:absolute;inset:0;pointer-events:none;z-index:2;transition:background 2s ease;background:radial-gradient(ellipse at center,transparent 55%,#0008)}
+.prologue-layer .pl-veil.dark{background:radial-gradient(ellipse at 60% 40%,#3a1a5a33,#12052acc)}
+.prologue-layer .pl-veil.night{background:radial-gradient(ellipse at 50% 35%,#ffd36b22,#05071299)}
+.prologue-layer .pl-veil.dawn{background:radial-gradient(ellipse at 50% 70%,#ffcf7a33,transparent 70%)}
+
+/* Letterbox bars disabled so full 16:9 illustrations are never cropped at top or bottom */
+.prologue-layer .pl-bars i{position:absolute;left:0;right:0;height:0;background:#000;z-index:4;transition:height .9s ease;pointer-events:none}
+.prologue-layer .pl-bars .top{top:0}.prologue-layer .pl-bars .bottom{bottom:0}
+.prologue-layer .pl-bars.on i{height:0}
+
+/* Chapter title card */
+.prologue-layer .pl-title{position:absolute;inset:0;display:grid;place-content:center;text-align:center;z-index:6;pointer-events:none;opacity:0;transition:opacity .8s ease;background:radial-gradient(ellipse at center,#0009,transparent 70%)}
+.prologue-layer .pl-title.shown{opacity:1}
+.prologue-layer .pl-title strong{display:block;font-size:clamp(28px,5vw,58px);letter-spacing:.18em;color:#ffe9a8;text-shadow:0 0 24px #ffbf4a99,0 4px 18px #000}
+.prologue-layer .pl-title small{display:block;margin-top:10px;font-size:clamp(14px,1.8vw,20px);letter-spacing:.12em;color:#e8dcc0;opacity:.85}
+
+/* Chrome */
+.prologue-layer .pl-chrome{position:absolute;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:8px;padding:10px 14px;background:linear-gradient(#000a,transparent);pointer-events:none}
+.prologue-layer .pl-chrome>*{pointer-events:auto}
+.prologue-layer .pl-brand{margin-right:auto;font-size:14px;letter-spacing:.12em;color:#f3e2b0;text-shadow:0 1px 4px #000}
+.prologue-layer .pl-status{font-size:12px;color:#ffd9a0;max-width:40vw}
+.prologue-layer .pl-chip{min-height:34px;padding:6px 14px;border-radius:999px;border:1px solid #ffe3a055;background:#0b1424b3;color:#fff4d6;font-size:13px;cursor:pointer}
+.prologue-layer .pl-chip:hover,.prologue-layer .pl-chip:focus-visible{background:#1b2a44;border-color:#ffe3a0}
+.prologue-layer .pl-chip[aria-pressed="true"]{background:#e9b949;color:#2a1a05;border-color:#ffe3a0}
+.prologue-layer .pl-close{flex:none}
+
+/* Dialogue with NPC portrait */
+.prologue-layer .pl-dialog{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);width:min(880px,calc(100% - 28px));z-index:40;display:flex;align-items:center;gap:16px;padding:18px 62px 16px 20px;border-radius:18px;background:linear-gradient(#0d1730ee,#081022f2);border:1px solid #ffe3a044;box-shadow:0 10px 40px #000a;cursor:pointer;animation:pl-rise .25s ease}
+.prologue-layer .pl-dialog.is-prompt{pointer-events:none;cursor:default;bottom:22px}
+@keyframes pl-rise{from{opacity:0;transform:translate(-50%,10px)}}
+.prologue-layer .pl-avatar{flex:0 0 68px;width:68px;height:68px;border-radius:14px;background:radial-gradient(circle at 50% 35%,#23365c,#091224);border:2px solid var(--speaker,#f2d27a);box-shadow:0 4px 14px #0009,inset 0 0 12px #ffffff18;display:grid;place-items:center;overflow:hidden}
+.prologue-layer .pl-avatar canvas,.prologue-layer .pl-avatar img{max-width:64px!important;max-height:68px!important;width:auto!important;height:auto!important;object-fit:contain;display:block}
+.prologue-layer .pl-dialog-body{flex:1;min-width:0}
+.prologue-layer .pl-speaker{position:absolute;top:-14px;left:20px;padding:3px 14px;border-radius:999px;font-size:14px;font-weight:700;color:#1b1206;background:var(--speaker,#f2d27a);box-shadow:0 2px 8px #0008}
+.prologue-layer .pl-primary{margin:2px 0 0;font-size:clamp(17px,2.1vw,23px);line-height:1.45;color:#fff8e6;min-height:1.45em}
+.prologue-layer .pl-secondary{margin:5px 0 0;font-size:clamp(13px,1.5vw,16px);line-height:1.4;color:#b9d6ff}
+.prologue-layer .pl-next{position:absolute;right:16px;bottom:14px;width:34px;height:34px}
+.prologue-layer .pl-ring{position:absolute;inset:0;transform:rotate(-90deg)}
+.prologue-layer .pl-ring circle{fill:none;stroke-width:3}
+.prologue-layer .pl-ring .track{stroke:#ffffff22}
+.prologue-layer .pl-ring .bar{stroke:#ffd36b;stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset .12s linear}
+.prologue-layer .pl-next-arrow{position:absolute;left:13px;top:11px;border-left:10px solid #ffe9a8;border-top:6px solid transparent;border-bottom:6px solid transparent;animation:pl-nudge 1.2s ease-in-out infinite}
+@keyframes pl-nudge{50%{transform:translateX(3px)}}
+
+/* Battles reuse the real battle view; cards are centered and the camp key art shows through */
+.prologue-layer .battle-layer,.prologue-layer .pl-battle.battle-layer{z-index:8;background:#0a0f2a55;backdrop-filter:none}
+.prologue-layer .battle-layer .battle-heading-actions .secondary,.prologue-layer .battle-layer .result-card,.prologue-layer .battle-layer .hand-card .discard-button,.prologue-layer .battle-layer .battle-party-controls,.prologue-layer .battle-layer .battle-log,.prologue-layer .battle-layer .pip-legend{display:none!important}
+.prologue-layer .battle-layer .battle-canvas{inset:72px 0 118px;height:calc(100% - 190px)}
+.prologue-layer .battle-layer .battle-hand{top:50%;bottom:auto;left:50%;transform:translate(-50%,-52%);z-index:25;justify-content:center;gap:18px;padding:18px 26px;border-radius:20px;background:radial-gradient(ellipse at center,#071126d9,#07112677 68%,transparent);max-width:96vw}
+.prologue-layer .battle-layer .hand-card{width:clamp(124px,13.2vw,156px);transition:transform .18s ease,filter .18s ease}
+.prologue-layer .battle-layer .hand-card:hover,.prologue-layer .battle-layer .hand-card:focus-within{transform:translateY(-10px) scale(1.04);filter:drop-shadow(0 0 16px #ffd36baa)}
+.prologue-layer .pl-banner{position:absolute;top:58px;left:50%;transform:translateX(-50%);z-index:38;padding:8px 18px;border-radius:999px;background:#e9b949;color:#2a1a05;font-weight:700;font-size:15px;box-shadow:0 4px 16px #0008;pointer-events:none}
+.prologue-layer .pl-banner[data-countdown]:not([data-countdown=""])::after{content:" " attr(data-countdown);opacity:.65;font-variant-numeric:tabular-nums}
+.prologue-layer .pl-word-flash{position:absolute;inset:0;z-index:45;display:grid;place-content:center;text-align:center;pointer-events:none;background:radial-gradient(circle,#fff6d0cc,#ffd36b55 35%,transparent 70%);animation:pl-flash 1.8s ease forwards}
+.prologue-layer .pl-word-flash strong{font-size:min(30vh,240px);line-height:1;color:#fffdf2;text-shadow:0 0 40px #ffbf4a,0 0 90px #ffbf4a}
+.prologue-layer .pl-word-flash small{font-size:28px;letter-spacing:.3em;color:#7a4a00}
+@keyframes pl-flash{0%{opacity:0;transform:scale(.7)}25%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.15)}}
+
+/* Interactive beats */
+.prologue-layer .pl-interact{position:absolute;inset:0;z-index:35;pointer-events:none}
+.prologue-layer .pl-interact>*{pointer-events:auto}
+.prologue-layer .pl-spark-wrap{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:18px}
+.prologue-layer .pl-spark{width:120px;height:120px;border:0;border-radius:50%;cursor:pointer;background:radial-gradient(circle,#fffbe6 0 18%,#ffd36b 30%,#ffb02e55 55%,transparent 70%);box-shadow:0 0 60px #ffcf5a;animation:pl-float 2.4s ease-in-out infinite}
+.prologue-layer .pl-spark::after{content:"";position:absolute;left:30px;top:56px;width:60px;height:8px;border-radius:8px;background:#fff;transform:rotate(-18deg);box-shadow:0 0 16px #fff}
+.prologue-layer .pl-spark{position:relative}
+.prologue-layer .pl-spark.caught{animation:pl-caught .9s ease forwards}
+@keyframes pl-float{50%{transform:translateY(-16px) scale(1.05)}}
+@keyframes pl-caught{to{transform:translateY(120px) scale(.2);opacity:0}}
+.prologue-layer .pl-spark-prompt{margin:0;padding:8px 18px;border-radius:12px;background:#0b1424cc;text-align:center;font-size:20px}
+.prologue-layer .pl-spark-prompt small{display:block;font-size:14px;color:#b9d6ff}
+
+.prologue-layer .pl-school{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(760px,calc(100% - 24px));padding:22px;border-radius:22px;background:#0b1424e6;border:1px solid #ffe3a055;text-align:center;box-shadow:0 20px 60px #000c}
+.prologue-layer .pl-school h2{margin:0 0 14px;font-size:24px;color:#ffe9a8}
+.prologue-layer .pl-school h2 small{display:block;font-size:14px;color:#b9d6ff;font-weight:400}
+.prologue-layer .pl-school-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.prologue-layer .pl-school-orb{display:grid;justify-items:center;gap:4px;padding:12px 6px;border-radius:16px;border:2px solid transparent;background:#14203a;color:#fff8e6;cursor:pointer}
+.prologue-layer .pl-school-orb i{width:54px;height:54px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff8,var(--orb) 45%,#0006);box-shadow:0 0 18px var(--orb)}
+.prologue-layer .pl-school-orb strong{font-size:17px}.prologue-layer .pl-school-orb small{font-size:12px;color:#b9d6ff}
+.prologue-layer .pl-school-orb.picked,.prologue-layer .pl-school-orb:hover,.prologue-layer .pl-school-orb:focus-visible{border-color:var(--orb);background:#1d2c4c}
+.prologue-layer .school-fire{--orb:#ff7a3c}.prologue-layer .school-ice{--orb:#6cc8ff}.prologue-layer .school-storm{--orb:#b07cff}.prologue-layer .school-life{--orb:#5fd36e}.prologue-layer .school-death{--orb:#9a5cff}
+.prologue-layer .pl-look{display:flex;justify-content:center;align-items:center;gap:10px;margin:16px 0 12px;color:#e8dcc0}
+.prologue-layer .pl-look-btn{min-width:84px;min-height:36px;border-radius:999px;border:1px solid #ffe3a055;background:#14203a;color:#fff8e6;cursor:pointer}
+.prologue-layer .pl-look-btn.picked{background:#e9b949;color:#2a1a05}
+.prologue-layer .pl-school-go{min-width:160px}
+.prologue-layer .pl-school-count{display:block;margin-top:6px;color:#9fb3d6;font-variant-numeric:tabular-nums}
+
+.prologue-layer .pl-hanzi{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;background:#070a1c}
+.prologue-layer .pl-hanzi iframe{flex:1;width:100%;height:100%;border:0;border-radius:0;background:#070a1c;box-shadow:none;display:block}
+.prologue-layer .pl-hanzi-close{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(14px,env(safe-area-inset-right));z-index:5}
+.prologue-layer .pl-hanzi-next{position:absolute;right:18px;bottom:18px;z-index:5;min-width:140px}
+
+.prologue-layer .pl-forge{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:14px;background:radial-gradient(circle,#ffd36b33,#05071ccc 70%);opacity:0;transition:opacity .6s ease}
+.prologue-layer .pl-forge.shown{opacity:1}.prologue-layer .pl-forge.leaving{opacity:0}
+.prologue-layer .pl-forge-label{margin:0;letter-spacing:.3em;color:#ffe9a8;font-size:16px}
+.prologue-layer .pl-card{width:min(300px,70vw);aspect-ratio:3/4.2;perspective:900px}
+.prologue-layer .pl-card-face{height:100%;padding:18px;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;background:linear-gradient(160deg,#fff7dc,#f0d48a 60%,#d9a84a);color:#3a2305;border:3px solid #fff3c4;box-shadow:0 0 50px #ffcf5a,0 18px 40px #000a;animation:pl-forge 1.6s cubic-bezier(.2,.9,.3,1.2) both}
+@keyframes pl-forge{0%{transform:rotateY(180deg) scale(.3);opacity:0;filter:brightness(3)}60%{opacity:1}100%{transform:none;filter:none}}
+.prologue-layer .pl-card-glyph{font-size:96px;line-height:1;font-family:"KaiTi","STKaiti",serif;text-shadow:0 0 18px #fff}
+.prologue-layer .pl-card-eq{display:flex;align-items:baseline;gap:10px;font-size:30px;font-weight:700}
+.prologue-layer .pl-card-eq em{font-style:normal;color:#a06a10}
+.prologue-layer .pl-card-word{letter-spacing:.06em}
+.prologue-layer .pl-card-pinyin{font-size:22px;color:#8a5a12}
+.prologue-layer .pl-card-face h3{margin:6px 0 0;font-size:20px}
+.prologue-layer .pl-card-face p{margin:0;font-size:14px;line-height:1.4}
+.prologue-layer .pl-card-face .pl-card-sub{color:#6b4a14;font-size:13px}
+
+.prologue-layer .pl-end{position:absolute;inset:0;z-index:48;display:grid;place-items:center;align-content:center;gap:16px;text-align:center;opacity:0;transition:opacity 1s ease;background:linear-gradient(transparent 40%,#0008)}
+.prologue-layer .pl-end.shown{opacity:1}
+.prologue-layer .pl-end h1{margin:0 0 12px;font-size:clamp(40px,8vw,96px);letter-spacing:.2em;color:#fff3c4;text-shadow:0 0 30px #ffbf4a,0 6px 24px #000}
+.prologue-layer .pl-end h1 small{display:block;font-size:clamp(16px,2.4vw,26px);letter-spacing:.3em;color:#ffe9a8}
+.prologue-layer .pl-end-go{min-width:240px;min-height:56px;font-size:20px}
+.prologue-layer .pl-end-go small{display:block;font-size:13px;opacity:.8}
+
+@media (max-width:650px),(orientation:portrait){
+  .prologue-layer .pl-brand{display:none}
+  .prologue-layer .pl-dialog{padding:14px 52px 14px 16px;bottom:14px}
+  .prologue-layer .pl-bars.on i{height:0}
+  .prologue-layer .pl-school-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media (prefers-reduced-motion:reduce){
+  .prologue-layer .pl-art,.prologue-layer .pl-spark,.prologue-layer .pl-card-face,.prologue-layer .pl-next-arrow{animation:none!important}
+}

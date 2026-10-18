@@ -22,26 +22,28 @@ const localAnimations={
     'hanzi/hanzi_guo.html':new URL('../hanzi/hanzi_guo.html',import.meta.url).href,
     'hanzi/hanzi_ming.html':new URL('../hanzi/hanzi_ming.html',import.meta.url).href,
     'hanzi/hanzi_wu.html':new URL('../hanzi/hanzi_wu.html',import.meta.url).href,
+    'hanzi/hanzi_ri.html':new URL('../hanzi/hanzi_ri.html',import.meta.url).href,
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_men.html':new URL('../hanzi/hanzi_men.html',import.meta.url).href,
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_yu.html':new URL('../hanzi/hanzi_yu.html',import.meta.url).href,
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_xiu.html':new URL('../hanzi/hanzi_xiu.html',import.meta.url).href,
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_sen.html':new URL('../hanzi/hanzi_sen.html',import.meta.url).href,
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_guang.html':new URL('../hanzi/hanzi_guang.html',import.meta.url).href,
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_guo.html':new URL('../hanzi/hanzi_guo.html',import.meta.url).href,
+    'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_ri.html':new URL('../hanzi/hanzi_ri.html',import.meta.url).href,
 };
 export async function loadDictionary(language){
     if(!['zh','en'].includes(language))throw Error('暂未收录该语言');
     if(!loads.has(language))loads.set(language,fetch(language==='zh'?new URL('../data/adventure/dictionary/zh.json',import.meta.url):new URL('../data/adventure/dictionary/en.json',import.meta.url)).then(r=>{if(!r.ok)throw Error('字典暂时无法加载');return r.json();}).then(validateDictionary).catch(e=>{loads.delete(language);throw e;}));
     const data=await loads.get(language);return {...data,entries:data.entries.map(e=>({...e,animation:localAnimations[e.animation]||e.animation}))};
 }
-export function createDictionary({root,getState,onClose,onBuff,onRewards,onLegacy,onPractice=()=>{},storage=store,load=loadDictionary,loadBattleCards=async()=>[],now=()=>Date.now(),viewFactory=createDictionaryView,voice=createLearningVoice({getSettings:()=>getState().save.languageLearning})}){
+export function createDictionary({root,getState,onClose,onBuff,onRewards,onLegacy,onPractice=()=>{},onLanguageTree=null,storage=store,load=loadDictionary,loadBattleCards=async()=>[],now=()=>Date.now(),viewFactory=createDictionaryView,voice=createLearningVoice({getSettings:()=>getState().save.languageLearning})}){
     const identity={...getState()},key=JSON.stringify([identity.owner||'guest',identity.role]);
     const tutorConversations=new Map();
     let speechRate=1;
     let active=true,language='zh',data,state,warning='',session=null,generation=0,busy=false,taskKind=null,changingDay=false,updateSequence=0,appliedSequence=0;
     const valid=()=>active&&getState().owner===identity.owner&&getState().role===identity.role&&getState().stage==='world';
     const same=s=>valid()&&session===s&&!s.abort.signal.aborted;
-    const view=viewFactory(root,{close:onClose,retrySave:()=>run(()=>retrySave()),language:lang=>run(()=>home(lang)),home:()=>run(()=>home(language)),entry:id=>run(()=>entry(id)),task:kind=>run(()=>task(kind)),next:()=>run(()=>continueDaily()),hint:()=>run(()=>hint()),explainAttempt:()=>run(()=>explainAttempt()),recall:()=>run(()=>recall()),choice:text=>run(()=>choice(text)),write:points=>run(()=>write(points)),animationWrite:()=>run(()=>animationWrite()),writeDraftChanged:draftChanged,spellDraftChanged:draftChanged,spell:text=>run(()=>spell(text)),speak:()=>run(()=>speak()),speakExample:()=>run(()=>speak(true)),tutorSpeak:text=>run(()=>speak(true,text)),stopSpeech:()=>run(()=>stopSpeech()),speechRate:value=>{if(valid()&&!session?.speaking)speechRate=value===0.8?0.8:1;},contextDraft:text=>{if(session?.context&&same(session))session.draft=String(text).slice(0,500);},contextAnswer:text=>run(()=>judge(text)),contextChoice:text=>run(()=>contextChoice(text)),fallback:()=>run(()=>context(true)),record:accept=>run(()=>record(accept)),finishRecording:()=>run(()=>finishRecording()),cancelRecording:()=>run(()=>cancelRecording()),tutor:(text,mode)=>run(()=>askTutor(text,mode)),tutorFallback:()=>useLocalTutor(),tutorRetry:()=>run(()=>retryTutor()),wordEntry:row=>run(async()=>{await home(row.language);if(valid()&&data.language===row.language)await entry(row.entryId);}),rewards:onRewards,legacy:onLegacy});
+    const view=viewFactory(root,{languageTree:onLanguageTree,close:onClose,retrySave:()=>run(()=>retrySave()),language:lang=>run(()=>home(lang)),home:()=>run(()=>home(language)),entry:id=>run(()=>entry(id)),task:kind=>run(()=>task(kind)),next:()=>run(()=>continueDaily()),hint:()=>run(()=>hint()),explainAttempt:()=>run(()=>explainAttempt()),recall:()=>run(()=>recall()),choice:text=>run(()=>choice(text)),write:points=>run(()=>write(points)),animationWrite:()=>run(()=>animationWrite()),writeDraftChanged:draftChanged,spellDraftChanged:draftChanged,spell:text=>run(()=>spell(text)),speak:()=>run(()=>speak()),speakExample:()=>run(()=>speak(true)),tutorSpeak:text=>run(()=>speak(true,text)),stopSpeech:()=>run(()=>stopSpeech()),speechRate:value=>{if(valid()&&!session?.speaking)speechRate=value===0.8?0.8:1;},contextDraft:text=>{if(session?.context&&same(session))session.draft=String(text).slice(0,500);},contextAnswer:text=>run(()=>judge(text)),contextChoice:text=>run(()=>contextChoice(text)),fallback:()=>run(()=>context(true)),record:accept=>run(()=>record(accept)),finishRecording:()=>run(()=>finishRecording()),cancelRecording:()=>run(()=>cancelRecording()),tutor:(text,mode)=>run(()=>askTutor(text,mode)),tutorFallback:()=>useLocalTutor(),tutorRetry:()=>run(()=>retryTutor()),wordEntry:row=>run(async()=>{await home(row.language);if(valid()&&data.language===row.language)await entry(row.entryId);}),rewards:onRewards,legacy:onLegacy});
     async function run(fn){try{await fn();}catch(e){if(valid())view.message(e.message);}}
     function cancel(){generation++;session?.questionAbort?.abort();session?.abort.abort();session=null;busy=false;void voice.cancel();}
     async function update(reduce){

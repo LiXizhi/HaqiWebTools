@@ -1,15 +1,20 @@
 // Identity until the browser locale module installs a translator. Safe for Node tests.
 let translate = value => value;
+let translatorLocale='zh-CN';
+const translationObservers=new Set();
+export function observeTranslations(listener){translationObservers.add(listener);return ()=>translationObservers.delete(listener);}
+export function notifyTranslation(source,text,locale){for(const listener of translationObservers){try{listener({source,text,locale});}catch{/* Observation must never interrupt presentation. */}}}
 
-export function setTranslator(fn) {
+export function setTranslator(fn,locale='zh-CN') {
     translate = typeof fn === 'function' ? fn : value => value;
+    translatorLocale=locale;
 }
 
 const CJK = /[\u4e00-\u9fff]/;
 
 export function tr(value) {
     const source = String(value ?? '');
-    return translate(source);
+    const text=translate(source);notifyTranslation(source,text,translatorLocale);return text;
 }
 
 function slot(value) {

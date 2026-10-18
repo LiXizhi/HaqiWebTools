@@ -2,6 +2,7 @@ import {selectableCards,canCast,PET_CARD_SEQ_BASE} from './combat_unit_core.js';
 import {validTargets} from './combat_arena_core.js';
 import {createActorSpeech,placeActorSpeech} from './view_actor_speech.js';
 import {fill,setText} from './locale_runtime.js';
+import {battleViewport} from './battle_viewport_core.js';
 // DOM speech balloon anchored to the same screen positions as battle actors.
 export function nearestBattlePet(battle,save,content,positions,scale=1){
     const hero=battle.sides.near[0],origin=positions[hero.id];
@@ -52,14 +53,17 @@ export function createBattlePetHint(model,{el,onDismiss}){
 }
 export function updateBattlePetHint(root,battle,save,content,canvas){
     const bubble=root.battlePetHint;if(!bubble)return;
-    const scale=Math.min(1,canvas.clientHeight/270),pet=nearestBattlePet(battle,save,content,canvas.battlePositions||{},scale);
+    // Do not cache measurements from a hidden cinematic frame. Re-anchor when
+    // the normal arena returns, even if the actor's position is unchanged.
+    if(canvas.battleCamera?.active){bubble.hidden=true;bubble.lastLayoutKey='';return;}
+    const {scale}=battleViewport(canvas.clientWidth||root.clientWidth,canvas.clientHeight),pet=nearestBattlePet(battle,save,content,canvas.battlePositions||{},scale);
     // Hints are passive speech from a visible living pet.
     if(!pet||bubble.hintDismissed){bubble.hidden=true;bubble.lastLayoutKey='';return;}
     bubble.hidden=false;
     bubble.dataset.petId=pet?.id||'';
     const x=canvas.offsetLeft+pet.x,y=canvas.offsetTop+pet.y-pet.head;
     const statusRects=canvas.battleStatusRects||[];
-    const layoutKey=`${pet.id}:${Math.round(x)}:${Math.round(y)}:${root.clientWidth}:${statusRects.length}:${statusRects[0]?.x||0}:${statusRects[0]?.y||0}`;
+    const layoutKey=JSON.stringify([pet.id,x,y,root.clientWidth,root.clientHeight,bubble.offsetWidth,bubble.offsetHeight,statusRects.map(({x,y,width,height})=>[x,y,width,height])]);
     if(bubble.lastLayoutKey===layoutKey)return;
     bubble.lastLayoutKey=layoutKey;
     // Grow rightwards from the pet instead of centering over the hero. On narrow
@@ -72,7 +76,7 @@ export function updateBattlePetHint(root,battle,save,content,canvas){
     const obstacles=statusRects.map(rect=>({...rect,x:rect.x+canvas.offsetLeft,y:rect.y+canvas.offsetTop}));
     // Actor speech is laid out afterwards, above this hint when their columns overlap.
     if(obstacles.length){
-        placeActorSpeech(bubble,root,{x:left+width/2,y},obstacles,{x,y});
+        placeActorSpeech(bubble,root,{x:left+width/2-14,y},obstacles,{x,y});
     }
 }
 
@@ -104,9 +108,10 @@ export function battleSpeechController(battle){
 }
 export function updateBattleSpeech(root,battle,canvas,now,event=null){
     battleSpeech(battle,now,event);
+    const {scale}=battleViewport(canvas.clientWidth||root.clientWidth,canvas.clientHeight);
     const heroId=battle.sides.near?.[0]?.id;
-    const anchors=Object.fromEntries(Object.entries(canvas.battlePositions||{}).map(([id,at])=>{
-        const head=canvas.battleSpeechAnchors?.[id]||{x:at.x,y:at.y-104*Math.min(1,canvas.clientHeight/270)};
+    const anchors=Object.fromEntries(Object.entries(canvas.battlePositions||{}).filter(([id])=>!canvas.battleCamera?.active||!canvas.battleCamera.focusId||canvas.battleCamera.focusId===id).map(([id,at])=>{
+        const head=canvas.battleSpeechAnchors?.[id]||{x:at.x,y:at.y-104*scale};
         return [id,{x:canvas.offsetLeft+head.x,y:canvas.offsetTop+head.y,aboveOthers:id===heroId}];
     }));
     const obstacles=(canvas.battleStatusRects||[]).map(rect=>({...rect,x:rect.x+canvas.offsetLeft,y:rect.y+canvas.offsetTop}));

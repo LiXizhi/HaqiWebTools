@@ -1,10 +1,13 @@
 import {createDialogueReveal} from './dialogue_reveal.js';
+import {watchTreeText} from './language_tree_capture.js';
+import {waitForDialogueReveal} from './dialogue_reveal.js';
 // Dialogue presentation only; quest actions remain in the controller.
 import { fill, setText } from './locale_runtime.js';
 import {createBilingualDialogue} from './view_bilingual_dialogue.js';
-export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],autoReadDialogue=false,readAloud,mapWords,targetLocale=lines[0]?.locale,close}={}) {
+export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],autoReadDialogue=false,readAloud,mapWords,targetLocale=lines[0]?.locale,close,languageSource='npc',languageLabel='NPC对白'}={}) {
     const reveal=createDialogueReveal();
     const full=text.textContent,chars=Array.from(full);
+    const sourceZh=text.dataset.zh||'',captureStops=[];
     const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
     let timer=0,index=0,disposed=false,ready=false,playback=null,mapping=null,disposeLinks=()=>{};
     const visible=document.createElement('span');
@@ -15,6 +18,7 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],autoRead
     function finish(){
         clearTimeout(timer);ready=true;visible.textContent=full;
         box.classList.remove('is-speaking');
+        if(!lines.length)captureStops.push(watchTreeText(text,{source:languageSource,label:languageLabel,text:full,zh:sourceZh}));
         setText(hint,'空格 · {action} · 点击空白处关闭',{action:defaultButton.textContent});
     }
     function tick(){
@@ -75,6 +79,7 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],autoRead
             onRead:read,
             onError:error=>{if(!disposed)hint.textContent=error.message;}});
         reveal.start([{node:line.textNode,translation:line.translationNode}]);
+        void waitForDialogueReveal(line.textNode).then(()=>{if(disposed)return;for(let i=0;i<lines.length;i++){const row=lines[i];captureStops.push(watchTreeText(i===0?line.textNode:labels[i],{source:languageSource,label:languageLabel,text:row.text,locale:row.locale,zh:lines.find(l=>l.locale==='zh-CN')?.text||sourceZh}));}});
         disposeLinks=()=>{reveal.finish();line.dispose();bilingual.close();};
         setText(hint,'点击“再听一次”朗读，点击“词义映射”查看中英文对应词。');
         if(autoReadDialogue&&lines[0].locale===targetLocale&&lines[0].text.trim())void read();
@@ -82,6 +87,7 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],autoRead
     }else if(reduced||!chars.length)finish();else tick();
     root.disposeDialogue=()=>{
         disposed=true;disposeLinks();clearTimeout(timer);playback?.abort();mapping?.abort();
+        captureStops.forEach(stop=>stop());
         root.removeEventListener('click',click,true);root.removeEventListener('keydown',keydown);
         root.disposeDialogue=null;
     };

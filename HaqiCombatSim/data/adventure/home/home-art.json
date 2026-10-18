@@ -1,0 +1,3609 @@
+{
+  "schemaVersion": 1,
+  "grid": {
+    "cols": 4,
+    "rows": 4
+  },
+  "atlases": {
+    "home-atlas-01": {
+      "id": "home-atlas-01",
+      "local": "assets/adventure/home/home-atlas-01-958157475f91.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-atlas-01-958157475f91.webp",
+      "width": 768,
+      "height": 768,
+      "bytes": 187860,
+      "sha256": "958157475f91814e46803017849b64ebe2e609bf9ae4d4974d40beab8af09eb5",
+      "source": {
+        "generator": "image_gen",
+        "transparentBackground": true,
+        "alphaProcessing": "preserved; whole connected components assigned to logical cells",
+        "sha256": "2fe6523a82a749697a1734c3b0285167f57392ee2a1eff97bd097947f733be93",
+        "width": 1254,
+        "height": 1254,
+        "description": "Cozy 3/4 top-down game furniture & prop 4x4 sprite atlas"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 88
+      },
+      "frames": {
+        "bed": {
+          "cell": 0,
+          "rect": [
+            12,
+            14,
+            168,
+            164
+          ],
+          "sourceRect": [
+            21,
+            23,
+            274,
+            267
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            274,
+            267
+          ]
+        },
+        "bunk-bed": {
+          "cell": 1,
+          "rect": [
+            208,
+            12,
+            159,
+            168
+          ],
+          "sourceRect": [
+            343,
+            16,
+            266,
+            281
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            266,
+            281
+          ]
+        },
+        "cradle": {
+          "cell": 2,
+          "rect": [
+            396,
+            21,
+            168,
+            150
+          ],
+          "sourceRect": [
+            651,
+            50,
+            264,
+            235
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            264,
+            235
+          ]
+        },
+        "hammock": {
+          "cell": 3,
+          "rect": [
+            588,
+            19,
+            168,
+            153
+          ],
+          "sourceRect": [
+            954,
+            19,
+            285,
+            259
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            285,
+            259
+          ]
+        },
+        "sleeping-bag": {
+          "cell": 4,
+          "rect": [
+            12,
+            205,
+            168,
+            165
+          ],
+          "sourceRect": [
+            20,
+            330,
+            287,
+            282
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            287,
+            282
+          ]
+        },
+        "wardrobe": {
+          "cell": 5,
+          "rect": [
+            227,
+            204,
+            122,
+            168
+          ],
+          "sourceRect": [
+            358,
+            316,
+            224,
+            309
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            224,
+            309
+          ]
+        },
+        "dresser": {
+          "cell": 6,
+          "rect": [
+            396,
+            211,
+            168,
+            153
+          ],
+          "sourceRect": [
+            642,
+            350,
+            288,
+            262
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            288,
+            262
+          ]
+        },
+        "nightstand": {
+          "cell": 7,
+          "rect": [
+            602,
+            204,
+            139,
+            168
+          ],
+          "sourceRect": [
+            990,
+            332,
+            234,
+            283
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            234,
+            283
+          ]
+        },
+        "alarm-clock": {
+          "cell": 8,
+          "rect": [
+            31,
+            396,
+            130,
+            168
+          ],
+          "sourceRect": [
+            48,
+            643,
+            206,
+            267
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            206,
+            267
+          ]
+        },
+        "pillow": {
+          "cell": 9,
+          "rect": [
+            204,
+            416,
+            168,
+            127
+          ],
+          "sourceRect": [
+            301,
+            672,
+            309,
+            234
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            309,
+            234
+          ]
+        },
+        "blanket": {
+          "cell": 10,
+          "rect": [
+            396,
+            400,
+            168,
+            159
+          ],
+          "sourceRect": [
+            640,
+            666,
+            286,
+            271
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            286,
+            271
+          ]
+        },
+        "quilt": {
+          "cell": 11,
+          "rect": [
+            588,
+            414,
+            168,
+            131
+          ],
+          "sourceRect": [
+            948,
+            669,
+            290,
+            226
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            290,
+            226
+          ]
+        },
+        "slippers": {
+          "cell": 12,
+          "rect": [
+            12,
+            603,
+            168,
+            138
+          ],
+          "sourceRect": [
+            14,
+            961,
+            295,
+            243
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            295,
+            243
+          ]
+        },
+        "bedside-lamp": {
+          "cell": 13,
+          "rect": [
+            229,
+            588,
+            117,
+            168
+          ],
+          "sourceRect": [
+            377,
+            936,
+            201,
+            288
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            201,
+            288
+          ]
+        },
+        "mirror": {
+          "cell": 14,
+          "rect": [
+            420,
+            588,
+            120,
+            168
+          ],
+          "sourceRect": [
+            665,
+            920,
+            218,
+            304
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            218,
+            304
+          ]
+        },
+        "clothes-rack": {
+          "cell": 15,
+          "rect": [
+            592,
+            588,
+            159,
+            168
+          ],
+          "sourceRect": [
+            954,
+            928,
+            285,
+            301
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            285,
+            301
+          ]
+        }
+      }
+    },
+    "home-atlas-02": {
+      "id": "home-atlas-02",
+      "local": "assets/adventure/home/home-atlas-02-d32eff0feaf4.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-atlas-02-d32eff0feaf4.webp",
+      "width": 768,
+      "height": 768,
+      "bytes": 179804,
+      "sha256": "d32eff0feaf4aad93cbb378bcd231129bfa5604f96c3d2f5949dcf0823d4e164",
+      "source": {
+        "generator": "image_gen",
+        "transparentBackground": true,
+        "alphaProcessing": "preserved; whole connected components assigned to logical cells",
+        "sha256": "a5fa8d5af8b383d73ddc222d7f3f15c70741ec9634d9a934a7d3de522d5849cf",
+        "width": 1254,
+        "height": 1254,
+        "description": "Cozy 3/4 top-down game furniture & prop 4x4 sprite atlas"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 88
+      },
+      "frames": {
+        "laundry-basket": {
+          "cell": 0,
+          "rect": [
+            12,
+            23,
+            168,
+            145
+          ],
+          "sourceRect": [
+            38,
+            65,
+            240,
+            207
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            240,
+            207
+          ]
+        },
+        "toy-chest": {
+          "cell": 1,
+          "rect": [
+            204,
+            20,
+            168,
+            151
+          ],
+          "sourceRect": [
+            336,
+            37,
+            274,
+            247
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            274,
+            247
+          ]
+        },
+        "bedroom-rug": {
+          "cell": 2,
+          "rect": [
+            396,
+            47,
+            168,
+            97
+          ],
+          "sourceRect": [
+            639,
+            85,
+            308,
+            178
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            308,
+            178
+          ]
+        },
+        "dream-catcher": {
+          "cell": 3,
+          "rect": [
+            604,
+            12,
+            135,
+            168
+          ],
+          "sourceRect": [
+            941,
+            15,
+            241,
+            300
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            241,
+            300
+          ]
+        },
+        "table": {
+          "cell": 4,
+          "rect": [
+            12,
+            206,
+            168,
+            163
+          ],
+          "sourceRect": [
+            23,
+            326,
+            302,
+            293
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            302,
+            293
+          ]
+        },
+        "chair": {
+          "cell": 5,
+          "rect": [
+            211,
+            204,
+            153,
+            168
+          ],
+          "sourceRect": [
+            316,
+            329,
+            273,
+            300
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            273,
+            300
+          ]
+        },
+        "refrigerator": {
+          "cell": 6,
+          "rect": [
+            428,
+            204,
+            103,
+            168
+          ],
+          "sourceRect": [
+            688,
+            309,
+            194,
+            315
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            194,
+            315
+          ]
+        },
+        "oven": {
+          "cell": 7,
+          "rect": [
+            607,
+            204,
+            130,
+            168
+          ],
+          "sourceRect": [
+            985,
+            330,
+            229,
+            295
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            229,
+            295
+          ]
+        },
+        "stove": {
+          "cell": 8,
+          "rect": [
+            19,
+            396,
+            153,
+            168
+          ],
+          "sourceRect": [
+            28,
+            643,
+            274,
+            301
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            274,
+            301
+          ]
+        },
+        "kitchen-sink": {
+          "cell": 9,
+          "rect": [
+            211,
+            396,
+            154,
+            168
+          ],
+          "sourceRect": [
+            335,
+            644,
+            272,
+            297
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            272,
+            297
+          ]
+        },
+        "kitchen-cabinet": {
+          "cell": 10,
+          "rect": [
+            415,
+            396,
+            130,
+            168
+          ],
+          "sourceRect": [
+            657,
+            628,
+            253,
+            327
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            253,
+            327
+          ]
+        },
+        "kettle": {
+          "cell": 11,
+          "rect": [
+            596,
+            396,
+            152,
+            168
+          ],
+          "sourceRect": [
+            967,
+            657,
+            244,
+            269
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            244,
+            269
+          ]
+        },
+        "cup": {
+          "cell": 12,
+          "rect": [
+            12,
+            597,
+            168,
+            150
+          ],
+          "sourceRect": [
+            61,
+            989,
+            246,
+            219
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            246,
+            219
+          ]
+        },
+        "plate": {
+          "cell": 13,
+          "rect": [
+            204,
+            598,
+            168,
+            148
+          ],
+          "sourceRect": [
+            342,
+            978,
+            268,
+            236
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            268,
+            236
+          ]
+        },
+        "bowl": {
+          "cell": 14,
+          "rect": [
+            396,
+            605,
+            168,
+            133
+          ],
+          "sourceRect": [
+            656,
+            997,
+            260,
+            206
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            260,
+            206
+          ]
+        },
+        "teapot": {
+          "cell": 15,
+          "rect": [
+            588,
+            600,
+            168,
+            143
+          ],
+          "sourceRect": [
+            952,
+            966,
+            282,
+            240
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            282,
+            240
+          ]
+        }
+      }
+    },
+    "home-atlas-03": {
+      "id": "home-atlas-03",
+      "local": "assets/adventure/home/home-atlas-03-bc04be1fbbc4.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-atlas-03-bc04be1fbbc4.webp",
+      "width": 768,
+      "height": 768,
+      "bytes": 178888,
+      "sha256": "bc04be1fbbc492c3d4e0c0077677c12c76a0932fc72a050cc94536b66bdfca58",
+      "source": {
+        "generator": "image_gen",
+        "transparentBackground": true,
+        "alphaProcessing": "preserved; whole connected components assigned to logical cells",
+        "sha256": "7aa84ea820e78b6d465b950e5a5145c425168df72306d40f1c1ed7ff7b7f0614",
+        "width": 1254,
+        "height": 1254,
+        "description": "Cozy 3/4 top-down game furniture & prop 4x4 sprite atlas"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 92
+      },
+      "frames": {
+        "toaster": {
+          "cell": 0,
+          "rect": [
+            14,
+            12,
+            163,
+            168
+          ],
+          "sourceRect": [
+            29,
+            36,
+            257,
+            265
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            257,
+            265
+          ]
+        },
+        "bread-basket": {
+          "cell": 1,
+          "rect": [
+            204,
+            31,
+            168,
+            129
+          ],
+          "sourceRect": [
+            321,
+            63,
+            296,
+            228
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            296,
+            228
+          ]
+        },
+        "fruit-basket": {
+          "cell": 2,
+          "rect": [
+            396,
+            16,
+            168,
+            159
+          ],
+          "sourceRect": [
+            640,
+            26,
+            293,
+            278
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            293,
+            278
+          ]
+        },
+        "cutting-board": {
+          "cell": 3,
+          "rect": [
+            588,
+            27,
+            168,
+            138
+          ],
+          "sourceRect": [
+            961,
+            80,
+            268,
+            220
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            268,
+            220
+          ]
+        },
+        "cooking-pot": {
+          "cell": 4,
+          "rect": [
+            12,
+            225,
+            168,
+            126
+          ],
+          "sourceRect": [
+            15,
+            366,
+            298,
+            224
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            298,
+            224
+          ]
+        },
+        "frying-pan": {
+          "cell": 5,
+          "rect": [
+            204,
+            218,
+            168,
+            139
+          ],
+          "sourceRect": [
+            331,
+            358,
+            286,
+            237
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            286,
+            237
+          ]
+        },
+        "dining-bench": {
+          "cell": 6,
+          "rect": [
+            396,
+            208,
+            168,
+            160
+          ],
+          "sourceRect": [
+            643,
+            351,
+            279,
+            265
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            279,
+            265
+          ]
+        },
+        "picnic-table": {
+          "cell": 7,
+          "rect": [
+            588,
+            228,
+            168,
+            120
+          ],
+          "sourceRect": [
+            944,
+            372,
+            306,
+            219
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            306,
+            219
+          ]
+        },
+        "bathtub": {
+          "cell": 8,
+          "rect": [
+            12,
+            398,
+            168,
+            164
+          ],
+          "sourceRect": [
+            24,
+            644,
+            303,
+            295
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            303,
+            295
+          ]
+        },
+        "shower": {
+          "cell": 9,
+          "rect": [
+            229,
+            396,
+            117,
+            168
+          ],
+          "sourceRect": [
+            372,
+            625,
+            220,
+            317
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            220,
+            317
+          ]
+        },
+        "washbasin": {
+          "cell": 10,
+          "rect": [
+            407,
+            396,
+            145,
+            168
+          ],
+          "sourceRect": [
+            661,
+            646,
+            254,
+            294
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            254,
+            294
+          ]
+        },
+        "toilet": {
+          "cell": 11,
+          "rect": [
+            604,
+            396,
+            136,
+            168
+          ],
+          "sourceRect": [
+            980,
+            641,
+            244,
+            302
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            244,
+            302
+          ]
+        },
+        "towel-rack": {
+          "cell": 12,
+          "rect": [
+            18,
+            588,
+            156,
+            168
+          ],
+          "sourceRect": [
+            42,
+            961,
+            251,
+            270
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            251,
+            270
+          ]
+        },
+        "soap": {
+          "cell": 13,
+          "rect": [
+            204,
+            594,
+            168,
+            155
+          ],
+          "sourceRect": [
+            328,
+            942,
+            279,
+            258
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            279,
+            258
+          ]
+        },
+        "toothbrush": {
+          "cell": 14,
+          "rect": [
+            396,
+            588,
+            167,
+            168
+          ],
+          "sourceRect": [
+            652,
+            964,
+            260,
+            261
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            260,
+            261
+          ]
+        },
+        "toothpaste": {
+          "cell": 15,
+          "rect": [
+            588,
+            606,
+            168,
+            131
+          ],
+          "sourceRect": [
+            962,
+            1007,
+            274,
+            214
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            274,
+            214
+          ]
+        }
+      }
+    },
+    "home-atlas-04": {
+      "id": "home-atlas-04",
+      "local": "assets/adventure/home/home-atlas-04-820bc05ad9e1.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-atlas-04-820bc05ad9e1.webp",
+      "width": 768,
+      "height": 768,
+      "bytes": 194950,
+      "sha256": "820bc05ad9e14cf48bd369917cfa903383e12064dd80bf8750462c893043ccdc",
+      "source": {
+        "generator": "image_gen",
+        "transparentBackground": true,
+        "alphaProcessing": "preserved; whole connected components assigned to logical cells",
+        "sha256": "581bb8c632a2db5e335db155eb2263e78214cda07acf0e7851e2d0c69fc7ad9b",
+        "width": 1254,
+        "height": 1254,
+        "description": "Cozy 3/4 top-down game furniture & prop 4x4 sprite atlas"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 92
+      },
+      "frames": {
+        "bath-mat": {
+          "cell": 0,
+          "rect": [
+            12,
+            43,
+            168,
+            106
+          ],
+          "sourceRect": [
+            12,
+            84,
+            297,
+            188
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            297,
+            188
+          ]
+        },
+        "rubber-duck": {
+          "cell": 1,
+          "rect": [
+            206,
+            12,
+            163,
+            168
+          ],
+          "sourceRect": [
+            370,
+            58,
+            213,
+            219
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            213,
+            219
+          ]
+        },
+        "bath-stool": {
+          "cell": 2,
+          "rect": [
+            396,
+            12,
+            167,
+            168
+          ],
+          "sourceRect": [
+            658,
+            49,
+            247,
+            248
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            247,
+            248
+          ]
+        },
+        "bathroom-mirror": {
+          "cell": 3,
+          "rect": [
+            607,
+            12,
+            129,
+            168
+          ],
+          "sourceRect": [
+            989,
+            17,
+            230,
+            300
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            230,
+            300
+          ]
+        },
+        "shampoo": {
+          "cell": 4,
+          "rect": [
+            57,
+            204,
+            77,
+            168
+          ],
+          "sourceRect": [
+            95,
+            323,
+            132,
+            288
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            132,
+            288
+          ]
+        },
+        "hair-dryer": {
+          "cell": 5,
+          "rect": [
+            215,
+            204,
+            146,
+            168
+          ],
+          "sourceRect": [
+            345,
+            327,
+            241,
+            278
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            241,
+            278
+          ]
+        },
+        "laundry-machine": {
+          "cell": 6,
+          "rect": [
+            409,
+            204,
+            141,
+            168
+          ],
+          "sourceRect": [
+            664,
+            321,
+            245,
+            292
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            245,
+            292
+          ]
+        },
+        "laundry-hamper": {
+          "cell": 7,
+          "rect": [
+            603,
+            204,
+            138,
+            168
+          ],
+          "sourceRect": [
+            990,
+            330,
+            233,
+            283
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            233,
+            283
+          ]
+        },
+        "sponge": {
+          "cell": 8,
+          "rect": [
+            12,
+            405,
+            168,
+            149
+          ],
+          "sourceRect": [
+            34,
+            667,
+            255,
+            226
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            255,
+            226
+          ]
+        },
+        "bathrobe": {
+          "cell": 9,
+          "rect": [
+            219,
+            396,
+            137,
+            168
+          ],
+          "sourceRect": [
+            353,
+            621,
+            239,
+            293
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            239,
+            293
+          ]
+        },
+        "hot-spring": {
+          "cell": 10,
+          "rect": [
+            396,
+            403,
+            168,
+            154
+          ],
+          "sourceRect": [
+            633,
+            640,
+            304,
+            279
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            304,
+            279
+          ]
+        },
+        "water-barrel": {
+          "cell": 11,
+          "rect": [
+            588,
+            397,
+            168,
+            165
+          ],
+          "sourceRect": [
+            973,
+            646,
+            259,
+            254
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            259,
+            254
+          ]
+        },
+        "sofa": {
+          "cell": 12,
+          "rect": [
+            12,
+            605,
+            168,
+            134
+          ],
+          "sourceRect": [
+            10,
+            951,
+            319,
+            254
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            319,
+            254
+          ]
+        },
+        "armchair": {
+          "cell": 13,
+          "rect": [
+            216,
+            588,
+            143,
+            168
+          ],
+          "sourceRect": [
+            362,
+            933,
+            243,
+            285
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            243,
+            285
+          ]
+        },
+        "coffee-table": {
+          "cell": 14,
+          "rect": [
+            396,
+            596,
+            168,
+            152
+          ],
+          "sourceRect": [
+            637,
+            948,
+            295,
+            267
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            295,
+            267
+          ]
+        },
+        "bookshelf": {
+          "cell": 15,
+          "rect": [
+            614,
+            588,
+            116,
+            168
+          ],
+          "sourceRect": [
+            991,
+            909,
+            228,
+            329
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            228,
+            329
+          ]
+        }
+      }
+    },
+    "home-atlas-05": {
+      "id": "home-atlas-05",
+      "local": "assets/adventure/home/home-atlas-05-4f07658f25e0.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-atlas-05-4f07658f25e0.webp",
+      "width": 768,
+      "height": 768,
+      "bytes": 184632,
+      "sha256": "4f07658f25e0608fd46b86802672e579d3b0bd61da8cba00cb01be7ae71f5bd5",
+      "source": {
+        "generator": "image_gen",
+        "transparentBackground": true,
+        "alphaProcessing": "preserved; whole connected components assigned to logical cells",
+        "sha256": "a528aa94908f094957b248d38fa944650827f6ba0827d49eadf4440df80a37b5",
+        "width": 1254,
+        "height": 1254,
+        "description": "Cozy 3/4 top-down game furniture & prop 4x4 sprite atlas"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 88
+      },
+      "frames": {
+        "book": {
+          "cell": 0,
+          "rect": [
+            12,
+            24,
+            168,
+            144
+          ],
+          "sourceRect": [
+            16,
+            48,
+            281,
+            241
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            281,
+            241
+          ]
+        },
+        "desk": {
+          "cell": 1,
+          "rect": [
+            204,
+            18,
+            168,
+            155
+          ],
+          "sourceRect": [
+            325,
+            12,
+            325,
+            300
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            325,
+            300
+          ]
+        },
+        "desk-lamp": {
+          "cell": 2,
+          "rect": [
+            398,
+            12,
+            163,
+            168
+          ],
+          "sourceRect": [
+            634,
+            19,
+            280,
+            288
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            280,
+            288
+          ]
+        },
+        "television": {
+          "cell": 3,
+          "rect": [
+            599,
+            12,
+            146,
+            168
+          ],
+          "sourceRect": [
+            969,
+            13,
+            259,
+            299
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            259,
+            299
+          ]
+        },
+        "radio": {
+          "cell": 4,
+          "rect": [
+            15,
+            204,
+            162,
+            168
+          ],
+          "sourceRect": [
+            28,
+            343,
+            257,
+            267
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            257,
+            267
+          ]
+        },
+        "piano": {
+          "cell": 5,
+          "rect": [
+            204,
+            206,
+            168,
+            164
+          ],
+          "sourceRect": [
+            323,
+            315,
+            308,
+            300
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            308,
+            300
+          ]
+        },
+        "guitar": {
+          "cell": 6,
+          "rect": [
+            426,
+            204,
+            108,
+            168
+          ],
+          "sourceRect": [
+            696,
+            303,
+            208,
+            323
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            208,
+            323
+          ]
+        },
+        "globe": {
+          "cell": 7,
+          "rect": [
+            615,
+            204,
+            114,
+            168
+          ],
+          "sourceRect": [
+            1000,
+            317,
+            206,
+            303
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            206,
+            303
+          ]
+        },
+        "wall-clock": {
+          "cell": 8,
+          "rect": [
+            44,
+            396,
+            104,
+            168
+          ],
+          "sourceRect": [
+            62,
+            630,
+            189,
+            306
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            189,
+            306
+          ]
+        },
+        "fireplace": {
+          "cell": 9,
+          "rect": [
+            204,
+            398,
+            168,
+            163
+          ],
+          "sourceRect": [
+            324,
+            637,
+            298,
+            290
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            298,
+            290
+          ]
+        },
+        "cushion": {
+          "cell": 10,
+          "rect": [
+            396,
+            415,
+            168,
+            129
+          ],
+          "sourceRect": [
+            638,
+            670,
+            302,
+            231
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            302,
+            231
+          ]
+        },
+        "aquarium": {
+          "cell": 11,
+          "rect": [
+            588,
+            397,
+            168,
+            166
+          ],
+          "sourceRect": [
+            958,
+            642,
+            282,
+            278
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            282,
+            278
+          ]
+        },
+        "painting": {
+          "cell": 12,
+          "rect": [
+            12,
+            598,
+            168,
+            147
+          ],
+          "sourceRect": [
+            23,
+            961,
+            283,
+            248
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            283,
+            248
+          ]
+        },
+        "floor-lamp": {
+          "cell": 13,
+          "rect": [
+            253,
+            588,
+            69,
+            168
+          ],
+          "sourceRect": [
+            404,
+            927,
+            124,
+            302
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            124,
+            302
+          ]
+        },
+        "magazine-rack": {
+          "cell": 14,
+          "rect": [
+            397,
+            588,
+            165,
+            168
+          ],
+          "sourceRect": [
+            653,
+            944,
+            273,
+            278
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            273,
+            278
+          ]
+        },
+        "rocking-chair": {
+          "cell": 15,
+          "rect": [
+            594,
+            588,
+            156,
+            168
+          ],
+          "sourceRect": [
+            960,
+            932,
+            273,
+            294
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            273,
+            294
+          ]
+        }
+      }
+    },
+    "home-atlas-06": {
+      "id": "home-atlas-06",
+      "local": "assets/adventure/home/home-atlas-06-f15d6acecea8.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-atlas-06-f15d6acecea8.webp",
+      "width": 768,
+      "height": 768,
+      "bytes": 188712,
+      "sha256": "f15d6acecea8d9f504c15c9d7f36c129f61272faa2ef44096d2e112a1e5d6e96",
+      "source": {
+        "generator": "image_gen",
+        "transparentBackground": true,
+        "alphaProcessing": "preserved; whole connected components assigned to logical cells",
+        "sha256": "4b299a8be121cf850139eafeba4df77c617daaa9732b7396d9ad60a57d23a840",
+        "width": 1254,
+        "height": 1254,
+        "description": "Cozy 3/4 top-down game furniture & prop 4x4 sprite atlas"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 80
+      },
+      "frames": {
+        "flower": {
+          "cell": 0,
+          "rect": [
+            12,
+            19,
+            168,
+            154
+          ],
+          "sourceRect": [
+            20,
+            54,
+            265,
+            243
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            265,
+            243
+          ]
+        },
+        "tree": {
+          "cell": 1,
+          "rect": [
+            204,
+            12,
+            168,
+            167
+          ],
+          "sourceRect": [
+            328,
+            18,
+            287,
+            286
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            287,
+            286
+          ]
+        },
+        "apple-tree": {
+          "cell": 2,
+          "rect": [
+            396,
+            12,
+            167,
+            168
+          ],
+          "sourceRect": [
+            643,
+            17,
+            288,
+            290
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            288,
+            290
+          ]
+        },
+        "palm-tree": {
+          "cell": 3,
+          "rect": [
+            592,
+            12,
+            160,
+            168
+          ],
+          "sourceRect": [
+            964,
+            19,
+            274,
+            287
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            274,
+            287
+          ]
+        },
+        "bush": {
+          "cell": 4,
+          "rect": [
+            12,
+            212,
+            168,
+            151
+          ],
+          "sourceRect": [
+            18,
+            351,
+            278,
+            250
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            278,
+            250
+          ]
+        },
+        "flower-bed": {
+          "cell": 5,
+          "rect": [
+            204,
+            213,
+            168,
+            150
+          ],
+          "sourceRect": [
+            322,
+            337,
+            289,
+            258
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            289,
+            258
+          ]
+        },
+        "vegetable-patch": {
+          "cell": 6,
+          "rect": [
+            396,
+            215,
+            168,
+            146
+          ],
+          "sourceRect": [
+            634,
+            347,
+            306,
+            266
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            306,
+            266
+          ]
+        },
+        "watering-can": {
+          "cell": 7,
+          "rect": [
+            588,
+            216,
+            168,
+            143
+          ],
+          "sourceRect": [
+            965,
+            352,
+            272,
+            231
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            272,
+            231
+          ]
+        },
+        "fountain": {
+          "cell": 8,
+          "rect": [
+            17,
+            396,
+            158,
+            168
+          ],
+          "sourceRect": [
+            21,
+            634,
+            271,
+            288
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            271,
+            288
+          ]
+        },
+        "pond": {
+          "cell": 9,
+          "rect": [
+            204,
+            411,
+            168,
+            137
+          ],
+          "sourceRect": [
+            314,
+            665,
+            312,
+            255
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            312,
+            255
+          ]
+        },
+        "birdhouse": {
+          "cell": 10,
+          "rect": [
+            436,
+            396,
+            88,
+            168
+          ],
+          "sourceRect": [
+            705,
+            629,
+            160,
+            306
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            160,
+            306
+          ]
+        },
+        "birdbath": {
+          "cell": 11,
+          "rect": [
+            600,
+            396,
+            144,
+            168
+          ],
+          "sourceRect": [
+            978,
+            639,
+            241,
+            282
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            241,
+            282
+          ]
+        },
+        "garden-bench": {
+          "cell": 12,
+          "rect": [
+            12,
+            601,
+            168,
+            141
+          ],
+          "sourceRect": [
+            12,
+            970,
+            302,
+            254
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            302,
+            254
+          ]
+        },
+        "wheelbarrow": {
+          "cell": 13,
+          "rect": [
+            204,
+            604,
+            168,
+            136
+          ],
+          "sourceRect": [
+            334,
+            970,
+            294,
+            238
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            294,
+            238
+          ]
+        },
+        "planter": {
+          "cell": 14,
+          "rect": [
+            396,
+            597,
+            168,
+            150
+          ],
+          "sourceRect": [
+            641,
+            958,
+            297,
+            266
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            297,
+            266
+          ]
+        },
+        "rose-bush": {
+          "cell": 15,
+          "rect": [
+            588,
+            592,
+            168,
+            160
+          ],
+          "sourceRect": [
+            962,
+            948,
+            279,
+            266
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            279,
+            266
+          ]
+        }
+      }
+    },
+    "home-atlas-07": {
+      "id": "home-atlas-07",
+      "local": "assets/adventure/home/home-atlas-07-fbb98a624384.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-atlas-07-fbb98a624384.webp",
+      "width": 768,
+      "height": 768,
+      "bytes": 191362,
+      "sha256": "fbb98a62438466cc00477d6423f16419b8495d097692567afc03a471617d2967",
+      "source": {
+        "generator": "image_gen",
+        "transparentBackground": true,
+        "alphaProcessing": "preserved; whole connected components assigned to logical cells",
+        "sha256": "89223ef83b643f3f060b3298930f24d3f608c8080785be06a00714dd78532696",
+        "width": 1254,
+        "height": 1254,
+        "description": "Cozy 3/4 top-down game furniture & prop 4x4 sprite atlas"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 88
+      },
+      "frames": {
+        "sunflower": {
+          "cell": 0,
+          "rect": [
+            27,
+            12,
+            137,
+            168
+          ],
+          "sourceRect": [
+            43,
+            26,
+            231,
+            283
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            231,
+            283
+          ]
+        },
+        "mushroom": {
+          "cell": 1,
+          "rect": [
+            205,
+            12,
+            165,
+            168
+          ],
+          "sourceRect": [
+            348,
+            61,
+            236,
+            241
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            236,
+            241
+          ]
+        },
+        "garden-lantern": {
+          "cell": 2,
+          "rect": [
+            425,
+            12,
+            110,
+            168
+          ],
+          "sourceRect": [
+            687,
+            28,
+            185,
+            283
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            185,
+            283
+          ]
+        },
+        "greenhouse": {
+          "cell": 3,
+          "rect": [
+            588,
+            12,
+            168,
+            167
+          ],
+          "sourceRect": [
+            940,
+            13,
+            301,
+            300
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            301,
+            300
+          ]
+        },
+        "swing": {
+          "cell": 4,
+          "rect": [
+            12,
+            204,
+            168,
+            167
+          ],
+          "sourceRect": [
+            18,
+            341,
+            284,
+            282
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            284,
+            282
+          ]
+        },
+        "slide": {
+          "cell": 5,
+          "rect": [
+            204,
+            205,
+            168,
+            166
+          ],
+          "sourceRect": [
+            330,
+            335,
+            290,
+            286
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            290,
+            286
+          ]
+        },
+        "ball": {
+          "cell": 6,
+          "rect": [
+            396,
+            204,
+            168,
+            168
+          ],
+          "sourceRect": [
+            676,
+            391,
+            210,
+            210
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            210,
+            210
+          ]
+        },
+        "sandbox": {
+          "cell": 7,
+          "rect": [
+            588,
+            229,
+            168,
+            118
+          ],
+          "sourceRect": [
+            925,
+            391,
+            316,
+            222
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            316,
+            222
+          ]
+        },
+        "seesaw": {
+          "cell": 8,
+          "rect": [
+            12,
+            428,
+            168,
+            104
+          ],
+          "sourceRect": [
+            12,
+            686,
+            297,
+            184
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            297,
+            184
+          ]
+        },
+        "trampoline": {
+          "cell": 9,
+          "rect": [
+            204,
+            426,
+            168,
+            107
+          ],
+          "sourceRect": [
+            324,
+            703,
+            291,
+            186
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            291,
+            186
+          ]
+        },
+        "climbing-frame": {
+          "cell": 10,
+          "rect": [
+            396,
+            405,
+            168,
+            149
+          ],
+          "sourceRect": [
+            634,
+            650,
+            296,
+            262
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            296,
+            262
+          ]
+        },
+        "toy-train": {
+          "cell": 11,
+          "rect": [
+            588,
+            417,
+            168,
+            126
+          ],
+          "sourceRect": [
+            945,
+            710,
+            303,
+            227
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            303,
+            227
+          ]
+        },
+        "teddy-bear": {
+          "cell": 12,
+          "rect": [
+            22,
+            588,
+            148,
+            168
+          ],
+          "sourceRect": [
+            44,
+            927,
+            245,
+            279
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            245,
+            279
+          ]
+        },
+        "dollhouse": {
+          "cell": 13,
+          "rect": [
+            210,
+            588,
+            155,
+            168
+          ],
+          "sourceRect": [
+            330,
+            925,
+            277,
+            301
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            277,
+            301
+          ]
+        },
+        "toy-car": {
+          "cell": 14,
+          "rect": [
+            396,
+            608,
+            168,
+            128
+          ],
+          "sourceRect": [
+            638,
+            968,
+            293,
+            224
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            293,
+            224
+          ]
+        },
+        "kite": {
+          "cell": 15,
+          "rect": [
+            607,
+            588,
+            129,
+            168
+          ],
+          "sourceRect": [
+            964,
+            908,
+            258,
+            337
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            258,
+            337
+          ]
+        }
+      }
+    },
+    "home-atlas-08": {
+      "id": "home-atlas-08",
+      "local": "assets/adventure/home/home-atlas-08-66193f971396.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-atlas-08-66193f971396.webp",
+      "width": 768,
+      "height": 768,
+      "bytes": 183740,
+      "sha256": "66193f9713965c59df23135aa7fdb1d0ab813570428adab6d419c2e61364c527",
+      "source": {
+        "generator": "image_gen",
+        "transparentBackground": true,
+        "alphaProcessing": "preserved; whole connected components assigned to logical cells",
+        "sha256": "76b15e2c8840b41806f4b61c300167d7e154859aa230ee0434a97beb6f5c86f3",
+        "width": 1254,
+        "height": 1254,
+        "description": "Cozy 3/4 top-down game furniture & prop 4x4 sprite atlas"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 88
+      },
+      "frames": {
+        "puzzle": {
+          "cell": 0,
+          "rect": [
+            12,
+            26,
+            168,
+            140
+          ],
+          "sourceRect": [
+            16,
+            62,
+            286,
+            238
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            286,
+            238
+          ]
+        },
+        "building-blocks": {
+          "cell": 1,
+          "rect": [
+            208,
+            12,
+            160,
+            168
+          ],
+          "sourceRect": [
+            342,
+            25,
+            267,
+            280
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            267,
+            280
+          ]
+        },
+        "rocking-horse": {
+          "cell": 2,
+          "rect": [
+            396,
+            13,
+            168,
+            165
+          ],
+          "sourceRect": [
+            640,
+            25,
+            287,
+            282
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            287,
+            282
+          ]
+        },
+        "scooter": {
+          "cell": 3,
+          "rect": [
+            605,
+            12,
+            134,
+            168
+          ],
+          "sourceRect": [
+            1009,
+            23,
+            225,
+            283
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            225,
+            283
+          ]
+        },
+        "bicycle": {
+          "cell": 4,
+          "rect": [
+            12,
+            209,
+            168,
+            158
+          ],
+          "sourceRect": [
+            13,
+            336,
+            296,
+            278
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            296,
+            278
+          ]
+        },
+        "basketball-hoop": {
+          "cell": 5,
+          "rect": [
+            240,
+            204,
+            96,
+            168
+          ],
+          "sourceRect": [
+            393,
+            322,
+            167,
+            293
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            167,
+            293
+          ]
+        },
+        "goal": {
+          "cell": 6,
+          "rect": [
+            396,
+            222,
+            168,
+            131
+          ],
+          "sourceRect": [
+            627,
+            362,
+            301,
+            234
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            301,
+            234
+          ]
+        },
+        "play-tent": {
+          "cell": 7,
+          "rect": [
+            590,
+            204,
+            163,
+            168
+          ],
+          "sourceRect": [
+            948,
+            323,
+            292,
+            301
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            292,
+            301
+          ]
+        },
+        "dance-floor": {
+          "cell": 8,
+          "rect": [
+            12,
+            424,
+            168,
+            111
+          ],
+          "sourceRect": [
+            9,
+            689,
+            325,
+            215
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            325,
+            215
+          ]
+        },
+        "speaker": {
+          "cell": 9,
+          "rect": [
+            230,
+            396,
+            115,
+            168
+          ],
+          "sourceRect": [
+            378,
+            635,
+            199,
+            291
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            199,
+            291
+          ]
+        },
+        "balloon": {
+          "cell": 10,
+          "rect": [
+            413,
+            396,
+            133,
+            168
+          ],
+          "sourceRect": [
+            659,
+            636,
+            250,
+            316
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            250,
+            316
+          ]
+        },
+        "birthday-cake": {
+          "cell": 11,
+          "rect": [
+            594,
+            396,
+            156,
+            168
+          ],
+          "sourceRect": [
+            960,
+            638,
+            277,
+            299
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            277,
+            299
+          ]
+        },
+        "party-hat": {
+          "cell": 12,
+          "rect": [
+            25,
+            588,
+            141,
+            168
+          ],
+          "sourceRect": [
+            44,
+            940,
+            238,
+            284
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            238,
+            284
+          ]
+        },
+        "gift-box": {
+          "cell": 13,
+          "rect": [
+            206,
+            588,
+            163,
+            168
+          ],
+          "sourceRect": [
+            337,
+            950,
+            262,
+            270
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            262,
+            270
+          ]
+        },
+        "bunting": {
+          "cell": 14,
+          "rect": [
+            396,
+            623,
+            168,
+            98
+          ],
+          "sourceRect": [
+            622,
+            984,
+            319,
+            187
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            319,
+            187
+          ]
+        },
+        "disco-ball": {
+          "cell": 15,
+          "rect": [
+            601,
+            588,
+            142,
+            168
+          ],
+          "sourceRect": [
+            978,
+            937,
+            240,
+            283
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            240,
+            283
+          ]
+        }
+      }
+    },
+    "home-atlas-09": {
+      "id": "home-atlas-09",
+      "local": "assets/adventure/home/home-atlas-09-a84c9922728f.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-atlas-09-a84c9922728f.webp",
+      "width": 768,
+      "height": 768,
+      "bytes": 184618,
+      "sha256": "a84c9922728f9eda69a8087ff694695a5f82a0ff104564b33f34928e1408e347",
+      "source": {
+        "generator": "image_gen",
+        "transparentBackground": true,
+        "alphaProcessing": "preserved; whole connected components assigned to logical cells",
+        "sha256": "b9ab41784bc97a99638f23837e0b35381edbfdf6b3b36462512160482ba193cf",
+        "width": 1254,
+        "height": 1254,
+        "description": "Cozy 3/4 top-down game furniture & prop 4x4 sprite atlas"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 88
+      },
+      "frames": {
+        "microphone": {
+          "cell": 0,
+          "rect": [
+            51,
+            12,
+            89,
+            168
+          ],
+          "sourceRect": [
+            89,
+            33,
+            148,
+            280
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            148,
+            280
+          ]
+        },
+        "drum": {
+          "cell": 1,
+          "rect": [
+            204,
+            21,
+            168,
+            150
+          ],
+          "sourceRect": [
+            349,
+            79,
+            239,
+            214
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            239,
+            214
+          ]
+        },
+        "picnic-blanket": {
+          "cell": 2,
+          "rect": [
+            396,
+            39,
+            168,
+            114
+          ],
+          "sourceRect": [
+            621,
+            90,
+            316,
+            214
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            316,
+            214
+          ]
+        },
+        "picnic-basket": {
+          "cell": 3,
+          "rect": [
+            588,
+            17,
+            168,
+            157
+          ],
+          "sourceRect": [
+            976,
+            61,
+            257,
+            240
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            257,
+            240
+          ]
+        },
+        "lemonade-stand": {
+          "cell": 4,
+          "rect": [
+            29,
+            204,
+            134,
+            168
+          ],
+          "sourceRect": [
+            43,
+            341,
+            242,
+            304
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            242,
+            304
+          ]
+        },
+        "ice-cream-cart": {
+          "cell": 5,
+          "rect": [
+            207,
+            204,
+            162,
+            168
+          ],
+          "sourceRect": [
+            341,
+            345,
+            281,
+            292
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            281,
+            292
+          ]
+        },
+        "candy-jar": {
+          "cell": 6,
+          "rect": [
+            419,
+            204,
+            122,
+            168
+          ],
+          "sourceRect": [
+            685,
+            348,
+            210,
+            288
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            210,
+            288
+          ]
+        },
+        "popcorn-machine": {
+          "cell": 7,
+          "rect": [
+            606,
+            204,
+            132,
+            168
+          ],
+          "sourceRect": [
+            974,
+            329,
+            249,
+            316
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            249,
+            316
+          ]
+        },
+        "party-table": {
+          "cell": 8,
+          "rect": [
+            12,
+            410,
+            168,
+            139
+          ],
+          "sourceRect": [
+            17,
+            676,
+            297,
+            245
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            297,
+            245
+          ]
+        },
+        "garland": {
+          "cell": 9,
+          "rect": [
+            204,
+            433,
+            168,
+            94
+          ],
+          "sourceRect": [
+            320,
+            701,
+            297,
+            166
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            297,
+            166
+          ]
+        },
+        "string-lights": {
+          "cell": 10,
+          "rect": [
+            396,
+            434,
+            168,
+            92
+          ],
+          "sourceRect": [
+            630,
+            699,
+            306,
+            167
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            306,
+            167
+          ]
+        },
+        "stage": {
+          "cell": 11,
+          "rect": [
+            588,
+            412,
+            168,
+            136
+          ],
+          "sourceRect": [
+            936,
+            666,
+            308,
+            250
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            308,
+            250
+          ]
+        },
+        "wood-floor": {
+          "cell": 12,
+          "rect": [
+            12,
+            608,
+            168,
+            128
+          ],
+          "sourceRect": [
+            9,
+            952,
+            306,
+            233
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            306,
+            233
+          ]
+        },
+        "stone-path": {
+          "cell": 13,
+          "rect": [
+            204,
+            606,
+            168,
+            132
+          ],
+          "sourceRect": [
+            316,
+            948,
+            304,
+            238
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            304,
+            238
+          ]
+        },
+        "brick-path": {
+          "cell": 14,
+          "rect": [
+            396,
+            605,
+            168,
+            133
+          ],
+          "sourceRect": [
+            632,
+            947,
+            303,
+            239
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            303,
+            239
+          ]
+        },
+        "grass-patch": {
+          "cell": 15,
+          "rect": [
+            588,
+            602,
+            168,
+            139
+          ],
+          "sourceRect": [
+            938,
+            944,
+            307,
+            254
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            307,
+            254
+          ]
+        }
+      }
+    },
+    "home-atlas-10": {
+      "id": "home-atlas-10",
+      "local": "assets/adventure/home/home-atlas-10-cffd06b0b1fe.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-atlas-10-cffd06b0b1fe.webp",
+      "width": 768,
+      "height": 768,
+      "bytes": 185556,
+      "sha256": "cffd06b0b1fe66f579a43cee8dc34322f17e316ad8e9eef3336602383a4e67f7",
+      "source": {
+        "generator": "image_gen",
+        "transparentBackground": true,
+        "alphaProcessing": "preserved; whole connected components assigned to logical cells",
+        "sha256": "6f4714c6e95ea4337cf891a166ab8d396b34a2f483754325820c018059bbc3fe",
+        "width": 1254,
+        "height": 1254,
+        "description": "Cozy 3/4 top-down game furniture & prop 4x4 sprite atlas"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 88
+      },
+      "frames": {
+        "sand-patch": {
+          "cell": 0,
+          "rect": [
+            12,
+            40,
+            168,
+            111
+          ],
+          "sourceRect": [
+            16,
+            80,
+            286,
+            189
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            286,
+            189
+          ]
+        },
+        "gravel-path": {
+          "cell": 1,
+          "rect": [
+            204,
+            32,
+            168,
+            128
+          ],
+          "sourceRect": [
+            331,
+            75,
+            275,
+            209
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            275,
+            209
+          ]
+        },
+        "wall": {
+          "cell": 2,
+          "rect": [
+            396,
+            34,
+            168,
+            123
+          ],
+          "sourceRect": [
+            640,
+            73,
+            284,
+            208
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            284,
+            208
+          ]
+        },
+        "fence": {
+          "cell": 3,
+          "rect": [
+            588,
+            30,
+            168,
+            132
+          ],
+          "sourceRect": [
+            962,
+            62,
+            272,
+            214
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            272,
+            214
+          ]
+        },
+        "gate": {
+          "cell": 4,
+          "rect": [
+            12,
+            218,
+            168,
+            139
+          ],
+          "sourceRect": [
+            25,
+            358,
+            284,
+            235
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            284,
+            235
+          ]
+        },
+        "archway": {
+          "cell": 5,
+          "rect": [
+            208,
+            204,
+            159,
+            168
+          ],
+          "sourceRect": [
+            341,
+            320,
+            274,
+            290
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            274,
+            290
+          ]
+        },
+        "bridge": {
+          "cell": 6,
+          "rect": [
+            396,
+            218,
+            168,
+            140
+          ],
+          "sourceRect": [
+            638,
+            354,
+            287,
+            239
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            287,
+            239
+          ]
+        },
+        "stepping-stones": {
+          "cell": 7,
+          "rect": [
+            588,
+            207,
+            168,
+            161
+          ],
+          "sourceRect": [
+            964,
+            356,
+            249,
+            238
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            249,
+            238
+          ]
+        },
+        "hedge": {
+          "cell": 8,
+          "rect": [
+            12,
+            420,
+            168,
+            119
+          ],
+          "sourceRect": [
+            23,
+            675,
+            282,
+            199
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            282,
+            199
+          ]
+        },
+        "window": {
+          "cell": 9,
+          "rect": [
+            232,
+            396,
+            111,
+            168
+          ],
+          "sourceRect": [
+            366,
+            614,
+            214,
+            325
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            214,
+            325
+          ]
+        },
+        "door": {
+          "cell": 10,
+          "rect": [
+            424,
+            396,
+            112,
+            168
+          ],
+          "sourceRect": [
+            676,
+            614,
+            216,
+            323
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            216,
+            323
+          ]
+        },
+        "signpost": {
+          "cell": 11,
+          "rect": [
+            614,
+            396,
+            116,
+            168
+          ],
+          "sourceRect": [
+            997,
+            623,
+            216,
+            314
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            216,
+            314
+          ]
+        },
+        "mailbox": {
+          "cell": 12,
+          "rect": [
+            43,
+            588,
+            105,
+            168
+          ],
+          "sourceRect": [
+            67,
+            929,
+            176,
+            282
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            176,
+            282
+          ]
+        },
+        "street-lamp": {
+          "cell": 13,
+          "rect": [
+            256,
+            588,
+            64,
+            168
+          ],
+          "sourceRect": [
+            411,
+            909,
+            121,
+            316
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            121,
+            316
+          ]
+        },
+        "porch": {
+          "cell": 14,
+          "rect": [
+            408,
+            588,
+            143,
+            168
+          ],
+          "sourceRect": [
+            642,
+            916,
+            262,
+            308
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            262,
+            308
+          ]
+        },
+        "gazebo": {
+          "cell": 15,
+          "rect": [
+            602,
+            588,
+            139,
+            168
+          ],
+          "sourceRect": [
+            963,
+            909,
+            261,
+            316
+          ],
+          "sourceAlphaBounds": [
+            0,
+            0,
+            261,
+            316
+          ]
+        }
+      }
+    }
+  }
+}

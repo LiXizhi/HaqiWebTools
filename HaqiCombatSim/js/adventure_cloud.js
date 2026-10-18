@@ -195,7 +195,7 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
         const key=`${current.owner}:${path}`;
         // Mutable index writes publish the latest local state; only immutable paths
         // can skip an already acknowledged identical write.
-        const immutable=path!==rolesPath;
+        const immutable=path!==rolesPath&&!path.endsWith('/index.json');
         if(immutable&&acknowledgedFiles.get(key)===text)return;
         await timeout(saveWorkspaceFile({store,owner:current.owner,path,text,check:()=>check(current)}));
         textCache.set(key,Promise.resolve(text));
@@ -203,6 +203,22 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
     }
     return {
         get owner() { return owner; },
+        // Independent home storage; shares authenticated cache IO and write ordering.
+        homeRead:(path,{refresh=false}={})=>guarded(async()=>{
+            if(!/^homes\/[a-zA-Z0-9_-]+\/(?:index\.json|[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+\.json)$/.test(path))throw new CloudError('家园路径无效');
+            const current=await session();if(refresh)textCache.delete(`${current.owner}:${path}`);
+            const fullPath=store.getRemotePagePath(path);check(current);
+            if(typeof sdk.loadPageCache!=='function'||typeof sdk.getRepoPath!=='function'||typeof sdk.safeEncodeURIComponent!=='function')throw new CloudError('当前 SDK 缺少家园读取能力，请刷新后重试');
+            const segments=fullPath.split('/');let raw;
+            try{raw=await timeout(sdk.loadPageCache(sdk.getRepoPath(segments.slice(0,2).join('/')),sdk.safeEncodeURIComponent(fullPath)));}
+            catch(error){check(current);if(error?.status===404||/\b404\b/.test(error?.message||''))return null;throw error;}
+            check(current);const text=typeof raw==='string'?raw:raw?.content;
+            if(typeof text!=='string'||!text)throw new CloudError('云端家园响应无效，本地进度已保留');return JSON.parse(text);
+        }),
+        homeWrite:(path,value)=>guarded(async()=>{
+            if(!/^homes\/[a-zA-Z0-9_-]+\/(?:index\.json|[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+\.json)$/.test(path))throw new CloudError('家园路径无效');
+            const current=await session();return queueSave(()=>writeAcknowledged(path,JSON.stringify(value),current));
+        }),
         petFile:(roleId,path)=>guarded(async()=>petIO(roleId,await session()).read(path)),
         roles: ({refresh=false}={}) => guarded(async () => {const current=await session();return queueSave(async()=>{check(current);if(refresh)clearReads();return readRoles(current);});}),
         saveRoles: (catalog, expectedRevision, options) => guarded(async () => {

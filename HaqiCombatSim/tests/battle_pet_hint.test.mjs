@@ -100,6 +100,23 @@ test('pet speech is passive plain text, suppressed while choosing or muted',()=>
  assert.equal(createBattlePetHint({...model,aiHint:{action:{pass:true}}},{el}).children[0].children[0],'先攒点魔力，等机会再出手。');
 });
 import {updateBattlePetHint} from '../js/view_battle_pet_hint.js';
+
+test('pet advice restores after a cinematic and follows changes to non-first status obstacles',()=>{
+ const bubble={style:{setProperty(name,value){this[name]=value;}},dataset:{},offsetWidth:280,offsetHeight:50};
+ const root={battlePetHint:bubble,clientWidth:1100,clientHeight:920};
+ const battle={sides:{near:[{id:'hero',hp:100},{id:'pet',hp:100,speciesId:'pet'}]}};
+ const canvas={clientWidth:1100,clientHeight:920,offsetLeft:0,offsetTop:0,battlePositions:{hero:{x:424,y:300},pet:{x:205,y:556}},battleStatusRects:[{x:410,y:70,width:28,height:28},{x:180,y:420,width:60,height:28}]};
+ updateBattlePetHint(root,battle,{}, {pets:{pet:{name:'宠物'}}},canvas);
+ assert.ok(parseFloat(bubble.style.top)>300);
+ const initial=bubble.style.top;
+ canvas.battleCamera={active:true};updateBattlePetHint(root,battle,{}, {},canvas);
+ assert.equal(bubble.hidden,true);assert.equal(bubble.lastLayoutKey,'');
+ canvas.battleCamera={active:false};updateBattlePetHint(root,battle,{}, {},canvas);
+ assert.equal(bubble.hidden,false);assert.equal(bubble.style.top,initial);
+ canvas.battleStatusRects[1].y=650;
+ updateBattlePetHint(root,battle,{}, {},canvas);
+ assert.notEqual(bubble.style.top,initial,'moving the pet status row invalidates placement');
+});
 test('pet tail stays at the pet while enemy speech appears and disappears on mobile and desktop',()=>{
  for(const width of [390,1280]){
   const bubble={style:{setProperty(name,value){this[name]=value;}},dataset:{},offsetWidth:230,offsetHeight:56};

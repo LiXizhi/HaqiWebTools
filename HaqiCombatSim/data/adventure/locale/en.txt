@@ -9733,3 +9733,471 @@ VIP 有效期由账号下所有角色共享；魔豆放入当前角色背包，�
 第 12 笔，共 14 笔。||Stroke 12 of 14.
 第 13 笔，共 14 笔。||Stroke 13 of 14.
 第 14 笔，共 14 笔。||Stroke 14 of 14.
+观看序章||Watch prologue
+正在准备序章…||Preparing prologue…
+序章加载失败||Prologue failed to load
+序章暂时无法播放，可以直接开始冒险。||The prologue cannot play right now. You can start the adventure directly.
+帮我完成||Help me finish
+再看一次||Watch again
+请从亮起的起点开始拖动。||Please start dragging from the glowing start point.
+海雾还没散开，船上的孩子静静等着天亮。||The sea mist has not cleared yet; the child on the boat waits quietly for dawn.
+按住海平线的微光（或按住空格），让太阳露出半张脸。||Hold the faint glow on the horizon (or hold Space) to let the sun show half its face.
+太阳露出脸了。||The sun has shown its face.
+从红日中心向上拖到山岬上方，看海面倒影一起拉长。||Drag upward from the red sun to above the headland and watch its sea reflection stretch.
+再往上，越过山头。||Higher still, across the mountain ridge.
+依次点亮：太阳外轮、日中短纹、海面倒影。||Light up in order: outer sun ring, inner mark, and sea reflection.
+太阳外轮||Sun outer ring
+日中短纹||Inner sun mark
+海面倒影||Sea reflection
+浑圆的太阳外轮，亮起了金色的边。||The round outer ring of the sun glows with a golden rim.
+日轮中央的短纹，是古人留下的记号。||The short mark in the center of the sun disk is a sign left by ancient scribes.
+海面摇晃的金波，映出天上的暖光。||Shimmering golden waves on the sea mirror the warm light above.
+圆圆的太阳，留下了字的模样。||The round sun leaves behind the shape of the character.
+日出（rì chū）：太阳从海平线升起，新的一天开始了。||Sunrise (rì chū): The sun rises from the horizon, and a new day begins.
+日光（rì guāng）：暖融融的日光洒下来，照亮了船帆与海面。||Sunlight (rì guāng): Warm sunlight pours down, brightening the sail and the sea.
+日子（rì zi）：太阳升起又落下，陪我们走过温暖的日子。||Days (rì zi): The sun rises and sets, accompanying us through warm days.
+天亮了，小船沿着金色的水路出发。||Day has broken; the little boat sets off along the golden waterway.
+切换破晓、正午、夕照，拖动太阳或轻点海面泛起金波。||Switch between Dawn, Noon, and Dusk; drag the sun or tap the sea to make golden ripples.
+破晓||Dawn
+正午||Noon
+夕照||Dusk
+破晓微光染红海面，小船扬起晨帆。||First light of dawn tints the sea red as the boat raises its morning sail.
+正午骄阳高悬碧空，海面波光粼粼。||The midday sun hangs high in the blue sky while the sea sparkles.
+夕照晚霞铺满归途，暖金洒满海湾。||Evening glow fills the way home, bathing the bay in warm gold.
+小船晚归，岸边的灯还很远，云遮住了月亮。||The boat returns late, the shore light is still far away, and clouds hide the moon.
+按住云后的银边（或按住空格），让云层缓缓散开。||Hold the silver rim behind the clouds (or hold Space) to let the clouds drift apart.
+云散开了，月亮出来了。||The clouds have parted, and the moon is out.
+把月光沿水路拖向渡口，让小船跟着银光前行。||Drag the moonlight along the waterway toward the dock so the boat follows the silver light.
+把月光送到渡口。||Send the moonlight to the dock.
+依次点亮：月牙上尖、月腹轮廓、渡口灯火。||Light up in order: top tip of the crescent, moon belly contour, and dock lantern.
+月牙上尖||Crescent tip
+月腹轮廓||Moon contour
+渡口灯火||Dock lantern
+高高翘起的月牙尖，像夜空挂着的小钩。||The upturned tip of the crescent hangs like a little hook in the night sky.
+弯弯饱满的月腹，收拢着清亮的光。||The curved, full belly of the crescent gathers clear, bright light.
+渡口温暖的灯火，在月色里迎着归舟。||The warm lantern at the dock welcomes the returning boat in the moonlight.
+弯弯的月亮，变成了古老的字。||The curved moon becomes the ancient character.
+月光（yuè guāng）：银白月光铺在水面，照亮回家的航道。||Moonlight (yuè guāng): Silver-white moonlight spreads across the water, lighting the way home.
+明月（míng yuè）：云散夜静，天上一轮明月清亮又安宁。||Bright moon (míng yuè): With clouds gone and night still, the bright moon shines clear and calm.
+月牙（yuè yá）：初升的月牙弯弯的，挂在芦苇梢头。||Crescent moon (yuè yá): The newly risen crescent curves above the reed tips.
+月光陪着小船，走到家的门前。||Moonlight accompanies the little boat all the way to the front door of home.
+切换弯月、半月、满月（真实月相变化需许多天），轻点水面看月影聚散。||Switch between Crescent, Half, and Full Moon (real moon phases take many days), and tap the water to scatter moonbeams.
+弯月||Crescent
+半月||Half moon
+满月||Full moon
+弯弯新月挂在夜空，真实月相圆缺需要许多天。||A curved crescent hangs in the night sky; real moon phases take many days to wax and wane.
+半轮清月映着芦苇，真实月相要许多天才会慢慢变圆。||A half moon shines over the reeds; in nature it takes many days to slowly grow round.
+满月银辉洒满渡口，小船稳稳靠在岸边。||Full moon silver light fills the dock as the little boat rests safely by the shore.
+山路藏在浓雾里，孩子认不出回家的方向。||The mountain path hides in thick mist; the child cannot tell the way home.
+按住谷口的风铃石（或按住空格），让清风吹薄近处的山雾。||Hold the wind-chime stone at the valley mouth (or hold Space) so the breeze thins the mist.
+风把雾吹薄了。||The wind has thinned the mist.
+横向拖动山腰的云带，一层层露出山脚、侧峰与主峰。||Drag the cloud band horizontally across the mountainside to reveal foothills, side peaks, and the main peak.
+再拨开一点，山路露出来了。||Clear a little more, and the mountain path appears.
+依次点亮：左峰、中央高峰、右峰。||Light up in order: left peak, tall central peak, and right peak.
+左峰||Left peak
+中央高峰||Central tall peak
+右峰||Right peak
+左边的山峰稳稳耸立，连着厚实的山脚。||The left peak stands steady, connected to the solid mountain base.
+中央的主峰最高，直直探入云端。||The central peak is the tallest, reaching straight into the clouds.
+右边的山峰遥遥呼应，三峰并肩而立。||The right peak answers from afar as all three peaks stand side by side.
+高高低低的山峰，留在字里。||High and low mountain peaks remain within the character.
+高山（gāo shān）：抬头仰望高山，主峰高高耸入云霄。||High mountain (gāo shān): Look up at the high mountain as its main peak towers into the sky.
+山路（shān lù）：弯弯曲曲的山路，从谷口一直通向家门。||Mountain path (shān lù): The winding mountain path leads from the valley mouth all the way home.
+山水（shān shuǐ）：青山映着绿水，像一幅安静的水墨画。||Mountains and water (shān shuǐ): Green mountains reflected in clear water look like a quiet ink painting.
+三座山露出来了，回家的路也找到了。||The three mountains are in view, and the way home is found.
+切换晨雾、晴山、暮雪，横向拖动画面可小幅环绕三座山峰。||Switch between Morning Mist, Clear Peaks, and Evening Snow; drag horizontally to orbit the three peaks.
+晨雾||Morning mist
+晴山||Clear peaks
+暮雪||Evening snow
+晨雾轻绕山腰，三峰在薄云间若隐若现。||Morning mist wraps gently around the mountain waist as the three peaks peek through thin clouds.
+晴空万里，石青与苍翠的三峰格外分明。||Under a clear sky, the mineral-blue and emerald peaks stand crisp and distinct.
+暮雪落满峰顶，山脚归途亮起温暖路标。||Evening snow crowns the summits while warm guideposts light the path at the foot of the hills.
+泉眼里的一滴水，想去看看山下的村庄，石头挡住了窄窄的水路。||A drop of water in the spring wants to visit the village below, but rocks block the narrow channel.
+按住山间泉眼（或按住空格），让泉水积满小水洼。||Hold the mountain spring (or hold Space) so spring water fills the little pool.
+泉水汇起来了。||The spring water has gathered.
+沿着弯曲的河床向下拖动，引溪水绕过石头向前流。||Drag down along the winding streambed to guide the stream around the rocks.
+绕过石头，向前流。||Flow around the rocks and onward.
+依次点亮：中间水流、左侧短流、右侧短流。||Light up in order: central stream, left short current, and right short current.
+中间水流||Central stream
+左侧短流||Left current
+右侧短流||Right current
+中央一道主水流，蜿蜒不停向前奔。||A main stream in the center winds onward without stopping.
+左边溅起的水花，像轻盈舒展的侧流。||Splashes on the left spread out like a light side current.
+右边跃动的水滴，与主水脉相呼应。||Leaping water drops on the right echo the main stream.
+弯弯的水流，也能写成字。||A winding stream can also be written as a character.
+流水（liú shuǐ）：清清的流水绕过溪石，一路欢快地向前奔。||Flowing water (liú shuǐ): Clear flowing water winds past creek stones, running happily ahead.
+溪水（xī shuǐ）：凉丝丝的溪水穿过山谷，流向山下的村庄。||Stream water (xī shuǐ): Cool stream water passes through the valley toward the village below.
+水滴（shuǐ dī）：晶莹的水滴跳起水花，在光下闪闪发亮。||Water drop (shuǐ dī): Crystal water drops leap up in splashes, sparkling in the light.
+小溪流到村边，花儿喝到了水。||The stream reaches the village edge, and the flowers get a drink of water.
+切换春涧、夏泉、秋水，拖动落叶漂流或轻点水面荡开涟漪。||Switch between Spring Brook, Summer Spring, and Autumn Water; drag the leaf or tap to make ripples.
+春涧||Spring brook
+夏泉||Summer spring
+秋水||Autumn water
+春涧融雪叮咚作响，岸边小花喝饱了甘甜的溪水。||Melting snow chimes in the spring brook as shore flowers drink sweet stream water.
+夏泉清澈碧绿，水花在青石间溅起丝丝清凉。||The summer spring is emerald-clear, splashing cool mist among the blue stones.
+秋水映着金黄落叶，小叶舟顺着溪流飘向远方。||Autumn water reflects golden leaves as a little leaf boat drifts far downstream.
+夜风凉了，屋里的灯还没有亮，大人守着炉边的一点火种。||The night wind has grown cool, the house light is still unlit, and a grown-up tends a tiny ember by the hearth.
+按住炉中的火种（或按住空格），让暖光慢慢扩散。||Hold the ember in the hearth (or hold Space) so the warm glow slowly spreads.
+一点火种，慢慢亮起来。||A tiny ember slowly brightens.
+把左下方的干枝拖进炉口，让火焰温暖升起。||Drag the dry branch at bottom-left into the hearth so the flame rises warmly.
+添一枝柴，暖光大了一圈。||Add a branch of firewood, and the warm glow grows wider.
+依次点亮：中央火舌、左侧火舌、右侧火舌。||Light up in order: central flame tongue, left flame tongue, and right flame tongue.
+中央火舌||Central flame
+左侧火舌||Left flame
+右侧火舌||Right flame
+中央高高升起的主火舌，温暖又明亮。||The main flame tongue rising high in the center is warm and bright.
+左边跃动的小火苗，伴着主火舌一起升腾。||The leaping little flame on the left rises alongside the main flame.
+右边呼应的火舌，聚成一团融融暖意。||The answering flame on the right gathers into a cozy warmth.
+向上跳的火焰，留在这个字里。||The upward-leaping flame stays within this character.
+火苗（huǒ miáo）：红彤彤的火苗向上跳动，驱散了夜里的微凉。||Flame (huǒ miáo): Red little flames dance upward, chasing away the night chill.
+灯火（dēng huǒ）：窗边的灯火亮起来，为晚归的人留着温暖。||Lamp light (dēng huǒ): The lamp by the window lights up, keeping warmth for someone returning late.
+火光（huǒ guāng）：明明灭灭的火光，把整间小屋照得暖融融。||Firelight (huǒ guāng): Flickering firelight bathes the whole little room in warmth.
+窗里的灯亮了，回家的人看见了暖光。||The lamp in the window is lit, and the person coming home sees the warm light.
+切换微火、暖火、灯火三种亮度，轻点窗灯看门外归人挥手。||Switch between Ember, Warm Fire, and Lamp Light, and tap the window to see the returning friend wave.
+微火||Ember
+暖火||Warm fire
+灯火||Lamp light
+炉中微火静静闪烁，守护着安静的夜。||A gentle ember glows quietly in the hearth, guarding the peaceful night.
+暖火熊熊跃动，整间屋子都洋溢着琥珀色的光。||The warm fire dances brightly, filling the whole room with amber light.
+窗台灯火通明，门外归来的人笑着挥了挥手。||The window shines brightly with lamp light as the person returning outside waves with a smile.
+种子落在土里，它要先往下扎稳根，才能向着天空生长。||A seed rests in the soil; it must send roots down firmly before growing toward the sky.
+按住种子旁的水珠（或按住空格），让细根向下生长。||Hold the water drop beside the seed (or hold Space) so fine roots grow downward.
+先长根，站稳一点。||Grow roots first and stand steady.
+沿着嫩芽向上拖动，让树干长高、枝叶舒展。||Drag upward along the sprout so the trunk grows tall and branches spread open.
+向着天空，慢慢长高。||Toward the sky, growing tall slowly.
+依次点亮：树枝、主干、树根。||Light up in order: branches, main trunk, and tree roots.
+树枝||Branches
+主干||Main trunk
+树根||Tree roots
+向两边展开的树枝，托起一片绿叶。||Branches spreading to both sides hold up a canopy of green leaves.
+笔直挺立的树干，把根与枝连在一起。||The straight, upright trunk connects the roots below to the branches above.
+泥土下深扎的树根，稳稳抓住了大地。||Roots reaching deep beneath the soil hold firmly onto the earth.
+有枝，有干，还有看不见的根。||There are branches, a trunk, and unseen roots below.
+树木（shù mù）：葱茏的树木站在路边，为小鸟搭起绿色的家。||Trees (shù mù): Lush trees stand by the roadside, building a green home for little birds.
+木头（mù tou）：结实的木头带着年轮的纹理，散发着淡淡清香。||Wood (mù tou): Sturdy wood carries the grain of tree rings and a gentle scent.
+木桥（mù qiáo）：坚实的小木桥跨过溪流，连接起两岸的小路。||Wooden bridge (mù qiáo): A sturdy little wooden bridge crosses the stream, linking paths on both banks.
+树长大了，给路边留下一片阴凉。||The tree has grown tall, leaving a cool patch of shade by the road.
+切换春芽、夏荫、秋叶，轻点地面显出根系或轻点树冠飘落叶片。||Switch between Spring Buds, Summer Shade, and Autumn Leaves; tap the ground to glow roots or the crown for falling leaves.
+春芽||Spring buds
+夏荫||Summer shade
+秋叶||Autumn leaves
+春风吹绿了枝头的新芽，泥土下的根系也充满生机。||Spring breeze greens the new buds on the branches while the roots beneath brim with life.
+夏日树冠浓密翠绿，在路边撑起一片凉爽的绿荫。||In summer the lush emerald crown opens a cool umbrella of shade beside the path.
+秋风染黄了树叶，片片金叶像小蝴蝶轻轻落下。||Autumn wind turns the leaves golden as they flutter gently down like little butterflies.
+家园||Home
+为伙伴创造一个家||Create a home for your companions
+说出一句话，召唤一件家具。拖动宠物，一起生活。||Say a sentence to summon furniture. Move your pets and play together.
+新家园的名字||Name your new home
+新建家园||Create home
+刷新云端家园||Refresh cloud homes
+复制访客家园||Copy a guest home
+仅云端，进入时下载||Cloud home; downloaded when you enter
+已保存到本机 · 有待同步内容||Saved on this device · Changes to sync
+已保存到本机 · 已同步||Saved on this device · Synced
+进入家园||Enter home
+重命名||Rename
+删除家园||Delete home
+给家园起个名字，开始创造。||Name your home and start creating.
+选择要复制的访客家园||Choose a guest home to copy
+家园列表||My homes
+回到出生点||Back to the start
+旋转||Rotate
+收回||Put away
+取消选择||Clear selection
+同步当前家园||Sync this home
+安静模式||Quiet mode
+听宠物愿望||Listen to the wish
+帮它实现||Help this pet
+召唤句子||Summoning sentence
+召唤||Summon
+物品目录||Catalog
+仓库||Storage
+搜索物品或宠物||Search items or pets
+物品分类||Item category
+全部分类||All categories
+先选一件物品查看示范，或直接说出想要的东西。||Choose an item for examples, or say what you want.
+家具颜色||Furniture color
+原色||Original color
+召到身边||Bring here
+选择库存，再点土地放下。||Choose an item in storage, then tap the ground.
+每说出或输入一句话，得到一件物品。||Say or type a sentence to get one item.
+这里还没有物品。||No items here yet.
+重试保存||Retry saving
+已保存到本机||Saved on this device
+家园自动保存到本机，云端同步由你手动开启。||Homes save automatically on this device. Sync to the cloud when you choose.
+正在同步家园…||Syncing your home…
+家园已同步到云端||Home synced to the cloud
+宠物已安置，位置已保存到本机||Pet placed and saved on this device
+未保存：本机存储写入失败，请重试保存。||Not saved: storage failed. Please retry.
+正在听，松开后召唤||Listening. Release to summon.
+正在准备麦克风…||Preparing the microphone…
+睡觉||Sleeping
+坐下休息||Resting
+吃饭||Eating
+喝水||Drinking
+洗澡||Bathing
+荡秋千||Swinging
+玩滑梯||Playing on the slide
+玩球||Playing ball
+读书||Reading
+浇花||Watering flowers
+跳舞||Dancing
+野餐||Having a picnic
+卧室||Bedroom
+厨房餐厅||Kitchen and dining
+浴室||Bathroom
+客厅书房||Living room and study
+花园||Garden
+游乐||Playground
+派对||Party
+建筑铺装||Building and paving
+红色||Red
+蓝色||Blue
+绿色||Green
+黄色||Yellow
+粉色||Pink
+紫色||Purple
+白色||White
+橙色||Orange
+棕色||Brown
+床||Bed
+双层床||Bunk bed
+摇篮||Cradle
+吊床||Hammock
+睡袋||Sleeping bag
+衣柜||Wardrobe
+梳妆台||Dresser
+床头柜||Nightstand
+闹钟||Alarm clock
+枕头||Pillow
+毯子||Blanket
+被子||Quilt
+拖鞋||Slippers
+床头灯||Bedside lamp
+镜子||Mirror
+衣架||Clothes rack
+洗衣篮||Laundry basket
+玩具箱||Toy chest
+卧室地毯||Bedroom rug
+捕梦网||Dream catcher
+桌子||Table
+椅子||Chair
+冰箱||Refrigerator
+烤箱||Oven
+炉灶||Stove
+厨房水槽||Kitchen sink
+橱柜||Kitchen cabinet
+水壶||Kettle
+杯子||Cup
+盘子||Plate
+碗||Bowl
+茶壶||Teapot
+烤面包机||Toaster
+面包篮||Bread basket
+水果篮||Fruit basket
+砧板||Cutting board
+汤锅||Cooking pot
+平底锅||Frying pan
+餐椅长凳||Dining bench
+野餐桌||Picnic table
+浴缸||Bathtub
+淋浴间||Shower
+洗脸盆||Washbasin
+马桶||Toilet
+毛巾架||Towel rack
+肥皂||Soap
+牙刷||Toothbrush
+牙膏||Toothpaste
+浴室垫||Bath mat
+小黄鸭||Rubber duck
+浴室凳||Bath stool
+浴室镜||Bathroom mirror
+洗发水||Shampoo
+吹风机||Hair dryer
+洗衣机||Laundry machine
+脏衣筐||Laundry hamper
+海绵||Sponge
+浴袍||Bathrobe
+温泉池||Hot spring
+水桶||Water barrel
+沙发||Sofa
+扶手椅||Armchair
+茶几||Coffee table
+书架||Bookshelf
+书||Book
+书桌||Desk
+台灯||Desk lamp
+电视||Television
+收音机||Radio
+钢琴||Piano
+吉他||Guitar
+地球仪||Globe
+挂钟||Wall clock
+壁炉||Fireplace
+坐垫||Cushion
+鱼缸||Aquarium
+画框||Painting
+落地灯||Floor lamp
+杂志架||Magazine rack
+摇椅||Rocking chair
+花||Flower
+树||Tree
+苹果树||Apple tree
+棕榈树||Palm tree
+灌木||Bush
+花坛||Flower bed
+菜地||Vegetable patch
+浇水壶||Watering can
+喷泉||Fountain
+池塘||Pond
+鸟屋||Birdhouse
+鸟浴盆||Birdbath
+花园长凳||Garden bench
+独轮车||Wheelbarrow
+花盆||Planter
+玫瑰丛||Rose bush
+向日葵||Sunflower
+蘑菇||Mushroom
+花园灯笼||Garden lantern
+温室||Greenhouse
+秋千||Swing
+滑梯||Slide
+球||Ball
+沙坑||Sandbox
+跷跷板||Seesaw
+蹦床||Trampoline
+攀爬架||Climbing frame
+玩具火车||Toy train
+泰迪熊||Teddy bear
+玩具屋||Dollhouse
+玩具汽车||Toy car
+风筝||Kite
+拼图||Puzzle
+积木||Building blocks
+木马||Rocking horse
+滑板车||Scooter
+自行车||Bicycle
+篮球架||Basketball hoop
+球门||Goal
+游戏帐篷||Play tent
+舞池||Dance floor
+音箱||Speaker
+气球||Balloon
+生日蛋糕||Birthday cake
+派对帽||Party hat
+礼物盒||Gift box
+彩旗||Bunting
+迪斯科球||Disco ball
+麦克风||Microphone
+鼓||Drum
+野餐毯||Picnic blanket
+野餐篮||Picnic basket
+柠檬水摊||Lemonade stand
+冰淇淋车||Ice cream cart
+糖果罐||Candy jar
+爆米花机||Popcorn machine
+派对桌||Party table
+花环||Garland
+灯串||String lights
+舞台||Stage
+木地板||Wood floor
+石板路||Stone path
+砖路||Brick path
+草坪||Grass patch
+沙地||Sand patch
+碎石路||Gravel path
+墙||Wall
+围栏||Fence
+门||Gate
+拱门||Archway
+桥||Bridge
+踏脚石||Stepping stones
+树篱||Hedge
+窗户||Window
+房门||Door
+路牌||Signpost
+信箱||Mailbox
+路灯||Street lamp
+门廊||Porch
+凉亭||Gazebo
+重试加载||Retry loading
+位置已选好，说话或打字即可召唤。||Place selected. Say or type a sentence to summon it.
+此前版本已同步，仍有本地待同步修改。||The previous version is synced. New local changes still need syncing.
+漫游||Explore
+建造||Build
+居民||Residents
+家园设置||Home settings
+返回冒险||Return to adventure
+回到角色||Find my character
+点击土地行走 · 拖动探索 · 建造你的世界||Click to walk · Drag to explore · Build your world
+我||Me
+出生点传送装置：打开哈奇世界地图||Spawn teleporter: open the Haqi world map
+更新于||Updated
+已游玩||Time played
+暂无记录||No record yet
+不足1分钟||Less than 1 minute
+上次离开时的家园||Home when you last left
+完成布置||Done decorating
+左右滑动挑选，向上拖到场景摆放；也可以点选后点击地面。||Swipe to browse, drag up into the scene to place, or select an item and tap the ground.
+拖到场景摆放||Drag into the scene to place
+左右滑动挑选，按住物品拖到场景摆放。||Swipe to browse, then hold and drag an item into the scene.
+
+# hanzi/hanzi_ri.html
+待旦||Awaiting Dawn
+散雾||Clearing the Mist
+照耀||Shining Forth
+日光||Sunlight
+白昼||Daylight
+一日||One Day
+古文字||Ancient Script
+说文解字||Shuowen Jiezi
+楷书||Regular Script
+日子||Days
+日 · 太阳与白昼||Ri · Sun and Daylight
+圆圆太阳挂天上，一轮红日照四方||The round sun hangs in the sky, shining over all lands
+天还没亮，东海沉浸在漫长的黑夜里。||Before daybreak, the eastern sea lay deep in the long night.
+海鸥睡在礁石上，渔船静静停在港湾。||Seagulls slept on the rocks, and fishing boats rested quietly in the bay.
+阿晨站在石表旁，望着浓雾笼罩的东方海面。||Achen stood by the stone sundial, gazing at the mist-shrouded eastern sea.
+厚厚的海雾挡住了天边，微光透不过来。||Thick sea mist blocked the horizon, keeping the faint light from shining through.
+按住屏幕，帮阿晨吹散海面上的晨雾||Press and hold the screen to help Achen blow away the morning mist
+按住吹雾||Hold to Blow Mist
+呼——海雾散开了，天边透出一抹金红！||Whoosh—the sea mist parted, and a streak of golden red glowed on the horizon!
+红日刚露出一角，还沉在海平线下面。||The crimson sun just showed its rim, still resting below the horizon.
+把红日往上拖，让太阳升到海天之间||Drag the crimson sun upward to raise it between sea and sky
+升起太阳||Raise the Sun
+一轮红日跃出海面，万道金光洒满大海！||The crimson sun leaped above the sea, pouring golden rays across the ocean!
+阳光照向海湾，去唤醒沉睡的万物吧。||Sunlight shines over the bay—go awaken all the sleeping things.
+点一点礁石上的海鸥||Tap the seagulls on the reef
+唤醒海鸥||Awaken Seagulls
+点一点港湾里的木帆船||Tap the wooden sailboat in the bay
+扬起白帆||Hoist the Sail
+点一点岸边的向阳花||Tap the sunflowers on the shore
+唤醒向阳花||Awaken Sunflowers
+点一点发光圆圈里的地方||Tap inside the glowing circle
+海鸥飞翔，白帆远航，向阳花朝着太阳绽放。||Seagulls soar, white sails set out, and sunflowers bloom toward the sun.
+太阳升到高空，石表投下日影，带来了明亮的白昼。||The sun rose high in the sky, casting a shadow from the stone pillar and bringing bright daylight.
+古人把太阳升起到落下，称作“一日”。||Ancient people called the time from sunrise to sunset "one day" (ri).
+三千多年前，古人仰望太阳，把它的样子刻了下来。||Over three thousand years ago, ancient people looked up at the sun and carved its shape.
+外圈画圆圆的太阳，中间添上一笔，表示阳光充实饱满。||The outer ring draws the round sun, and the stroke inside shows its full, radiant light.
+《说文解字》：“日，实也。太阳之精不亏。”||Shuowen Jiezi: "Ri means fullness; the essence of the sun never wanes."
+圆圈变成方框，中间留着一横——注意别和两横的“目”弄混啦。||The circle became a square frame with one horizontal stroke inside—don't confuse it with "mu" (eye), which has two!
+「日」一共四笔：先写左竖、横折，再写中间一横，最后封口。||"Ri" has four strokes: left vertical, horizontal-turn, middle horizontal, and the closing bottom stroke.
+第 1 笔 · 竖||Stroke 1 · Vertical
+第 2 笔 · 横折||Stroke 2 · Horizontal Turn
+第 3 笔 · 横||Stroke 3 · Horizontal
+第 4 笔 · 横||Stroke 4 · Horizontal
+写好了！日，红日东升的日。||Well written! Ri, the character for the rising sun.
+太阳从东方升起，新的一天开始了。||The sun rises in the east, and a new day begins.
+温暖的阳光洒下来，照亮山川与大海。||Warm sunlight pours down, illuminating mountains and seas.
+太阳升起又落下，一天一天，就是日子。||The sun rises and sets; day after day makes up our days.
+每一天清晨，太阳都会准时升起。||Every morning, the sun rises right on time.
+带着温暖的日光，照亮我们走过的每一个日子。||Bringing warm sunlight to brighten every single day we walk through.
+点一点天空或海面，唤起晨光与飞鸟||Tap the sky or sea to call forth morning light and birds
+放大家具||Enlarge furniture
+缩小家具||Shrink furniture
+物品大小须在50%至200%之间||Furniture size must be between 50% and 200%.
+无效的尺寸调整||Invalid size adjustment.
+缩小后放不下桌面物品，请先调整它们||Move the tabletop items before shrinking this furniture.
+互动已开启，点击关闭自由拖动||Interaction on: click to disable dragging during play
+互动已关闭，点击开启自由拖动||Interaction off: click to enable dragging during play
+互动设置无效||Invalid interaction setting

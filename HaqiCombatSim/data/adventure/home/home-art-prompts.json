@@ -1,0 +1,65 @@
+{
+  "version": 2,
+  "assets": [
+    {
+      "id": "home-atlas-01",
+      "prompt": "Create a production game sprite atlas, square canvas, exactly 4 columns by 4 rows of 16 isolated objects. TRUE transparent alpha background. Cozy hand-painted colorful storybook furniture, warm brown outlines, three-quarter slightly overhead view, readable small sprites. No ground plane, NO cast shadows, no gray bases, no white matte, no checkerboard drawing, no text or labels. Each object completely contained in its own equally sized cell, centered, generous 15% empty transparent margin on every cell edge. Never cross cell boundaries, no shared scenery. Exact row-major objects: row 1 column 1: bed; row 1 column 2: bunk bed; row 1 column 3: cradle; row 1 column 4: hammock; row 2 column 1: sleeping bag; row 2 column 2: wardrobe; row 2 column 3: dresser; row 2 column 4: nightstand; row 3 column 1: alarm clock; row 3 column 2: pillow; row 3 column 3: blanket; row 3 column 4: quilt; row 4 column 1: slippers; row 4 column 2: bedside lamp; row 4 column 3: mirror; row 4 column 4: clothes rack. Complete silhouettes including feet and handles. Similar polished illustrated cozy homestead furniture throughout.",
+      "tool": "built-in image_gen",
+      "transparent_background": true
+    },
+    {
+      "id": "home-atlas-02",
+      "prompt": "Create a production game sprite atlas, square canvas, exactly 4 columns by 4 rows of 16 isolated objects. TRUE transparent alpha background. Cozy hand-painted colorful storybook furniture, warm brown outlines, three-quarter slightly overhead view, readable small sprites. No ground plane, NO cast shadows, no gray bases, no white matte, no checkerboard drawing, no text or labels. Each object completely contained in its own equally sized cell, centered, generous 15% empty transparent margin on every cell edge. Never cross cell boundaries, no shared scenery. Exact row-major objects: row 1 column 1: laundry basket; row 1 column 2: toy chest; row 1 column 3: bedroom rug; row 1 column 4: dream catcher; row 2 column 1: table; row 2 column 2: chair; row 2 column 3: refrigerator; row 2 column 4: oven; row 3 column 1: stove; row 3 column 2: kitchen sink; row 3 column 3: kitchen cabinet; row 3 column 4: kettle; row 4 column 1: cup; row 4 column 2: plate; row 4 column 3: bowl; row 4 column 4: teapot. Complete silhouettes including feet and handles. Similar polished illustrated cozy homestead furniture throughout.",
+      "tool": "built-in image_gen",
+      "transparent_background": true
+    },
+    {
+      "id": "home-atlas-03",
+      "prompt": "Create a production game sprite atlas, square canvas, exactly 4 columns by 4 rows of 16 isolated objects. TRUE transparent alpha background. Cozy hand-painted colorful storybook furniture, warm brown outlines, three-quarter slightly overhead view, readable small sprites. No ground plane, NO cast shadows, no gray bases, no white matte, no checkerboard drawing, no text or labels. Each object completely contained in its own equally sized cell, centered, generous 15% empty transparent margin on every cell edge. Never cross cell boundaries, no shared scenery. Exact row-major objects: row 1 column 1: toaster; row 1 column 2: bread basket; row 1 column 3: fruit basket; row 1 column 4: cutting board; row 2 column 1: cooking pot; row 2 column 2: frying pan; row 2 column 3: dining bench; row 2 column 4: picnic table; row 3 column 1: bathtub; row 3 column 2: shower; row 3 column 3: washbasin; row 3 column 4: toilet; row 4 column 1: towel rack; row 4 column 2: soap; row 4 column 3: toothbrush; row 4 column 4: toothpaste. Complete silhouettes including feet and handles. Similar polished illustrated cozy homestead furniture throughout.",
+      "tool": "built-in image_gen",
+      "transparent_background": true
+    },
+    {
+      "id": "home-atlas-04",
+      "prompt": "Create a production game sprite atlas, square canvas, exactly 4 columns by 4 rows of 16 isolated objects. TRUE transparent alpha background. Cozy hand-painted colorful storybook furniture, warm brown outlines, three-quarter slightly overhead view, readable small sprites. No ground plane, NO cast shadows, no gray bases, no white matte, no checkerboard drawing, no text or labels. Each object completely contained in its own equally sized cell, centered, generous 15% empty transparent margin on every cell edge. Never cross cell boundaries, no shared scenery. Exact row-major objects: row 1 column 1: bath mat; row 1 column 2: rubber duck; row 1 column 3: bath stool; row 1 column 4: bathroom mirror; row 2 column 1: shampoo; row 2 column 2: hair dryer; row 2 column 3: laundry machine; row 2 column 4: laundry hamper; row 3 column 1: sponge; row 3 column 2: bathrobe; row 3 column 3: hot spring; row 3 column 4: water barrel; row 4 column 1: sofa; row 4 column 2: armchair; row 4 column 3: coffee table; row 4 column 4: bookshelf. Complete silhouettes including feet and handles. Similar polished illustrated cozy homestead furniture throughout.",
+      "tool": "built-in image_gen",
+      "transparent_background": true
+    },
+    {
+      "id": "home-atlas-05",
+      "prompt": "Create a production game sprite atlas, square canvas, exactly 4 columns by 4 rows of 16 isolated objects. TRUE transparent alpha background. Cozy hand-painted colorful storybook furniture, warm brown outlines, three-quarter slightly overhead view, readable small sprites. No ground plane, NO cast shadows, no gray bases, no white matte, no checkerboard drawing, no text or labels. Each object completely contained in its own equally sized cell, centered, generous 15% empty transparent margin on every cell edge. Never cross cell boundaries, no shared scenery. Exact row-major objects: row 1 column 1: book; row 1 column 2: desk; row 1 column 3: desk lamp; row 1 column 4: television; row 2 column 1: radio; row 2 column 2: piano; row 2 column 3: guitar; row 2 column 4: globe; row 3 column 1: wall clock; row 3 column 2: fireplace; row 3 column 3: cushion; row 3 column 4: aquarium; row 4 column 1: painting; row 4 column 2: floor lamp; row 4 column 3: magazine rack; row 4 column 4: rocking chair. Complete silhouettes including feet and handles. Similar polished illustrated cozy homestead furniture throughout.",
+      "tool": "built-in image_gen",
+      "transparent_background": true
+    },
+    {
+      "id": "home-atlas-06",
+      "prompt": "Create a production game sprite atlas, square canvas, exactly 4 columns by 4 rows of 16 isolated objects. TRUE transparent alpha background. Cozy hand-painted colorful storybook furniture, warm brown outlines, three-quarter slightly overhead view, readable small sprites. No ground plane, NO cast shadows, no gray bases, no white matte, no checkerboard drawing, no text or labels. Each object completely contained in its own equally sized cell, centered, generous 15% empty transparent margin on every cell edge. Never cross cell boundaries, no shared scenery. Exact row-major objects: row 1 column 1: flower; row 1 column 2: tree; row 1 column 3: apple tree; row 1 column 4: palm tree; row 2 column 1: bush; row 2 column 2: flower bed; row 2 column 3: vegetable patch; row 2 column 4: watering can; row 3 column 1: fountain; row 3 column 2: pond; row 3 column 3: birdhouse; row 3 column 4: birdbath; row 4 column 1: garden bench; row 4 column 2: wheelbarrow; row 4 column 3: planter; row 4 column 4: rose bush. Complete silhouettes including feet and handles. Similar polished illustrated cozy homestead furniture throughout.",
+      "tool": "built-in image_gen",
+      "transparent_background": true
+    },
+    {
+      "id": "home-atlas-07",
+      "prompt": "Create a production game sprite atlas, square canvas, exactly 4 columns by 4 rows of 16 isolated objects. TRUE transparent alpha background. Cozy hand-painted colorful storybook furniture, warm brown outlines, three-quarter slightly overhead view, readable small sprites. No ground plane, NO cast shadows, no gray bases, no white matte, no checkerboard drawing, no text or labels. Each object completely contained in its own equally sized cell, centered, generous 15% empty transparent margin on every cell edge. Never cross cell boundaries, no shared scenery. Exact row-major objects: row 1 column 1: sunflower; row 1 column 2: mushroom; row 1 column 3: garden lantern; row 1 column 4: greenhouse; row 2 column 1: swing; row 2 column 2: slide; row 2 column 3: ball; row 2 column 4: sandbox; row 3 column 1: seesaw; row 3 column 2: trampoline; row 3 column 3: climbing frame; row 3 column 4: toy train; row 4 column 1: teddy bear; row 4 column 2: dollhouse; row 4 column 3: toy car; row 4 column 4: kite. Complete silhouettes including feet and handles. Similar polished illustrated cozy homestead furniture throughout.",
+      "tool": "built-in image_gen",
+      "transparent_background": true
+    },
+    {
+      "id": "home-atlas-08",
+      "prompt": "Create a production game sprite atlas, square canvas, exactly 4 columns by 4 rows of 16 isolated objects. TRUE transparent alpha background. Cozy hand-painted colorful storybook furniture, warm brown outlines, three-quarter slightly overhead view, readable small sprites. No ground plane, NO cast shadows, no gray bases, no white matte, no checkerboard drawing, no text or labels. Each object completely contained in its own equally sized cell, centered, generous 15% empty transparent margin on every cell edge. Never cross cell boundaries, no shared scenery. Exact row-major objects: row 1 column 1: puzzle; row 1 column 2: building blocks; row 1 column 3: rocking horse; row 1 column 4: scooter; row 2 column 1: bicycle; row 2 column 2: basketball hoop; row 2 column 3: goal; row 2 column 4: play tent; row 3 column 1: dance floor; row 3 column 2: speaker; row 3 column 3: balloon; row 3 column 4: birthday cake; row 4 column 1: party hat; row 4 column 2: gift box; row 4 column 3: bunting; row 4 column 4: disco ball. Complete silhouettes including feet and handles. Similar polished illustrated cozy homestead furniture throughout.",
+      "tool": "built-in image_gen",
+      "transparent_background": true
+    },
+    {
+      "id": "home-atlas-09",
+      "prompt": "Create a production game sprite atlas, square canvas, exactly 4 columns by 4 rows of 16 isolated objects. TRUE transparent alpha background. Cozy hand-painted colorful storybook furniture, warm brown outlines, three-quarter slightly overhead view, readable small sprites. No ground plane, NO cast shadows, no gray bases, no white matte, no checkerboard drawing, no text or labels. Each object completely contained in its own equally sized cell, centered, generous 15% empty transparent margin on every cell edge. Never cross cell boundaries, no shared scenery. Exact row-major objects: row 1 column 1: microphone; row 1 column 2: drum; row 1 column 3: picnic blanket; row 1 column 4: picnic basket; row 2 column 1: lemonade stand; row 2 column 2: ice cream cart; row 2 column 3: candy jar; row 2 column 4: popcorn machine; row 3 column 1: party table; row 3 column 2: garland; row 3 column 3: string lights; row 3 column 4: stage; row 4 column 1: wood floor; row 4 column 2: stone path; row 4 column 3: brick path; row 4 column 4: grass patch. Complete silhouettes including feet and handles. Similar polished illustrated cozy homestead furniture throughout.",
+      "tool": "built-in image_gen",
+      "transparent_background": true
+    },
+    {
+      "id": "home-atlas-10",
+      "prompt": "Create a production game sprite atlas, square canvas, exactly 4 columns by 4 rows of 16 isolated objects. TRUE transparent alpha background. Cozy hand-painted colorful storybook furniture, warm brown outlines, three-quarter slightly overhead view, readable small sprites. No ground plane, NO cast shadows, no gray bases, no white matte, no checkerboard drawing, no text or labels. Each object completely contained in its own equally sized cell, centered, generous 15% empty transparent margin on every cell edge. Never cross cell boundaries, no shared scenery. Exact row-major objects: row 1 column 1: sand patch; row 1 column 2: gravel path; row 1 column 3: wall; row 1 column 4: fence; row 2 column 1: gate; row 2 column 2: archway; row 2 column 3: bridge; row 2 column 4: stepping stones; row 3 column 1: hedge; row 3 column 2: window; row 3 column 3: door; row 3 column 4: signpost; row 4 column 1: mailbox; row 4 column 2: street lamp; row 4 column 3: porch; row 4 column 4: gazebo. Complete silhouettes including feet and handles. Similar polished illustrated cozy homestead furniture throughout.",
+      "tool": "built-in image_gen",
+      "transparent_background": true
+    }
+  ]
+}

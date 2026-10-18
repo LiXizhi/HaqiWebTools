@@ -1,0 +1,8 @@
+import {emptyLanguageTree} from './language_tree_core.js';
+export function createLanguageTreeStore({indexedDB=globalThis.indexedDB,name='haqi-language-tree-v1'}={}){
+    let opening;const memory=new Map();
+    async function open(){if(!indexedDB)throw Error('本地数据库不可用');return opening||=(new Promise((resolve,reject)=>{const r=indexedDB.open(name,1);r.onupgradeneeded=()=>r.result.createObjectStore('learners');r.onsuccess=()=>{r.result.onversionchange=()=>{r.result.close();opening=null;};resolve(r.result);};r.onerror=r.onblocked=()=>reject(r.error||Error('数据库被占用'));}).catch(e=>{opening=null;throw e;}));}
+    return {async read(key){try{const db=await open(),state=await new Promise((resolve,reject)=>{const r=db.transaction('learners').objectStore('learners').get(key);r.onsuccess=()=>resolve(r.result||emptyLanguageTree());r.onerror=()=>reject(r.error);});memory.set(key,structuredClone(state));return {state,persisted:true};}catch(error){return {state:structuredClone(memory.get(key)||emptyLanguageTree()),persisted:false,error};}},
+        async update(key,reduce){let state,result;try{const db=await open();await new Promise((resolve,reject)=>{const tx=db.transaction('learners','readwrite'),s=tx.objectStore('learners'),r=s.get(key);r.onsuccess=()=>{try{state=r.result||emptyLanguageTree();result=reduce(state);s.put(state,key);}catch(e){tx.abort();reject(e);}};tx.oncomplete=resolve;tx.onerror=tx.onabort=()=>reject(tx.error||Error('保存失败'));});memory.set(key,structuredClone(state));return {state,result,persisted:true};}catch(error){state=structuredClone(memory.get(key)||emptyLanguageTree());result=reduce(state);memory.set(key,state);return {state,result,persisted:false,error};}}
+    };
+}

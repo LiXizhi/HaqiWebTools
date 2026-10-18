@@ -8,8 +8,13 @@ export function speechPlacement(anchor,size,bounds,obstacles=[]){
         {x:rect.x-size.width-gap,y:preferred.y},
         {x:rect.x+rect.width+gap,y:preferred.y},
         {x:preferred.x,y:rect.y+rect.height+gap});
-    for(const candidate of candidates){
-        const rect={x:clamp(candidate.x,8,bounds.width-size.width-8),y:clamp(candidate.y,8,bounds.height-size.height-8),...size};
+    // Choose the nearest legal placement, not the first actor's status icon.
+    // Camera motion can reorder distant obstacles; that must not send a pet's
+    // balloon to the top of the arena when its own status row overlaps it.
+    const placements=candidates.map(candidate=>({x:clamp(candidate.x,8,bounds.width-size.width-8),y:clamp(candidate.y,8,bounds.height-size.height-8),...size}));
+    const distance=rect=>Math.hypot(rect.x-preferred.x,rect.y-preferred.y);
+    placements.sort((a,b)=>distance(a)-distance(b)||a.y-b.y||a.x-b.x);
+    for(const rect of placements){
         if(Number.isFinite(anchor.maxBottom)&&rect.y+rect.height>anchor.maxBottom)continue;
         if(obstacles.every(other=>rect.x+rect.width+gap<=other.x||rect.x>=other.x+other.width+gap||rect.y+rect.height+gap<=other.y||rect.y>=other.y+other.height+gap))return rect;
     }

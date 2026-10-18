@@ -1,0 +1,42 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>大招摄影机验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css">
+<body class="haqi-app"><div id="root"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure,playerSpec} from '../../js/adventure_core.js';
+import {createPveBattle} from '../../js/combat_pve_core.js';
+import {renderBattle} from '../../js/view_adventure.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+import {spellEffect} from '../../js/spell_effects_core.js';
+import {battleCameraTemplate} from '../../js/battle_camera_core.js';
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const assets=await loadResources(),save=createAdventure(assets.content,{name:'镜头验收'});
+const monsters=Array.from({length:3},(_,i)=>({...assets.content.monsters['fire-scout'],id:'camera-foe-'+i,name:'施法怪物'+(i+1)}));
+const battle=createPveBattle({dataset:assets.dataset,player:playerSpec(save,assets.content),monsters,seed:9});
+const root=document.querySelector('#root'),renderer=createRenderer(document.createElement('canvas'),assets);
+const callbacks=Object.fromEntries(['sound','retreat','pass','select','reselect','target','discard','toggleRunes','togglePetCards','finish'].map(k=>[k,()=>{}]));
+renderBattle(root,{assets,save,battle,selected:null,discarded:[],animating:true,soundEnabled:false},callbacks);
+const canvas=root.querySelector('#battle-canvas'),cards={};
+for(const card of Object.values(battle.resolved.cards))if(card.pipcost>2){const spec=spellEffect(assets.effects,card),kind=battleCameraTemplate(card,spec);cards[kind]??=card;}
+cards.one=Object.values(battle.resolved.cards).find(c=>c.pipcost===1);
+cards.two=Object.values(battle.resolved.cards).find(c=>c.pipcost===2);
+let current=null,clock=0;
+const snapshot=JSON.stringify(battle.events);
+window.cameraPreview={cards:Object.fromEntries(Object.entries(cards).map(([k,c])=>[k,c.key])),
+ sample(kind='strike',progress=.2,enemy=false){
+    const caster=enemy?battle.sides.far[0].id:'hero',target=enemy?'hero':battle.sides.far[0].id;
+    current=kind==='idle'?null:{event:['pass','fizzle'].includes(kind)?{type:kind,caster,target,card:cards.strike.key}:kind==='pointer'?{type:'movearrow',from:target,caster}:{type:'cast',card:cards[kind].key,caster,target,round:1},progress};
+    return this.draw();
+ },
+ damage(kind='damage',progress=.2,enemy=false){
+    const target=enemy?'hero':battle.sides.far[0].id;
+    current={event:{type:kind==='dot'?'dot':'damage',target,amount:kind==='blocked'?0:25,label:kind==='reflection'?'reflection':undefined},progress};
+    if(kind==='lethal')current.hp={[target]:0};
+    return this.draw();
+ },
+ draw(){const start=performance.now();canvas.battlePositions=renderer.renderBattle(canvas,battle,save,clock+=16,current);return {camera:canvas.battleCamera,feedback:canvas.battleDamageFeedback,positions:canvas.battlePositions,rects:canvas.battleTargetRects,ms:performance.now()-start,eventsUnchanged:snapshot===JSON.stringify(battle.events),handHidden:getComputedStyle(root.querySelector('.battle-hand')).visibility==='hidden'};},
+};
+window.cameraPreview.sample('idle');
+window.cameraReady=true;
+// Repaint loading atlases without advancing the sampled shot.
+function tick(){window.cameraPreview.draw();requestAnimationFrame(tick);}requestAnimationFrame(tick);
+</script></body></html>

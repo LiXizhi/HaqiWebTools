@@ -140,7 +140,7 @@ export function createSpellEffects(assets) {
         if(hit>0&&!spec.friendly){c.save();c.globalAlpha*=1-hit;c.strokeStyle=spec.palette[1];c.lineWidth=3*scale;c.beginPath();c.ellipse(b.x,to.y,radius*(.5+hit*1.5),radius*(.2+hit*.4),0,0,TAU);c.stroke();c.restore();}
         return true;
     }
-    function draw(c,{card,spec,progress,from,to,center,width,height,seed=0,reducedMotion=false,failed=false,echo=false,reflection=false,environmentManaged=false,arenaRadius,arenaAspect}) {
+    function draw(c,{card,spec,progress,from,to,center,width,height,seed=0,reducedMotion=false,failed=false,echo=false,reflection=false,environmentManaged=false,arenaRadius,arenaAspect,visualScale=1}) {
         if(!spec||!from||!to)return;
         const p=clamp(progress),col=spec.palette,[primary,light,dark]=col;
         if(spec.choreography.placement==='field'&&!failed){
@@ -149,10 +149,10 @@ export function createSpellEffects(assets) {
             else if(!environmentManaged)drawArenaEnvironment(c,{palette:col,center,radius:arenaRadius??Math.min(width*.4,height*.62),aspect:arenaAspect??.54,time:p*spec.duration/1000,reducedMotion,strength:clamp((p-config.timeline.impact)/.1)});
             return;
         }
-        const scale=Math.min(1,width/650,height/330),radius=70*scale*spec.scale;
+        const scale=Math.min(1,width/650,height/330)*visualScale,radius=70*scale*spec.scale;
         const centered=['center','field'].includes(spec.choreography.placement);
         const origin=centered&&!failed?(center||{x:(from.x+to.x)/2,y:(from.y+to.y)/2}):from;
-        const a={x:origin.x,y:origin.y-52*scale},b={x:to.x,y:to.y-52*scale},caster={x:from.x,y:from.y-52*scale};
+        const a={x:origin.x,y:origin.y-52*(origin.scale??visualScale)*Math.min(1,width/650,height/330)},b={x:to.x,y:to.y-52*(to.scale??visualScale)*Math.min(1,width/650,height/330)},caster={x:from.x,y:from.y-52*(from.scale??visualScale)*Math.min(1,width/650,height/330)};
         const cacheKey=spec.base+':'+seed;
         if(!cache.has(cacheKey)){if(cache.size>=128)cache.delete(cache.keys().next().value);const values=effectParticles(spec.base,spec.count,seed);values.groups={};for(const n of [20,22,24,30,32,38,40,48])values.groups[n]=values.slice(0,n);cache.set(cacheKey,values);}
         const particles=cache.get(cacheKey);

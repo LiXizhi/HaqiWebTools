@@ -1,3 +1,6 @@
+// Shared world/home idle lift in world pixels; callers keep ground shadows fixed.
+export function petIdleLift(time,reduced=false){return reduced?0:Math.sin(time/1000*2)*1.5;}
+
 // Sleep uses the atlas fourth column at its original aspect ratio.
 export function drawPetMood(ctx,mood,time,reduced,size,draw){
     const t=time/1000;

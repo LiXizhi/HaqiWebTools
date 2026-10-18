@@ -4,6 +4,7 @@ import {catalogAcceptBlock,catalogVisibleGoalRows,trackedQuestIds} from './adven
 import { tr, fill, setText } from './locale_runtime.js';
 import {currentQuest,questState,questReady,questProgress,rewardsFor,catalogStatSnapshot} from './adventure_core.js';
 import {ItemDetails} from './view_adventure_item_details.js';
+import {watchTreeText} from './language_tree_capture.js';
 
 export function rewardChip(content, reward, { el, button, onClick, className = 'dialogue-reward' } = {}) {
     const node = onClick ? button('', onClick, className) : el('span', className);
@@ -91,6 +92,7 @@ export function renderQuestJournal(body,model,cb,ui) {
         const state=questState(save,q.id),active=current?.id===q.id;
         detail.dataset.questId=q.id;
         detail.replaceChildren(el('header','journal-detail-heading',el('span','journal-status',label(q)),el('h3','',q.title)),el('p','journal-description',q.description));
+        watchTreeText(detail.querySelector('.journal-description'),{source:`quest:${q.id}`,label:q.title,zh:q.description});
         const section=(title,...children)=>el('section','journal-section',el('h4','',title),...children);
         const goals=questProgress(save,q);
         const fallback=el('p','');setText(fallback,'与{name}交谈，完成指导。',{name:c.npcs[q.endNpc]?.name||'导师'});
@@ -120,6 +122,7 @@ export function renderQuestJournal(body,model,cb,ui) {
         const runtime=c.catalogQuests?.byId[q.id];
         const regionLabel=el('span','journal-status');setText(regionLabel,'{region} · {status}',{region:QUEST_REGIONS[q.region]||'其他任务',status:label(q)});
         detail.replaceChildren(el('header','journal-detail-heading',regionLabel,el('h3','',q.title)),el('p','journal-description',q.description));
+        watchTreeText(detail.querySelector('.journal-description'),{source:`quest:${q.id}`,label:q.title,zh:q.description});
         const section=(title,...nodes)=>el('section','journal-section',el('h4','',title),...nodes);
         if(!runtime)detail.append(el('p','journal-unavailable','全岛任务数据还没有载入，目前可以查看任务内容。'));
         else {

@@ -1,0 +1,174 @@
+{
+  "version": 1,
+  "entries": {
+    "word-tree": {
+      "local": "assets/prologue/word-tree-c45b0a4ff7b3.webp",
+      "cdn": "",
+      "width": 1376,
+      "height": 768,
+      "size": 170726,
+      "sha256": "c45b0a4ff7b39cbdda68d19282420bfdcbecf1e04dc433372a36ac63578a3b6b",
+      "sourceSha256": "2833ca65dc05dbea822b63816960cbe2e648006cf6b6016fa97c19bdad3385e7",
+      "sourceSize": [
+        1376,
+        768
+      ],
+      "source": "Generated 2026-10-18 with the agent built-in image tool for the prologue (new creation, not original game art)."
+    },
+    "dark-lord-steals": {
+      "local": "assets/prologue/dark-lord-steals-3959470da926.webp",
+      "cdn": "",
+      "width": 1376,
+      "height": 768,
+      "size": 178442,
+      "sha256": "3959470da9261fad800785bafae04cc7d8face82ddb2274414e6d85f06b69958",
+      "sourceSha256": "8cac9f4d947e0499415b8a2994cf63e1ef9ef1aed5a9eb38216b1e1905caba06",
+      "sourceSize": [
+        1376,
+        768
+      ],
+      "source": "Generated 2026-10-18 with the agent built-in image tool for the prologue (new creation, not original game art)."
+    },
+    "blank-signposts": {
+      "local": "assets/prologue/blank-signposts-be89f2b4fc6f.webp",
+      "cdn": "",
+      "width": 1376,
+      "height": 768,
+      "size": 181958,
+      "sha256": "be89f2b4fc6fb750be83760ea0dcb0ba471617f62d51660d91db5b190c5f4763",
+      "sourceSha256": "3c7582830e07391d687c9c2fb3dd4a3e813e0c0e8539511b3867ac56bb922e69",
+      "sourceSize": [
+        1376,
+        768
+      ],
+      "source": "Generated 2026-10-18 with the agent built-in image tool for the prologue (new creation, not original game art)."
+    },
+    "masters-assemble": {
+      "local": "assets/prologue/masters-assemble-19e651d0df2e.webp",
+      "cdn": "",
+      "width": 1376,
+      "height": 768,
+      "size": 179098,
+      "sha256": "19e651d0df2e05bacd2d62b48ecf0a64e5cf4336b6f5cb0079b1f8c6c298c8cc",
+      "sourceSha256": "7ac8dc71b6cf978fed8856759a6a4f87e3664e23cc0bc2bf934dea6a691e0905",
+      "sourceSize": [
+        1376,
+        768
+      ],
+      "source": "Generated 2026-10-18 with the agent built-in image tool for the prologue (new creation, not original game art)."
+    },
+    "camp-night-battle-bg": {
+      "local": "assets/prologue/camp-night-battle-bg-760bf41441cf.webp",
+      "cdn": "",
+      "width": 1376,
+      "height": 768,
+      "size": 153134,
+      "sha256": "760bf41441cfc08f55f75fe99567ee90e1d6845c1aff6596096244b8d6c87336",
+      "sourceSha256": "ccd576a5f37ba8f39a215b776491bf3200c3ad1a4e1602ca27599ed4ce2ca8aa",
+      "sourceSize": [
+        1376,
+        768
+      ],
+      "source": "Generated 2026-10-18 with the agent built-in image tool for the prologue (new creation, not original game art)."
+    },
+    "light-shatters": {
+      "local": "assets/prologue/light-shatters-aca7e4fe3ef3.webp",
+      "cdn": "",
+      "width": 1376,
+      "height": 768,
+      "size": 172612,
+      "sha256": "aca7e4fe3ef3d75e09ed3b2c6483126c39f6f755dee0bc7f256fc5ad3ed19a30",
+      "sourceSha256": "a3e54a1b4b6cf0db711a9976fae6cd86c7192bd7a214d2e54c8db3a748de3db1",
+      "sourceSize": [
+        1376,
+        768
+      ],
+      "source": "Generated 2026-10-18 with the agent built-in image tool for the prologue (new creation, not original game art)."
+    },
+    "blank-cards": {
+      "local": "assets/prologue/blank-cards-24a5af3f87e1.webp",
+      "cdn": "",
+      "width": 1376,
+      "height": 768,
+      "size": 114738,
+      "sha256": "24a5af3f87e133d07f04d187be2cace79aa80deddea1aec610666997a8bb206d",
+      "sourceSha256": "0d836bd2894fe9be8582c2240c9f842699241a1b5afcf8bb7a487d63ee080120",
+      "sourceSize": [
+        1376,
+        768
+      ],
+      "source": "Generated 2026-10-18 with the agent built-in image tool for the prologue (new creation, not original game art)."
+    },
+    "spark-in-hand": {
+      "local": "assets/prologue/spark-in-hand-b7080c5b4521.webp",
+      "cdn": "",
+      "width": 1376,
+      "height": 768,
+      "size": 68902,
+      "sha256": "b7080c5b4521915581fb0392baa9e6a2341d86c9dee915752e7930ec0c5ec196",
+      "sourceSha256": "1a1b6cad18ac52f198077fdecdd094a231bbcc5f99b69e444afd46b07dc02304",
+      "sourceSize": [
+        1376,
+        768
+      ],
+      "source": "Generated 2026-10-18 with the agent built-in image tool for the prologue (new creation, not original game art)."
+    },
+    "dawn-signpost": {
+      "local": "assets/prologue/dawn-signpost-a733572e5e1b.webp",
+      "cdn": "",
+      "width": 1376,
+      "height": 768,
+      "size": 179172,
+      "sha256": "a733572e5e1bce60db54ab189306a466075fc83f876a85983cca09813286bfdc",
+      "sourceSha256": "38d40ef7290cd8bc93c39a58c15b1ded99dfffecfb565e3c760c1bd64412983e",
+      "sourceSize": [
+        1376,
+        768
+      ],
+      "source": "Generated 2026-10-18 with the agent built-in image tool for the prologue (new creation, not original game art)."
+    },
+    "two-worlds-pullback": {
+      "local": "assets/prologue/two-worlds-pullback-0116290a22da.webp",
+      "cdn": "",
+      "width": 1376,
+      "height": 768,
+      "size": 172396,
+      "sha256": "0116290a22dae31fd6abea2725ae48a1d0949b7b84ded48976103c8699f1d24a",
+      "sourceSha256": "d7efd697d69f58074b89617ac02120a8ef77565baf7fdf1f62e9d8a760009f96",
+      "sourceSize": [
+        1376,
+        768
+      ],
+      "source": "Generated 2026-10-18 with the agent built-in image tool for the prologue (new creation, not original game art)."
+    },
+    "title": {
+      "local": "assets/prologue/title-d1e4141ce72a.webp",
+      "cdn": "",
+      "width": 1376,
+      "height": 768,
+      "size": 119446,
+      "sha256": "d1e4141ce72a1442e73a7a07b9085c1c3876e18985af6aace71c7372ee573132",
+      "sourceSha256": "39277596c8a3f08d0a71a5a95f7df68a76706f917aee708a4e913da2f92bf14b",
+      "sourceSize": [
+        1376,
+        768
+      ],
+      "source": "Generated 2026-10-18 with the agent built-in image tool for the prologue (new creation, not original game art)."
+    },
+    "dark-lord-boss": {
+      "local": "assets/prologue/dark-lord-boss-e3dd97182d66.webp",
+      "cdn": "",
+      "width": 256,
+      "height": 256,
+      "size": 27406,
+      "sha256": "e3dd97182d662c1de185ecf7b874f8cf392f4190156a28f27ab1edb39ea11804",
+      "sourceSha256": "218a6577b2d473c69d2c325c1ac8d60e11ec87b65b777aceace018223fc9cd5d",
+      "sourceSize": [
+        1024,
+        1024
+      ],
+      "source": "Generated 2026-10-18 with the agent built-in image tool for the prologue (new creation, not original game art)."
+    }
+  },
+  "byteLimitExclusive": 200000
+}

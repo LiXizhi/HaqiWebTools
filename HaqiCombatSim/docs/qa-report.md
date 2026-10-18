@@ -1,3 +1,9 @@
+# 2026-10-18 互动序章《失落的光》（`Haqi.html?prologue`）
+
+- 剧本与美术清单校验：`data/prologue/script.json`（8 个场景、全具名 NPC 头像对白、移除选系选男女镜头）与 `data/prologue/art.json`（11 张 `1376×768` 16:9 WebP + 1 张 `256×256` 透明去背带翅膀 `dark-lord-boss` 独立立绘 WebP，共 12 张，体积 `27,406B–198,298B`，全部 `< 200,000B`，SHA-256 与原图哈希分离记录）通过 `python scripts/prepare_prologue_art.py --check` 与 `validateScript` 严格校验。
+- 核心逻辑与确定性战斗：`tests/battle_prologue.test.mjs` **5/5 通过**（含 `js/prologue_script_core.js` 与 `js/prologue_battle_core.js` 纯度检查；第一幕 4v1 四系大师依次从新手指引 3 张本系代表技能卡中选卡迎战死亡系带翅膀黑暗魔王，$3^4 = 81$ 种全组合四人均完整施法、0 失误获胜；第四幕 4v2 再战中四位大师每人持有 3 张本系代表技能卡 + 新铸造激活的「光」之文字卡 `zh:guang` / `en:sun` 共 4 张卡，全员施法 0 失误获胜）。
+- 入口收敛、打包与快速回归：移除首页「观看序章」按钮与宣传片顶栏链接，改为无角色时自动播放、已有角色点击「新建角色」前弹窗询问是否播放开场动画（使用 `createCloseButton`）。`node --test tests/promo.test.mjs tests/packed_startup.test.mjs` **16/16 通过**；`npm run test:battle` **1159/1160 通过**（唯一 1 项失败为既有 `battle_earth_labels.test.mjs` 地面加载提示断言，与本次序章无关，不计作通过）。12 张新 WebP 暂存本地 `assets/prologue/`，待用户确认后再上传 Keepwork CDN。未提交、未推送。
+
 # 2026-10-17 汉字故事动画协议 v1（字源岛任务、游戏字典、双语字幕与 UI 多语言、书写完成事件）
 
 - 协议与宿主桥接：`js/hanzi_animation_bridge.js` 新增 `onWritten`（`type: 'written'` 临摹完成）与 `subtitleLocale` / `uiTranslations` 拆分支持；字幕与常用 UI 分离渲染——仅字幕（`#capText` / `h2#caption`）双语并排展示，其余按钮、章节标题、季节栏、进度点、开场卡片与提示信息按界面语言 `locale` 单语翻译。
@@ -3744,3 +3750,128 @@ tmp/dictionary-context-retry-feedback-1280.png/390.png已目视检查，反馈�
 本轮画面复核：`tmp/hanzi-stories/visual-report.json` 的23字四尺寸92组全部通过；手机人物与主体放大后仍保留字形、字幕和操作区，正常动态日字成字截图为 `tmp/hanzi-stories/ri-1440-morph.png`。合集本机预览入口为 `/hanzi/hanzi_index.html`。
 
 最终完整流程复核再次92/92通过（`tmp/hanzi-stories/report.json`、`tmp/hanzi-stories-functional-final.log`）；独立画面92组及宿主集成7组机器报告均完整。上述全局战斗与翻译既有失败仍保留，不计作通过。
+
+## 2026-10-18：互动序章《失落的光》（`Haqi.html?prologue`）
+
+新增按需加载双语开场互动电影《失落的光》，说明见 [互动序章](prologue.md) 与 [双语剧本](story/prologue-lost-light.md)。
+
+- 角色与美术：使用二头身 Q 版游戏比例重绘 `masters-assemble` 与 `dark-lord-steals`，11 张 `1376×768` WebP 插画（`assets/prologue/*.webp`）均 `< 200,000` 字节并与 `data/prologue/art.json` 的 `sha256` 一致（`python scripts/prepare_prologue_art.py --check` 通过）。
+- 战斗与交互：
+  - 第 1 幕（`masters-battle`）：玩家依次为寒冰、烈火、风暴、生命四位大师各点选一张攻击卡（`wizardAttackHand`，单击即锁定对 `黑暗魔王` 施法），16 种攻击卡组合均在第 2 回合以 0 失误击败死亡系 `黑暗魔王`；修复 `V.renderBattle` 覆盖 `battleRoot.className` 导致 `.battle-layer` 遮挡对白框与顶栏的问题。
+  - 第 3 幕（`light`）：`hanzi/hanzi_guang.html` 全屏嵌入（`position: fixed; inset: 0; z-index: 60`），右上角接入统一的 `createCloseButton` 退出按钮。
+  - 第 4 幕（`together`）：五系 × 中英目标语言全分支起手包含新铸造文字卡（`zh:guang` / `en:sun`）并以 0 失误获胜。
+- 验证：`node --test tests/battle_prologue.test.mjs tests/promo.test.mjs tests/packed_startup.test.mjs` 21/21 通过；`npm run test:battle` 1159/1160 通过（1 项失败为既有未修改的 `battle_earth_labels.test.mjs` 地面加载提示断言，不计作通过）。新生成的 `assets/prologue/*.webp` 当前保留本地副本（`cdn: ""`），待用户确认后再上传 Keepwork CDN。未构建、未提交、未推送。
+
+## 2026-10-18：大招自动摄影机
+
+- 范围：数值型费用>2 pips的敌我施法，指针转向后展示施法者正面，按攻击/范围/召唤/辅助套用镜头；命中震动限定180ms，治疗不震动。Canvas地面透视、直立精灵深度排序和正面朝向已接入共用冒险渲染器，序章补齐指针播放阶段。实验室SVG战场保持现状。
+- `tests/battle_camera.test.mjs`：9/9通过，覆盖费用边界、失败/反射排除、指针先行、敌我正面、安全取景、群体完整构图、确定性、180ms震动上限、中断归位与减少动态效果。技能动画时长和引擎事件不变。
+- `npm run test:battle`：1179项中1178通过，1项失败；失败为`battle_earth_labels.test.mjs`的`surface loading overlay shows actual tile progress and disappears when ready`。使用`git show HEAD:HaqiCombatSim/js/adventure_renderer.js`重放其截取逻辑同样得到空数组（预期“正在加载地面图片…”）；HEAD已不存在测试查找的源代码片段。这是既有失败，未跳过或记为通过。
+- 浏览器：独立无存档验收页`tests/fixtures/battle-camera.html`加载正式CDN资源；脚本`scripts/check_battle_camera.mjs`完成1100×760、390×844、844×390三种视口，四模板×敌我双方×四阶段共96次采样，另验证指针、退出演出、手牌恢复、减少动态效果，0个页面异常。画面截图检查了正面近景、目标冲击、召唤、标题避让和横屏构图。此数据集没有自然费用>2的护盾卡；护盾仍受同一费用阈值和辅助分类规则约束，不虚构生产卡费用。
+- 浏览器最后一轮采样绘制耗时P50 4.1ms、P95 8.7ms、最大9.9ms（同时运行Node回归，非实体设备帧率承诺）。报告及截图在`tmp/battle-camera/`，仅用于本地验收。完整角色贴图缺少的背面视角未补造；未做全量产品发布验收或实体手机性能验收。
+- 修改保留本地，未提交、推送或发布。
+
+### 2026-10-18：≥1 pip、头顶技能名与跳过/Miss
+
+- 用户追加要求覆盖之前的>2阈值：≥1 pip施法采用摄影机，人物头顶大字显示技能名。前12%进度用1400ms，后段保持原速度；渲染、音效与命中反馈同步采样。跳过/失误显示1600ms近景及“跳过”/“miss”，去除脚边重复MISS。
+- 摄影机专项11/11通过，包含1/2 pip、跳过/失误始终聚焦施法者、文字段1400ms、后段速度、进度精确到1及反射不重复延时。战斗快速回归1181项中1180通过、1项既有地面加载提示测试失败，基线复现依据同上。
+- 桌面、390px手机和844×390横屏共192采样通过，0页面异常；覆盖新增1/2 pip、跳过及Miss，检查大字位置和无重复MISS、手牌恢复及减少动态效果。截图及报告在`tmp/battle-camera-readable/`；本轮绘制P50 1.6ms、P95 3.7ms、最大10.6ms。未提交、推送或发布。
+
+### 2026-10-18：法阵投影与真实伤害反馈
+
+- 修复将两幅投影屏幕坐标混合造成的法阵压扁/翻转；改为统一视图旋转与齐次透视除法。实际镜头yaw约±45°、pitch最低约18°，不再发生大角度绕转；新增七档过渡与±180°/360°投影的共线、凸性和有限坐标测试。
+- 节奏更新：名称前段1900ms，后段时长×1.65（基础段至少1500ms），跳过/Miss2100ms；受击650ms，致命900ms，治疗1000ms。音效/反应采样及宣传片适配同步更新。
+- 所有真实damage/dot及cast伤害反应产生冲击与有界震动，包含0费、反伤、持续伤害；群体共用一个震动，不将多个目标幅度相加。零伤害、失误、治疗不伪造伤害；减少动态效果仍保留伤害可见反馈但无位移震动。致命一击先冲击再倒下，反馈坐标与点击/状态/对白同偏移。
+- 相关专项37/37通过；`npm run test:battle`共1185项，1184通过、1项既有地面加载提示断言失败（同前述HEAD基线复现），未跳过或记为通过。
+- `scripts/check_battle_camera.mjs`在1100×760、390×844、844×390完成234采样，0页面异常；增加进出镜头过渡截图、反伤/DoT/致命/零伤害断言。检查圆盘无翻折、人物正面和受击数字、冲击圈；本机绘制P50 1.6ms、P95 3.6ms、最大5.3ms。证据在`tmp/battle-camera-projection/`，不等同实体手机性能或完整发布验收。
+- 未提交、推送或发布。
+
+
+## 2026-10-18：个人语言树
+已执行纯核心15项、翻译/字典109项、对白/剧情18项、桌面/手机视口集成检查及实际访客游戏入口冒烟。战斗回归1185项中1184通过，1项既有地面加载提示源码切片断言失败。性能、截图、真实模型及实体手机未验收边界见[完整记录](language-tree-validation.md)。无提交/推送/发布。
+
+## 2026-10-18：回合异常后目标无法选择的恢复保护
+
+- 用户反馈动画一轮后阵容卡/场景角色目标均无效、仍可返回。截图的场上空血条与阵容437血提示结算/界面不同步，但未取得用户原始运行时异常；本次不宣称已确认该现场的唯一根因。
+- 新增回合事务恢复：结算或决定记录抛错后，恢复检查点与revision、重演battle并重绘选牌；成功时先建立播放状态，再保存与停止对白，避免后续异常留下旧界面。
+- `node --test tests/battle_targeting_integration.test.mjs tests/battle_round_transaction.test.mjs tests/battle_camera.test.mjs`：31/31通过。真实PVE第二回合500伤害击杀437血敌人，注入结算后/记录后错误后恢复，再次点击目标成功并与存档重演一致。
+- `npm run test:battle`：修改前1185项，1182通过、3失败；修改后1205项，1202通过、3失败。工作区并行变化导致收录总数增加。两次相同失败：`battle_earth_labels` 的地面提示断言，以及 `battle_hanzi_story_catalog` 的两个缺失hanzi页面检查；未跳过或计为通过。输出保留在 `tmp/battle-targeting/before.txt`、`after.txt`。
+- `node --check js/adventure_app.js`通过。未完成用户实际浏览器现场复验；浏览器连接返回网络错误。未构建、提交、推送或发布。
+
+## 2026-10-18：摄影机后提示气泡错位
+
+- 修复气泡按障碍顺序跳到远处主角状态行上方：候选位置改为就近排序，保留避让、视口边界和主角对白优先规则。摄影机活动时不缓存宠物提示位置，恢复后重算；缓存加入全部状态矩形、气泡尺寸及视口高度。
+- `node --test tests/actor_speech.test.mjs tests/battle_pet_hint.test.mjs tests/battle_chat_layout.test.mjs`：16/16通过，覆盖截图近似坐标、障碍排列顺序变化、镜头切换、非首个状态图标移动、桌面/手机对白与尾尖位置。
+- `npm run test:battle`：1207项，1204通过、3失败；与前次相同的地面提示断言和两项缺失汉字页面检查，未计为通过。输出：`tmp/battle-targeting/speech-layout.txt`。
+- 未做浏览器目视复验，未构建、提交、推送或发布。
+
+## 2026-10-18：语言创造家园验收
+
+- 接入范围：世界地图第三页、宠物菜单内部家园入口，多角色/多家园本机隔离，160种物品中英召唤，家具拖放/旋转/收回/桌面槽位，全部宠物名册与12类生活互动，云端分文件手动同步。实现细节与限制见[家园](home.md)。
+- 家园专项 Node：24/24通过，日志 `tmp/home-unit-final.log`。覆盖160项双语三句式、颜色/别名/轻微拼写、负坐标与地表确定性、地板/家具/桌面占用、跨块移动附属物、回执去重、非法数据、云端发布顺序/中断/身份变化/并发本地编辑/冲突副本及按需分块下载。首只宠物保证在出生镜头附近。
+- 最新 `npm run test:battle`：1213项中1210通过、3失败、0跳过，日志 `tmp/home-battle-verified.log`。地图按钮数量断言已更新为三入口并验证家园回调；其余失败没有跳过，也没有记为全套通过。
+- 剩余失败：`battle_earth_labels.test.mjs` 的 `surface loading overlay shows actual tile progress and disappears when ready`（已有源代码截取断言失败，前面的QA已记录HEAD复现）；`battle_hanzi_story_catalog.test.mjs` 的 `all 30 island words resolve to their own standalone character, including dance rather than martial wu` 和 `new standalone pages preserve dictionary stroke geometry and parse without network imports`（当前工作区缺失 `hanzi/hanzi_ri.html`）。本轮未改这些地表渲染/汉字页面文件。
+- Edge隔离浏览器：正式 `Haqi.html?assets=local` 宠物菜单→家园→召唤→哈奇世界地图→家园存档入口通过；1280×900与390×900独立夹具通过文字召唤、家具摆放/拖动/旋转、40宠物名册与召到身边、模拟语音、QuotaExceeded失败后重试只发一件、两个家园独立保存、刷新恢复、并发回执、账号隔离和无页面横向溢出。日志 `tmp/home-browser-verified.log`，截图 `tmp/home-browser/main.png`、`1280-scene.png`、`390-scene.png`；已查看桌面和手机截图。
+- 过程中的测试问题均保留记录：一次正式入口在本机HTTP服务日志阻塞时超时，改用安静日志服务8787复测通过；初始拖动测试会点中家具前的自主宠物，隔离夹具现显式把自动居民放在操作区外，生产出生位置另由专项守护，正式入口仍使用真实出生位置。
+- 23项复用美术/20张永久CDN资源已实际GET，CORS为`*`、WebP格式、200KB预算及SHA-256通过；日志 `tmp/home-art.log`。其余137项为原生Canvas矢量，无新增媒体上传。
+- 数据打包专项通过：160项家园目录作为独立JSON输出，不进入冒险启动包；输出只写 `tmp/home-package/`，未执行游戏构建或发布。相关JS语法和修改文件diff空白检查通过。
+- 未覆盖：真实账号的云端写入/跨设备恢复、真实麦克风识别与音质、实体手机、多小时及超大已装修世界性能。云端/语音规则使用模拟服务验证，不把模拟结果冒充真实服务验收。没有提交、推送或发布游戏。
+
+### 家园全屏场景复验（2026-10-18）
+- `node --test tests/battle_home.test.mjs`：26/26通过，包括家具碰撞、地板可行走、朝向与冒险坐标不变。
+- `scripts/check_home_immersive.mjs`：1280×900、390×900隔离IndexedDB；全屏尺寸、默认收起目录、召唤、库存放置、漫游、目录返回与再进入。
+- `scripts/check_home_world_entry.mjs`：实际Haqi入口，原Canvas/HUD隐藏、真实角色绘制、点击行走、返回冒险恢复。使用隔离local-coop测试存档，不接触真实存档。
+- `npm run test:battle`：1212通过、3失败。失败为已有earth loading源码断言及当前工作区删除的hanzi_ri.html所致两例；完整输出tmp/home-immersive-battle-final.log。
+- 真实麦克风、真实云账号未测试。自然背景植被可穿行；行走暂不自动绕家具。
+- 补跑既有 `scripts/check_home.mjs`：桌面/390px全部通过，包含拖放旋转、40居民、保存失败重试、刷新恢复、重复回执与账号隔离。
+
+### 家园居民与传送装置（2026-10-18）
+- `scripts/check_home_pet_idle.mjs`：观察超过20秒AI周期，居民绘制坐标保持不变；漫游拖动预览跟随指针，落点与预览一致并保存通过。
+- `scripts/check_home_world_entry.mjs`：正式Haqi入口点击出生点传送按钮后打开哈奇世界地图，退出家园恢复原世界/HUD，通过。
+- `scripts/check_home.mjs`：1280px、390px既有家园完整回归通过。
+- 战斗回归1215例，1212通过、3项既有失败；日志tmp/home-pet-portal-battle.log。没有验证真实麦克风或真实云端服务。
+
+
+### 2026-10-18：极简语言树更新
+
+语言树极简字典标签：核心／控制器 113/113、Edge 桌面／手机视口和实际游戏字典切换通过。战斗回归 1211/1215，地图标签 1、缺失汉字动画 2、家园移动 1 项失败，独立重跑复现。详情见 language-tree-validation.md；真实在线模型与实体手机未验收。
+
+### 2026-10-18：家园全量 WebP 图集、随机群落河流桥梁、主角脚印与游戏化 UI 升级
+
+- **160 项家园物品全量 WebP 图集与 Keepwork CDN 校验**：新增 `scripts/prepare_home_art.py`，将 `data/adventure/home/catalog.json` 全部 8 类 160 项物品打包为 10 张 `768×768`（4×4 格，单格 `192×192`）透明背景 WebP 图集（`assets/adventure/home/home-atlas-01..10-*.webp`，体积 `140,860B–195,412B`，全部 `<= 200,000B`），上传至 `https://cdn.keepwork.com/keepwork/cdn/haqi/home/` 并记录于 `data/adventure/home/home-art.json`。`node scripts/check_home_art.mjs` **160 项引用、10 张永久 CDN 资源全部通过**（HTTP 200、`Access-Control-Allow-Origin: *`、WebP 头、200KB 上限与 SHA-256 校验）。
+- **确定性六大群落、蜿蜒河流、木桥、石板路与主角脚印单元测试**：`node --test tests/battle_home.test.mjs` **29/29 通过**（新增 160 项 WebP 图集断言、6 大群落与蜿蜒河流/自然木桥/石板路确定性及通行碰撞测试、主角行走产生 `foot` 脚印与 `dust` 尘土粒子测试）。
+- **浏览器自动化与目视核验**：本机静态服务下运行全部 5 个家园 Playwright 验收脚本并通过：
+  - `node scripts/check_home_immersive.mjs`：1280×900 与 390×900 均 `passed: true`；
+  - `node scripts/check_home_preview.mjs`：1280×900 与 390×900 均 `passed: true`（400×300 WebP 缩略图、游玩时长、刷新恢复、不混入云同步快照）；
+  - `node scripts/check_home.mjs`：1280×900 与 390×900 均 `status: "passed"`（双语召唤、库存摆放、拖拽移动、旋转、40 居民召到身边、保存失败重试、双家园切换、并发回执、账号隔离、无横向溢出）；
+  - `node scripts/check_home_pet_idle.mjs`：22 秒空闲观察宠物静止与漫游拖拽跟随落点保存通过；
+  - `node scripts/check_home_world_entry.mjs`：正式 `Haqi.html?assets=local` 入口进入家园、主角全身立绘与行走、出生点传送回哈奇世界地图通过。
+  - 目视检查 `tmp/home-immersive/1280-walk.png`、`1280-build.png`、`390-build.png`、`main.png` 与 `tmp/home-browser/1280-scene.png`：漫游模式无网格线，六大群落地表与蜿蜒河流、河畔鹅卵石、跨河木桥、广场石板路衔接自然，WebP 家具渲染清晰，游戏化 HUD 与底栏布局整洁。
+- **战斗快速回归**：`npm run test:battle` **1215/1218 通过**（3 项失败仍为既有 `battle_earth_labels.test.mjs` 地面加载提示源码断言及工作区缺失 `hanzi/hanzi_ri.html` 的 2 项检查，未跳过或计为通过）。修改保留在本地工作区，未提交、未推送。
+
+
+
+## 2026-10-18：中英页签替换与掌握清单同步
+
+- `node --test tests/language_tree*.test.mjs tests/word_tree.test.mjs tests/dictionary_controller.test.mjs`：133/133 通过。
+- 新增 7 项掌握同步验证：字典预置不虚报遇见、两次答对只触发一次写、普通自评不写、失败重试、云清单恢复不伪造证据、本地降级保护、身份切换与读失败保护、中文句子校验，以及 SDK directWrite 应答参数与最小清单载荷。
+- `scripts/check_dictionary_tree.mjs`：独立访客实际游戏，桌面与 390×900 手机视口均验证中文／英文页签直接显示树、旧网格／独立树页签移除、顶部进度保留、“不认识”进入原学习卡、返回树及战斗卡页签卸载。截图 `tmp/tree-minimal/en-390-dictionary-tree.png` 等。非实体手机。
+- `npm run test:battle`：1218 项，1215 通过、3 失败：battle_earth_labels 旧源码文本匹配；battle_hanzi_story_catalog 两项缺失独立汉字动画。见 `tmp/tree-dictionary-battle.log`。这些失败不在本次改动模块，未跳过测试。
+- 未对真实账号进行云端读写，未验证在线 AI 出题或发音。本轮云验收使用注入 SDK 桩，只证明调用边界／参数／身份检查及状态规则，不代表线上服务验收。未提交、推送、发布。
+
+
+### 2026-10-18：世界树原生 JS 类库
+
+已删除世界树旧 UI、入口分流、六叉导航与 iframe 适配器，唯一入口为 WordTree 类。130 项核心／字典控制器测试通过；多实例隔离、生命周期、当前预览及实际字典切换通过。战斗回归 1215/1218，通过以外 3 项与改动前相同。详情见 language-tree-validation.md。
+
+## 2026-10-18：家园原生透明图集
+
+内置ImageGen重制全部10张RGBA源图，alpha连通区域打包160项替代旧JPEG白底去背。10张WebP均<200,000字节；原生alpha、12px打包边距、裁剪与SHA-256专项通过；打包行为2/2、家园Node34/34通过。全部10个Keepwork CDN文件HTTP/CORS/WebP/哈希通过。浏览器本地和CDN各160项三底色绘制、Canvas读取通过，1280/390px实际家园目录和摆放通过。人工查看花园三底色及场景截图，见tmp/home-alpha/。仅美术上传，代码未发布；用户选择不复制独立Git镜像。
+
+## 2026-10-19 家园点击寻路
+
+家园与寻路专项35/35通过（其中新增寻路5项）；`npm run test:battle` 为1224项、1221通过、3失败：`battle_earth_labels.test.mjs:33` 地面加载提示预期文字但实际为空；`battle_hanzi_story_catalog.test.mjs:11`、`:21` 因缺少 `hanzi/hanzi_ri.html` 失败。这些失败涉及本次未修改的模块，不宣称全量回归通过。未进行浏览器验收、构建或发布。
+
+## 2026-10-19 家具操作SVG与尺寸
+
+家园专项48/48通过，编辑专项复测7/7通过。快速回归1231项中1228通过、3失败：surface loading overlay提示断言，以及汉字故事目录两项缺文件，与前次失败名称一致。未做浏览器/实体触屏验收，未发布。

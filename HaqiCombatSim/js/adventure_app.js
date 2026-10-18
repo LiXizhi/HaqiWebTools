@@ -149,12 +149,12 @@ async function getEarth(){
     return earthServiceTask;
 }
 let atlasView=null,atlasPortalFocus=null;
-function switchWorldMap(id){atlasPortalFocus=null;openPanel(id==='home'?'home':id==='earth'?'earthmap':'worldmap');}
+function switchWorldMap(id){atlasPortalFocus=null;openPanel(id==='earth'?'earthmap':'worldmap');}
 let homeView=null,homeTicket=0;
 async function openHomePanel(){
     if(stage!=='world')return;close({silent:true});panel='home';const ticket=++homeTicket;
     try{const {openHomeSystem}=await import('./home_app.js');if(ticket!==homeTicket||panel!=='home')return;
-        const view=await openHomeSystem({root:nodes.overlay,close,switchWorld:switchWorldMap,cloud:cloudClient,assetMode:assets.mode,drawTree:(ctx,x,y,size,variant)=>assets.environmentArt?.draw(ctx,'campTrees',['tallPine','layeredPine','cypressPine','blossomTree'][variant%4],x-size*.56,y-size*1.06,size*1.12,size*1.08),drawHero:(ctx,hero,x,y,time,moving,scale,options)=>assets.hero.drawSave(ctx,hero,x,y,time,moving,scale,options),onScene:active=>{nodes.hud.hidden=active;nodes.world.hidden=active;},getContext:()=>({owner:roleStore.owner,roleId:roleStore.catalog.activeId,save,content:assets.content,active:panel==='home'&&stage==='world'&&ticket===homeTicket})});
+        const view=await openHomeSystem({root:nodes.overlay,close,cloud:cloudClient,assetMode:assets.mode,drawTree:(ctx,x,y,size,variant)=>assets.environmentArt?.draw(ctx,'campTrees',['tallPine','layeredPine','cypressPine','blossomTree'][variant%4],x-size*.56,y-size*1.06,size*1.12,size*1.08),drawHero:(ctx,hero,x,y,time,moving,scale,options)=>assets.hero.drawSave(ctx,hero,x,y,time,moving,scale,options),onScene:active=>{nodes.hud.hidden=active;nodes.world.hidden=active;},getContext:()=>({owner:roleStore.owner,roleId:roleStore.catalog.activeId,save,content:assets.content,active:panel==='home'&&stage==='world'&&ticket===homeTicket})});
         if(ticket!==homeTicket||panel!=='home'){view.dispose();return;}homeView=view;
     }catch(e){if(ticket===homeTicket){close();toast(e.message);}}
 }

@@ -12,5 +12,5 @@ const create=store.create;store.create=async home=>{await create(home);const res
 let fail=false;store.mutate=(...args)=>fail?Promise.reject(new DOMException('测试磁盘已满','QuotaExceededError')):mutate(...args);
 window.homeQA={store,context,fail:value=>fail=value,ready:false};
 const voice={start:async()=>{},finish:async()=> 'I want a chair.',cancel:async()=>{},speak:async()=>{}};
-window.homeQA.app=await openHomeSystem({root:document.getElementById('overlay'),getContext:()=>context,close:()=>{},switchWorld:()=>{},catalog,store,voice});window.homeQA.ready=true;
+window.homeQA.app=await openHomeSystem({root:document.getElementById('overlay'),getContext:()=>context,close:()=>{},catalog,store,voice});window.homeQA.ready=true;
 </script></body></html>

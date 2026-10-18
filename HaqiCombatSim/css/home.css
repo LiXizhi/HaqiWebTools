@@ -34,7 +34,7 @@
 .home-world-heading .close-button .icon{width:36px;height:36px}
 
 /* Buttons inside Home World */
-.home-world button:not(.home-item):not(.home-bubble):not(.home-color-dot):not(.home-cat-pill):not(.close-button){background:#fff8e6!important;border:1px solid #cbb88a!important;border-radius:999px!important;box-shadow:0 2px 6px rgba(34,58,40,0.16)!important;background-image:none!important;border-image:none!important;text-shadow:none!important;color:#2f503a!important;min-height:36px;padding:6px 14px;font-weight:600;font-size:13px;cursor:pointer;transition:transform .1s ease,filter .1s ease}
+.home-world button:not(.home-pet-name-btn):not(.home-item):not(.home-bubble):not(.home-color-dot):not(.home-cat-pill):not(.close-button){background:#fff8e6!important;border:1px solid #cbb88a!important;border-radius:999px!important;box-shadow:0 2px 6px rgba(34,58,40,0.16)!important;background-image:none!important;border-image:none!important;text-shadow:none!important;color:#2f503a!important;min-height:36px;padding:6px 14px;font-weight:600;font-size:13px;cursor:pointer;transition:transform .1s ease,filter .1s ease}
 .home-world button:not(.close-button)::before,.home-world button:not(.close-button)::after{display:none!important}
 .home-world button.primary:not(.close-button){background:#2f593f!important;color:#fff7e2!important;border-color:#234430!important}
 .home-world button:hover{filter:brightness(1.04)}
@@ -43,7 +43,8 @@
 /* World-Space Contextual Floating Action Wheel */
 .home-world .home-edit-actions{display:none;position:absolute;top:76px;left:50%;transform:translate(-50%,-100%);gap:4px;padding:6px 8px;border-radius:999px;background:rgba(34,54,40,0.86);backdrop-filter:blur(8px);box-shadow:0 8px 24px rgba(18,32,22,0.32);z-index:5;pointer-events:auto;white-space:nowrap}
 .home-world .is-building.has-selection .home-edit-actions{display:flex}
-.home-world .home-edit-actions .home-wheel-btn{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;min-height:44px;padding:9px;border-radius:50%;box-sizing:border-box;background:#fff9e8!important;color:#2b4c36!important;border:1px solid #d8c696!important}
+/* Override the more specific generic home-button padding so the SVG stays centered. */
+.home-world .home-edit-actions .home-wheel-btn{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;min-height:44px;padding:0!important;border-radius:50%;box-sizing:border-box;background:#fff9e8!important;color:#2b4c36!important;border:1px solid #d8c696!important}
 .home-world .home-edit-actions .home-wheel-btn.danger{background:#ffece8!important;color:#8e352e!important;border-color:#e6a8a0!important}
 
 /* Pet Wish Speech Bubble */
@@ -67,7 +68,7 @@
 .home-world .home-dock-button[aria-pressed=true]{background:#d2e4b5!important;color:#1e442e;font-weight:700}
 
 /* Magic Voice / Summon Bar — ONLY displayed when summoning (data-drawer="summon") */
-.home-world .home-summon{display:none;position:absolute;bottom:78px;left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 32px));gap:6px;padding:6px 8px;background:rgba(255,247,228,0.96);backdrop-filter:blur(8px);border:1.5px solid #d8c698;border-radius:999px;z-index:4;box-shadow:0 6px 20px rgba(32,58,40,0.22)}
+.home-world .home-summon{display:none;position:absolute;bottom:calc(max(8px,env(safe-area-inset-bottom)) + 86px);left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 32px));gap:6px;padding:6px 8px;background:rgba(255,247,228,0.96);backdrop-filter:blur(8px);border:1.5px solid #d8c698;border-radius:999px;z-index:4;box-shadow:0 6px 20px rgba(32,58,40,0.22)}
 .home-world .home-play[data-drawer=summon] .home-summon{display:flex}
 .home-summon input{flex:1;min-width:0;padding:8px 14px;border:1px solid #c6b488;border-radius:999px;background:#fffdf7;color:#2f4734;font:inherit;font-size:14px}
 .home-summon button{flex-shrink:0;border-radius:999px!important;padding:6px 14px!important}
@@ -75,7 +76,7 @@
 .home-mic{touch-action:none;background:#f4e6c2!important}
 
 /* Summon Example & Color Dye Swatches — ONLY displayed when summoning (data-drawer="summon") */
-.home-world .home-example{display:none;position:absolute;bottom:134px;left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 32px));z-index:4;background:rgba(255,248,230,0.95);backdrop-filter:blur(8px);border:1px solid #d8c698;border-radius:16px;padding:8px 12px;flex-direction:column;gap:6px;font-size:12px;color:#5f5138;box-shadow:0 6px 18px rgba(32,58,40,0.18)}
+.home-world .home-example{display:none;position:absolute;bottom:calc(max(8px,env(safe-area-inset-bottom)) + 142px);left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 32px));z-index:4;background:rgba(255,248,230,0.95);backdrop-filter:blur(8px);border:1px solid #d8c698;border-radius:16px;padding:8px 12px;flex-direction:column;gap:6px;font-size:12px;color:#5f5138;box-shadow:0 6px 18px rgba(32,58,40,0.18)}
 .home-world .home-play[data-drawer=summon] .home-example{display:flex}
 .home-example-chips{display:flex;flex-wrap:wrap;gap:5px}
 .home-world .home-sentence-chip{min-height:30px!important;padding:4px 10px!important;border-radius:999px!important;font-size:12px!important;background:#f4ebd0!important}
@@ -85,7 +86,7 @@
 .home-color-dot:first-of-type{width:auto;padding:2px 8px!important;border-radius:999px!important}
 .home-color-dot.is-active{outline:2.5px solid #2f593f;transform:scale(1.12)}
 .home-world .home-speak-btn{margin-left:auto;min-height:28px!important;padding:3px 10px!important;border-radius:999px!important;font-size:11px!important}
-.home-world .home-choices{position:absolute;bottom:205px;left:50%;transform:translateX(-50%);display:flex;flex-wrap:wrap;gap:6px;z-index:4}
+.home-world .home-choices{position:absolute;bottom:calc(max(8px,env(safe-area-inset-bottom)) + 213px);left:50%;transform:translateX(-50%);display:flex;flex-wrap:wrap;gap:6px;z-index:4}
 
 /* Build / Inventory / Residents Drawer (.home-sidebar) */
 .home-world .home-sidebar{display:none;position:absolute;right:16px;bottom:78px;width:336px;height:min(64vh,560px);flex-direction:column;gap:8px;padding:12px;border:1.5px solid #dcc99c;border-radius:22px;background:rgba(255,247,230,0.96);backdrop-filter:blur(10px);box-shadow:0 12px 32px rgba(28,54,38,0.28);z-index:4}
@@ -133,7 +134,7 @@
  .home-world .home-dock{bottom:max(6px,env(safe-area-inset-bottom));gap:2px;padding:4px;width:calc(100% - 16px);justify-content:space-around;border-radius:18px}
  .home-world .home-dock-button{min-width:0;padding:4px 6px;height:50px;font-size:11px;gap:2px}
  .home-dock-button svg{width:19px;height:19px}
- .home-world .home-summon{bottom:64px;left:8px;transform:none;width:calc(100% - 16px);max-width:none;padding:4px 6px}
+ .home-world .home-summon{bottom:calc(max(6px,env(safe-area-inset-bottom)) + 74px);left:8px;transform:none;width:calc(100% - 16px);max-width:none;padding:4px 6px}
  .home-summon input{font-size:12px;padding:6px 10px}
  .home-summon button{font-size:11px!important;padding:5px 10px!important;min-height:32px!important}
  .home-world .home-sidebar{right:8px;left:8px;bottom:64px;width:auto;height:40vh;gap:5px;padding:8px}
@@ -141,7 +142,7 @@
  .home-item-thumb{height:52px}
  .home-item strong{font-size:10px}
  .home-item small{font-size:9px}
- .home-world .home-example{bottom:116px;left:8px;transform:none;width:calc(100% - 16px);max-width:none;max-height:76px;overflow:auto;padding:6px}
+ .home-world .home-example{bottom:calc(max(6px,env(safe-area-inset-bottom)) + 126px);left:8px;transform:none;width:calc(100% - 16px);max-width:none;max-height:76px;overflow:auto;padding:6px}
  .home-world .home-status{top:48px;left:8px;max-width:calc(100% - 16px);font-size:11px;padding:4px 10px}
  .home-world .home-toolbar{right:8px;left:8px;bottom:64px;width:auto}
  .home-entry-preview,.home-entry-placeholder{width:100px;height:75px}
@@ -180,9 +181,13 @@
 .home-edit-done{min-height:44px;white-space:nowrap}
 .home-play[data-drawer=pets] .home-edit-done{display:none}
 .home-play[data-drawer=pets] .home-summary{display:none}
-.home-play[data-drawer=pets] .home-pet-card{flex:0 0 112px;height:126px;box-sizing:border-box;flex-direction:column;gap:2px;padding:4px;touch-action:pan-x}
+.home-play[data-drawer=pets] .home-pet-card{flex:0 0 112px;height:126px;box-sizing:border-box;flex-direction:column;gap:2px;padding:4px;touch-action:pan-x;background:transparent;border:0;border-radius:0}
 .home-world .home-play[data-drawer=pets] .home-pet-name-btn{width:100%;display:flex;flex-direction:column;gap:1px;min-height:0!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
-.home-play[data-drawer=pets] .home-pet-portrait{width:42px;height:42px;flex:0 0 42px}
+.home-play[data-drawer=pets] .home-pet-name-btn::before,.home-play[data-drawer=pets] .home-pet-name-btn::after{display:none!important}
+.home-world .home-play[data-drawer=pets] .home-pet-name-btn{border-radius:0!important;border-image:none!important;cursor:grab;touch-action:pan-x;user-select:none}
+.home-play[data-drawer=pets] .home-pet-portrait{width:80px;height:80px;flex:0 0 80px;background:transparent;border-radius:0}
+.home-pet-drag-preview{position:fixed;z-index:10000;pointer-events:none;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;color:var(--ink);font-size:12px}
+.home-pet-drag-preview canvas{width:64px;height:64px}
 .home-play[data-drawer=pets] .home-pet-name{flex:none;max-width:100%;font-size:12px;line-height:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .home-play[data-drawer=pets] .home-pet-act-tag{font-size:9px;line-height:12px;padding:0 4px}
 .home-world .home-play[data-drawer=pets] .home-pet-card>button.primary{width:100%;min-height:26px!important;padding:2px 5px!important;font-size:12px}
@@ -192,7 +197,7 @@
 .home-play.is-dragging-item .home-canvas{cursor:grabbing}
 @media(max-width:650px){
  .home-play[data-drawer=pets] .home-pet-card{flex-basis:90px;height:104px}
- .home-play[data-drawer=pets] .home-pet-portrait{width:28px;height:28px;flex-basis:28px}
+ .home-play[data-drawer=pets] .home-pet-portrait{width:64px;height:64px;flex-basis:64px}
  .home-world .home-play[data-drawer=build] .home-sidebar,
  .home-world .home-play[data-drawer=pets] .home-sidebar,
 .home-world .home-play[data-drawer=stock] .home-sidebar{left:0;right:0;bottom:0;padding:2px 8px max(2px,env(safe-area-inset-bottom));gap:2px;height:calc(180px + env(safe-area-inset-bottom));max-height:none}

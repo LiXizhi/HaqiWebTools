@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "style": "经典魔法绘本",
-  "local": "assets/adventure/ui/storybook-edbc67b355aa.webp",
-  "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/ui/storybook-edbc67b355aa.webp",
+  "local": "assets/adventure/ui/storybook-6af26b053137.webp",
+  "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/ui/storybook-6af26b053137.webp",
   "width": 512,
   "height": 640,
-  "size": 97696,
-  "sha256": "edbc67b355aa6ba11bf9bc97c5232cc81e600aad8a3242cc4487ff8af648de11",
+  "size": 93820,
+  "sha256": "6af26b053137451dee365668e418b9245baf06e857ad7b95fad10c7798d31244",
   "source": {
     "generator": "image_gen",
     "date": "2026-09-19",
@@ -16,7 +16,7 @@
   },
   "encoding": {
     "lossless": false,
-    "quality": 84
+    "quality": 78
   },
   "frames": {
     "paper": {
@@ -348,6 +348,24 @@
         1230,
         1173
       ]
+    },
+    "home": {
+      "rect": [
+        136,
+        520,
+        112,
+        111
+      ],
+      "cell": [
+        1,
+        4
+      ],
+      "sourceRect": [
+        0,
+        0,
+        1236,
+        1230
+      ]
     }
   },
   "columns": 4,
@@ -364,6 +382,18 @@
       "local": "assets/adventure/ui/dungeon-icon.webp",
       "size": 20502,
       "webpSha256": "6207440e02560126ab5edadc92a0da94b3e889650548770a9e3d73c246104225"
+    },
+    "home": {
+      "generator": "image_gen",
+      "date": "2026-10-19",
+      "prompt": "Edit the reference game icon: remove the ENTIRE surrounding circular gold medallion frame, all four rim ornaments, and all circular outlines. Keep only the cozy green-roof ivory cottage, glowing doorway/windows and small garden directly at its feet. Preserve its hand-painted fantasy style and golden roof trim. Complete standalone house silhouette on real transparent background, centered and large. NO circle, NO ring, NO badge, NO border, NO enclosing frame, NO disc or background panel, NO text. This image will be placed inside a circular button that already supplies its own frame.",
+      "sha256": "973a0c19c9f9338094e94be72bc0f0c0c9bef4a04ca9243cc4e1c0f83e5a2c68",
+      "width": 1254,
+      "height": 1254,
+      "baseAtlas": "assets/adventure/ui/storybook-edbc67b355aa.webp",
+      "local": "assets/adventure/ui/home-icon.webp",
+      "size": 97032,
+      "webpSha256": "044a8c87699ac92da4371890394ec3166f7616e544dbce0a87bf81753dd1edae"
     }
   }
 }

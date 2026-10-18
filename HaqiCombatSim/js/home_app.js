@@ -9,7 +9,7 @@ import {ownedPetRecords} from './adventure_pet_files_core.js';
 import {hashSeed} from './rng_core.js';
 const directories=new Map();
 export async function primeHomeDirectory(cloud,role){if(!cloud?.owner||!role)return;const key=homeScope(cloud.owner,role);try{directories.set(key,await cloud.homeRead(`homes/${role}/index.json`,{refresh:true})||{version:1,entries:{}});}catch{directories.delete(key);}}
-export async function openHomeSystem({root,getContext,close,switchWorld,cloud,assetMode='cdn',drawHero,drawTree,onScene=()=>{},catalog:providedCatalog,store:providedStore,voice:providedVoice}){
+export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn',drawHero,drawTree,onScene=()=>{},catalog:providedCatalog,store:providedStore,voice:providedVoice}){
  const context=getContext(),scope=homeScope(context.owner,context.roleId),store=providedStore||createHomeStore(scope);
  let dead=false,home=null,parts={},homes=[],guests=null,selection=null,preview=null,inventory={},pets=[],camera={x:0,y:0},scale=40,status='正在加载家园…',pending=null,candidates=[],quiet=false,wish=null,translation=false,rotation=0,loadTicket=0,round=0,recording=null,mutation=Promise.resolve(),busy=false;
  let walkChunk=null;let hero={x:0,y:0,facing:0}, destination=null,build=false,walkPath=[];
@@ -83,7 +83,6 @@ export async function openHomeSystem({root,getContext,close,switchWorld,cloud,as
   },
   retry:async()=>{const job=pending;pending=null;try{await job?.();}catch(e){error(e);}},
   close:()=>close(),
-  world:id=>{if(id==='home')return;if(pending&&!confirm('仍有未保存操作，确定离开？'))return;switchWorld(id);},
   error,
   create,
   enter,
@@ -122,7 +121,6 @@ export async function openHomeSystem({root,getContext,close,switchWorld,cloud,as
   cancel:()=>{selection=null;preview=null;emit();},
   quiet:()=>{quiet=!quiet;emit();},
   findPet:id=>{const p=pets.find(p=>p.id===id);if(p){navigate(p);emit();}},
-  callPet:id=>movePet(id,{x:Math.round(hero.x+1),y:Math.round(hero.y)}),
   translate:()=>{translation=!translation;emit();},
   speak:text=>voice.speak(text,lang()==='en'?'en':'zh-CN',abort.signal),
   summon:text=>summon(text,'text'),

@@ -14,7 +14,7 @@ try{
   page.once('dialog',dialog=>dialog.accept('正式入口家园'));await page.getByRole('button',{name:'新建家园',exact:true}).click();await page.locator('.home-canvas').waitFor();
   await page.getByRole('button',{name:'语音召唤',exact:true}).click();
   await page.getByRole('textbox',{name:'召唤句子'}).fill('I want a chair.');await page.getByRole('button',{name:'召唤',exact:true}).click();await page.waitForFunction(()=>document.querySelector('.home-status')?.textContent==='已保存到本机');
-  await page.screenshot({path:`out/main.png`.replace('out/',`${out}/`),fullPage:true});await page.getByRole('button',{name:'家园列表',exact:true}).click();await page.getByRole('button',{name:'哈奇世界',exact:true}).click();await page.getByRole('button',{name:'家园',exact:true}).click();await page.getByRole('button',{name:'正式入口家园',exact:true}).waitFor();console.log(JSON.stringify({main:'passed',checks:'pet home, summon, return to map, map home tab'}));await context.close();
+  await page.screenshot({path:`out/main.png`.replace('out/',`${out}/`),fullPage:true});await page.locator('.home-portal').click();await page.getByRole('button',{name:'家园',exact:true}).click();await page.getByRole('button',{name:'正式入口家园',exact:true}).waitFor();console.log(JSON.stringify({main:'passed',checks:'pet home, summon, return to adventure, independent home button'}));await context.close();
  }
  for(const width of [1280,390]){
  const context=await browser.newContext({viewport:{width,height:900},hasTouch:width===390}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
@@ -31,7 +31,7 @@ try{
  const moved=await page.evaluate(async()=>{const h=(await homeQA.store.list())[0],s=await homeQA.store.snapshot(h.id);return Object.values(s.parts).flatMap(v=>Object.values(v)).find(v=>v?.itemId==='bed');});assert.notDeepEqual([moved.x,moved.y],[bed.x,bed.y]);
  await canvas.click({position:{x:rect.width/2+(moved.x+.5)*40,y:rect.height/2+(moved.y+.5)*40}});await page.getByRole('button',{name:'旋转',exact:true}).click();await page.waitForTimeout(100);
  const rotated=await page.evaluate(async()=>{const h=(await homeQA.store.list())[0],s=await homeQA.store.snapshot(h.id);return Object.values(s.parts).flatMap(v=>Object.values(v)).find(v=>v?.itemId==='bed');});assert.equal(rotated.rotation,1);
- await page.getByRole('button',{name:'居民',exact:true}).click();assert.equal(await page.locator('.home-pet-card').count(),40);await page.locator('.home-pet-card').first().getByRole('button',{name:'召到身边'}).click();await page.waitForTimeout(150);
+ await page.getByRole('button',{name:'居民',exact:true}).click();assert.equal(await page.locator('.home-pet-card').count(),40);assert.equal(await page.getByRole('button',{name:'召到身边'}).count(),0);
  await page.screenshot({path:`${out}/${width}-scene.png`,fullPage:true});
  // A failed IndexedDB operation is visible, retryable, and grants only once.
  await page.getByRole('button',{name:'语音召唤',exact:true}).click();

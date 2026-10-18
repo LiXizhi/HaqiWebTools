@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="icon" href="data:,">
+<title>木 · 破土而出的树冠、树干与树根</title>
+<style>
+  :root {
+    --gold: #8ef09a;
+    --gold-soft: #d6fad8;
+    --ink: #07140e;
+    --wood: #c88c52;
+    --amber: #f4a442;
+    --ui-bg: rgba(8, 22, 15, 0.76);
+    --ui-border: rgba(142, 240, 154, 0.36);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    background: #07140e;
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Serif SC", serif;
+    color: #f0fff2;
+    touch-action: none;
+  }
+  #stage {
+    position: fixed; inset: 0;
+    width: 100%; height: 100%;
+    display: block;
+    cursor: pointer;
+  }
+
+  /* 顶部进度条 */
+  #hud {
+    position: fixed; top: 18px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: var(--ui-bg);
+    border: 1px solid var(--ui-border);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 20;
+    opacity: 0;
+    transition: opacity .6s ease;
+    pointer-events: none;
+    max-width: calc(100vw - 96px);
+  }
+  #hud.show { opacity: 1; }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.22);
+    transition: all .45s cubic-bezier(.2,.9,.3,1.3);
+  }
+  .dot.done { background: rgba(142, 240, 154, 0.68); }
+  .dot.active {
+    width: 24px; border-radius: 999px;
+    background: linear-gradient(90deg, #b8f8a8, #44c468);
+    box-shadow: 0 0 12px rgba(82, 214, 118, 0.78);
+  }
+  #hud-label {
+    font-size: 12px; letter-spacing: 2px;
+    color: rgba(238, 255, 242, 0.88);
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+
+  /* 右上角工具栏 */
+  #tools {
+    position: fixed; top: 16px; right: 16px;
+    display: flex; gap: 8px;
+    z-index: 25;
+  }
+  .icon-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--ui-bg);
+    border: 1px solid var(--ui-border);
+    color: var(--gold-soft);
+    display: grid; place-items: center;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
+  }
+  .icon-btn:hover { transform: scale(1.06); border-color: rgba(142, 240, 154, 0.75); }
+  .icon-btn:active { transform: scale(0.95); }
+  .icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+  /* 底部字幕与旁白 */
+  #caption-wrap {
+    position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+    width: min(740px, 92vw);
+    text-align: center;
+    z-index: 20;
+    pointer-events: none;
+  }
+  #caption {
+    display: inline-block;
+    padding: 13px 26px;
+    border-radius: 20px;
+    background: rgba(8, 22, 15, 0.8);
+    border: 1px solid rgba(142, 240, 154, 0.28);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.48);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity .5s ease, transform .5s ease;
+  }
+  #caption.show { opacity: 1; transform: translateY(0); }
+  #caption .zh {
+    font-size: clamp(17px, 2.3vw, 22px);
+    letter-spacing: 1.5px;
+    line-height: 1.55;
+    color: #f4fff6;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+  }
+  #caption .zh em {
+    font-style: normal;
+    color: var(--gold);
+    font-weight: 600;
+    padding: 0 2px;
+  }
+  #caption .sub {
+    display: block;
+    margin-top: 4px;
+    font-size: clamp(12px, 1.5vw, 13.5px);
+    color: rgba(214, 250, 216, 0.72);
+    letter-spacing: 1px;
+  }
+
+  /* 交互提示气泡 */
+  #prompt {
+    position: fixed; left: 50%; bottom: 118px; transform: translateX(-50%);
+    padding: 9px 20px;
+    border-radius: 999px;
+    background: rgba(68, 196, 104, 0.18);
+    border: 1px solid rgba(142, 240, 154, 0.58);
+    color: var(--gold-soft);
+    font-size: 14px;
+    letter-spacing: 2px;
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .4s ease, transform .4s ease;
+    box-shadow: 0 0 24px rgba(68, 196, 104, 0.28);
+    animation: pulsePrompt 2.2s ease-in-out infinite;
+    white-space: nowrap;
+  }
+  #prompt.show { opacity: 1; }
+  @keyframes pulsePrompt {
+    0%,100% { transform: translateX(-50%) scale(1); box-shadow: 0 0 18px rgba(68, 196, 104, 0.24); }
+    50% { transform: translateX(-50%) scale(1.04); box-shadow: 0 0 28px rgba(102, 224, 132, 0.52); }
+  }
+
+  /* 独立动作按钮（催芽幕等） */
+  #act-btn {
+    position: fixed; left: 50%; bottom: 114px; transform: translateX(-50%);
+    padding: 12px 30px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(164, 244, 132, 0.94), rgba(52, 168, 86, 0.94));
+    border: 1px solid rgba(226, 255, 224, 0.82);
+    color: #061c0f;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    cursor: pointer;
+    z-index: 23;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(8px);
+    transition: opacity .35s ease, transform .35s ease, box-shadow .25s ease;
+    box-shadow: 0 10px 30px rgba(68, 196, 104, 0.45), 0 0 24px rgba(142, 240, 154, 0.52);
+  }
+  #act-btn.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+    animation: actPulse 1.9s ease-in-out infinite;
+  }
+  #act-btn:hover { box-shadow: 0 12px 34px rgba(68, 196, 104, 0.65), 0 0 32px rgba(142, 240, 154, 0.75); }
+  #act-btn:active { transform: translateX(-50%) scale(0.95); }
+  @keyframes actPulse {
+    0%,100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.05); }
+  }
+
+  /* 部件拆解卡片（成字幕） */
+  #radicals {
+    position: fixed; left: 50%; top: 68px; transform: translateX(-50%);
+    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+    z-index: 21;
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity .2s ease;
+    width: min(94vw, 680px);
+  }
+  #radicals.show { opacity: 1; visibility: visible; }
+  .rad-pill {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: rgba(8, 22, 15, 0.82);
+    border: 1px solid rgba(142, 240, 154, 0.34);
+    backdrop-filter: blur(8px);
+    font-size: 13px;
+    color: #f0fff2;
+    transition: all .4s ease;
+  }
+  .rad-pill.lit {
+    border-color: var(--gold);
+    box-shadow: 0 0 18px rgba(102, 224, 132, 0.48);
+    transform: translateY(-2px);
+  }
+  .rad-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+
+  /* 词语卡片（林木幕） */
+  #words {
+    position: fixed; left: 50%; bottom: 118px; transform: translateX(-50%);
+    display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+    z-index: 22;
+    opacity: 0; pointer-events: none;
+    transition: opacity .5s ease;
+    width: min(92vw, 720px);
+  }
+  #words.show { opacity: 1; pointer-events: auto; }
+  .word-card {
+    min-width: 156px;
+    padding: 12px 18px;
+    border-radius: 16px;
+    background: rgba(10, 26, 18, 0.86);
+    border: 1px solid rgba(142, 240, 154, 0.36);
+    backdrop-filter: blur(10px);
+    text-align: center;
+    cursor: pointer;
+    transform: translateY(14px) scale(0.94);
+    opacity: 0;
+    transition: all .45s cubic-bezier(.2,.9,.3,1.2);
+  }
+  .word-card.in {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .word-card.active, .word-card:hover {
+    border-color: var(--gold);
+    background: rgba(24, 64, 38, 0.9);
+    box-shadow: 0 8px 26px rgba(68, 196, 104, 0.35);
+    transform: translateY(-3px) scale(1.03);
+  }
+  .word-card .w-py {
+    font-size: 12px; color: rgba(214, 250, 216, 0.78);
+    letter-spacing: 1.5px;
+  }
+  .word-card .w-zh {
+    font-size: 24px; color: #fff;
+    letter-spacing: 4px; margin: 3px 0 4px;
+    font-weight: 600;
+  }
+  .word-card .w-zh b { color: var(--gold); }
+  .word-card .w-desc {
+    font-size: 12px; color: rgba(235, 252, 238, 0.76);
+  }
+
+  /* 描红辅助按钮栏 */
+  #write-bar {
+    position: fixed; left: 50%; top: 68px; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(8, 22, 15, 0.84);
+    border: 1px solid rgba(142, 240, 154, 0.36);
+    backdrop-filter: blur(8px);
+    z-index: 22;
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s ease;
+    white-space: nowrap;
+  }
+  #write-bar.show { opacity: 1; pointer-events: auto; }
+  #stroke-counter {
+    font-size: 13px; color: var(--gold-soft); letter-spacing: 1.5px;
+    padding: 0 6px;
+    white-space: nowrap;
+  }
+  .mini-btn {
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(142, 240, 154, 0.16);
+    border: 1px solid rgba(142, 240, 154, 0.45);
+    color: var(--gold-soft);
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all .2s ease;
+    white-space: nowrap;
+  }
+  .mini-btn:hover { background: rgba(142, 240, 154, 0.3); }
+
+  /* 片头覆盖层 */
+  #intro {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-end;
+    padding-bottom: clamp(46px, 9vh, 88px);
+    background: radial-gradient(circle at 50% 42%, rgba(10, 32, 20, 0.08) 0%, rgba(6, 18, 12, 0.5) 64%, rgba(3, 10, 7, 0.86) 100%);
+    z-index: 30;
+    transition: opacity .85s ease;
+  }
+  #intro.hide { opacity: 0; pointer-events: none; }
+  .intro-panel {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 20px 32px 24px;
+    border-radius: 26px;
+    background: rgba(8, 22, 15, 0.66);
+    border: 1px solid rgba(142, 240, 154, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    max-width: 92vw;
+  }
+  .intro-py {
+    font-size: clamp(14px, 2vw, 18px);
+    letter-spacing: 5px;
+    color: rgba(214, 250, 216, 0.88);
+    margin-bottom: 6px;
+  }
+  .intro-sub {
+    font-size: clamp(14px, 2vw, 17px);
+    letter-spacing: 3px;
+    color: rgba(235, 252, 238, 0.88);
+    margin-bottom: 18px;
+  }
+  .start-btn {
+    padding: 13px 38px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(142, 240, 154, 0.32), rgba(52, 168, 86, 0.2));
+    border: 1.5px solid rgba(142, 240, 154, 0.8);
+    color: #fff;
+    font-size: 16px;
+    letter-spacing: 5px;
+    cursor: pointer;
+    box-shadow: 0 10px 32px rgba(0,0,0,0.45), 0 0 28px rgba(68, 196, 104, 0.32);
+    transition: all .28s ease;
+  }
+  .start-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    background: linear-gradient(135deg, rgba(142, 240, 154, 0.48), rgba(52, 168, 86, 0.3));
+    box-shadow: 0 12px 36px rgba(0,0,0,0.5), 0 0 36px rgba(68, 196, 104, 0.52);
+  }
+
+  /* 尾声重播气泡 */
+  #replay {
+    position: fixed; left: 50%; bottom: 116px; transform: translateX(-50%);
+    padding: 11px 28px;
+    border-radius: 999px;
+    background: rgba(8, 22, 15, 0.85);
+    border: 1.5px solid rgba(142, 240, 154, 0.7);
+    color: var(--gold-soft);
+    font-size: 14px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    z-index: 22;
+    opacity: 0; pointer-events: none;
+    transition: all .35s ease;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+  }
+  #replay.show { opacity: 1; pointer-events: auto; }
+  #replay:hover {
+    background: rgba(142, 240, 154, 0.24);
+    transform: translateX(-50%) translateY(-2px);
+  }
+
+  /* 左下角古文字事实边界轻提示 */
+  #fact-note {
+    position: fixed; left: 16px; bottom: 10px;
+    font-size: 11px;
+    color: rgba(214, 244, 218, 0.42);
+    letter-spacing: 0.8px;
+    z-index: 15;
+    pointer-events: none;
+  }
+
+  @media (max-width: 640px) {
+    #hud { top: 12px; padding: 6px 12px; gap: 7px; max-width: calc(100vw - 88px); }
+    #hud-label { font-size: 11px; letter-spacing: 1px; }
+    #tools { top: 10px; right: 10px; gap: 6px; }
+    .icon-btn { width: 34px; height: 34px; }
+    #radicals { top: 54px; gap: 6px; }
+    .rad-pill { padding: 5px 10px; font-size: 11.5px; }
+    #write-bar { top: 54px; padding: 5px 12px; gap: 8px; white-space: nowrap; }
+    #stroke-counter { font-size: 12px; white-space: nowrap; }
+    .mini-btn { white-space: nowrap; }
+    #caption-wrap { bottom: 14px; width: 94vw; }
+    #caption { padding: 10px 14px; border-radius: 16px; }
+    #prompt { bottom: 128px; font-size: 12px; padding: 6px 14px; max-width: 92vw; overflow: hidden; text-overflow: ellipsis; }
+    #act-btn { bottom: 126px; padding: 10px 24px; font-size: 14.5px; }
+    #replay { bottom: 128px; padding: 9px 22px; font-size: 13px; }
+    #words { bottom: 126px; gap: 8px; }
+    .word-card { min-width: 104px; padding: 8px 11px; border-radius: 12px; }
+    .word-card .w-zh { font-size: 19px; letter-spacing: 2px; }
+    .word-card .w-desc { font-size: 10.5px; }
+    #fact-note { display: none; }
+    .intro-panel { padding: 16px 22px 20px; }
+  }
+</style>
+<script id="haqi-h5-protocol-v1">
+(function () {
+  if (window.__haqiHanziProtocolV1) return;
+  window.__haqiHanziProtocolV1 = true;
+
+  const HANZI_CHAR = "木";
+  let lang = (new URLSearchParams(location.search).get('lang') || '').trim();
+  let dict = {};
+  let writtenSent = false;
+  let completedSent = false;
+  let lastCaption = { zh: '', sub: '' };
+
+  function post(type, extra) {
+    const payload = Object.assign({
+      protocol: 'haqi-h5-v1',
+      type: type,
+      char: HANZI_CHAR,
+      hanzi: HANZI_CHAR,
+      timestamp: Date.now()
+    }, extra || {});
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage(payload, '*');
+      }
+    } catch (_) {}
+  }
+
+  function norm(s) {
+    return String(s || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function stripTags(s) {
+    return norm(String(s || '').replace(/<[^>]*>/g, ''));
+  }
+
+  function lookup(text) {
+    if (!lang || lang === 'zh' || lang === 'zh-CN') return '';
+    const k1 = norm(text);
+    const k2 = stripTags(text);
+    return (k1 && dict[k1]) || (k2 && dict[k2]) || '';
+  }
+
+  function applyCaption(zh, sub) {
+    lastCaption = { zh: zh || '', sub: sub || '' };
+    const cap = document.getElementById('caption');
+    const zhEl = document.getElementById('cap-zh') || (cap && cap.querySelector('.zh'));
+    const subEl = document.getElementById('cap-sub') || (cap && cap.querySelector('.sub'));
+    if (!cap || !zhEl) return;
+    if (!zh) {
+      cap.classList.remove('show');
+      return;
+    }
+    zhEl.innerHTML = zh;
+    const trans = lookup(zh);
+    const finalSub = trans || sub || '';
+    if (subEl) {
+      subEl.textContent = finalSub;
+      subEl.style.display = finalSub ? 'block' : 'none';
+    }
+    cap.classList.add('show');
+  }
+
+  function applyElementTranslation(el) {
+    if (!el) return;
+    const orig = el.getAttribute('data-zh-orig') ?? el.textContent;
+    if (!el.hasAttribute('data-zh-orig')) el.setAttribute('data-zh-orig', orig);
+    const trans = lookup(orig);
+    el.textContent = trans ? orig + ' · ' + trans : orig;
+  }
+
+  function scanStatic() {
+    ['#prompt', '#act-btn', '#replay', '#hud-label', '#stroke-counter', '#fact-note', '.intro-sub', '.start-btn', '.mini-btn', '.w-desc'].forEach(sel => {
+      document.querySelectorAll(sel).forEach(applyElementTranslation);
+    });
+    if (lastCaption.zh) applyCaption(lastCaption.zh, lastCaption.sub);
+  }
+
+  window.haqiHanziSetLang = function (nextLang, nextDict) {
+    if (typeof nextLang === 'string') lang = nextLang.trim();
+    if (nextDict && typeof nextDict === 'object') dict = Object.assign({}, dict, nextDict);
+    scanStatic();
+  };
+
+  window.haqiHanziCaption = applyCaption;
+  window.haqiHanziUi = applyElementTranslation;
+
+  window.haqiHanziWritten = function (detail) {
+    if (writtenSent) return;
+    writtenSent = true;
+    post('written', detail || {});
+  };
+
+  window.haqiHanziComplete = function (detail) {
+    if (!writtenSent) {
+      writtenSent = true;
+      post('written', { auto: true });
+    }
+    if (completedSent) return;
+    completedSent = true;
+    post('completed', detail || {});
+  };
+
+  window.addEventListener('message', function (ev) {
+    const d = ev && ev.data;
+    if (!d || typeof d !== 'object') return;
+    if (d.type === 'init' || d.type === 'haqi:init' || d.type === 'translate' || d.type === 'haqi:translate') {
+      window.haqiHanziSetLang(d.lang || d.language || lang, d.dict || d.translations || d.map || {});
+    }
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      scanStatic();
+      post('ready');
+    });
+  } else {
+    setTimeout(function () {
+      scanStatic();
+      post('ready');
+    }, 0);
+  }
+})();
+</script>
+</head>
+<body>
+
+<canvas id="stage"></canvas>
+
+<!-- 顶部进度 -->
+<div id="hud">
+  <div class="dot" data-step="0"></div>
+  <div class="dot" data-step="1"></div>
+  <div class="dot" data-step="2"></div>
+  <div class="dot" data-step="3"></div>
+  <div class="dot" data-step="4"></div>
+  <div class="dot" data-step="5"></div>
+  <div class="dot" data-step="6"></div>
+  <span id="hud-label">春泥</span>
+</div>
+
+<!-- 右上角控制按钮 -->
+<div id="tools">
+  <button class="icon-btn" id="btn-mute" title="声音开关" aria-label="声音开关">
+    <svg id="ico-sound-on" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+    <svg id="ico-sound-off" viewBox="0 0 24 24" style="display:none"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+  </button>
+  <button class="icon-btn" id="btn-restart" title="从头播放" aria-label="从头播放">
+    <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+  </button>
+</div>
+
+<!-- 成字幕：甲骨文象形构成提示 -->
+<div id="radicals">
+  <div class="rad-pill" id="rad-branch"><span class="rad-dot" style="background:#8ef09a"></span><span>树冠 · 横向伸展的枝条（第 1 笔横）</span></div>
+  <div class="rad-pill" id="rad-trunk"><span class="rad-dot" style="background:#e8b268"></span><span>树干 · 顶天立地的主干（第 2 笔竖）</span></div>
+  <div class="rad-pill" id="rad-roots"><span class="rad-dot" style="background:#f49852"></span><span>树根 · 深入大地的双根（第 3 笔撇与第 4 笔捺）</span></div>
+</div>
+
+<!-- 描红辅助栏 -->
+<div id="write-bar">
+  <span id="stroke-counter">第 1 / 4 笔 · 横</span>
+  <button class="mini-btn" id="btn-demo">看示范</button>
+</div>
+
+<!-- 词语卡片 -->
+<div id="words">
+  <div class="word-card" data-idx="0">
+    <div class="w-py">shù mù</div>
+    <div class="w-zh">树<b>木</b></div>
+    <div class="w-desc">扎根大地、枝叶繁茂的参天大树</div>
+  </div>
+  <div class="word-card" data-idx="1">
+    <div class="w-py">mù tou</div>
+    <div class="w-zh"><b>木</b>头</div>
+    <div class="w-desc">温润坚实的木材与木料</div>
+  </div>
+  <div class="word-card" data-idx="2">
+    <div class="w-py">cǎo mù</div>
+    <div class="w-zh">草<b>木</b></div>
+    <div class="w-desc">漫山遍野随春风生长的青草与树木</div>
+  </div>
+</div>
+
+<!-- 交互提示与动作按钮 -->
+<div id="prompt">按住屏幕 · 春雨润泥催芽</div>
+<button id="act-btn" type="button">按住催芽</button>
+<button id="replay">再看一次 · 木的故事</button>
+
+<!-- 字幕 -->
+<div id="caption-wrap">
+  <div id="caption">
+    <div class="zh" id="cap-zh"></div>
+    <span class="sub" id="cap-sub"></span>
+  </div>
+</div>
+
+<div id="fact-note">古字形为依据通行字形的艺术示意</div>
+
+<!-- 片头 -->
+<div id="intro">
+  <div class="intro-panel">
+    <div class="intro-py">MÙ · THE LIVING TREE</div>
+    <div class="intro-sub">破土而出的树冠、树干与树根 · 汉字象形故事</div>
+    <button class="start-btn" id="start">开始</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  // ============================================================================
+  // 1. 工具与确定性随机数
+  // ============================================================================
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const smooth = t => { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); };
+
+  function mulberry32(seed) {
+    let t = seed >>> 0;
+    return function() {
+      t += 0x6D2B79F5;
+      let r = Math.imul(t ^ (t >>> 15), 1 | t);
+      r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+      return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const rng = mulberry32(20261024);
+
+  // ============================================================================
+  // 2. WebAudio 实时春风拂叶与五声木琴音景（零外部音频依赖）
+  // ============================================================================
+  class SoundEngine {
+    constructor() {
+      this.ctx = null;
+      this.muted = false;
+      this.breezeGain = null;
+      this.breezeFilter = null;
+      // F 大调五声音阶: F4, G4, A4, C5, D5, F5, G5, A5, C6
+      this.scale = [349.23, 392.00, 440.00, 523.25, 587.33, 698.46, 783.99, 880.00, 1046.50];
+    }
+
+    init() {
+      if (this.ctx) {
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+        return;
+      }
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      this.ctx = new AC();
+      this._setupBreezeNoise();
+    }
+
+    _setupBreezeNoise() {
+      if (!this.ctx) return;
+      const sr = this.ctx.sampleRate;
+      const len = sr * 3;
+      const buf = this.ctx.createBuffer(1, len, sr);
+      const data = buf.getChannelData(0);
+      let b0 = 0, b1 = 0;
+      for (let i = 0; i < len; i++) {
+        const w = Math.random() * 2 - 1;
+        b0 = 0.995 * b0 + w * 0.04;
+        b1 = 0.96 * b1 + w * 0.1;
+        data[i] = (b0 + b1) * 0.16;
+      }
+      const src = this.ctx.createBufferSource();
+      src.buffer = buf;
+      src.loop = true;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 480;
+      filter.Q.value = 0.9;
+
+      const g = this.ctx.createGain();
+      g.gain.value = 0.0001;
+
+      src.connect(filter);
+      filter.connect(g);
+      g.connect(this.ctx.destination);
+      src.start();
+      this.breezeGain = g;
+      this.breezeFilter = filter;
+    }
+
+    setBreezeLevel(level) {
+      if (!this.ctx || !this.breezeGain) return;
+      const target = this.muted ? 0.0001 : clamp(level, 0.001, 0.22);
+      this.breezeGain.gain.setTargetAtTime(target, this.ctx.currentTime, 0.45);
+      if (this.breezeFilter) {
+        this.breezeFilter.frequency.setTargetAtTime(380 + level * 1200, this.ctx.currentTime, 0.45);
+      }
+    }
+
+    toggleMute() {
+      this.muted = !this.muted;
+      if (this.ctx && this.breezeGain) {
+        this.breezeGain.gain.setTargetAtTime(this.muted ? 0.0001 : 0.05, this.ctx.currentTime, 0.15);
+      }
+      return this.muted;
+    }
+
+    pluck(idx = 0, vol = 0.14, dur = 1.2) {
+      if (this.muted || !this.ctx) return;
+      const now = this.ctx.currentTime;
+      const freq = this.scale[clamp(idx, 0, this.scale.length - 1)];
+      const osc = this.ctx.createOscillator();
+      const osc2 = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+      osc2.type = 'triangle';
+      osc2.frequency.setValueAtTime(freq * 2, now);
+
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.linearRampToValueAtTime(vol, now + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+
+      const g2 = this.ctx.createGain();
+      g2.gain.setValueAtTime(vol * 0.24, now);
+      g2.gain.exponentialRampToValueAtTime(0.0001, now + dur * 0.4);
+
+      osc.connect(g);
+      osc2.connect(g2);
+      g2.connect(g);
+      g.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc2.start(now);
+      osc.stop(now + dur + 0.05);
+      osc2.stop(now + dur + 0.05);
+    }
+
+    woodTap(pitch = 520, vol = 0.1) {
+      if (this.muted || !this.ctx) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(pitch, now);
+      osc.frequency.exponentialRampToValueAtTime(pitch * 1.35, now + 0.09);
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.linearRampToValueAtTime(vol, now + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+      osc.connect(g);
+      g.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.2);
+    }
+
+    chord(indices = [0, 2, 3, 5], vol = 0.1, gap = 0.09) {
+      indices.forEach((n, i) => {
+        setTimeout(() => this.pluck(n, vol, 1.8), i * gap * 1000);
+      });
+    }
+
+    bloomSound() {
+      this.woodTap(580, 0.11);
+      setTimeout(() => this.woodTap(820, 0.1), 65);
+      setTimeout(() => this.pluck(4, 0.13, 1.4), 115);
+    }
+  }
+  const sfx = new SoundEngine();
+
+  // ============================================================================
+  // 3. 世界坐标与自适应相机
+  // ============================================================================
+  const canvas = document.getElementById('stage');
+  const ctx = canvas.getContext('2d');
+  let W = window.innerWidth, H = window.innerHeight, DPR = Math.min(window.devicePixelRatio || 1, 2);
+  let isPortrait = H > W;
+
+  const VIEW = {
+    intro:   { cx: 800, cy: 450, w: 1280, pcy: 455, pw: 660 },
+    hill:    { cx: 800, cy: 465, w: 1320, pcy: 470, pw: 680 },
+    seed:    { cx: 800, cy: 525, w: 880,  pcy: 515, pw: 540 },
+    grow:    { cx: 800, cy: 455, w: 1120, pcy: 460, pw: 610 },
+    wide:    { cx: 800, cy: 455, w: 1340, pcy: 465, pw: 680 },
+    anatomy: { cx: 800, cy: 450, w: 1040, pcy: 455, pw: 590 },
+    glyph:   { cx: 800, cy: 445, w: 1060, pcy: 455, pw: 580 },
+    finale:  { cx: 800, cy: 455, w: 1300, pcy: 465, pw: 660 }
+  };
+
+  const cam = {
+    cx: 800, cy: 450, w: 1280,
+    tcx: 800, tcy: 450, tw: 1280,
+    scale: 1, offX: 0, offY: 0,
+    setTarget(preset, instant = false) {
+      const v = VIEW[preset] || VIEW.wide;
+      this.tcx = v.cx;
+      this.tcy = isPortrait ? v.pcy : v.cy;
+      this.tw  = isPortrait ? v.pw  : v.w;
+      if (instant) {
+        this.cx = this.tcx; this.cy = this.tcy; this.w = this.tw;
+      }
+    },
+    update(dt) {
+      const k = 1 - Math.exp(-dt * 3.8);
+      this.cx = lerp(this.cx, this.tcx, k);
+      this.cy = lerp(this.cy, this.tcy, k);
+      this.w  = lerp(this.w,  this.tw,  k);
+      this.scale = W / this.w;
+      this.offX = W * 0.5 - this.cx * this.scale;
+      this.offY = H * 0.5 - this.cy * this.scale;
+    },
+    toScreen(wx, wy) {
+      return { x: wx * this.scale + this.offX, y: wy * this.scale + this.offY };
+    },
+    toWorld(sx, sy) {
+      return { x: (sx - this.offX) / this.scale, y: (sy - this.offY) / this.scale };
+    }
+  };
+
+  let currentCamPreset = 'intro';
+  function resize() {
+    W = window.innerWidth; H = window.innerHeight;
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    isPortrait = H > W;
+    canvas.width = Math.round(W * DPR);
+    canvas.height = Math.round(H * DPR);
+    cam.setTarget(currentCamPreset, true);
+  }
+  window.addEventListener('resize', resize);
+
+  // ============================================================================
+  // 4. 视觉场景数据：地平线剖面、种子、树冠枝叶、地下根系与三处生机点
+  // ============================================================================
+  const GROUND_Y = 485;
+  const SEED_POS = { x: 800, y: 520 };
+
+  const FIREFLIES = Array.from({ length: 48 }, () => ({
+    x: 140 + rng() * 1320,
+    y: 45 + rng() * 410,
+    r: 1.1 + rng() * 2.1,
+    phase: rng() * Math.PI * 2,
+    speed: 1.0 + rng() * 1.9
+  }));
+
+  // 树冠簇团位置（围绕横向枝条展开）
+  const CANOPY_CLUSTERS = [
+    { ox:   0, oy: -230, r: 62, col: '#48c878' },
+    { ox: -86, oy: -175, r: 54, col: '#3eb86c' },
+    { ox:  88, oy: -180, r: 54, col: '#3eb86c' },
+    { ox: -142, oy: -142, r: 44, col: '#58d886' },
+    { ox:  144, oy: -146, r: 44, col: '#58d886' },
+    { ox: -46, oy: -206, r: 48, col: '#68e494' },
+    { ox:  48, oy: -208, r: 48, col: '#68e494' }
+  ];
+
+  // 飘舞新叶粒子池
+  const LEAVES = [];
+  function spawnLeaves(wx, wy, count = 16, col = '#8ef09a') {
+    for (let i = 0; i < count; i++) {
+      const a = rng() * Math.PI * 2;
+      const sp = 45 + rng() * 135;
+      LEAVES.push({
+        x: wx + (rng() - 0.5) * 26,
+        y: wy + (rng() - 0.5) * 20,
+        vx: Math.cos(a) * sp,
+        vy: Math.sin(a) * sp - 35,
+        rot: rng() * Math.PI * 2,
+        vrot: (rng() - 0.5) * 5,
+        r: 4.5 + rng() * 4.5,
+        life: 1,
+        decay: 0.58 + rng() * 0.45,
+        col
+      });
+    }
+  }
+
+  const RINGS = [];
+  function spawnRing(wx, wy, maxR = 92) {
+    RINGS.push({ x: wx, y: wy, r: 8, maxR, alpha: 0.92 });
+  }
+
+  // 第 4 幕：唤醒大树三处生机
+  const LIFE_SPOTS = [
+    { id: 'foliage',  x: 800, y: 275, r: 56, label: '满树新叶', lit: false, litTime: 0 },
+    { id: 'oriole',   x: 942, y: 335, r: 52, label: '枝头黄鹂', lit: false, litTime: 0 },
+    { id: 'squirrel', x: 675, y: 545, r: 52, label: '树根松鼠', lit: false, litTime: 0 }
+  ];

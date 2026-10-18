@@ -38,4 +38,5 @@ test('atlas arrivals and island changes transfer only changed images',async t=>{
     delete art.images.ground;await rasterize(world,{},516,1);
     assert.deepEqual(messages.filter(m=>m.type==='scene')[3].removed,['ground']);
     art.images.water={};await rasterize(world,{},516,1);assert.equal(copies.length,3);
+    rasterize.dispose();await assert.rejects(rasterize(world,{},516,1),/不可用/);
 });

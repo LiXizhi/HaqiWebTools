@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="icon" href="data:,">
+<title>火 · 篝火跃动的焰苗与火星</title>
+<style>
+  :root {
+    --gold: #ffb85c;
+    --gold-soft: #ffe2b0;
+    --ink: #070b18;
+    --ember: #ff6a28;
+    --crimson: #ff4828;
+    --ui-bg: rgba(18, 12, 16, 0.74);
+    --ui-border: rgba(255, 184, 92, 0.36);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    background: #070b18;
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Serif SC", serif;
+    color: #fff6ea;
+    touch-action: none;
+  }
+  #stage {
+    position: fixed; inset: 0;
+    width: 100%; height: 100%;
+    display: block;
+    cursor: pointer;
+  }
+
+  /* 顶部进度条 */
+  #hud {
+    position: fixed; top: 18px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: var(--ui-bg);
+    border: 1px solid var(--ui-border);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 20;
+    opacity: 0;
+    transition: opacity .6s ease;
+    pointer-events: none;
+    max-width: calc(100vw - 96px);
+  }
+  #hud.show { opacity: 1; }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.22);
+    transition: all .45s cubic-bezier(.2,.9,.3,1.3);
+  }
+  .dot.done { background: rgba(255, 184, 92, 0.68); }
+  .dot.active {
+    width: 24px; border-radius: 999px;
+    background: linear-gradient(90deg, #ffe08a, #ff6a28);
+    box-shadow: 0 0 12px rgba(255, 128, 48, 0.78);
+  }
+  #hud-label {
+    font-size: 12px; letter-spacing: 2px;
+    color: rgba(255, 244, 230, 0.88);
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+
+  /* 右上角工具栏 */
+  #tools {
+    position: fixed; top: 16px; right: 16px;
+    display: flex; gap: 8px;
+    z-index: 25;
+  }
+  .icon-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--ui-bg);
+    border: 1px solid var(--ui-border);
+    color: var(--gold-soft);
+    display: grid; place-items: center;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
+  }
+  .icon-btn:hover { transform: scale(1.06); border-color: rgba(255, 184, 92, 0.75); }
+  .icon-btn:active { transform: scale(0.95); }
+  .icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+  /* 底部字幕与旁白 */
+  #caption-wrap {
+    position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+    width: min(740px, 92vw);
+    text-align: center;
+    z-index: 20;
+    pointer-events: none;
+  }
+  #caption {
+    display: inline-block;
+    padding: 13px 26px;
+    border-radius: 20px;
+    background: rgba(18, 11, 14, 0.78);
+    border: 1px solid rgba(255, 184, 92, 0.28);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.48);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity .5s ease, transform .5s ease;
+  }
+  #caption.show { opacity: 1; transform: translateY(0); }
+  #caption .zh {
+    font-size: clamp(17px, 2.3vw, 22px);
+    letter-spacing: 1.5px;
+    line-height: 1.55;
+    color: #fff8f0;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+  }
+  #caption .zh em {
+    font-style: normal;
+    color: var(--gold);
+    font-weight: 600;
+    padding: 0 2px;
+  }
+  #caption .sub {
+    display: block;
+    margin-top: 4px;
+    font-size: clamp(12px, 1.5vw, 13.5px);
+    color: rgba(255, 226, 176, 0.72);
+    letter-spacing: 1px;
+  }
+
+  /* 交互提示气泡 */
+  #prompt {
+    position: fixed; left: 50%; bottom: 118px; transform: translateX(-50%);
+    padding: 9px 20px;
+    border-radius: 999px;
+    background: rgba(255, 116, 42, 0.18);
+    border: 1px solid rgba(255, 184, 92, 0.58);
+    color: var(--gold-soft);
+    font-size: 14px;
+    letter-spacing: 2px;
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .4s ease, transform .4s ease;
+    box-shadow: 0 0 24px rgba(255, 116, 42, 0.28);
+    animation: pulsePrompt 2.2s ease-in-out infinite;
+    white-space: nowrap;
+  }
+  #prompt.show { opacity: 1; }
+  @keyframes pulsePrompt {
+    0%,100% { transform: translateX(-50%) scale(1); box-shadow: 0 0 18px rgba(255, 116, 42, 0.24); }
+    50% { transform: translateX(-50%) scale(1.04); box-shadow: 0 0 28px rgba(255, 152, 64, 0.52); }
+  }
+
+  /* 独立动作按钮（引火幕等） */
+  #act-btn {
+    position: fixed; left: 50%; bottom: 114px; transform: translateX(-50%);
+    padding: 12px 30px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(255, 196, 88, 0.94), rgba(235, 92, 32, 0.94));
+    border: 1px solid rgba(255, 238, 198, 0.82);
+    color: #220b04;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    cursor: pointer;
+    z-index: 23;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(8px);
+    transition: opacity .35s ease, transform .35s ease, box-shadow .25s ease;
+    box-shadow: 0 10px 30px rgba(255, 106, 40, 0.45), 0 0 24px rgba(255, 184, 92, 0.52);
+  }
+  #act-btn.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+    animation: actPulse 1.9s ease-in-out infinite;
+  }
+  #act-btn:hover { box-shadow: 0 12px 34px rgba(255, 106, 40, 0.65), 0 0 32px rgba(255, 184, 92, 0.75); }
+  #act-btn:active { transform: translateX(-50%) scale(0.95); }
+  @keyframes actPulse {
+    0%,100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.05); }
+  }
+
+  /* 部件拆解卡片（成字幕） */
+  #radicals {
+    position: fixed; left: 50%; top: 68px; transform: translateX(-50%);
+    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+    z-index: 21;
+    opacity: 0; pointer-events: none;
+    transition: opacity .5s ease, transform .5s ease;
+    width: min(94vw, 680px);
+  }
+  #radicals.show { opacity: 1; }
+  .rad-pill {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: rgba(20, 12, 14, 0.8);
+    border: 1px solid rgba(255, 184, 92, 0.34);
+    backdrop-filter: blur(8px);
+    font-size: 13px;
+    color: #fff6ea;
+    transition: all .4s ease;
+  }
+  .rad-pill.lit {
+    border-color: var(--gold);
+    box-shadow: 0 0 18px rgba(255, 148, 66, 0.48);
+    transform: translateY(-2px);
+  }
+  .rad-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+
+  /* 词语卡片（暖光幕） */
+  #words {
+    position: fixed; left: 50%; bottom: 118px; transform: translateX(-50%);
+    display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+    z-index: 22;
+    opacity: 0; pointer-events: none;
+    transition: opacity .5s ease;
+    width: min(92vw, 720px);
+  }
+  #words.show { opacity: 1; pointer-events: auto; }
+  .word-card {
+    min-width: 156px;
+    padding: 12px 18px;
+    border-radius: 16px;
+    background: rgba(26, 14, 14, 0.86);
+    border: 1px solid rgba(255, 184, 92, 0.36);
+    backdrop-filter: blur(10px);
+    text-align: center;
+    cursor: pointer;
+    transform: translateY(14px) scale(0.94);
+    opacity: 0;
+    transition: all .45s cubic-bezier(.2,.9,.3,1.2);
+  }
+  .word-card.in {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .word-card.active, .word-card:hover {
+    border-color: var(--gold);
+    background: rgba(68, 28, 16, 0.9);
+    box-shadow: 0 8px 26px rgba(255, 116, 42, 0.35);
+    transform: translateY(-3px) scale(1.03);
+  }
+  .word-card .w-py {
+    font-size: 12px; color: rgba(255, 226, 176, 0.78);
+    letter-spacing: 1.5px;
+  }
+  .word-card .w-zh {
+    font-size: 24px; color: #fff;
+    letter-spacing: 4px; margin: 3px 0 4px;
+    font-weight: 600;
+  }
+  .word-card .w-zh b { color: var(--gold); }
+  .word-card .w-desc {
+    font-size: 12px; color: rgba(255, 242, 228, 0.76);
+  }
+
+  /* 描红辅助按钮栏 */
+  #write-bar {
+    position: fixed; left: 50%; top: 68px; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(20, 12, 14, 0.82);
+    border: 1px solid rgba(255, 184, 92, 0.36);
+    backdrop-filter: blur(8px);
+    z-index: 22;
+    opacity: 0; pointer-events: none;
+    transition: opacity .4s ease;
+    white-space: nowrap;
+  }
+  #write-bar.show { opacity: 1; pointer-events: auto; }
+  #stroke-counter {
+    font-size: 13px; color: var(--gold-soft); letter-spacing: 1.5px;
+    padding: 0 6px;
+    white-space: nowrap;
+  }
+  .mini-btn {
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255, 184, 92, 0.16);
+    border: 1px solid rgba(255, 184, 92, 0.45);
+    color: var(--gold-soft);
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all .2s ease;
+    white-space: nowrap;
+  }
+  .mini-btn:hover { background: rgba(255, 184, 92, 0.3); }
+
+  /* 片头覆盖层 */
+  #intro {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-end;
+    padding-bottom: clamp(46px, 9vh, 88px);
+    background: radial-gradient(circle at 50% 42%, rgba(28, 14, 12, 0.08) 0%, rgba(12, 8, 16, 0.5) 64%, rgba(5, 6, 12, 0.85) 100%);
+    z-index: 30;
+    transition: opacity .85s ease;
+  }
+  #intro.hide { opacity: 0; pointer-events: none; }
+  .intro-panel {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 20px 32px 24px;
+    border-radius: 26px;
+    background: rgba(20, 12, 14, 0.66);
+    border: 1px solid rgba(255, 184, 92, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    max-width: 92vw;
+  }
+  .intro-py {
+    font-size: clamp(14px, 2vw, 18px);
+    letter-spacing: 5px;
+    color: rgba(255, 226, 176, 0.88);
+    margin-bottom: 6px;
+  }
+  .intro-sub {
+    font-size: clamp(14px, 2vw, 17px);
+    letter-spacing: 3px;
+    color: rgba(255, 242, 228, 0.88);
+    margin-bottom: 18px;
+  }
+  .start-btn {
+    padding: 13px 38px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(255, 184, 92, 0.32), rgba(235, 92, 32, 0.2));
+    border: 1.5px solid rgba(255, 184, 92, 0.8);
+    color: #fff;
+    font-size: 16px;
+    letter-spacing: 5px;
+    cursor: pointer;
+    box-shadow: 0 10px 32px rgba(0,0,0,0.45), 0 0 28px rgba(255, 116, 42, 0.32);
+    transition: all .28s ease;
+  }
+  .start-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    background: linear-gradient(135deg, rgba(255, 184, 92, 0.48), rgba(235, 92, 32, 0.3));
+    box-shadow: 0 12px 36px rgba(0,0,0,0.5), 0 0 36px rgba(255, 116, 42, 0.52);
+  }
+
+  /* 尾声重播气泡 */
+  #replay {
+    position: fixed; left: 50%; bottom: 116px; transform: translateX(-50%);
+    padding: 11px 28px;
+    border-radius: 999px;
+    background: rgba(20, 12, 14, 0.85);
+    border: 1.5px solid rgba(255, 184, 92, 0.7);
+    color: var(--gold-soft);
+    font-size: 14px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    z-index: 22;
+    opacity: 0; pointer-events: none;
+    transition: all .35s ease;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+  }
+  #replay.show { opacity: 1; pointer-events: auto; }
+  #replay:hover {
+    background: rgba(255, 184, 92, 0.24);
+    transform: translateX(-50%) translateY(-2px);
+  }
+
+  /* 左下角古文字事实边界轻提示 */
+  #fact-note {
+    position: fixed; left: 16px; bottom: 10px;
+    font-size: 11px;
+    color: rgba(255, 224, 190, 0.42);
+    letter-spacing: 0.8px;
+    z-index: 15;
+    pointer-events: none;
+  }
+
+  @media (max-width: 640px) {
+    #hud { top: 12px; padding: 6px 12px; gap: 7px; max-width: calc(100vw - 88px); }
+    #hud-label { font-size: 11px; letter-spacing: 1px; }
+    #tools { top: 10px; right: 10px; gap: 6px; }
+    .icon-btn { width: 34px; height: 34px; }
+    #radicals { top: 54px; gap: 6px; }
+    .rad-pill { padding: 5px 10px; font-size: 11.5px; }
+    #write-bar { top: 54px; padding: 5px 12px; gap: 8px; white-space: nowrap; }
+    #stroke-counter { font-size: 12px; white-space: nowrap; }
+    .mini-btn { white-space: nowrap; }
+    #caption-wrap { bottom: 14px; width: 94vw; }
+    #caption { padding: 10px 14px; border-radius: 16px; }
+    #prompt { bottom: 128px; font-size: 12px; padding: 6px 14px; max-width: 92vw; overflow: hidden; text-overflow: ellipsis; }
+    #act-btn { bottom: 126px; padding: 10px 24px; font-size: 14.5px; }
+    #replay { bottom: 128px; padding: 9px 22px; font-size: 13px; }
+    #words { bottom: 126px; gap: 8px; }
+    .word-card { min-width: 104px; padding: 8px 11px; border-radius: 12px; }
+    .word-card .w-zh { font-size: 19px; letter-spacing: 2px; }
+    .word-card .w-desc { font-size: 10.5px; }
+    #fact-note { display: none; }
+    .intro-panel { padding: 16px 22px 20px; }
+  }
+</style>
+<script id="haqi-h5-protocol-v1">
+(function () {
+  if (window.__haqiHanziProtocolV1) return;
+  window.__haqiHanziProtocolV1 = true;
+
+  const HANZI_CHAR = "火";
+  let lang = (new URLSearchParams(location.search).get('lang') || '').trim();
+  let dict = {};
+  let writtenSent = false;
+  let completedSent = false;
+  let lastCaption = { zh: '', sub: '' };
+
+  function post(type, extra) {
+    const payload = Object.assign({
+      protocol: 'haqi-h5-v1',
+      type: type,
+      char: HANZI_CHAR,
+      hanzi: HANZI_CHAR,
+      timestamp: Date.now()
+    }, extra || {});
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage(payload, '*');
+      }
+    } catch (_) {}
+  }
+
+  function norm(s) {
+    return String(s || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function stripTags(s) {
+    return norm(String(s || '').replace(/<[^>]*>/g, ''));
+  }
+
+  function lookup(text) {
+    if (!lang || lang === 'zh' || lang === 'zh-CN') return '';
+    const k1 = norm(text);
+    const k2 = stripTags(text);
+    return (k1 && dict[k1]) || (k2 && dict[k2]) || '';
+  }
+
+  function applyCaption(zh, sub) {
+    lastCaption = { zh: zh || '', sub: sub || '' };
+    const cap = document.getElementById('caption');
+    const zhEl = document.getElementById('cap-zh') || (cap && cap.querySelector('.zh'));
+    const subEl = document.getElementById('cap-sub') || (cap && cap.querySelector('.sub'));
+    if (!cap || !zhEl) return;
+    if (!zh) {
+      cap.classList.remove('show');
+      return;
+    }
+    zhEl.innerHTML = zh;
+    const trans = lookup(zh);
+    const finalSub = trans || sub || '';
+    if (subEl) {
+      subEl.textContent = finalSub;
+      subEl.style.display = finalSub ? 'block' : 'none';
+    }
+    cap.classList.add('show');
+  }
+
+  function applyElementTranslation(el) {
+    if (!el) return;
+    const orig = el.getAttribute('data-zh-orig') ?? el.textContent;
+    if (!el.hasAttribute('data-zh-orig')) el.setAttribute('data-zh-orig', orig);
+    const trans = lookup(orig);
+    el.textContent = trans ? orig + ' · ' + trans : orig;
+  }
+
+  function scanStatic() {
+    ['#prompt', '#act-btn', '#replay', '#hud-label', '#stroke-counter', '#fact-note', '.intro-sub', '.start-btn', '.mini-btn', '.w-desc'].forEach(sel => {
+      document.querySelectorAll(sel).forEach(applyElementTranslation);
+    });
+    if (lastCaption.zh) applyCaption(lastCaption.zh, lastCaption.sub);
+  }
+
+  window.haqiHanziSetLang = function (nextLang, nextDict) {
+    if (typeof nextLang === 'string') lang = nextLang.trim();
+    if (nextDict && typeof nextDict === 'object') dict = Object.assign({}, dict, nextDict);
+    scanStatic();
+  };
+
+  window.haqiHanziCaption = applyCaption;
+  window.haqiHanziUi = applyElementTranslation;
+
+  window.haqiHanziWritten = function (detail) {
+    if (writtenSent) return;
+    writtenSent = true;
+    post('written', detail || {});
+  };
+
+  window.haqiHanziComplete = function (detail) {
+    if (!writtenSent) {
+      writtenSent = true;
+      post('written', { auto: true });
+    }
+    if (completedSent) return;
+    completedSent = true;
+    post('completed', detail || {});
+  };
+
+  window.addEventListener('message', function (ev) {
+    const d = ev && ev.data;
+    if (!d || typeof d !== 'object') return;
+    if (d.type === 'init' || d.type === 'haqi:init' || d.type === 'translate' || d.type === 'haqi:translate') {
+      window.haqiHanziSetLang(d.lang || d.language || lang, d.dict || d.translations || d.map || {});
+    }
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      scanStatic();
+      post('ready');
+    });
+  } else {
+    setTimeout(function () {
+      scanStatic();
+      post('ready');
+    }, 0);
+  }
+})();
+</script>
+</head>
+<body>
+
+<canvas id="stage"></canvas>
+
+<!-- 顶部进度 -->
+<div id="hud">
+  <div class="dot" data-step="0"></div>
+  <div class="dot" data-step="1"></div>
+  <div class="dot" data-step="2"></div>
+  <div class="dot" data-step="3"></div>
+  <div class="dot" data-step="4"></div>
+  <div class="dot" data-step="5"></div>
+  <div class="dot" data-step="6"></div>
+  <span id="hud-label">寒夜</span>
+</div>
+
+<!-- 右上角控制按钮 -->
+<div id="tools">
+  <button class="icon-btn" id="btn-mute" title="声音开关" aria-label="声音开关">
+    <svg id="ico-sound-on" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+    <svg id="ico-sound-off" viewBox="0 0 24 24" style="display:none"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+  </button>
+  <button class="icon-btn" id="btn-restart" title="从头播放" aria-label="从头播放">
+    <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+  </button>
+</div>
+
+<!-- 成字幕：甲骨文象形构成提示 -->
+<div id="radicals">
+  <div class="rad-pill" id="rad-sides"><span class="rad-dot" style="background:#ffd262"></span><span>侧焰 · 两边跃起的火星（左点与右撇）</span></div>
+  <div class="rad-pill" id="rad-core"><span class="rad-dot" style="background:#ff6a28"></span><span>主焰 · 冲天而起的火苗（中竖撇）</span></div>
+  <div class="rad-pill" id="rad-base"><span class="rad-dot" style="background:#ff9442"></span><span>火势 · 向右舒展的烈焰（长捺）</span></div>
+</div>
+
+<!-- 描红辅助栏 -->
+<div id="write-bar">
+  <span id="stroke-counter">第 1 / 4 笔 · 点</span>
+  <button class="mini-btn" id="btn-demo">看示范</button>
+</div>
+
+<!-- 词语卡片 -->
+<div id="words">
+  <div class="word-card" data-idx="0">
+    <div class="w-py">huǒ miáo</div>
+    <div class="w-zh"><b>火</b>苗</div>
+    <div class="w-desc">柴薪上欢快跳动的金红火焰</div>
+  </div>
+  <div class="word-card" data-idx="1">
+    <div class="w-py">huǒ bǎ</div>
+    <div class="w-zh"><b>火</b>把</div>
+    <div class="w-desc">在黑夜里照亮前路的温暖火炬</div>
+  </div>
+  <div class="word-card" data-idx="2">
+    <div class="w-py">huā huǒ</div>
+    <div class="w-zh">花<b>火</b></div>
+    <div class="w-desc">夜空中如繁花般绽放的璀璨火星</div>
+  </div>
+</div>
+
+<!-- 交互提示与动作按钮 -->
+<div id="prompt">按住屏幕 · 擦亮火石引火</div>
+<button id="act-btn" type="button">按住引火</button>
+<button id="replay">再看一次 · 火的故事</button>
+
+<!-- 字幕 -->
+<div id="caption-wrap">
+  <div id="caption">
+    <div class="zh" id="cap-zh"></div>
+    <span class="sub" id="cap-sub"></span>
+  </div>
+</div>
+
+<div id="fact-note">古字形为依据通行字形的艺术示意</div>
+
+<!-- 片头 -->
+<div id="intro">
+  <div class="intro-panel">
+    <div class="intro-py">HUǑ · THE RISING FLAME</div>
+    <div class="intro-sub">篝火跃动的焰苗与火星 · 汉字象形故事</div>
+    <button class="start-btn" id="start">开始</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  // ============================================================================
+  // 1. 工具与确定性随机数
+  // ============================================================================
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const smooth = t => { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); };
+
+  function mulberry32(seed) {
+    let t = seed >>> 0;
+    return function() {
+      t += 0x6D2B79F5;
+      let r = Math.imul(t ^ (t >>> 15), 1 | t);
+      r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+      return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const rng = mulberry32(20261023);
+
+  // ============================================================================
+  // 2. WebAudio 实时篝火噼啪与五声暖音（零外部音频依赖）
+  // ============================================================================
+  class SoundEngine {
+    constructor() {
+      this.ctx = null;
+      this.muted = false;
+      this.fireGain = null;
+      this.fireFilter = null;
+      // C 大调五声音阶: C4, D4, E4, G4, A4, C5, D5, E5, G5
+      this.scale = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99];
+    }
+
+    init() {
+      if (this.ctx) {
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+        return;
+      }
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      this.ctx = new AC();
+      this._setupFireNoise();
+    }
+
+    _setupFireNoise() {
+      if (!this.ctx) return;
+      const sr = this.ctx.sampleRate;
+      const len = sr * 3;
+      const buf = this.ctx.createBuffer(1, len, sr);
+      const data = buf.getChannelData(0);
+      let b0 = 0, b1 = 0;
+      for (let i = 0; i < len; i++) {
+        const w = Math.random() * 2 - 1;
+        b0 = 0.992 * b0 + w * 0.05;
+        b1 = 0.94 * b1 + w * 0.12;
+        const crackle = Math.random() < 0.0018 ? (Math.random() * 2 - 1) * 0.65 : 0;
+        data[i] = (b0 + b1) * 0.18 + crackle;
+      }
+      const src = this.ctx.createBufferSource();
+      src.buffer = buf;
+      src.loop = true;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 460;
+
+      const g = this.ctx.createGain();
+      g.gain.value = 0.0001;
+
+      src.connect(filter);
+      filter.connect(g);
+      g.connect(this.ctx.destination);
+      src.start();
+      this.fireGain = g;
+      this.fireFilter = filter;
+    }
+
+    setFireLevel(level) {
+      if (!this.ctx || !this.fireGain) return;
+      const target = this.muted ? 0.0001 : clamp(level, 0.001, 0.24);
+      this.fireGain.gain.setTargetAtTime(target, this.ctx.currentTime, 0.4);
+      if (this.fireFilter) {
+        this.fireFilter.frequency.setTargetAtTime(340 + level * 1500, this.ctx.currentTime, 0.4);
+      }
+    }
+
+    toggleMute() {
+      this.muted = !this.muted;
+      if (this.ctx && this.fireGain) {
+        this.fireGain.gain.setTargetAtTime(this.muted ? 0.0001 : 0.06, this.ctx.currentTime, 0.15);
+      }
+      return this.muted;
+    }
+
+    pluck(idx = 0, vol = 0.14, dur = 1.4) {
+      if (this.muted || !this.ctx) return;
+      const now = this.ctx.currentTime;
+      const freq = this.scale[clamp(idx, 0, this.scale.length - 1)];
+      const osc = this.ctx.createOscillator();
+      const osc2 = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, now);
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(freq * 2, now);
+
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.linearRampToValueAtTime(vol, now + 0.018);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+
+      const g2 = this.ctx.createGain();
+      g2.gain.setValueAtTime(vol * 0.25, now);
+      g2.gain.exponentialRampToValueAtTime(0.0001, now + dur * 0.5);
+
+      osc.connect(g);
+      osc2.connect(g2);
+      g2.connect(g);
+      g.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc2.start(now);
+      osc.stop(now + dur + 0.05);
+      osc2.stop(now + dur + 0.05);
+    }
+
+    sparkClick(pitch = 920, vol = 0.1) {
+      if (this.muted || !this.ctx) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(pitch, now);
+      osc.frequency.exponentialRampToValueAtTime(pitch * 1.65, now + 0.08);
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.linearRampToValueAtTime(vol, now + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
+      osc.connect(g);
+      g.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.18);
+    }
+
+    chord(indices = [0, 2, 4, 5], vol = 0.1, gap = 0.09) {
+      indices.forEach((n, i) => {
+        setTimeout(() => this.pluck(n, vol, 1.9), i * gap * 1000);
+      });
+    }
+
+    flareSound() {
+      this.sparkClick(740, 0.11);
+      setTimeout(() => this.sparkClick(1080, 0.1), 65);
+      setTimeout(() => this.pluck(4, 0.13, 1.5), 110);
+    }
+  }
+  const sfx = new SoundEngine();
+
+  // ============================================================================
+  // 3. 世界坐标与自适应相机
+  // ============================================================================
+  const canvas = document.getElementById('stage');
+  const ctx = canvas.getContext('2d');
+  let W = window.innerWidth, H = window.innerHeight, DPR = Math.min(window.devicePixelRatio || 1, 2);
+  let isPortrait = H > W;
+
+  const VIEW = {
+    intro:   { cx: 800, cy: 450, w: 1280, pcy: 455, pw: 660 },
+    camp:    { cx: 800, cy: 460, w: 1320, pcy: 470, pw: 680 },
+    hearth:  { cx: 800, cy: 520, w: 880,  pcy: 510, pw: 540 },
+    flame:   { cx: 800, cy: 465, w: 1120, pcy: 470, pw: 600 },
+    wide:    { cx: 800, cy: 465, w: 1340, pcy: 475, pw: 680 },
+    blaze:   { cx: 800, cy: 455, w: 1020, pcy: 460, pw: 580 },
+    glyph:   { cx: 800, cy: 445, w: 1060, pcy: 455, pw: 580 },
+    finale:  { cx: 800, cy: 460, w: 1300, pcy: 470, pw: 660 }
+  };
+
+  const cam = {
+    cx: 800, cy: 450, w: 1280,
+    tcx: 800, tcy: 450, tw: 1280,
+    scale: 1, offX: 0, offY: 0,
+    setTarget(preset, instant = false) {
+      const v = VIEW[preset] || VIEW.wide;
+      this.tcx = v.cx;
+      this.tcy = isPortrait ? v.pcy : v.cy;
+      this.tw  = isPortrait ? v.pw  : v.w;
+      if (instant) {
+        this.cx = this.tcx; this.cy = this.tcy; this.w = this.tw;
+      }
+    },
+    update(dt) {
+      const k = 1 - Math.exp(-dt * 3.8);
+      this.cx = lerp(this.cx, this.tcx, k);
+      this.cy = lerp(this.cy, this.tcy, k);
+      this.w  = lerp(this.w,  this.tw,  k);
+      this.scale = W / this.w;
+      this.offX = W * 0.5 - this.cx * this.scale;
+      this.offY = H * 0.5 - this.cy * this.scale;
+    },
+    toScreen(wx, wy) {
+      return { x: wx * this.scale + this.offX, y: wy * this.scale + this.offY };
+    },
+    toWorld(sx, sy) {
+      return { x: (sx - this.offX) / this.scale, y: (sy - this.offY) / this.scale };
+    }
+  };
+
+  let currentCamPreset = 'intro';
+  function resize() {
+    W = window.innerWidth; H = window.innerHeight;
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    isPortrait = H > W;
+    canvas.width = Math.round(W * DPR);
+    canvas.height = Math.round(H * DPR);
+    cam.setTarget(currentCamPreset, true);
+  }
+  window.addEventListener('resize', resize);
+
+  // ============================================================================
+  // 4. 视觉场景数据：星空松林、篝火柴堆、三股火苗、火星粒子与营地三处温暖点
+  // ============================================================================
+  const STARS = Array.from({ length: 62 }, () => ({
+    x: 100 + rng() * 1400,
+    y: 25 + rng() * 320,
+    r: 0.9 + rng() * 2.0,
+    phase: rng() * Math.PI * 2,
+    speed: 1.0 + rng() * 2.2
+  }));
+
+  const PINES = Array.from({ length: 18 }, (_, i) => {
+    const side = i < 9 ? -1 : 1;
+    const idx = i % 9;
+    const x = side < 0 ? (150 + idx * 58 + rng() * 22) : (960 + idx * 58 + rng() * 22);
+    const y = 520 + (idx % 3) * 26;
+    const h = 130 + rng() * 85;
+    return { x, y, h, w: h * 0.42 };
+  });
+
+  // 篝火中心坐标 (800, 565)，火焰顶端随 flameProgress 从 530 升至 245
+  const HEARTH = { x: 800, y: 565 };
+
+  // 升腾火星粒子池
+  const EMBERS = [];
+  function spawnEmbers(wx, wy, count = 18, col = '#ffd262') {
+    for (let i = 0; i < count; i++) {
+      const a = -Math.PI * (0.25 + rng() * 0.5);
+      const sp = 55 + rng() * 165;
+      EMBERS.push({
+        x: wx + (rng() - 0.5) * 32,
+        y: wy + (rng() - 0.5) * 18,
+        vx: Math.cos(a) * sp + (rng() - 0.5) * 40,
+        vy: Math.sin(a) * sp - 35,
+        r: 2.2 + rng() * 3.8,
+        life: 1,
+        decay: 0.65 + rng() * 0.55,
+        col
+      });
+    }
+  }
+
+  // 温暖光波环
+  const RINGS = [];
+  function spawnWarmRing(wx, wy, maxR = 95) {
+    RINGS.push({ x: wx, y: wy, r: 8, maxR, alpha: 0.92 });
+  }
+
+  // 第 4 幕：营地三处温暖互动点
+  const WARM_SPOTS = [
+    { id: 'traveler', x: 632, y: 495, r: 54, label: '旅人暖手', lit: false, litTime: 0 },
+    { id: 'kettle',   x: 800, y: 345, r: 52, label: '铜壶热茶', lit: false, litTime: 0 },
+    { id: 'roast',    x: 966, y: 505, r: 54, label: '烘烤松果', lit: false, litTime: 0 }
+  ];
+  // ============================================================================
+  // 5. 「火」字字源演进与 4 笔描红数据（严格对齐 data/adventure/dictionary/zh.json）
+  // ============================================================================
+  const GLYPH_BOX = { cx: 800, cy: 435, size: 350 };
+  function glyphToWorld(nx, ny) {
+    return {
+      x: GLYPH_BOX.cx + (nx - 50) * (GLYPH_BOX.size / 100),
+      y: GLYPH_BOX.cy + (ny - 50) * (GLYPH_BOX.size / 100)
+    };
+  }
+
+  // 楷书「火」4 笔标准笔顺（先两边小火苗，再中间主火苗）：
+  // 1. 点（左侧小火苗）
+  // 2. 撇（右上短撇小火苗）
+  // 3. 竖撇（中央主焰左支）
+  // 4. 捺（中央主焰右支）
+  const STROKES = [
+    {
+      name: '点',
+      part: 'sides',
+      pts: [[21, 38], [26, 44], [31, 52]]
+    },
+    {
+      name: '撇',
+      part: 'sides',
+      pts: [[73, 31], [68, 38], [62, 44], [56, 49]]
+    },
+    {
+      name: '竖撇',
+      part: 'core',
+      pts: [[48, 15], [48, 34], [48, 49], [44, 65], [34, 78], [17, 86]]
+    },
+    {
+      name: '捺',
+      part: 'base',
+      pts: [[49, 52], [58, 66], [68, 78], [78, 84], [89, 87]]
+    }
+  ];
+
+  // 甲骨文 / 金文「火」：底部山形火堆底座 + 正中高耸主焰 + 两侧升腾小火苗
+  const ORACLE_PATHS = [
+    // 正中高耸主焰与底座双弧
+    [[18, 84], [38, 66], [50, 14], [62, 66], [82, 84]],
+    // 左侧跃起火苗
+    [[28, 60], [22, 44], [27, 32]],
+    // 右侧跃起火苗
+    [[72, 60], [78, 44], [73, 32]]
+  ];
+
+  // ============================================================================
+  // 6. 场景状态与 9 幕控制
+  // ============================================================================
+  const state = {
+    started: false,
+    sceneIdx: -1,
+    sceneTime: 0,
+    globalTime: 0,
+    introStrokeT: 0,
+    // 第 2 幕：按住打火石引燃柴堆
+    holdingSpark: false,
+    sparkProgress: 0,
+    sparkIgnited: false,
+    // 第 3 幕：向上提拉扇旺火焰
+    draggingFlame: false,
+    flameProgress: 0,
+    flameDone: false,
+    // 第 4 幕：点亮营地三处温暖
+    warmCount: 0,
+    // 第 5 幕：三簇火焰高光展示
+    blazeShowcase: 0,
+    // 第 6 幕：成字演进
+    glyphMorph: 0,
+    radicalStep: 0,
+    // 第 7 幕：四笔描红
+    writeStrokeIdx: 0,
+    writeProgress: 0,
+    isTracing: false,
+    demoPlaying: false,
+    demoStrokeIdx: 0,
+    demoT: 0,
+    writtenDone: false,
+    // 第 8 幕：暖光三词
+    activeWordIdx: -1,
+    glyAlpha: 0
+  };
+
+  // DOM 引用
+  const hud = document.getElementById('hud');
+  const hudDots = Array.from(hud.querySelectorAll('.dot'));
+  const hudLabel = document.getElementById('hud-label');
+  const promptEl = document.getElementById('prompt');
+  const actBtn = document.getElementById('act-btn');
+  const radicalsEl = document.getElementById('radicals');
+  const radSides = document.getElementById('rad-sides');
+  const radCore = document.getElementById('rad-core');
+  const radBase = document.getElementById('rad-base');
+  const writeBar = document.getElementById('write-bar');
+  const strokeCounter = document.getElementById('stroke-counter');
+  const btnDemo = document.getElementById('btn-demo');
+  const wordsEl = document.getElementById('words');
+  const wordCards = Array.from(wordsEl.querySelectorAll('.word-card'));
+  const replayBtn = document.getElementById('replay');
+  const introEl = document.getElementById('intro');
+  const startBtn = document.getElementById('start');
+
+  function setCaption(zh, sub = '') {
+    if (window.haqiHanziCaption) {
+      window.haqiHanziCaption(zh, sub);
+    }
+  }
+
+  function setHud(step, labelText) {
+    hud.classList.add('show');
+    hudDots.forEach((d, i) => {
+      d.classList.toggle('done', i < step);
+      d.classList.toggle('active', i === step);
+    });
+    hudLabel.setAttribute('data-zh-orig', labelText);
+    hudLabel.textContent = labelText;
+    if (window.haqiHanziUi) window.haqiHanziUi(hudLabel);
+  }
+
+  function setPrompt(text) {
+    if (!text) {
+      promptEl.classList.remove('show');
+      return;
+    }
+    promptEl.setAttribute('data-zh-orig', text);
+    promptEl.textContent = text;
+    if (window.haqiHanziUi) window.haqiHanziUi(promptEl);
+    promptEl.classList.add('show');
+  }
+
+  function setActBtn(text) {
+    if (!text) {
+      actBtn.classList.remove('show');
+      return;
+    }
+    actBtn.setAttribute('data-zh-orig', text);
+    actBtn.textContent = text;
+    if (window.haqiHanziUi) window.haqiHanziUi(actBtn);
+    actBtn.classList.add('show');
+  }
+
+  function hideAllOverlays() {
+    setPrompt('');
+    setActBtn('');
+    radicalsEl.classList.remove('show');
+    writeBar.classList.remove('show');
+    wordsEl.classList.remove('show');
+    replayBtn.classList.remove('show');
+  }
+
+  // ============================================================================
+  // 7. 九幕剧本定义
+  // ============================================================================
+  const SCENES = [
+    // 0: 寒夜
+    {
+      name: '寒夜',
+      hudStep: 0,
+      cam: 'camp',
+      enter() {
+        hideAllOverlays();
+        state.sparkProgress = 0;
+        state.sparkIgnited = false;
+        state.flameProgress = 0;
+        state.flameDone = false;
+        state.glyAlpha = 0;
+        WARM_SPOTS.forEach(s => { s.lit = false; s.litTime = 0; });
+        state.warmCount = 0;
+        sfx.setFireLevel(0.005);
+        sfx.pluck(0, 0.11, 1.8);
+        setCaption('寒夜的森林又黑又冷，干松柴静静堆在营地中央。', 'The winter night forest is dark and cold; dry pine logs wait in the camp.');
+      },
+      update(dt, t) {
+        if (t > 2.1) {
+          currentCamPreset = 'hearth';
+          cam.setTarget('hearth');
+        }
+        if (t > 4.2) goScene(1);
+      }
+    },
+
+    // 1: 引火（互动 1：按住擦亮火石引燃柴堆）
+    {
+      name: '引火',
+      hudStep: 1,
+      cam: 'hearth',
+      enter() {
+        hideAllOverlays();
+        state.holdingSpark = false;
+        state.sparkProgress = 0;
+        state.sparkIgnited = false;
+        setPrompt('按住屏幕或按钮 · 擦亮火石点燃柴薪');
+        setActBtn('按住引火');
+        setCaption('柴堆下藏着火绒，<em>按住</em>擦出金亮火星，把干柴点燃吧！', 'Hold to strike bright sparks and ignite the dry firewood!');
+      },
+      update(dt, t) {
+        if (!state.sparkIgnited) {
+          const autoRate = t > 5.5 ? 0.34 : 0;
+          const rate = state.holdingSpark ? 0.7 : autoRate;
+          if (rate > 0) {
+            state.sparkProgress = clamp(state.sparkProgress + dt * rate, 0, 1);
+            if (Math.random() < dt * 11) {
+              sfx.sparkClick(780 + state.sparkProgress * 420, 0.08);
+              spawnEmbers(HEARTH.x, HEARTH.y - 12, 4, '#ffd262');
+            }
+          }
+          if (state.sparkProgress >= 1) {
+            state.sparkIgnited = true;
+            state.holdingSpark = false;
+            setPrompt('');
+            setActBtn('');
+            sfx.flareSound();
+            sfx.chord([0, 2, 4, 6], 0.12, 0.08);
+            sfx.setFireLevel(0.08);
+            spawnEmbers(HEARTH.x, HEARTH.y - 20, 26, '#ffe08a');
+            spawnWarmRing(HEARTH.x, HEARTH.y - 20, 110);
+            state.flameProgress = 0.22;
+            setCaption('噼啪！金红的小火苗在松柴上欢快地跳起来了！', 'Crackle! A golden-red little flame leaps up on the pine logs!');
+            state.sceneTime = 0;
+          }
+        } else {
+          if (state.sceneTime > 2.4) goScene(2);
+        }
+      }
+    },
+
+    // 2: 升焰（互动 2：向上提拉扇旺冲天主焰与两侧火星）
+    {
+      name: '升焰',
+      hudStep: 2,
+      cam: 'flame',
+      enter() {
+        hideAllOverlays();
+        state.flameProgress = Math.max(state.flameProgress, 0.22);
+        state.flameDone = false;
+        setPrompt('从篝火向上滑动 · 扇旺冲天火焰');
+        setCaption('顺着火苗<em>向上滑动</em>，让正中主焰与两边火苗熊熊升腾！', 'Drag upward from the fire to fan the central blaze and side flames!');
+      },
+      update(dt, t) {
+        if (!state.flameDone) {
+          if (t > 6.0 && !state.draggingFlame) {
+            state.flameProgress = clamp(state.flameProgress + dt * 0.36, 0.22, 1);
+          }
+          sfx.setFireLevel(0.06 + state.flameProgress * 0.15);
+          if (state.flameProgress >= 0.98) {
+            state.flameProgress = 1;
+            state.flameDone = true;
+            setPrompt('');
+            sfx.flareSound();
+            sfx.chord([2, 4, 5, 7], 0.12, 0.08);
+            spawnEmbers(HEARTH.x, HEARTH.y - 120, 34, '#ffe29a');
+            setCaption('呼呼——主焰高高窜起，左右两边也跃起了明亮的火苗与火星！', 'Whoosh — the main flame surges high, flanked by bright side flames and sparks!');
+            state.sceneTime = 0;
+          }
+        } else {
+          if (state.sceneTime > 2.5) goScene(3);
+        }
+      }
+    },
+
+    // 3: 温暖（互动 3：依次点亮营地三处温暖）
+    {
+      name: '温暖',
+      hudStep: 3,
+      cam: 'wide',
+      enter() {
+        hideAllOverlays();
+        state.flameProgress = 1;
+        WARM_SPOTS.forEach(s => { s.lit = false; s.litTime = 0; });
+        state.warmCount = 0;
+        setPrompt('点击篝火旁 3 处光环 · 温暖旅人、铜壶与松果');
+        setCaption('火光驱散了寒夜，快点击温暖<em>旅人、铜茶壶与烤松果</em>吧！', 'Firelight chases away the cold — tap the traveler, tea kettle, and pinecones!');
+      },
+      update(dt, t) {
+        if (t > 5.2 && !WARM_SPOTS[0].lit) triggerWarmSpot(WARM_SPOTS[0]);
+        if (t > 6.8 && !WARM_SPOTS[1].lit) triggerWarmSpot(WARM_SPOTS[1]);
+        if (t > 8.4 && !WARM_SPOTS[2].lit) triggerWarmSpot(WARM_SPOTS[2]);
+
+        if (state.warmCount >= 3) {
+          const lastLit = Math.max(...WARM_SPOTS.map(s => s.litTime));
+          if (state.globalTime - lastLit > 2.2) {
+            goScene(4);
+          }
+        }
+      }
+    },
+
+    // 4: 炎而上（聚焦篝火三簇火苗）
+    {
+      name: '温暖',
+      hudStep: 3,
+      cam: 'blaze',
+      enter() {
+        hideAllOverlays();
+        state.blazeShowcase = 0;
+        sfx.chord([0, 3, 5, 7], 0.11, 0.1);
+        setCaption('你看：正中<em>一道高耸主焰</em>，左右两侧跃起<em>两簇小火苗</em>。', 'Look: one tall main flame in the center, with two leaping sparks on the sides.');
+      },
+      update(dt, t) {
+        state.blazeShowcase = clamp(t / 2.2, 0, 1);
+        if (t > 4.0) goScene(5);
+      }
+    },
+
+    // 5: 成字（甲骨文/金文 → 楷书「火」与部件拆解）
+    {
+      name: '成字',
+      hudStep: 4,
+      cam: 'glyph',
+      enter() {
+        hideAllOverlays();
+        radicalsEl.classList.add('show');
+        radSides.classList.remove('lit');
+        radCore.classList.remove('lit');
+        radBase.classList.remove('lit');
+        state.glyphMorph = 0;
+        state.radicalStep = 0;
+        state.glyAlpha = 1;
+        sfx.chord([1, 4, 6, 8], 0.12, 0.1);
+        setCaption('古人画下向上升腾的主焰与两侧火苗，造出了象形字<em>「火」</em>。', 'Ancients drew the rising central flame and side sparks to create 火.');
+      },
+      update(dt, t) {
+        state.glyphMorph = clamp((t - 1.6) / 2.2, 0, 1);
+        if (t > 1.0 && state.radicalStep < 1) {
+          state.radicalStep = 1;
+          radSides.classList.add('lit');
+          sfx.pluck(2, 0.11, 1.3);
+        }
+        if (t > 2.6 && state.radicalStep < 2) {
+          state.radicalStep = 2;
+          radCore.classList.add('lit');
+          sfx.pluck(4, 0.11, 1.3);
+          setCaption('两边火苗化作<em>左点与右短撇</em>，正中主焰化作<em>竖撇与长捺</em>。', 'Side sparks become the left dot and right short sweep; the main flame becomes the center sweep and press.');
+        }
+        if (t > 4.0 && state.radicalStep < 3) {
+          state.radicalStep = 3;
+          radBase.classList.add('lit');
+          sfx.pluck(6, 0.11, 1.3);
+        }
+        if (t > 6.6) goScene(6);
+      }
+    },
+
+    // 6: 写字（互动 4：四笔描红）
+    {
+      name: '写字',
+      hudStep: 5,
+      cam: 'glyph',
+      enter() {
+        hideAllOverlays();
+        state.glyphMorph = 1;
+        state.glyAlpha = 1;
+        state.writeStrokeIdx = 0;
+        state.writeProgress = 0;
+        state.isTracing = false;
+        state.demoPlaying = false;
+        writeBar.classList.add('show');
+        updateStrokeCounter();
+        setPrompt('顺着金橙光点 · 先写两边火苗，再写中间主焰');
+        setCaption('记住笔顺：先写两边的<em>点、短撇</em>，再写中间的<em>竖撇、长捺</em>！', 'Trace the side dot and short sweep first, then the center sweep and long press!');
+      },
+      update(dt, t) {
+        if (state.demoPlaying) {
+          state.demoT += dt * 1.45;
+          if (state.demoT >= 1) {
+            state.demoT = 0;
+            state.demoStrokeIdx++;
+            sfx.sparkClick(760 + state.demoStrokeIdx * 100, 0.09);
+            if (state.demoStrokeIdx >= STROKES.length) {
+              state.demoPlaying = false;
+              state.demoStrokeIdx = 0;
+            }
+          }
+        }
+        if (state.writtenDone && state.sceneTime > 1.8) {
+          goScene(7);
+        }
+      }
+    },
+
+    // 7: 暖光（三组词意卡片）
+    {
+      name: '暖光',
+      hudStep: 6,
+      cam: 'wide',
+      enter() {
+        hideAllOverlays();
+        state.glyAlpha = 0.28;
+        wordsEl.classList.add('show');
+        wordCards.forEach(c => c.classList.remove('in', 'active'));
+        state.activeWordIdx = -1;
+        setCaption('温暖明亮的<em>「火」</em>走进词汇里，化作了<em>火苗、火把与花火</em>。', 'Warm fire shines in words: flame, torch, and fireworks.');
+      },
+      update(dt, t) {
+        if (t > 0.4 && state.activeWordIdx < 0) activateWordCard(0);
+        if (t > 2.2 && state.activeWordIdx < 1) activateWordCard(1);
+        if (t > 4.0 && state.activeWordIdx < 2) activateWordCard(2);
+        if (t > 6.8) goScene(8);
+      }
+    },
+
+    // 8: 尾声（自由互动）
+    {
+      name: '尾声',
+      hudStep: 6,
+      cam: 'finale',
+      enter() {
+        hideAllOverlays();
+        state.glyAlpha = 0.22;
+        replayBtn.classList.add('show');
+        setPrompt('点击篝火激起漫天火星 · 或点「再看一次」');
+        setCaption('星火跃动，照亮寒夜——你已经学会了温暖明亮的<em>「火」</em>字！', 'Sparks dance and light the cold night — you have mastered 火!');
+        sfx.chord([0, 2, 4, 5, 7, 8], 0.12, 0.09);
+        if (window.haqiHanziComplete) {
+          window.haqiHanziComplete({ char: '火', strokes: 4 });
+        }
+      },
+      update(dt, t) {}
+    }
+  ];
+
+  function goScene(idx) {
+    state.sceneIdx = idx;
+    state.sceneTime = 0;
+    const sc = SCENES[idx];
+    if (!sc) return;
+    currentCamPreset = sc.cam || 'wide';
+    cam.setTarget(currentCamPreset);
+    setHud(sc.hudStep, sc.name);
+    sc.enter();
+  }
+
+  function triggerWarmSpot(spot) {
+    if (spot.lit) return;
+    spot.lit = true;
+    spot.litTime = state.globalTime;
+    state.warmCount++;
+    spawnEmbers(spot.x, spot.y, 22, '#ffe08a');
+    spawnWarmRing(spot.x, spot.y, 92);
+    sfx.flareSound();
+    sfx.pluck(2 + state.warmCount * 2, 0.14, 1.5);
+    if (spot.id === 'traveler') {
+      setCaption('火光映红了<em>旅人的脸庞</em>，冻僵的双手变得暖洋洋！', 'Firelight warms the traveler’s face and cold hands!');
+    } else if (spot.id === 'kettle') {
+      setCaption('架上的<em>铜茶壶</em>咕嘟沸腾，飘起一缕缕暖白茶香！', 'The copper tea kettle bubbles on the rack, steaming with warm tea fragrance!');
+    } else if (spot.id === 'roast') {
+      setCaption('火畔的<em>松果与红薯</em>烤得金黄酥香，让人垂涎欲滴！', 'Pinecones and sweet potatoes roast golden and fragrant by the fire!');
+    }
+    if (state.warmCount >= 3) {
+      setPrompt('');
+    }
+  }
+
+  function updateStrokeCounter() {
+    const idx = clamp(state.writeStrokeIdx, 0, STROKES.length - 1);
+    const st = STROKES[idx];
+    const txt = `第 ${idx + 1} / ${STROKES.length} 笔 · ${st.name}`;
+    strokeCounter.setAttribute('data-zh-orig', txt);
+    strokeCounter.textContent = txt;
+    if (window.haqiHanziUi) window.haqiHanziUi(strokeCounter);
+  }
+
+  function activateWordCard(idx) {
+    state.activeWordIdx = idx;
+    wordCards.forEach((c, i) => {
+      if (i <= idx) c.classList.add('in');
+      c.classList.toggle('active', i === idx);
+    });
+    sfx.pluck(idx * 2 + 2, 0.13, 1.4);
+    const descs = [
+      '<em>火苗</em>（huǒ miáo）：柴薪上欢快跳动的金红火焰。',
+      '<em>火把</em>（huǒ bǎ）：在黑夜里照亮前路的温暖火炬。',
+      '<em>花火</em>（huā huǒ）：夜空中如繁花般绽放的璀璨火星。'
+    ];
+    const subs = [
+      'huǒ miáo — dancing golden-red flames above firewood.',
+      'huǒ bǎ — a warm torch lighting the path through night.',
+      'huā huǒ — sparkling fireworks blooming in the night sky.'
+    ];
+    if (descs[idx]) setCaption(descs[idx], subs[idx]);
+  }
+
+  // ============================================================================
+  // 8. 渲染系统：寒林夜空、松木柴堆、三簇跃动火焰、营地三景、字形与描红
+  // ============================================================================
+  function drawNightForest(t) {
+    const warmth = clamp(state.flameProgress * 0.65 + (state.warmCount / 3) * 0.35, 0, 1);
+    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, warmth > 0.5 ? '#0f1022' : '#060a16');
+    grad.addColorStop(0.55, warmth > 0.5 ? '#1f1626' : '#0b1428');
+    grad.addColorStop(1, warmth > 0.5 ? '#261412' : '#09101e');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    // 星空
+    ctx.save();
+    STARS.forEach(s => {
+      const p = cam.toScreen(s.x, s.y);
+      const tw = 0.4 + 0.6 * Math.sin(t * s.speed + s.phase);
+      ctx.fillStyle = `rgba(255, 236, 200, ${(0.22 + 0.48 * tw).toFixed(3)})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, s.r * cam.scale * 0.75, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.restore();
+  }
+
+  function drawCampground(t) {
+    const warmth = clamp(state.flameProgress * 0.7 + (state.warmCount / 3) * 0.3, 0, 1);
+
+    // 远山与松林剪影
+    ctx.fillStyle = '#0c1526';
+    ctx.beginPath();
+    ctx.moveTo(0, 520);
+    ctx.lineTo(280, 360);
+    ctx.lineTo(560, 465);
+    ctx.lineTo(800, 430);
+    ctx.lineTo(1040, 460);
+    ctx.lineTo(1320, 355);
+    ctx.lineTo(1600, 520);
+    ctx.lineTo(1600, 900);
+    ctx.lineTo(0, 900);
+    ctx.closePath();
+    ctx.fill();
+
+    PINES.forEach(p => {
+      ctx.fillStyle = warmth > 0.4 ? '#182232' : '#101b2e';
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y - p.h);
+      ctx.lineTo(p.x - p.w, p.y);
+      ctx.lineTo(p.x + p.w, p.y);
+      ctx.closePath();
+      ctx.fill();
+    });
+
+    // 营地地面
+    const groundGrad = ctx.createRadialGradient(HEARTH.x, HEARTH.y + 10, 20, HEARTH.x, HEARTH.y + 40, Math.max(80, 520));
+    groundGrad.addColorStop(0, warmth > 0.15 ? 'rgba(92, 38, 18, 0.95)' : '#121c2c');
+    groundGrad.addColorStop(0.55, warmth > 0.15 ? '#1c1824' : '#0d1523');
+    groundGrad.addColorStop(1, '#080d18');
+    ctx.fillStyle = groundGrad;
+    ctx.fillRect(0, 515, 1600, 420);
+  }
+
+  function drawHearthAndFlames(t) {
+    const hx = HEARTH.x, hy = HEARTH.y;
+    const sparkP = state.sparkIgnited ? 1 : state.sparkProgress;
+    const flameP = clamp(state.flameProgress, 0, 1);
+
+    // 篝火暖光大光晕
+    const haloR = Math.max(4, 55 + sparkP * 85 + flameP * 240 + Math.sin(t * 5.2) * 12);
+    const hg = ctx.createRadialGradient(hx, hy - 50 * flameP, 4, hx, hy - 30 * flameP, haloR);
+    hg.addColorStop(0, `rgba(255, 220, 128, ${(0.25 + sparkP * 0.35 + flameP * 0.32).toFixed(2)})`);
+    hg.addColorStop(0.45, `rgba(255, 108, 36, ${(0.12 + flameP * 0.28).toFixed(2)})`);
+    hg.addColorStop(1, 'rgba(255, 68, 20, 0)');
+    ctx.fillStyle = hg;
+    ctx.beginPath();
+    ctx.arc(hx, hy - 30 * flameP, haloR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 围火青石圈
+    const stones = [-92, -62, -28, 12, 52, 88];
+    stones.forEach((ox, i) => {
+      ctx.fillStyle = i % 2 === 0 ? '#2b3344' : '#232a3a';
+      ctx.beginPath();
+      ctx.ellipse(hx + ox, hy + 22 + Math.abs(ox) * 0.06, 22, 12, 0, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // 交叉松木柴堆（呼应甲骨文底座与楷书撇捺交叉底座）
+    ctx.save();
+    ctx.translate(hx, hy);
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 22;
+    ctx.strokeStyle = '#4e2b18';
+    ctx.beginPath();
+    ctx.moveTo(-78, 16); ctx.lineTo(68, -22);
+    ctx.moveTo(78, 16);  ctx.lineTo(-68, -22);
+    ctx.stroke();
+
+    ctx.lineWidth = 18;
+    ctx.strokeStyle = '#68381f';
+    ctx.beginPath();
+    ctx.moveTo(-54, 20); ctx.lineTo(54, 18);
+    ctx.stroke();
+    ctx.restore();
+
+    // 第 2 幕：按住引火进度环
+    if (state.sceneIdx === 1 && !state.sparkIgnited) {
+      const pulse = 0.65 + 0.35 * Math.sin(t * 4.5);
+      ctx.strokeStyle = `rgba(255, 196, 98, ${(0.45 + 0.4 * pulse).toFixed(2)})`;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(hx, hy - 8, 62 + pulse * 6, 0, Math.PI * 2);
+      ctx.stroke();
+
+      if (state.sparkProgress > 0.01) {
+        ctx.strokeStyle = '#ffc458';
+        ctx.lineWidth = 6;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.arc(hx, hy - 8, 62, -Math.PI / 2, -Math.PI / 2 + state.sparkProgress * Math.PI * 2);
+        ctx.stroke();
+      }
+    }
+
+    // 跃动的三簇火焰（正中高耸主焰 + 左右两簇侧焰，贴合「火」字造型）
+    if (sparkP > 0.15 || flameP > 0.01) {
+      const p = Math.max(sparkP * 0.22, flameP);
+      const boost = state.sceneIdx === 4 ? (1 + state.blazeShowcase * 0.28) : 1;
+      const mainH = (75 + p * 235) * boost;
+      const mainW = (28 + p * 54) * boost;
+      const sway = Math.sin(t * 7.2) * (6 + p * 12);
+
+      // 正中主焰外层（赤红橙）
+      ctx.save();
+      const fg = ctx.createLinearGradient(hx, hy, hx, hy - mainH);
+      fg.addColorStop(0, '#ff3d18');
+      fg.addColorStop(0.55, '#ff8828');
+      fg.addColorStop(1, '#ffe878');
+      ctx.fillStyle = fg;
+      ctx.shadowColor = 'rgba(255, 118, 36, 0.85)';
+      ctx.shadowBlur = 24;
+
+      ctx.beginPath();
+      ctx.moveTo(hx - mainW, hy + 8);
+      ctx.quadraticCurveTo(hx - mainW * 0.85, hy - mainH * 0.52, hx + sway, hy - mainH);
+      ctx.quadraticCurveTo(hx + mainW * 0.85, hy - mainH * 0.52, hx + mainW, hy + 8);
+      ctx.closePath();
+      ctx.fill();
+
+      // 正中主焰明亮内芯
+      ctx.fillStyle = '#fff5be';
+      ctx.beginPath();
+      ctx.moveTo(hx - mainW * 0.45, hy + 6);
+      ctx.quadraticCurveTo(hx - mainW * 0.35, hy - mainH * 0.38, hx + sway * 0.6, hy - mainH * 0.68);
+      ctx.quadraticCurveTo(hx + mainW * 0.35, hy - mainH * 0.38, hx + mainW * 0.45, hy + 6);
+      ctx.closePath();
+      ctx.fill();
+
+      // 左右两侧跃起的小火苗（直接对应第 1 笔左点、第 2 笔右撇）
+      if (p > 0.32) {
+        const sideP = clamp((p - 0.32) / 0.68, 0, 1) * boost;
+        const sideFlames = [
+          // 左火苗（点）
+          { bx: hx - 86, by: hy - 78, tx: hx - 112 + Math.sin(t * 8.5) * 6, ty: hy - 78 - 88 * sideP, w: 22 * sideP },
+          // 右火苗（短撇）
+          { bx: hx + 86, by: hy - 82, tx: hx + 114 + Math.cos(t * 8.2) * 6, ty: hy - 82 - 92 * sideP, w: 22 * sideP }
+        ];
+        sideFlames.forEach(sf => {
+          ctx.fillStyle = '#ffb43e';
+          ctx.beginPath();
+          ctx.moveTo(sf.bx - sf.w, sf.by);
+          ctx.quadraticCurveTo(sf.bx - sf.w * 0.6, (sf.by + sf.ty) * 0.5, sf.tx, sf.ty);
+          ctx.quadraticCurveTo(sf.bx + sf.w * 0.8, (sf.by + sf.ty) * 0.5, sf.bx + sf.w, sf.by);
+          ctx.closePath();
+          ctx.fill();
+        });
+      }
+      ctx.restore();
+    }
+
+    // 第 3 幕：向上提拉扇旺引导光球
+    if (state.sceneIdx === 2 && !state.flameDone) {
+      const tipY = lerp(510, 260, flameP);
+      const r = Math.max(2, 22 + Math.sin(t * 5) * 4);
+      const tg = ctx.createRadialGradient(hx, tipY, 2, hx, tipY, r * 1.6);
+      tg.addColorStop(0, 'rgba(255,255,255,0.98)');
+      tg.addColorStop(0.5, 'rgba(255, 206, 96, 0.85)');
+      tg.addColorStop(1, 'rgba(255, 106, 40, 0)');
+      ctx.fillStyle = tg;
+      ctx.beginPath();
+      ctx.arc(hx, tipY, r * 1.6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(255, 218, 136, 0.78)';
+      ctx.lineWidth = 3;
+      ctx.setLineDash([8, 8]);
+      ctx.beginPath();
+      ctx.moveTo(hx, tipY);
+      ctx.lineTo(hx, 245);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  function drawWarmElements(t) {
+    // ① 旅人阿焱 (632, 495)
+    const travSpot = WARM_SPOTS[0];
+    ctx.save();
+    ctx.translate(travSpot.x, travSpot.y);
+    // 披风
+    ctx.fillStyle = travSpot.lit ? '#e06236' : '#3a4a68';
+    ctx.beginPath();
+    ctx.moveTo(0, -18);
+    ctx.lineTo(-24, 38);
+    ctx.lineTo(24, 38);
+    ctx.closePath();
+    ctx.fill();
+    // 脸庞
+    ctx.fillStyle = travSpot.lit ? '#ffd8b8' : '#c8d4e6';
+    ctx.beginPath();
+    ctx.arc(0, -28, 12, 0, Math.PI * 2);
+    ctx.fill();
+    // 伸向篝火暖手的双臂
+    const handWave = travSpot.lit ? Math.sin(t * 5) * 4 : 0;
+    ctx.strokeStyle = travSpot.lit ? '#ffd8b8' : '#c8d4e6';
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(8, -6);
+    ctx.lineTo(32, -12 + handWave);
+    ctx.stroke();
+    ctx.restore();
+
+    // ② 三脚架与铜茶壶 (800, 345)
+    const ketSpot = WARM_SPOTS[1];
+    ctx.save();
+    // 木三脚架
+    ctx.strokeStyle = '#5c3c28';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(690, 575); ctx.lineTo(800, 275);
+    ctx.moveTo(910, 575); ctx.lineTo(800, 275);
+    ctx.moveTo(800, 275); ctx.lineTo(800, 325);
+    ctx.stroke();
+
+    // 铜茶壶
+    ctx.translate(ketSpot.x, ketSpot.y);
+    ctx.fillStyle = ketSpot.lit ? '#e89642' : '#786252';
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 24, 18, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // 沸腾暖白蒸汽
+    if (ketSpot.lit) {
+      ctx.strokeStyle = 'rgba(255, 246, 232, 0.78)';
+      ctx.lineWidth = 3;
+      for (let i = -1; i <= 1; i++) {
+        const sy = -22 - ((t * 28 + i * 12) % 34);
+        const sx = i * 10 + Math.sin(t * 4 + i) * 5;
+        ctx.beginPath();
+        ctx.arc(sx, sy, 6, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+
+    // ③ 火畔烘烤松果与红薯 (966, 505)
+    const roastSpot = WARM_SPOTS[2];
+    ctx.save();
+    ctx.translate(roastSpot.x, roastSpot.y + 15);
+    for (let i = -1; i <= 1; i++) {
+      ctx.fillStyle = roastSpot.lit ? '#f49b38' : '#584438';
+      ctx.beginPath();
+      ctx.ellipse(i * 22, 0, 12, 16, i * 0.25, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    if (roastSpot.lit) {
+      // 香气波纹
+      ctx.strokeStyle = 'rgba(255, 218, 136, 0.8)';
+      ctx.lineWidth = 2.5;
+      for (let i = -1; i <= 1; i++) {
+        const wy = -24 - Math.sin(t * 3.5 + i) * 6;
+        ctx.beginPath();
+        ctx.moveTo(i * 18, wy + 10);
+        ctx.quadraticCurveTo(i * 18 + 6, wy, i * 18, wy - 12);
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+
+    // 第 4 幕：未点亮热点的呼吸提示光环
+    if (state.sceneIdx === 3) {
+      WARM_SPOTS.forEach(spot => {
+        if (spot.lit) return;
+        const pulse = 0.6 + 0.4 * Math.sin(t * 4.2 + spot.x);
+        const r = Math.max(2, spot.r * (0.88 + 0.16 * pulse));
+        ctx.save();
+        ctx.strokeStyle = `rgba(255, 206, 112, ${(0.5 + 0.4 * pulse).toFixed(2)})`;
+        ctx.lineWidth = 3;
+        ctx.setLineDash([7, 6]);
+        ctx.beginPath();
+        ctx.arc(spot.x, spot.y, r, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = 'rgba(255, 244, 224, 0.92)';
+        ctx.font = '600 15px "PingFang SC", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(spot.label, spot.x, spot.y + r + 20);
+        ctx.restore();
+      });
+    }
+  }
+
+  function drawEmbersAndRings(dt) {
+    // 持续自然升腾火星
+    if (state.flameProgress > 0.25 && Math.random() < dt * 16) {
+      spawnEmbers(HEARTH.x + (Math.random() - 0.5) * 70, HEARTH.y - 40 - state.flameProgress * 120, 1, '#ffd262');
+    }
+
+    for (let i = RINGS.length - 1; i >= 0; i--) {
+      const rg = RINGS[i];
+      rg.r += dt * 95;
+      rg.alpha -= dt * 0.72;
+      if (rg.alpha <= 0 || rg.r >= rg.maxR) {
+        RINGS.splice(i, 1);
+        continue;
+      }
+      ctx.strokeStyle = `rgba(255, 198, 102, ${rg.alpha.toFixed(3)})`;
+      ctx.lineWidth = 2.4;
+      ctx.beginPath();
+      ctx.arc(rg.x, rg.y, rg.r, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    for (let i = EMBERS.length - 1; i >= 0; i--) {
+      const e = EMBERS[i];
+      e.x += e.vx * dt;
+      e.y += e.vy * dt;
+      e.vy -= 45 * dt; // 火星向上升腾
+      e.life -= e.decay * dt;
+      if (e.life <= 0) {
+        EMBERS.splice(i, 1);
+        continue;
+      }
+      ctx.fillStyle = e.col;
+      ctx.globalAlpha = clamp(e.life, 0, 1);
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function strokePolyline(pts, progress = 1) {
+    if (!pts || pts.length < 2 || progress <= 0) return;
+    const worldPts = pts.map(p => glyphToWorld(p[0], p[1]));
+    const totalSegs = worldPts.length - 1;
+    const exact = clamp(progress, 0, 1) * totalSegs;
+    const full = Math.floor(exact);
+    const frac = exact - full;
+
+    ctx.beginPath();
+    ctx.moveTo(worldPts[0].x, worldPts[0].y);
+    for (let i = 1; i <= full && i < worldPts.length; i++) {
+      ctx.lineTo(worldPts[i].x, worldPts[i].y);
+    }
+    if (full < totalSegs && frac > 0) {
+      const a = worldPts[full];
+      const b = worldPts[full + 1];
+      ctx.lineTo(lerp(a.x, b.x, frac), lerp(a.y, b.y, frac));
+    }
+    ctx.stroke();
+  }
+
+  function drawGlyphAndWriting(t) {
+    if (state.glyAlpha <= 0.01 && state.sceneIdx !== -1) return;
+
+    if (!state.started) {
+      ctx.save();
+      const box = GLYPH_BOX;
+      const glowR = Math.max(2, 210 + Math.sin(t * 2.2) * 16);
+      const g = ctx.createRadialGradient(box.cx, box.cy, 8, box.cx, box.cy, glowR);
+      g.addColorStop(0, 'rgba(255, 128, 42, 0.26)');
+      g.addColorStop(1, 'rgba(255, 128, 42, 0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(box.cx, box.cy, glowR, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 24;
+      ctx.strokeStyle = 'rgba(255, 224, 152, 0.94)';
+      ctx.shadowColor = 'rgba(255, 108, 36, 0.78)';
+      ctx.shadowBlur = 22;
+
+      const totalT = clamp(state.introStrokeT, 0, STROKES.length);
+      STROKES.forEach((st, idx) => {
+        const p = clamp(totalT - idx, 0, 1);
+        if (p > 0) strokePolyline(st.pts, p);
+      });
+      ctx.restore();
+      return;
+    }
+
+    ctx.save();
+    ctx.globalAlpha = clamp(state.glyAlpha, 0, 1);
+
+    const bgR = Math.max(2, GLYPH_BOX.size * 0.62);
+    const bg = ctx.createRadialGradient(GLYPH_BOX.cx, GLYPH_BOX.cy, 12, GLYPH_BOX.cx, GLYPH_BOX.cy, bgR);
+    bg.addColorStop(0, 'rgba(34, 16, 14, 0.86)');
+    bg.addColorStop(0.75, 'rgba(20, 10, 12, 0.64)');
+    bg.addColorStop(1, 'rgba(20, 10, 12, 0)');
+    ctx.fillStyle = bg;
+    ctx.beginPath();
+    ctx.arc(GLYPH_BOX.cx, GLYPH_BOX.cy, bgR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 第 6 幕：甲骨文 → 楷书演进
+    if (state.sceneIdx === 5) {
+      const m = smooth(state.glyphMorph);
+      if (m < 0.95) {
+        ctx.save();
+        ctx.globalAlpha = (1 - m * 0.85) * state.glyAlpha;
+        ctx.strokeStyle = '#ffbe58';
+        ctx.lineWidth = 15;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.shadowColor = 'rgba(255, 128, 42, 0.78)';
+        ctx.shadowBlur = 16;
+        ORACLE_PATHS.forEach(path => strokePolyline(path, 1));
+        ctx.restore();
+      }
+      if (m > 0.08) {
+        ctx.save();
+        ctx.globalAlpha = m * state.glyAlpha;
+        ctx.lineWidth = 24;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        STROKES.forEach(st => {
+          let col = '#fff2dc';
+          if (st.part === 'sides' && state.radicalStep >= 1) col = '#ffd262';
+          if (st.part === 'core'  && state.radicalStep >= 2) col = '#ff6a28';
+          if (st.part === 'base'  && state.radicalStep >= 3) col = '#ff9442';
+          ctx.strokeStyle = col;
+          ctx.shadowColor = col;
+          ctx.shadowBlur = 18;
+          strokePolyline(st.pts, 1);
+        });
+        ctx.restore();
+      }
+    }
+
+    // 第 7 幕：四笔描红
+    if (state.sceneIdx === 6) {
+      const half = GLYPH_BOX.size * 0.52;
+      ctx.strokeStyle = 'rgba(255, 184, 92, 0.22)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(GLYPH_BOX.cx - half, GLYPH_BOX.cy - half, half * 2, half * 2);
+      ctx.setLineDash([6, 6]);
+      ctx.beginPath();
+      ctx.moveTo(GLYPH_BOX.cx - half, GLYPH_BOX.cy);
+      ctx.lineTo(GLYPH_BOX.cx + half, GLYPH_BOX.cy);
+      ctx.moveTo(GLYPH_BOX.cx, GLYPH_BOX.cy - half);
+      ctx.lineTo(GLYPH_BOX.cx, GLYPH_BOX.cy + half);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 24;
+      ctx.strokeStyle = 'rgba(255, 184, 92, 0.22)';
+      STROKES.forEach(st => strokePolyline(st.pts, 1));
+
+      ctx.strokeStyle = '#ffe6a8';
+      ctx.shadowColor = 'rgba(255, 118, 36, 0.85)';
+      ctx.shadowBlur = 16;
+      for (let i = 0; i < state.writeStrokeIdx; i++) {
+        strokePolyline(STROKES[i].pts, 1);
+      }
+
+      if (state.writeStrokeIdx < STROKES.length) {
+        const cur = STROKES[state.writeStrokeIdx];
+        if (state.writeProgress > 0) {
+          ctx.strokeStyle = '#ff9838';
+          strokePolyline(cur.pts, state.writeProgress);
+        }
+
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = 'rgba(255, 206, 98, 0.76)';
+        ctx.lineWidth = 4;
+        ctx.setLineDash([8, 8]);
+        strokePolyline(cur.pts, 1);
+        ctx.setLineDash([]);
+
+        const startPt = glyphToWorld(cur.pts[0][0], cur.pts[0][1]);
+        const pulse = 0.65 + 0.35 * Math.sin(t * 5);
+        ctx.fillStyle = '#ff7828';
+        ctx.beginPath();
+        ctx.arc(startPt.x, startPt.y, 11 + pulse * 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(startPt.x, startPt.y, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      if (state.demoPlaying && state.demoStrokeIdx < STROKES.length) {
+        ctx.strokeStyle = '#ffbe58';
+        ctx.lineWidth = 18;
+        strokePolyline(STROKES[state.demoStrokeIdx].pts, state.demoT);
+      }
+    }
+
+    if (state.sceneIdx >= 7) {
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 22;
+      ctx.strokeStyle = 'rgba(255, 212, 136, 0.85)';
+      ctx.shadowColor = 'rgba(255, 108, 36, 0.65)';
+      ctx.shadowBlur = 18;
+      STROKES.forEach(st => strokePolyline(st.pts, 1));
+    }
+
+    ctx.restore();
+  }
+
+  // ============================================================================
+  // 9. 指针与键盘交互处理
+  // ============================================================================
+  function getPointerWorld(e) {
+    const rect = canvas.getBoundingClientRect();
+    const cx = (e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX) - rect.left;
+    const cy = (e.touches && e.touches[0] ? e.touches[0].clientY : e.clientY) - rect.top;
+    return cam.toWorld(cx, cy);
+  }
+
+  function advanceTracingToPoint(wp) {
+    if (state.sceneIdx !== 6 || state.writeStrokeIdx >= STROKES.length) return;
+    const cur = STROKES[state.writeStrokeIdx];
+    const worldPts = cur.pts.map(p => glyphToWorld(p[0], p[1]));
+
+    let bestU = state.writeProgress;
+    let minDist = Infinity;
+    const totalSegs = worldPts.length - 1;
+    for (let i = 0; i < totalSegs; i++) {
+      const a = worldPts[i], b = worldPts[i + 1];
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const len2 = dx * dx + dy * dy || 1;
+      const uSeg = clamp(((wp.x - a.x) * dx + (wp.y - a.y) * dy) / len2, 0, 1);
+      const px = a.x + dx * uSeg, py = a.y + dy * uSeg;
+      const d = Math.hypot(wp.x - px, wp.y - py);
+      const uTotal = (i + uSeg) / totalSegs;
+      if (d < minDist && uTotal >= state.writeProgress - 0.15) {
+        minDist = d;
+        bestU = uTotal;
+      }
+    }
+
+    if (minDist < 95 && bestU > state.writeProgress) {
+      state.writeProgress = Math.min(1, bestU + 0.08);
+      if (state.writeProgress >= 0.88) {
+        completeCurrentStroke();
+      }
+    }
+  }
+
+  function completeCurrentStroke() {
+    if (state.writeStrokeIdx >= STROKES.length) return;
+    const cur = STROKES[state.writeStrokeIdx];
+    const endPt = glyphToWorld(cur.pts[cur.pts.length - 1][0], cur.pts[cur.pts.length - 1][1]);
+    spawnEmbers(endPt.x, endPt.y, 16, '#ffd262');
+    sfx.sparkClick(720 + state.writeStrokeIdx * 110, 0.11);
+    sfx.pluck(state.writeStrokeIdx * 2, 0.13, 1.3);
+
+    state.writeStrokeIdx++;
+    state.writeProgress = 0;
+    state.isTracing = false;
+
+    if (state.writeStrokeIdx >= STROKES.length) {
+      state.writtenDone = true;
+      state.sceneTime = 0;
+      setPrompt('');
+      setCaption('太棒了！先两边火苗、再中间主焰，四笔写出了跃动的<em>「火」</em>！', 'Wonderful! Side sparks first, main flame next — four strokes complete 火!');
+      sfx.chord([0, 2, 4, 6, 8], 0.13, 0.08);
+      if (window.haqiHanziWritten) {
+        window.haqiHanziWritten({ char: '火', strokes: 4 });
+      }
+    } else {
+      updateStrokeCounter();
+    }
+  }
+
+  function onPointerDown(e) {
+    if (!state.started) return;
+    sfx.init();
+    const wp = getPointerWorld(e);
+
+    if (state.sceneIdx === 1 && !state.sparkIgnited) {
+      state.holdingSpark = true;
+      spawnWarmRing(wp.x, wp.y, 65);
+    } else if (state.sceneIdx === 2 && !state.flameDone) {
+      state.draggingFlame = true;
+      const u = clamp((540 - wp.y) / 280, 0, 1);
+      if (u > state.flameProgress - 0.25) {
+        state.flameProgress = clamp(Math.max(state.flameProgress, u + 0.12), 0.22, 1);
+      }
+    } else if (state.sceneIdx === 3) {
+      let hit = null;
+      let bestD = Infinity;
+      WARM_SPOTS.forEach(s => {
+        if (s.lit) return;
+        const d = Math.hypot(wp.x - s.x, wp.y - s.y);
+        if (d < bestD) { bestD = d; hit = s; }
+      });
+      if (hit && bestD < 135) {
+        triggerWarmSpot(hit);
+      } else {
+        const nextUnlit = WARM_SPOTS.find(s => !s.lit);
+        if (nextUnlit) triggerWarmSpot(nextUnlit);
+      }
+    } else if (state.sceneIdx === 6 && state.writeStrokeIdx < STROKES.length) {
+      state.isTracing = true;
+      const cur = STROKES[state.writeStrokeIdx];
+      const startPt = glyphToWorld(cur.pts[0][0], cur.pts[0][1]);
+      if (Math.hypot(wp.x - startPt.x, wp.y - startPt.y) < 110) {
+        state.writeProgress = Math.max(state.writeProgress, 0.18);
+      }
+      advanceTracingToPoint(wp);
+    } else if (state.sceneIdx === 8) {
+      spawnWarmRing(wp.x, wp.y, 95);
+      spawnEmbers(wp.x, wp.y, 22, '#ffe08a');
+      sfx.flareSound();
+    }
+  }
+
+  function onPointerMove(e) {
+    if (!state.started) return;
+    const wp = getPointerWorld(e);
+
+    if (state.sceneIdx === 2 && state.draggingFlame && !state.flameDone) {
+      const u = clamp((540 - wp.y) / 280, 0, 1);
+      if (u + 0.08 > state.flameProgress) {
+        state.flameProgress = clamp(u + 0.08, 0.22, 1);
+        if (Math.random() < 0.35) {
+          spawnEmbers(HEARTH.x, lerp(510, 260, state.flameProgress), 3, '#ffd262');
+        }
+      }
+    } else if (state.sceneIdx === 6 && state.isTracing) {
+      advanceTracingToPoint(wp);
+    }
+  }
+
+  function onPointerUp() {
+    state.holdingSpark = false;
+    state.draggingFlame = false;
+    if (state.sceneIdx === 6 && state.isTracing) {
+      state.isTracing = false;
+      if (state.writeProgress >= 0.72) {
+        completeCurrentStroke();
+      }
+    }
+  }
+
+  canvas.addEventListener('pointerdown', onPointerDown);
+  window.addEventListener('pointermove', onPointerMove);
+  window.addEventListener('pointerup', onPointerUp);
+  window.addEventListener('pointercancel', onPointerUp);
+
+  actBtn.addEventListener('pointerdown', e => {
+    e.stopPropagation();
+    sfx.init();
+    if (state.sceneIdx === 1 && !state.sparkIgnited) {
+      state.holdingSpark = true;
+      state.sparkProgress = clamp(state.sparkProgress + 0.36, 0, 1);
+    }
+  });
+  actBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    sfx.init();
+    if (state.sceneIdx === 1 && !state.sparkIgnited) {
+      state.sparkProgress = clamp(state.sparkProgress + 0.38, 0, 1);
+    }
+  });
+
+  window.addEventListener('keydown', e => {
+    if (e.code === 'Space' || e.code === 'Enter') {
+      if (!state.started) {
+        startStory();
+        return;
+      }
+      if (state.sceneIdx === 1 && !state.sparkIgnited) {
+        state.holdingSpark = true;
+        state.sparkProgress = clamp(state.sparkProgress + 0.38, 0, 1);
+      } else if (state.sceneIdx === 2 && !state.flameDone) {
+        state.flameProgress = clamp(state.flameProgress + 0.36, 0.22, 1);
+      } else if (state.sceneIdx === 3) {
+        const nextUnlit = WARM_SPOTS.find(s => !s.lit);
+        if (nextUnlit) triggerWarmSpot(nextUnlit);
+      }
+    }
+  });
+  window.addEventListener('keyup', e => {
+    if (e.code === 'Space' || e.code === 'Enter') {
+      state.holdingSpark = false;
+    }
+  });
+
+  btnDemo.addEventListener('click', e => {
+    e.stopPropagation();
+    sfx.init();
+    state.demoPlaying = true;
+    state.demoStrokeIdx = state.writeStrokeIdx;
+    state.demoT = 0;
+  });
+
+  wordCards.forEach((card, idx) => {
+    card.addEventListener('click', e => {
+      e.stopPropagation();
+      sfx.init();
+      activateWordCard(idx);
+    });
+  });
+
+  function startStory() {
+    sfx.init();
+    state.started = true;
+    state.writtenDone = false;
+    introEl.classList.add('hide');
+    goScene(0);
+  }
+
+  startBtn.addEventListener('click', startStory);
+  replayBtn.addEventListener('click', () => startStory());
+  document.getElementById('btn-restart').addEventListener('click', () => startStory());
+
+  document.getElementById('btn-mute').addEventListener('click', () => {
+    sfx.init();
+    const muted = sfx.toggleMute();
+    document.getElementById('ico-sound-on').style.display = muted ? 'none' : 'block';
+    document.getElementById('ico-sound-off').style.display = muted ? 'block' : 'none';
+  });
+
+  // ============================================================================
+  // 10. 主循环与自动化测试接口
+  // ============================================================================
+  let lastNow = performance.now();
+  function frame(now) {
+    const dt = clamp((now - lastNow) / 1000, 0.001, 0.1);
+    lastNow = now;
+    state.globalTime += dt;
+
+    if (!state.started) {
+      state.introStrokeT = (state.introStrokeT + dt * 1.15) % (STROKES.length + 1.4);
+    } else if (state.sceneIdx >= 0 && SCENES[state.sceneIdx]) {
+      state.sceneTime += dt;
+      SCENES[state.sceneIdx].update(dt, state.sceneTime);
+    }
+
+    cam.update(dt);
+
+    ctx.save();
+    ctx.scale(DPR, DPR);
+    drawNightForest(state.globalTime);
+
+    ctx.save();
+    ctx.translate(cam.offX, cam.offY);
+    ctx.scale(cam.scale, cam.scale);
+
+    drawCampground(state.globalTime);
+    drawHearthAndFlames(state.globalTime);
+    drawWarmElements(state.globalTime);
+    drawEmbersAndRings(dt);
+    drawGlyphAndWriting(state.globalTime);
+
+    ctx.restore();
+    ctx.restore();
+
+    requestAnimationFrame(frame);
+  }
+
+  window.__huo = {
+    state,
+    STROKES,
+    WARM_SPOTS,
+    toScreen: (wx, wy) => cam.toScreen(wx, wy),
+    glyphToScreen: (nx, ny) => {
+      const w = glyphToWorld(nx, ny);
+      return cam.toScreen(w.x, w.y);
+    },
+    flameScreen: u => {
+      const wy = lerp(510, 260, clamp(u, 0, 1));
+      return cam.toScreen(HEARTH.x, wy);
+    }
+  };
+
+  resize();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

@@ -25,7 +25,7 @@ export const PACK_ISLANDS = [
     "id": "hanzi",
     "name": "字源岛",
     "source": "web-authored:hanzi",
-    "description": "适合1–10级自由探索的岛屿。帮助居民，完成独立任务线，把字卡的力量带进冒险。",
+    "description": "探索祖先的记忆，找回30个生活中的汉字，让路标、农事记录与家书重新被读懂。",
     "recommendedLevel": 1
   }
 ];

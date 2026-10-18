@@ -180,7 +180,7 @@ test('map header selectors do not load Earth until explicitly selected',()=>{
     const previousDocument=globalThis.document,previousFetch=globalThis.fetch;let requests=0;const selected=[];
     class Element {constructor(){this.children=[];this.attributes={};}append(...children){this.children.push(...children);}setAttribute(k,v){this.attributes[k]=v;}}
     globalThis.document={createElement:()=>new Element()};globalThis.fetch=()=>{requests++;};
-    try{const tabs=createWorldMapSwitch('haqi',id=>selected.push(id));assert.equal(requests,0);assert.equal(tabs.children.length,3);assert.equal(tabs.children[0].attributes['aria-pressed'],'true');assert.equal(tabs.children[1].attributes['aria-pressed'],'false');tabs.children[1].onclick();assert.deepEqual(selected,['earth']);tabs.children[2].onclick();assert.deepEqual(selected,['earth','home']);assert.equal(requests,0);}finally{globalThis.document=previousDocument;globalThis.fetch=previousFetch;}
+    try{const tabs=createWorldMapSwitch('haqi',id=>selected.push(id));assert.equal(requests,0);assert.equal(tabs.children.length,2);assert.equal(tabs.children[0].attributes['aria-pressed'],'true');assert.equal(tabs.children[1].attributes['aria-pressed'],'false');tabs.children[1].onclick();assert.deepEqual(selected,['earth']);assert.deepEqual(tabs.children.map(b=>b.attributes['data-world']),['haqi','earth']);assert.equal(requests,0);}finally{globalThis.document=previousDocument;globalThis.fetch=previousFetch;}
 });
 
 test('Earth language completion reuses existing reward deduplication',()=>{

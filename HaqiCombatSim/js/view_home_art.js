@@ -2,8 +2,8 @@
 import {createRng,hashSeed} from './rng_core.js';
 import {homeBiomeAt,homeBridgeAt,homeInteractiveKind,homeRiverCenterX,homeRiverCenterY,homeRoadAt,homeWaterAt} from './home_core.js';
 import {paintBridges} from './adventure_bridge.js';
+import {paintStaticShadows} from './adventure_shadows.js';
 
-export const HOME_TERRAIN_TILE_SIZE=512;
 export const HOME_FURNITURE_SCALE=1.6;
 export const HOME_GROUND_SCALE=1.15;
 
@@ -302,7 +302,11 @@ function paintHomeCampPlaza(c,rect,envArt){
 }
 
 // Deterministic, 100% static world-space terrain painter baked into texture tiles.
-export function paintHomeWorldTerrain(c,seed,rect,envArt=null,decorArt=null){
+export function paintHomeWorldTerrain(c,seed,rect,envArt=null,decorArt=null,objects=[]){
+ for(const step of paintHomeWorldTerrainSteps(c,seed,rect,envArt,decorArt,objects)){}
+}
+
+export function* paintHomeWorldTerrainSteps(c,seed,rect,envArt=null,decorArt=null,objects=[]){
  c.save();
  c.lineJoin='round';
  c.lineCap='round';
@@ -311,6 +315,7 @@ export function paintHomeWorldTerrain(c,seed,rect,envArt=null,decorArt=null){
  c.fillStyle='#8eb768';
  c.fillRect(rect.x-4,rect.y-4,rect.w+8,rect.h+8);
 
+ yield;
  // 2. Large radial-gradient biome regions (adventure_large_terrain.js style)
  const baseRegions=[
   {x:0,y:160,rx:560,ry:460,color:'#98c270'},
@@ -336,11 +341,13 @@ export function paintHomeWorldTerrain(c,seed,rect,envArt=null,decorArt=null){
   c.restore();
  }
 
+ yield;
  // 3. Haqi ground detail washes, soil flecks, grass blades & tiny 3-petal wildflowers
  const soilCell=96;
  const gx0=Math.floor((rect.x-soilCell)/soilCell),gx1=Math.floor((rect.x+rect.w+soilCell)/soilCell);
  const gy0=Math.floor((rect.y-soilCell)/soilCell),gy1=Math.floor((rect.y+rect.h+soilCell)/soilCell);
  for(let gy=gy0;gy<=gy1;gy++){
+  yield;
   for(let gx=gx0;gx<=gx1;gx++){
    const cx=gx*soilCell,cy=gy*soilCell;
    const rng=createRng(hashSeed(`${seed}:soil:${gx}:${gy}`));
@@ -383,6 +390,7 @@ export function paintHomeWorldTerrain(c,seed,rect,envArt=null,decorArt=null){
   }
  }
 
+ yield;
  // 4. Static Multi-Band Meandering Rivers anchored to global world step indices
  const stepX0=Math.floor((rect.x-160)/20),stepX1=Math.ceil((rect.x+rect.w+160)/20);
  const stepY0=Math.floor((rect.y-160)/20),stepY1=Math.ceil((rect.y+rect.h+160)/20);
@@ -441,6 +449,7 @@ export function paintHomeWorldTerrain(c,seed,rect,envArt=null,decorArt=null){
   }
  }
 
+ yield;
  // 5. Continuous Multi-Band Homestead Roads
  const nsRoad=[],weRoad=[];
  for(let ty=-11.5;ty<=6.5;ty+=.5)nsRoad.push([Math.sin(ty*.22)*10,ty*40]);
@@ -479,9 +488,11 @@ export function paintHomeWorldTerrain(c,seed,rect,envArt=null,decorArt=null){
   }
  }
 
+ yield;
  // 6. Carved Stone Rim & Radial Mason Plaza at (0,0)
  paintHomeCampPlaza(c,rect,envArt);
 
+ yield;
  // 7. Authentic Haqi Timber Bridges across river crossings
  const bridges=[];
  const seenBridge=new Set();
@@ -511,12 +522,14 @@ export function paintHomeWorldTerrain(c,seed,rect,envArt=null,decorArt=null){
   paintBridges(c,bridges,{edge:'#6d5739'},false,rect);
  }
 
+ yield;
  // 8. Exact-frame WebP Ground Decorations baked into the terrain tile
  if(decorArt){
   const decoCell=136;
   const dx0=Math.floor((rect.x-decoCell)/decoCell),dx1=Math.floor((rect.x+rect.w+decoCell)/decoCell);
   const dy0=Math.floor((rect.y-decoCell)/decoCell),dy1=Math.floor((rect.y+rect.h+decoCell)/decoCell);
   for(let gy=dy0;gy<=dy1;gy++){
+   yield;
    for(let gx=dx0;gx<=dx1;gx++){
     const rng=createRng(hashSeed(`${seed}:floor-deco:${gx}:${gy}`));
     if(rng.float()>.68)continue;
@@ -541,34 +554,9 @@ export function paintHomeWorldTerrain(c,seed,rect,envArt=null,decorArt=null){
   }
  }
 
+ yield;
+ paintHomeTreeShadows(c,seed,rect,objects);
  c.restore();
-}
-
-// Bake and blit static 512x512 world-space terrain texture tiles
-export function paintHomeBakedTerrain(ctx,tileCache,seed,worldRect,envArt=null,decorArt=null){
- const tileSize=HOME_TERRAIN_TILE_SIZE;
- const tx0=Math.floor(worldRect.x/tileSize),tx1=Math.floor((worldRect.x+worldRect.w)/tileSize);
- const ty0=Math.floor(worldRect.y/tileSize),ty1=Math.floor((worldRect.y+worldRect.h)/tileSize);
- for(let ty=ty0;ty<=ty1;ty++){
-  for(let tx=tx0;tx<=tx1;tx++){
-   const key=`${seed}:${tx},${ty}`;
-   let tile=tileCache.get(key);
-   if(!tile){
-    tile=document.createElement('canvas');
-    tile.width=tileSize;
-    tile.height=tileSize;
-    const tc=tile.getContext('2d');
-    const rect={x:tx*tileSize,y:ty*tileSize,w:tileSize,h:tileSize};
-    tc.save();
-    tc.translate(-rect.x,-rect.y);
-    paintHomeWorldTerrain(tc,seed,rect,envArt,decorArt);
-    tc.restore();
-    tileCache.set(key,tile);
-    if(tileCache.size>96)tileCache.delete(tileCache.keys().next().value);
-   }
-   ctx.drawImage(tile,tx*tileSize,ty*tileSize,tileSize,tileSize);
-  }
- }
 }
 
 // Collect natural Haqi island trees around the perimeter for Y-sorted depth rendering
@@ -601,10 +589,16 @@ export function collectHomeWorldTrees(seed,rect,objects=[]){
 export function drawHomeWorldTree(c,tree,px,py,scaleRatio,envArt){
  if(!envArt)return;
  const size=tree.size*scaleRatio;
- oval(c,px,py-2*scaleRatio,size*.38,size*.15,'rgba(22,42,26,0.24)');
  c.save();
  c.translate(px,py);
  if(tree.flip)c.scale(-1,1);
  envArt.draw(c,tree.atlas,tree.frame,-size*.56,-size*1.04+8*scaleRatio,size*1.12,size*1.06);
  c.restore();
+}
+
+
+// Same two soft world-space shadows as outdoor trees, baked beneath all actors.
+export function paintHomeTreeShadows(c,seed,rect,objects=[]){
+ const trees=collectHomeWorldTrees(seed,rect,objects).map(t=>({x:t.wx,y:t.wy,size:t.size}));
+ paintStaticShadows(c,{trees},rect);
 }

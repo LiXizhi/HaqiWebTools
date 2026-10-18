@@ -10201,3 +10201,194 @@ VIP 有效期由账号下所有角色共享；魔豆放入当前角色背包，�
 互动已开启，点击关闭自由拖动||Interaction on: click to disable dragging during play
 互动已关闭，点击开启自由拖动||Interaction off: click to enable dragging during play
 互动设置无效||Invalid interaction setting
+
+# hanzi/hanzi_yue.html
+夜湖的弯月=Crescent Moon over the Night Lake
+入夜=Nightfall
+拨云=Parting Clouds
+盈亏=Waxing & Waning
+清辉=Moonlight
+月色=Moonlit Night
+月 · 月亮与岁月=Moon · Moonlight and Time
+一弯新月挂夜空，清辉如水照湖中=A crescent moon hangs in the night sky, its clear light shining on the lake
+夜幕降临，江南的芦苇湖湾静悄悄的。=Night falls, and the reed bay of the southern lake grows quiet.
+睡莲合着花瓣，小船静静停在湖心。=Water lilies close their petals, and a small boat rests calmly on the lake.
+阿玥站在桂花树下仰望，厚厚的夜云遮住了天空。=Ah-Yue looks up beneath the osmanthus tree as thick night clouds cover the sky.
+月亮藏在夜云后面，只有一丝微光透出来。=The moon hides behind the night clouds, with only a faint glimmer shining through.
+按住屏幕，帮晚风拨开夜空里的云层=Press and hold the screen to help the evening breeze part the night clouds
+按住拨云=Hold to Part Clouds
+夜云散开了，一弯银白的新月露了出来！=The night clouds part, revealing a silvery-white crescent moon!
+月亮不像太阳那样天天圆满，它有阴晴圆缺。=Unlike the sun that is always round, the moon waxes and wanes.
+顺着虚线拖动月亮，看月亮由弯变圆、再化作弯月=Drag the moon along the dashed line to watch it wax full and wane back to a crescent
+月相流转=Cycle Phases
+满月像太阳，弯月最特别——古人就用弯弯的月牙来造字！=A full moon looks like the sun, so the crescent is special—the ancients used the crescent moon to create this character!
+温柔的月光洒向湖湾，去点亮夜色里的风物吧。=Gentle moonlight spills over the bay; go light up the sights of the night.
+点一点岸边的金桂花枝=Tap the golden osmanthus branch by the shore
+点一点芦苇丛里的流萤=Tap the fireflies in the reeds
+点一点湖心的白睡莲与轻舟=Tap the white water lilies and boat in the lake
+点亮金桂=Light Osmanthus
+唤醒流萤=Wake Fireflies
+点亮睡莲=Light Water Lilies
+金桂飘香，流萤飞舞，白睡莲在月光下静静盛开。=Osmanthus fragrance drifts, fireflies dance, and white water lilies bloom quietly in the moonlight.
+月影=Moon Reflection
+天上一弯月，水里一弯月，把夜晚照得清亮温柔。=A crescent moon in the sky and a crescent moon in the water light up the night with gentle clarity.
+一月=One Month
+月亮从缺到圆再到缺，走完一轮，就是“一月”。=When the moon goes from crescent to full and back again, completing one cycle, that is "one month" (一月).
+三千多年前，古人把弯弯的月牙刻在了甲骨上。=Over three thousand years ago, the ancients carved the curved crescent moon onto oracle bones.
+外边弯弯像月牙，里面画上短纹，表示月亮里的微光。=The curved outline looks like a crescent moon, with short strokes inside for the moon's shimmer.
+《说文解字》：“月，阙也。大阴之精。象形。”=Shuowen Jiezi: "Yue means waxing and waning. The essence of Yin. A pictograph."
+左边是竖撇，右边是横折钩，底下不封口，里面有两短横。=A vertical-left sweep on the left, a horizontal-turn-hook on the right, open at the bottom, with two short horizontals inside.
+「月」一共四笔：先写竖撇、横折钩，再写里面两短横。="月" has four strokes: first the vertical-left sweep and horizontal-turn-hook, then the two short horizontals inside.
+第 1 笔 · 竖撇=Stroke 1 · Vertical-Left Sweep
+第 2 笔 · 横折钩=Stroke 2 · Horizontal-Turn-Hook
+写好了！月，明月清辉的月。=Well done! 月 (yuè), the character for the bright moon.
+月光=Moonlight (月光)
+银白色的月光洒下来，给大地披上薄纱。=Silvery-white moonlight pours down, draping the earth in a soft veil.
+月亮=Moon (月亮)
+弯弯的月亮挂在夜空，陪伴安静的夜晚。=The curved moon hangs in the night sky, keeping company with the quiet night.
+岁月=Years & Time (岁月)
+月亮圆了又缺，一月又一月，汇成了岁月。=The moon waxes and wanes, month after month, flowing into the passage of years.
+无论月亮是弯是圆，它都会在夜空静静守望。=Whether crescent or full, the moon watches quietly in the night sky.
+洒下温柔的月光，照亮宁静的湖湾与梦乡。=Shedding gentle moonlight to brighten the peaceful bay and our dreams.
+点一点夜空或湖面，唤起流萤与月波=Tap the night sky or lake to summon fireflies and moonlit ripples
+
+# hanzi/hanzi_shan.html
+云海里的三座群峰=Three Peaks in the Sea of Clouds
+寻山=Seeking the Mountains
+散云=Clearing Clouds
+耸峰=Rising Peaks
+生机=Mountain Life
+山川=Mountains & Rivers
+山 · 群峰与山川=Mountain · Peaks and Landscapes
+三座山峰并肩立，高耸入云接天际=Three mountain peaks stand side by side, towering into the clouds
+清晨的山谷静悄悄的，白茫茫的云海铺满了远方。=The morning valley is quiet, with a vast sea of white clouds stretching into the distance.
+阿岳站在松石高台上，想看看云海后面的大山。=Ah-Yue stands on a rocky pine terrace, hoping to see the great mountains behind the sea of clouds.
+可是浓密的云障压在山谷里，挡住了群山的身影。=Yet thick clouds press into the valley, hiding the silhouettes of the peaks.
+唤起一阵清凉的山风，把厚厚的云海吹开吧。=Summon a cool mountain breeze to blow away the thick sea of clouds.
+按住屏幕，帮阿岳唤起山风吹散云海=Press and hold the screen to help Ah-Yue summon a mountain breeze and clear the clouds
+按住唤风=Hold for Breeze
+云海散开了，大地上露出了相连的坚实山基！=The sea of clouds parts, revealing the solid, connected mountain base upon the earth!
+大地蓄满了力量，三座山峰正准备拔地而起。=The earth brims with strength as three mountain peaks prepare to rise from the ground.
+往上拖动山峰，让三座群峰高高耸立起来=Drag the peaks upward so the three mountains tower high into the sky
+拔起群峰=Raise the Peaks
+轰隆——中间主峰最高，左右两峰相伴，三座青峰拔地而起！=Rumble—with the central peak tallest and two side peaks beside it, three green peaks rise from the earth!
+大山养育着万物，去唤醒三座山峰上的生机吧。=Great mountains nurture all things; go awaken the life upon the three peaks.
+点一点左峰上的迎客古松=Tap the ancient welcoming pine on the left peak
+点一点中峰上的银河飞瀑=Tap the cascading waterfall on the central peak
+点一点右峰上的丹顶白鹤=Tap the red-crowned cranes on the right peak
+唤醒古松=Wake Ancient Pine
+引来飞瀑=Summon Waterfall
+放飞白鹤=Release Cranes
+苍松翠绿，飞瀑奔流，白鹤绕着群山欢快地飞翔。=Ancient pines glow emerald, waterfalls cascade, and white cranes soar joyfully around the peaks.
+群峰=Three Peaks
+你看，三座山峰并肩耸立，山脚紧紧连在一起。=Look—three mountain peaks stand side by side, their bases firmly joined together.
+山脉=Mountain Range
+这就是大自然里巍峨庄严的“山”。=This is the lofty and majestic "mountain" (山) in nature.
+古人远望三座并立的山峰，把它们的轮廓画了下来。=Looking at three peaks standing side by side from afar, the ancients drew their outline.
+中间一峰高耸，左右两峰拱卫，底部山脉相连。=The central peak towers high, flanked by two side peaks, with their mountain base connected below.
+《说文解字》：“山，宣也……有石而高。象形。”=Shuowen Jiezi: "Shan means to spread vitality... rocky and high. A pictograph."
+三座山峰化作三笔：中间主峰是长竖，左右两峰连着山脚。=The three peaks become three strokes: the central peak is a tall vertical, while the left and right peaks join at the base.
+主峰=Main Peak
+双峰=Side Peaks
+「山」一共三笔：记住先写中间最高的竖，再写左边的竖折，最后写右竖。="山" has three strokes: remember to write the tallest central vertical first, then the left vertical-turn, and finally the right vertical.
+第 2 笔 · 竖折=Stroke 2 · Vertical-Turn
+第 3 笔 · 竖=Stroke 3 · Vertical
+写好了！山，巍峨群山的山。=Well done! 山 (shān), the character for towering mountains.
+高山=High Mountain (高山)
+高高耸立的大山，穿过了重重云海。=A lofty mountain rises high, piercing through layers of clouds.
+连绵的群山与奔流的河水，组成壮丽的山川。=Rolling mountains and rushing rivers form magnificent landscapes.
+山林=Mountain Forest (山林)
+长满苍松与翠竹的山坡，是鸟儿和百兽的家。=Hillsides covered in pines and bamboo are home to birds and wildlife.
+三座青峰耸立在天地之间，稳稳地守护着四季。=Three green peaks stand between heaven and earth, steadily guarding the four seasons.
+苍松常青，泉水长流，回荡着大山的歌声。=Pines stay evergreen and springs flow on, echoing the song of the mountains.
+点一点群山或天空，唤起空谷回音与白鹤=Tap the mountains or sky to awaken valley echoes and white cranes
+
+# hanzi/hanzi_shui.html
+寻泉||Find the Spring
+涌泉||Bubbling Spring
+奔流||Flowing Stream
+润泽||Nourish
+清泉||Clear Spring
+按住开泉||Hold to Open Spring
+奔流的溪涧与水花 · 汉字象形故事||Flowing Stream & Splashes · Pictograph Story
+再看一次 · 水的故事||Watch Again · Story of 水
+按住屏幕 · 温热融冰开泉||Hold Screen · Warm the Frozen Spring
+按住屏幕或按钮 · 融开泉眼寒冰||Hold Screen or Button · Melt the Spring Ice
+顺着中央溪道向下滑动 · 引清泉奔流||Drag Down Along the Creek · Guide the Stream
+点击溪畔 3 处光环 · 唤醒水车、锦鲤与翠竹||Tap 3 Streamside Rings · Wake Wheel, Koi & Bamboo
+顺着橙色光点与箭头 · 先写中间主流，再写两边水花||Follow Orange Dots · Write Center Stream Then Side Splashes
+点击溪水激起浪花 · 或点「再看一次」||Tap the Stream for Splashes · Or Tap "Watch Again"
+中流 · 奔涌的溪水主干（竖钩）||Main Current · Surging Center Stream (Vertical Hook)
+左花 · 激起的左侧水滴（横撇）||Left Splash · Left Water Droplets (Horizontal-Left Stroke)
+右花 · 飞溅的右侧浪花（撇与捺）||Right Splash · Right Splashes (Left-Falling & Right-Falling)
+在河道里欢快流淌的清澈溪水||Clear stream water flowing joyfully in its channel
+溪流撞上青石溅起的晶莹浪花||Sparkling splashes where the stream meets blue stone
+苍翠群山与潺潺流水相伴的风景||Green mountains and murmuring waters together
+第 1 / 4 笔 · 竖钩||Stroke 1 / 4 · Vertical Hook
+第 2 / 4 笔 · 横撇||Stroke 2 / 4 · Horizontal-Left
+第 3 / 4 笔 · 撇||Stroke 3 / 4 · Left-Falling
+第 4 / 4 笔 · 捺||Stroke 4 / 4 · Right-Falling
+青石山谷静悄悄，干涸的溪床正盼着清泉流淌。||The quiet stone valley awaits clear spring water in its dry creek bed.
+山涧泉眼被寒石封住，按住送去温热，唤醒清泉吧！||Hold to warm the frozen spring stone and release the clear water!
+咕嘟咕嘟——清澈的泉水从青石间欢快地涌出来了！||Clear spring water bubbles forth from between the stones!
+顺着溪床向下滑动，引一道清泉贯通整条山涧！||Drag downward along the creek bed to guide the main stream through the valley!
+溪水奔流而下，撞上两岸礁石，激起朵朵晶莹水花！||The stream rushes down, splashing against rocks on both sides!
+清泉润泽万物，快点击溪畔的水车、锦鲤与翠竹吧！||Tap the waterwheel, koi fish, and green bamboo along the stream!
+溪水推动竹水车吱呀转动，扬起串串银亮水珠！||Stream water turns the bamboo waterwheel, tossing silvery droplets!
+红锦鲤在清波里摆尾跃起，泛起一圈圈涟漪！||Red koi leap joyfully in the clear waves, spreading ripples!
+岸边的翠竹与水草喝饱了溪水，吐露鲜亮的新绿！||Streamside bamboo and reeds drink deeply and sprout fresh green leaves!
+你看：正中一道奔涌主流，左右两侧溅起四朵水花。||Look: one surging main current in the middle, with four splashes on both sides.
+古人画下中间蜿蜒的主流与两边飞溅的水滴，造出了象形字「水」。||Ancients drew the winding main stream and splashes on both sides to create 水.
+正中主流化作竖钩，左边水花连成横撇，右边水花化作撇与捺。||The center stream becomes the vertical hook, flanked by left and right splash strokes.
+先写中间的竖钩，再写左边的横撇和右边的撇、捺，写下「水」！||Trace center first, then left and right strokes to write 水!
+太棒了！中间主流、两边水花，四笔写出了清澈的「水」！||Wonderful! Four strokes complete the character 水!
+清澈的「水」流进生活里，化作了河水、水花与山水。||Clear water flows into daily words: river water, splashes, and mountains & waters.
+河水（hé shuǐ）：在河道里欢快流淌的清澈溪水。||hé shuǐ — clear river water flowing in its channel.
+水花（shuǐ huā）：溪流撞上青石溅起的晶莹浪花。||shuǐ huā — sparkling splashes where water meets stone.
+山水（shān shuǐ）：苍翠群山与潺潺流水相伴的风景。||shān shuǐ — green mountains and flowing waters together.
+众水并流，润泽四方——你已经学会了清澈灵动的「水」字！||Waters flow together and nourish all things — you have mastered 水!
+
+# hanzi/hanzi_huo.html
+寒夜||Cold Night
+引火||Strike Fire
+升焰||Rising Flame
+温暖||Warmth
+暖光||Warm Glow
+按住引火||Hold to Ignite
+篝火跃动的焰苗与火星 · 汉字象形故事||Dancing Campfire Flames & Sparks · Pictograph Story
+再看一次 · 火的故事||Watch Again · Story of 火
+按住屏幕 · 擦亮火石引火||Hold Screen · Strike Flint to Ignite
+按住屏幕或按钮 · 擦亮火石点燃柴薪||Hold Screen or Button · Strike Flint to Light Firewood
+从篝火向上滑动 · 扇旺冲天火焰||Drag Up from the Fire · Fan the Rising Blaze
+点击篝火旁 3 处光环 · 温暖旅人、铜壶与松果||Tap 3 Rings by the Fire · Warm Traveler, Kettle & Pinecones
+顺着金橙光点 · 先写两边火苗，再写中间主焰||Follow Golden Dots · Write Side Sparks Then Center Flame
+点击篝火激起漫天火星 · 或点「再看一次」||Tap Campfire for Sparks · Or Tap "Watch Again"
+侧焰 · 两边跃起的火星（左点与右撇）||Side Flames · Leaping Sparks on Both Sides (Dot & Short Sweep)
+主焰 · 冲天而起的火苗（中竖撇）||Main Flame · Rising Central Blaze (Vertical Sweep)
+火势 · 向右舒展的烈焰（长捺）||Fire Spread · Outstretched Blaze to the Right (Long Press)
+柴薪上欢快跳动的金红火焰||Dancing golden-red flames above firewood
+在黑夜里照亮前路的温暖火炬||A warm torch lighting the path through the dark night
+夜空中如繁花般绽放的璀璨火星||Sparkling fireworks blooming like flowers in the night sky
+第 1 / 4 笔 · 点||Stroke 1 / 4 · Dot
+第 2 / 4 笔 · 撇||Stroke 2 / 4 · Short Sweep
+第 3 / 4 笔 · 竖撇||Stroke 3 / 4 · Vertical Sweep
+第 4 / 4 笔 · 捺||Stroke 4 / 4 · Right-Falling
+寒夜的森林又黑又冷，干松柴静静堆在营地中央。||The winter night forest is dark and cold; dry pine logs wait in the camp.
+柴堆下藏着火绒，按住擦出金亮火星，把干柴点燃吧！||Hold to strike bright sparks and ignite the dry firewood!
+噼啪！金红的小火苗在松柴上欢快地跳起来了！||Crackle! A golden-red little flame leaps up on the pine logs!
+顺着火苗向上滑动，让正中主焰与两边火苗熊熊升腾！||Drag upward from the fire to fan the central blaze and side flames!
+呼呼——主焰高高窜起，左右两边也跃起了明亮的火苗与火星！||Whoosh — the main flame surges high, flanked by bright side flames and sparks!
+火光驱散了寒夜，快点击温暖旅人、铜茶壶与烤松果吧！||Firelight chases away the cold — tap the traveler, tea kettle, and pinecones!
+火光映红了旅人的脸庞，冻僵的双手变得暖洋洋！||Firelight warms the traveler's face and cold hands!
+架上的铜茶壶咕嘟沸腾，飘起一缕缕暖白茶香！||The copper tea kettle bubbles on the rack, steaming with warm tea fragrance!
+火畔的松果与红薯烤得金黄酥香，让人垂涎欲滴！||Pinecones and sweet potatoes roast golden and fragrant by the fire!
+你看：正中一道高耸主焰，左右两侧跃起两簇小火苗。||Look: one tall main flame in the center, with two leaping sparks on the sides.
+古人画下向上升腾的主焰与两侧火苗，造出了象形字「火」。||Ancients drew the rising central flame and side sparks to create 火.
+两边火苗化作左点与右短撇，正中主焰化作竖撇与长捺。||Side sparks become the left dot and right short sweep; the main flame becomes the center sweep and press.
+记住笔顺：先写两边的点、短撇，再写中间的竖撇、长捺！||Trace the side dot and short sweep first, then the center sweep and long press!
+太棒了！先两边火苗、再中间主焰，四笔写出了跃动的「火」！||Wonderful! Side sparks first, main flame next — four strokes complete 火!
+温暖明亮的「火」走进词汇里，化作了火苗、火把与花火。||Warm fire shines in words: flame, torch, and fireworks.
+火苗（huǒ miáo）：柴薪上欢快跳动的金红火焰。||huǒ miáo — dancing golden-red flames above firewood.
+火把（huǒ bǎ）：在黑夜里照亮前路的温暖火炬。||huǒ bǎ — a warm torch lighting the path through night.
+花火（huā huǒ）：夜空中如繁花般绽放的璀璨火星。||huā huǒ — sparkling fireworks blooming in the night sky.
+星火跃动，照亮寒夜——你已经学会了温暖明亮的「火」字！||Sparks dance and light the cold night — you have mastered 火!

@@ -1,5 +1,6 @@
-import {createCloseButton,createWorldMapSwitch} from './view_adventure_controls.js';
-import {collectHomeWorldTrees,drawHomeObject,drawHomeWorldTree,paintHomeBakedTerrain} from './view_home_art.js';
+import {createHomeTerrainCache} from './home_terrain_cache.js';
+import {createCloseButton} from './view_adventure_controls.js';
+import {collectHomeWorldTrees,drawHomeObject,drawHomeWorldTree} from './view_home_art.js';
 import {homeObjectInteractive,footprint,summonSentences,COLORS,homeBiomeAt,homeInteractiveKind} from './home_core.js';
 import {createMotionTrail,drawMotionAccessory,drawMotionTrail,motionStyle} from './adventure_motion_effects.js';
 import {createHeroActor,updateHeroActor} from './hero_pose_core.js';
@@ -22,9 +23,9 @@ export function createHomeView(root,cb){
  root.replaceChildren();root.className='overlay visible';
  const modal=el('section','modal home-modal'),header=el('header','modal-header'),title=el('h2','','家园'),body=el('div','home-body'),status=el('p','home-status');
  modal.setAttribute('role','dialog');modal.setAttribute('aria-label','宠物家园');modal.setAttribute('aria-modal','true');status.setAttribute('role','status');
- header.append(title,createWorldMapSwitch('home',cb.world),createCloseButton(cb.close));modal.append(header,body,status);root.append(modal);
+ header.append(title,createCloseButton(cb.close));modal.append(header,body,status);root.append(modal);
  let model=null,mode='',signature='',exampleSignature='',gesture=null,catalogDrag=null,hits=[],frame=0,dead=false,lastPaint=0;
- const images=new Map(),terrain=new Map();
+ const images=new Map(),terrain=createHomeTerrainCache();
  const frameMeter=createFrameMeter();
  let fpsLabel;
  let canvas,ctx,stage,side,items,category,catPills,tabs,input,example,bubble,bubbleText,tools,choice,summary,portal,edit,inventoryMode=false,petMode=false;
@@ -159,8 +160,8 @@ export function createHomeView(root,cb){
   bubble.append(bubbleText,bubbleActions);
 
   // Invisible accessible hit target over the (0,0) crystal portal
-  portal=button('哈奇世界',()=>cb.world('haqi'),'home-portal');
-  portal.setAttribute('aria-label','出生点传送装置：打开哈奇世界地图');
+  portal=button('返回冒险',cb.close,'home-portal');
+  portal.setAttribute('aria-label',tr('返回冒险'));
   fpsLabel=el('div','home-fps','FPS —');
   fpsLabel.setAttribute('aria-label','家园帧率');
   frameMeter.sample(0,false);
@@ -218,16 +219,25 @@ export function createHomeView(root,cb){
   trayHeader.insertBefore(catPills,done);
   side.append(trayHeader,summary,items);
   // Capture on the stable tray: selecting an item may rebuild its card.
-  let trayGesture=null,suppressTrayClick=false;
+  let trayGesture=null,suppressTrayClick=false,petGhost=null;
   const overScene=e=>document.elementFromPoint(e.clientX,e.clientY)===canvas;
   const finishTray=(e,cancelled=false)=>{
    if(!trayGesture||trayGesture.id!==e.pointerId)return;
    const g=trayGesture;trayGesture=null;catalogDrag=null;
+   petGhost?.remove();petGhost=null;
    body.classList.remove('is-dragging-item');
    if(side.hasPointerCapture(e.pointerId))side.releasePointerCapture(e.pointerId);
    if(g.active){
     suppressTrayClick=true;
-    if(!cancelled&&overScene(e))run(()=>cb.take(g.row,position(e)));
+    if(!cancelled&&overScene(e)){
+     const point=position(e);
+     if(g.petId){
+      const rect=canvas.getBoundingClientRect();
+      point.x=model.camera.x+(point.sx-rect.width/2)/model.scale;
+      point.y=model.camera.y+(point.sy-rect.height/2)/model.scale;
+     }
+     run(()=>g.petId?cb.drop({kind:'pet',id:g.petId},point):cb.take(g.row,point));
+    }
     else cb.cancel();
     signature='';render(model);
    }
@@ -235,10 +245,10 @@ export function createHomeView(root,cb){
   side.onpointerdown=e=>{
    // A new gesture must not inherit the synthetic-click suppression of a drag.
    suppressTrayClick=false;
-   const card=e.target.closest('.home-item');
+   const card=e.target.closest('.home-item,.home-pet-card');
    if(!card||e.button!==0||trayGesture)return;
    suppressTrayClick=false;
-   trayGesture={id:e.pointerId,x:e.clientX,y:e.clientY,row:{...card.homeItem},active:false};
+   trayGesture={id:e.pointerId,x:e.clientX,y:e.clientY,row:{...card.homeItem},petId:card.homePetId,card,active:false};
   };
   side.onpointermove=e=>{
    const g=trayGesture;if(!g||g.id!==e.pointerId)return;
@@ -249,10 +259,20 @@ export function createHomeView(root,cb){
     if(Math.abs(dx)>Math.abs(dy))return;
     side.setPointerCapture(e.pointerId);
     g.active=true;catalogDrag=g.row;
-    cb.select(g.row.itemId,g.row.color,g.row.fromInventory);
+    if(g.petId){
+     cb.stopWalk();
+     petGhost=el('div','home-pet-drag-preview');
+     const portrait=g.card.querySelector('canvas'),copy=el('canvas');
+     copy.width=portrait.width;copy.height=portrait.height;
+     copy.getContext('2d').drawImage(portrait,0,0);
+     petGhost.append(copy,el('span','',g.card.textContent));
+     petGhost.setAttribute('aria-hidden','true');body.append(petGhost);
+    }else cb.select(g.row.itemId,g.row.color,g.row.fromInventory);
     body.classList.add('is-dragging-item');
    }
-   e.preventDefault();cb.hover(overScene(e)?position(e):null);
+   e.preventDefault();
+   if(petGhost){petGhost.style.left=`${e.clientX}px`;petGhost.style.top=`${e.clientY}px`;}
+   else cb.hover(overScene(e)?position(e):null);
   };
   side.onpointerup=e=>finishTray(e);
   side.onpointercancel=e=>finishTray(e,true);
@@ -278,14 +298,12 @@ export function createHomeView(root,cb){
   dock.append(
    button('建造',()=>show('build'),'home-dock-button'),
    button('语音召唤',()=>show('summon'),'home-dock-button'),
-   button('仓库',()=>show('stock'),'home-dock-button'),
    button('居民',()=>show('pets'),'home-dock-button'),
    button('家园设置',()=>show('settings'),'home-dock-button')
   );
   const dockPaths=[
    'M4 20 14 10 M12 4 16 2 22 8 18 12 12 6Z',
    'M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3Z M19 10v1a7 7 0 0 1-14 0v-1 M12 18v4 M8 22h8',
-   'M3 7 12 3 21 7 21 18 12 22 3 18Z M3 7 12 11 21 7 M12 11 12 22',
    'M7 13 Q12 8 17 13 L20 18 Q20 22 15 20 Q12 18 9 20 Q4 22 4 18Z M5 5 5 8 M10 2 10 6 M15 2 15 6 M20 5 20 8',
    'M4 6 20 6 M4 12 20 12 M4 18 20 18 M8 3 8 9 M16 9 16 15 M10 15 10 21'
   ];
@@ -373,7 +391,7 @@ export function createHomeView(root,cb){
      return cb.drop(g.hit,homeFurnitureDragPosition(g.origin,g.start,p,model.scale));
     });
    }else if(!g.moved){
-    if(g.hit?.kind==='portal')cb.world('haqi');
+    if(g.hit?.kind==='portal')cb.close();
     else run(()=>cb.tap(g.hit,p));
    }
   };
@@ -448,7 +466,7 @@ export function createHomeView(root,cb){
    edit.querySelector('[data-resize=down]').disabled=!next.selection?.id||size<=.5;
   }
 
-  const drawerIdx={build:0,summon:1,stock:2,pets:3,settings:4}[body.dataset.drawer];
+  const drawerIdx={build:0,summon:1,pets:2,settings:3}[body.dataset.drawer];
   [...body.querySelectorAll('.home-dock-button')].forEach((b,i)=>b.setAttribute('aria-pressed',String(i===drawerIdx)));
   if(next.transcript!==undefined&&document.activeElement!==input)input.value=next.transcript;
   input.placeholder=next.lang==='en'?'I want a chair.':'我想要一把椅子。';
@@ -508,9 +526,10 @@ export function createHomeView(root,cb){
   items.replaceChildren();
   if(petMode){
    const pets=next.pets;
-   summary.textContent=`${pets.length} 位家园居民 · 点击走向它或召到身边`;
+   summary.textContent='';
    for(const pet of pets){
     const row=el('div','home-pet-card');
+    row.homePetId=pet.id;
     const infoBtn=button('',()=>cb.findPet(pet.id),'home-pet-name-btn');
     const portrait=el('canvas','home-pet-portrait');
     portrait.width=80;portrait.height=80;portrait.setAttribute('aria-hidden','true');
@@ -526,9 +545,7 @@ export function createHomeView(root,cb){
     if(portraitImage&&!portraitImage.complete)portraitImage.addEventListener('load',()=>{if(portrait.isConnected)drawPortrait();},{once:true});
     drawPortrait();
     infoBtn.append(portrait,el('span','home-pet-name',pet.name));
-    const actTag=el('span','home-pet-act-tag',pet.activity?tr(activities[pet.activity]||'互动中'):tr('漫步中'));
-    infoBtn.append(actTag);
-    row.append(infoBtn,button('召到身边',()=>run(()=>cb.callPet(pet.id)),'primary'));
+    row.append(infoBtn);
     items.append(row);
    }
    return;
@@ -577,8 +594,7 @@ export function createHomeView(root,cb){
 
  function paint(now){
   frame=requestAnimationFrame(paint);
-  if(dead||mode!=='scene'||!canvas?.isConnected||document.hidden){frameMeter.sample(0,false);return;}
-  if(now-lastPaint<32)return;
+  if(dead||mode!=='scene'||!canvas?.isConnected||document.hidden){lastPaint=0;frameMeter.sample(0,false);return;}
   const dt=lastPaint?Math.min(.05,(now-lastPaint)/1000):0;
   lastPaint=now;
   if(gesture&&!gesture.hit&&(gesture.moved||now-gesture.since>=180)){
@@ -614,7 +630,7 @@ export function createHomeView(root,cb){
   ctx.save();
   ctx.translate(r.width/2-model.camera.x*scale,r.height/2-model.camera.y*scale);
   ctx.scale(scale/40,scale/40);
-  paintHomeBakedTerrain(ctx,terrain,model.home.seed,worldRect,envArt,decorArt);
+  terrain.draw(ctx,model.home.seed,worldRect,envArt,decorArt,ratio*scale/40,objects);
   ctx.restore();
 
   hits=[];
@@ -892,7 +908,7 @@ export function createHomeView(root,cb){
    root.classList.remove('home-world-active');
    cancelAnimationFrame(frame);
    images.clear();
-   terrain.clear();
+   terrain.dispose();
   },
   get size(){
    const r=canvas?.getBoundingClientRect();

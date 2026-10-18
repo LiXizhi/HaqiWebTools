@@ -1,0 +1,2365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="icon" href="data:,">
+<title>水 · 奔流的溪涧与水花</title>
+<style>
+  :root {
+    --gold: #a8e4ff;
+    --gold-soft: #d2f3ff;
+    --ink: #04101b;
+    --jade: #6ee0b8;
+    --amber: #f49b52;
+    --ui-bg: rgba(5, 16, 28, 0.72);
+    --ui-border: rgba(168, 228, 255, 0.34);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    background: #04101b;
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Serif SC", serif;
+    color: #eef9ff;
+    touch-action: none;
+  }
+  #stage {
+    position: fixed; inset: 0;
+    width: 100%; height: 100%;
+    display: block;
+    cursor: pointer;
+  }
+
+  /* 顶部进度条 */
+  #hud {
+    position: fixed; top: 18px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: var(--ui-bg);
+    border: 1px solid var(--ui-border);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 20;
+    opacity: 0;
+    transition: opacity .6s ease;
+    pointer-events: none;
+    max-width: calc(100vw - 96px);
+  }
+  #hud.show { opacity: 1; }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.22);
+    transition: all .45s cubic-bezier(.2,.9,.3,1.3);
+  }
+  .dot.done { background: rgba(168, 228, 255, 0.68); }
+  .dot.active {
+    width: 24px; border-radius: 999px;
+    background: linear-gradient(90deg, #b8ebff, #4cb8f0);
+    box-shadow: 0 0 12px rgba(104, 200, 245, 0.75);
+  }
+  #hud-label {
+    font-size: 12px; letter-spacing: 2px;
+    color: rgba(238, 249, 255, 0.88);
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+
+  /* 右上角工具栏 */
+  #tools {
+    position: fixed; top: 16px; right: 16px;
+    display: flex; gap: 8px;
+    z-index: 25;
+  }
+  .icon-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--ui-bg);
+    border: 1px solid var(--ui-border);
+    color: var(--gold-soft);
+    display: grid; place-items: center;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
+  }
+  .icon-btn:hover { transform: scale(1.06); border-color: rgba(168, 228, 255, 0.75); }
+  .icon-btn:active { transform: scale(0.95); }
+  .icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+  /* 底部字幕与旁白 */
+  #caption-wrap {
+    position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+    width: min(740px, 92vw);
+    text-align: center;
+    z-index: 20;
+    pointer-events: none;
+  }
+  #caption {
+    display: inline-block;
+    padding: 13px 26px;
+    border-radius: 20px;
+    background: rgba(5, 16, 28, 0.76);
+    border: 1px solid rgba(168, 228, 255, 0.28);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity .5s ease, transform .5s ease;
+  }
+  #caption.show { opacity: 1; transform: translateY(0); }
+  #caption .zh {
+    font-size: clamp(17px, 2.3vw, 22px);
+    letter-spacing: 1.5px;
+    line-height: 1.55;
+    color: #f4fbff;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+  }
+  #caption .zh em {
+    font-style: normal;
+    color: var(--gold);
+    font-weight: 600;
+    padding: 0 2px;
+  }
+  #caption .sub {
+    display: block;
+    margin-top: 4px;
+    font-size: clamp(12px, 1.5vw, 13.5px);
+    color: rgba(210, 243, 255, 0.72);
+    letter-spacing: 1px;
+  }
+
+  /* 交互提示气泡 */
+  #prompt {
+    position: fixed; left: 50%; bottom: 118px; transform: translateX(-50%);
+    padding: 9px 20px;
+    border-radius: 999px;
+    background: rgba(76, 184, 240, 0.16);
+    border: 1px solid rgba(168, 228, 255, 0.56);
+    color: var(--gold-soft);
+    font-size: 14px;
+    letter-spacing: 2px;
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .4s ease, transform .4s ease;
+    box-shadow: 0 0 24px rgba(104, 200, 245, 0.25);
+    animation: pulsePrompt 2.2s ease-in-out infinite;
+    white-space: nowrap;
+  }
+  #prompt.show { opacity: 1; }
+  @keyframes pulsePrompt {
+    0%,100% { transform: translateX(-50%) scale(1); box-shadow: 0 0 18px rgba(104, 200, 245, 0.22); }
+    50% { transform: translateX(-50%) scale(1.04); box-shadow: 0 0 28px rgba(104, 200, 245, 0.48); }
+  }
+
+  /* 独立动作按钮（涌泉幕等） */
+  #act-btn {
+    position: fixed; left: 50%; bottom: 114px; transform: translateX(-50%);
+    padding: 12px 30px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(88, 198, 250, 0.92), rgba(36, 128, 196, 0.92));
+    border: 1px solid rgba(224, 247, 255, 0.78);
+    color: #041524;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    cursor: pointer;
+    z-index: 23;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(8px);
+    transition: opacity .35s ease, transform .35s ease, box-shadow .25s ease;
+    box-shadow: 0 10px 30px rgba(64, 178, 240, 0.42), 0 0 24px rgba(168, 228, 255, 0.48);
+  }
+  #act-btn.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+    animation: actPulse 1.9s ease-in-out infinite;
+  }
+  #act-btn:hover { box-shadow: 0 12px 34px rgba(64, 178, 240, 0.62), 0 0 32px rgba(168, 228, 255, 0.72); }
+  #act-btn:active { transform: translateX(-50%) scale(0.95); }
+  @keyframes actPulse {
+    0%,100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.05); }
+  }
+
+  /* 部件拆解卡片（成字幕） */
+  #radicals {
+    position: fixed; left: 50%; top: 68px; transform: translateX(-50%);
+    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+    z-index: 21;
+    opacity: 0; pointer-events: none;
+    transition: opacity .5s ease, transform .5s ease;
+    width: min(94vw, 680px);
+  }
+  #radicals.show { opacity: 1; }
+  .rad-pill {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: rgba(5, 16, 28, 0.78);
+    border: 1px solid rgba(168, 228, 255, 0.34);
+    backdrop-filter: blur(8px);
+    font-size: 13px;
+    color: #eef9ff;
+    transition: all .4s ease;
+  }
+  .rad-pill.lit {
+    border-color: var(--gold);
+    box-shadow: 0 0 18px rgba(104, 200, 245, 0.44);
+    transform: translateY(-2px);
+  }
+  .rad-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+
+  /* 词语卡片（清泉幕） */
+  #words {
+    position: fixed; left: 50%; bottom: 118px; transform: translateX(-50%);
+    display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+    z-index: 22;
+    opacity: 0; pointer-events: none;
+    transition: opacity .5s ease;
+    width: min(92vw, 720px);
+  }
+  #words.show { opacity: 1; pointer-events: auto; }
+  .word-card {
+    min-width: 156px;
+    padding: 12px 18px;
+    border-radius: 16px;
+    background: rgba(6, 20, 34, 0.84);
+    border: 1px solid rgba(168, 228, 255, 0.35);
+    backdrop-filter: blur(10px);
+    text-align: center;
+    cursor: pointer;
+    transform: translateY(14px) scale(0.94);
+    opacity: 0;
+    transition: all .45s cubic-bezier(.2,.9,.3,1.2);
+  }
+  .word-card.in {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .word-card.active, .word-card:hover {
+    border-color: var(--gold);
+    background: rgba(24, 62, 96, 0.9);
+    box-shadow: 0 8px 26px rgba(104, 200, 245, 0.32);
+    transform: translateY(-3px) scale(1.03);
+  }
+  .word-card .w-py {
+    font-size: 12px; color: rgba(210, 243, 255, 0.78);
+    letter-spacing: 1.5px;
+  }
+  .word-card .w-zh {
+    font-size: 24px; color: #fff;
+    letter-spacing: 4px; margin: 3px 0 4px;
+    font-weight: 600;
+  }
+  .word-card .w-zh b { color: var(--gold); }
+  .word-card .w-desc {
+    font-size: 12px; color: rgba(235, 246, 255, 0.76);
+  }
+
+  /* 描红辅助按钮栏 */
+  #write-bar {
+    position: fixed; left: 50%; top: 68px; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(5, 16, 28, 0.8);
+    border: 1px solid rgba(168, 228, 255, 0.34);
+    backdrop-filter: blur(8px);
+    z-index: 22;
+    opacity: 0; pointer-events: none;
+    transition: opacity .4s ease;
+  }
+  #write-bar.show { opacity: 1; pointer-events: auto; }
+  #stroke-counter {
+    font-size: 13px; color: var(--gold-soft); letter-spacing: 1.5px;
+    padding: 0 6px;
+  }
+  .mini-btn {
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(168, 228, 255, 0.16);
+    border: 1px solid rgba(168, 228, 255, 0.45);
+    color: var(--gold-soft);
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+  .mini-btn:hover { background: rgba(168, 228, 255, 0.3); }
+
+  /* 片头覆盖层 */
+  #intro {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-end;
+    padding-bottom: clamp(46px, 9vh, 88px);
+    background: radial-gradient(circle at 50% 42%, rgba(4, 18, 32, 0.06) 0%, rgba(3, 12, 22, 0.48) 64%, rgba(2, 8, 16, 0.84) 100%);
+    z-index: 30;
+    transition: opacity .85s ease;
+  }
+  #intro.hide { opacity: 0; pointer-events: none; }
+  .intro-panel {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 20px 32px 24px;
+    border-radius: 26px;
+    background: rgba(5, 16, 28, 0.62);
+    border: 1px solid rgba(168, 228, 255, 0.28);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.48);
+    text-align: center;
+    max-width: 92vw;
+  }
+  .intro-py {
+    font-size: clamp(14px, 2vw, 18px);
+    letter-spacing: 5px;
+    color: rgba(210, 243, 255, 0.88);
+    margin-bottom: 6px;
+  }
+  .intro-sub {
+    font-size: clamp(14px, 2vw, 17px);
+    letter-spacing: 3px;
+    color: rgba(235, 246, 255, 0.88);
+    margin-bottom: 18px;
+  }
+  .start-btn {
+    padding: 13px 38px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(168, 228, 255, 0.28), rgba(64, 178, 240, 0.16));
+    border: 1.5px solid rgba(168, 228, 255, 0.78);
+    color: #fff;
+    font-size: 16px;
+    letter-spacing: 5px;
+    cursor: pointer;
+    box-shadow: 0 10px 32px rgba(0,0,0,0.45), 0 0 28px rgba(104, 200, 245, 0.28);
+    transition: all .28s ease;
+  }
+  .start-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    background: linear-gradient(135deg, rgba(168, 228, 255, 0.44), rgba(64, 178, 240, 0.26));
+    box-shadow: 0 12px 36px rgba(0,0,0,0.5), 0 0 36px rgba(104, 200, 245, 0.48);
+  }
+
+  /* 尾声重播气泡 */
+  #replay {
+    position: fixed; left: 50%; bottom: 116px; transform: translateX(-50%);
+    padding: 11px 28px;
+    border-radius: 999px;
+    background: rgba(5, 16, 28, 0.84);
+    border: 1.5px solid rgba(168, 228, 255, 0.68);
+    color: var(--gold-soft);
+    font-size: 14px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    z-index: 22;
+    opacity: 0; pointer-events: none;
+    transition: all .35s ease;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+  }
+  #replay.show { opacity: 1; pointer-events: auto; }
+  #replay:hover {
+    background: rgba(168, 228, 255, 0.22);
+    transform: translateX(-50%) translateY(-2px);
+  }
+
+  /* 左下角古文字事实边界轻提示 */
+  #fact-note {
+    position: fixed; left: 16px; bottom: 10px;
+    font-size: 11px;
+    color: rgba(210, 232, 248, 0.42);
+    letter-spacing: 0.8px;
+    z-index: 15;
+    pointer-events: none;
+  }
+
+  @media (max-width: 640px) {
+    #hud { top: 12px; padding: 6px 12px; gap: 7px; max-width: calc(100vw - 88px); }
+    #hud-label { font-size: 11px; letter-spacing: 1px; }
+    #tools { top: 10px; right: 10px; gap: 6px; }
+    .icon-btn { width: 34px; height: 34px; }
+    #radicals { top: 54px; gap: 6px; }
+    .rad-pill { padding: 5px 10px; font-size: 11.5px; }
+    #write-bar { top: 54px; padding: 5px 12px; gap: 8px; white-space: nowrap; }
+    #stroke-counter { font-size: 12px; white-space: nowrap; }
+    .mini-btn { white-space: nowrap; }
+    #caption-wrap { bottom: 14px; width: 94vw; }
+    #caption { padding: 10px 14px; border-radius: 16px; }
+    #prompt { bottom: 128px; font-size: 12px; padding: 6px 14px; max-width: 92vw; overflow: hidden; text-overflow: ellipsis; }
+    #act-btn { bottom: 126px; padding: 10px 24px; font-size: 14.5px; }
+    #replay { bottom: 128px; padding: 9px 22px; font-size: 13px; }
+    #words { bottom: 126px; gap: 8px; }
+    .word-card { min-width: 104px; padding: 8px 11px; border-radius: 12px; }
+    .word-card .w-zh { font-size: 19px; letter-spacing: 2px; }
+    .word-card .w-desc { font-size: 10.5px; }
+    #fact-note { display: none; }
+    .intro-panel { padding: 16px 22px 20px; }
+  }
+</style>
+<script id="haqi-h5-protocol-v1">
+(function () {
+  if (window.__haqiHanziProtocolV1) return;
+  window.__haqiHanziProtocolV1 = true;
+
+  const HANZI_CHAR = "水";
+  let lang = (new URLSearchParams(location.search).get('lang') || '').trim();
+  let dict = {};
+  let writtenSent = false;
+  let completedSent = false;
+  let lastCaption = { zh: '', sub: '' };
+
+  function post(type, extra) {
+    const payload = Object.assign({
+      protocol: 'haqi-h5-v1',
+      type: type,
+      char: HANZI_CHAR,
+      hanzi: HANZI_CHAR,
+      timestamp: Date.now()
+    }, extra || {});
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage(payload, '*');
+      }
+    } catch (_) {}
+  }
+
+  function norm(s) {
+    return String(s || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function stripTags(s) {
+    return norm(String(s || '').replace(/<[^>]*>/g, ''));
+  }
+
+  function lookup(text) {
+    if (!lang || lang === 'zh' || lang === 'zh-CN') return '';
+    const k1 = norm(text);
+    const k2 = stripTags(text);
+    return (k1 && dict[k1]) || (k2 && dict[k2]) || '';
+  }
+
+  function applyCaption(zh, sub) {
+    lastCaption = { zh: zh || '', sub: sub || '' };
+    const cap = document.getElementById('caption');
+    const zhEl = document.getElementById('cap-zh') || (cap && cap.querySelector('.zh'));
+    const subEl = document.getElementById('cap-sub') || (cap && cap.querySelector('.sub'));
+    if (!cap || !zhEl) return;
+    if (!zh) {
+      cap.classList.remove('show');
+      return;
+    }
+    zhEl.innerHTML = zh;
+    const trans = lookup(zh);
+    const finalSub = trans || sub || '';
+    if (subEl) {
+      subEl.textContent = finalSub;
+      subEl.style.display = finalSub ? 'block' : 'none';
+    }
+    cap.classList.add('show');
+  }
+
+  function applyElementTranslation(el) {
+    if (!el) return;
+    const orig = el.getAttribute('data-zh-orig') ?? el.textContent;
+    if (!el.hasAttribute('data-zh-orig')) el.setAttribute('data-zh-orig', orig);
+    const trans = lookup(orig);
+    el.textContent = trans ? orig + ' · ' + trans : orig;
+  }
+
+  function scanStatic() {
+    ['#prompt', '#act-btn', '#replay', '#hud-label', '#stroke-counter', '#fact-note', '.intro-sub', '.start-btn', '.mini-btn', '.w-desc'].forEach(sel => {
+      document.querySelectorAll(sel).forEach(applyElementTranslation);
+    });
+    if (lastCaption.zh) applyCaption(lastCaption.zh, lastCaption.sub);
+  }
+
+  window.haqiHanziSetLang = function (nextLang, nextDict) {
+    if (typeof nextLang === 'string') lang = nextLang.trim();
+    if (nextDict && typeof nextDict === 'object') dict = Object.assign({}, dict, nextDict);
+    scanStatic();
+  };
+
+  window.haqiHanziCaption = applyCaption;
+  window.haqiHanziUi = applyElementTranslation;
+
+  window.haqiHanziWritten = function (detail) {
+    if (writtenSent) return;
+    writtenSent = true;
+    post('written', detail || {});
+  };
+
+  window.haqiHanziComplete = function (detail) {
+    if (!writtenSent) {
+      writtenSent = true;
+      post('written', { auto: true });
+    }
+    if (completedSent) return;
+    completedSent = true;
+    post('completed', detail || {});
+  };
+
+  window.addEventListener('message', function (ev) {
+    const d = ev && ev.data;
+    if (!d || typeof d !== 'object') return;
+    if (d.type === 'init' || d.type === 'haqi:init' || d.type === 'translate' || d.type === 'haqi:translate') {
+      window.haqiHanziSetLang(d.lang || d.language || lang, d.dict || d.translations || d.map || {});
+    }
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      scanStatic();
+      post('ready');
+    });
+  } else {
+    setTimeout(function () {
+      scanStatic();
+      post('ready');
+    }, 0);
+  }
+})();
+</script>
+</head>
+<body>
+
+<canvas id="stage"></canvas>
+
+<!-- 顶部进度 -->
+<div id="hud">
+  <div class="dot" data-step="0"></div>
+  <div class="dot" data-step="1"></div>
+  <div class="dot" data-step="2"></div>
+  <div class="dot" data-step="3"></div>
+  <div class="dot" data-step="4"></div>
+  <div class="dot" data-step="5"></div>
+  <div class="dot" data-step="6"></div>
+  <span id="hud-label">寻泉</span>
+</div>
+
+<!-- 右上角控制按钮 -->
+<div id="tools">
+  <button class="icon-btn" id="btn-mute" title="声音开关" aria-label="声音开关">
+    <svg id="ico-sound-on" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+    <svg id="ico-sound-off" viewBox="0 0 24 24" style="display:none"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+  </button>
+  <button class="icon-btn" id="btn-restart" title="从头播放" aria-label="从头播放">
+    <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+  </button>
+</div>
+
+<!-- 成字幕：甲骨文象形构成提示 -->
+<div id="radicals">
+  <div class="rad-pill" id="rad-main"><span class="rad-dot" style="background:#5ec4f8"></span><span>中流 · 奔涌的溪水主干（竖钩）</span></div>
+  <div class="rad-pill" id="rad-left"><span class="rad-dot" style="background:#a8e4ff"></span><span>左花 · 激起的左侧水滴（横撇）</span></div>
+  <div class="rad-pill" id="rad-right"><span class="rad-dot" style="background:#7ce6c4"></span><span>右花 · 飞溅的右侧浪花（撇与捺）</span></div>
+</div>
+
+<!-- 描红辅助栏 -->
+<div id="write-bar">
+  <span id="stroke-counter">第 1 / 4 笔 · 竖钩</span>
+  <button class="mini-btn" id="btn-demo">看示范</button>
+</div>
+
+<!-- 词语卡片 -->
+<div id="words">
+  <div class="word-card" data-idx="0">
+    <div class="w-py">hé shuǐ</div>
+    <div class="w-zh">河<b>水</b></div>
+    <div class="w-desc">在河道里欢快流淌的清澈溪水</div>
+  </div>
+  <div class="word-card" data-idx="1">
+    <div class="w-py">shuǐ huā</div>
+    <div class="w-zh"><b>水</b>花</div>
+    <div class="w-desc">溪流撞上青石溅起的晶莹浪花</div>
+  </div>
+  <div class="word-card" data-idx="2">
+    <div class="w-py">shān shuǐ</div>
+    <div class="w-zh">山<b>水</b></div>
+    <div class="w-desc">苍翠群山与潺潺流水相伴的风景</div>
+  </div>
+</div>
+
+<!-- 交互提示与动作按钮 -->
+<div id="prompt">按住屏幕 · 温热融冰开泉</div>
+<button id="act-btn" type="button">按住开泉</button>
+<button id="replay">再看一次 · 水的故事</button>
+
+<!-- 字幕 -->
+<div id="caption-wrap">
+  <div id="caption">
+    <div class="zh" id="cap-zh"></div>
+    <span class="sub" id="cap-sub"></span>
+  </div>
+</div>
+
+<div id="fact-note">古字形为依据通行字形的艺术示意</div>
+
+<!-- 片头 -->
+<div id="intro">
+  <div class="intro-panel">
+    <div class="intro-py">SHUǏ · THE FLOWING STREAM</div>
+    <div class="intro-sub">奔流的溪涧与水花 · 汉字象形故事</div>
+    <button class="start-btn" id="start">开始</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  // ============================================================================
+  // 1. 工具与确定性随机数
+  // ============================================================================
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const smooth = t => { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); };
+  const easeOutCubic = t => { t = clamp(t, 0, 1); return 1 - Math.pow(1 - t, 3); };
+  const easeInOutCubic = t => {
+    t = clamp(t, 0, 1);
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  };
+
+  function mulberry32(seed) {
+    let t = seed >>> 0;
+    return function() {
+      t += 0x6D2B79F5;
+      let r = Math.imul(t ^ (t >>> 15), 1 | t);
+      r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+      return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const rng = mulberry32(20261022);
+
+  // ============================================================================
+  // 2. WebAudio 实时清泉与五声音景（零外部音频依赖）
+  // ============================================================================
+  class SoundEngine {
+    constructor() {
+      this.ctx = null;
+      this.muted = false;
+      this.streamGain = null;
+      // G 大调五声音阶: G4, A4, B4, D5, E5, G5, A5, B5, D6
+      this.scale = [392.00, 440.00, 493.88, 587.33, 659.25, 783.99, 880.00, 987.77, 1174.66];
+    }
+
+    init() {
+      if (this.ctx) {
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+        return;
+      }
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      this.ctx = new AC();
+      this._setupStreamNoise();
+    }
+
+    _setupStreamNoise() {
+      if (!this.ctx) return;
+      const sr = this.ctx.sampleRate;
+      const len = sr * 3;
+      const buf = this.ctx.createBuffer(1, len, sr);
+      const data = buf.getChannelData(0);
+      let b0 = 0, b1 = 0, b2 = 0;
+      for (let i = 0; i < len; i++) {
+        const w = (Math.random() * 2 - 1);
+        b0 = 0.996 * b0 + w * 0.04;
+        b1 = 0.98 * b1 + w * 0.08;
+        b2 = 0.90 * b2 + w * 0.14;
+        data[i] = (b0 + b1 + b2) * 0.16;
+      }
+      const src = this.ctx.createBufferSource();
+      src.buffer = buf;
+      src.loop = true;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 540;
+      filter.Q.value = 0.85;
+
+      const g = this.ctx.createGain();
+      g.gain.value = 0.0001;
+
+      src.connect(filter);
+      filter.connect(g);
+      g.connect(this.ctx.destination);
+      src.start();
+      this.streamGain = g;
+      this.streamFilter = filter;
+    }
+
+    setStreamLevel(level) {
+      if (!this.ctx || !this.streamGain) return;
+      const target = this.muted ? 0.0001 : clamp(level, 0.001, 0.26);
+      this.streamGain.gain.setTargetAtTime(target, this.ctx.currentTime, 0.45);
+      if (this.streamFilter) {
+        this.streamFilter.frequency.setTargetAtTime(420 + level * 1400, this.ctx.currentTime, 0.45);
+      }
+    }
+
+    toggleMute() {
+      this.muted = !this.muted;
+      if (this.ctx && this.streamGain) {
+        this.streamGain.gain.setTargetAtTime(this.muted ? 0.0001 : 0.06, this.ctx.currentTime, 0.15);
+      }
+      return this.muted;
+    }
+
+    pluck(idx = 0, vol = 0.14, dur = 1.3) {
+      if (this.muted || !this.ctx) return;
+      const now = this.ctx.currentTime;
+      const freq = this.scale[clamp(idx, 0, this.scale.length - 1)];
+      const osc = this.ctx.createOscillator();
+      const osc2 = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+      osc2.type = 'triangle';
+      osc2.frequency.setValueAtTime(freq * 2, now);
+
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.linearRampToValueAtTime(vol, now + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+
+      const g2 = this.ctx.createGain();
+      g2.gain.setValueAtTime(vol * 0.22, now);
+      g2.gain.exponentialRampToValueAtTime(0.0001, now + dur * 0.45);
+
+      osc.connect(g);
+      osc2.connect(g2);
+      g2.connect(g);
+      g.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc2.start(now);
+      osc.stop(now + dur + 0.05);
+      osc2.stop(now + dur + 0.05);
+    }
+
+    waterDrop(pitch = 680, vol = 0.11) {
+      if (this.muted || !this.ctx) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(pitch * 0.72, now);
+      osc.frequency.exponentialRampToValueAtTime(pitch * 1.48, now + 0.11);
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.linearRampToValueAtTime(vol, now + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+      osc.connect(g);
+      g.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.25);
+    }
+
+    chord(indices = [0, 2, 4, 5], vol = 0.09, gap = 0.09) {
+      indices.forEach((n, i) => {
+        setTimeout(() => this.pluck(n, vol, 1.9), i * gap * 1000);
+      });
+    }
+
+    splashSound() {
+      this.waterDrop(560, 0.12);
+      setTimeout(() => this.waterDrop(840, 0.10), 70);
+      setTimeout(() => this.pluck(4, 0.12, 1.4), 120);
+    }
+  }
+  const sfx = new SoundEngine();
+
+  // ============================================================================
+  // 3. 世界坐标与自适应相机
+  // ============================================================================
+  const canvas = document.getElementById('stage');
+  const ctx = canvas.getContext('2d');
+  let W = window.innerWidth, H = window.innerHeight, DPR = Math.min(window.devicePixelRatio || 1, 2);
+  let isPortrait = H > W;
+
+  const VIEW = {
+    intro:   { cx: 800, cy: 450, w: 1280, pcy: 455, pw: 660 },
+    gorge:   { cx: 800, cy: 440, w: 1320, pcy: 450, pw: 680 },
+    spring:  { cx: 800, cy: 230, w: 880,  pcy: 245, pw: 520 },
+    stream:  { cx: 800, cy: 460, w: 1180, pcy: 470, pw: 620 },
+    wide:    { cx: 800, cy: 465, w: 1360, pcy: 475, pw: 680 },
+    splash:  { cx: 800, cy: 455, w: 1080, pcy: 465, pw: 590 },
+    glyph:   { cx: 800, cy: 445, w: 1060, pcy: 455, pw: 580 },
+    finale:  { cx: 800, cy: 455, w: 1320, pcy: 465, pw: 660 }
+  };
+
+  const cam = {
+    cx: 800, cy: 450, w: 1280,
+    tcx: 800, tcy: 450, tw: 1280,
+    scale: 1, offX: 0, offY: 0,
+    setTarget(preset, instant = false) {
+      const v = VIEW[preset] || VIEW.wide;
+      this.tcx = v.cx;
+      this.tcy = isPortrait ? v.pcy : v.cy;
+      this.tw  = isPortrait ? v.pw  : v.w;
+      if (instant) {
+        this.cx = this.tcx; this.cy = this.tcy; this.w = this.tw;
+      }
+    },
+    update(dt) {
+      const k = 1 - Math.exp(-dt * 3.8);
+      this.cx = lerp(this.cx, this.tcx, k);
+      this.cy = lerp(this.cy, this.tcy, k);
+      this.w  = lerp(this.w,  this.tw,  k);
+      this.scale = W / this.w;
+      this.offX = W * 0.5 - this.cx * this.scale;
+      this.offY = H * 0.5 - this.cy * this.scale;
+    },
+    toScreen(wx, wy) {
+      return { x: wx * this.scale + this.offX, y: wy * this.scale + this.offY };
+    },
+    toWorld(sx, sy) {
+      return { x: (sx - this.offX) / this.scale, y: (sy - this.offY) / this.scale };
+    }
+  };
+
+  function resize() {
+    W = window.innerWidth; H = window.innerHeight;
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    isPortrait = H > W;
+    canvas.width = Math.round(W * DPR);
+    canvas.height = Math.round(H * DPR);
+    cam.setTarget(currentCamPreset, true);
+  }
+  let currentCamPreset = 'intro';
+  window.addEventListener('resize', resize);
+
+  // ============================================================================
+  // 4. 视觉场景数据：山涧溪道、泉眼、礁石、水花、水车与锦鲤
+  // ============================================================================
+  const STARS = Array.from({ length: 58 }, () => ({
+    x: 120 + rng() * 1360,
+    y: 30 + rng() * 240,
+    r: 0.9 + rng() * 1.9,
+    phase: rng() * Math.PI * 2,
+    speed: 1.1 + rng() * 2.1
+  }));
+
+  // 河床中央主干曲线采样 (t in 0..1) -> 从上方泉眼 (800, 175) 蜿蜒流向下方 (765, 735)
+  // 特意贴合「水」字第 1 笔竖钩的中心走势与底部微向左钩
+  function streamCenterPoint(t) {
+    const u = clamp(t, 0, 1);
+    const y = lerp(175, 735, u);
+    const wave = Math.sin(u * Math.PI * 2.1) * 18 * (1 - u * 0.35);
+    const hook = u > 0.82 ? -Math.pow((u - 0.82) / 0.18, 1.5) * 44 : 0;
+    const x = 800 + wave + hook;
+    const halfW = lerp(24, 54, Math.pow(u, 0.72));
+    return { x, y, halfW };
+  }
+
+  // 四朵关键礁石水花（直接对应甲骨文「水」左右四点及楷书左横撇、右撇、右捺）
+  const SPLASH_NODES = [
+    // 左上与左下连成第 2 笔「横撇」
+    { id: 'L1', x: 690, y: 392, dir: -1, angle: -0.45, label: '左水花 · 上' },
+    { id: 'L2', x: 642, y: 548, dir: -1, angle: -0.82, label: '左水花 · 下' },
+    // 右上第 3 笔「短撇」
+    { id: 'R1', x: 910, y: 328, dir:  1, angle:  0.42, label: '右水花 · 撇' },
+    // 右下第 4 笔「长捺」
+    { id: 'R2', x: 928, y: 552, dir:  1, angle:  0.76, label: '右水花 · 捺' }
+  ];
+
+  // 河岸卵石
+  const PEBBLES = Array.from({ length: 42 }, (_, i) => {
+    const u = (i + 0.5) / 42;
+    const c = streamCenterPoint(u);
+    const side = i % 2 === 0 ? -1 : 1;
+    const dist = c.halfW + 14 + rng() * 68;
+    return {
+      x: c.x + side * dist,
+      y: c.y + (rng() - 0.5) * 18,
+      rx: 10 + rng() * 18,
+      ry: 6 + rng() * 10,
+      rot: (rng() - 0.5) * 0.6,
+      shade: 0.78 + rng() * 0.38
+    };
+  });
+
+  // 流动波光粒子与飞溅水珠
+  const STREAM_PARTICLES = Array.from({ length: 64 }, () => ({
+    u: rng(),
+    lane: (rng() - 0.5) * 1.5,
+    speed: 0.24 + rng() * 0.28,
+    size: 2.2 + rng() * 3.5,
+    phase: rng() * Math.PI * 2
+  }));
+
+  const DROPLETS = [];
+  function spawnDroplets(wx, wy, count = 16, col = '#b8ebff') {
+    for (let i = 0; i < count; i++) {
+      const a = -Math.PI * (0.15 + rng() * 0.7);
+      const sp = 75 + rng() * 185;
+      DROPLETS.push({
+        x: wx + (rng() - 0.5) * 18,
+        y: wy + (rng() - 0.5) * 10,
+        vx: Math.cos(a) * sp,
+        vy: Math.sin(a) * sp - 45,
+        r: 2.4 + rng() * 3.6,
+        life: 1,
+        decay: 0.85 + rng() * 0.55,
+        col
+      });
+    }
+  }
+
+  // 点击涟漪
+  const RIPPLES = [];
+  function spawnRipple(wx, wy, maxR = 78, col = 'rgba(168,228,255,0.85)') {
+    RIPPLES.push({ x: wx, y: wy, r: 6, maxR, alpha: 0.95, col });
+  }
+
+  // 第 4 幕：唤醒溪畔三处生机热点
+  const NOURISH_SPOTS = [
+    { id: 'wheel', x: 648, y: 365, r: 54, label: '竹水车', lit: false, litTime: 0 },
+    { id: 'koi',   x: 805, y: 505, r: 56, label: '溪中锦鲤', lit: false, litTime: 0 },
+    { id: 'bamboo',x: 956, y: 425, r: 54, label: '岸畔翠竹', lit: false, litTime: 0 }
+  ];
+  // ============================================================================
+  // 5. 「水」字字源演进与 4 笔描红数据（严格对齐 data/adventure/dictionary/zh.json）
+  // ============================================================================
+  // 归一化到 0..100 字框，渲染时映射到世界坐标 (cx=800, cy=435, box=350)
+  const GLYPH_BOX = { cx: 800, cy: 435, size: 350 };
+  function glyphToWorld(nx, ny) {
+    return {
+      x: GLYPH_BOX.cx + (nx - 50) * (GLYPH_BOX.size / 100),
+      y: GLYPH_BOX.cy + (ny - 50) * (GLYPH_BOX.size / 100)
+    };
+  }
+
+  // 楷书「水」4 笔标准笔顺：
+  // 1. 竖钩（中流主干）
+  // 2. 横撇（左侧水花）
+  // 3. 撇（右上水花）
+  // 4. 捺（右下水花）
+  const STROKES = [
+    {
+      name: '竖钩',
+      part: 'main',
+      pts: [[50, 12], [50, 32], [50, 56], [50, 81], [46, 86], [36, 80]]
+    },
+    {
+      name: '横撇',
+      part: 'left',
+      pts: [[16, 42], [28, 41], [38, 41], [34, 54], [24, 67], [12, 79]]
+    },
+    {
+      name: '撇',
+      part: 'right',
+      pts: [[74, 24], [69, 32], [63, 40], [56, 46]]
+    },
+    {
+      name: '捺',
+      part: 'right',
+      pts: [[52, 42], [62, 55], [73, 66], [82, 71], [90, 73]]
+    }
+  ];
+
+  // 甲骨文 / 金文「水」：中央蜿蜒溪道 + 两侧四点水花
+  const ORACLE_PATHS = [
+    // 正中蜿蜒水道
+    [[50, 10], [45, 28], [54, 48], [46, 68], [50, 88]],
+    // 左上水滴
+    [[26, 26], [22, 34], [26, 41]],
+    // 左下水滴
+    [[24, 58], [20, 66], [24, 74]],
+    // 右上水滴
+    [[74, 24], [78, 32], [74, 40]],
+    // 右下水滴
+    [[76, 56], [80, 65], [76, 74]]
+  ];
+
+  // ============================================================================
+  // 6. 场景状态与 9 幕控制
+  // ============================================================================
+  const state = {
+    started: false,
+    sceneIdx: -1,
+    sceneTime: 0,
+    globalTime: 0,
+    // 片头书法进度
+    introStrokeT: 0,
+    // 第 2 幕：按住融冰开泉
+    holdingSpring: false,
+    springProgress: 0,
+    springOpened: false,
+    // 第 3 幕：顺河道向下引水
+    draggingStream: false,
+    streamProgress: 0,
+    streamDone: false,
+    // 第 4 幕：唤醒溪畔三处生机
+    nourishCount: 0,
+    // 第 5 幕：四朵水花高光展示
+    splashShowcase: 0,
+    // 第 6 幕：成字演进 (0: 河水与水花 -> 1: 甲骨文 -> 2: 楷书拆解)
+    glyphMorph: 0,
+    radicalStep: 0,
+    // 第 7 幕：四笔描红
+    writeStrokeIdx: 0,
+    writeProgress: 0,
+    isTracing: false,
+    demoPlaying: false,
+    demoStrokeIdx: 0,
+    demoT: 0,
+    writtenDone: false,
+    // 第 8 幕：清泉三词
+    activeWordIdx: -1,
+    // 场景过渡度
+    glyAlpha: 0,
+    wheelAngle: 0
+  };
+
+  // DOM 引用
+  const hud = document.getElementById('hud');
+  const hudDots = Array.from(hud.querySelectorAll('.dot'));
+  const hudLabel = document.getElementById('hud-label');
+  const promptEl = document.getElementById('prompt');
+  const actBtn = document.getElementById('act-btn');
+  const radicalsEl = document.getElementById('radicals');
+  const radMain = document.getElementById('rad-main');
+  const radLeft = document.getElementById('rad-left');
+  const radRight = document.getElementById('rad-right');
+  const writeBar = document.getElementById('write-bar');
+  const strokeCounter = document.getElementById('stroke-counter');
+  const btnDemo = document.getElementById('btn-demo');
+  const wordsEl = document.getElementById('words');
+  const wordCards = Array.from(wordsEl.querySelectorAll('.word-card'));
+  const replayBtn = document.getElementById('replay');
+  const introEl = document.getElementById('intro');
+  const startBtn = document.getElementById('start');
+
+  function setCaption(zh, sub = '') {
+    if (window.haqiHanziCaption) {
+      window.haqiHanziCaption(zh, sub);
+    }
+  }
+
+  function setHud(step, labelText) {
+    hud.classList.add('show');
+    hudDots.forEach((d, i) => {
+      d.classList.toggle('done', i < step);
+      d.classList.toggle('active', i === step);
+    });
+    hudLabel.setAttribute('data-zh-orig', labelText);
+    hudLabel.textContent = labelText;
+    if (window.haqiHanziUi) window.haqiHanziUi(hudLabel);
+  }
+
+  function setPrompt(text) {
+    if (!text) {
+      promptEl.classList.remove('show');
+      return;
+    }
+    promptEl.setAttribute('data-zh-orig', text);
+    promptEl.textContent = text;
+    if (window.haqiHanziUi) window.haqiHanziUi(promptEl);
+    promptEl.classList.add('show');
+  }
+
+  function setActBtn(text) {
+    if (!text) {
+      actBtn.classList.remove('show');
+      return;
+    }
+    actBtn.setAttribute('data-zh-orig', text);
+    actBtn.textContent = text;
+    if (window.haqiHanziUi) window.haqiHanziUi(actBtn);
+    actBtn.classList.add('show');
+  }
+
+  function hideAllOverlays() {
+    setPrompt('');
+    setActBtn('');
+    radicalsEl.classList.remove('show');
+    writeBar.classList.remove('show');
+    wordsEl.classList.remove('show');
+    replayBtn.classList.remove('show');
+  }
+
+  // ============================================================================
+  // 7. 九幕剧本定义
+  // ============================================================================
+  const SCENES = [
+    // 0: 寻泉
+    {
+      name: '寻泉',
+      hudStep: 0,
+      cam: 'gorge',
+      enter() {
+        hideAllOverlays();
+        state.springProgress = 0;
+        state.springOpened = false;
+        state.streamProgress = 0;
+        state.streamDone = false;
+        state.glyAlpha = 0;
+        NOURISH_SPOTS.forEach(s => { s.lit = false; s.litTime = 0; });
+        state.nourishCount = 0;
+        sfx.setStreamLevel(0.01);
+        sfx.pluck(0, 0.11, 1.8);
+        setCaption('青石山谷静悄悄，干涸的溪床正盼着清泉流淌。', 'The quiet stone valley awaits clear spring water in its dry creek bed.');
+      },
+      update(dt, t) {
+        if (t > 2.2) {
+          currentCamPreset = 'spring';
+          cam.setTarget('spring');
+        }
+        if (t > 4.3) goScene(1);
+      }
+    },
+
+    // 1: 涌泉（互动 1：按住融冰开泉）
+    {
+      name: '涌泉',
+      hudStep: 1,
+      cam: 'spring',
+      enter() {
+        hideAllOverlays();
+        state.holdingSpring = false;
+        state.springProgress = 0;
+        state.springOpened = false;
+        setPrompt('按住屏幕或按钮 · 融开泉眼寒冰');
+        setActBtn('按住开泉');
+        setCaption('山涧泉眼被寒石封住，<em>按住</em>送去温热，唤醒清泉吧！', 'Hold to warm the frozen spring stone and release the clear water!');
+      },
+      update(dt, t) {
+        if (!state.springOpened) {
+          // 9 秒未完成时自动助力开启
+          const autoRate = t > 5.5 ? 0.34 : 0;
+          const rate = state.holdingSpring ? 0.68 : autoRate;
+          if (rate > 0) {
+            state.springProgress = clamp(state.springProgress + dt * rate, 0, 1);
+            if (Math.random() < dt * 10) {
+              sfx.waterDrop(520 + state.springProgress * 360, 0.08);
+              spawnDroplets(800, 175, 3, '#a8e4ff');
+            }
+          }
+          if (state.springProgress >= 1) {
+            state.springOpened = true;
+            state.holdingSpring = false;
+            setPrompt('');
+            setActBtn('');
+            sfx.splashSound();
+            sfx.chord([0, 2, 4, 6], 0.12, 0.08);
+            sfx.setStreamLevel(0.08);
+            spawnDroplets(800, 175, 28, '#d2f3ff');
+            spawnRipple(800, 175, 110);
+            state.streamProgress = 0.18;
+            setCaption('咕嘟咕嘟——清澈的泉水从青石间欢快地涌出来了！', 'Clear spring water bubbles forth from between the stones!');
+            state.sceneTime = 0;
+          }
+        } else {
+          if (state.sceneTime > 2.4) goScene(2);
+        }
+      }
+    },
+
+    // 2: 奔流（互动 2：顺着溪道向下拖动引水）
+    {
+      name: '奔流',
+      hudStep: 2,
+      cam: 'stream',
+      enter() {
+        hideAllOverlays();
+        state.streamProgress = Math.max(state.streamProgress, 0.18);
+        state.streamDone = false;
+        setPrompt('顺着中央溪道向下滑动 · 引清泉奔流');
+        setCaption('顺着溪床<em>向下滑动</em>，引一道清泉贯通整条山涧！', 'Drag downward along the creek bed to guide the main stream through the valley!');
+      },
+      update(dt, t) {
+        if (!state.streamDone) {
+          // 超时 8.5 秒柔和自动推进
+          if (t > 6.0 && !state.draggingStream) {
+            state.streamProgress = clamp(state.streamProgress + dt * 0.36, 0.18, 1);
+          }
+          sfx.setStreamLevel(0.06 + state.streamProgress * 0.14);
+          if (state.streamProgress >= 0.98) {
+            state.streamProgress = 1;
+            state.streamDone = true;
+            setPrompt('');
+            sfx.splashSound();
+            sfx.chord([2, 4, 5, 7], 0.12, 0.08);
+            SPLASH_NODES.forEach(n => spawnDroplets(n.x, n.y, 14, '#eef9ff'));
+            setCaption('溪水奔流而下，撞上两岸礁石，激起朵朵晶莹水花！', 'The stream rushes down, splashing against rocks on both sides!');
+            state.sceneTime = 0;
+          }
+        } else {
+          if (state.sceneTime > 2.6) goScene(3);
+        }
+      }
+    },
+
+    // 3: 润泽（互动 3：点亮溪畔三处生机）
+    {
+      name: '润泽',
+      hudStep: 3,
+      cam: 'wide',
+      enter() {
+        hideAllOverlays();
+        state.streamProgress = 1;
+        NOURISH_SPOTS.forEach(s => { s.lit = false; s.litTime = 0; });
+        state.nourishCount = 0;
+        setPrompt('点击溪畔 3 处光环 · 唤醒水车、锦鲤与翠竹');
+        setCaption('清泉润泽万物，快点击溪畔的<em>水车、锦鲤与翠竹</em>吧！', 'Tap the waterwheel, koi fish, and green bamboo along the stream!');
+      },
+      update(dt, t) {
+        // 超时自动点亮，保证流畅观赏
+        if (t > 5.2 && !NOURISH_SPOTS[0].lit) triggerNourishSpot(NOURISH_SPOTS[0]);
+        if (t > 6.8 && !NOURISH_SPOTS[1].lit) triggerNourishSpot(NOURISH_SPOTS[1]);
+        if (t > 8.4 && !NOURISH_SPOTS[2].lit) triggerNourishSpot(NOURISH_SPOTS[2]);
+
+        if (state.nourishCount >= 3) {
+          const lastLit = Math.max(...NOURISH_SPOTS.map(s => s.litTime));
+          if (state.globalTime - lastLit > 2.2) {
+            goScene(4);
+          }
+        }
+      }
+    },
+
+    // 4: 众水并流（俯瞰主流与四朵水花）
+    {
+      name: '润泽',
+      hudStep: 3,
+      cam: 'splash',
+      enter() {
+        hideAllOverlays();
+        state.splashShowcase = 0;
+        sfx.chord([0, 3, 5, 7], 0.11, 0.1);
+        setCaption('你看：正中一道<em>奔涌主流</em>，左右两侧溅起<em>四朵水花</em>。', 'Look: one surging main current in the middle, with four splashes on both sides.');
+      },
+      update(dt, t) {
+        state.splashShowcase = clamp(t / 2.2, 0, 1);
+        if (t > 4.0) goScene(5);
+      }
+    },
+
+    // 5: 成字（甲骨文/金文 → 楷书「水」与部件拆解）
+    {
+      name: '成字',
+      hudStep: 4,
+      cam: 'glyph',
+      enter() {
+        hideAllOverlays();
+        radicalsEl.classList.add('show');
+        radMain.classList.remove('lit');
+        radLeft.classList.remove('lit');
+        radRight.classList.remove('lit');
+        state.glyphMorph = 0;
+        state.radicalStep = 0;
+        state.glyAlpha = 1;
+        sfx.chord([1, 4, 6, 8], 0.12, 0.1);
+        setCaption('古人画下中间蜿蜒的主流与两边飞溅的水滴，造出了象形字<em>「水」</em>。', 'Ancients drew the winding main stream and splashes on both sides to create 水.');
+      },
+      update(dt, t) {
+        // 0..2.2s 甲骨文浮现；2.2..4.4s 演进为楷书
+        state.glyphMorph = clamp((t - 1.6) / 2.2, 0, 1);
+        if (t > 1.0 && state.radicalStep < 1) {
+          state.radicalStep = 1;
+          radMain.classList.add('lit');
+          sfx.pluck(2, 0.11, 1.3);
+        }
+        if (t > 2.6 && state.radicalStep < 2) {
+          state.radicalStep = 2;
+          radLeft.classList.add('lit');
+          sfx.pluck(4, 0.11, 1.3);
+          setCaption('正中主流化作<em>竖钩</em>，左边水花连成<em>横撇</em>，右边水花化作<em>撇与捺</em>。', 'The center stream becomes the vertical hook, flanked by left and right splash strokes.');
+        }
+        if (t > 4.0 && state.radicalStep < 3) {
+          state.radicalStep = 3;
+          radRight.classList.add('lit');
+          sfx.pluck(6, 0.11, 1.3);
+        }
+        if (t > 6.6) goScene(6);
+      }
+    },
+
+    // 6: 写字（互动 4：四笔描红）
+    {
+      name: '写字',
+      hudStep: 5,
+      cam: 'glyph',
+      enter() {
+        hideAllOverlays();
+        state.glyphMorph = 1;
+        state.glyAlpha = 1;
+        state.writeStrokeIdx = 0;
+        state.writeProgress = 0;
+        state.isTracing = false;
+        state.demoPlaying = false;
+        writeBar.classList.add('show');
+        updateStrokeCounter();
+        setPrompt('顺着橙色光点与箭头 · 先写中间主流，再写两边水花');
+        setCaption('先写中间的<em>竖钩</em>，再写左边的<em>横撇</em>和右边的<em>撇、捺</em>，写下「水」！', 'Trace center first, then left and right strokes to write 水!');
+      },
+      update(dt, t) {
+        if (state.demoPlaying) {
+          state.demoT += dt * 1.45;
+          if (state.demoT >= 1) {
+            state.demoT = 0;
+            state.demoStrokeIdx++;
+            sfx.waterDrop(620 + state.demoStrokeIdx * 90, 0.09);
+            if (state.demoStrokeIdx >= STROKES.length) {
+              state.demoPlaying = false;
+              state.demoStrokeIdx = 0;
+            }
+          }
+        }
+        if (state.writtenDone && state.sceneTime > 1.8) {
+          goScene(7);
+        }
+      }
+    },
+
+    // 7: 清泉（三组词意卡片）
+    {
+      name: '清泉',
+      hudStep: 6,
+      cam: 'wide',
+      enter() {
+        hideAllOverlays();
+        state.glyAlpha = 0.28;
+        wordsEl.classList.add('show');
+        wordCards.forEach(c => c.classList.remove('in', 'active'));
+        state.activeWordIdx = -1;
+        setCaption('清澈的<em>「水」</em>流进生活里，化作了<em>河水、水花与山水</em>。', 'Clear water flows into daily words: river water, splashes, and mountains & waters.');
+      },
+      update(dt, t) {
+        if (t > 0.4 && state.activeWordIdx < 0) activateWordCard(0);
+        if (t > 2.2 && state.activeWordIdx < 1) activateWordCard(1);
+        if (t > 4.0 && state.activeWordIdx < 2) activateWordCard(2);
+        if (t > 6.8) goScene(8);
+      }
+    },
+
+    // 8: 尾声（自由互动）
+    {
+      name: '尾声',
+      hudStep: 6,
+      cam: 'finale',
+      enter() {
+        hideAllOverlays();
+        state.glyAlpha = 0.22;
+        replayBtn.classList.add('show');
+        setPrompt('点击溪水激起浪花 · 或点「再看一次」');
+        setCaption('众水并流，润泽四方——你已经学会了清澈灵动的<em>「水」</em>字！', 'Waters flow together and nourish all things — you have mastered 水!');
+        sfx.chord([0, 2, 4, 5, 7, 8], 0.12, 0.09);
+        if (window.haqiHanziComplete) {
+          window.haqiHanziComplete({ char: '水', strokes: 4 });
+        }
+      },
+      update(dt, t) {}
+    }
+  ];
+
+  function goScene(idx) {
+    state.sceneIdx = idx;
+    state.sceneTime = 0;
+    const sc = SCENES[idx];
+    if (!sc) return;
+    currentCamPreset = sc.cam || 'wide';
+    cam.setTarget(currentCamPreset);
+    setHud(sc.hudStep, sc.name);
+    sc.enter();
+  }
+
+  function triggerNourishSpot(spot) {
+    if (spot.lit) return;
+    spot.lit = true;
+    spot.litTime = state.globalTime;
+    state.nourishCount++;
+    spawnDroplets(spot.x, spot.y, 22, '#a8e4ff');
+    spawnRipple(spot.x, spot.y, 92);
+    sfx.splashSound();
+    sfx.pluck(2 + state.nourishCount * 2, 0.14, 1.5);
+    if (spot.id === 'wheel') {
+      setCaption('溪水推动<em>竹水车</em>吱呀转动，扬起串串银亮水珠！', 'Stream water turns the bamboo waterwheel, tossing silvery droplets!');
+    } else if (spot.id === 'koi') {
+      setCaption('<em>红锦鲤</em>在清波里摆尾跃起，泛起一圈圈涟漪！', 'Red koi leap joyfully in the clear waves, spreading ripples!');
+    } else if (spot.id === 'bamboo') {
+      setCaption('岸边的<em>翠竹与水草</em>喝饱了溪水，吐露鲜亮的新绿！', 'Streamside bamboo and reeds drink deeply and sprout fresh green leaves!');
+    }
+    if (state.nourishCount >= 3) {
+      setPrompt('');
+    }
+  }
+
+  function updateStrokeCounter() {
+    const idx = clamp(state.writeStrokeIdx, 0, STROKES.length - 1);
+    const st = STROKES[idx];
+    const txt = `第 ${idx + 1} / ${STROKES.length} 笔 · ${st.name}`;
+    strokeCounter.setAttribute('data-zh-orig', txt);
+    strokeCounter.textContent = txt;
+    if (window.haqiHanziUi) window.haqiHanziUi(strokeCounter);
+  }
+
+  function activateWordCard(idx) {
+    state.activeWordIdx = idx;
+    wordCards.forEach((c, i) => {
+      if (i <= idx) c.classList.add('in');
+      c.classList.toggle('active', i === idx);
+    });
+    sfx.pluck(idx * 2 + 2, 0.13, 1.4);
+    const descs = [
+      '<em>河水</em>（hé shuǐ）：在河道里欢快流淌的清澈溪水。',
+      '<em>水花</em>（shuǐ huā）：溪流撞上青石溅起的晶莹浪花。',
+      '<em>山水</em>（shān shuǐ）：苍翠群山与潺潺流水相伴的风景。'
+    ];
+    const subs = [
+      'hé shuǐ — clear river water flowing in its channel.',
+      'shuǐ huā — sparkling splashes where water meets stone.',
+      'shān shuǐ — green mountains and flowing waters together.'
+    ];
+    if (descs[idx]) setCaption(descs[idx], subs[idx]);
+  }
+
+  // ============================================================================
+  // 8. 渲染系统：峡谷、泉眼、动态水流、水花、水车、锦鲤、字形与描红
+  // ============================================================================
+  function drawSkyAndGorge(t) {
+    const nourishment = clamp(state.nourishCount / 3, 0, 1);
+    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, nourishment > 0.5 ? '#061a2e' : '#04101d');
+    grad.addColorStop(0.48, nourishment > 0.5 ? '#0b2c47' : '#081d31');
+    grad.addColorStop(1, '#051523');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    // 远空星点与薄雾
+    ctx.save();
+    STARS.forEach(s => {
+      const p = cam.toScreen(s.x, s.y);
+      const tw = 0.4 + 0.6 * Math.sin(t * s.speed + s.phase);
+      ctx.fillStyle = `rgba(205, 240, 255, ${(0.25 + 0.45 * tw).toFixed(3)})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, s.r * cam.scale * 0.75, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.restore();
+  }
+
+  function drawValleyWalls(t) {
+    const nourishment = clamp(state.nourishCount / 3, 0, 1);
+
+    // 远山剪影
+    ctx.fillStyle = '#092238';
+    ctx.beginPath();
+    ctx.moveTo(0, 220);
+    ctx.lineTo(360, 95);
+    ctx.lineTo(640, 175);
+    ctx.lineTo(800, 155);
+    ctx.lineTo(980, 172);
+    ctx.lineTo(1260, 88);
+    ctx.lineTo(1600, 210);
+    ctx.lineTo(1600, 900);
+    ctx.lineTo(0, 900);
+    ctx.closePath();
+    ctx.fill();
+
+    // 左岸层叠青石山崖
+    const leftGrad = ctx.createLinearGradient(320, 160, 740, 780);
+    leftGrad.addColorStop(0, '#0f2d46');
+    leftGrad.addColorStop(0.6, nourishment > 0.6 ? '#17465c' : '#12354e');
+    leftGrad.addColorStop(1, '#091f32');
+    ctx.fillStyle = leftGrad;
+    ctx.beginPath();
+    ctx.moveTo(140, 160);
+    ctx.lineTo(745, 165);
+    for (let i = 0; i <= 16; i++) {
+      const u = i / 16;
+      const c = streamCenterPoint(u);
+      ctx.lineTo(c.x - c.halfW - 16, c.y);
+    }
+    ctx.lineTo(140, 820);
+    ctx.closePath();
+    ctx.fill();
+
+    // 右岸层叠青石山崖
+    const rightGrad = ctx.createLinearGradient(860, 160, 1280, 780);
+    rightGrad.addColorStop(0, '#10304a');
+    rightGrad.addColorStop(0.6, nourishment > 0.6 ? '#184a60' : '#133752');
+    rightGrad.addColorStop(1, '#081d2f');
+    ctx.fillStyle = rightGrad;
+    ctx.beginPath();
+    ctx.moveTo(1460, 160);
+    ctx.lineTo(855, 165);
+    for (let i = 0; i <= 16; i++) {
+      const u = i / 16;
+      const c = streamCenterPoint(u);
+      ctx.lineTo(c.x + c.halfW + 16, c.y);
+    }
+    ctx.lineTo(1460, 820);
+    ctx.closePath();
+    ctx.fill();
+
+    // 干涸/湿润河床底槽
+    ctx.fillStyle = '#071929';
+    ctx.beginPath();
+    for (let i = 0; i <= 24; i++) {
+      const u = i / 24;
+      const c = streamCenterPoint(u);
+      const x = c.x - c.halfW - 10;
+      if (i === 0) ctx.moveTo(x, c.y);
+      else ctx.lineTo(x, c.y);
+    }
+    for (let i = 24; i >= 0; i--) {
+      const u = i / 24;
+      const c = streamCenterPoint(u);
+      ctx.lineTo(c.x + c.halfW + 10, c.y);
+    }
+    ctx.closePath();
+    ctx.fill();
+
+    // 河岸卵石
+    PEBBLES.forEach(p => {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      const wet = state.streamProgress > (p.y - 175) / 560 ? 1 : 0;
+      ctx.fillStyle = wet
+        ? `rgba(${Math.round(42 * p.shade)}, ${Math.round(92 * p.shade)}, ${Math.round(128 * p.shade)}, 0.85)`
+        : `rgba(${Math.round(32 * p.shade)}, ${Math.round(54 * p.shade)}, ${Math.round(74 * p.shade)}, 0.72)`;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, p.rx, p.ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  function drawSpringAndTraveler(t) {
+    const sx = 800, sy = 172;
+    const openP = state.springOpened ? 1 : state.springProgress;
+
+    // 泉眼池底座
+    ctx.fillStyle = '#0b253a';
+    ctx.beginPath();
+    ctx.ellipse(sx, sy, 62, 26, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 泉眼内发光碧水
+    const glowR = Math.max(2, 26 + openP * 48 + Math.sin(t * 3.5) * 4);
+    const sg = ctx.createRadialGradient(sx, sy, 2, sx, sy, glowR);
+    sg.addColorStop(0, 'rgba(220, 248, 255, 0.95)');
+    sg.addColorStop(0.5, 'rgba(88, 198, 250, 0.75)');
+    sg.addColorStop(1, 'rgba(32, 110, 172, 0)');
+    ctx.fillStyle = sg;
+    ctx.beginPath();
+    ctx.arc(sx, sy, glowR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 未完全融开时的封泉寒冰石
+    if (openP < 0.99) {
+      const iceScale = 1 - openP * 0.78;
+      ctx.save();
+      ctx.translate(sx, sy - 4);
+      ctx.scale(iceScale, iceScale);
+      ctx.fillStyle = 'rgba(155, 215, 248, 0.82)';
+      ctx.strokeStyle = '#eef9ff';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.moveTo(-42, 8);
+      ctx.lineTo(-24, -22);
+      ctx.lineTo(8, -28);
+      ctx.lineTo(38, -14);
+      ctx.lineTo(44, 10);
+      ctx.lineTo(12, 20);
+      ctx.lineTo(-28, 18);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // 第 2 幕：按住开泉进度环
+    if (state.sceneIdx === 1 && !state.springOpened) {
+      const pulse = 0.65 + 0.35 * Math.sin(t * 4.2);
+      ctx.strokeStyle = `rgba(168, 228, 255, ${(0.45 + 0.4 * pulse).toFixed(2)})`;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(sx, sy, 58 + pulse * 6, 0, Math.PI * 2);
+      ctx.stroke();
+
+      if (state.springProgress > 0.01) {
+        ctx.strokeStyle = '#a8e4ff';
+        ctx.lineWidth = 6;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.arc(sx, sy, 58, -Math.PI / 2, -Math.PI / 2 + state.springProgress * Math.PI * 2);
+        ctx.stroke();
+      }
+    }
+
+    // 小旅人阿淼站在泉眼左上方
+    const tx = 706, ty = 166 + Math.sin(t * 2.4) * 2;
+    ctx.save();
+    ctx.translate(tx, ty);
+    // 斗篷与身姿
+    ctx.fillStyle = '#3898d4';
+    ctx.beginPath();
+    ctx.moveTo(0, -14);
+    ctx.lineTo(-16, 22);
+    ctx.lineTo(16, 22);
+    ctx.closePath();
+    ctx.fill();
+    // 头部与竹笠
+    ctx.fillStyle = '#ffe5c8';
+    ctx.beginPath();
+    ctx.arc(0, -21, 9, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#8ad4b0';
+    ctx.beginPath();
+    ctx.moveTo(-18, -24);
+    ctx.quadraticCurveTo(0, -36, 18, -24);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawFlowingStream(t) {
+    const prog = clamp(state.streamProgress, 0, 1);
+    if (prog <= 0.01) return;
+
+    const steps = 32;
+    const maxStep = Math.max(2, Math.round(steps * prog));
+
+    // 主体碧蓝水流带
+    const waterGrad = ctx.createLinearGradient(800, 175, 780, 735);
+    waterGrad.addColorStop(0, '#8ce0ff');
+    waterGrad.addColorStop(0.45, '#3aa8ec');
+    waterGrad.addColorStop(1, '#1d74b8');
+
+    ctx.save();
+    ctx.fillStyle = waterGrad;
+    ctx.shadowColor = 'rgba(88, 198, 250, 0.55)';
+    ctx.shadowBlur = 18;
+    ctx.beginPath();
+    for (let i = 0; i <= maxStep; i++) {
+      const u = (i / steps);
+      const c = streamCenterPoint(u);
+      const shimmer = Math.sin(t * 4.5 + u * 10) * 3.5;
+      const x = c.x - c.halfW + shimmer;
+      if (i === 0) ctx.moveTo(x, c.y);
+      else ctx.lineTo(x, c.y);
+    }
+    for (let i = maxStep; i >= 0; i--) {
+      const u = (i / steps);
+      const c = streamCenterPoint(u);
+      const shimmer = Math.cos(t * 4.5 + u * 10) * 3.5;
+      ctx.lineTo(c.x + c.halfW + shimmer, c.y);
+    }
+    ctx.closePath();
+    ctx.fill();
+
+    // 正中银亮主干流线（呼应「水」字第 1 笔竖钩与甲骨文中流）
+    ctx.strokeStyle = 'rgba(232, 250, 255, 0.88)';
+    ctx.lineWidth = 8;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    for (let i = 0; i <= maxStep; i++) {
+      const u = i / steps;
+      const c = streamCenterPoint(u);
+      if (i === 0) ctx.moveTo(c.x, c.y);
+      else ctx.lineTo(c.x, c.y);
+    }
+    ctx.stroke();
+
+    // 水面流动波光粒子
+    STREAM_PARTICLES.forEach(sp => {
+      const u = (sp.u + t * sp.speed) % 1;
+      if (u > prog) return;
+      const c = streamCenterPoint(u);
+      const px = c.x + sp.lane * c.halfW * 0.55;
+      const py = c.y;
+      ctx.fillStyle = 'rgba(235, 251, 255, 0.78)';
+      ctx.beginPath();
+      ctx.ellipse(px, py, sp.size * 0.7, sp.size * 2.1, 0, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.restore();
+
+    // 第 3 幕：引水拖动引导光球
+    if (state.sceneIdx === 2 && !state.streamDone) {
+      const head = streamCenterPoint(prog);
+      const r = Math.max(2, 22 + Math.sin(t * 5) * 4);
+      const hg = ctx.createRadialGradient(head.x, head.y, 2, head.x, head.y, r * 1.6);
+      hg.addColorStop(0, 'rgba(255,255,255,0.98)');
+      hg.addColorStop(0.5, 'rgba(120, 218, 255, 0.82)');
+      hg.addColorStop(1, 'rgba(64, 178, 240, 0)');
+      ctx.fillStyle = hg;
+      ctx.beginPath();
+      ctx.arc(head.x, head.y, r * 1.6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 向下虚线引导箭头
+      ctx.strokeStyle = 'rgba(184, 235, 255, 0.75)';
+      ctx.lineWidth = 3;
+      ctx.setLineDash([8, 8]);
+      ctx.beginPath();
+      for (let u = prog; u <= 1.0; u += 0.05) {
+        const c = streamCenterPoint(u);
+        if (u === prog) ctx.moveTo(c.x, c.y);
+        else ctx.lineTo(c.x, c.y);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // 两侧四朵礁石水花（直接对应「水」左右四点/撇捺）
+    SPLASH_NODES.forEach((node, idx) => {
+      const nodeU = (node.y - 175) / 560;
+      if (prog < nodeU) return;
+      const boost = state.sceneIdx === 4 ? (1 + state.splashShowcase * 0.45) : 1;
+
+      ctx.save();
+      ctx.translate(node.x, node.y);
+      // 礁石
+      ctx.fillStyle = '#1b4764';
+      ctx.beginPath();
+      ctx.ellipse(0, 8, 22, 13, node.dir * 0.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 飞溅水花弧线（呼应甲骨文四点与楷书左横撇、右撇捺）
+      const wave = Math.sin(t * 6 + idx * 1.4) * 4;
+      ctx.strokeStyle = '#e8f9ff';
+      ctx.lineWidth = 5.5 * boost;
+      ctx.lineCap = 'round';
+      ctx.shadowColor = 'rgba(140, 224, 255, 0.85)';
+      ctx.shadowBlur = 12;
+
+      for (let k = -1; k <= 1; k++) {
+        ctx.beginPath();
+        ctx.moveTo(-node.dir * 14, 0);
+        ctx.quadraticCurveTo(
+          node.dir * (16 + k * 8),
+          -22 - Math.abs(k) * 6 + wave,
+          node.dir * (38 + k * 10) * boost,
+          12 + k * 12
+        );
+        ctx.stroke();
+      }
+      ctx.restore();
+    });
+  }
+
+  function drawNourishElements(t) {
+    // ① 溪畔竹水车 (648, 365)
+    const wheelSpot = NOURISH_SPOTS[0];
+    if (wheelSpot.lit) {
+      state.wheelAngle += 0.025;
+    }
+    ctx.save();
+    ctx.translate(wheelSpot.x, wheelSpot.y);
+    ctx.rotate(state.wheelAngle);
+    const wheelR = 44;
+    ctx.strokeStyle = wheelSpot.lit ? '#d8b278' : 'rgba(148, 128, 98, 0.55)';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(0, 0, wheelR, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0, 0, wheelR * 0.32, 0, Math.PI * 2);
+    ctx.stroke();
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(Math.cos(a) * wheelR, Math.sin(a) * wheelR);
+      ctx.stroke();
+      // 水斗
+      ctx.fillStyle = wheelSpot.lit ? '#9be0ff' : 'rgba(110, 145, 168, 0.45)';
+      ctx.beginPath();
+      ctx.arc(Math.cos(a) * wheelR, Math.sin(a) * wheelR, 5.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+
+    // ② 溪中双锦鲤 (805, 505)
+    const koiSpot = NOURISH_SPOTS[1];
+    if (koiSpot.lit || state.streamProgress >= 1) {
+      const koiAlpha = koiSpot.lit ? 1 : 0.38;
+      for (let k = 0; k < 2; k++) {
+        const ang = t * (koiSpot.lit ? 2.1 : 0.9) + k * Math.PI;
+        const kx = koiSpot.x + Math.cos(ang) * 28;
+        const ky = koiSpot.y + Math.sin(ang * 1.3) * 18;
+        const dir = Math.atan2(Math.cos(ang * 1.3) * 1.3, -Math.sin(ang));
+        ctx.save();
+        ctx.translate(kx, ky);
+        ctx.rotate(dir);
+        ctx.fillStyle = k === 0 ? `rgba(255, 128, 72, ${koiAlpha})` : `rgba(255, 196, 88, ${koiAlpha})`;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 15, 6.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // 鱼尾
+        ctx.beginPath();
+        ctx.moveTo(-13, 0);
+        ctx.lineTo(-23, -7 + Math.sin(t * 10 + k) * 3);
+        ctx.lineTo(-23,  7 + Math.sin(t * 10 + k) * 3);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // ③ 岸畔翠竹与水草 (956, 425)
+    const bambooSpot = NOURISH_SPOTS[2];
+    const bamGrow = bambooSpot.lit ? clamp((state.globalTime - bambooSpot.litTime) * 1.2, 0.35, 1) : 0.32;
+    ctx.save();
+    ctx.translate(bambooSpot.x, bambooSpot.y + 30);
+    const stalks = [-18, 0, 16];
+    stalks.forEach((ox, idx) => {
+      const sway = Math.sin(t * 2.2 + idx) * 4 * bamGrow;
+      const h = (64 + idx * 14) * bamGrow;
+      ctx.strokeStyle = bambooSpot.lit ? '#5cd6a0' : '#2d5e52';
+      ctx.lineWidth = 4.5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(ox, 0);
+      ctx.quadraticCurveTo(ox + sway * 0.5, -h * 0.5, ox + sway, -h);
+      ctx.stroke();
+
+      if (bambooSpot.lit) {
+        ctx.fillStyle = '#7ef0be';
+        for (let lf = 1; lf <= 2; lf++) {
+          const ly = -h * (lf * 0.42);
+          ctx.beginPath();
+          ctx.ellipse(ox + sway * 0.6 + (lf % 2 ? 11 : -11), ly, 11, 3.8, lf % 2 ? -0.4 : 0.4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    });
+    ctx.restore();
+
+    // 第 4 幕：未点亮热点的呼吸提示光环
+    if (state.sceneIdx === 3) {
+      NOURISH_SPOTS.forEach(spot => {
+        if (spot.lit) return;
+        const pulse = 0.6 + 0.4 * Math.sin(t * 4.2 + spot.x);
+        const r = Math.max(2, spot.r * (0.88 + 0.16 * pulse));
+        ctx.save();
+        ctx.strokeStyle = `rgba(184, 238, 255, ${(0.5 + 0.4 * pulse).toFixed(2)})`;
+        ctx.lineWidth = 3;
+        ctx.setLineDash([7, 6]);
+        ctx.beginPath();
+        ctx.arc(spot.x, spot.y, r, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = 'rgba(235, 250, 255, 0.92)';
+        ctx.font = '600 15px "PingFang SC", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(spot.label, spot.x, spot.y + r + 20);
+        ctx.restore();
+      });
+    }
+  }
+
+  function drawDropletsAndRipples(dt) {
+    // 涟漪
+    for (let i = RIPPLES.length - 1; i >= 0; i--) {
+      const rp = RIPPLES[i];
+      rp.r += dt * 95;
+      rp.alpha -= dt * 0.72;
+      if (rp.alpha <= 0 || rp.r >= rp.maxR) {
+        RIPPLES.splice(i, 1);
+        continue;
+      }
+      ctx.strokeStyle = `rgba(184, 238, 255, ${rp.alpha.toFixed(3)})`;
+      ctx.lineWidth = 2.4;
+      ctx.beginPath();
+      ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    // 飞溅水珠
+    for (let i = DROPLETS.length - 1; i >= 0; i--) {
+      const d = DROPLETS[i];
+      d.x += d.vx * dt;
+      d.y += d.vy * dt;
+      d.vy += 320 * dt;
+      d.life -= d.decay * dt;
+      if (d.life <= 0) {
+        DROPLETS.splice(i, 1);
+        continue;
+      }
+      ctx.fillStyle = d.col;
+      ctx.globalAlpha = clamp(d.life, 0, 1);
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // 绘制平滑折线路径（支持按比例 t 截取）
+  function strokePolyline(pts, progress = 1) {
+    if (!pts || pts.length < 2 || progress <= 0) return;
+    const worldPts = pts.map(p => glyphToWorld(p[0], p[1]));
+    const totalSegs = worldPts.length - 1;
+    const exact = clamp(progress, 0, 1) * totalSegs;
+    const full = Math.floor(exact);
+    const frac = exact - full;
+
+    ctx.beginPath();
+    ctx.moveTo(worldPts[0].x, worldPts[0].y);
+    for (let i = 1; i <= full && i < worldPts.length; i++) {
+      ctx.lineTo(worldPts[i].x, worldPts[i].y);
+    }
+    if (full < totalSegs && frac > 0) {
+      const a = worldPts[full];
+      const b = worldPts[full + 1];
+      ctx.lineTo(lerp(a.x, b.x, frac), lerp(a.y, b.y, frac));
+    }
+    ctx.stroke();
+  }
+
+  function drawGlyphAndWriting(t) {
+    if (state.glyAlpha <= 0.01 && state.sceneIdx !== -1) return;
+
+    // 片头毛笔水墨「水」字演示
+    if (!state.started) {
+      ctx.save();
+      const box = GLYPH_BOX;
+      const glowR = Math.max(2, 210 + Math.sin(t * 2.2) * 16);
+      const g = ctx.createRadialGradient(box.cx, box.cy, 8, box.cx, box.cy, glowR);
+      g.addColorStop(0, 'rgba(104, 200, 245, 0.24)');
+      g.addColorStop(1, 'rgba(104, 200, 245, 0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(box.cx, box.cy, glowR, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 24;
+      ctx.strokeStyle = 'rgba(210, 245, 255, 0.92)';
+      ctx.shadowColor = 'rgba(88, 198, 250, 0.72)';
+      ctx.shadowBlur = 22;
+
+      const totalT = clamp(state.introStrokeT, 0, STROKES.length);
+      STROKES.forEach((st, idx) => {
+        const p = clamp(totalT - idx, 0, 1);
+        if (p > 0) strokePolyline(st.pts, p);
+      });
+      ctx.restore();
+      return;
+    }
+
+    ctx.save();
+    ctx.globalAlpha = clamp(state.glyAlpha, 0, 1);
+
+    // 字框柔和玉盘背光
+    const bgR = Math.max(2, GLYPH_BOX.size * 0.62);
+    const bg = ctx.createRadialGradient(GLYPH_BOX.cx, GLYPH_BOX.cy, 12, GLYPH_BOX.cx, GLYPH_BOX.cy, bgR);
+    bg.addColorStop(0, 'rgba(7, 28, 48, 0.84)');
+    bg.addColorStop(0.75, 'rgba(5, 20, 35, 0.62)');
+    bg.addColorStop(1, 'rgba(5, 20, 35, 0)');
+    ctx.fillStyle = bg;
+    ctx.beginPath();
+    ctx.arc(GLYPH_BOX.cx, GLYPH_BOX.cy, bgR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 第 6 幕：甲骨文 → 楷书演进
+    if (state.sceneIdx === 5) {
+      const m = smooth(state.glyphMorph);
+      // 甲骨文层
+      if (m < 0.95) {
+        ctx.save();
+        ctx.globalAlpha = (1 - m * 0.85) * state.glyAlpha;
+        ctx.strokeStyle = '#9be4ff';
+        ctx.lineWidth = 15;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.shadowColor = 'rgba(120, 218, 255, 0.75)';
+        ctx.shadowBlur = 16;
+        ORACLE_PATHS.forEach(path => strokePolyline(path, 1));
+        ctx.restore();
+      }
+      // 楷书层按部件分色高亮
+      if (m > 0.08) {
+        ctx.save();
+        ctx.globalAlpha = m * state.glyAlpha;
+        ctx.lineWidth = 24;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        STROKES.forEach(st => {
+          let col = '#eef9ff';
+          if (st.part === 'main' && state.radicalStep >= 1) col = '#5ec4f8';
+          if (st.part === 'left' && state.radicalStep >= 2) col = '#a8e4ff';
+          if (st.part === 'right' && state.radicalStep >= 3) col = '#7ce6c4';
+          ctx.strokeStyle = col;
+          ctx.shadowColor = col;
+          ctx.shadowBlur = 18;
+          strokePolyline(st.pts, 1);
+        });
+        ctx.restore();
+      }
+    }
+
+    // 第 7 幕：四笔描红互动
+    if (state.sceneIdx === 6) {
+      // 田字格参考框
+      const half = GLYPH_BOX.size * 0.52;
+      ctx.strokeStyle = 'rgba(168, 228, 255, 0.22)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(GLYPH_BOX.cx - half, GLYPH_BOX.cy - half, half * 2, half * 2);
+      ctx.setLineDash([6, 6]);
+      ctx.beginPath();
+      ctx.moveTo(GLYPH_BOX.cx - half, GLYPH_BOX.cy);
+      ctx.lineTo(GLYPH_BOX.cx + half, GLYPH_BOX.cy);
+      ctx.moveTo(GLYPH_BOX.cx, GLYPH_BOX.cy - half);
+      ctx.lineTo(GLYPH_BOX.cx, GLYPH_BOX.cy + half);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // 底衬暗轮廓
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 24;
+      ctx.strokeStyle = 'rgba(168, 228, 255, 0.22)';
+      STROKES.forEach(st => strokePolyline(st.pts, 1));
+
+      // 已完成笔画
+      ctx.strokeStyle = '#d8f5ff';
+      ctx.shadowColor = 'rgba(104, 200, 245, 0.8)';
+      ctx.shadowBlur = 16;
+      for (let i = 0; i < state.writeStrokeIdx; i++) {
+        strokePolyline(STROKES[i].pts, 1);
+      }
+
+      // 当前正在描红的笔画
+      if (state.writeStrokeIdx < STROKES.length) {
+        const cur = STROKES[state.writeStrokeIdx];
+        if (state.writeProgress > 0) {
+          ctx.strokeStyle = '#8ce0ff';
+          strokePolyline(cur.pts, state.writeProgress);
+        }
+
+        // 虚线引导线 + 起点橙色呼吸圆点 + 终点箭头
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = 'rgba(244, 155, 82, 0.72)';
+        ctx.lineWidth = 4;
+        ctx.setLineDash([8, 8]);
+        strokePolyline(cur.pts, 1);
+        ctx.setLineDash([]);
+
+        const startPt = glyphToWorld(cur.pts[0][0], cur.pts[0][1]);
+        const pulse = 0.65 + 0.35 * Math.sin(t * 5);
+        ctx.fillStyle = '#f49b52';
+        ctx.beginPath();
+        ctx.arc(startPt.x, startPt.y, 11 + pulse * 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(startPt.x, startPt.y, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 示范笔画动画
+      if (state.demoPlaying && state.demoStrokeIdx < STROKES.length) {
+        ctx.strokeStyle = '#f49b52';
+        ctx.lineWidth = 18;
+        strokePolyline(STROKES[state.demoStrokeIdx].pts, state.demoT);
+      }
+    }
+
+    // 第 8、9 幕：轻柔背景字印
+    if (state.sceneIdx >= 7) {
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 22;
+      ctx.strokeStyle = 'rgba(184, 238, 255, 0.85)';
+      ctx.shadowColor = 'rgba(88, 198, 250, 0.65)';
+      ctx.shadowBlur = 18;
+      STROKES.forEach(st => strokePolyline(st.pts, 1));
+    }
+
+    ctx.restore();
+  }
+
+  // ============================================================================
+  // 9. 指针与键盘交互处理
+  // ============================================================================
+  function getPointerWorld(e) {
+    const rect = canvas.getBoundingClientRect();
+    const cx = (e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX) - rect.left;
+    const cy = (e.touches && e.touches[0] ? e.touches[0].clientY : e.clientY) - rect.top;
+    return cam.toWorld(cx, cy);
+  }
+
+  function advanceTracingToPoint(wp) {
+    if (state.sceneIdx !== 6 || state.writeStrokeIdx >= STROKES.length) return;
+    const cur = STROKES[state.writeStrokeIdx];
+    const worldPts = cur.pts.map(p => glyphToWorld(p[0], p[1]));
+
+    // 计算当前触点在笔画折线上的最近投影比例
+    let bestU = state.writeProgress;
+    let minDist = Infinity;
+    const totalSegs = worldPts.length - 1;
+    for (let i = 0; i < totalSegs; i++) {
+      const a = worldPts[i], b = worldPts[i + 1];
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const len2 = dx * dx + dy * dy || 1;
+      const uSeg = clamp(((wp.x - a.x) * dx + (wp.y - a.y) * dy) / len2, 0, 1);
+      const px = a.x + dx * uSeg, py = a.y + dy * uSeg;
+      const d = Math.hypot(wp.x - px, wp.y - py);
+      const uTotal = (i + uSeg) / totalSegs;
+      if (d < minDist && uTotal >= state.writeProgress - 0.15) {
+        minDist = d;
+        bestU = uTotal;
+      }
+    }
+
+    // 宽容度：95 世界单位内均可推进
+    if (minDist < 95 && bestU > state.writeProgress) {
+      state.writeProgress = Math.min(1, bestU + 0.08);
+      if (state.writeProgress >= 0.88) {
+        completeCurrentStroke();
+      }
+    }
+  }
+
+  function completeCurrentStroke() {
+    if (state.writeStrokeIdx >= STROKES.length) return;
+    const cur = STROKES[state.writeStrokeIdx];
+    const endPt = glyphToWorld(cur.pts[cur.pts.length - 1][0], cur.pts[cur.pts.length - 1][1]);
+    spawnDroplets(endPt.x, endPt.y, 14, '#a8e4ff');
+    sfx.waterDrop(580 + state.writeStrokeIdx * 110, 0.12);
+    sfx.pluck(state.writeStrokeIdx * 2, 0.13, 1.3);
+
+    state.writeStrokeIdx++;
+    state.writeProgress = 0;
+    state.isTracing = false;
+
+    if (state.writeStrokeIdx >= STROKES.length) {
+      state.writtenDone = true;
+      state.sceneTime = 0;
+      setPrompt('');
+      setCaption('太棒了！中间主流、两边水花，四笔写出了清澈的<em>「水」</em>！', 'Wonderful! Four strokes complete the character 水!');
+      sfx.chord([0, 2, 4, 6, 8], 0.13, 0.08);
+      if (window.haqiHanziWritten) {
+        window.haqiHanziWritten({ char: '水', strokes: 4 });
+      }
+    } else {
+      updateStrokeCounter();
+    }
+  }
+
+  function onPointerDown(e) {
+    if (!state.started) return;
+    sfx.init();
+    const wp = getPointerWorld(e);
+
+    if (state.sceneIdx === 1 && !state.springOpened) {
+      state.holdingSpring = true;
+      spawnRipple(wp.x, wp.y, 65);
+    } else if (state.sceneIdx === 2 && !state.streamDone) {
+      state.draggingStream = true;
+      const u = clamp((wp.y - 175) / 560, 0, 1);
+      if (u > state.streamProgress - 0.25) {
+        state.streamProgress = clamp(Math.max(state.streamProgress, u + 0.12), 0.18, 1);
+      }
+    } else if (state.sceneIdx === 3) {
+      // 点击最近的热点或按顺序唤醒下一个未点亮热点
+      let hit = null;
+      let bestD = Infinity;
+      NOURISH_SPOTS.forEach(s => {
+        if (s.lit) return;
+        const d = Math.hypot(wp.x - s.x, wp.y - s.y);
+        if (d < bestD) { bestD = d; hit = s; }
+      });
+      if (hit && bestD < 135) {
+        triggerNourishSpot(hit);
+      } else {
+        const nextUnlit = NOURISH_SPOTS.find(s => !s.lit);
+        if (nextUnlit) triggerNourishSpot(nextUnlit);
+      }
+    } else if (state.sceneIdx === 6 && state.writeStrokeIdx < STROKES.length) {
+      state.isTracing = true;
+      const cur = STROKES[state.writeStrokeIdx];
+      const startPt = glyphToWorld(cur.pts[0][0], cur.pts[0][1]);
+      if (Math.hypot(wp.x - startPt.x, wp.y - startPt.y) < 110) {
+        state.writeProgress = Math.max(state.writeProgress, 0.18);
+      }
+      advanceTracingToPoint(wp);
+    } else if (state.sceneIdx === 8) {
+      spawnRipple(wp.x, wp.y, 90);
+      spawnDroplets(wp.x, wp.y, 18, '#b8ebff');
+      sfx.splashSound();
+    }
+  }
+
+  function onPointerMove(e) {
+    if (!state.started) return;
+    const wp = getPointerWorld(e);
+
+    if (state.sceneIdx === 2 && state.draggingStream && !state.streamDone) {
+      const u = clamp((wp.y - 175) / 560, 0, 1);
+      if (u + 0.08 > state.streamProgress) {
+        state.streamProgress = clamp(u + 0.08, 0.18, 1);
+        if (Math.random() < 0.35) {
+          const c = streamCenterPoint(state.streamProgress);
+          spawnDroplets(c.x, c.y, 3, '#a8e4ff');
+        }
+      }
+    } else if (state.sceneIdx === 6 && state.isTracing) {
+      advanceTracingToPoint(wp);
+    }
+  }
+
+  function onPointerUp() {
+    state.holdingSpring = false;
+    state.draggingStream = false;
+    if (state.sceneIdx === 6 && state.isTracing) {
+      state.isTracing = false;
+      if (state.writeProgress >= 0.72) {
+        completeCurrentStroke();
+      }
+    }
+  }
+
+  canvas.addEventListener('pointerdown', onPointerDown);
+  window.addEventListener('pointermove', onPointerMove);
+  window.addEventListener('pointerup', onPointerUp);
+  window.addEventListener('pointercancel', onPointerUp);
+
+  // 独立动作按钮（按住开泉）
+  actBtn.addEventListener('pointerdown', e => {
+    e.stopPropagation();
+    sfx.init();
+    if (state.sceneIdx === 1 && !state.springOpened) {
+      state.holdingSpring = true;
+      state.springProgress = clamp(state.springProgress + 0.36, 0, 1);
+    }
+  });
+  actBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    sfx.init();
+    if (state.sceneIdx === 1 && !state.springOpened) {
+      state.springProgress = clamp(state.springProgress + 0.38, 0, 1);
+    }
+  });
+
+  // 键盘无障碍支持（Space / Enter）
+  window.addEventListener('keydown', e => {
+    if (e.code === 'Space' || e.code === 'Enter') {
+      if (!state.started) {
+        startStory();
+        return;
+      }
+      if (state.sceneIdx === 1 && !state.springOpened) {
+        state.holdingSpring = true;
+        state.springProgress = clamp(state.springProgress + 0.38, 0, 1);
+      } else if (state.sceneIdx === 2 && !state.streamDone) {
+        state.streamProgress = clamp(state.streamProgress + 0.36, 0.18, 1);
+      } else if (state.sceneIdx === 3) {
+        const nextUnlit = NOURISH_SPOTS.find(s => !s.lit);
+        if (nextUnlit) triggerNourishSpot(nextUnlit);
+      }
+    }
+  });
+  window.addEventListener('keyup', e => {
+    if (e.code === 'Space' || e.code === 'Enter') {
+      state.holdingSpring = false;
+    }
+  });
+
+  // 示范按钮、词卡、重播、静音与开始按钮
+  btnDemo.addEventListener('click', e => {
+    e.stopPropagation();
+    sfx.init();
+    state.demoPlaying = true;
+    state.demoStrokeIdx = state.writeStrokeIdx;
+    state.demoT = 0;
+  });
+
+  wordCards.forEach((card, idx) => {
+    card.addEventListener('click', e => {
+      e.stopPropagation();
+      sfx.init();
+      activateWordCard(idx);
+    });
+  });
+
+  function startStory() {
+    sfx.init();
+    state.started = true;
+    state.writtenDone = false;
+    introEl.classList.add('hide');
+    goScene(0);
+  }
+
+  startBtn.addEventListener('click', startStory);
+  replayBtn.addEventListener('click', () => startStory());
+  document.getElementById('btn-restart').addEventListener('click', () => startStory());
+
+  document.getElementById('btn-mute').addEventListener('click', () => {
+    sfx.init();
+    const muted = sfx.toggleMute();
+    document.getElementById('ico-sound-on').style.display = muted ? 'none' : 'block';
+    document.getElementById('ico-sound-off').style.display = muted ? 'block' : 'none';
+  });
+
+  // ============================================================================
+  // 10. 主循环
+  // ============================================================================
+  let lastNow = performance.now();
+  function frame(now) {
+    const dt = clamp((now - lastNow) / 1000, 0.001, 0.1);
+    lastNow = now;
+    state.globalTime += dt;
+
+    if (!state.started) {
+      state.introStrokeT = (state.introStrokeT + dt * 1.15) % (STROKES.length + 1.4);
+    } else if (state.sceneIdx >= 0 && SCENES[state.sceneIdx]) {
+      state.sceneTime += dt;
+      SCENES[state.sceneIdx].update(dt, state.sceneTime);
+    }
+
+    cam.update(dt);
+
+    ctx.save();
+    ctx.scale(DPR, DPR);
+    drawSkyAndGorge(state.globalTime);
+
+    ctx.save();
+    ctx.translate(cam.offX, cam.offY);
+    ctx.scale(cam.scale, cam.scale);
+
+    drawValleyWalls(state.globalTime);
+    drawSpringAndTraveler(state.globalTime);
+    drawFlowingStream(state.globalTime);
+    drawNourishElements(state.globalTime);
+    drawDropletsAndRipples(dt);
+    drawGlyphAndWriting(state.globalTime);
+
+    ctx.restore();
+    ctx.restore();
+
+    requestAnimationFrame(frame);
+  }
+
+  window.__shui = {
+    state,
+    STROKES,
+    NOURISH_SPOTS,
+    toScreen: (wx, wy) => cam.toScreen(wx, wy),
+    glyphToScreen: (nx, ny) => {
+      const w = glyphToWorld(nx, ny);
+      return cam.toScreen(w.x, w.y);
+    },
+    streamScreen: u => {
+      const w = streamCenterPoint(u);
+      return cam.toScreen(w.x, w.y);
+    }
+  };
+
+  resize();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

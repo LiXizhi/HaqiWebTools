@@ -1187,11 +1187,11 @@ flowchart LR
 
 ## 2026-10-18：独立家园世界
 
-世界地图第三页和宠物菜单按需进入家园，沿用当前角色身份；不写冒险成长或坐标。详见[家园](home.md)。
+底部家园按钮和宠物菜单按需进入独立家园窗口，沿用当前角色身份；不写冒险成长或坐标。详见[家园](home.md)。
 
 ```mermaid
 flowchart LR
-    Entry[世界地图 / 宠物菜单] --> App[home_app 会话控制]
+    Entry[底部家园按钮 / 宠物菜单] --> App[home_app 会话控制]
     App --> Rules[home_core / home_actions_core]
     App --> View[view_home / view_home_art]
     App --> Local[home_store IndexedDB 事务]
@@ -1208,7 +1208,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  Map[世界地图家园目录] --> Home[home_app 独立家园会话]
+  Map[独立家园目录] --> Home[home_app 独立家园会话]
   Home --> Walk[home_walk_core 家园移动与碰撞]
   Home --> View[view_home 全屏 Canvas 与专用底栏]
   View --> Art[冒险角色绘制与营地树木图集]
@@ -1230,3 +1230,36 @@ flowchart LR
 ```
 
 路线只计算已加载区块，复用 path_queue_core 优先队列与家园既有碰撞；新增目标替换路线，直接控制取消路线，家具和区块变化重新规划。家园坐标不写入冒险存档。
+
+
+## 2026-10-19：家园复用岛屿后台地块缓存
+
+```mermaid
+flowchart LR
+  View[view_home 每次浏览器刷新] --> Cache[home_terrain_cache]
+  Cache --> Scheduler[共享 terrain_tile_scheduler / 无边界负坐标 / 64MiB]
+  Scheduler --> Client[共享 island_terrain_rasterizer]
+  Client --> Worker[home_terrain_worker / OffscreenCanvas]
+  Worker --> Painter[原家园地表画笔]
+  Worker --> Bitmap[ImageBitmap / 过期关闭]
+  Bitmap --> View
+  Scheduler --> Fallback[Worker失败 / 2ms协作调度 / 原画笔逐段yield]
+```
+
+图片到达按图集失效，当前视野优先、相邻块预取，缩放与DPR参与栅格密度；家园退出释放缓存和Worker。具体表现和验证限制见[家园系统](home.md)。
+
+
+家园固定树影追加路径（2026-10-19）：`家具坐标快照 → home_terrain_cache 局部地块失效 → home_terrain_worker / 协作回退 → paintHomeTreeShadows → 共享 paintStaticShadows → terrain tile`。天然树木的树身继续独立纵深排序；位置变化取消受影响的在途旧结果，不重建其他地块。
+
+家园局部重绘显示链路（2026-10-19）：
+
+```mermaid
+flowchart LR
+  Move[家具位置变化] --> Dirty[局部地块标记待更新]
+  Dirty --> Old[保留上一张完整地块供场景绘制]
+  Dirty --> Render[Worker / 协作画笔重绘]
+  Render --> Valid[丢弃过期结果]
+  Valid --> Swap[新地块完成后替换并释放旧图]
+```
+
+该保留策略只由家园的局部坐标失效显式开启；准备进度仍只统计最新地块，普通岛屿失效行为不变。

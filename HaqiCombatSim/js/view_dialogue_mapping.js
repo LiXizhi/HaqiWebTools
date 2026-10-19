@@ -1,12 +1,13 @@
 import {mappingColor} from './dialogue_mapping_core.js';
 
 // Shared word spans and responsive connectors for NPC and learning conversations.
-export function renderDialogueMapping(text,labels,result){
+export function renderDialogueMapping(text,labels,result,{onWord}={}){
     let disposed=false;
     const words=[[],[]];
     result.forEach((parts,i)=>{labels[i].replaceChildren(...parts.map(part=>{
-        const span=document.createElement('span');span.textContent=part.text;const color=mappingColor(part);
+        const span=document.createElement(part.wordId&&onWord?'button':'span');span.textContent=part.text;const color=mappingColor(part);
         if(color){words[i].push({span,color});span.className=/[\u3400-\u9fff]/u.test(part.text)?'dialogue-mapped-word is-cjk':'dialogue-mapped-word';span.style.color=color;span.style.fontWeight='600';span.title='同色框和连线表示对应词义';}
+        if(part.wordId&&onWord){span.type='button';span.classList.add('dialogue-learning-word');span.setAttribute('aria-label',`标记词语：${part.text}`);for(const event of ['pointerdown','pointerup','keydown','click'])span.addEventListener(event,e=>e.stopPropagation());span.addEventListener('click',()=>onWord(part.wordId,part.text));}
         return span;
     }));});
     if(!words[0].length)return ()=>{};

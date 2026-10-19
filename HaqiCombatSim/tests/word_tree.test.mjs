@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {chooseLearningLabels,languageTreeLabelLimit,defaultCamera,project,createProjector,chooseLabels,hitLabel,fitCamera,createEncounterTree,fadeTreeLabels} from '../js/word_tree_layout_core.js';
 const makeTree=count=>createEncounterTree(Array.from({length:count},(_,i)=>({id:'word'+i,ordinal:i,source:'source'+i%18})));
-test('production layout stays deterministic for 600 to 3000 stable word nodes',()=>{const a=makeTree(600),b=makeTree(3000);assert.deepEqual(a.nodes,b.nodes.slice(0,600));assert.deepEqual(makeTree(600),a);assert.equal(b.nodes.length,3000);});
+test('production layout caps 3000 records at 600 deterministic word nodes',()=>{const a=makeTree(600),b=makeTree(3000);assert.deepEqual(a.nodes,b.nodes.slice(0,600));assert.deepEqual(makeTree(600),a);assert.equal(b.nodes.length,600);});
 test('label bounds, collision rejection, hit testing and camera focus',()=>{
     const {nodes}=makeTree(600),width=1100,height=700;
     const points=nodes.map(node=>({...project(node,defaultCamera(),width,height),node}));
@@ -27,7 +27,7 @@ test('whole-tree fit leaves controls and canopy within the viewport',()=>{
 test('personal words retain continuous positions across learning updates and new arrivals',()=>{
  const words=[{id:'book',ordinal:0,source:'npc:one'},{id:'read',ordinal:1,source:'npc:one'},{id:'door',ordinal:2,source:'quest:two'}];
  const before=createEncounterTree(words),after=createEncounterTree([...words.map(w=>({...w,count:99,mark:'know'})),{id:'home',ordinal:3,source:'new'}]);
- assert.equal(before.nodes[0].branch,before.nodes[1].branch);for(let i=0;i<3;i++)for(const key of ['x','y','z','branch'])assert.equal(before.nodes[i][key],after.nodes[i][key]);
+ assert.notEqual(before.nodes[0].branch,before.nodes[1].branch);for(let i=0;i<3;i++)for(const key of ['x','y','z','branch'])assert.equal(before.nodes[i][key],after.nodes[i][key]);
 });
 test('text fades in and out without flashing on entry, reversal or tab resume',()=>{
  const cache=new Map(),p={node:{id:'word'},x:10,y:20};
@@ -53,4 +53,17 @@ test('learning foreground balances five states while favoring unfamiliar words',
  const only=chooseLearningLabels(points.filter(p=>p.node.status.kind==='mastered'),12,1300,750,()=>40);assert.equal(only.length,12);
  const tight=chooseLearningLabels(points,8,390,750,()=>40);assert.ok(tight.length<=8);for(const p of tight)assert.equal(hitLabel(tight,p.x,p.y),p.node);
  assert.equal(languageTreeLabelLimit(390,900),8);assert.ok(languageTreeLabelLimit(1280,900)>languageTreeLabelLimit(700,700));assert.equal(languageTreeLabelLimit(3840,2160),32);
+});
+
+test('one-source dictionary spreads capped words across all branches without changing records',()=>{
+ const words=Array.from({length:2000},(_,i)=>({id:'word'+i,ordinal:i,source:'dictionary:en',count:0}));
+ const original=structuredClone(words),tree=createEncounterTree(words);
+ assert.equal(tree.nodes.length,600);assert.equal(new Set(tree.nodes.map(n=>n.branch)).size,18);
+ const counts=tree.branches.map((_,i)=>tree.nodes.filter(n=>n.branch===i).length);
+ assert.ok(Math.max(...counts)<60);assert.ok(Math.min(...counts)>10);assert.deepEqual(words,original);
+ const active=words.map(w=>w.ordinal===1999?{...w,count:1,lastAt:100}:w);
+ const next=createEncounterTree(active,new Set(['word1998']));
+ assert.equal(next.nodes.length,600);assert.ok(next.nodes.some(n=>n.id==='word1999'));assert.ok(next.nodes.some(n=>n.id==='word1998'));
+ for(const n of next.nodes){const old=tree.nodes.find(o=>o.id===n.id);if(old)for(const key of ['x','y','z','branch'])assert.equal(n[key],old[key]);}
+ assert.deepEqual(createEncounterTree([...active].reverse(),new Set(['word1998'])),next);
 });

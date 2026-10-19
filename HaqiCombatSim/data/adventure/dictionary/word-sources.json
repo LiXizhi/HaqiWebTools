@@ -1,0 +1,29 @@
+{
+  "description": "词库为基础常用词选集，不代表语言精通认证。词义来自共享 WordNet 词义编号；歧义留给上下文及显式模型补齐。",
+  "sources": {
+    "en": {
+      "url": "https://raw.githubusercontent.com/omwn/omw-data/406bf83b3c507a3d1f26e88252d5d66893fd36bf/wns/eng/wn-data-eng.tab",
+      "sha256": "d1409d88addcdb890b1606dd280b558cca4258b1f33bd580d54ed949daad1ede",
+      "entries": 2000,
+      "forms": 3306
+    },
+    "zh": {
+      "url": "https://raw.githubusercontent.com/omwn/omw-data/406bf83b3c507a3d1f26e88252d5d66893fd36bf/wns/cow/wn-data-cmn.tab",
+      "sha256": "379fd2e41d3e1395f9f27cf23a39c6181849ffb4020c14a07ed2a4d4dd651122",
+      "entries": 2000,
+      "forms": 0
+    },
+    "ja": {
+      "url": "https://raw.githubusercontent.com/omwn/omw-data/406bf83b3c507a3d1f26e88252d5d66893fd36bf/wns/jpn/wn-data-jpn.tab",
+      "sha256": "f47fefb11824b86d8556c632f5b71438397abac79677b607070cd0bdcb9ac212",
+      "entries": 2000,
+      "forms": 252
+    },
+    "ko": {
+      "url": "https://raw.githubusercontent.com/omwn/omw-data/406bf83b3c507a3d1f26e88252d5d66893fd36bf/wns/wikt/wn-wikt-kor.tab",
+      "sha256": "50134a5fa559130cba7cb3fa1f14c3a67ed05cafd6fdf59e7603d4230a92571f",
+      "entries": 2000,
+      "forms": 180
+    }
+  }
+}

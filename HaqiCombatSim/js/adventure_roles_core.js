@@ -61,6 +61,10 @@ export function selectRole(catalog, id, now) {
 export function directSignInRequested(search) {
     return new URLSearchParams(String(search || '')).get('signin') === 'direct';
 }
+export function familyPadSignInRequested(search) {
+    const query = new URLSearchParams(String(search || ''));
+    return query.get('host') === 'family-pad' && !!query.get('token')?.trim();
+}
 export function startupRoleId(catalog, { direct = false, blocked = false } = {}) {
     if (!direct || blocked || !catalog?.roles?.length) return null;
     if (catalog.activeId && catalog.roles.some(row => row.id === catalog.activeId)) return catalog.activeId;

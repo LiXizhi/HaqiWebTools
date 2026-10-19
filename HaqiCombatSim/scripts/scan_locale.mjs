@@ -18,11 +18,34 @@ function decodeEscape(text, i) {
     return { value: ch, next: i + 1 };
 }
 
+const REGEX_KEYWORDS = new Set(['return', 'typeof', 'instanceof', 'in', 'of', 'new', 'delete', 'void', 'case', 'do', 'else', 'yield', 'await']);
+
+// A `/` starts a regex literal only after tokens that cannot end an expression.
+// Division after an identifier, `)` or `]` keeps the old behaviour. A candidate
+// regex must also close on the same line; otherwise it is treated as division
+// so a misguess can never swallow more than one line of source.
+function regexEnd(text, start) {
+    let j = start + 1;
+    let inClass = false;
+    while (j < text.length) {
+        const ch = text[j];
+        if (ch === '\n') return -1;
+        if (ch === '\\') { j += 2; continue; }
+        if (inClass) { if (ch === ']') inClass = false; }
+        else if (ch === '[') inClass = true;
+        else if (ch === '/') return j;
+        j += 1;
+    }
+    return -1;
+}
+
 export function extractJsStrings(source) {
     const text = String(source || '');
     const found = [];
     let i = 0;
     let line = 1;
+    let lastSignificant = '';
+    let lastWord = '';
     const bump = ch => { if (ch === '\n') line += 1; };
     const push = (value, at, dynamic) => {
         if (!CJK.test(value)) return;
@@ -39,6 +62,17 @@ export function extractJsStrings(source) {
             while (i < text.length && !(text[i] === '*' && text[i + 1] === '/')) bump(text[i++]);
             i += 2;
             continue;
+        }
+        if (ch === '/' && ('(,=:[!&|?{;'.includes(lastSignificant) || REGEX_KEYWORDS.has(lastWord))) {
+            const end = regexEnd(text, i);
+            if (end >= 0) {
+                for (let cursor = i; cursor < end; cursor += 1) bump(text[cursor]);
+                i = end + 1;
+                while (i < text.length && /[a-z]/.test(text[i])) i += 1;
+                lastSignificant = '/';
+                lastWord = '';
+                continue;
+            }
         }
         if (ch === '\'' || ch === '"') {
             const at = line;
@@ -60,6 +94,8 @@ export function extractJsStrings(source) {
             }
             i += 1;
             push(value, at, false);
+            lastSignificant = quote;
+            lastWord = '';
             continue;
         }
         if (ch === '`') {
@@ -116,7 +152,13 @@ export function extractJsStrings(source) {
             }
             i += 1;
             push(value, at, dynamic);
+            lastSignificant = '`';
+            lastWord = '';
             continue;
+        }
+        if (!/\s/.test(ch)) {
+            lastWord = /[A-Za-z0-9_$]/.test(ch) ? lastWord + ch : '';
+            lastSignificant = ch;
         }
         bump(ch);
         i += 1;

@@ -80,13 +80,13 @@
       },
       "sentences": {
         "en": [
-          "I want a bed.",
           "Create a bed.",
+          "I want a bed.",
           "Can I have a bed?"
         ],
         "zh": [
-          "我想要一个床。",
           "创造一个床。",
+          "我想要一个床。",
           "可以给我一个床吗？"
         ]
       },
@@ -157,13 +157,13 @@
       },
       "sentences": {
         "en": [
-          "I want a bunk bed.",
           "Create a bunk bed.",
+          "I want a bunk bed.",
           "Can I have a bunk bed?"
         ],
         "zh": [
-          "我想要一个双层床。",
           "创造一个双层床。",
+          "我想要一个双层床。",
           "可以给我一个双层床吗？"
         ]
       },
@@ -234,13 +234,13 @@
       },
       "sentences": {
         "en": [
-          "I want a cradle.",
           "Create a cradle.",
+          "I want a cradle.",
           "Can I have a cradle?"
         ],
         "zh": [
-          "我想要一个摇篮。",
           "创造一个摇篮。",
+          "我想要一个摇篮。",
           "可以给我一个摇篮吗？"
         ]
       },
@@ -311,13 +311,13 @@
       },
       "sentences": {
         "en": [
-          "I want a hammock.",
           "Create a hammock.",
+          "I want a hammock.",
           "Can I have a hammock?"
         ],
         "zh": [
-          "我想要一个吊床。",
           "创造一个吊床。",
+          "我想要一个吊床。",
           "可以给我一个吊床吗？"
         ]
       },
@@ -388,13 +388,13 @@
       },
       "sentences": {
         "en": [
-          "I want a sleeping bag.",
           "Create a sleeping bag.",
+          "I want a sleeping bag.",
           "Can I have a sleeping bag?"
         ],
         "zh": [
-          "我想要一个睡袋。",
           "创造一个睡袋。",
+          "我想要一个睡袋。",
           "可以给我一个睡袋吗？"
         ]
       },
@@ -465,13 +465,13 @@
       },
       "sentences": {
         "en": [
-          "I want a wardrobe.",
           "Create a wardrobe.",
+          "I want a wardrobe.",
           "Can I have a wardrobe?"
         ],
         "zh": [
-          "我想要一个衣柜。",
           "创造一个衣柜。",
+          "我想要一个衣柜。",
           "可以给我一个衣柜吗？"
         ]
       },
@@ -542,13 +542,13 @@
       },
       "sentences": {
         "en": [
-          "I want a dresser.",
           "Create a dresser.",
+          "I want a dresser.",
           "Can I have a dresser?"
         ],
         "zh": [
-          "我想要一个梳妆台。",
           "创造一个梳妆台。",
+          "我想要一个梳妆台。",
           "可以给我一个梳妆台吗？"
         ]
       },
@@ -619,13 +619,13 @@
       },
       "sentences": {
         "en": [
-          "I want a nightstand.",
           "Create a nightstand.",
+          "I want a nightstand.",
           "Can I have a nightstand?"
         ],
         "zh": [
-          "我想要一个床头柜。",
           "创造一个床头柜。",
+          "我想要一个床头柜。",
           "可以给我一个床头柜吗？"
         ]
       },
@@ -696,13 +696,13 @@
       },
       "sentences": {
         "en": [
-          "I want an alarm clock.",
           "Create an alarm clock.",
+          "I want an alarm clock.",
           "Can I have an alarm clock?"
         ],
         "zh": [
-          "我想要一个闹钟。",
           "创造一个闹钟。",
+          "我想要一个闹钟。",
           "可以给我一个闹钟吗？"
         ]
       },
@@ -773,13 +773,13 @@
       },
       "sentences": {
         "en": [
-          "I want a pillow.",
           "Create a pillow.",
+          "I want a pillow.",
           "Can I have a pillow?"
         ],
         "zh": [
-          "我想要一个枕头。",
           "创造一个枕头。",
+          "我想要一个枕头。",
           "可以给我一个枕头吗？"
         ]
       },
@@ -850,13 +850,13 @@
       },
       "sentences": {
         "en": [
-          "I want a blanket.",
           "Create a blanket.",
+          "I want a blanket.",
           "Can I have a blanket?"
         ],
         "zh": [
-          "我想要一个毯子。",
           "创造一个毯子。",
+          "我想要一个毯子。",
           "可以给我一个毯子吗？"
         ]
       },
@@ -927,13 +927,13 @@
       },
       "sentences": {
         "en": [
-          "I want a quilt.",
           "Create a quilt.",
+          "I want a quilt.",
           "Can I have a quilt?"
         ],
         "zh": [
-          "我想要一个被子。",
           "创造一个被子。",
+          "我想要一个被子。",
           "可以给我一个被子吗？"
         ]
       },
@@ -1004,13 +1004,13 @@
       },
       "sentences": {
         "en": [
-          "I want a slippers.",
-          "Create a slippers.",
-          "Can I have a slippers?"
+          "Create some slippers.",
+          "I want some slippers.",
+          "Can I have some slippers?"
         ],
         "zh": [
-          "我想要一个拖鞋。",
           "创造一个拖鞋。",
+          "我想要一个拖鞋。",
           "可以给我一个拖鞋吗？"
         ]
       },
@@ -1034,7 +1034,8 @@
       "aliases": {
         "en": [],
         "zh": []
-      }
+      },
+      "article": "some"
     },
     {
       "id": "bedside-lamp",
@@ -1081,13 +1082,13 @@
       },
       "sentences": {
         "en": [
-          "I want a bedside lamp.",
           "Create a bedside lamp.",
+          "I want a bedside lamp.",
           "Can I have a bedside lamp?"
         ],
         "zh": [
-          "我想要一个床头灯。",
           "创造一个床头灯。",
+          "我想要一个床头灯。",
           "可以给我一个床头灯吗？"
         ]
       },
@@ -1158,13 +1159,13 @@
       },
       "sentences": {
         "en": [
-          "I want a mirror.",
           "Create a mirror.",
+          "I want a mirror.",
           "Can I have a mirror?"
         ],
         "zh": [
-          "我想要一个镜子。",
           "创造一个镜子。",
+          "我想要一个镜子。",
           "可以给我一个镜子吗？"
         ]
       },
@@ -1235,13 +1236,13 @@
       },
       "sentences": {
         "en": [
-          "I want a clothes rack.",
           "Create a clothes rack.",
+          "I want a clothes rack.",
           "Can I have a clothes rack?"
         ],
         "zh": [
-          "我想要一个衣架。",
           "创造一个衣架。",
+          "我想要一个衣架。",
           "可以给我一个衣架吗？"
         ]
       },
@@ -1312,13 +1313,13 @@
       },
       "sentences": {
         "en": [
-          "I want a laundry basket.",
           "Create a laundry basket.",
+          "I want a laundry basket.",
           "Can I have a laundry basket?"
         ],
         "zh": [
-          "我想要一个洗衣篮。",
           "创造一个洗衣篮。",
+          "我想要一个洗衣篮。",
           "可以给我一个洗衣篮吗？"
         ]
       },
@@ -1389,13 +1390,13 @@
       },
       "sentences": {
         "en": [
-          "I want a toy chest.",
           "Create a toy chest.",
+          "I want a toy chest.",
           "Can I have a toy chest?"
         ],
         "zh": [
-          "我想要一个玩具箱。",
           "创造一个玩具箱。",
+          "我想要一个玩具箱。",
           "可以给我一个玩具箱吗？"
         ]
       },
@@ -1466,13 +1467,13 @@
       },
       "sentences": {
         "en": [
-          "I want a bedroom rug.",
           "Create a bedroom rug.",
+          "I want a bedroom rug.",
           "Can I have a bedroom rug?"
         ],
         "zh": [
-          "我想要一个卧室地毯。",
           "创造一个卧室地毯。",
+          "我想要一个卧室地毯。",
           "可以给我一个卧室地毯吗？"
         ]
       },
@@ -1543,13 +1544,13 @@
       },
       "sentences": {
         "en": [
-          "I want a dream catcher.",
           "Create a dream catcher.",
+          "I want a dream catcher.",
           "Can I have a dream catcher?"
         ],
         "zh": [
-          "我想要一个捕梦网。",
           "创造一个捕梦网。",
+          "我想要一个捕梦网。",
           "可以给我一个捕梦网吗？"
         ]
       },
@@ -1620,13 +1621,13 @@
       },
       "sentences": {
         "en": [
-          "I want a table.",
           "Create a table.",
+          "I want a table.",
           "Can I have a table?"
         ],
         "zh": [
-          "我想要一个桌子。",
           "创造一个桌子。",
+          "我想要一个桌子。",
           "可以给我一个桌子吗？"
         ]
       },
@@ -1697,13 +1698,13 @@
       },
       "sentences": {
         "en": [
-          "I want a chair.",
           "Create a chair.",
+          "I want a chair.",
           "Can I have a chair?"
         ],
         "zh": [
-          "我想要一个椅子。",
           "创造一个椅子。",
+          "我想要一个椅子。",
           "可以给我一个椅子吗？"
         ]
       },
@@ -1777,13 +1778,13 @@
       },
       "sentences": {
         "en": [
-          "I want a refrigerator.",
           "Create a refrigerator.",
+          "I want a refrigerator.",
           "Can I have a refrigerator?"
         ],
         "zh": [
-          "我想要一个冰箱。",
           "创造一个冰箱。",
+          "我想要一个冰箱。",
           "可以给我一个冰箱吗？"
         ]
       },
@@ -1856,13 +1857,13 @@
       },
       "sentences": {
         "en": [
-          "I want an oven.",
           "Create an oven.",
+          "I want an oven.",
           "Can I have an oven?"
         ],
         "zh": [
-          "我想要一个烤箱。",
           "创造一个烤箱。",
+          "我想要一个烤箱。",
           "可以给我一个烤箱吗？"
         ]
       },
@@ -1933,13 +1934,13 @@
       },
       "sentences": {
         "en": [
-          "I want a stove.",
           "Create a stove.",
+          "I want a stove.",
           "Can I have a stove?"
         ],
         "zh": [
-          "我想要一个炉灶。",
           "创造一个炉灶。",
+          "我想要一个炉灶。",
           "可以给我一个炉灶吗？"
         ]
       },
@@ -2010,13 +2011,13 @@
       },
       "sentences": {
         "en": [
-          "I want a kitchen sink.",
           "Create a kitchen sink.",
+          "I want a kitchen sink.",
           "Can I have a kitchen sink?"
         ],
         "zh": [
-          "我想要一个厨房水槽。",
           "创造一个厨房水槽。",
+          "我想要一个厨房水槽。",
           "可以给我一个厨房水槽吗？"
         ]
       },
@@ -2087,13 +2088,13 @@
       },
       "sentences": {
         "en": [
-          "I want a kitchen cabinet.",
           "Create a kitchen cabinet.",
+          "I want a kitchen cabinet.",
           "Can I have a kitchen cabinet?"
         ],
         "zh": [
-          "我想要一个橱柜。",
           "创造一个橱柜。",
+          "我想要一个橱柜。",
           "可以给我一个橱柜吗？"
         ]
       },
@@ -2164,13 +2165,13 @@
       },
       "sentences": {
         "en": [
-          "I want a kettle.",
           "Create a kettle.",
+          "I want a kettle.",
           "Can I have a kettle?"
         ],
         "zh": [
-          "我想要一个水壶。",
           "创造一个水壶。",
+          "我想要一个水壶。",
           "可以给我一个水壶吗？"
         ]
       },
@@ -2241,13 +2242,13 @@
       },
       "sentences": {
         "en": [
-          "I want a cup.",
           "Create a cup.",
+          "I want a cup.",
           "Can I have a cup?"
         ],
         "zh": [
-          "我想要一个杯子。",
           "创造一个杯子。",
+          "我想要一个杯子。",
           "可以给我一个杯子吗？"
         ]
       },
@@ -2318,13 +2319,13 @@
       },
       "sentences": {
         "en": [
-          "I want a plate.",
           "Create a plate.",
+          "I want a plate.",
           "Can I have a plate?"
         ],
         "zh": [
-          "我想要一个盘子。",
           "创造一个盘子。",
+          "我想要一个盘子。",
           "可以给我一个盘子吗？"
         ]
       },
@@ -2395,13 +2396,13 @@
       },
       "sentences": {
         "en": [
-          "I want a bowl.",
           "Create a bowl.",
+          "I want a bowl.",
           "Can I have a bowl?"
         ],
         "zh": [
-          "我想要一个碗。",
           "创造一个碗。",
+          "我想要一个碗。",
           "可以给我一个碗吗？"
         ]
       },
@@ -2472,13 +2473,13 @@
       },
       "sentences": {
         "en": [
-          "I want a teapot.",
           "Create a teapot.",
+          "I want a teapot.",
           "Can I have a teapot?"
         ],
         "zh": [
-          "我想要一个茶壶。",
           "创造一个茶壶。",
+          "我想要一个茶壶。",
           "可以给我一个茶壶吗？"
         ]
       },
@@ -2549,13 +2550,13 @@
       },
       "sentences": {
         "en": [
-          "I want a toaster.",
           "Create a toaster.",
+          "I want a toaster.",
           "Can I have a toaster?"
         ],
         "zh": [
-          "我想要一个烤面包机。",
           "创造一个烤面包机。",
+          "我想要一个烤面包机。",
           "可以给我一个烤面包机吗？"
         ]
       },
@@ -2626,13 +2627,13 @@
       },
       "sentences": {
         "en": [
-          "I want a bread basket.",
           "Create a bread basket.",
+          "I want a bread basket.",
           "Can I have a bread basket?"
         ],
         "zh": [
-          "我想要一个面包篮。",
           "创造一个面包篮。",
+          "我想要一个面包篮。",
           "可以给我一个面包篮吗？"
         ]
       },
@@ -2703,13 +2704,13 @@
       },
       "sentences": {
         "en": [
-          "I want a fruit basket.",
           "Create a fruit basket.",
+          "I want a fruit basket.",
           "Can I have a fruit basket?"
         ],
         "zh": [
-          "我想要一个水果篮。",
           "创造一个水果篮。",
+          "我想要一个水果篮。",
           "可以给我一个水果篮吗？"
         ]
       },
@@ -2780,13 +2781,13 @@
       },
       "sentences": {
         "en": [
-          "I want a cutting board.",
           "Create a cutting board.",
+          "I want a cutting board.",
           "Can I have a cutting board?"
         ],
         "zh": [
-          "我想要一个砧板。",
           "创造一个砧板。",
+          "我想要一个砧板。",
           "可以给我一个砧板吗？"
         ]
       },
@@ -2857,13 +2858,13 @@
       },
       "sentences": {
         "en": [
-          "I want a cooking pot.",
           "Create a cooking pot.",
+          "I want a cooking pot.",
           "Can I have a cooking pot?"
         ],
         "zh": [
-          "我想要一个汤锅。",
           "创造一个汤锅。",
+          "我想要一个汤锅。",
           "可以给我一个汤锅吗？"
         ]
       },
@@ -2934,13 +2935,13 @@
       },
       "sentences": {
         "en": [
-          "I want a frying pan.",
           "Create a frying pan.",
+          "I want a frying pan.",
           "Can I have a frying pan?"
         ],
         "zh": [
-          "我想要一个平底锅。",
           "创造一个平底锅。",
+          "我想要一个平底锅。",
           "可以给我一个平底锅吗？"
         ]
       },
@@ -3011,13 +3012,13 @@
       },
       "sentences": {
         "en": [
-          "I want a dining bench.",
           "Create a dining bench.",
+          "I want a dining bench.",
           "Can I have a dining bench?"
         ],
         "zh": [
-          "我想要一个餐椅长凳。",
           "创造一个餐椅长凳。",
+          "我想要一个餐椅长凳。",
           "可以给我一个餐椅长凳吗？"
         ]
       },
@@ -3089,13 +3090,13 @@
       },
       "sentences": {
         "en": [
-          "I want a picnic table.",
           "Create a picnic table.",
+          "I want a picnic table.",
           "Can I have a picnic table?"
         ],
         "zh": [
-          "我想要一个野餐桌。",
           "创造一个野餐桌。",
+          "我想要一个野餐桌。",
           "可以给我一个野餐桌吗？"
         ]
       },
@@ -3166,13 +3167,13 @@
       },
       "sentences": {
         "en": [
-          "I want a bathtub.",
           "Create a bathtub.",
+          "I want a bathtub.",
           "Can I have a bathtub?"
         ],
         "zh": [
-          "我想要一个浴缸。",
           "创造一个浴缸。",
+          "我想要一个浴缸。",
           "可以给我一个浴缸吗？"
         ]
       },
@@ -3243,13 +3244,13 @@
       },
       "sentences": {
         "en": [
-          "I want a shower.",
           "Create a shower.",
+          "I want a shower.",
           "Can I have a shower?"
         ],
         "zh": [
-          "我想要一个淋浴间。",
           "创造一个淋浴间。",
+          "我想要一个淋浴间。",
           "可以给我一个淋浴间吗？"
         ]
       },
@@ -3320,13 +3321,13 @@
       },
       "sentences": {
         "en": [
-          "I want a washbasin.",
           "Create a washbasin.",
+          "I want a washbasin.",
           "Can I have a washbasin?"
         ],
         "zh": [
-          "我想要一个洗脸盆。",
           "创造一个洗脸盆。",
+          "我想要一个洗脸盆。",
           "可以给我一个洗脸盆吗？"
         ]
       },
@@ -3397,13 +3398,13 @@
       },
       "sentences": {
         "en": [
-          "I want a toilet.",
           "Create a toilet.",
+          "I want a toilet.",
           "Can I have a toilet?"
         ],
         "zh": [
-          "我想要一个马桶。",
           "创造一个马桶。",
+          "我想要一个马桶。",
           "可以给我一个马桶吗？"
         ]
       },
@@ -3474,13 +3475,13 @@
       },
       "sentences": {
         "en": [
-          "I want a towel rack.",
           "Create a towel rack.",
+          "I want a towel rack.",
           "Can I have a towel rack?"
         ],
         "zh": [
-          "我想要一个毛巾架。",
           "创造一个毛巾架。",
+          "我想要一个毛巾架。",
           "可以给我一个毛巾架吗？"
         ]
       },
@@ -3551,13 +3552,13 @@
       },
       "sentences": {
         "en": [
-          "I want a soap.",
-          "Create a soap.",
-          "Can I have a soap?"
+          "Create some soap.",
+          "I want some soap.",
+          "Can I have some soap?"
         ],
         "zh": [
-          "我想要一个肥皂。",
           "创造一个肥皂。",
+          "我想要一个肥皂。",
           "可以给我一个肥皂吗？"
         ]
       },
@@ -3581,7 +3582,8 @@
       "aliases": {
         "en": [],
         "zh": []
-      }
+      },
+      "article": "some"
     },
     {
       "id": "toothbrush",
@@ -3628,13 +3630,13 @@
       },
       "sentences": {
         "en": [
-          "I want a toothbrush.",
           "Create a toothbrush.",
+          "I want a toothbrush.",
           "Can I have a toothbrush?"
         ],
         "zh": [
-          "我想要一个牙刷。",
           "创造一个牙刷。",
+          "我想要一个牙刷。",
           "可以给我一个牙刷吗？"
         ]
       },
@@ -3705,13 +3707,13 @@
       },
       "sentences": {
         "en": [
-          "I want a toothpaste.",
-          "Create a toothpaste.",
-          "Can I have a toothpaste?"
+          "Create some toothpaste.",
+          "I want some toothpaste.",
+          "Can I have some toothpaste?"
         ],
         "zh": [
-          "我想要一个牙膏。",
           "创造一个牙膏。",
+          "我想要一个牙膏。",
           "可以给我一个牙膏吗？"
         ]
       },
@@ -3735,7 +3737,8 @@
       "aliases": {
         "en": [],
         "zh": []
-      }
+      },
+      "article": "some"
     },
     {
       "id": "bath-mat",
@@ -3782,13 +3785,13 @@
       },
       "sentences": {
         "en": [
-          "I want a bath mat.",
           "Create a bath mat.",
+          "I want a bath mat.",
           "Can I have a bath mat?"
         ],
         "zh": [
-          "我想要一个浴室垫。",
           "创造一个浴室垫。",
+          "我想要一个浴室垫。",
           "可以给我一个浴室垫吗？"
         ]
       },
@@ -3859,13 +3862,13 @@
       },
       "sentences": {
         "en": [
-          "I want a rubber duck.",
           "Create a rubber duck.",
+          "I want a rubber duck.",
           "Can I have a rubber duck?"
         ],
         "zh": [
-          "我想要一个小黄鸭。",
           "创造一个小黄鸭。",
+          "我想要一个小黄鸭。",
           "可以给我一个小黄鸭吗？"
         ]
       },
@@ -3936,13 +3939,13 @@
       },
       "sentences": {
         "en": [
-          "I want a bath stool.",
           "Create a bath stool.",
+          "I want a bath stool.",
           "Can I have a bath stool?"
         ],
         "zh": [
-          "我想要一个浴室凳。",
           "创造一个浴室凳。",
+          "我想要一个浴室凳。",
           "可以给我一个浴室凳吗？"
         ]
       },
@@ -4014,13 +4017,13 @@
       },
       "sentences": {
         "en": [
-          "I want a bathroom mirror.",
           "Create a bathroom mirror.",
+          "I want a bathroom mirror.",
           "Can I have a bathroom mirror?"
         ],
         "zh": [
-          "我想要一个浴室镜。",
           "创造一个浴室镜。",
+          "我想要一个浴室镜。",
           "可以给我一个浴室镜吗？"
         ]
       },
@@ -4091,13 +4094,13 @@
       },
       "sentences": {
         "en": [
-          "I want a shampoo.",
-          "Create a shampoo.",
-          "Can I have a shampoo?"
+          "Create some shampoo.",
+          "I want some shampoo.",
+          "Can I have some shampoo?"
         ],
         "zh": [
-          "我想要一个洗发水。",
           "创造一个洗发水。",
+          "我想要一个洗发水。",
           "可以给我一个洗发水吗？"
         ]
       },
@@ -4121,7 +4124,8 @@
       "aliases": {
         "en": [],
         "zh": []
-      }
+      },
+      "article": "some"
     },
     {
       "id": "hair-dryer",
@@ -4168,13 +4172,13 @@
       },
       "sentences": {
         "en": [
-          "I want a hair dryer.",
           "Create a hair dryer.",
+          "I want a hair dryer.",
           "Can I have a hair dryer?"
         ],
         "zh": [
-          "我想要一个吹风机。",
           "创造一个吹风机。",
+          "我想要一个吹风机。",
           "可以给我一个吹风机吗？"
         ]
       },
@@ -4245,13 +4249,13 @@
       },
       "sentences": {
         "en": [
-          "I want a laundry machine.",
           "Create a laundry machine.",
+          "I want a laundry machine.",
           "Can I have a laundry machine?"
         ],
         "zh": [
-          "我想要一个洗衣机。",
           "创造一个洗衣机。",
+          "我想要一个洗衣机。",
           "可以给我一个洗衣机吗？"
         ]
       },
@@ -4322,13 +4326,13 @@
       },
       "sentences": {
         "en": [
-          "I want a laundry hamper.",
           "Create a laundry hamper.",
+          "I want a laundry hamper.",
           "Can I have a laundry hamper?"
         ],
         "zh": [
-          "我想要一个脏衣筐。",
           "创造一个脏衣筐。",
+          "我想要一个脏衣筐。",
           "可以给我一个脏衣筐吗？"
         ]
       },
@@ -4399,13 +4403,13 @@
       },
       "sentences": {
         "en": [
-          "I want a sponge.",
           "Create a sponge.",
+          "I want a sponge.",
           "Can I have a sponge?"
         ],
         "zh": [
-          "我想要一个海绵。",
           "创造一个海绵。",
+          "我想要一个海绵。",
           "可以给我一个海绵吗？"
         ]
       },
@@ -4476,13 +4480,13 @@
       },
       "sentences": {
         "en": [
-          "I want a bathrobe.",
           "Create a bathrobe.",
+          "I want a bathrobe.",
           "Can I have a bathrobe?"
         ],
         "zh": [
-          "我想要一个浴袍。",
           "创造一个浴袍。",
+          "我想要一个浴袍。",
           "可以给我一个浴袍吗？"
         ]
       },
@@ -4553,13 +4557,13 @@
       },
       "sentences": {
         "en": [
-          "I want a hot spring.",
           "Create a hot spring.",
+          "I want a hot spring.",
           "Can I have a hot spring?"
         ],
         "zh": [
-          "我想要一个温泉池。",
           "创造一个温泉池。",
+          "我想要一个温泉池。",
           "可以给我一个温泉池吗？"
         ]
       },
@@ -4630,13 +4634,13 @@
       },
       "sentences": {
         "en": [
-          "I want a water barrel.",
           "Create a water barrel.",
+          "I want a water barrel.",
           "Can I have a water barrel?"
         ],
         "zh": [
-          "我想要一个水桶。",
           "创造一个水桶。",
+          "我想要一个水桶。",
           "可以给我一个水桶吗？"
         ]
       },
@@ -4707,13 +4711,13 @@
       },
       "sentences": {
         "en": [
-          "I want a sofa.",
           "Create a sofa.",
+          "I want a sofa.",
           "Can I have a sofa?"
         ],
         "zh": [
-          "我想要一个沙发。",
           "创造一个沙发。",
+          "我想要一个沙发。",
           "可以给我一个沙发吗？"
         ]
       },
@@ -4786,13 +4790,13 @@
       },
       "sentences": {
         "en": [
-          "I want an armchair.",
           "Create an armchair.",
+          "I want an armchair.",
           "Can I have an armchair?"
         ],
         "zh": [
-          "我想要一个扶手椅。",
           "创造一个扶手椅。",
+          "我想要一个扶手椅。",
           "可以给我一个扶手椅吗？"
         ]
       },
@@ -4864,13 +4868,13 @@
       },
       "sentences": {
         "en": [
-          "I want a coffee table.",
           "Create a coffee table.",
+          "I want a coffee table.",
           "Can I have a coffee table?"
         ],
         "zh": [
-          "我想要一个茶几。",
           "创造一个茶几。",
+          "我想要一个茶几。",
           "可以给我一个茶几吗？"
         ]
       },
@@ -4941,13 +4945,13 @@
       },
       "sentences": {
         "en": [
-          "I want a bookshelf.",
           "Create a bookshelf.",
+          "I want a bookshelf.",
           "Can I have a bookshelf?"
         ],
         "zh": [
-          "我想要一个书架。",
           "创造一个书架。",
+          "我想要一个书架。",
           "可以给我一个书架吗？"
         ]
       },
@@ -5018,13 +5022,13 @@
       },
       "sentences": {
         "en": [
-          "I want a book.",
           "Create a book.",
+          "I want a book.",
           "Can I have a book?"
         ],
         "zh": [
-          "我想要一个书。",
           "创造一个书。",
+          "我想要一个书。",
           "可以给我一个书吗？"
         ]
       },
@@ -5095,13 +5099,13 @@
       },
       "sentences": {
         "en": [
-          "I want a desk.",
           "Create a desk.",
+          "I want a desk.",
           "Can I have a desk?"
         ],
         "zh": [
-          "我想要一个书桌。",
           "创造一个书桌。",
+          "我想要一个书桌。",
           "可以给我一个书桌吗？"
         ]
       },
@@ -5172,13 +5176,13 @@
       },
       "sentences": {
         "en": [
-          "I want a desk lamp.",
           "Create a desk lamp.",
+          "I want a desk lamp.",
           "Can I have a desk lamp?"
         ],
         "zh": [
-          "我想要一个台灯。",
           "创造一个台灯。",
+          "我想要一个台灯。",
           "可以给我一个台灯吗？"
         ]
       },
@@ -5249,13 +5253,13 @@
       },
       "sentences": {
         "en": [
-          "I want a television.",
           "Create a television.",
+          "I want a television.",
           "Can I have a television?"
         ],
         "zh": [
-          "我想要一个电视。",
           "创造一个电视。",
+          "我想要一个电视。",
           "可以给我一个电视吗？"
         ]
       },
@@ -5328,13 +5332,13 @@
       },
       "sentences": {
         "en": [
-          "I want a radio.",
           "Create a radio.",
+          "I want a radio.",
           "Can I have a radio?"
         ],
         "zh": [
-          "我想要一个收音机。",
           "创造一个收音机。",
+          "我想要一个收音机。",
           "可以给我一个收音机吗？"
         ]
       },
@@ -5405,13 +5409,13 @@
       },
       "sentences": {
         "en": [
-          "I want a piano.",
           "Create a piano.",
+          "I want a piano.",
           "Can I have a piano?"
         ],
         "zh": [
-          "我想要一个钢琴。",
           "创造一个钢琴。",
+          "我想要一个钢琴。",
           "可以给我一个钢琴吗？"
         ]
       },
@@ -5482,13 +5486,13 @@
       },
       "sentences": {
         "en": [
-          "I want a guitar.",
           "Create a guitar.",
+          "I want a guitar.",
           "Can I have a guitar?"
         ],
         "zh": [
-          "我想要一个吉他。",
           "创造一个吉他。",
+          "我想要一个吉他。",
           "可以给我一个吉他吗？"
         ]
       },
@@ -5559,13 +5563,13 @@
       },
       "sentences": {
         "en": [
-          "I want a globe.",
           "Create a globe.",
+          "I want a globe.",
           "Can I have a globe?"
         ],
         "zh": [
-          "我想要一个地球仪。",
           "创造一个地球仪。",
+          "我想要一个地球仪。",
           "可以给我一个地球仪吗？"
         ]
       },
@@ -5636,13 +5640,13 @@
       },
       "sentences": {
         "en": [
-          "I want a wall clock.",
           "Create a wall clock.",
+          "I want a wall clock.",
           "Can I have a wall clock?"
         ],
         "zh": [
-          "我想要一个挂钟。",
           "创造一个挂钟。",
+          "我想要一个挂钟。",
           "可以给我一个挂钟吗？"
         ]
       },
@@ -5713,13 +5717,13 @@
       },
       "sentences": {
         "en": [
-          "I want a fireplace.",
           "Create a fireplace.",
+          "I want a fireplace.",
           "Can I have a fireplace?"
         ],
         "zh": [
-          "我想要一个壁炉。",
           "创造一个壁炉。",
+          "我想要一个壁炉。",
           "可以给我一个壁炉吗？"
         ]
       },
@@ -5790,13 +5794,13 @@
       },
       "sentences": {
         "en": [
-          "I want a cushion.",
           "Create a cushion.",
+          "I want a cushion.",
           "Can I have a cushion?"
         ],
         "zh": [
-          "我想要一个坐垫。",
           "创造一个坐垫。",
+          "我想要一个坐垫。",
           "可以给我一个坐垫吗？"
         ]
       },
@@ -5867,13 +5871,13 @@
       },
       "sentences": {
         "en": [
-          "I want an aquarium.",
           "Create an aquarium.",
+          "I want an aquarium.",
           "Can I have an aquarium?"
         ],
         "zh": [
-          "我想要一个鱼缸。",
           "创造一个鱼缸。",
+          "我想要一个鱼缸。",
           "可以给我一个鱼缸吗？"
         ]
       },
@@ -5944,13 +5948,13 @@
       },
       "sentences": {
         "en": [
-          "I want a painting.",
           "Create a painting.",
+          "I want a painting.",
           "Can I have a painting?"
         ],
         "zh": [
-          "我想要一个画框。",
           "创造一个画框。",
+          "我想要一个画框。",
           "可以给我一个画框吗？"
         ]
       },
@@ -6021,13 +6025,13 @@
       },
       "sentences": {
         "en": [
-          "I want a floor lamp.",
           "Create a floor lamp.",
+          "I want a floor lamp.",
           "Can I have a floor lamp?"
         ],
         "zh": [
-          "我想要一个落地灯。",
           "创造一个落地灯。",
+          "我想要一个落地灯。",
           "可以给我一个落地灯吗？"
         ]
       },
@@ -6098,13 +6102,13 @@
       },
       "sentences": {
         "en": [
-          "I want a magazine rack.",
           "Create a magazine rack.",
+          "I want a magazine rack.",
           "Can I have a magazine rack?"
         ],
         "zh": [
-          "我想要一个杂志架。",
           "创造一个杂志架。",
+          "我想要一个杂志架。",
           "可以给我一个杂志架吗？"
         ]
       },
@@ -6175,13 +6179,13 @@
       },
       "sentences": {
         "en": [
-          "I want a rocking chair.",
           "Create a rocking chair.",
+          "I want a rocking chair.",
           "Can I have a rocking chair?"
         ],
         "zh": [
-          "我想要一个摇椅。",
           "创造一个摇椅。",
+          "我想要一个摇椅。",
           "可以给我一个摇椅吗？"
         ]
       },
@@ -6253,13 +6257,13 @@
       },
       "sentences": {
         "en": [
-          "I want a flower.",
           "Create a flower.",
+          "I want a flower.",
           "Can I have a flower?"
         ],
         "zh": [
-          "我想要一个花。",
           "创造一个花。",
+          "我想要一个花。",
           "可以给我一个花吗？"
         ]
       },
@@ -6332,13 +6336,13 @@
       },
       "sentences": {
         "en": [
-          "I want a tree.",
           "Create a tree.",
+          "I want a tree.",
           "Can I have a tree?"
         ],
         "zh": [
-          "我想要一个树。",
           "创造一个树。",
+          "我想要一个树。",
           "可以给我一个树吗？"
         ]
       },
@@ -6409,13 +6413,13 @@
       },
       "sentences": {
         "en": [
-          "I want an apple tree.",
           "Create an apple tree.",
+          "I want an apple tree.",
           "Can I have an apple tree?"
         ],
         "zh": [
-          "我想要一个苹果树。",
           "创造一个苹果树。",
+          "我想要一个苹果树。",
           "可以给我一个苹果树吗？"
         ]
       },
@@ -6486,13 +6490,13 @@
       },
       "sentences": {
         "en": [
-          "I want a palm tree.",
           "Create a palm tree.",
+          "I want a palm tree.",
           "Can I have a palm tree?"
         ],
         "zh": [
-          "我想要一个棕榈树。",
           "创造一个棕榈树。",
+          "我想要一个棕榈树。",
           "可以给我一个棕榈树吗？"
         ]
       },
@@ -6563,13 +6567,13 @@
       },
       "sentences": {
         "en": [
-          "I want a bush.",
           "Create a bush.",
+          "I want a bush.",
           "Can I have a bush?"
         ],
         "zh": [
-          "我想要一个灌木。",
           "创造一个灌木。",
+          "我想要一个灌木。",
           "可以给我一个灌木吗？"
         ]
       },
@@ -6640,13 +6644,13 @@
       },
       "sentences": {
         "en": [
-          "I want a flower bed.",
           "Create a flower bed.",
+          "I want a flower bed.",
           "Can I have a flower bed?"
         ],
         "zh": [
-          "我想要一个花坛。",
           "创造一个花坛。",
+          "我想要一个花坛。",
           "可以给我一个花坛吗？"
         ]
       },
@@ -6717,13 +6721,13 @@
       },
       "sentences": {
         "en": [
-          "I want a vegetable patch.",
           "Create a vegetable patch.",
+          "I want a vegetable patch.",
           "Can I have a vegetable patch?"
         ],
         "zh": [
-          "我想要一个菜地。",
           "创造一个菜地。",
+          "我想要一个菜地。",
           "可以给我一个菜地吗？"
         ]
       },
@@ -6794,13 +6798,13 @@
       },
       "sentences": {
         "en": [
-          "I want a watering can.",
           "Create a watering can.",
+          "I want a watering can.",
           "Can I have a watering can?"
         ],
         "zh": [
-          "我想要一个浇水壶。",
           "创造一个浇水壶。",
+          "我想要一个浇水壶。",
           "可以给我一个浇水壶吗？"
         ]
       },
@@ -6871,13 +6875,13 @@
       },
       "sentences": {
         "en": [
-          "I want a fountain.",
           "Create a fountain.",
+          "I want a fountain.",
           "Can I have a fountain?"
         ],
         "zh": [
-          "我想要一个喷泉。",
           "创造一个喷泉。",
+          "我想要一个喷泉。",
           "可以给我一个喷泉吗？"
         ]
       },
@@ -6948,13 +6952,13 @@
       },
       "sentences": {
         "en": [
-          "I want a pond.",
           "Create a pond.",
+          "I want a pond.",
           "Can I have a pond?"
         ],
         "zh": [
-          "我想要一个池塘。",
           "创造一个池塘。",
+          "我想要一个池塘。",
           "可以给我一个池塘吗？"
         ]
       },
@@ -7025,13 +7029,13 @@
       },
       "sentences": {
         "en": [
-          "I want a birdhouse.",
           "Create a birdhouse.",
+          "I want a birdhouse.",
           "Can I have a birdhouse?"
         ],
         "zh": [
-          "我想要一个鸟屋。",
           "创造一个鸟屋。",
+          "我想要一个鸟屋。",
           "可以给我一个鸟屋吗？"
         ]
       },
@@ -7102,13 +7106,13 @@
       },
       "sentences": {
         "en": [
-          "I want a birdbath.",
           "Create a birdbath.",
+          "I want a birdbath.",
           "Can I have a birdbath?"
         ],
         "zh": [
-          "我想要一个鸟浴盆。",
           "创造一个鸟浴盆。",
+          "我想要一个鸟浴盆。",
           "可以给我一个鸟浴盆吗？"
         ]
       },
@@ -7179,13 +7183,13 @@
       },
       "sentences": {
         "en": [
-          "I want a garden bench.",
           "Create a garden bench.",
+          "I want a garden bench.",
           "Can I have a garden bench?"
         ],
         "zh": [
-          "我想要一个花园长凳。",
           "创造一个花园长凳。",
+          "我想要一个花园长凳。",
           "可以给我一个花园长凳吗？"
         ]
       },
@@ -7257,13 +7261,13 @@
       },
       "sentences": {
         "en": [
-          "I want a wheelbarrow.",
           "Create a wheelbarrow.",
+          "I want a wheelbarrow.",
           "Can I have a wheelbarrow?"
         ],
         "zh": [
-          "我想要一个独轮车。",
           "创造一个独轮车。",
+          "我想要一个独轮车。",
           "可以给我一个独轮车吗？"
         ]
       },
@@ -7334,13 +7338,13 @@
       },
       "sentences": {
         "en": [
-          "I want a planter.",
           "Create a planter.",
+          "I want a planter.",
           "Can I have a planter?"
         ],
         "zh": [
-          "我想要一个花盆。",
           "创造一个花盆。",
+          "我想要一个花盆。",
           "可以给我一个花盆吗？"
         ]
       },
@@ -7411,13 +7415,13 @@
       },
       "sentences": {
         "en": [
-          "I want a rose bush.",
           "Create a rose bush.",
+          "I want a rose bush.",
           "Can I have a rose bush?"
         ],
         "zh": [
-          "我想要一个玫瑰丛。",
           "创造一个玫瑰丛。",
+          "我想要一个玫瑰丛。",
           "可以给我一个玫瑰丛吗？"
         ]
       },
@@ -7488,13 +7492,13 @@
       },
       "sentences": {
         "en": [
-          "I want a sunflower.",
           "Create a sunflower.",
+          "I want a sunflower.",
           "Can I have a sunflower?"
         ],
         "zh": [
-          "我想要一个向日葵。",
           "创造一个向日葵。",
+          "我想要一个向日葵。",
           "可以给我一个向日葵吗？"
         ]
       },
@@ -7565,13 +7569,13 @@
       },
       "sentences": {
         "en": [
-          "I want a mushroom.",
           "Create a mushroom.",
+          "I want a mushroom.",
           "Can I have a mushroom?"
         ],
         "zh": [
-          "我想要一个蘑菇。",
           "创造一个蘑菇。",
+          "我想要一个蘑菇。",
           "可以给我一个蘑菇吗？"
         ]
       },
@@ -7642,13 +7646,13 @@
       },
       "sentences": {
         "en": [
-          "I want a garden lantern.",
           "Create a garden lantern.",
+          "I want a garden lantern.",
           "Can I have a garden lantern?"
         ],
         "zh": [
-          "我想要一个花园灯笼。",
           "创造一个花园灯笼。",
+          "我想要一个花园灯笼。",
           "可以给我一个花园灯笼吗？"
         ]
       },
@@ -7719,13 +7723,13 @@
       },
       "sentences": {
         "en": [
-          "I want a greenhouse.",
           "Create a greenhouse.",
+          "I want a greenhouse.",
           "Can I have a greenhouse?"
         ],
         "zh": [
-          "我想要一个温室。",
           "创造一个温室。",
+          "我想要一个温室。",
           "可以给我一个温室吗？"
         ]
       },
@@ -7796,13 +7800,13 @@
       },
       "sentences": {
         "en": [
-          "I want a swing.",
           "Create a swing.",
+          "I want a swing.",
           "Can I have a swing?"
         ],
         "zh": [
-          "我想要一个秋千。",
           "创造一个秋千。",
+          "我想要一个秋千。",
           "可以给我一个秋千吗？"
         ]
       },
@@ -7873,13 +7877,13 @@
       },
       "sentences": {
         "en": [
-          "I want a slide.",
           "Create a slide.",
+          "I want a slide.",
           "Can I have a slide?"
         ],
         "zh": [
-          "我想要一个滑梯。",
           "创造一个滑梯。",
+          "我想要一个滑梯。",
           "可以给我一个滑梯吗？"
         ]
       },
@@ -7950,13 +7954,13 @@
       },
       "sentences": {
         "en": [
-          "I want a ball.",
           "Create a ball.",
+          "I want a ball.",
           "Can I have a ball?"
         ],
         "zh": [
-          "我想要一个球。",
           "创造一个球。",
+          "我想要一个球。",
           "可以给我一个球吗？"
         ]
       },
@@ -8027,13 +8031,13 @@
       },
       "sentences": {
         "en": [
-          "I want a sandbox.",
           "Create a sandbox.",
+          "I want a sandbox.",
           "Can I have a sandbox?"
         ],
         "zh": [
-          "我想要一个沙坑。",
           "创造一个沙坑。",
+          "我想要一个沙坑。",
           "可以给我一个沙坑吗？"
         ]
       },
@@ -8104,13 +8108,13 @@
       },
       "sentences": {
         "en": [
-          "I want a seesaw.",
           "Create a seesaw.",
+          "I want a seesaw.",
           "Can I have a seesaw?"
         ],
         "zh": [
-          "我想要一个跷跷板。",
           "创造一个跷跷板。",
+          "我想要一个跷跷板。",
           "可以给我一个跷跷板吗？"
         ]
       },
@@ -8181,13 +8185,13 @@
       },
       "sentences": {
         "en": [
-          "I want a trampoline.",
           "Create a trampoline.",
+          "I want a trampoline.",
           "Can I have a trampoline?"
         ],
         "zh": [
-          "我想要一个蹦床。",
           "创造一个蹦床。",
+          "我想要一个蹦床。",
           "可以给我一个蹦床吗？"
         ]
       },
@@ -8258,13 +8262,13 @@
       },
       "sentences": {
         "en": [
-          "I want a climbing frame.",
           "Create a climbing frame.",
+          "I want a climbing frame.",
           "Can I have a climbing frame?"
         ],
         "zh": [
-          "我想要一个攀爬架。",
           "创造一个攀爬架。",
+          "我想要一个攀爬架。",
           "可以给我一个攀爬架吗？"
         ]
       },
@@ -8335,13 +8339,13 @@
       },
       "sentences": {
         "en": [
-          "I want a toy train.",
           "Create a toy train.",
+          "I want a toy train.",
           "Can I have a toy train?"
         ],
         "zh": [
-          "我想要一个玩具火车。",
           "创造一个玩具火车。",
+          "我想要一个玩具火车。",
           "可以给我一个玩具火车吗？"
         ]
       },
@@ -8412,13 +8416,13 @@
       },
       "sentences": {
         "en": [
-          "I want a teddy bear.",
           "Create a teddy bear.",
+          "I want a teddy bear.",
           "Can I have a teddy bear?"
         ],
         "zh": [
-          "我想要一个泰迪熊。",
           "创造一个泰迪熊。",
+          "我想要一个泰迪熊。",
           "可以给我一个泰迪熊吗？"
         ]
       },
@@ -8489,13 +8493,13 @@
       },
       "sentences": {
         "en": [
-          "I want a dollhouse.",
           "Create a dollhouse.",
+          "I want a dollhouse.",
           "Can I have a dollhouse?"
         ],
         "zh": [
-          "我想要一个玩具屋。",
           "创造一个玩具屋。",
+          "我想要一个玩具屋。",
           "可以给我一个玩具屋吗？"
         ]
       },
@@ -8566,13 +8570,13 @@
       },
       "sentences": {
         "en": [
-          "I want a toy car.",
           "Create a toy car.",
+          "I want a toy car.",
           "Can I have a toy car?"
         ],
         "zh": [
-          "我想要一个玩具汽车。",
           "创造一个玩具汽车。",
+          "我想要一个玩具汽车。",
           "可以给我一个玩具汽车吗？"
         ]
       },
@@ -8643,13 +8647,13 @@
       },
       "sentences": {
         "en": [
-          "I want a kite.",
           "Create a kite.",
+          "I want a kite.",
           "Can I have a kite?"
         ],
         "zh": [
-          "我想要一个风筝。",
           "创造一个风筝。",
+          "我想要一个风筝。",
           "可以给我一个风筝吗？"
         ]
       },
@@ -8720,13 +8724,13 @@
       },
       "sentences": {
         "en": [
-          "I want a puzzle.",
           "Create a puzzle.",
+          "I want a puzzle.",
           "Can I have a puzzle?"
         ],
         "zh": [
-          "我想要一个拼图。",
           "创造一个拼图。",
+          "我想要一个拼图。",
           "可以给我一个拼图吗？"
         ]
       },
@@ -8797,13 +8801,13 @@
       },
       "sentences": {
         "en": [
-          "I want a building blocks.",
-          "Create a building blocks.",
-          "Can I have a building blocks?"
+          "Create some building blocks.",
+          "I want some building blocks.",
+          "Can I have some building blocks?"
         ],
         "zh": [
-          "我想要一个积木。",
           "创造一个积木。",
+          "我想要一个积木。",
           "可以给我一个积木吗？"
         ]
       },
@@ -8827,7 +8831,8 @@
       "aliases": {
         "en": [],
         "zh": []
-      }
+      },
+      "article": "some"
     },
     {
       "id": "rocking-horse",
@@ -8874,13 +8879,13 @@
       },
       "sentences": {
         "en": [
-          "I want a rocking horse.",
           "Create a rocking horse.",
+          "I want a rocking horse.",
           "Can I have a rocking horse?"
         ],
         "zh": [
-          "我想要一个木马。",
           "创造一个木马。",
+          "我想要一个木马。",
           "可以给我一个木马吗？"
         ]
       },
@@ -8951,13 +8956,13 @@
       },
       "sentences": {
         "en": [
-          "I want a scooter.",
           "Create a scooter.",
+          "I want a scooter.",
           "Can I have a scooter?"
         ],
         "zh": [
-          "我想要一个滑板车。",
           "创造一个滑板车。",
+          "我想要一个滑板车。",
           "可以给我一个滑板车吗？"
         ]
       },
@@ -9028,13 +9033,13 @@
       },
       "sentences": {
         "en": [
-          "I want a bicycle.",
           "Create a bicycle.",
+          "I want a bicycle.",
           "Can I have a bicycle?"
         ],
         "zh": [
-          "我想要一个自行车。",
           "创造一个自行车。",
+          "我想要一个自行车。",
           "可以给我一个自行车吗？"
         ]
       },
@@ -9105,13 +9110,13 @@
       },
       "sentences": {
         "en": [
-          "I want a basketball hoop.",
           "Create a basketball hoop.",
+          "I want a basketball hoop.",
           "Can I have a basketball hoop?"
         ],
         "zh": [
-          "我想要一个篮球架。",
           "创造一个篮球架。",
+          "我想要一个篮球架。",
           "可以给我一个篮球架吗？"
         ]
       },
@@ -9182,13 +9187,13 @@
       },
       "sentences": {
         "en": [
-          "I want a goal.",
           "Create a goal.",
+          "I want a goal.",
           "Can I have a goal?"
         ],
         "zh": [
-          "我想要一个球门。",
           "创造一个球门。",
+          "我想要一个球门。",
           "可以给我一个球门吗？"
         ]
       },
@@ -9259,13 +9264,13 @@
       },
       "sentences": {
         "en": [
-          "I want a play tent.",
           "Create a play tent.",
+          "I want a play tent.",
           "Can I have a play tent?"
         ],
         "zh": [
-          "我想要一个游戏帐篷。",
           "创造一个游戏帐篷。",
+          "我想要一个游戏帐篷。",
           "可以给我一个游戏帐篷吗？"
         ]
       },
@@ -9336,13 +9341,13 @@
       },
       "sentences": {
         "en": [
-          "I want a dance floor.",
           "Create a dance floor.",
+          "I want a dance floor.",
           "Can I have a dance floor?"
         ],
         "zh": [
-          "我想要一个舞池。",
           "创造一个舞池。",
+          "我想要一个舞池。",
           "可以给我一个舞池吗？"
         ]
       },
@@ -9413,13 +9418,13 @@
       },
       "sentences": {
         "en": [
-          "I want a speaker.",
           "Create a speaker.",
+          "I want a speaker.",
           "Can I have a speaker?"
         ],
         "zh": [
-          "我想要一个音箱。",
           "创造一个音箱。",
+          "我想要一个音箱。",
           "可以给我一个音箱吗？"
         ]
       },
@@ -9490,13 +9495,13 @@
       },
       "sentences": {
         "en": [
-          "I want a balloon.",
           "Create a balloon.",
+          "I want a balloon.",
           "Can I have a balloon?"
         ],
         "zh": [
-          "我想要一个气球。",
           "创造一个气球。",
+          "我想要一个气球。",
           "可以给我一个气球吗？"
         ]
       },
@@ -9567,13 +9572,13 @@
       },
       "sentences": {
         "en": [
-          "I want a birthday cake.",
           "Create a birthday cake.",
+          "I want a birthday cake.",
           "Can I have a birthday cake?"
         ],
         "zh": [
-          "我想要一个生日蛋糕。",
           "创造一个生日蛋糕。",
+          "我想要一个生日蛋糕。",
           "可以给我一个生日蛋糕吗？"
         ]
       },
@@ -9644,13 +9649,13 @@
       },
       "sentences": {
         "en": [
-          "I want a party hat.",
           "Create a party hat.",
+          "I want a party hat.",
           "Can I have a party hat?"
         ],
         "zh": [
-          "我想要一个派对帽。",
           "创造一个派对帽。",
+          "我想要一个派对帽。",
           "可以给我一个派对帽吗？"
         ]
       },
@@ -9721,13 +9726,13 @@
       },
       "sentences": {
         "en": [
-          "I want a gift box.",
           "Create a gift box.",
+          "I want a gift box.",
           "Can I have a gift box?"
         ],
         "zh": [
-          "我想要一个礼物盒。",
           "创造一个礼物盒。",
+          "我想要一个礼物盒。",
           "可以给我一个礼物盒吗？"
         ]
       },
@@ -9798,13 +9803,13 @@
       },
       "sentences": {
         "en": [
-          "I want a bunting.",
-          "Create a bunting.",
-          "Can I have a bunting?"
+          "Create some bunting.",
+          "I want some bunting.",
+          "Can I have some bunting?"
         ],
         "zh": [
-          "我想要一个彩旗。",
           "创造一个彩旗。",
+          "我想要一个彩旗。",
           "可以给我一个彩旗吗？"
         ]
       },
@@ -9828,7 +9833,8 @@
       "aliases": {
         "en": [],
         "zh": []
-      }
+      },
+      "article": "some"
     },
     {
       "id": "disco-ball",
@@ -9875,13 +9881,13 @@
       },
       "sentences": {
         "en": [
-          "I want a disco ball.",
           "Create a disco ball.",
+          "I want a disco ball.",
           "Can I have a disco ball?"
         ],
         "zh": [
-          "我想要一个迪斯科球。",
           "创造一个迪斯科球。",
+          "我想要一个迪斯科球。",
           "可以给我一个迪斯科球吗？"
         ]
       },
@@ -9952,13 +9958,13 @@
       },
       "sentences": {
         "en": [
-          "I want a microphone.",
           "Create a microphone.",
+          "I want a microphone.",
           "Can I have a microphone?"
         ],
         "zh": [
-          "我想要一个麦克风。",
           "创造一个麦克风。",
+          "我想要一个麦克风。",
           "可以给我一个麦克风吗？"
         ]
       },
@@ -10029,13 +10035,13 @@
       },
       "sentences": {
         "en": [
-          "I want a drum.",
           "Create a drum.",
+          "I want a drum.",
           "Can I have a drum?"
         ],
         "zh": [
-          "我想要一个鼓。",
           "创造一个鼓。",
+          "我想要一个鼓。",
           "可以给我一个鼓吗？"
         ]
       },
@@ -10106,13 +10112,13 @@
       },
       "sentences": {
         "en": [
-          "I want a picnic blanket.",
           "Create a picnic blanket.",
+          "I want a picnic blanket.",
           "Can I have a picnic blanket?"
         ],
         "zh": [
-          "我想要一个野餐毯。",
           "创造一个野餐毯。",
+          "我想要一个野餐毯。",
           "可以给我一个野餐毯吗？"
         ]
       },
@@ -10183,13 +10189,13 @@
       },
       "sentences": {
         "en": [
-          "I want a picnic basket.",
           "Create a picnic basket.",
+          "I want a picnic basket.",
           "Can I have a picnic basket?"
         ],
         "zh": [
-          "我想要一个野餐篮。",
           "创造一个野餐篮。",
+          "我想要一个野餐篮。",
           "可以给我一个野餐篮吗？"
         ]
       },
@@ -10260,13 +10266,13 @@
       },
       "sentences": {
         "en": [
-          "I want a lemonade stand.",
           "Create a lemonade stand.",
+          "I want a lemonade stand.",
           "Can I have a lemonade stand?"
         ],
         "zh": [
-          "我想要一个柠檬水摊。",
           "创造一个柠檬水摊。",
+          "我想要一个柠檬水摊。",
           "可以给我一个柠檬水摊吗？"
         ]
       },
@@ -10337,13 +10343,13 @@
       },
       "sentences": {
         "en": [
-          "I want an ice cream cart.",
           "Create an ice cream cart.",
+          "I want an ice cream cart.",
           "Can I have an ice cream cart?"
         ],
         "zh": [
-          "我想要一个冰淇淋车。",
           "创造一个冰淇淋车。",
+          "我想要一个冰淇淋车。",
           "可以给我一个冰淇淋车吗？"
         ]
       },
@@ -10414,13 +10420,13 @@
       },
       "sentences": {
         "en": [
-          "I want a candy jar.",
           "Create a candy jar.",
+          "I want a candy jar.",
           "Can I have a candy jar?"
         ],
         "zh": [
-          "我想要一个糖果罐。",
           "创造一个糖果罐。",
+          "我想要一个糖果罐。",
           "可以给我一个糖果罐吗？"
         ]
       },
@@ -10491,13 +10497,13 @@
       },
       "sentences": {
         "en": [
-          "I want a popcorn machine.",
           "Create a popcorn machine.",
+          "I want a popcorn machine.",
           "Can I have a popcorn machine?"
         ],
         "zh": [
-          "我想要一个爆米花机。",
           "创造一个爆米花机。",
+          "我想要一个爆米花机。",
           "可以给我一个爆米花机吗？"
         ]
       },
@@ -10568,13 +10574,13 @@
       },
       "sentences": {
         "en": [
-          "I want a party table.",
           "Create a party table.",
+          "I want a party table.",
           "Can I have a party table?"
         ],
         "zh": [
-          "我想要一个派对桌。",
           "创造一个派对桌。",
+          "我想要一个派对桌。",
           "可以给我一个派对桌吗？"
         ]
       },
@@ -10645,13 +10651,13 @@
       },
       "sentences": {
         "en": [
-          "I want a garland.",
           "Create a garland.",
+          "I want a garland.",
           "Can I have a garland?"
         ],
         "zh": [
-          "我想要一个花环。",
           "创造一个花环。",
+          "我想要一个花环。",
           "可以给我一个花环吗？"
         ]
       },
@@ -10722,13 +10728,13 @@
       },
       "sentences": {
         "en": [
-          "I want a string lights.",
-          "Create a string lights.",
-          "Can I have a string lights?"
+          "Create some string lights.",
+          "I want some string lights.",
+          "Can I have some string lights?"
         ],
         "zh": [
-          "我想要一个灯串。",
           "创造一个灯串。",
+          "我想要一个灯串。",
           "可以给我一个灯串吗？"
         ]
       },
@@ -10752,7 +10758,8 @@
       "aliases": {
         "en": [],
         "zh": []
-      }
+      },
+      "article": "some"
     },
     {
       "id": "stage",
@@ -10799,13 +10806,13 @@
       },
       "sentences": {
         "en": [
-          "I want a stage.",
           "Create a stage.",
+          "I want a stage.",
           "Can I have a stage?"
         ],
         "zh": [
-          "我想要一个舞台。",
           "创造一个舞台。",
+          "我想要一个舞台。",
           "可以给我一个舞台吗？"
         ]
       },
@@ -10876,13 +10883,13 @@
       },
       "sentences": {
         "en": [
-          "I want a wood floor.",
           "Create a wood floor.",
+          "I want a wood floor.",
           "Can I have a wood floor?"
         ],
         "zh": [
-          "我想要一个木地板。",
           "创造一个木地板。",
+          "我想要一个木地板。",
           "可以给我一个木地板吗？"
         ]
       },
@@ -10953,13 +10960,13 @@
       },
       "sentences": {
         "en": [
-          "I want a stone path.",
           "Create a stone path.",
+          "I want a stone path.",
           "Can I have a stone path?"
         ],
         "zh": [
-          "我想要一个石板路。",
           "创造一个石板路。",
+          "我想要一个石板路。",
           "可以给我一个石板路吗？"
         ]
       },
@@ -11030,13 +11037,13 @@
       },
       "sentences": {
         "en": [
-          "I want a brick path.",
           "Create a brick path.",
+          "I want a brick path.",
           "Can I have a brick path?"
         ],
         "zh": [
-          "我想要一个砖路。",
           "创造一个砖路。",
+          "我想要一个砖路。",
           "可以给我一个砖路吗？"
         ]
       },
@@ -11107,13 +11114,13 @@
       },
       "sentences": {
         "en": [
-          "I want a grass patch.",
           "Create a grass patch.",
+          "I want a grass patch.",
           "Can I have a grass patch?"
         ],
         "zh": [
-          "我想要一个草坪。",
           "创造一个草坪。",
+          "我想要一个草坪。",
           "可以给我一个草坪吗？"
         ]
       },
@@ -11184,13 +11191,13 @@
       },
       "sentences": {
         "en": [
-          "I want a sand patch.",
           "Create a sand patch.",
+          "I want a sand patch.",
           "Can I have a sand patch?"
         ],
         "zh": [
-          "我想要一个沙地。",
           "创造一个沙地。",
+          "我想要一个沙地。",
           "可以给我一个沙地吗？"
         ]
       },
@@ -11261,13 +11268,13 @@
       },
       "sentences": {
         "en": [
-          "I want a gravel path.",
           "Create a gravel path.",
+          "I want a gravel path.",
           "Can I have a gravel path?"
         ],
         "zh": [
-          "我想要一个碎石路。",
           "创造一个碎石路。",
+          "我想要一个碎石路。",
           "可以给我一个碎石路吗？"
         ]
       },
@@ -11338,13 +11345,13 @@
       },
       "sentences": {
         "en": [
-          "I want a wall.",
           "Create a wall.",
+          "I want a wall.",
           "Can I have a wall?"
         ],
         "zh": [
-          "我想要一个墙。",
           "创造一个墙。",
+          "我想要一个墙。",
           "可以给我一个墙吗？"
         ]
       },
@@ -11415,13 +11422,13 @@
       },
       "sentences": {
         "en": [
-          "I want a fence.",
           "Create a fence.",
+          "I want a fence.",
           "Can I have a fence?"
         ],
         "zh": [
-          "我想要一个围栏。",
           "创造一个围栏。",
+          "我想要一个围栏。",
           "可以给我一个围栏吗？"
         ]
       },
@@ -11492,13 +11499,13 @@
       },
       "sentences": {
         "en": [
-          "I want a gate.",
           "Create a gate.",
+          "I want a gate.",
           "Can I have a gate?"
         ],
         "zh": [
-          "我想要一个门。",
           "创造一个门。",
+          "我想要一个门。",
           "可以给我一个门吗？"
         ]
       },
@@ -11569,13 +11576,13 @@
       },
       "sentences": {
         "en": [
-          "I want an archway.",
           "Create an archway.",
+          "I want an archway.",
           "Can I have an archway?"
         ],
         "zh": [
-          "我想要一个拱门。",
           "创造一个拱门。",
+          "我想要一个拱门。",
           "可以给我一个拱门吗？"
         ]
       },
@@ -11646,13 +11653,13 @@
       },
       "sentences": {
         "en": [
-          "I want a bridge.",
           "Create a bridge.",
+          "I want a bridge.",
           "Can I have a bridge?"
         ],
         "zh": [
-          "我想要一个桥。",
           "创造一个桥。",
+          "我想要一个桥。",
           "可以给我一个桥吗？"
         ]
       },
@@ -11723,13 +11730,13 @@
       },
       "sentences": {
         "en": [
-          "I want a stepping stones.",
-          "Create a stepping stones.",
-          "Can I have a stepping stones?"
+          "Create some stepping stones.",
+          "I want some stepping stones.",
+          "Can I have some stepping stones?"
         ],
         "zh": [
-          "我想要一个踏脚石。",
           "创造一个踏脚石。",
+          "我想要一个踏脚石。",
           "可以给我一个踏脚石吗？"
         ]
       },
@@ -11753,7 +11760,8 @@
       "aliases": {
         "en": [],
         "zh": []
-      }
+      },
+      "article": "some"
     },
     {
       "id": "hedge",
@@ -11800,13 +11808,13 @@
       },
       "sentences": {
         "en": [
-          "I want a hedge.",
           "Create a hedge.",
+          "I want a hedge.",
           "Can I have a hedge?"
         ],
         "zh": [
-          "我想要一个树篱。",
           "创造一个树篱。",
+          "我想要一个树篱。",
           "可以给我一个树篱吗？"
         ]
       },
@@ -11877,13 +11885,13 @@
       },
       "sentences": {
         "en": [
-          "I want a window.",
           "Create a window.",
+          "I want a window.",
           "Can I have a window?"
         ],
         "zh": [
-          "我想要一个窗户。",
           "创造一个窗户。",
+          "我想要一个窗户。",
           "可以给我一个窗户吗？"
         ]
       },
@@ -11954,13 +11962,13 @@
       },
       "sentences": {
         "en": [
-          "I want a door.",
           "Create a door.",
+          "I want a door.",
           "Can I have a door?"
         ],
         "zh": [
-          "我想要一个房门。",
           "创造一个房门。",
+          "我想要一个房门。",
           "可以给我一个房门吗？"
         ]
       },
@@ -12031,13 +12039,13 @@
       },
       "sentences": {
         "en": [
-          "I want a signpost.",
           "Create a signpost.",
+          "I want a signpost.",
           "Can I have a signpost?"
         ],
         "zh": [
-          "我想要一个路牌。",
           "创造一个路牌。",
+          "我想要一个路牌。",
           "可以给我一个路牌吗？"
         ]
       },
@@ -12108,13 +12116,13 @@
       },
       "sentences": {
         "en": [
-          "I want a mailbox.",
           "Create a mailbox.",
+          "I want a mailbox.",
           "Can I have a mailbox?"
         ],
         "zh": [
-          "我想要一个信箱。",
           "创造一个信箱。",
+          "我想要一个信箱。",
           "可以给我一个信箱吗？"
         ]
       },
@@ -12185,13 +12193,13 @@
       },
       "sentences": {
         "en": [
-          "I want a street lamp.",
           "Create a street lamp.",
+          "I want a street lamp.",
           "Can I have a street lamp?"
         ],
         "zh": [
-          "我想要一个路灯。",
           "创造一个路灯。",
+          "我想要一个路灯。",
           "可以给我一个路灯吗？"
         ]
       },
@@ -12262,13 +12270,13 @@
       },
       "sentences": {
         "en": [
-          "I want a porch.",
           "Create a porch.",
+          "I want a porch.",
           "Can I have a porch?"
         ],
         "zh": [
-          "我想要一个门廊。",
           "创造一个门廊。",
+          "我想要一个门廊。",
           "可以给我一个门廊吗？"
         ]
       },
@@ -12339,13 +12347,13 @@
       },
       "sentences": {
         "en": [
-          "I want a gazebo.",
           "Create a gazebo.",
+          "I want a gazebo.",
           "Can I have a gazebo?"
         ],
         "zh": [
-          "我想要一个凉亭。",
           "创造一个凉亭。",
+          "我想要一个凉亭。",
           "可以给我一个凉亭吗？"
         ]
       },

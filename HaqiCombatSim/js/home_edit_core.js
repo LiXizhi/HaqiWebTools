@@ -1,7 +1,7 @@
-// Preserve the grabbed point while snapping furniture to the existing cell grid.
+// Preserve the grabbed point with continuous world coordinates at every zoom level.
 export function homeFurnitureDragPosition(origin, start, current, scale) {
  return {
-  x:origin.x+Math.round((current.sx-start.sx)/scale),
-  y:origin.y+Math.round((current.sy-start.sy)/scale)
+  x:origin.x+(current.sx-start.sx)/scale,
+  y:origin.y+(current.sy-start.sy)/scale
  };
 }

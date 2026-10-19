@@ -63,7 +63,7 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],autoRead
     box.classList.add('is-speaking');
     if(lines.length){
         ready=true;box.classList.remove('is-speaking');box.classList.add('dialogue-learning');text.replaceChildren();
-        const idleHint='点击喇叭朗读，点击译文查看最多5组关键词；同色框和连线表示对应。';
+        const idleHint='点击词语标记理解程度；同色连线表示对应词义，点击按钮可用模型补齐。';
         const makeButton=(label,run,cls)=>{const node=document.createElement('button');node.type='button';node.className=cls;node.textContent=label;node.onclick=run;return node;};
         const bilingual=createBilingualDialogue({button:makeButton,mapWords});
         const read=async()=>{
@@ -81,7 +81,7 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],autoRead
         reveal.start([{node:line.textNode,translation:line.translationNode}]);
         void waitForDialogueReveal(line.textNode).then(()=>{if(disposed)return;for(let i=0;i<lines.length;i++){const row=lines[i];captureStops.push(watchTreeText(i===0?line.textNode:labels[i],{source:languageSource,label:languageLabel,text:row.text,locale:row.locale,zh:lines.find(l=>l.locale==='zh-CN')?.text||sourceZh}));}});
         disposeLinks=()=>{reveal.finish();line.dispose();bilingual.close();};
-        setText(hint,'点击“再听一次”朗读，点击“词义映射”查看中英文对应词。');
+        setText(hint,idleHint);
         if(autoReadDialogue&&lines[0].locale===targetLocale&&lines[0].text.trim())void read();
 
     }else if(reduced||!chars.length)finish();else tick();

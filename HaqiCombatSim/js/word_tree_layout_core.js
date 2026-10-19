@@ -31,11 +31,13 @@ export function fitCamera(nodes,width,height,yaw=0){
     camera.y=height*.5-(height*.64+((minY+maxY)/2-height*.64)*camera.zoom);
     return camera;
 }
-// Retain the original continuous tree geometry; first source chooses a stable branch.
-export function createEncounterTree(words){
-    const ordered=[...words].sort((a,b)=>a.ordinal-b.ordinal),branches=[],nodes=[];
+export const TREE_WORD_LIMIT=600;
+// Limit rendering only; learning records remain complete. Active fruit targets stay visible.
+export function createEncounterTree(words,priorityIds=new Set()){
+    const priority=w=>priorityIds.has(w.id)?2:(w.mark||w.count>0?1:0);
+    const ordered=[...words].sort((a,b)=>priority(b)-priority(a)||Math.max(b.markAt||0,b.lastAt||0)-Math.max(a.markAt||0,a.lastAt||0)||a.ordinal-b.ordinal||a.id.localeCompare(b.id)).slice(0,TREE_WORD_LIMIT).sort((a,b)=>a.ordinal-b.ordinal),branches=[],nodes=[];
     for(let b=0;b<18;b++){const angle=b*2.39996,radius=95+(b%3)*28;branches.push({start:{x:Math.sin(b)*9,y:-80+b*5,z:Math.cos(b)*9},end:{x:Math.cos(angle)*radius,y:80+(b%6)*24,z:Math.sin(angle)*radius},width:9-b*.25});}
-    for(const word of ordered){const branch=hashSeed(word.source)%18,tip=branches[branch].end,rng=createRng(hashSeed(`${word.source}/${word.ordinal}`)),angle=rng.float()*Math.PI*2,u=rng.float()*2-1,r=Math.cbrt(rng.float());
+    for(const word of ordered){const branch=hashSeed(word.id)%18,tip=branches[branch].end,rng=createRng(hashSeed(word.id)),angle=rng.float()*Math.PI*2,u=rng.float()*2-1,r=Math.cbrt(rng.float());
         nodes.push({id:word.id,index:word.ordinal,branch,word,entry:{id:word.id,text:word.id,meaning:''},x:tip.x+Math.cos(angle)*Math.sqrt(1-u*u)*r*62,y:tip.y+u*r*49,z:tip.z+Math.sin(angle)*Math.sqrt(1-u*u)*r*62});}
     return {branches,nodes};
 }

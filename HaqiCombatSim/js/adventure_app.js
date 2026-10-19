@@ -1,5 +1,6 @@
+import {claimTreeMasteryRewards} from './language_tree_rewards_core.js';
 import {configureLearningReport} from './learning_report.js';
-import {configureLanguageTreeCapture,setLanguageTreeVocabulary} from './language_tree_capture.js';
+import {configureLanguageTreeCapture} from './language_tree_capture.js';
 import {openWordCardForCast} from './word_card_cast.js';
 import {resolveParams} from './combat_params_core.js';
 import {createWordCardPractice} from './word_card_practice.js';
@@ -120,7 +121,7 @@ import { createSceneFishing } from './view_adventure_scene_fishing.js';
 import { fishingSpot } from './adventure_fishing_spot_core.js';
 import { createRoleStore } from './adventure_roles.js';
 import { createHeroDraft } from './hero_body_core.js';
-import { roleLimit, roleLimitReachedMessage, directSignInRequested, startupRoleId } from './adventure_roles_core.js';
+import { roleLimit, roleLimitReachedMessage, directSignInRequested, familyPadSignInRequested, startupRoleId } from './adventure_roles_core.js';
 import { renderRoles } from './view_adventure_roles.js';
 import { createCreationPreview, tutorialCards } from './adventure_creation_preview.js';
 import { localeIdsToLoad, isLocaleId } from './locale_core.js';
@@ -883,6 +884,9 @@ function activateRole(id) {
     if(!row)throw Error('角色不存在');
     let restored;
     try{restored=checkedRoleProgress(row.save,assets.content,assets.dataset);}catch(error){console.warn('角色恢复失败',error);throw Error(roleRecoveryMessage);}
+    // Start each role session on foot with bilingual learning; scene transitions keep manual choices.
+    restored.save.mountHidden=true;
+    restored.save.languageLearning.enabled=true;
     autoSave.reset();roleStore.select(id);roleStorage=roleStore.scoped();
     if(roleStore.owner)void import('./home_app.js').then(m=>m.primeHomeDirectory(cloudClient,id));
     selected=null;discarded=[];shopView.page=0;petView.selected=null;
@@ -1731,7 +1735,6 @@ const wordRecordings=new Map();let wordAudio=null,wordAudioUrl=null;
 const dictionaryCardKey=()=>JSON.stringify([roleStore?.owner||'guest',roleStore?.catalog.activeId]);
 configureLearningReport(()=>roleStore?.catalog.activeId?dictionaryCardKey():null);
 configureLanguageTreeCapture(()=>roleStore?.catalog.activeId?{key:dictionaryCardKey(),privateNames:[save?.name,save?.pet?.name],onWarning:toast}:null);
-void fetch(new URL('../data/adventure/dictionary/en.json',import.meta.url)).then(r=>r.ok?r.json():null).then(data=>{if(data)setLanguageTreeVocabulary(data.entries);}).catch(()=>{});
 async function loadWordCards(){
     if(wordCardRows)return wordCardRows;
     if(!wordCardLoading)wordCardLoading=fetch(new URL('../data/adventure/dictionary/word-cards.json',import.meta.url)).then(r=>{if(!r.ok)throw Error('文字卡暂时无法加载');return r.json();}).then(data=>wordCardRows=validateWordCards(data.cards,assets.dataset.cards)).finally(()=>{wordCardLoading=null;});
@@ -1788,12 +1791,12 @@ async function openDictionary(language=null,entryId=null,returnTarget=document.a
         const module=await import('./adventure_dictionary.js');
         if(ticket!==dictionaryTicket||role!==roleStore.catalog.activeId||owner!==roleStore.owner)return;
         if(!document.getElementById('dictionary-style')){const link=document.createElement('link');link.id='dictionary-style';link.rel='stylesheet';link.href=new URL('../css/dictionary.css',import.meta.url).href;document.head.append(link);}
-        dictionary=module.createDictionary({root:nodes.overlay,onLanguageTree:async (host,options)=>{const {mountDictionaryWordTree}=await import('./word_tree_dictionary.js');const key=dictionaryCardKey();return mountDictionaryWordTree({root:host,key,...options,owner:roleStore.owner,role:roleStore.catalog.activeId,getKey:()=>panel==='dictionary'&&stage==='world'?dictionaryCardKey():null,online:()=>!!roleStore.owner,request:(messages,signal)=>dialogueVoice.judge(messages,signal,{maxTokens:2200})});},loadBattleCards:loadWordCards,getState:()=>({save,assets,content:assets.content,stage,owner:roleStore.owner,role:roleStore.catalog.activeId}),onClose:returnToScene,onPractice:state=>applyWordLearning(state),onRewards:()=>openPanel('learning-mode'),onBuff:(buff,reward)=>{
+        dictionary=module.createDictionary({root:nodes.overlay,onLanguageTree:async (host,options)=>{const {mountDictionaryWordTree}=await import('./word_tree_dictionary.js');const key=dictionaryCardKey();return mountDictionaryWordTree({root:host,key,...options,onConfirmed:(language,words)=>{if(dictionaryCardKey()!==key||panel!=='dictionary'||stage!=='world')return;const next=structuredClone(save),amount=claimTreeMasteryRewards(next,language,words);if(!amount)return;saveLocal(next,roleStorage);Object.assign(save,next);queueCloudSave();paintHud();toast(`已验证学会，兑换 ${amount} 奇豆`);},owner:roleStore.owner,role:roleStore.catalog.activeId,getKey:()=>panel==='dictionary'&&stage==='world'?dictionaryCardKey():null,online:()=>!!roleStore.owner,request:(messages,signal)=>dialogueVoice.judge(messages,signal,{maxTokens:2200})});},loadBattleCards:loadWordCards,getState:()=>({save,assets,content:assets.content,stage,owner:roleStore.owner,role:roleStore.catalog.activeId}),onClose:returnToScene,onPractice:state=>applyWordLearning(state),onRewards:()=>openPanel('learning-mode'),onBuff:(buff,reward)=>{
             if(role!==roleStore.catalog.activeId||owner!==roleStore.owner)return;
             save.dailyLanguageBuff=structuredClone(buff);persist();paintHud();
             if(reward)globalReward.show({title:'学习加成已生效',lines:[['{name} +1%',{name:DAILY_BUFF_NAMES[reward.key]}],['今日累计 {total} 层',{total:reward.total}]]});
         }});
-        await dictionary.open(language||(save.languageLearning?.target==='en'?'en':'zh'),entryId);
+        await dictionary.open(language||({en:'en',ja:'ja',ko:'ko'}[save.languageLearning?.target]||'zh'),entryId);
     }catch(error){if(ticket===dictionaryTicket)nodes.overlay.replaceChildren(V.el('section','loading-card',V.el('p','',error.message),V.button('重试',()=>openDictionary(language,entryId,returnTarget)),V.button('返回',returnToScene)));}
 }
 document.addEventListener('visibilitychange',()=>{if(document.hidden)dictionary?.suspend();});
@@ -1829,18 +1832,19 @@ async function boot(){
         renderer=createRenderer(nodes.world,assets);requestAnimationFrame(frame);
         // Keep the loading screen until session restoration chooses the final screen.
         // Rendering the guest title first briefly exposes creation/role selection.
-        const direct=directSignInRequested(location.search);
+        const familyPad=familyPadSignInRequested(location.search);
+        const direct=familyPad||directSignInRequested(location.search);
         const query=new URLSearchParams(location.search);
         if(query.has('prologue')){
             setText($('load-status'),'正在准备序章…');
             await runPrologue({fromUrl:true,scene:query.get('scene'),lang:query.get('lang'),second:query.get('second')});
         }
-        if(localStorage.getItem(LAST_ACCOUNT_KEY)){
+        if(familyPad||localStorage.getItem(LAST_ACCOUNT_KEY)){
             setText($('load-status'),'正在恢复账号与角色…');
             await connectRoles(false,{enter:direct});
         }
         if(stage==='loading'){
-            const resume=!localStorage.getItem(LAST_ACCOUNT_KEY)&&startupRoleId(roleStore.catalog,{direct,blocked:!!roles.conflict||!!roles.error||roleStore.recovering});
+            const resume=!familyPad&&!localStorage.getItem(LAST_ACCOUNT_KEY)&&startupRoleId(roleStore.catalog,{direct,blocked:!!roles.conflict||!!roles.error||roleStore.recovering});
             if(resume){try{await localPlay.guardSolo();await activateRole(resume);}catch(error){roles.error=error.message;await showTitle();}}
             else await showTitle();
         }

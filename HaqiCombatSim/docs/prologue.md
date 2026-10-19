@@ -27,6 +27,8 @@
 
 ## 2. 模块职责与分层
 
+序章标题、对白和文字卡展示默认等待手动继续：点击画面任意非控件位置或按空格；对白打字未结束时先显示完整句子。对白右侧为「自动播放」开关，默认关闭，点击开启后恢复定时推进，再次点击关闭。选卡、接住微光及汉字动画保持各自交互流程。
+
 - `data/prologue/script.json`：唯一剧本数据源，包含中英双语角色名、8 个场景与全部镜头（`art`、`fx`、`title`、`line`、`battle-scripted`、`catch-spark`、`hanzi`、`card-forge`、`battle-live`、`end`）。所有对白均绑定具名角色并展示对应 NPC 头像。
 - `data/prologue/art.json`：12 张 WebP 美术清单（11 张 `1376×768` 16:9 关键帧插画 + 1 张 `256×256` 透明背景带翅膀 `dark-lord-boss` 独立立绘，记录本地路径、CDN 地址、尺寸、字节数、`sha256` 与原图来源哈希）。
 - `js/prologue_script_core.js`：纯函数校验（`validateScript`）、语言配对（`languagePair`、`bilingual`）、URL 解析（`prologueRequested`）、自动推进时长（`readSeconds`、`beatAutoSeconds`）与无 DOM 场景游标（`createRunner`）。

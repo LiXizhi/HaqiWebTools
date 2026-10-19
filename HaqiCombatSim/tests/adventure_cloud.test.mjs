@@ -3,6 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { createCloudClient,loadKeepwork,SDK_URL } from '../js/adventure_cloud.js';
+import {createHomeCloud} from '../js/home_cloud.js';
 import { makeCloudSnapshot,parseCloudSnapshot,snapshotPath,checkpointPaths } from '../js/adventure_cloud_core.js';
 import { SAVE_KEY,BACKUP_KEY,saveLocal,replaceLocalWithBackup } from '../js/adventure_assets.js';
 import * as A from '../js/adventure_core.js';
@@ -26,6 +27,20 @@ function mockSDK(options={}) {
     return {sdk,store,remote,cache};
 }
 function client(mock,extra={}) {return createCloudClient({content,dataset,loadSDK:async()=>mock.sdk,now:()=>date,uuid:()=>id,...extra});}
+test('missing home directory is cached as empty and failed refresh preserves it',async()=>{
+    const mock=mockSDK(),calls=[];
+    let status=404;
+    mock.sdk.getRepoPath=encodeURIComponent;mock.sdk.safeEncodeURIComponent=encodeURIComponent;
+    mock.sdk.loadPageCache=async(...args)=>{calls.push(args);throw Object.assign(Error(`HTTP ${status}`),{status});};
+    const c=client(mock);await c.connect();
+    const home=createHomeCloud({store:{},io:{read:c.homeRead},roleId:'role',catalog:[]});
+    const directory=await home.list();assert.deepEqual(directory,{version:1,entries:{}});
+    assert.strictEqual(await home.list(),directory);assert.equal(calls.length,1);
+    assert.deepEqual(calls[0],[encodeURIComponent('fixture-user/edunotes'),encodeURIComponent(mock.store.getRemotePagePath('homes/role/index.json'))]);
+    status=503;await assert.rejects(home.list(true),/云端操作未完成/);
+    assert.strictEqual(await home.list(),directory);assert.equal(calls.length,2);assert.equal(mock.remote.size,0);
+});
+
 test('cloud snapshots exclude local runtime and defer unfinished battles',async()=>{
     const save=A.createAdventure(content),mock=mockSDK(),c=client(mock);await c.connect();
     A.beginEncounter(save,content,'ice-scout');

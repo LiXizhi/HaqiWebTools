@@ -10,6 +10,7 @@ import {dailyBuffs,localBuffDay} from './language_daily_buff_core.js';
 import {createDictionaryStore} from './dictionary_store.js';
 import {createLearningVoice} from './language_adventure_voice.js';
 import {createDictionaryView} from './view_dictionary.js';
+import {loadWordLexicon} from './word_lexicon.js';
 
 const store=createDictionaryStore(),loads=new Map();
 const localAnimations={
@@ -66,6 +67,7 @@ export function createDictionary({root,getState,onClose,onBuff,onRewards,onLegac
     }
     function rewards(){const buff=getState().save,counts=dailyBuffs(buff,now()),events=buff.dailyLanguageBuff?.day===localBuffDay(now())?buff.dailyLanguageBuff.events:[];const zh=events.filter(x=>x.startsWith('dictionary:zh:')).length,en=events.filter(x=>x.startsWith('dictionary:en:')).length;return `今日加成 ${Object.values(counts).reduce((a,b)=>a+b,0)} 层 · 口语 ${events.length-zh-en} · 中文 ${zh} · 英文 ${en}\n答对获得 1% 加成，与口语共享每日上限。`;}
     async function home(lang='zh'){
+        if(['ja','ko'].includes(lang)){cancel();const ticket=generation,index=await loadWordLexicon(lang);if(!valid()||ticket!==generation)return;language=lang;data={language:lang,title:index.data.title,entries:[]};view.vocabulary({data});return;}
         cancel();const ticket=generation;taskKind=null;const loaded=await load(lang);if(!valid()||ticket!==generation)return;language=lang;data=loaded;
         const r=await update((s,{data})=>{dailyDictionaryPlan(s,data,now());mergeDictionaryBuff(s,getState().save,getState().content,now());});if(!r||ticket!==generation)return;
         if(r.persisted&&state.buff?.day===localBuffDay(now()))onBuff(state.buff,null);
@@ -270,5 +272,11 @@ export function createDictionary({root,getState,onClose,onBuff,onRewards,onLegac
             if(interrupted)view.message('离开页面时已停止语音。可以继续输入，或重新开始朗读、录音。');
         }
         void run(()=>voice.cancel());view.suspend();
-    },tick(){if(active&&!valid())onClose();else if(active&&!changingDay&&state?.languages[language]?.plan.day<localBuffDay(now())){changingDay=true;void run(()=>home(language)).finally(()=>{changingDay=false;});}},get active(){return active;}};
+    },tick(){
+        // Legacy import creates a language row with plan:null; home() prepares it asynchronously.
+        if(active&&!valid())onClose();
+        else if(active&&!changingDay&&state?.languages[language]?.plan?.day<localBuffDay(now())){
+            changingDay=true;void run(()=>home(language)).finally(()=>{changingDay=false;});
+        }
+    },get active(){return active;}};
 }

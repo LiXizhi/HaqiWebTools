@@ -12,7 +12,9 @@ flowchart LR
   Session --> Local[角色隔离 IndexedDB]
   Tree -->|不认识| Card[原有学习卡]
   Session -->|首次彻底掌握| Sync[掌握词清单同步器]
-  Sync --> Cloud[Keepwork / 仅 en 与 zh 清单]
+  Sync --> Cloud[Keepwork / 只增不减 en 与 zh 清单]
+  Sync -->|新增词写入成功应答| Reward[每词50奇豆 / 领取去重]
+  Reward --> Records[角色 records 领取记录与 battle 货币分片]
 ```
 
 ## 2026-10-18：摄影机投影与统一受击反馈修正
@@ -1310,3 +1312,55 @@ flowchart LR
 ```
 
 冒险手柄轮询在家园面板期间暂停，家园自行接管输入并在关闭时释放监听。双方冒险角色存档仅供读取外观，家园位置不回写冒险坐标或第二角色收藏。
+
+## 2026-10-19：按需四语词库与对话学习
+
+```mermaid
+flowchart LR
+    Selection[所选词树语言 / 对话目标语言与母语] --> Loader[word_lexicon 按语言 Promise 内存缓存]
+    Loader --> Files[word_zh / en / ja / ko.txt 各2000条]
+    Loader --> Index[word_lexicon_core 原形Map / 前缀树 / 词义倒排索引]
+    Index --> Tree[四语 WordTree / 朗读 / 题目词汇校验]
+    Index --> Capture[实际正文呈现800ms后采集]
+    Index --> Dialogue[本地双语匹配 / 保留原文位置]
+    Dialogue --> Mark[共享三档标记弹窗]
+    Tree --> Local[按账号与角色隔离 IndexedDB / 原形节点]
+    Mark --> Local
+    Capture --> Local
+    Local --> Dialogue
+    Dialogue -->|用户点击模型补齐| Model[现有模型适配器 / 排除已掌握和已对应词]
+    Model --> Check[原文校验 / 不覆盖本地对应 / 掌握过滤]
+    Check --> Dialogue
+    Local -->|仅原有中英验证掌握清单| Cloud[既有 Keepwork 同步]
+```
+
+词库加载与缓存只在浏览器 IO 层；解析、索引、归一化、迁移与对应均是纯核心。初次建索引后不扫描整词表做匹配。日语和韩语自评／验证记录只存本机，未扩展云端清单协议。既有汉字与英语完整课程保留，四语词库不生成虚假课程或遇见次数。格式、来源及测试见 [世界树](word-tree.md#2026-10-19四语词库与对话标记)。
+
+### 家园召唤门槛（2026-10-19）
+
+```mermaid
+flowchart LR
+  Catalog[catalog.json 每件物品三句中英咒语] --> View[view_home 选择 / 拖出预选位置 / 试听]
+  View --> Input[用户输入 / Keepwork语音识别文字]
+  Input --> Match[home_core.matchHomeSpell 完整句子匹配]
+  Match -->|未匹配| Retry[显示提示 / 不创建]
+  Match -->|匹配| App[home_app 核验当前家园与本次落点]
+  App --> Actions[home_actions_core 召唤回执与占地校验]
+  Actions --> Store[home_store 原子提交物品与库存]
+```
+
+目录拖放不直接创建；试听不填写答案。句库为运行时JSON作者源，有颜色时使用相同句式生成。原有分块本机保存及手动云同步不变；旧物移动不经过学习奖励入口。
+
+### 核心事件保存与本机快照（2026-10-20）
+
+```mermaid
+flowchart LR
+    Events[单人或双人核心事件] --> Commit[角色存储：比较核心状态]
+    Commit -->|有变化| Durable[角色目录及变化的宠物文件 / 标记云端dirty]
+    Commit -->|无变化| Runtime[仅运行状态投影]
+    Timer[每30秒本机快照] --> Runtime
+    Runtime --> IDB[IndexedDB / 不替换现场角色]
+    Durable --> Cloud[既有云同步队列]
+```
+
+移动和护理不再按停步/3秒/10秒提交整份存档。自动喂食消耗与成长、签到跨日显式报告核心变化；核心未变化不重复打包收藏。运行快照使用持久化版本作为恢复锚点，并另存liveRevision保持本机战斗与随机序列恢复。详情见[用户存储](user-storage.md#2026-10-20单人和双人按核心变化保存)。

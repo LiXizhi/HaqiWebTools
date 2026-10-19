@@ -3899,3 +3899,41 @@ Node专项 `tests/battle_home_residents.test.mjs` 4/4通过：首次前6个、�
 ## 2026-10-20：家园双人模式
 
 双人专项5/5通过；最终 `npm run test:battle` 1249项中1246通过、3失败。失败仍为地块加载提示断言、汉字独立页标记及笔画解析，详情见当日开发日志与 `.cache/home-duo-battle-final.log`。语法和diff检查通过。没有执行浏览器、实体手柄或发布验收，未提交/推送/发布。
+
+## 2026-10-19 词典每日计划空值修复
+
+新增用例在修复前复现 `tick()` 的 `null.day` 异常；增加每日计划空值保护后，控制器 105/105 通过，覆盖首次加载、双向语言切换、跨日刷新去重与角色失效。家园云目录 404/503 模拟验证通过，未访问真实账号。联合专项 148 项中 147 通过，SDK 加载原测试仍因要求 `haqi-storage` 参数而失败（当前 URL 使用 `v`）。战斗快速回归 1235 项中 1231 通过、4 失败：政区图 WebP 哈希、地面加载提示、汉字独立页标记及笔顺解析，均涉及未修改实现。日志见 `tmp/dictionary-null-*.log`，详情见当日开发日志。未做浏览器复测；Live Preview 注入脚本的 `null.stack` 尚未验证消失。未构建或发布。
+
+## 家园物品连续坐标（2026-10-19）
+
+- 家具拖动与目录拖放取消网格取整，保持抓取偏移和连续小数坐标；落点冲突不再自动移到邻格。
+- 放置与分块存档校验支持有限小数，保留 ±10亿范围、碰撞和桌面槽位限制，兼容旧整数坐标。同步更新 docs/home.md。
+- 验证：家园编辑专项 13/13 通过（包含新增指针坐标用例）；npm run test:battle 当轮 1238 项，1234 通过、4 失败。失败项如下，未宣称全量通过；本次未运行浏览器、构建或真实云端读写。
+  - not ok 470 - political atlas preserves original geographic bounds and records a verified WebP source
+  - not ok 559 - surface loading overlay shows actual tile progress and disappears when ready
+  - not ok 710 - all 30 island words resolve to their own standalone character, including dance rather than martial wu
+  - not ok 712 - new standalone pages preserve dictionary stroke geometry and parse without network imports
+- 修改保留本地，未提交、推送或发布。
+
+## 2026-10-19：单词树即时果实与每词50奇豆
+
+Node词树专项31/31通过，含单个新标记即时生成、服务器写失败不发奖、服务器已有词不再发奖、领取失败重试和分片存储。扩展云测试44项43通过，SDK地址haqi-storage断言失败。战斗快速回归1239项1235通过、4失败：battle_earth地图库哈希、battle_earth_labels加载提示、battle_hanzi_story_catalog协议和笔顺提取；不宣称全通过。真实模型、真实账号云写入与浏览器未验收；未发布。
+
+
+### 2026-10-19 四语词库与对话本地匹配
+
+- 四语 `word_*.txt` 各2,000条；按当前目标语言／母语动态加载，解析和索引缓存内存。Node验证了并发去重、失败重试、中文长词优先、英语及日韩词形、韩语词块边界、旧数据迁移和保留源许可证的单文件打包。
+- 词库、词树、字典、对话、同步与locale专项178项，177通过、1失败。失败：`dialogue_ui.test.mjs` 的 `tracking dialogue closes after success and follows only the sole updated tracker entry`（claim opens next chapter）。测试抽取的控制器片段与HEAD一致，本轮未改变任务追踪逻辑。
+- `npm run test:battle`：1,242项，1,238通过、4失败，未跳过。失败分别为 `battle_earth.test.mjs` 的political atlas来源哈希，`battle_earth_labels.test.mjs` 的surface loading overlay，`battle_hanzi_story_catalog.test.mjs` 的30字动画协议及独立页面笔画提取。相关测试、renderer及水字HTML与HEAD一致（忽略换行差异）；不将这些失败标记为通过。
+- 新增 `battle_word_dialogue.test.mjs` 已进入快速回归：默认零模型请求、点击才补齐、掌握词即时消失、原文不变、无嵌套按钮、身份变化／关闭视图拦截迟到操作。
+- 词库源为固定修订的OMW表及项目校订；中文语法标记“+的／+地”转换为原形，避免丢失基础形容词。词形不是完整形态分析器，自动选集释义尚未逐条人工语言审校。
+- 未启动浏览器、真实模型或真实语音验收；未构建、提交、推送或发布。词库新增代码无运行时第三方依赖，源数据的下载／wordfreq排序只在作者准备工具中进行。
+
+## 家园语言咒语召唤（2026-10-19）
+
+- 160件目录物品按简单、进阶、挑战提供3句中英咒语；显示“你需要读出下面句子才能召唤XXX”，正确完成任意一句创建一件。修正复数和不可数英文词的冠词。
+- 目录点击打开练习，拖出只预选精确落点；关闭直接创建、空输入自动示范、点击示范自动填入答案三条捷径。试听与练习分开，输入和ASR文字复用完整句子匹配，拒绝拼写错误、缺词和错误目标。
+- 创建到当前场景；无指定位置时寻找附近已加载合法空地，固定落点失败提示重选。保留原有物品自由拖动、库存摆放、回执去重和原子保存；切换/取消使迟到录音失效。
+- 家园Node专项45/45通过；新增 scripts/check_home_spells.mjs 在Edge无头1280px与390px均通过，覆盖点击、空/错输入、试听不自动填入、正确输入、模拟语音、拖出不创建、正确练习后精确落点及取消。已查看390px截图并修复原76px高度截断，三句均可见。验收使用独立QA库。
+- 最终 npm run test:battle：1244项，1240通过、4失败，和本任务前一轮失败项相同：political atlas preserves original geographic bounds and records a verified WebP source；surface loading overlay shows actual tile progress and disappears when ready；all 30 island words resolve to their own standalone character, including dance rather than martial wu；new standalone pages preserve dictionary stroke geometry and parse without network imports。未跳过或宣称全部通过。
+- node --check 与本次文件 git diff --check 通过。未验证真实麦克风/实体手机、真实云读写，未构建、提交、推送或发布。

@@ -9,6 +9,7 @@ export function localePackageFiles(directory) {
         .sort()
         .map(name => ({
             fileName: `data/adventure/locale/${name}`,
-            source: stripLocaleComments(readFileSync(path.join(directory, name), 'utf8')),
+            // WordNet licenses must accompany adapted vocabulary, including release assets.
+            source: name.startsWith('word_')?readFileSync(path.join(directory,name),'utf8'):stripLocaleComments(readFileSync(path.join(directory, name), 'utf8')),
         }));
 }

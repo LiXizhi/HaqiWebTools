@@ -14,6 +14,8 @@ npm run preview
 
 `data/datasets.json`只含三个模拟数据集的manifest索引；`adventure.json`、`kids.json`、`teen.json`、`sample.json`按用途容纳其余数据，格式为 `{schemaVersion:1,files:{原路径:数据}}`。统一浏览器加载器 `js/runtime_data.js` 在Vite生产构建中按需请求数据包，并合并并发请求；每次返回独立数据副本，防止章节扩展和数据规范化污染缓存。下载失败可重试；源码静态服务及Vite dev继续读取原始分文件JSON。新增数据读取应使用该加载器，避免发布时请求已不存在的小JSON。
 
+序章的 `data/prologue/script.json` 和 `art.json` 独立输出，生产加载器按明确白名单直读；序章使用的 `data/adventure/dictionary/word-cards.json` 则从 `data/adventure.json` 包内读取。两类路径都需经过打包与读取联合测试，不能只验证开发模式。
+
 ## 上传
 
 ### SDK 构建版本

@@ -628,3 +628,11 @@
 :is(.haqi-app,.storybook-ui) .item-inspect-button:hover { background:#fff6d9; border-color:#c3a263; }
 :is(.haqi-app,.storybook-ui) .item-inspect-button:focus-visible { outline:2px solid #86602c; outline-offset:1px; }
 .item-details-art { width:96px; height:96px; flex:none; }
+
+/* Shared dictionary/NPC word marking, outside the tree shadow root. */
+.dialogue-word-popup{color:var(--ink,#35291f);background:var(--paper,#fff6df);border:1px solid var(--gold,#a78a4c);border-radius:16px;padding:20px;width:min(380px,92vw);max-height:85vh;overflow:auto}
+.dialogue-word-popup::backdrop{background:#17251f77}
+.dialogue-word-popup .tree-rating-choices{display:grid;gap:10px;margin-top:12px}
+.dialogue-word-popup button{min-height:44px}
+.dialogue-learning-word{display:inline!important;font:inherit!important;line-height:inherit!important;padding:1px 2px!important;min-width:0!important;min-height:0!important;border:0;border-bottom:1px dashed currentColor;border-radius:3px;background:transparent;color:inherit;cursor:pointer}
+.dialogue-learning-word:focus-visible{outline:2px solid var(--gold,#a78a4c)}

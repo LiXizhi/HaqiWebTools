@@ -114,15 +114,28 @@ const normalize=s=>String(s).normalize('NFKC').toLowerCase().replace(/[.,!?。�
 function oneEdit(a,b){if(Math.abs(a.length-b.length)>1)return false;let i=0,j=0,edits=0;while(i<a.length&&j<b.length){if(a[i]===b[j]){i++;j++;continue;}if(++edits>1)return false;if(a.length>=b.length)i++;if(b.length>=a.length)j++;}return edits+(a.length-i)+(b.length-j)<=1;}
 export function summonSentences(item,lang='en',color=''){
  const noun=lang==='en'?[color,item.en].filter(Boolean).join(' '):`${COLORS[color]||''}${item.zh}`;
- const article=/^[aeiou]/.test(noun)?'an':'a';
- return lang==='en'?[`I want ${article} ${noun}.`,`Create ${article} ${noun}.`,`Can I have ${article} ${noun}?`]:[`我想要一个${noun}。`,`创造一个${noun}。`,`可以给我一个${noun}吗？`];
+ const article=item.article==='some'?'some':/^[aeiou]/.test(noun)?'an':'a';
+ const sentences=lang==='en'?[`Create ${article} ${noun}.`,`I want ${article} ${noun}.`,`Can I have ${article} ${noun}?`]:[`创造一个${noun}。`,`我想要一个${noun}。`,`可以给我一个${noun}吗？`];
+ return !color&&item.sentences?.[lang]?.length?item.sentences[lang].slice(0,3):sentences;
+}
+// ASR and typed answers use the same complete-sentence check, without fuzzy spelling.
+export function matchHomeSpell(text,catalog,lang='en',selection=null){
+ const answer=normalize(text||'');
+ if(!answer)return {candidates:[],error:'请先读出或正确输入一句召唤咒语。'};
+ const candidates=[];
+ for(const item of catalog){
+  if(selection?.itemId&&selection.itemId!==item.id)continue;
+  const colors=selection?.itemId?[selection.color||'']:['',...Object.keys(COLORS)];
+  for(const color of colors)if(summonSentences(item,lang,color).some(s=>normalize(s)===answer))candidates.push({itemId:item.id,color});
+ }
+ return {candidates,error:candidates.length?'':'句子还不正确，请读出或输入下面任意一句完整的咒语。'};
 }
 export function parseSummon(text,catalog,lang='en'){
  let value=normalize(text),noun;
  if(lang==='en')noun=value.match(/^(?:i (?:want|would like|need)|(?:please )?(?:create|make|summon)|can i have|give me)(?: please)? (.+?)(?: please)?$/)?.[1];
  else noun=value.match(/^(?:我(?:想要|需要|要)|请?创造|请?生成|请?给我|可以给我)(.+?)(?:吗)?$/)?.[1];
  if(!noun)return {error:'请说出完整句子，或点击物品查看示范。',candidates:[]};
- noun=noun.replace(lang==='en'?/^(?:a|an|the|one) /:/^(?:一[个张把朵盏本块棵只套]|[个张把朵盏本块棵只套])/,'');
+ noun=noun.replace(lang==='en'?/^(?:a|an|the|one|some) /:/^(?:一[个张把朵盏本块棵只套]|[个张把朵盏本块棵只套])/,'');
  let color='';for(const [en,zh]of Object.entries(COLORS)){const prefix=lang==='en'?`${en} `:zh;if(noun.startsWith(prefix)){color=en;noun=noun.slice(prefix.length);break;}if(lang!=='en'&&noun.startsWith(zh[0])&&!catalog.some(i=>i.zh===noun)){color=en;noun=noun.slice(1);break;}}
  const names=item=>[item[lang==='en'?'en':'zh'],...(item.aliases?.[lang]||[])].map(normalize);
  let candidates=catalog.filter(item=>names(item).some(name=>name===noun||(lang==='en'&&`${name}s`===noun)));
@@ -136,7 +149,7 @@ export const overlaps=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
 export function canPlace(obj,objects,catalog){
  if(obj.interactionEnabled!==undefined&&typeof obj.interactionEnabled!=='boolean')return {ok:false,reason:'互动设置无效'};
  if(!validHomeSize(obj.sizeScale))return {ok:false,reason:'物品大小须在50%至200%之间'};
- if(!Number.isSafeInteger(obj.x)||!Number.isSafeInteger(obj.y)||Math.abs(obj.x)>1e9||Math.abs(obj.y)>1e9)return {ok:false,reason:'位置超出支持范围'};
+ if(!Number.isFinite(obj.x)||!Number.isFinite(obj.y)||Math.abs(obj.x)>1e9||Math.abs(obj.y)>1e9)return {ok:false,reason:'位置超出支持范围'};
  const box=footprint(obj,catalog),others=objects.filter(o=>o.id!==obj.id);
  if(box.item.layer==='top'){
   if(obj.parentId){
@@ -168,7 +181,7 @@ export function homeResidentPets(records,residents){return Object.values(records
 export function petWish(petId,round,catalog,lang='en'){const rng=createRng(hashSeed(`${petId}:${round}`)),item=rng.pick(catalog.filter(i=>i.activity));return {itemId:item.id,text:lang==='en'?`I want ${/^[aeiou]/.test(item.en)?'an':'a'} ${item.en}.`:`我想要一个${item.zh}。`,translation:lang==='en'?`我想要一个${item.zh}。`:`I want ${/^[aeiou]/.test(item.en)?'an':'a'} ${item.en}.`};}
 export function validateHomePart(kind,value,catalog){
  if(!value||typeof value!=='object'||Array.isArray(value))throw Error('家园文件无效');
- if(kind==='chunk')for(const obj of Object.values(value)){if(!obj||(obj.interactionEnabled!==undefined&&typeof obj.interactionEnabled!=='boolean')||!validHomeSize(obj.sizeScale)||typeof obj.id!=='string'||!catalog.some(i=>i.id===obj.itemId)||!Number.isSafeInteger(obj.x)||!Number.isSafeInteger(obj.y)||Math.abs(obj.x)>1e9||Math.abs(obj.y)>1e9)throw Error('家园物品无效');}
+ if(kind==='chunk')for(const obj of Object.values(value)){if(!obj||(obj.interactionEnabled!==undefined&&typeof obj.interactionEnabled!=='boolean')||!validHomeSize(obj.sizeScale)||typeof obj.id!=='string'||!catalog.some(i=>i.id===obj.itemId)||!Number.isFinite(obj.x)||!Number.isFinite(obj.y)||Math.abs(obj.x)>1e9||Math.abs(obj.y)>1e9)throw Error('家园物品无效');}
  if(kind==='inventory')for(const [key,n]of Object.entries(value)){if(!catalog.some(i=>key.startsWith(`${i.id}:`))||!Number.isSafeInteger(n)||n<0)throw Error('家园库存无效');}
  if(kind==='residents')for(const [id,p] of Object.entries(value)){if(id==='$selection'){if(p?.version!==1)throw Error('宠物名单版本无效');continue;}if(!p||!Number.isFinite(p.x)||!Number.isFinite(p.y)||Math.abs(p.x)>1e9||Math.abs(p.y)>1e9)throw Error('宠物位置无效');}
  return value;

@@ -169,6 +169,11 @@ test('five compact packs load all datasets, retain projected content and preserv
             assert.deepEqual(await loadDataset(`data/${version}`, reader), baseline);
         }
         assert.equal(calls.length, 5);
+        for (const name of ['script', 'art']) {
+            assert.deepEqual(await reader(`data/prologue/${name}.json`), JSON.parse(fs.readFileSync(new URL(`prologue/${name}.json`, source))));
+        }
+        assert.deepEqual(await reader('data/adventure/dictionary/word-cards.json'), read('dictionary/word-cards'));
+        assert.deepEqual(calls.slice(5), ['data/prologue/script.json', 'data/prologue/art.json']);
         const cards = await reader('data/kids/cards.json');
         cards.changed = true;
         assert.equal((await reader('data/kids/cards.json')).changed, undefined);

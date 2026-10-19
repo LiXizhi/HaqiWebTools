@@ -40,7 +40,7 @@ export async function mountPrologue(host,ctx){
 
     const cinema=createCinema(stageNode,{manifest:artManifest,mode:assets.mode,reducedMotion});
     const dialog=createPrologueDialog(stageNode);
-    let epoch=0,disposed=false,narration=null,readAloud=false,tapResolvers=new Set(),skipResolvers=new Set();
+    let epoch=0,disposed=false,narration=null,readAloud=false,autoPlay=false,tapResolvers=new Set(),skipResolvers=new Set();
     const state={school:null,appearance:null,draft:null,battles:{}};
 
     // ----- waiting primitives (tap / auto / skip) -----
@@ -56,7 +56,8 @@ export async function mountPrologue(host,ctx){
             tapResolvers.add(finish);skipResolvers.add(finish);
             const timer=setInterval(()=>{
                 const now=performance.now(),dt=now-last;last=now;
-                if(!doc.hidden&&!(readAloud&&narration?.pending))shown+=dt;
+                if(!autoPlay)shown=0;
+                else if(!doc.hidden&&!(readAloud&&narration?.pending))shown+=dt;
                 if(seconds>0){progress?.(shown/1000/seconds);if(shown/1000>=seconds)finish();}
             },100);
         }).then(()=>guard(e));
@@ -112,7 +113,13 @@ export async function mountPrologue(host,ctx){
         reducedMotion,
         hideDialog:()=>dialog.hide(),
     });
-    dialog.onTap=tap;
+    function continueStory(){if(dialog.typing)dialog.stopTyping();else tap();}
+    dialog.onAutoPlay=()=>{autoPlay=!autoPlay;dialog.setAutoPlay(autoPlay);};
+    const onClick=event=>{
+        if(event.target?.closest?.('button,input,textarea,select,a,[role="button"],iframe'))return;
+        continueStory();
+    };
+    layer.addEventListener('click',onClick);
 
     // ----- chrome -----
     const bar=make('header','pl-chrome');
@@ -145,7 +152,10 @@ export async function mountPrologue(host,ctx){
     skipBtn.onclick=()=>skip('scene');
     const onKey=event=>{
         if(event.target?.closest?.('input,textarea,select'))return;
-        if(event.key===' '||event.key==='Enter'){if(event.target===doc.body||event.target===layer||stageNode.contains(event.target)&&!event.target.closest('button')){event.preventDefault();if(dialog.typing)dialog.stopTyping();else tap();}}
+        if(event.key===' '||event.key==='Enter'){
+            if(event.repeat||!tapResolvers.size)return;
+            if(event.key===' '||event.target===doc.body||event.target===layer||stageNode.contains(event.target)&&!event.target.closest('button')){event.preventDefault();continueStory();}
+        }
         else if(event.key==='ArrowRight'){event.preventDefault();skip('scene');}
     };
     doc.addEventListener('keydown',onKey);
@@ -206,6 +216,7 @@ export async function mountPrologue(host,ctx){
         if(disposed)return;disposed=true;epoch++;
         for(const fn of [...skipResolvers])fn();
         doc.removeEventListener('keydown',onKey);
+        layer.removeEventListener('click',onClick);
         narration?.stop();stage.dispose();dialog.dispose();cinema.dispose();layer.remove();
         exitPayload={finished,school:state.school,appearance:state.appearance,draft:state.draft,battles:state.battles,written:!!state.written};
         try{onExit(exitPayload);}finally{resolveExit(exitPayload);}

@@ -389,6 +389,42 @@ test('submissions while a correct answer is saving cannot replace its evidence o
 });
 
 
+test('dictionary tick waits safely for the first daily plan to load',async()=>{
+ let release,entered;const started=new Promise(r=>entered=r);
+ const h=harness({beforeUpdate:async()=>{entered();await new Promise(r=>release=r);}});
+ assert.doesNotThrow(()=>h.controller.tick());
+ const pending=h.controller.open('en');await started;
+ try{assert.doesNotThrow(()=>h.controller.tick());assert.equal(h.ui,undefined);}
+ finally{release();await pending;}
+ assert.equal(h.ui.row.plan.day,'2026-10-16');assert.doesNotThrow(()=>h.controller.tick());assert.equal(h.awards.length,0);
+});
+
+test('dictionary tick tolerates null or missing plans while switching languages',async()=>{
+ const zh=JSON.parse(fs.readFileSync(new URL('../data/adventure/dictionary/zh.json',import.meta.url)));
+ for(const [from,to] of [['en','zh'],['zh','en']]){
+  let delay=false,release,entered,updates=0;const started=new Promise(r=>entered=r);
+  const h=harness({dictionaries:{en:data,zh},beforeUpdate:async()=>{updates++;if(delay){entered();await new Promise(r=>release=r);}}});
+  await h.controller.open(from);assert.equal(h.row.languages[to]?.plan??null,null);
+  delay=true;const pending=h.cb.language(to);await started;
+  try{for(let i=0;i<3;i++)assert.doesNotThrow(()=>h.controller.tick());assert.equal(updates,2);}
+  finally{delay=false;release();await pending;}
+  assert.equal(h.ui.data.language,to);assert.equal(h.ui.row.plan.day,'2026-10-16');
+  assert.doesNotThrow(()=>h.controller.tick());assert.equal(h.awards.length,0);assert.deepEqual(h.messages,[]);
+ }
+});
+
+test('dictionary tick refreshes an expired daily plan once and still closes on role changes',async()=>{
+ let time=now,delay=false,release,entered,refreshed,loads=0;
+ const started=new Promise(r=>entered=r),shown=new Promise(r=>refreshed=r);
+ const h=harness({clock:()=>time,beforeLoad:async()=>{loads++;},beforeUpdate:async()=>{if(delay){entered();await new Promise(r=>release=r);}},viewExtras:{home:value=>{if(value.row.plan.day==='2026-10-17')refreshed(value);}}});
+ await h.controller.open('en');h.controller.tick();assert.equal(loads,1);
+ time+=86400000;delay=true;h.controller.tick();await started;
+ try{for(let i=0;i<3;i++)h.controller.tick();assert.equal(loads,2);}
+ finally{delay=false;release();}
+ const home=await shown;assert.equal(home.row.plan.day,'2026-10-17');assert.equal(h.awards.length,0);
+ h.state.role='other';h.controller.tick();assert.equal(h.controller.active,false);assert.doesNotThrow(()=>h.controller.tick());
+});
+
 test('a delayed entry write stays with the language where the page was opened',async()=>{
  let release,delay=false;const zh=JSON.parse(fs.readFileSync(new URL('../data/adventure/dictionary/zh.json',import.meta.url)));const h=harness({dictionaries:{en:data,zh},beforeUpdate:async()=>{if(delay){delay=false;await new Promise(r=>release=r);}}});
  await h.controller.open('en');delay=true;const pending=h.cb.entry('hello');await new Promise(r=>setTimeout(r,0));await h.cb.language('zh');release();await pending;

@@ -15,6 +15,20 @@ test('js scan keeps string literals and skips comments', () => {
     assert.equal(found.find(row => row.dynamic).text, '接取任务 · ${quest.title}');
 });
 
+test('js scan skips regex literals without swallowing source', () => {
+    // A regex containing quotes and backticks must not start a string or
+    // template literal; the code after it keeps being scanned.
+    const found = extractJsStrings(`
+        const inline=/(?<![\\\\*])\\*\\*([^*\\n]+)\\*\\*(?!\\*)|(?<![\\\\\`])\`([^\`\\n]+)\`(?!\`)/gu;
+        const after = '正则之后';
+        const half = total / 2;
+        const div = '除号之后';
+    `);
+    assert.deepEqual(found.map(row => row.text), ['正则之后', '除号之后']);
+    const keyword = extractJsStrings('return /[\\d]+/g.test("关键字之后");');
+    assert.deepEqual(keyword.map(row => row.text), ['关键字之后']);
+});
+
 test('json scan can limit fields', () => {
     const all = extractJsonStrings({ label: '交谈', name: '店主', note: '内部说明' });
     assert.deepEqual(all, ['交谈', '店主', '内部说明']);

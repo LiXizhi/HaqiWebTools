@@ -886,3 +886,1297 @@
     { id: 'oriole',   x: 942, y: 335, r: 52, label: '枝头黄鹂', lit: false, litTime: 0 },
     { id: 'squirrel', x: 675, y: 545, r: 52, label: '树根松鼠', lit: false, litTime: 0 }
   ];
+  // ============================================================================
+  // 5. 「木」字笔顺与甲骨文/小篆/楷书构件定义（严格对齐 zh.json 4 画笔顺）
+  // ============================================================================
+  const GLYPH_BOX = { x: 640, y: 170, w: 320, h: 320 };
+  const STROKES = [
+    {
+      name: '横',
+      role: '树冠横枝',
+      color: '#5ce08e',
+      pts: [[20, 38], [49, 36], [78, 35]]
+    },
+    {
+      name: '竖',
+      role: '笔直树干',
+      color: '#ffd166',
+      pts: [[49, 12], [49, 38], [49, 66], [49, 90]]
+    },
+    {
+      name: '撇',
+      role: '左伸树根',
+      color: '#8ce870',
+      pts: [[47, 38], [38, 52], [27, 66], [14, 78]]
+    },
+    {
+      name: '捺',
+      role: '右展树根',
+      color: '#5ec8a0',
+      pts: [[51, 39], [62, 55], [74, 68], [88, 75]]
+    }
+  ];
+
+  // 甲骨文/小篆象形线条（归一到 0..100 盒子：上为Y形枝条、中为主干、下为八字树根）
+  const ORACLE_PATHS = [
+    [[50, 14], [50, 88]],
+    [[24, 24], [36, 36], [50, 44], [64, 36], [76, 24]],
+    [[50, 56], [35, 70], [22, 84]],
+    [[50, 56], [65, 70], [78, 84]]
+  ];
+
+  function glyphPtToWorld(nx, ny, box = GLYPH_BOX) {
+    return [box.x + (nx / 100) * box.w, box.y + (ny / 100) * box.h];
+  }
+
+  // ============================================================================
+  // 6. 状态机与 9 幕剧情定义
+  // ============================================================================
+  const state = {
+    sceneIdx: 0,
+    sceneTime: 0,
+    globalTime: 0,
+    holding: false,
+    pointerW: { x: 800, y: 450 },
+    pointerDownW: { x: 800, y: 450 },
+    // 第1幕：按住春雨破土萌芽
+    sproutProgress: 0,
+    sproutDone: false,
+    // 第2幕：向上拖动拔高树干与树根
+    growLevel: 0,
+    draggingGrow: false,
+    growStartY: 0,
+    growStartVal: 0,
+    growDone: false,
+    // 第3幕：点亮三处大树生机
+    litCount: 0,
+    allSpotsDone: false,
+    // 第5幕：部件拆解高亮
+    activeRadical: 'all',
+    // 第6幕：逐笔描红
+    strokeIndex: 0,
+    strokeProgress: 0,
+    tracing: false,
+    tracePoints: [],
+    completedStrokes: [false, false, false, false],
+    writeCelebration: 0,
+    // 第7幕：词意卡片
+    wordsShown: false,
+    // 第8幕：自由余韵额外小树苗与生机脉冲
+    saplings: [],
+    pulseTime: -10
+  };
+
+  function resetSceneState(idx) {
+    state.sceneTime = 0;
+    state.holding = false;
+    state.draggingGrow = false;
+    state.tracing = false;
+    state.tracePoints = [];
+
+    if (idx <= 1) {
+      state.sproutProgress = 0;
+      state.sproutDone = false;
+      state.growLevel = 0;
+      state.growDone = false;
+      state.litCount = 0;
+      state.allSpotsDone = false;
+      LIFE_SPOTS.forEach(s => { s.lit = false; s.litTime = 0; });
+    }
+    if (idx === 2) {
+      state.sproutProgress = 1;
+      state.sproutDone = true;
+      state.growLevel = 0;
+      state.growDone = false;
+      state.litCount = 0;
+      state.allSpotsDone = false;
+      LIFE_SPOTS.forEach(s => { s.lit = false; s.litTime = 0; });
+    }
+    if (idx === 3) {
+      state.sproutProgress = 1;
+      state.sproutDone = true;
+      state.growLevel = 1;
+      state.growDone = true;
+      state.litCount = 0;
+      state.allSpotsDone = false;
+      LIFE_SPOTS.forEach(s => { s.lit = false; s.litTime = 0; });
+    }
+    if (idx >= 4) {
+      state.sproutProgress = 1;
+      state.sproutDone = true;
+      state.growLevel = 1;
+      state.growDone = true;
+      state.litCount = 3;
+      state.allSpotsDone = true;
+      LIFE_SPOTS.forEach(s => { s.lit = true; s.litTime = 1; });
+    }
+    if (idx === 5) {
+      state.activeRadical = 'all';
+      document.querySelectorAll('.rad-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.rad === 'all');
+      });
+    }
+    if (idx === 6) {
+      state.strokeIndex = 0;
+      state.strokeProgress = 0;
+      state.completedStrokes = [false, false, false, false];
+      state.writeCelebration = 0;
+      updateStrokeCounter();
+    }
+    if (idx === 8) {
+      state.saplings = [
+        { x: 470, y: GROUND_Y, scale: 0.72, birth: state.globalTime - 1.5 },
+        { x: 1130, y: GROUND_Y, scale: 0.76, birth: state.globalTime - 1.2 }
+      ];
+    }
+  }
+
+  function updateStrokeCounter() {
+    const done = state.completedStrokes.filter(Boolean).length;
+    const nextName = done < 4 ? ` · 第 ${done + 1} 笔：${STROKES[done].name}（${STROKES[done].role}）` : ' · 已写完！';
+    document.getElementById('stroke-counter').textContent = `笔画：${done} / 4${nextName}`;
+  }
+
+  const SCENES = [
+    {
+      name: '序幕 · 春泥藏种',
+      cam: 'intro',
+      sub: '泥土之下藏着一颗饱满的种子，地面之上春风轻拂。让我们一起走近汉字「木」的生命故事。',
+      prompt: '点击画面 · 唤醒泥土里的种子',
+      narration: '泥土之下藏着一颗饱满的种子。点击画面，走近木字的故事。'
+    },
+    {
+      name: '第一幕 · 破土萌芽',
+      cam: 'seed',
+      sub: '春雨润物，种子吸收水分，向下扎出嫩白胚根，向上顶破黑土长出两片嫩绿子叶！',
+      prompt: '按住画面不放 · 降下春雨催发新芽',
+      narration: '按住画面不放，降下春雨，看种子向下扎根、向上破土萌芽。'
+    },
+    {
+      name: '第二幕 · 上枝下根',
+      cam: 'tree',
+      sub: '小苗顺着阳光笔直长高：地面之上伸展树干与枝条，地面之下扎稳盘根错节的树根。',
+      prompt: '向上拖动幼苗 · 让大树枝干与树根同时生长',
+      narration: '向上滑动小树苗，看地面上伸展枝干，地面下扎深树根。'
+    },
+    {
+      name: '第三幕 · 枝繁叶茂',
+      cam: 'canopy',
+      sub: '参天大树长成了！点亮树冠新叶、枝头黄鹂与树根松鼠，感受大树生机勃勃的世界。',
+      prompt: '依次点击 3 处金色光圈 · 唤醒大树生机（0 / 3）',
+      narration: '依次点击树冠新叶、枝头黄鹂和树根松鼠，唤醒大树的生机。'
+    },
+    {
+      name: '第四幕 · 观树造字',
+      cam: 'glyph',
+      sub: '古人观察树木「上冒枝叶、中立树干、下扎树根」的姿态，刻画出了甲骨文与小篆的「木」字。',
+      prompt: '点击画面 · 拆解「木」字的象形部件',
+      narration: '古人照着树木上展枝条、中立主干、下扎树根的样子，造出了木字。'
+    },
+    {
+      name: '第五幕 · 部件拆解',
+      cam: 'glyph',
+      sub: '「木」是汉字里最重要的独体部首之一：一横如树冠横枝，一竖如笔直树干，一撇一捺如左右深扎的树根。',
+      prompt: '点击上方部件按钮观察 · 或点击画面开始写字',
+      narration: '一横像树枝，一竖像树干，一撇一捺像左右扎进泥土的树根。'
+    },
+    {
+      name: '第六幕 · 逐笔描红',
+      cam: 'write',
+      sub: '严格按照笔顺写出「木」字：第一笔横、第二笔竖、第三笔撇、第四笔捺。',
+      prompt: '顺着发光箭头的方向 · 一笔一笔描写出「木」',
+      narration: '请顺着箭头方向，先横、后竖、再撇、最后捺，亲手写出木字。'
+    },
+    {
+      name: '第七幕 · 独木成林',
+      cam: 'words',
+      sub: '一棵树是「木」，两棵树并排是「林」，三棵树聚在一起就成了广袤的「森」！',
+      prompt: '点击词卡听读音 · 再点画面进入自由余韵',
+      narration: '树木、树林、森林。一木为木，双木成林，三木为森。'
+    },
+    {
+      name: '第八幕 · 万木春风',
+      cam: 'free',
+      sub: '十年树木，生生不息。点击草地种下更多春天的树苗，点击大树掀起漫天飞舞的绿叶吧！',
+      prompt: '自由点击草地种树苗 · 点击大树唤醒春风飞叶',
+      narration: '十年树木，生生不息。自由点击草地种下新的小树苗吧！'
+    }
+  ];
+
+  // ============================================================================
+  // 7. 场景切换与 UI 同步
+  // ============================================================================
+  const titleCard = document.getElementById('title-card');
+  const subtitleEl = document.getElementById('subtitle');
+  const promptEl = document.getElementById('prompt');
+  const promptTextEl = document.getElementById('prompt-text');
+  const radicalsEl = document.getElementById('radicals');
+  const writeBarEl = document.getElementById('write-bar');
+  const wordsLayerEl = document.getElementById('words-layer');
+  const finActionsEl = document.getElementById('fin-actions');
+  const dotsEl = document.getElementById('dots');
+
+  SCENES.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.title = SCENES[i].name;
+    d.addEventListener('click', (e) => {
+      e.stopPropagation();
+      SFX.init();
+      goScene(i);
+    });
+    dotsEl.appendChild(d);
+  });
+
+  function updatePromptText(txt) {
+    promptTextEl.textContent = txt;
+    promptEl.classList.toggle('hide', !txt);
+  }
+
+  function goScene(idx) {
+    idx = clamp(idx, 0, SCENES.length - 1);
+    state.sceneIdx = idx;
+    resetSceneState(idx);
+    const sc = SCENES[idx];
+    currentCamPreset = sc.cam;
+    cam.setTarget(sc.cam, false);
+
+    titleCard.classList.toggle('show', idx === 0);
+    subtitleEl.textContent = sc.sub;
+    subtitleEl.classList.add('show');
+    updatePromptText(sc.prompt);
+
+    radicalsEl.classList.toggle('show', idx === 5);
+    writeBarEl.classList.toggle('show', idx === 6);
+    wordsLayerEl.classList.toggle('show', idx === 7);
+    finActionsEl.classList.toggle('show', idx === 8);
+
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === idx);
+    });
+
+    if (idx === 0) SFX.introPlay();
+    else if (idx === 4) SFX.chime(587.33);
+    else if (idx === 7) {
+      SFX.reveal();
+      document.querySelectorAll('.word-card').forEach((c, i) => {
+        c.classList.remove('show');
+        setTimeout(() => c.classList.add('show'), 140 + i * 160);
+      });
+    } else if (idx === 8) {
+      SFX.complete();
+      window.haqiHanziComplete('mu', { char: '木', pinyin: 'mù' });
+    }
+
+    Narration.speak(sc.narration);
+  }
+
+  // 部件拆解按钮
+  document.querySelectorAll('.rad-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      SFX.init();
+      const rad = btn.dataset.rad;
+      state.activeRadical = rad;
+      document.querySelectorAll('.rad-btn').forEach(b => b.classList.toggle('active', b === btn));
+      SFX.chime(rad === 'branch' ? 659.25 : rad === 'trunk' ? 523.25 : rad === 'root' ? 440 : 587.33);
+    });
+  });
+
+  // 描红辅助按钮
+  document.getElementById('btn-demo').addEventListener('click', (e) => {
+    e.stopPropagation();
+    SFX.init();
+    autoCompleteNextStroke();
+  });
+  document.getElementById('btn-reset-write').addEventListener('click', (e) => {
+    e.stopPropagation();
+    SFX.init();
+    state.strokeIndex = 0;
+    state.strokeProgress = 0;
+    state.completedStrokes = [false, false, false, false];
+    state.writeCelebration = 0;
+    updateStrokeCounter();
+    SFX.chime(392);
+  });
+
+  function autoCompleteNextStroke() {
+    if (state.sceneIdx !== 6) return;
+    const idx = state.completedStrokes.findIndex(v => !v);
+    if (idx === -1) return;
+    state.completedStrokes[idx] = true;
+    state.strokeIndex = idx + 1;
+    state.strokeProgress = 0;
+    const pts = STROKES[idx].pts;
+    const mid = pts[Math.floor(pts.length / 2)];
+    const [wx, wy] = glyphPtToWorld(mid[0], mid[1]);
+    spawnLeaves(wx, wy, 14, STROKES[idx].color);
+    SFX.strokeDone(idx);
+    updateStrokeCounter();
+
+    if (state.completedStrokes.every(Boolean)) {
+      state.writeCelebration = 1;
+      SFX.complete();
+      window.haqiHanziWritten('mu', { char: '木', strokes: 4 });
+      updatePromptText('写得真棒！点击画面进入词意森林');
+      setTimeout(() => {
+        if (state.sceneIdx === 6) goScene(7);
+      }, 1500);
+    }
+  }
+
+  // 词意卡片点击朗读
+  document.querySelectorAll('.word-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      e.stopPropagation();
+      SFX.init();
+      SFX.chime(659.25);
+      Narration.speak(card.dataset.speech || '');
+    });
+  });
+
+  // 终幕重播与跳过按钮
+  document.getElementById('btn-replay').addEventListener('click', (e) => {
+    e.stopPropagation();
+    SFX.init();
+    goScene(0);
+  });
+  document.getElementById('btn-skip').addEventListener('click', (e) => {
+    e.stopPropagation();
+    SFX.init();
+    if (state.sceneIdx < SCENES.length - 1) goScene(state.sceneIdx + 1);
+    else goScene(0);
+  });
+  document.getElementById('btn-sound').addEventListener('click', (e) => {
+    e.stopPropagation();
+    SFX.init();
+    SFX.muted = !SFX.muted;
+    document.getElementById('btn-sound').classList.toggle('muted', SFX.muted);
+    if (SFX.muted && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+  });
+
+  // ============================================================================
+  // 8. 绘制函数：天空、剖面土壤、春雨、种子萌芽、大树枝干与根系、黄鹂松鼠、字形与描红
+  // ============================================================================
+  function drawSkyAndSoil(t) {
+    // 天空渐变（随生长进度从晨曦森林渐变为明朗翠绿）
+    const vitality = clamp(state.sproutProgress * 0.35 + state.growLevel * 0.4 + (state.litCount / 3) * 0.25, 0, 1);
+    const skyGrad = ctx.createLinearGradient(0, 0, 0, GROUND_Y);
+    skyGrad.addColorStop(0, vitality > 0.5 ? '#0b2217' : '#08150f');
+    skyGrad.addColorStop(0.55, vitality > 0.5 ? '#153a27' : '#0e2419');
+    skyGrad.addColorStop(1, vitality > 0.5 ? '#235438' : '#173826');
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(0, 0, 1600, GROUND_Y + 20);
+
+    // 柔和阳光光柱
+    const sunGlow = ctx.createRadialGradient(800, 75, 10, 800, 210, 520);
+    sunGlow.addColorStop(0, `rgba(210,255,190,${0.14 + vitality * 0.14})`);
+    sunGlow.addColorStop(0.55, `rgba(110,220,150,${0.06 + vitality * 0.08})`);
+    sunGlow.addColorStop(1, 'rgba(20,60,40,0)');
+    ctx.fillStyle = sunGlow;
+    ctx.fillRect(180, 0, 1240, GROUND_Y);
+
+    // 森林萤火/晨露微光点
+    for (const f of FIREFLIES) {
+      const a = 0.2 + 0.55 * (0.5 + 0.5 * Math.sin(t * f.speed + f.phase));
+      ctx.fillStyle = `rgba(180,255,195,${a.toFixed(3)})`;
+      ctx.beginPath();
+      ctx.arc(f.x, f.y + Math.sin(t + f.phase) * 5, f.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 远景层叠山丘
+    ctx.fillStyle = 'rgba(18,48,32,0.72)';
+    ctx.beginPath();
+    ctx.moveTo(0, GROUND_Y);
+    for (let x = 0; x <= 1600; x += 80) {
+      const y = GROUND_Y - 38 - Math.sin(x * 0.005 + 0.8) * 26 - Math.cos(x * 0.011) * 14;
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(1600, GROUND_Y);
+    ctx.closePath();
+    ctx.fill();
+
+    // 地下土壤横截面
+    const soilGrad = ctx.createLinearGradient(0, GROUND_Y, 0, 900);
+    soilGrad.addColorStop(0, '#2c1e14');
+    soilGrad.addColorStop(0.28, '#23170f');
+    soilGrad.addColorStop(1, '#120b07');
+    ctx.fillStyle = soilGrad;
+    ctx.fillRect(0, GROUND_Y, 1600, 900 - GROUND_Y);
+
+    // 土壤层理纹理线
+    ctx.strokeStyle = 'rgba(130,92,58,0.16)';
+    ctx.lineWidth = 2;
+    for (let row = 0; row < 4; row++) {
+      const baseY = GROUND_Y + 55 + row * 72;
+      ctx.beginPath();
+      for (let x = 80; x <= 1520; x += 60) {
+        const y = baseY + Math.sin(x * 0.012 + row * 1.7) * 8;
+        if (x === 80) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    // 地表青苔草岸线
+    const turfGrad = ctx.createLinearGradient(0, GROUND_Y - 12, 0, GROUND_Y + 14);
+    turfGrad.addColorStop(0, '#5cd685');
+    turfGrad.addColorStop(0.55, '#358c52');
+    turfGrad.addColorStop(1, '#261910');
+    ctx.fillStyle = turfGrad;
+    ctx.beginPath();
+    ctx.moveTo(0, GROUND_Y + 12);
+    for (let x = 0; x <= 1600; x += 40) {
+      const y = GROUND_Y - 5 + Math.sin(x * 0.015) * 4;
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(1600, GROUND_Y + 14);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function drawSpringRain(t) {
+    if (state.sceneIdx !== 1) return;
+    const intensity = state.holding ? 1 : 0.35;
+    ctx.save();
+    ctx.strokeStyle = `rgba(160,235,255,${0.25 + intensity * 0.35})`;
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 36; i++) {
+      const rx = 440 + ((i * 67 + t * 240) % 720);
+      const ry = 140 + ((i * 97 + t * (420 + intensity * 260)) % (GROUND_Y - 130));
+      ctx.beginPath();
+      ctx.moveTo(rx, ry);
+      ctx.lineTo(rx - 4, ry + 18 + intensity * 10);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawSeedAndSprout(t) {
+    const sp = state.sproutProgress;
+    const gl = state.growLevel;
+    // 当树干已经完全长大后，种子融入主根中心
+    if (gl > 0.65) return;
+
+    ctx.save();
+    const fade = clamp(1 - (gl - 0.3) / 0.35, 0, 1);
+    ctx.globalAlpha = fade;
+
+    // 破土前的饱满种子与温暖光晕
+    const pulse = 1 + 0.06 * Math.sin(t * 4);
+    const glow = ctx.createRadialGradient(SEED_POS.x, SEED_POS.y, 4, SEED_POS.x, SEED_POS.y, 48 + sp * 35);
+    glow.addColorStop(0, 'rgba(255,220,120,0.55)');
+    glow.addColorStop(1, 'rgba(255,220,120,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(SEED_POS.x, SEED_POS.y, 52 + sp * 35, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 向下扎出的胚根
+    if (sp > 0.05) {
+      const rootLen = sp * 78;
+      ctx.strokeStyle = '#e5c07b';
+      ctx.lineWidth = 5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(SEED_POS.x, SEED_POS.y + 6);
+      ctx.quadraticCurveTo(SEED_POS.x - 8, SEED_POS.y + rootLen * 0.55, SEED_POS.x + 4, SEED_POS.y + rootLen);
+      ctx.stroke();
+
+      if (sp > 0.45) {
+        const sideK = (sp - 0.45) / 0.55;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(SEED_POS.x - 3, SEED_POS.y + 32);
+        ctx.lineTo(SEED_POS.x - 28 * sideK, SEED_POS.y + 32 + 24 * sideK);
+        ctx.moveTo(SEED_POS.x + 2, SEED_POS.y + 44);
+        ctx.lineTo(SEED_POS.x + 28 * sideK, SEED_POS.y + 44 + 22 * sideK);
+        ctx.stroke();
+      }
+    }
+
+    // 向上破土的嫩茎与两片子叶
+    if (sp > 0.12) {
+      const stemK = clamp((sp - 0.12) / 0.88, 0, 1);
+      const topY = SEED_POS.y - stemK * 98;
+      ctx.strokeStyle = '#7be888';
+      ctx.lineWidth = 6.5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(SEED_POS.x, SEED_POS.y);
+      ctx.quadraticCurveTo(SEED_POS.x - 5, (SEED_POS.y + topY) * 0.5, SEED_POS.x, topY);
+      ctx.stroke();
+
+      // 两片嫩绿子叶
+      if (stemK > 0.45) {
+        const leafK = smoothstep(0.45, 1.0, stemK);
+        const sway = Math.sin(t * 3) * 0.08;
+        drawSingleLeaf(SEED_POS.x, topY + 4, -0.75 + sway, 28 * leafK, '#84f294');
+        drawSingleLeaf(SEED_POS.x, topY + 4,  0.75 + sway, 28 * leafK, '#68e07c');
+      }
+    }
+
+    // 种子外壳
+    ctx.fillStyle = '#c88a4b';
+    ctx.strokeStyle = '#ffe2a8';
+    ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    ctx.ellipse(SEED_POS.x, SEED_POS.y, 16 * pulse, 11 * pulse, -0.15, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // 第1幕环形进度条
+    if (state.sceneIdx === 1 && sp > 0 && sp < 1) {
+      ctx.strokeStyle = '#8ef09a';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.arc(SEED_POS.x, SEED_POS.y - 25, 58, -Math.PI / 2, -Math.PI / 2 + sp * Math.PI * 2);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  function drawSingleLeaf(x, y, angle, size, color) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.quadraticCurveTo(size * 0.55, -size * 0.5, size, -size * 0.15);
+    ctx.quadraticCurveTo(size * 0.55, size * 0.35, 0, 0);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // 绘制主树（地面之上树干与枝条 + 地面之下树根 + 树冠与生机小动物）
+  function drawMainTree(t, centerX = 800, baseY = GROUND_Y, scale = 1, growthOverride = null) {
+    const gl = growthOverride !== null ? growthOverride : state.growLevel;
+    if (gl <= 0.01) return;
+
+    // 在描红和文字拆解幕适度淡化背景大树，突出中央字形
+    const bgDim = (state.sceneIdx >= 4 && state.sceneIdx <= 6 && scale === 1) ? 0.32 : 1;
+
+    ctx.save();
+    ctx.translate(centerX, baseY);
+    ctx.scale(scale, scale);
+    ctx.globalAlpha = bgDim;
+
+    const sway = Math.sin(t * 1.6 + centerX * 0.01) * 4 * gl;
+
+    // 1. 地下树根系统（呼应「木」字下半部的撇、捺与竖尾）
+    const rootDepth = gl * 185;
+    const rootSpread = gl * 195;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#7a4e2d';
+
+    // 中心主直根（竖下部）
+    ctx.lineWidth = 16 * (0.45 + 0.55 * gl);
+    ctx.beginPath();
+    ctx.moveTo(0, -4);
+    ctx.quadraticCurveTo(4, rootDepth * 0.5, 0, rootDepth);
+    ctx.stroke();
+
+    // 左侧大斜根（呼应撇画）
+    ctx.lineWidth = 13 * (0.45 + 0.55 * gl);
+    ctx.beginPath();
+    ctx.moveTo(-4, 14);
+    ctx.quadraticCurveTo(-rootSpread * 0.45, rootDepth * 0.42, -rootSpread, rootDepth * 0.86);
+    ctx.stroke();
+
+    // 右侧大斜根（呼应捺画）
+    ctx.beginPath();
+    ctx.moveTo(4, 14);
+    ctx.quadraticCurveTo(rootSpread * 0.45, rootDepth * 0.42, rootSpread, rootDepth * 0.86);
+    ctx.stroke();
+
+    // 细支根毛
+    if (gl > 0.35) {
+      const subK = (gl - 0.35) / 0.65;
+      ctx.lineWidth = 5 * subK;
+      ctx.strokeStyle = '#9c6a43';
+      ctx.beginPath();
+      ctx.moveTo(-rootSpread * 0.48, rootDepth * 0.46);
+      ctx.lineTo(-rootSpread * 0.62, rootDepth * 0.88);
+      ctx.moveTo(rootSpread * 0.48, rootDepth * 0.46);
+      ctx.lineTo(rootSpread * 0.65, rootDepth * 0.88);
+      ctx.stroke();
+    }
+
+    // 2. 地上笔直树干（呼应「木」字中竖）
+    const trunkH = gl * 255;
+    const trunkW = 14 + gl * 22;
+    const trunkGrad = ctx.createLinearGradient(-trunkW, -trunkH, trunkW, 0);
+    trunkGrad.addColorStop(0, '#8d5b34');
+    trunkGrad.addColorStop(0.5, '#6e4425');
+    trunkGrad.addColorStop(1, '#4f2f18');
+    ctx.fillStyle = trunkGrad;
+
+    ctx.beginPath();
+    ctx.moveTo(-trunkW * 0.65, 6);
+    ctx.quadraticCurveTo(-trunkW * 0.42, -trunkH * 0.5, -trunkW * 0.32 + sway * 0.4, -trunkH);
+    ctx.lineTo(trunkW * 0.32 + sway * 0.4, -trunkH);
+    ctx.quadraticCurveTo(trunkW * 0.42, -trunkH * 0.5, trunkW * 0.65, 6);
+    ctx.closePath();
+    ctx.fill();
+
+    // 3. 左右舒展的主枝（呼应「木」字第一笔长横与甲骨文上扬枝杈）
+    if (gl > 0.25) {
+      const brK = smoothstep(0.25, 1.0, gl);
+      const branchY = -trunkH * 0.66;
+      const span = brK * 175;
+
+      ctx.strokeStyle = '#794c2b';
+      ctx.lineWidth = 13 * brK;
+      ctx.beginPath();
+      // 左横枝
+      ctx.moveTo(sway * 0.2, branchY);
+      ctx.quadraticCurveTo(-span * 0.5, branchY - 12, -span + sway, branchY - 26);
+      // 右横枝
+      ctx.moveTo(sway * 0.2, branchY);
+      ctx.quadraticCurveTo(span * 0.5, branchY - 12, span + sway, branchY - 26);
+      // 左上斜枝
+      ctx.moveTo(sway * 0.3, -trunkH * 0.82);
+      ctx.quadraticCurveTo(-span * 0.35, -trunkH - 18, -span * 0.62 + sway, -trunkH - 46 * brK);
+      // 右上斜枝
+      ctx.moveTo(sway * 0.3, -trunkH * 0.82);
+      ctx.quadraticCurveTo(span * 0.35, -trunkH - 18, span * 0.62 + sway, -trunkH - 46 * brK);
+      ctx.stroke();
+    }
+
+    // 4. 树冠繁茂叶团
+    if (gl > 0.45) {
+      const capK = smoothstep(0.45, 1.0, gl);
+      const foliageLit = LIFE_SPOTS[0].lit ? 1.16 : 0.92;
+      for (let i = 0; i < CANOPY_CLUSTERS.length; i++) {
+        const c = CANOPY_CLUSTERS[i];
+        const cx = c.ox * capK + sway * (0.7 + (i % 3) * 0.2);
+        const cy = c.oy * capK - (1 - capK) * 60;
+        const r = c.r * capK * foliageLit;
+
+        const g = ctx.createRadialGradient(cx - r * 0.25, cy - r * 0.25, r * 0.1, cx, cy, r);
+        g.addColorStop(0, LIFE_SPOTS[0].lit ? '#98ffaa' : '#6ee28e');
+        g.addColorStop(0.65, c.col);
+        g.addColorStop(1, 'rgba(26,92,48,0.88)');
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // 第2幕提示向上拖动的引导光箭
+    if (state.sceneIdx === 2 && !state.growDone && scale === 1) {
+      const arrowY = -60 - gl * 180 + Math.sin(t * 5) * 10;
+      ctx.strokeStyle = 'rgba(255,230,130,0.88)';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(0, arrowY + 28);
+      ctx.lineTo(0, arrowY - 18);
+      ctx.lineTo(-14, arrowY - 2);
+      ctx.moveTo(0, arrowY - 18);
+      ctx.lineTo(14, arrowY - 2);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  // 第3幕及之后：绘制枝头黄鹂与树根松鼠及三处互动光圈
+  function drawTreeLifeAndSpots(t) {
+    if (state.sceneIdx < 3) return;
+    const dim = (state.sceneIdx >= 4 && state.sceneIdx <= 6) ? 0.28 : 1;
+    ctx.save();
+    ctx.globalAlpha = dim;
+
+    // 枝头黄鹂（右侧横枝上）
+    const orioleLit = LIFE_SPOTS[1].lit;
+    const bx = 942, by = 335 + Math.sin(t * (orioleLit ? 7 : 2.5)) * (orioleLit ? 5 : 2);
+    ctx.save();
+    ctx.translate(bx, by);
+    ctx.fillStyle = orioleLit ? '#ffd84d' : '#b89b48';
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 17, 12, -0.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(13, -7, 9, 0, Math.PI * 2);
+    ctx.fill();
+    // 鸟喙与眼睛
+    ctx.fillStyle = '#ff7b29';
+    ctx.beginPath();
+    ctx.moveTo(21, -8);
+    ctx.lineTo(30, -5);
+    ctx.lineTo(21, -3);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#1b1b1b';
+    ctx.beginPath();
+    ctx.arc(15, -9, 2, 0, Math.PI * 2);
+    ctx.fill();
+    // 音符欢唱
+    if (orioleLit) {
+      ctx.strokeStyle = '#ffe98a';
+      ctx.lineWidth = 2.2;
+      const ny = -22 - ((t * 22) % 18);
+      ctx.beginPath();
+      ctx.arc(26, ny, 4, 0, Math.PI * 2);
+      ctx.moveTo(30, ny);
+      ctx.lineTo(30, ny - 12);
+      ctx.lineTo(37, ny - 9);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // 树根松鼠（左侧树根旁）
+    const sqLit = LIFE_SPOTS[2].lit;
+    const sx = 675, sy = 545 + Math.abs(Math.sin(t * (sqLit ? 6 : 2))) * (sqLit ? -6 : -1);
+    ctx.save();
+    ctx.translate(sx, sy);
+    // 蓬松大尾巴
+    ctx.fillStyle = sqLit ? '#d9823b' : '#9c6234';
+    ctx.beginPath();
+    ctx.ellipse(-15, -6, 14, 20, -0.45, 0, Math.PI * 2);
+    ctx.fill();
+    // 身体与脑袋
+    ctx.fillStyle = sqLit ? '#e8954c' : '#ad6f3e';
+    ctx.beginPath();
+    ctx.ellipse(2, 2, 13, 10, 0.1, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(12, -6, 8.5, 0, Math.PI * 2);
+    ctx.fill();
+    // 松果
+    if (sqLit) {
+      ctx.fillStyle = '#ffd166';
+      ctx.beginPath();
+      ctx.arc(21, 0, 5.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+
+    // 第3幕光圈引导
+    if (state.sceneIdx === 3) {
+      for (const s of LIFE_SPOTS) {
+        const pulse = 1 + 0.12 * Math.sin(t * 4.5);
+        ctx.save();
+        ctx.strokeStyle = s.lit ? 'rgba(130,255,160,0.85)' : 'rgba(255,220,115,0.92)';
+        ctx.lineWidth = s.lit ? 3 : 3.5;
+        ctx.setLineDash(s.lit ? [] : [8, 6]);
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r * (s.lit ? 0.82 : pulse), 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.fillStyle = s.lit ? 'rgba(140,255,175,0.95)' : 'rgba(255,236,165,0.95)';
+        ctx.font = '700 16px "Noto Serif SC", serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(s.lit ? `✓ ${s.label}` : s.label, s.x, s.y + s.r + 22);
+        ctx.restore();
+      }
+    }
+
+    ctx.restore();
+  }
+
+  // 第4幕 & 第5幕：甲骨文/小篆字形演化与部件拆解高亮
+  function drawGlyphEvolutionAndRadicals(t) {
+    if (state.sceneIdx !== 4 && state.sceneIdx !== 5) return;
+
+    ctx.save();
+    // 中央背光圆盘
+    const cx = 800, cy = 330;
+    const disc = ctx.createRadialGradient(cx, cy, 20, cx, cy, 250);
+    disc.addColorStop(0, 'rgba(22,64,40,0.88)');
+    disc.addColorStop(0.75, 'rgba(12,38,24,0.68)');
+    disc.addColorStop(1, 'rgba(12,38,24,0)');
+    ctx.fillStyle = disc;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 250, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (state.sceneIdx === 4) {
+      // 左侧展示甲骨文「木」，右侧展示楷书「木」
+      const progress = clamp(state.sceneTime / 2.2, 0, 1);
+      const leftBox = { x: 450, y: 185, w: 260, h: 260 };
+      const rightBox = { x: 890, y: 185, w: 260, h: 260 };
+
+      // 甲骨文/小篆「木」
+      ctx.strokeStyle = '#ffd97d';
+      ctx.lineWidth = 12;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      for (const path of ORACLE_PATHS) {
+        ctx.beginPath();
+        path.forEach((p, idx) => {
+          const [wx, wy] = glyphPtToWorld(p[0], p[1], leftBox);
+          if (idx === 0) ctx.moveTo(wx, wy);
+          else ctx.lineTo(wx, wy);
+        });
+        ctx.stroke();
+      }
+      ctx.fillStyle = 'rgba(255,232,175,0.92)';
+      ctx.font = '700 20px "Noto Serif SC", serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('甲骨文 / 小篆 · 象形树枝树根', leftBox.x + leftBox.w * 0.5, leftBox.y + leftBox.h + 36);
+
+      // 中间演化箭头
+      ctx.strokeStyle = `rgba(142,240,154,${progress})`;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(745, 315);
+      ctx.lineTo(855, 315);
+      ctx.lineTo(838, 302);
+      ctx.moveTo(855, 315);
+      ctx.lineTo(838, 328);
+      ctx.stroke();
+
+      // 右侧楷书「木」
+      ctx.globalAlpha = smoothstep(0.2, 1.0, progress);
+      for (let i = 0; i < STROKES.length; i++) {
+        drawStrokePolyline(STROKES[i].pts, rightBox, STROKES[i].color, 16, 1);
+      }
+      ctx.fillStyle = 'rgba(180,255,200,0.95)';
+      ctx.fillText('现代楷书 · 四画「木」', rightBox.x + rightBox.w * 0.5, rightBox.y + rightBox.h + 36);
+    } else {
+      // 第5幕：部件拆解高亮（横=树冠横枝，竖=笔直树干，撇捺=左右树根）
+      const rad = state.activeRadical;
+      for (let i = 0; i < STROKES.length; i++) {
+        const isHit =
+          rad === 'all' ||
+          (rad === 'branch' && i === 0) ||
+          (rad === 'trunk' && i === 1) ||
+          (rad === 'root' && (i === 2 || i === 3));
+        const col = isHit ? STROKES[i].color : 'rgba(160,195,175,0.24)';
+        const w = isHit ? 20 + Math.sin(t * 5) * 2 : 13;
+        drawStrokePolyline(STROKES[i].pts, GLYPH_BOX, col, w, 1);
+      }
+    }
+
+    ctx.restore();
+  }
+
+  function drawStrokePolyline(pts, box, color, width, progress = 1) {
+    if (!pts || pts.length < 2 || progress <= 0) return;
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    const totalSegs = pts.length - 1;
+    const exactSeg = clamp(progress, 0, 1) * totalSegs;
+    const fullSegs = Math.floor(exactSeg);
+    const frac = exactSeg - fullSegs;
+
+    ctx.beginPath();
+    const [sx, sy] = glyphPtToWorld(pts[0][0], pts[0][1], box);
+    ctx.moveTo(sx, sy);
+
+    for (let i = 1; i <= fullSegs; i++) {
+      const [wx, wy] = glyphPtToWorld(pts[i][0], pts[i][1], box);
+      ctx.lineTo(wx, wy);
+    }
+    if (fullSegs < totalSegs && frac > 0) {
+      const p0 = pts[fullSegs];
+      const p1 = pts[fullSegs + 1];
+      const nx = lerp(p0[0], p1[0], frac);
+      const ny = lerp(p0[1], p1[1], frac);
+      const [wx, wy] = glyphPtToWorld(nx, ny, box);
+      ctx.lineTo(wx, wy);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // 第6幕：田字格与逐笔描红引导
+  function drawWritingGridAndStrokes(t) {
+    if (state.sceneIdx !== 6) return;
+    const b = GLYPH_BOX;
+
+    ctx.save();
+    // 田字格底框
+    ctx.fillStyle = 'rgba(10,30,20,0.82)';
+    ctx.strokeStyle = 'rgba(130,225,160,0.45)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(b.x - 16, b.y - 16, b.w + 32, b.h + 32, 18);
+    ctx.fill();
+    ctx.stroke();
+
+    // 田字格十字虚线
+    ctx.strokeStyle = 'rgba(130,225,160,0.2)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([8, 8]);
+    ctx.beginPath();
+    ctx.moveTo(b.x, b.y + b.h * 0.5);
+    ctx.lineTo(b.x + b.w, b.y + b.h * 0.5);
+    ctx.moveTo(b.x + b.w * 0.5, b.y);
+    ctx.lineTo(b.x + b.w * 0.5, b.y + b.h);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // 底层灰色字模
+    for (let i = 0; i < STROKES.length; i++) {
+      drawStrokePolyline(STROKES[i].pts, b, 'rgba(180,210,190,0.18)', 22, 1);
+    }
+
+    // 已完成笔画
+    for (let i = 0; i < STROKES.length; i++) {
+      if (state.completedStrokes[i]) {
+        drawStrokePolyline(STROKES[i].pts, b, STROKES[i].color, 22, 1);
+      }
+    }
+
+    // 当前正在描写的笔画与动态引导光点
+    const curIdx = state.completedStrokes.findIndex(v => !v);
+    if (curIdx !== -1) {
+      const st = STROKES[curIdx];
+      // 当前已滑过的进度
+      if (state.strokeProgress > 0) {
+        drawStrokePolyline(st.pts, b, st.color, 22, state.strokeProgress);
+      }
+
+      // 起点呼吸光球 + 引导轨迹方向
+      const [startX, startY] = glyphPtToWorld(st.pts[0][0], st.pts[0][1], b);
+      const [endX, endY] = glyphPtToWorld(st.pts[st.pts.length - 1][0], st.pts[st.pts.length - 1][1], b);
+      const pulse = 10 + 4 * Math.sin(t * 6);
+      ctx.fillStyle = '#ffe57f';
+      ctx.beginPath();
+      ctx.arc(startX, startY, pulse, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 方向虚线小箭头
+      ctx.strokeStyle = 'rgba(255,235,140,0.78)';
+      ctx.lineWidth = 3;
+      ctx.setLineDash([6, 6]);
+      drawStrokePolyline(st.pts, b, 'rgba(255,235,140,0.72)', 4, 1);
+      ctx.setLineDash([]);
+
+      // 终点小圆环
+      ctx.strokeStyle = '#8ef09a';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(endX, endY, 9, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  // 第8幕：自由余韵中的额外小树苗
+  function drawSaplings(t) {
+    if (state.sceneIdx !== 8) return;
+    for (const sap of state.saplings) {
+      const age = clamp((t - sap.birth) / 1.2, 0.15, 1);
+      drawMainTree(t, sap.x, sap.y, sap.scale * age, age);
+    }
+  }
+
+  function updateAndDrawParticles(dt) {
+    // 树叶粒子
+    for (let i = LEAVES.length - 1; i >= 0; i--) {
+      const p = LEAVES[i];
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.vy += 65 * dt; // 轻柔重力
+      p.vx += Math.sin(state.globalTime * 3 + i) * 18 * dt;
+      p.rot += p.vrot * dt;
+      p.life -= p.decay * dt;
+      if (p.life <= 0) {
+        LEAVES.splice(i, 1);
+        continue;
+      }
+      ctx.save();
+      ctx.globalAlpha = clamp(p.life, 0, 1);
+      drawSingleLeaf(p.x, p.y, p.rot, p.r * 2.4, p.col);
+      ctx.restore();
+    }
+
+    // 涟漪光圈
+    for (let i = RINGS.length - 1; i >= 0; i--) {
+      const r = RINGS[i];
+      r.r += 140 * dt;
+      r.alpha -= 1.05 * dt;
+      if (r.alpha <= 0 || r.r >= r.maxR) {
+        RINGS.splice(i, 1);
+        continue;
+      }
+      ctx.save();
+      ctx.strokeStyle = `rgba(160,255,180,${r.alpha.toFixed(3)})`;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(r.x, r.y, r.r, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  // ============================================================================
+  // 9. 指针交互：按住春雨萌芽、向上拖动拔高树干、点击唤醒生机、描红写字、种树余韵
+  // ============================================================================
+  function getPointerWorld(e) {
+    const rect = canvas.getBoundingClientRect();
+    const sx = e.clientX - rect.left;
+    const sy = e.clientY - rect.top;
+    return cam.toWorld(sx, sy);
+  }
+
+  function evaluateStrokeTrace(pw) {
+    const curIdx = state.completedStrokes.findIndex(v => !v);
+    if (curIdx === -1) return;
+    const pts = STROKES[curIdx].pts;
+    const worldPts = pts.map(p => glyphPtToWorld(p[0], p[1], GLYPH_BOX));
+
+    // 计算当前指针在折线上的投影进度
+    let totalLen = 0;
+    const segLens = [];
+    for (let i = 0; i < worldPts.length - 1; i++) {
+      const l = dist(worldPts[i][0], worldPts[i][1], worldPts[i + 1][0], worldPts[i + 1][1]);
+      segLens.push(l);
+      totalLen += l;
+    }
+
+    let bestDist = Infinity;
+    let bestProgress = 0;
+    let accum = 0;
+    for (let i = 0; i < worldPts.length - 1; i++) {
+      const [ax, ay] = worldPts[i];
+      const [bx, by] = worldPts[i + 1];
+      const vx = bx - ax, vy = by - ay;
+      const len2 = vx * vx + vy * vy || 1;
+      const t = clamp(((pw.x - ax) * vx + (pw.y - ay) * vy) / len2, 0, 1);
+      const px = ax + vx * t, py = ay + vy * t;
+      const d = dist(pw.x, pw.y, px, py);
+      if (d < bestDist) {
+        bestDist = d;
+        bestProgress = (accum + segLens[i] * t) / totalLen;
+      }
+      accum += segLens[i];
+    }
+
+    // 宽容度：距离笔画 85 世界像素内均可推进进度
+    if (bestDist < 85 && bestProgress >= state.strokeProgress - 0.12) {
+      state.strokeProgress = Math.max(state.strokeProgress, bestProgress);
+      if (state.strokeProgress >= 0.82) {
+        autoCompleteNextStroke();
+        state.tracing = false;
+      }
+    }
+  }
+
+  canvas.addEventListener('pointerdown', (e) => {
+    SFX.init();
+    const pw = getPointerWorld(e);
+    state.holding = true;
+    state.pointerW = pw;
+    state.pointerDownW = pw;
+    spawnRing(pw.x, pw.y, 68);
+
+    const idx = state.sceneIdx;
+    if (idx === 0) {
+      goScene(1);
+      return;
+    }
+    if (idx === 1) {
+      SFX.rainTick();
+      spawnLeaves(SEED_POS.x, SEED_POS.y - 10, 8, '#8ef09a');
+      return;
+    }
+    if (idx === 2) {
+      state.draggingGrow = true;
+      state.growStartY = pw.y;
+      state.growStartVal = state.growLevel;
+      return;
+    }
+    if (idx === 3) {
+      // 检查是否点中三处生机点（或直接点亮下一个未点亮的点，保证儿童友好度）
+      let hitSpot = LIFE_SPOTS.find(s => !s.lit && dist(pw.x, pw.y, s.x, s.y) < s.r + 36);
+      if (!hitSpot) hitSpot = LIFE_SPOTS.find(s => !s.lit);
+      if (hitSpot) {
+        hitSpot.lit = true;
+        hitSpot.litTime = state.globalTime;
+        state.litCount = LIFE_SPOTS.filter(s => s.lit).length;
+        spawnLeaves(hitSpot.x, hitSpot.y, 20, '#9cffad');
+        spawnRing(hitSpot.x, hitSpot.y, 110);
+        if (hitSpot.id === 'oriole') SFX.birdChirp();
+        else SFX.chime(523.25 + state.litCount * 85);
+
+        updatePromptText(`依次点击 3 处金色光圈 · 唤醒大树生机（${state.litCount} / 3）`);
+        if (state.litCount >= 3 && !state.allSpotsDone) {
+          state.allSpotsDone = true;
+          SFX.reveal();
+          updatePromptText('大树焕发勃勃生机！正在进入甲骨文字形...');
+          setTimeout(() => {
+            if (state.sceneIdx === 3) goScene(4);
+          }, 1150);
+        }
+      }
+      return;
+    }
+    if (idx === 4 || idx === 5) {
+      goScene(idx + 1);
+      return;
+    }
+    if (idx === 6) {
+      if (state.completedStrokes.every(Boolean)) {
+        goScene(7);
+        return;
+      }
+      state.tracing = true;
+      evaluateStrokeTrace(pw);
+      return;
+    }
+    if (idx === 7) {
+      goScene(8);
+      return;
+    }
+    if (idx === 8) {
+      // 点击中央大树掀起飞叶，点击两侧草地种下新树苗
+      if (Math.abs(pw.x - 800) < 170 && pw.y < GROUND_Y + 40) {
+        state.pulseTime = state.globalTime;
+        spawnLeaves(800, 290, 28, '#9cffad');
+        SFX.birdChirp();
+      } else {
+        const sx = clamp(pw.x, 220, 1380);
+        if (state.saplings.length >= 8) state.saplings.shift();
+        state.saplings.push({
+          x: sx,
+          y: GROUND_Y,
+          scale: 0.48 + rng() * 0.32,
+          birth: state.globalTime
+        });
+        spawnLeaves(sx, GROUND_Y - 40, 18, '#84f294');
+        SFX.growTone(0.6 + rng() * 0.4);
+      }
+    }
+  });
+
+  window.addEventListener('pointermove', (e) => {
+    const pw = getPointerWorld(e);
+    state.pointerW = pw;
+
+    if (state.sceneIdx === 2 && state.draggingGrow && !state.growDone) {
+      const dy = state.growStartY - pw.y;
+      const nextVal = clamp(state.growStartVal + dy / 210, 0, 1);
+      if (nextVal > state.growLevel + 0.08) {
+        SFX.growTone(nextVal);
+        spawnLeaves(800, GROUND_Y - nextVal * 220, 6, '#7ce88c');
+      }
+      state.growLevel = Math.max(state.growLevel, nextVal);
+      if (state.growLevel >= 0.96 && !state.growDone) {
+        state.growLevel = 1;
+        state.growDone = true;
+        state.draggingGrow = false;
+        SFX.reveal();
+        spawnLeaves(800, 280, 26, '#9cffad');
+        updatePromptText('参天大树长成了！正在进入下一幕...');
+        setTimeout(() => {
+          if (state.sceneIdx === 2) goScene(3);
+        }, 1100);
+      }
+    }
+
+    if (state.sceneIdx === 6 && state.tracing) {
+      evaluateStrokeTrace(pw);
+    }
+  });
+
+  window.addEventListener('pointerup', () => {
+    state.holding = false;
+    state.draggingGrow = false;
+    state.tracing = false;
+  });
+
+  // ============================================================================
+  // 10. 主循环与自动化测试桥接接口 window.__mu
+  // ============================================================================
+  let lastTS = performance.now();
+  let rainSoundTimer = 0;
+
+  function tick(ts) {
+    const dt = Math.min((ts - lastTS) / 1000, 0.06);
+    lastTS = ts;
+    state.globalTime += dt;
+    state.sceneTime += dt;
+
+    // 第1幕：按住春雨催化种子萌芽
+    if (state.sceneIdx === 1 && !state.sproutDone) {
+      if (state.holding) {
+        state.sproutProgress = clamp(state.sproutProgress + dt * 0.68, 0, 1);
+        rainSoundTimer += dt;
+        if (rainSoundTimer > 0.22) {
+          rainSoundTimer = 0;
+          SFX.rainTick();
+          spawnLeaves(SEED_POS.x, SEED_POS.y - state.sproutProgress * 80, 4, '#8ef09a');
+        }
+        if (state.sproutProgress >= 1) {
+          state.sproutDone = true;
+          SFX.reveal();
+          spawnLeaves(SEED_POS.x, GROUND_Y - 50, 22, '#9cffad');
+          updatePromptText('种子破土发芽啦！正在进入下一幕...');
+          setTimeout(() => {
+            if (state.sceneIdx === 1) goScene(2);
+          }, 1050);
+        }
+      }
+    }
+
+    cam.update(dt);
+
+    // 渲染世界
+    ctx.save();
+    ctx.scale(DPR, DPR);
+    ctx.clearRect(0, 0, W, H);
+
+    ctx.save();
+    ctx.translate(cam.offX, cam.offY);
+    ctx.scale(cam.scale, cam.scale);
+
+    drawSkyAndSoil(state.globalTime);
+    drawSpringRain(state.globalTime);
+    drawSaplings(state.globalTime);
+    drawMainTree(state.globalTime, 800, GROUND_Y, 1);
+    drawSeedAndSprout(state.globalTime);
+    drawTreeLifeAndSpots(state.globalTime);
+    drawGlyphEvolutionAndRadicals(state.globalTime);
+    drawWritingGridAndStrokes(state.globalTime);
+    updateAndDrawParticles(dt);
+
+    ctx.restore();
+    ctx.restore();
+
+    requestAnimationFrame(tick);
+  }
+
+  // 暴露自动化校验桥接
+  window.__mu = {
+    state,
+    STROKES,
+    LIFE_SPOTS,
+    toScreen: (wx, wy) => cam.toScreen(wx, wy),
+    glyphToScreen: (nx, ny) => {
+      const [wx, wy] = glyphPtToWorld(nx, ny, GLYPH_BOX);
+      return cam.toScreen(wx, wy);
+    },
+    getState: () => ({
+      sceneIdx: state.sceneIdx,
+      sceneName: SCENES[state.sceneIdx]?.name || '',
+      sproutProgress: state.sproutProgress,
+      growLevel: state.growLevel,
+      litCount: state.litCount,
+      activeRadical: state.activeRadical,
+      completedStrokes: state.completedStrokes.slice(),
+      saplingCount: state.saplings.length
+    }),
+    goScene: (i) => goScene(i),
+    completeCurrentStroke: () => autoCompleteNextStroke()
+  };
+
+  resize();
+  goScene(0);
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

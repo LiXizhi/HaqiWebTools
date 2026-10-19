@@ -10392,3 +10392,61 @@ VIP 有效期由账号下所有角色共享；魔豆放入当前角色背包，�
 火把（huǒ bǎ）：在黑夜里照亮前路的温暖火炬。||huǒ bǎ — a warm torch lighting the path through night.
 花火（huā huǒ）：夜空中如繁花般绽放的璀璨火星。||huā huǒ — sparkling fireworks blooming in the night sky.
 星火跃动，照亮寒夜——你已经学会了温暖明亮的「火」字！||Sparks dance and light the cold night — you have mastered 火!
+
+# hanzi/hanzi_mu.html
+一字一世界 · 象形之源	One Character, One World · Pictographic Origins
+mù · 树木与生机	mù · Tree & Vitality
+泥土之下藏着一颗饱满的种子，地面之上春风轻拂。让我们一起走近汉字「木」的生命故事。	Beneath the soil lies a plump seed, while a gentle spring breeze blows above. Let's step into the living story of the character "木" (Tree).
+点击画面 · 唤醒泥土里的种子	Tap the screen · Wake the seed in the soil
+春雨润物，种子吸收水分，向下扎出嫩白胚根，向上顶破黑土长出两片嫩绿子叶！	Spring rain nourishes all things; the seed absorbs water, sending a tender root downward and pushing two green cotyledons up through the dark soil!
+按住画面不放 · 降下春雨催发新芽	Hold the screen · Bring spring rain to sprout the bud
+小苗顺着阳光笔直长高：地面之上伸展树干与枝条，地面之下扎稳盘根错节的树根。	The sapling grows straight toward the sunlight: extending trunk and branches above ground while anchoring deep roots below.
+向上拖动幼苗 · 让大树枝干与树根同时生长	Drag upward on the sapling · Grow the branches and roots together
+参天大树长成了！点亮树冠新叶、枝头黄鹂与树根松鼠，感受大树生机勃勃的世界。	A towering tree has grown! Light up the canopy leaves, the oriole on the branch, and the squirrel by the roots to feel the vibrant world of the tree.
+依次点击 3 处金色光圈 · 唤醒大树生机（0 / 3）	Tap the 3 golden rings in turn · Awaken the tree's vitality (0 / 3)
+依次点击 3 处金色光圈 · 唤醒大树生机（1 / 3）	Tap the 3 golden rings in turn · Awaken the tree's vitality (1 / 3)
+依次点击 3 处金色光圈 · 唤醒大树生机（2 / 3）	Tap the 3 golden rings in turn · Awaken the tree's vitality (2 / 3)
+依次点击 3 处金色光圈 · 唤醒大树生机（3 / 3）	Tap the 3 golden rings in turn · Awaken the tree's vitality (3 / 3)
+大树焕发勃勃生机！正在进入甲骨文字形...	The great tree brims with vitality! Entering the Oracle Bone script...
+参天大树长成了！正在进入下一幕...	The towering tree is fully grown! Entering the next act...
+种子破土发芽啦！正在进入下一幕...	The seed has sprouted through the soil! Entering the next act...
+古人观察树木「上冒枝叶、中立树干、下扎树根」的姿态，刻画出了甲骨文与小篆的「木」字。	Ancient people observed how a tree spreads branches above, stands with a trunk in the middle, and sinks roots below, carving the Oracle Bone and Small Seal character "木".
+点击画面 · 拆解「木」字的象形部件	Tap the screen · Deconstruct the pictographic parts of "木"
+「木」是汉字里最重要的独体部首之一：一横如树冠横枝，一竖如笔直树干，一撇一捺如左右深扎的树根。	"木" is one of the most important foundational radicals: the horizontal stroke is the spreading branches, the vertical stroke is the straight trunk, and the left/right strokes are the deep roots.
+点击上方部件按钮观察 · 或点击画面开始写字	Tap the component buttons above · Or tap the screen to start writing
+严格按照笔顺写出「木」字：第一笔横、第二笔竖、第三笔撇、第四笔捺。	Write "木" in exact stroke order: 1st horizontal, 2nd vertical, 3rd left-falling, 4th right-falling.
+顺着发光箭头的方向 · 一笔一笔描写出「木」	Follow the glowing arrows · Trace "木" stroke by stroke
+写得真棒！点击画面进入词意森林	Great job writing! Tap the screen to enter the forest of words
+一棵树是「木」，两棵树并排是「林」，三棵树聚在一起就成了广袤的「森」！	One tree is "木" (tree), two trees side by side make "林" (woods), and three trees together form a vast "森" (forest)!
+点击词卡听读音 · 再点画面进入自由余韵	Tap word cards to hear pronunciation · Tap screen again for free finale
+十年树木，生生不息。点击草地种下更多春天的树苗，点击大树掀起漫天飞舞的绿叶吧！	It takes ten years to grow a tree, full of endless life. Tap the meadow to plant more spring saplings, or tap the great tree to send green leaves dancing!
+自由点击草地种树苗 · 点击大树唤醒春风飞叶	Freely tap the meadow to plant saplings · Tap the great tree for spring leaves
+完整木字	Full "木"
+一横 · 树冠枝条	Horizontal · Canopy Branches
+一竖 · 笔直树干	Vertical · Straight Trunk
+撇捺 · 地下树根	Left & Right Strokes · Underground Roots
+笔画：0 / 4 · 第 1 笔：横（树冠横枝）	Strokes: 0 / 4 · Stroke 1: Horizontal (Canopy Branch)
+笔画：1 / 4 · 第 2 笔：竖（笔直树干）	Strokes: 1 / 4 · Stroke 2: Vertical (Straight Trunk)
+笔画：2 / 4 · 第 3 笔：撇（左伸树根）	Strokes: 2 / 4 · Stroke 3: Left-falling (Left Root)
+笔画：3 / 4 · 第 4 笔：捺（右展树根）	Strokes: 3 / 4 · Stroke 4: Right-falling (Right Root)
+笔画：4 / 4 · 已写完！	Strokes: 4 / 4 · Completed!
+示范下一笔	Demo Next Stroke
+重写	Reset
+树木	Tree
+一棵破土而出、枝繁叶茂的树	A lush tree that has sprouted from the earth
+树林	Woods
+双木成林，许多树木相伴生长	Two trees make woods; many trees growing side by side
+森林	Forest
+三木为森，万木参天的绿色海洋	Three trees make a forest; a green ocean of towering trees
+重温「木」的故事	Replay Story of "木"
+跳过本幕	Skip Scene
+声音开关	Toggle Sound
+满树新叶	Lush New Leaves
+枝头黄鹂	Oriole on the Branch
+树根松鼠	Squirrel by the Roots
+✓ 满树新叶	✓ Lush New Leaves
+✓ 枝头黄鹂	✓ Oriole on the Branch
+✓ 树根松鼠	✓ Squirrel by the Roots
+甲骨文 / 小篆 · 象形树枝树根	Oracle Bone / Small Seal · Pictographic Branches & Roots
+现代楷书 · 四画「木」	Modern Regular Script · 4-Stroke "木"
+上展枝叶、下扎树根的大树	A great tree with spreading branches above and deep roots below

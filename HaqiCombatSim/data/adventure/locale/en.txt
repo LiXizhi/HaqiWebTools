@@ -4983,7 +4983,7 @@ VIP7级专属的甜蜜糖果，14天有效期。||Sweet candy exclusive to VIP l
 这个冬天一定很暖了 在哈奇岛NPC胖雪人处购买得到||This winter is sure to be warm. Buy it from the plump snowman on Haqi Island
 拿在手上以后 整个人都帅呆了！||Hold this and you look amazing!
 圣诞专属手杖||Exclusive Christmas cane
-非常具有纪念价值的眼罩 奖励给所有在2012年前注册的魔法哈奇们 请符合条件的哈奇到NPC胖雪人处免费领取 领取眼罩截止日期： 2014年2月13日||A commemorative eye mask for mages who registered before 2012. Eligible mages can claim it free from the plump snowman. Claim deadline: 13 February 2014
+非常具有纪念价值的眼罩 奖励给所有在2012年前注册的魔法哈奇们 请符合条件的哈奇到NPC胖雪人处免费领取 领取眼罩截止日期： 2014年2月13日||A commemorative eye mask for Magic Haqi players who registered before 2012. Eligible mages can claim it free from the plump snowman. Claim deadline: 13 February 2014
 仅在2014寒假 限时推出的一款绝版眼罩 非常具有收藏价值 购买眼罩截止日期： 2014年2月13日||A limited eye mask sold only for the 2014 winter break. Purchase deadline: 13 February 2014
 在街边捡到了的兔子 每天就知道装死……||A rabbit picked up on the street. All it does is play dead.
 承诺一生只送1人 使用方法： 1、女生在(男版)戒指上签名，男生在(女版)戒指上签名 2、双方交换戒指 3、仪式完成 一个人一辈子只能拥有一枚男版/女版戒指||A promise for one person only. How to use: 1. She signs the male ring, he signs the female ring. 2. Exchange rings. 3. The ceremony is complete. Each person may own only one male or female ring
@@ -5015,7 +5015,7 @@ VIP7级专属的甜蜜糖果，14天有效期。||Sweet candy exclusive to VIP l
 学校马路对面贩卖的蔓越莓冰棍 最适合夏天吃了||A cranberry popsicle sold across from school. Best in summer
 在2015年端午节出的活动纪念副手 极具收藏意义 用999个超能粽子即可兑换||A 2015 Dragon Boat off-hand souvenir. Exchange 999 super rice dumplings
 逐梦玫瑰代表着创新 有效使用时间：6个月 9朵玫瑰花见证着你在创意空间逐梦的时光 创意同行，谢谢一路有你。||A dream-chasing rose stands for invention. Usable for 6 months. Nine roses mark your time in the creative space
-2020 爱你爱你 魔法哈奇白色情人节限定！时效限制：永久有效||2020 White Day limited item. Duration: permanent
+2020 爱你爱你 魔法哈奇白色情人节限定！时效限制：永久有效||2020 Magic Haqi White Day limited item. Duration: permanent
 2020白色情人节特别手持 抱抱你，送给特别的你。||2020 White Day hand item. A hug for someone special.
 穿戴此手套 必将披荆斩棘，所向披靡！||Wear these gloves and cut through every obstacle
 陈旧的杖柄，但似乎有用…… （需将杖柄装备在“玩具”栏中，打败秘境55层BOSS后淬炼成真火杖柄）||An old wand haft that still seems useful. Equip it in the toy slot and defeat the realm floor 55 boss to temper it into a true-fire haft
@@ -10297,7 +10297,7 @@ VIP 有效期由账号下所有角色共享；魔豆放入当前角色背包，�
 高山=High Mountain (高山)
 高高耸立的大山，穿过了重重云海。=A lofty mountain rises high, piercing through layers of clouds.
 连绵的群山与奔流的河水，组成壮丽的山川。=Rolling mountains and rushing rivers form magnificent landscapes.
-山林=Mountain Forest (山林)
+山林||Mountain Forest
 长满苍松与翠竹的山坡，是鸟儿和百兽的家。=Hillsides covered in pines and bamboo are home to birds and wildlife.
 三座青峰耸立在天地之间，稳稳地守护着四季。=Three green peaks stand between heaven and earth, steadily guarding the four seasons.
 苍松常青，泉水长流，回荡着大山的歌声。=Pines stay evergreen and springs flow on, echoing the song of the mountains.
@@ -10311,7 +10311,7 @@ VIP 有效期由账号下所有角色共享；魔豆放入当前角色背包，�
 清泉||Clear Spring
 按住开泉||Hold to Open Spring
 奔流的溪涧与水花 · 汉字象形故事||Flowing Stream & Splashes · Pictograph Story
-再看一次 · 水的故事||Watch Again · Story of 水
+再看一次 · 水的故事||Watch Again · The Story of "Shui" (Water)
 按住屏幕 · 温热融冰开泉||Hold Screen · Warm the Frozen Spring
 按住屏幕或按钮 · 融开泉眼寒冰||Hold Screen or Button · Melt the Spring Ice
 顺着中央溪道向下滑动 · 引清泉奔流||Drag Down Along the Creek · Guide the Stream
@@ -10338,15 +10338,15 @@ VIP 有效期由账号下所有角色共享；魔豆放入当前角色背包，�
 红锦鲤在清波里摆尾跃起，泛起一圈圈涟漪！||Red koi leap joyfully in the clear waves, spreading ripples!
 岸边的翠竹与水草喝饱了溪水，吐露鲜亮的新绿！||Streamside bamboo and reeds drink deeply and sprout fresh green leaves!
 你看：正中一道奔涌主流，左右两侧溅起四朵水花。||Look: one surging main current in the middle, with four splashes on both sides.
-古人画下中间蜿蜒的主流与两边飞溅的水滴，造出了象形字「水」。||Ancients drew the winding main stream and splashes on both sides to create 水.
+古人画下中间蜿蜒的主流与两边飞溅的水滴，造出了象形字「水」。||Ancients drew the winding main stream and splashes on both sides to create the pictograph "shui" (water).
 正中主流化作竖钩，左边水花连成横撇，右边水花化作撇与捺。||The center stream becomes the vertical hook, flanked by left and right splash strokes.
-先写中间的竖钩，再写左边的横撇和右边的撇、捺，写下「水」！||Trace center first, then left and right strokes to write 水!
-太棒了！中间主流、两边水花，四笔写出了清澈的「水」！||Wonderful! Four strokes complete the character 水!
+先写中间的竖钩，再写左边的横撇和右边的撇、捺，写下「水」！||Trace the center vertical hook first, then the left horizontal-sweep and the right falling strokes to write "shui"!
+太棒了！中间主流、两边水花，四笔写出了清澈的「水」！||Wonderful! Main stream in the center, splashes on both sides — four strokes write the clear "shui"!
 清澈的「水」流进生活里，化作了河水、水花与山水。||Clear water flows into daily words: river water, splashes, and mountains & waters.
 河水（hé shuǐ）：在河道里欢快流淌的清澈溪水。||hé shuǐ — clear river water flowing in its channel.
 水花（shuǐ huā）：溪流撞上青石溅起的晶莹浪花。||shuǐ huā — sparkling splashes where water meets stone.
 山水（shān shuǐ）：苍翠群山与潺潺流水相伴的风景。||shān shuǐ — green mountains and flowing waters together.
-众水并流，润泽四方——你已经学会了清澈灵动的「水」字！||Waters flow together and nourish all things — you have mastered 水!
+众水并流，润泽四方——你已经学会了清澈灵动的「水」字！||Waters flow together and nourish all around — you have mastered the clear, lively character "shui"!
 
 # hanzi/hanzi_huo.html
 寒夜||Cold Night
@@ -10356,7 +10356,7 @@ VIP 有效期由账号下所有角色共享；魔豆放入当前角色背包，�
 暖光||Warm Glow
 按住引火||Hold to Ignite
 篝火跃动的焰苗与火星 · 汉字象形故事||Dancing Campfire Flames & Sparks · Pictograph Story
-再看一次 · 火的故事||Watch Again · Story of 火
+再看一次 · 火的故事||Watch Again · The Story of "Huo" (Fire)
 按住屏幕 · 擦亮火石引火||Hold Screen · Strike Flint to Ignite
 按住屏幕或按钮 · 擦亮火石点燃柴薪||Hold Screen or Button · Strike Flint to Light Firewood
 从篝火向上滑动 · 扇旺冲天火焰||Drag Up from the Fire · Fan the Rising Blaze
@@ -10383,15 +10383,15 @@ VIP 有效期由账号下所有角色共享；魔豆放入当前角色背包，�
 架上的铜茶壶咕嘟沸腾，飘起一缕缕暖白茶香！||The copper tea kettle bubbles on the rack, steaming with warm tea fragrance!
 火畔的松果与红薯烤得金黄酥香，让人垂涎欲滴！||Pinecones and sweet potatoes roast golden and fragrant by the fire!
 你看：正中一道高耸主焰，左右两侧跃起两簇小火苗。||Look: one tall main flame in the center, with two leaping sparks on the sides.
-古人画下向上升腾的主焰与两侧火苗，造出了象形字「火」。||Ancients drew the rising central flame and side sparks to create 火.
+古人画下向上升腾的主焰与两侧火苗，造出了象形字「火」。||Ancients drew the rising central flame and side sparks to create the pictograph "huo" (fire).
 两边火苗化作左点与右短撇，正中主焰化作竖撇与长捺。||Side sparks become the left dot and right short sweep; the main flame becomes the center sweep and press.
 记住笔顺：先写两边的点、短撇，再写中间的竖撇、长捺！||Trace the side dot and short sweep first, then the center sweep and long press!
-太棒了！先两边火苗、再中间主焰，四笔写出了跃动的「火」！||Wonderful! Side sparks first, main flame next — four strokes complete 火!
+太棒了！先两边火苗、再中间主焰，四笔写出了跃动的「火」！||Wonderful! Side sparks first, then the central flame — four strokes write the leaping "huo"!
 温暖明亮的「火」走进词汇里，化作了火苗、火把与花火。||Warm fire shines in words: flame, torch, and fireworks.
 火苗（huǒ miáo）：柴薪上欢快跳动的金红火焰。||huǒ miáo — dancing golden-red flames above firewood.
 火把（huǒ bǎ）：在黑夜里照亮前路的温暖火炬。||huǒ bǎ — a warm torch lighting the path through night.
 花火（huā huǒ）：夜空中如繁花般绽放的璀璨火星。||huā huǒ — sparkling fireworks blooming in the night sky.
-星火跃动，照亮寒夜——你已经学会了温暖明亮的「火」字！||Sparks dance and light the cold night — you have mastered 火!
+星火跃动，照亮寒夜——你已经学会了温暖明亮的「火」字！||Sparks dance and light the cold night — you have mastered the warm, bright character "huo"!
 你需要读出下面句子才能召唤{item}||Read a spell below aloud to summon {item}
 从简单到挑战，正确读出或输入任意一句即可召唤。||From easy to challenging: say or type any one sentence correctly to summon.
 简单||Easy
@@ -10464,3 +10464,579 @@ mù · 树木与生机	mù · Tree & Vitality
 甲骨文 / 小篆 · 象形树枝树根	Oracle Bone / Small Seal · Pictographic Branches & Roots
 现代楷书 · 四画「木」	Modern Regular Script · 4-Stroke "木"
 上展枝叶、下扎树根的大树	A great tree with spreading branches above and deep roots below
+
+# 2026-10-19 字源岛六段生活故事与文字记忆
+找到回村的路||Find the way home
+昨天，一个孩子跟着空白的路牌走进了山里。石伯找到了他，可明天还会有人迷路。||Yesterday, a child followed blank signs into the mountains. Uncle Shi found him, but someone else may get lost tomorrow.
+石伯把字写回路牌。孩子指着“下”说：“这次我知道怎么回家了。”||Uncle Shi writes the characters back on the signs. The child points to the character for "down" and says, "Now I know how to get home."
+昨天，一个孩子跟着空白的路牌走进了山里。石伯找到了他，可明天还会有人迷路。 祖先曾在石上写下方向。找回这些字，让回村的路重新有名字。||Yesterday, a child followed blank signs into the mountains. Uncle Shi found him, but someone else may get lost tomorrow. Our ancestors wrote directions on stones. Find these characters so the roads home have names again.
+岛上传说，五千年前，祖先把生活记在文字里。后来文字失落，只留下散在岛上的记忆。 昨天，一个孩子跟着空白的路牌走进了山里。石伯找到了他，可明天还会有人迷路。||Island stories say that five thousand years ago, our ancestors wrote about their lives. Later, the writing was lost. Only memories remained, scattered across the island. Yesterday, a child followed blank signs into the mountains. Uncle Shi found him, but someone else may get lost tomorrow.
+祖先曾在石上写下方向。找回这些字，让回村的路重新有名字。 每次先练习一两个字。靠近文字线索，完成一次读写练习。最近练习的字会在战斗中化成文字卡，观看动画不算完成练习。||Our ancestors wrote directions on stones. Find these characters so the roads home have names again. Practice one or two characters at a time. Go near a character clue and complete a reading or writing exercise. Recently practiced characters can become word cards in battle. Watching an animation does not count as practice.
+把水送到田里||Bring water to the fields
+溪禾的田干了。旧水渠有两个出口，可木牌上的字都不见了。||Xihe's fields are dry. The old water channel has two exits, but the words on its wooden signs are gone.
+水流进田里。溪禾立起新木牌：“以后大家都能看懂水要去哪里。”||Water flows into the fields. Xihe puts up a new wooden sign. "Now everyone can read where the water goes."
+溪禾的田干了。旧水渠有两个出口，可木牌上的字都不见了。 找回水渠的记录，分清田地、树林和泥土。溪禾才能把水引到需要它的地方。||Xihe's fields are dry. The old water channel has two exits, but the words on its wooden signs are gone. Find the water channel records. Learn which signs mean fields, woods, and soil. Then Xihe can send water where it is needed.
+找回水渠的记录，分清田地、树林和泥土。溪禾才能把水引到需要它的地方。 每次先练习一两个字。靠近文字线索，完成一次读写练习。最近练习的字会在战斗中化成文字卡，观看动画不算完成练习。||Find the water channel records. Learn which signs mean fields, woods, and soil. Then Xihe can send water where it is needed. Practice one or two characters at a time. Go near a character clue and complete a reading or writing exercise. Recently practiced characters can become word cards in battle. Watching an animation does not count as practice.
+留下天气记录||Keep a weather record
+大家刚把谷物搬出来，雨就来了。祖先留下的天气册只剩下空格。||Rain came just as everyone brought the grain outside. The old weather book now has only empty spaces.
+溪禾写下今天的天气。石伯笑了：“明天的人，也能知道我们今天看到了什么。”||Xihe writes down today's weather. Uncle Shi smiles. "People in the future can learn what we saw today."
+大家刚把谷物搬出来，雨就来了。祖先留下的天气册只剩下空格。 找回记时间和天气的字，把每天看到的事情记下来。记录帮助大家安排生活，不会替大家预知天气。||Rain came just as everyone brought the grain outside. The old weather book now has only empty spaces. Find characters for time and weather. Write down what you see each day. Records help people plan their days. They cannot tell the future weather.
+找回记时间和天气的字，把每天看到的事情记下来。记录帮助大家安排生活，不会替大家预知天气。 每次先练习一两个字。靠近文字线索，完成一次读写练习。最近练习的字会在战斗中化成文字卡，观看动画不算完成练习。||Find characters for time and weather. Write down what you see each day. Records help people plan their days. They cannot tell the future weather. Practice one or two characters at a time. Go near a character clue and complete a reading or writing exercise. Recently practiced characters can become word cards in battle. Watching an animation does not count as practice.
+为夜归的人留灯||Leave a light for travelers
+小灯每晚都提着灯等旅人。有人看见亮光，却不知道哪扇门可以进去休息。||Xiaodeng waits for travelers with a lantern every night. Some see the light but do not know which door leads to a place to rest.
+门边亮起灯，牌上写着休息的地方。小灯终于可以回屋：“现在，文字会替我告诉他们。”||A light shines by the door. The sign shows where to rest. Xiaodeng can finally go inside. "Now the words can tell them for me."
+小灯每晚都提着灯等旅人。有人看见亮光，却不知道哪扇门可以进去休息。 找回门前告示上的字，把灯的意思留给夜里赶路的人。||Xiaodeng waits for travelers with a lantern every night. Some see the light but do not know which door leads to a place to rest. Find the characters on the notice by the door. Help night travelers understand what the light means.
+找回门前告示上的字，把灯的意思留给夜里赶路的人。 每次先练习一两个字。靠近文字线索，完成一次读写练习。最近练习的字会在战斗中化成文字卡，观看动画不算完成练习。||Find the characters on the notice by the door. Help night travelers understand what the light means. Practice one or two characters at a time. Go near a character clue and complete a reading or writing exercise. Recently practiced characters can become word cards in battle. Watching an animation does not count as practice.
+把心意留给别人||Share your care in a letter
+阿初找到一封旧家书。里面夹着一只小手印，可写信的人想说什么呢？||Achu found an old family letter. There is a small handprint inside. What did the writer want to say?
+阿初把家书读给大家听，又写下一封新信：“我们很好，也想知道你过得好不好。”||Achu reads the family letter to everyone, then writes a new one. "We are well. We want to know how you are, too."
+阿初找到一封旧家书。里面夹着一只小手印，可写信的人想说什么呢？ 找回祖先关于见面、看望和关心的记忆，让这封信重新有人读懂。||Achu found an old family letter. There is a small handprint inside. What did the writer want to say? Find our ancestors' memories of meeting, visiting, and caring for others. Help people read this letter again.
+找回祖先关于见面、看望和关心的记忆，让这封信重新有人读懂。 每次先练习一两个字。靠近文字线索，完成一次读写练习。最近练习的字会在战斗中化成文字卡，观看动画不算完成练习。||Find our ancestors' memories of meeting, visiting, and caring for others. Help people read this letter again. Practice one or two characters at a time. Go near a character clue and complete a reading or writing exercise. Recently practiced characters can become word cards in battle. Watching an animation does not count as practice.
+大家一起庆祝||Celebrate together
+庆典就要开始。谁拿大鼓，谁拿小鼓？旧节目单上的字都丢了。||The festival is about to start. Who will take the big drum? Who will take the small one? The words on the old program are gone.
+鼓声响起来，大家一起跳舞。阿初说：“祖先留下的字，现在又在我们的生活里了。”||The drums begin, and everyone dances. Achu says, "The characters our ancestors left are part of our lives again."
+庆典就要开始。谁拿大鼓，谁拿小鼓？旧节目单上的字都丢了。 找回最后一组生活记录。人们用文字安排庆典，也把来自不同地方的朋友介绍给彼此。||The festival is about to start. Who will take the big drum? Who will take the small one? The words on the old program are gone. Find the last set of daily records. People use writing to plan the festival and introduce friends from different places.
+找回最后一组生活记录。人们用文字安排庆典，也把来自不同地方的朋友介绍给彼此。 每次先练习一两个字。靠近文字线索，完成一次读写练习。最近练习的字会在战斗中化成文字卡，观看动画不算完成练习。||Find the last set of daily records. People use writing to plan the festival and introduce friends from different places. Practice one or two characters at a time. Go near a character clue and complete a reading or writing exercise. Recently practiced characters can become word cards in battle. Watching an animation does not count as practice.
+后来呢？||What happened next?
+我去寻找这些记忆。||I will look for these memories.
+让这些字继续留在生活里。||Let's keep these characters in our daily lives.
+山脚的路通向村子。||The road at the foot of the mountain leads to the village.
+祖先的记忆里：山脚的路通向村子。||In our ancestors' memories: The road at the foot of the mountain leads to the village.
+有人把“山”写了下来。山脚的路通向村子。||Someone wrote the character for "mountain". The road at the foot of the mountain leads to the village.
+后来的孩子读懂了这个字。山脚的路通向村子。||Children later learned to read this character. The road at the foot of the mountain leads to the village.
+练习“山”字||Practice the character for "mountain"
+上坡时，沿着石阶走。||Follow the stone steps uphill.
+祖先的记忆里：上坡时，沿着石阶走。||In our ancestors' memories: Follow the stone steps uphill.
+有人把“上”写了下来。上坡时，沿着石阶走。||Someone wrote the character for "up". Follow the stone steps uphill.
+后来的孩子读懂了这个字。上坡时，沿着石阶走。||Children later learned to read this character. Follow the stone steps uphill.
+练习“上”字||Practice the character for "up"
+下坡后，就能看见村口。||Past the slope, you can see the village entrance.
+祖先的记忆里：下坡后，就能看见村口。||In our ancestors' memories: Past the slope, you can see the village entrance.
+有人把“下”写了下来。下坡后，就能看见村口。||Someone wrote the character for "down". Past the slope, you can see the village entrance.
+后来的孩子读懂了这个字。下坡后，就能看见村口。||Children later learned to read this character. Past the slope, you can see the village entrance.
+练习“下”字||Practice the character for "down"
+中间的路通向广场。||The middle road leads to the square.
+祖先的记忆里：中间的路通向广场。||In our ancestors' memories: The middle road leads to the square.
+有人把“中”写了下来。中间的路通向广场。||Someone wrote the character for "middle". The middle road leads to the square.
+后来的孩子读懂了这个字。中间的路通向广场。||Children later learned to read this character. The middle road leads to the square.
+练习“中”字||Practice the character for "middle"
+石头上的字经得住风雨。||Writing on stone lasts through wind and rain.
+祖先的记忆里：石头上的字经得住风雨。||In our ancestors' memories: Writing on stone lasts through wind and rain.
+有人把“石”写了下来。石头上的字经得住风雨。||Someone wrote the character for "stone". Writing on stone lasts through wind and rain.
+后来的孩子读懂了这个字。石头上的字经得住风雨。||Children later learned to read this character. Writing on stone lasts through wind and rain.
+练习“石”字||Practice the character for "stone"
+这条渠把水送进田里。||This channel brings water to the fields.
+祖先的记忆里：这条渠把水送进田里。||In our ancestors' memories: This channel brings water to the fields.
+有人把“水”写了下来。这条渠把水送进田里。||Someone wrote the character for "water". This channel brings water to the fields.
+后来的孩子读懂了这个字。这条渠把水送进田里。||Children later learned to read this character. This channel brings water to the fields.
+练习“水”字||Practice the character for "water"
+田里的苗等着浇水。||The young plants in the fields need water.
+祖先的记忆里：田里的苗等着浇水。||In our ancestors' memories: The young plants in the fields need water.
+有人把“田”写了下来。田里的苗等着浇水。||Someone wrote the character for "field". The young plants in the fields need water.
+后来的孩子读懂了这个字。田里的苗等着浇水。||Children later learned to read this character. The young plants in the fields need water.
+练习“田”字||Practice the character for "field"
+松开泥土，水才能慢慢渗进去。||Loosen the soil so water can slowly soak in.
+祖先的记忆里：松开泥土，水才能慢慢渗进去。||In our ancestors' memories: Loosen the soil so water can slowly soak in.
+有人把“土”写了下来。松开泥土，水才能慢慢渗进去。||Someone wrote the character for "soil". Loosen the soil so water can slowly soak in.
+后来的孩子读懂了这个字。松开泥土，水才能慢慢渗进去。||Children later learned to read this character. Loosen the soil so water can slowly soak in.
+练习“土”字||Practice the character for "soil"
+木牌标着水渠的方向。||Wooden signs show the way along the water channel.
+祖先的记忆里：木牌标着水渠的方向。||In our ancestors' memories: Wooden signs show the way along the water channel.
+有人把“木”写了下来。木牌标着水渠的方向。||Someone wrote the character for "tree". Wooden signs show the way along the water channel.
+后来的孩子读懂了这个字。木牌标着水渠的方向。||Children later learned to read this character. Wooden signs show the way along the water channel.
+练习“木”字||Practice the character for "tree"
+树林里的小路也有了名字。||The paths in the woods have names again, too.
+祖先的记忆里：树林里的小路也有了名字。||In our ancestors' memories: The paths in the woods have names again, too.
+有人把“森”写了下来。树林里的小路也有了名字。||Someone wrote the character for "forest". The paths in the woods have names again, too.
+后来的孩子读懂了这个字。树林里的小路也有了名字。||Children later learned to read this character. The paths in the woods have names again, too.
+练习“森”字||Practice the character for "forest"
+日出后，大家开始干活。||Everyone starts work after sunrise.
+祖先的记忆里：日出后，大家开始干活。||In our ancestors' memories: Everyone starts work after sunrise.
+有人把“日”写了下来。日出后，大家开始干活。||Someone wrote the character for "sun". Everyone starts work after sunrise.
+后来的孩子读懂了这个字。日出后，大家开始干活。||Children later learned to read this character. Everyone starts work after sunrise.
+练习“日”字||Practice the character for "sun"
+月亮升起来，人们收好工具。||When the moon rises, people put their tools away.
+祖先的记忆里：月亮升起来，人们收好工具。||In our ancestors' memories: When the moon rises, people put their tools away.
+有人把“月”写了下来。月亮升起来，人们收好工具。||Someone wrote the character for "moon". When the moon rises, people put their tools away.
+后来的孩子读懂了这个字。月亮升起来，人们收好工具。||Children later learned to read this character. When the moon rises, people put their tools away.
+练习“月”字||Practice the character for "moon"
+每天留一行记录。||Write one line each day.
+祖先的记忆里：每天留一行记录。||In our ancestors' memories: Write one line each day.
+有人把“天”写了下来。每天留一行记录。||Someone wrote the character for "day". Write one line each day.
+后来的孩子读懂了这个字。每天留一行记录。||Children later learned to read this character. Write one line each day.
+练习“天”字||Practice the character for "day"
+云遮住太阳，大家抬头看看天。||Clouds cover the sun. Everyone looks up at the sky.
+祖先的记忆里：云遮住太阳，大家抬头看看天。||In our ancestors' memories: Clouds cover the sun. Everyone looks up at the sky.
+有人把“云”写了下来。云遮住太阳，大家抬头看看天。||Someone wrote the character for "cloud". Clouds cover the sun. Everyone looks up at the sky.
+后来的孩子读懂了这个字。云遮住太阳，大家抬头看看天。||Children later learned to read this character. Clouds cover the sun. Everyone looks up at the sky.
+练习“云”字||Practice the character for "cloud"
+下雨了，把谷物搬回屋。||It is raining. Bring the grain inside.
+祖先的记忆里：下雨了，把谷物搬回屋。||In our ancestors' memories: It is raining. Bring the grain inside.
+有人把“雨”写了下来。下雨了，把谷物搬回屋。||Someone wrote the character for "rain". It is raining. Bring the grain inside.
+后来的孩子读懂了这个字。下雨了，把谷物搬回屋。||Children later learned to read this character. It is raining. Bring the grain inside.
+练习“雨”字||Practice the character for "rain"
+火要有人照看。||Someone must watch the fire.
+祖先的记忆里：火要有人照看。||In our ancestors' memories: Someone must watch the fire.
+有人把“火”写了下来。火要有人照看。||Someone wrote the character for "fire". Someone must watch the fire.
+后来的孩子读懂了这个字。火要有人照看。||Children later learned to read this character. Someone must watch the fire.
+练习“火”字||Practice the character for "fire"
+光照着回家的路。||Light shines on the way home.
+祖先的记忆里：光照着回家的路。||In our ancestors' memories: Light shines on the way home.
+有人把“光”写了下来。光照着回家的路。||Someone wrote the character for "light". Light shines on the way home.
+后来的孩子读懂了这个字。光照着回家的路。||Children later learned to read this character. Light shines on the way home.
+练习“光”字||Practice the character for "light"
+屋里明亮，可以看清门边的告示。||The room is bright. You can read the notice by the door.
+祖先的记忆里：屋里明亮，可以看清门边的告示。||In our ancestors' memories: The room is bright. You can read the notice by the door.
+有人把“明”写了下来。屋里明亮，可以看清门边的告示。||Someone wrote the character for "bright". The room is bright. You can read the notice by the door.
+后来的孩子读懂了这个字。屋里明亮，可以看清门边的告示。||Children later learned to read this character. The room is bright. You can read the notice by the door.
+练习“明”字||Practice the character for "bright"
+门上写着欢迎旅人。||The words on the door welcome travelers.
+祖先的记忆里：门上写着欢迎旅人。||In our ancestors' memories: The words on the door welcome travelers.
+有人把“门”写了下来。门上写着欢迎旅人。||Someone wrote the character for "door". The words on the door welcome travelers.
+后来的孩子读懂了这个字。门上写着欢迎旅人。||Children later learned to read this character. The words on the door welcome travelers.
+练习“门”字||Practice the character for "door"
+走累了，可以在这里休息。||If you are tired from walking, you can rest here.
+祖先的记忆里：走累了，可以在这里休息。||In our ancestors' memories: If you are tired from walking, you can rest here.
+有人把“休”写了下来。走累了，可以在这里休息。||Someone wrote the character for "rest". If you are tired from walking, you can rest here.
+后来的孩子读懂了这个字。走累了，可以在这里休息。||Children later learned to read this character. If you are tired from walking, you can rest here.
+练习“休”字||Practice the character for "rest"
+信里记着想念的人。||The letter tells of someone the writer misses.
+祖先的记忆里：信里记着想念的人。||In our ancestors' memories: The letter tells of someone the writer misses.
+有人把“人”写了下来。信里记着想念的人。||Someone wrote the character for "person". The letter tells of someone the writer misses.
+后来的孩子读懂了这个字。信里记着想念的人。||Children later learned to read this character. The letter tells of someone the writer misses.
+练习“人”字||Practice the character for "person"
+口头说过的话，也能写下来。||Spoken words can be written down, too.
+祖先的记忆里：口头说过的话，也能写下来。||In our ancestors' memories: Spoken words can be written down, too.
+有人把“口”写了下来。口头说过的话，也能写下来。||Someone wrote the character for "mouth". Spoken words can be written down, too.
+后来的孩子读懂了这个字。口头说过的话，也能写下来。||Children later learned to read this character. Spoken words can be written down, too.
+练习“口”字||Practice the character for "mouth"
+这只手印属于写信的孩子。||This handprint belongs to the child who wrote the letter.
+祖先的记忆里：这只手印属于写信的孩子。||In our ancestors' memories: This handprint belongs to the child who wrote the letter.
+有人把“手”写了下来。这只手印属于写信的孩子。||Someone wrote the character for "hand". This handprint belongs to the child who wrote the letter.
+后来的孩子读懂了这个字。这只手印属于写信的孩子。||Children later learned to read this character. This handprint belongs to the child who wrote the letter.
+练习“手”字||Practice the character for "hand"
+看望家人时，亲眼看看他们的生活。||Visit your family and see their lives with your own eyes.
+祖先的记忆里：看望家人时，亲眼看看他们的生活。||In our ancestors' memories: Visit your family and see their lives with your own eyes.
+有人把“目”写了下来。看望家人时，亲眼看看他们的生活。||Someone wrote the character for "eye". Visit your family and see their lives with your own eyes.
+后来的孩子读懂了这个字。看望家人时，亲眼看看他们的生活。||Children later learned to read this character. Visit your family and see their lives with your own eyes.
+练习“目”字||Practice the character for "eye"
+把关心写进信里。||Put your care for others into a letter.
+祖先的记忆里：把关心写进信里。||In our ancestors' memories: Put your care for others into a letter.
+有人把“心”写了下来。把关心写进信里。||Someone wrote the character for "heart". Put your care for others into a letter.
+后来的孩子读懂了这个字。把关心写进信里。||Children later learned to read this character. Put your care for others into a letter.
+练习“心”字||Practice the character for "heart"
+大鼓放在广场左边。||Put the big drum on the left side of the square.
+祖先的记忆里：大鼓放在广场左边。||In our ancestors' memories: Put the big drum on the left side of the square.
+有人把“大”写了下来。大鼓放在广场左边。||Someone wrote the character for "big". Put the big drum on the left side of the square.
+后来的孩子读懂了这个字。大鼓放在广场左边。||Children later learned to read this character. Put the big drum on the left side of the square.
+练习“大”字||Practice the character for "big"
+小鼓交给孩子们。||Give the small drums to the children.
+祖先的记忆里：小鼓交给孩子们。||In our ancestors' memories: Give the small drums to the children.
+有人把“小”写了下来。小鼓交给孩子们。||Someone wrote the character for "small". Give the small drums to the children.
+后来的孩子读懂了这个字。小鼓交给孩子们。||Children later learned to read this character. Give the small drums to the children.
+练习“小”字||Practice the character for "small"
+用耳朵听，大家一起跟上鼓点。||Listen and follow the drumbeat together.
+祖先的记忆里：用耳朵听，大家一起跟上鼓点。||In our ancestors' memories: Listen and follow the drumbeat together.
+有人把“耳”写了下来。用耳朵听，大家一起跟上鼓点。||Someone wrote the character for "ear". Listen and follow the drumbeat together.
+后来的孩子读懂了这个字。用耳朵听，大家一起跟上鼓点。||Children later learned to read this character. Listen and follow the drumbeat together.
+练习“耳”字||Practice the character for "ear"
+朋友在纸上写下自己的国家。||Friends write the names of their countries on paper.
+祖先的记忆里：朋友在纸上写下自己的国家。||In our ancestors' memories: Friends write the names of their countries on paper.
+有人把“国”写了下来。朋友在纸上写下自己的国家。||Someone wrote the character for "country". Friends write the names of their countries on paper.
+后来的孩子读懂了这个字。朋友在纸上写下自己的国家。||Children later learned to read this character. Friends write the names of their countries on paper.
+练习“国”字||Practice the character for "country"
+节目单上的舞，今天又有人跳了。||Today, people dance the dance from the old program again.
+祖先的记忆里：节目单上的舞，今天又有人跳了。||In our ancestors' memories: Today, people dance the dance from the old program again.
+有人把“舞”写了下来。节目单上的舞，今天又有人跳了。||Someone wrote the character for "dance". Today, people dance the dance from the old program again.
+后来的孩子读懂了这个字。节目单上的舞，今天又有人跳了。||Children later learned to read this character. Today, people dance the dance from the old program again.
+练习“舞”字||Practice the character for "dance"
+字源岛||Character Origins Island
+阿初||Achu
+溪禾||Xihe
+石伯||Uncle Shi
+小灯||Xiaodeng
+迷路的小鼠||Lost Mouse
+探索祖先的记忆，找回30个生活中的汉字，让路标、农事记录与家书重新被读懂。||Explore our ancestors' memories. Find 30 characters from daily life, so people can read signs, farming records, and family letters again.
+
+# js/view_adventure.js
+文网文[2009]093号||Online Culture Business License [2009] No. 093
+字源岛 · 第一章||Character Origins Island · Chapter 1
+字有魔法||Magic in Characters
+文字会醒来的地方||The Land Where Characters Wake
+说出汉字，唤醒力量。写出汉字，赋予形状。练习之后，在战斗中读写激活文字卡。||Speak a character to awaken its power. Write a character to give it shape. After practice, read and write to activate word cards in battle.
+探索字义||Explore Character Meanings
+说字写字||Speak & Write Characters
+文字战斗||Word Battles
+玩家2角色信息||Player 2 character info
+玩家1角色信息||Player 1 character info
+# js/view_dictionary.js
+字典||Dictionary
+# js/view_adventure.js
+时光长卷||Time Scroll
+# js/view_adventure_dialogue.js
+NPC对白||NPC Dialogue
+# js/view_adventure.js
+已准备 · 取消||Ready · Cancel
+# js/view_learning_mode.js
+当前链接要求开启双语学习，无法关闭。||This link requires bilingual learning, so it cannot be turned off.
+# js/adventure_renderer.js
+文字记忆||Word Memory
+跳过||Skip
+# js/adventure_app.js
+翻开字典||Open the Dictionary
+正在准备双人冒险…||Preparing a two-player adventure…
+新建角色前，是否播放开场动画《失落的光》？||Play the opening animation "The Lost Light" before creating a character?
+播放开场动画||Play Opening Animation
+直接创建角色||Create Character Directly
+字典暂时无法读取，本场使用普通卡牌。||The dictionary cannot be read right now; this battle will use regular cards.
+战斗回合已恢复：||Battle turn restored:
+本回合未完成，已恢复到出牌前。请重新选择目标。||This turn was not finished and has been restored to before the card was played. Please choose a target again.
+请先进入现实城市并结束当前战斗。||Enter the real city and finish the current battle first.
+正在展开时光长卷…||Unrolling the time scroll…
+探索进度未能保存，请重试。||Exploration progress could not be saved. Please try again.
+时光长卷加载超时，原城市已保留。||The time scroll timed out; the original city has been kept.
+文字卡暂时无法加载||Word cards cannot be loaded right now
+文字记忆尚未保存，请重试。||Word memory has not been saved yet. Please try again.
+正在准备汉字练习…||Preparing character practice…
+正在翻开字典…||Opening the dictionary…
+# js/adventure_cloud.js
+家园路径无效||Invalid home path
+当前 SDK 缺少家园读取能力，请刷新后重试||The current SDK cannot read homes; refresh and try again
+云端家园响应无效，本地进度已保留||Invalid cloud home response; local progress is kept
+# js/view_bilingual_dialogue.js
+释义待补充||Definition coming soon
+已补齐||Filled in
+模型补齐||Fill with model
+# js/adventure_catalog_quests_core.js
+请寻找新的祖先记忆任务||Look for a new ancestral memory quest
+# js/view_learning_chat.js
+时光旅人双语对话||Bilingual Dialogue with Time Travelers
+# js/view_learning_mode.js
+今日语言学习||Daily Language Learning
+学习有礼||Learn and Earn
+每天学一点，冒险多一点力量。||Learn a little each day, and your adventure grows a little stronger.
+找居民聊聊，或到字典完成今日任务。||Chat with residents, or finish today's tasks in the dictionary.
+今日语言学习奖励进度||Daily Language Learning Reward Progress
+再完成 {count} 次，解锁下一份奖励||Finish {count} more to unlock the next reward
+{count} 次||{count} times
+{count}次奖励：{amount}{currency}，{state}||Reward at {count} times: {amount} {currency}, {state}
+每次有效口语或字典答题增加 1% 属性，生命、攻击、防御各最多 +10%；叠满后增加超级魔力生成率，最多 +10%。||Each valid speaking answer or dictionary quiz adds 1% to stats; health, attack and defense each cap at +10%. Once maxed, super pip generation rate increases by up to +10%.
+口语交流、剧情跟读或字典练习通过后计数；仅浏览、听示范不计数。奇豆可买宠物口粮，仙豆可强化装备。||Counted when you pass speaking practice, story read-along, or dictionary exercises; browsing and listening to examples do not count. Qi beans buy pet food, and fairy beans strengthen gear.
+每天本机时间 00:00 重置，每档奖励限领一次。加成与学习进度仅保存在本机当前角色；换地图仍有效，新战斗生效。领取记录随角色保存。||Resets every day at 00:00 device time, and each reward tier can be claimed once. Bonuses and learning progress are saved on this device for the current character; they carry over between maps and apply in new battles. Claim records are saved with the character.
+双语学习已锁定||Bilingual learning is locked
+# js/view_companion_chat.js
+队友||Teammate
+# js/view_adventure_dialogue.js
+点击词语标记理解程度；同色连线表示对应词义，点击按钮可用模型补齐。||Tap a word to mark how well you know it. Matching colors link corresponding meanings; use the button to let the model fill in the rest.
+# js/view_adventure_rewards.js
+获得汉字卡||Character card earned
+点击翻开这个字的故事||Tap to open this character's story
+# js/view_adventure_roles.js
+单人模式||Single Player
+双人模式||Two Players
+双人模式至少需要两个不同角色。||Two-player mode needs at least two different characters.
+双人模式至少需要两个不同角色，请先点击“新建角色”创建第二个角色。||Two-player mode needs at least two different characters. Tap "New Character" to create a second one first.
+角色{number} · 已确认||Character {number} · Confirmed
+取消确认||Cancel Confirmation
+# js/view_adventure_settings.js
+每位玩家的控制器||Controller for Each Player
+手柄已经断开，请刷新设备列表||The gamepad has disconnected. Please refresh the device list
+控制器分配已保存；另一位玩家暂不分配设备||Controller assignment saved; the other player has no device for now
+控制器分配已保存||Controller assignment saved
+暂不分配||Leave Unassigned
+完整鼠标＋键盘||Full Mouse + Keyboard
+键盘左侧（WASD）||Keyboard Left (WASD)
+键盘右侧（方向键）||Keyboard Right (Arrow Keys)
+连接手柄后按一次按钮，再选择设备。Xbox标准布局：左摇杆／十字键移动或选择，A确认，B返回，X弃牌，Y宠物，LB卡包，RB跳过，RT跟随，View背包，Menu设置。断开时角色停止；重新连接后先松开按键。||After connecting a gamepad, press any button once, then choose the device. Standard Xbox layout: left stick or D-pad to move and select, A confirm, B back, X discard card, Y pet, LB deck, RB skip, RT follow, View bag, Menu settings. Your character stops when the pad disconnects; release the buttons after reconnecting.
+刷新已连接手柄||Refresh Connected Gamepads
+# js/view_adventure_time_scroll.js
+城市时光长卷||City Time Scroll
+想象中的时光场景 · 旅人为虚构人物||Imagined time scenes · the travelers are fictional
+回到城市||Back to the City
+关闭时光长卷并回到城市||Close the Time Scroll and Return to the City
+分段时间轴，向左走向过去||A segmented timeline; walk left to head into the past
+时光道路，左右方向键行走，也可点击地面||Time road: walk with the left and right arrow keys, or tap the ground
+向过去走||Walk Into the Past
+向现在走||Walk Back to the Present
+发现记录||Discoveries
+今日加成||Today's Bonus
+点击地面行走，靠近旅人或线索可互动。刻度等距排列，不表示相同年数。||Tap the ground to walk, and approach travelers or clues to interact. The ticks are evenly spaced but do not mark equal years.
+关闭时光详情||Close Time Details
+沿着时光道路，寻找这一站的线索。||Follow the time road and look for clues at this stop.
+今日语言加成||Today's Language Bonus
+有效口语沿用全局每日加成。阅读、发现线索和文字回答不增加口语加成；时光探索不发放货币。||Valid speaking practice uses the global daily bonus. Reading, finding clues, and typed answers do not add speaking bonus, and time exploration grants no currency.
+练习双语对话||Practice Bilingual Dialogue
+向左走，遇见时光旅人||Walk left to meet the time travelers
+# js/view_companion_chat.js
+还没有共同记忆。仅保存在本机。||No shared memories yet. Saved on this device only.
+# js/view_dictionary.js
+语言字典||Language Dictionary
+关闭字典||Close Dictionary
+战斗文字卡||Battle Word Cards
+中文 · 字词||Chinese · Characters & Words
+英文 · Word||English · Word
+日语||Japanese
+韩语||Korean
+继续今日学习||Continue Today's Learning
+开始今日学习||Start Today's Learning
+今天的学习完成了。去冒险吧，也可以再翻翻喜欢的字词。||Today's learning is done. Go on an adventure, or browse your favorite characters and words again.
+温故知新||Review and Learn
+认识新朋友||Meet New Words
+今天会用了||Used It Today
+今日已完成||Done for Today
+开始学习||Start Learning
+暂无需复习||Nothing to Review Yet
+已学完||All Learned
+学习奖励||Learning Rewards
+查看语言加成与阶段奖励||View language bonuses and stage rewards
+中英合并的最近练习，最多 10 张。点击卡牌可继续练习。||Your most recent Chinese-English practice, up to 10 cards. Tap a card to keep practicing.
+练习字词后，文字卡会出现在这里；不足 10 张时不会补入陌生字词。||Word cards appear here after you practice; unfamiliar words are not added to fill the 10 slots.
+搜索汉字、拼音（如 shui）或词义||Search characters, pinyin (like shui), or meanings
+搜索单词、中文词义或例句||Search words, Chinese meanings, or example sentences
+搜索字典||Search Dictionary
+清除搜索||Clear Search
+在全部条目中查看||View All Entries
+没有精确匹配。你想找的是不是：||No exact match. Did you mean:
+现在没有到期的字词，可以认识新词或自由翻看。||No words are due right now; learn new ones or browse freely.
+还没有查看记录，打开一个喜欢的字词吧。||No viewing history yet; open a character or word you like.
+暂时没有找到。试试单个字、单词的一部分，或中文词义。||Nothing found yet. Try a single character, part of a word, or a Chinese meaning.
+全部条目||All Entries
+最近查看||Recently Viewed
+可以复习||Ready to Review
+有动画||Has Animation
+汉字 · ||Character · 
+Word · 回忆拼写||Word · Recall Spelling
+未练习||Not Practiced
+待初次练习||First Practice Needed
+已恢复本次打开字典时的练习草稿，尚未提交。||Restored your practice draft from this dictionary session; it has not been submitted yet.
+请小老师讲讲这个词形||Ask the Little Teacher about this character's shape
+读懂这句话||Understand This Sentence
+朗读短语：||Read the phrase aloud:
+请小老师讲讲这句话||Ask the Little Teacher about this sentence
+听例句||Play Example
+听发音||Play Pronunciation
+听例句提示||Play Example Hint
+# js/view_dictionary_tutor.js
+停止朗读||Stop Reading
+# js/view_dictionary.js
+朗读速度||Reading Speed
+# js/view_dictionary_tutor.js
+正常速度||Normal Speed
+慢速朗读||Slow Reading
+# js/view_dictionary.js
+停止朗读短语：||Stop Reading the Phrase:
+# js/view_dictionary_tutor.js
+正在准备朗读…||Preparing to Read…
+# js/view_dictionary.js
+查看词义提示||View Meaning Hint
+查看字源资料（新窗口）||View Character Origin (New Window)
+有动画 · 看看这个字的故事||Has Animation · See This Character's Story
+动画正在加载。如未显示，可以关闭动画继续写字。||The animation is loading. If it does not appear, close it and keep writing.
+的动画故事||'s Animated Story
+笔顺完成了。||Stroke order complete.
+动画是艺术联想。关闭后可继续练习。||The animation is an artistic association. You can keep practicing after closing it.
+动画暂不可用，关闭后仍可继续练习。||The animation is unavailable for now; you can still keep practicing after closing it.
+先认识，再试一试||Get to Know It, Then Try
+按笔顺写一写||Write It in Stroke Order
+回忆拼写||Recall Spelling
+选出它的意思||Pick Its Meaning
+请小老师讲讲||Ask the Little Teacher
+先选词义，再完成书写。||Choose the meaning first, then finish writing.
+用手指或鼠标按笔顺书写||Write in stroke order with your finger or mouse
+# js/view_hanzi_memory.js
+清空||Clear
+# js/view_dictionary.js
+词义已答对，接下来按笔顺写一遍。||Correct meaning. Next, write it once in stroke order.
+# js/view_hanzi_memory.js
+笔顺示范||Stroke Order Demo
+# js/view_dictionary.js
+暂停示范||Pause Demo
+下一笔怎么写||Show the Next Stroke
+继续示范||Resume Demo
+停止示范，继续写||Stop the Demo and Keep Writing
+示范已结束，可以接着写。||The demo has finished; you can keep writing.
+显示笔画提示||Show Stroke Hints
+隐藏笔画提示||Hide Stroke Hints
+撤销清空||Undo Clear
+撤销||Undo
+完成书写||Finish Writing
+想一想这个词||Think About This Word
+英文拼写||English Spelling
+提交拼写||Submit Spelling
+给一点字母提示||Give a Letter Hint
+字母提示已用完||Letter Hints Used Up
+再提示一个字母||One More Letter Hint
+收起答案，再试一次||Hide the Answer and Try Again
+这个词是||This word is
+查看答案||Show Answer
+准备好了，试着回忆||Ready? Try to Recall
+目标字词：||Target word:
+小老师：||Little Teacher:
+写下你的回答||Write Your Answer
+情境题回答||Scenario Answer
+上次回答的建议：||Advice on your last answer:
+提交回答||Submit Answer
+语音输入||Voice Input
+改用文字||Switch to Text
+准备麦克风…||Preparing the microphone…
+整理识别结果…||Organizing the result…
+回答已完成||Answer Complete
+正在理解…||Understanding…
+改做选择题||Switch to Multiple Choice
+刚才的回答（仅保留在本次页面）||Your Last Answer (Kept on This Page Only)
+刚才写的话留在这里供你回看。下面选择题答对后也能完成今天的任务。||What you wrote stays here for review. Answering the multiple-choice question below correctly also completes today's task.
+查看今日成果||View Today's Progress
+继续今日任务||Continue Today's Task
+今天的学习完成了。可以去冒险，也可以继续自由翻看字典。||Today's learning is done. You can go on an adventure or keep browsing the dictionary freely.
+返回今日任务||Back to Today's Task
+# js/view_dictionary_tutor.js
+听这句||Play This Line
+停止朗读：||Stop Reading:
+朗读例句：||Read Example:
+不明白？问问小老师||Confused? Ask the Little Teacher
+小老师朗读速度||Little Teacher Reading Speed
+小老师有新回复||New Reply from the Little Teacher
+小老师对话||Little Teacher Chat
+查看最新回复||View Latest Reply
+比如：这个词怎么记？我这样说对吗？||For example: how do I remember this word? Am I saying it right?
+向小老师提问||Ask the Little Teacher
+点击下方问题，或直接问小老师。||Tap a question below, or ask the Little Teacher directly.
+先看简短讲解||Show the Short Explanation First
+回到练习||Back to Practice
+重试在线讲解||Retry the Online Explanation
+帮我记住它||Help Me Remember It
+举个生活中的例子||Give an Example from Daily Life
+陪我练习造句||Practice Making Sentences with Me
+我还不会，请先给我一个简单例子，配上中文意思。||I do not know it yet. Please give me a simple example with the Chinese meaning.
+小老师||Little Teacher
+讲解还不完整，小老师正在重新整理。也可以先看简短讲解。||The explanation is incomplete; the Little Teacher is reorganizing it. You can also view the short explanation first.
+小老师 · 正在讲解||Little Teacher · Explaining
+讲解还在生成，完成后可以继续提问。||The explanation is still being generated; you can keep asking once it is done.
+可以再点“听这句”重试。||Tap "Play This Line" to try again.
+先看一个示范||Show an Example First
+一起练一句。还不会时，可以点“先看一个示范”。||Let us practice a sentence together. If you are not sure yet, tap "Show an Example First".
+先把问题讲清楚。想练习时，可以点“陪我练习造句”。||Explain your question first. When you want to practice, tap "Practice Making Sentences with Me".
+小老师正在想一个更好懂的说法…||The Little Teacher is thinking of an easier way to explain…
+这是字典中的简短讲解。还想了解什么，可以继续问。||This is the short explanation from the dictionary. Ask anything else you would like to know.
+在线老师暂不可用，先看看字典中的讲解。||The online teacher is unavailable for now; check the dictionary explanation first.
+你的答案已更新，之前的讲解已停止。可以再问小老师。||Your answer has been updated and the earlier explanation was stopped. You can ask the Little Teacher again.
+上次讲解未完成，问题已放回输入框。可以修改后重新发送。||The last explanation was not finished; your question is back in the input box. Edit and send it again.
+# js/view_hanzi.js
+汉字卡册||Character Card Album
+返回哈奇||Back to Haqi
+说出它，唤醒力量。写出它，赋予形状。把你的魔法，珍藏成卡。||Speak it to awaken its power. Write it to give it shape. Keep your magic as a treasured card.
+学习引导 / Learning guide||Learning Guide
+中文识字||Chinese Character Learning
+拼音||Pinyin
+先收集前一章全部字卡||Collect all character cards from the previous chapter first
+这是随身字卡册。字源岛居民会通过普通任务赠送字卡；说字、写字练习可以随时选做。||This is your portable card album. Residents of Character Origins Island gift character cards through regular quests; speaking and writing practice is optional anytime.
+尚未获得||Not Earned Yet
+卸下战斗字卡||Unequip Battle Card
+携带战斗字卡||Equip Battle Card
+可以复习了||Ready for Review
+适配法术||Matching Spell
+收集这四张字卡解锁||Collect these four character cards to unlock
+卸下炫彩||Remove Rainbow Look
+装备炫彩||Equip Rainbow Look
+预览||Preview
+施法文字||Casting Word
+汉字||Character
+汉字与释义||Characters and Meanings
+成语欣赏||Idiom Appreciation
+动画是艺术联想。现代笔画来自 Make Me a Hanzi（Arphic Public License）。历史解说及教学审校状态可在字卡中查看。||The animation is an artistic association. Modern stroke data comes from Make Me a Hanzi (Arphic Public License). Historical notes and teaching review status can be viewed on the card.
+素材许可全文||Full Asset License
+返回字源岛||Back to Character Origins Island
+想象中的魔法 · 非字源解释||Imagined Magic · Not a Character Origin Explanation
+下一幕||Next Scene
+动画进度||Animation Progress
+字卡说明与来源||Card Notes and Sources
+历史阅读来源：《说文解字》||Historical Reading Source: "Shuowen Jiezi"
+让魔法再次醒来||Wake the Magic Again
+你的魔法记忆||Your Magic Memory
+初识 · 看见魔法||First Sight · See the Magic
+再现 · 换个地方||Revisit · A New Place
+记忆 · 唤醒文字||Remember · Wake the Characters
+这张卡已珍藏。可以重播动画，或回岛装备已解锁的炫彩。||This card is treasured. Replay the animation, or return to the island to equip unlocked rainbow looks.
+返回岛屿，查看炫彩||Back to the Island to View Rainbow Looks
+播放||Play
+根据场景回忆汉字||Recall the Character from the Scene
+写出来||Write It
+说出来||Say It
+用手指或鼠标写字||Write with your finger or mouse
+请按笔顺书写||Please write in stroke order
+# js/view_hanzi_memory.js
+撤销一笔||Undo Last Stroke
+# js/view_hanzi.js
+唤醒魔法||Wake the Magic
+想一想这个字||Think About This Character
+录音：按住说话或点击开始，再点结束||Recording: hold to talk, or tap start and then stop
+点击录音，再点结束；也可以按住说话。识别的是表达，不是发音评分。||Tap record, then tap stop; you can also hold to talk. It recognizes what you say, not pronunciation scoring.
+登录并启用语音||Sign In and Enable Voice
+现在也可以选择写字，继续收集。||You can also choose writing now to keep collecting.
+展开字形提示||Show Character Shape Hints
+去下一处练习||Go to the Next Practice Spot
+珍藏成功 · 返回卡册||Treasured · Back to the Album
+# js/view_hanzi_animation.js
+关闭动画||Close Animation
+# js/view_hanzi_memory.js
+跳过动画，写一次字||Skip the Animation and Write Once
+关闭文字记忆||Close Word Memory
+找回文字记忆||Recover Word Memory
+按笔顺写汉字||Write the Character in Stroke Order
+写好了||Done Writing
+的汉字动画||'s Character Animation
+字源岛 · 文字记忆||Character Origins Island · Word Memory
+继续上次的文字记忆||Continue Your Last Word Memory
+追踪这段故事||Follow This Story
+原有字卡与魔法外观||Original Cards and Magic Looks
+字卡完整了||Card Set Complete
+找回一片记忆||Recover a Memory
+回到岛上||Back to the Island
+# js/view_home.js
+可点亮||Can Be Lit
+可演奏||Can Be Played
+流水互动||Water Interaction
+烹饪互动||Cooking Interaction
+屏幕互动||Screen Interaction
+选择或创建家园||Choose or Create a Home
+家园土地，点击地面或方向键控制主角移动，按住设施拖动摆放||Home land: tap the ground or use arrow keys to move your character; hold a fixture to drag and place it
+# js/view_word_mark.js
+朗读||Read Aloud
+# js/view_home.js
+家园帧率||Home Frame Rate
+户外与家园设施||Outdoor and Home Fixtures
+家园操作栏||Home Action Bar
+语音召唤||Voice Summon
+互动||Interact
+我想要一把椅子。||I would like a chair.
+家园居民||Home Residents
+我的仓库||My Warehouse
+可互动||Interactive
+# js/view_island_scene_loading.js
+正在准备场景||Preparing the Scene
+向冒险出发||Set Off on an Adventure
+地形准备进度||Terrain Loading Progress
+小伙伴正在前方探路…||Your buddy is scouting ahead…
+返回开始画面||Back to the Start Screen
+小伙伴||Buddy
+{name}正在前方探路…||{name} is scouting ahead…
+{name}马上就来…||{name} will be right here…
+正在准备场景资源…||Preparing scene assets…
+# js/view_photo_head.js
+正面头像||Front Portrait
+预览不可用||Preview Unavailable
+中断||Interrupted
+# js/view_prologue_dialog.js
+自动播放||Auto Play
+关闭自动播放||Turn Off Auto Play
+开启自动播放||Turn On Auto Play
+点击任意位置或按空格继续||Click anywhere or press Space to continue
+# js/view_time_scenery.js
+街景素材清单加载失败||Failed to load the street asset list
+# js/view_word_mark.js
+我全掌握了||I Know Them All
+基本理解||Basic Understanding
+不认识||Do Not Know
+词语理解||Word Understanding
+关闭词语理解||Close Word Understanding
+记录未保存，本次仅保存在内存中。||Records are not saved; they stay in memory for this session only.

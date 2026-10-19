@@ -878,6 +878,9 @@ function activateRole(id) {
     if(!row)throw Error('角色不存在');
     let restored;
     try{restored=checkedRoleProgress(row.save,assets.content,assets.dataset);}catch(error){console.warn('角色恢复失败',error);throw Error(roleRecoveryMessage);}
+    // Start each role session on foot with bilingual learning; scene transitions keep manual choices.
+    restored.save.mountHidden=true;
+    restored.save.languageLearning.enabled=true;
     autoSave.reset();roleStore.select(id);roleStorage=roleStore.scoped();
     if(roleStore.owner)void import('./home_app.js').then(m=>m.primeHomeDirectory(cloudClient,id));
     selected=null;discarded=[];shopView.page=0;petView.selected=null;

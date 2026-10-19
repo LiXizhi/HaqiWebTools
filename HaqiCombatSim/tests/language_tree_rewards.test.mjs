@@ -11,7 +11,7 @@ test('one newly marked dictionary word immediately produces validated fruits wit
  const s=seedDictionaryTree(emptyLanguageTree(),{language:'en',entries:[{id:'book',text:'book'}]});
  setTreeMark(s,'book','know');assert.equal(treeReadiness(s).ready,true);
  const store={read:async()=>({state:structuredClone(s),persisted:true}),update:async(_,reduce)=>({result:reduce(s),state:structuredClone(s),persisted:true})};
- const session=createLanguageTreeSession({key:'a',store,online:()=>true,request:async()=>({questions:['A book.','My book.','The book.'].map(sentence=>({target:'book',sentence,translation:'一本书',options:[{text:'书本',explanation:'book表示书本'},{text:'水杯',explanation:'不是水杯'},{text:'房屋',explanation:'不是房屋'}],answer:0,glosses:{a:'一',my:'我的',the:'这'}}))})});
+ const session=createLanguageTreeSession({key:'a',store,online:()=>true,request:async()=>({questions:['A book.','My book.','The book.'].map(sentence=>({target:'book',sentence,translation:'一本书',options:[{text:'一本书',explanation:'book表示书本'},{text:'水杯',explanation:'不是水杯'},{text:'房屋',explanation:'不是房屋'}],answer:0,glosses:{a:'一',my:'我的',the:'这'}}))})});
  await session.open();await session.prepare();assert.equal(s.questions.length,3);assert.ok(s.questions.every(q=>q.availableAt<=Date.now()));assert.equal(s.words.book.count,0);session.close();
 });
 

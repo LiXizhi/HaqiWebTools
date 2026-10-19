@@ -68,7 +68,7 @@ test('Korean and Japanese questions normalize inflections while keeping differen
   ['ko',['읽다','먹다','가다'],['책','밥','학교'],['책을 읽어요.','밥을 먹어요.','학교에 가요.'],{'을':'宾语助词','에':'表示目的地'}],
   ['ja',['読む','食べる','行く'],['本','ご飯','学校'],['本を読みます。','ご飯を食べます。','学校に行きます。'],{'を':'宾语助词','に':'表示目的地'}],
  ]){const state=emptyLanguageTree();seedWordLexicon(state,indexes[language]);for(const id of targets){assert.ok(state.words[id]);setTreeMark(state,id,'know',1);}for(const id of nouns){assert.ok(state.words[id]);setTreeMark(state,id,'basic',1);}
-  const rows=targets.map((target,i)=>({target,sentence:sentences[i],translation:'新的句子含义',options:[{text:'正确含义',explanation:'词语的正确含义'},{text:'其他含义',explanation:'不是这个意思'},{text:'另一含义',explanation:'没有这个意思'}],answer:0,glosses}));
+  const rows=targets.map((target,i)=>({target,sentence:sentences[i],translation:'新的句子含义',options:[{text:'新的句子含义',explanation:'词语的正确含义'},{text:'其他含义',explanation:'不是这个意思'},{text:'另一含义',explanation:'没有这个意思'}],answer:0,glosses}));
   const parsed=validateTreeQuestions({questions:rows},state,indexes[language]);assert.equal(new Set(parsed.map(q=>q.id)).size,3);
  }
 });

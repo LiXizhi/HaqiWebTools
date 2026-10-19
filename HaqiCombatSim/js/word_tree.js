@@ -54,7 +54,20 @@ function addPronunciation(text){
 }
 function showWord(id){const word=state.words[id];if(!word||!openPopup(id))return;popup.setAttribute('aria-label','词语理解');addPronunciation(id);popup.append(el('p',treeGloss(id,glossary)));appendWordMarkChoices(popup,button,async mark=>{await session.mark(id,mark);stopSpeech();popup.close();if(mark==='unknown'){if(!options.onUnknown?.(id))showLearningCard(id);return;}canvas.focus({preventScroll:true});void prepare(true);});}
 function showLearningCard(id){if(!openPopup(id))return;popup.setAttribute('aria-label','词语学习卡');addPronunciation(id);popup.append(el('p',treeGloss(id,glossary)));for(const c of (state.words[id]?.contexts||[]).slice(0,2)){popup.append(el('p',c.text));if(c.zh&&c.zh!==c.text)popup.append(el('small',c.zh));}popup.append(button('返回语言树',async()=>{stopSpeech();popup.close();canvas.focus({preventScroll:true});}));}
-function showFruit(q){if(!openPopup(q.sentence))return;popup.setAttribute('aria-label','果实题目');if(q.demo)popup.append(el('small','演示题'));for(const [word,meaning] of Object.entries(q.glosses||{}))popup.append(el('small',`${word}：${meaning}`));const choices=el('div');choices.className='tree-fruit-choices';q.options.forEach((option,index)=>choices.append(button(option.text,async()=>{const r=await session.answer(q.id,index);stopSpeech();popup.close();canvas.focus({preventScroll:true});if(r?.result)message(r.result.correct?'答对了！验证掌握并同步服务器后，每词兑换 50 奇豆。':`正确含义：${q.translation}`);void prepare(true);})));popup.append(choices);}
+function showFruit(q){
+ if(!openPopup(q.sentence))return;
+ popup.setAttribute('aria-label','果实题目');popup.append(el('p','请选择整句话的含义'));
+ if(q.demo)popup.append(el('small','演示题'));
+ for(const [word,meaning] of Object.entries(q.glosses||{}))popup.append(el('small',`${word}：${meaning}`));
+ const choices=el('div');choices.className='tree-fruit-choices';
+ const answer=async index=>{const r=await session.answer(q.id,index);if(!r?.result)return;stopSpeech();
+  popup.replaceChildren(el('h2',r.result.correct?'答对了！':r.result.skipped?'一起看看这句话':'再看看这句话'));
+  popup.append(el('p',q.sentence),el('p',`参考译文：${q.translation}`));
+  popup.append(button('返回语言树',async()=>{popup.close();canvas.focus({preventScroll:true});void prepare(true);}));
+ };
+ q.options.forEach((option,index)=>choices.append(button(option.text,()=>answer(index))));
+ const unknown=button('我不会',()=>answer(-1));unknown.className='tree-fruit-unknown';choices.append(unknown);popup.append(choices);
+}
 async function prepare(immediate=false){if(preparing&&immediate){prepareAgain=true;return;}if(closed||document.hidden||preparing||(!immediate&&Date.now()<nextPrepare))return;preparing=true;nextPrepare=Date.now()+60000;try{await session.prepare();}finally{preparing=false;if(prepareAgain){prepareAgain=false;void prepare(true);}}}
 function changed(result){if(closed)return;state=result.state;view.setState(state);view.setQuestions(state.questions.filter(q=>['know','basic'].includes(state.words[q.target]?.mark)));if(result.warning)message(result.warning);}
 async function start(){

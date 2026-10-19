@@ -168,6 +168,13 @@ test('release hashes all runtime data, is repeatable, and distinguishes previews
         fs.writeFileSync(path.join(root, 'dist/data/adventure/locale/en.txt'), '甲||A\n');
         assert.equal(await run(), 0);
         assert.ok(read().files.some(file => file.path === 'data/adventure/locale/en.txt'));
+        fs.mkdirSync(path.join(root, 'dist/assets'), { recursive: true });
+        fs.writeFileSync(path.join(root, 'dist/assets/word_en-BxdRHhhf.txt'), 'word||词\n');
+        assert.equal(await run(), 0);
+        assert.ok(read().files.some(file => file.path === 'assets/word_en-BxdRHhhf.txt'));
+        fs.writeFileSync(path.join(root, 'dist/assets/notes.txt'), 'no');
+        assert.notEqual(await run(), 0);
+        fs.rmSync(path.join(root, 'dist/assets/notes.txt'));
         fs.writeFileSync(path.join(root, 'dist/notes.txt'), 'no');
         assert.notEqual(await run(), 0);
         fs.rmSync(path.join(root, 'dist/notes.txt'));

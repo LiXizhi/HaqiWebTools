@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {sceneMountSave} from '../js/adventure_mounts_core.js';
+import {sceneMountSave,startWorldOnFoot} from '../js/adventure_mounts_core.js';
 import {teamHudButton} from '../js/view_adventure_social_hud.js';
 
 test('party walking is temporary and does not unequip the mount or change preference',()=>{
@@ -12,6 +12,15 @@ test('party walking is temporary and does not unequip the mount or change prefer
         assert.equal(save.mountHidden,mountHidden);
         assert.equal(sceneMountSave(save).mountId,mountHidden?null:123);
     }
+});
+
+test('entering a character starts the roaming scene on foot and keeps the equipped mount',()=>{
+    const save={mountId:123,mountHidden:false};
+    startWorldOnFoot(save);
+    assert.equal(save.mountHidden,true);
+    assert.equal(save.mountId,123);
+    assert.equal(sceneMountSave(save).mountId,null);
+    assert.throws(()=>startWorldOnFoot(null),/角色存档无效/);
 });
 
 test('team HUD counts only occupied members plus hero and opens team management',t=>{

@@ -77,12 +77,24 @@ test('compact art retains validation, every animation crop, CDN URL and comparis
     assert.deepEqual(Object.keys(shop.fallbacks), Object.keys(fullShop.fallbacks));
     assert.ok(Object.values(shop.fallbacks).every(value => value === true));
     for (const [id, pet] of Object.entries(read('pets').pets)) {
-        assert.deepEqual(compactPets.pets[id], { ...pet, art: { local: pet.art.local, cdn: pet.art.cdn } });
+        assert.deepEqual(compactPets.pets[id], { ...pet, art: { local: pet.art.local, cdn: pet.art.cdn, cols: pet.art.cols, rows: pet.art.rows } });
     }
     assert.equal(art.sheets['ice-01'].sourceSha256, undefined);
     assert.equal(shop.sources, undefined);
 });
 const compactPets = compact('pets');
+
+test('release pet data preserves home atlas cropping for every pose and growth stage', () => {
+    for (const [id, pet] of Object.entries(read('pets').pets)) {
+        const art = compactPets.pets[id].art;
+        for (let row = 0; row < pet.art.rows; row++) {
+            for (let col = 0; col < pet.art.cols; col++) {
+                const crop = grid => [col * pet.art.width / (grid.cols || 1), row * pet.art.height / (grid.rows || 1), pet.art.width / (grid.cols || 1), pet.art.height / (grid.rows || 1)];
+                assert.deepEqual(crop(art), crop(pet.art), `${id}: stage ${row}, pose ${col}`);
+            }
+        }
+    }
+});
 
 test('compact NPC catalog preserves offers and eligibility without export metadata', () => {
     const original = read('npc-catalog'), before = JSON.stringify(original);
@@ -129,7 +141,7 @@ test('five compact packs load all datasets, retain projected content and preserv
         packageRuntimeData(fileURLToPath(source), destination);
         assert.deepEqual(JSON.parse(fs.readFileSync(path.join(destination,'adventure/fishing.json'))),read('fishing'));
         assert.equal(JSON.parse(fs.readFileSync(path.join(destination,'adventure.json'))).files['data/adventure/fishing.json'],undefined);
-        assert.deepEqual(fs.readdirSync(destination).sort(), ['adventure', 'adventure.json', 'datasets.json', 'kids.json', 'sample.json', 'teen.json']);
+        assert.deepEqual(fs.readdirSync(destination).sort(), ['adventure', 'adventure.json', 'datasets.json', 'kids.json', 'prologue', 'sample.json', 'teen.json']);
         const calls = [];
         const reader = createJsonReader({ packed: true, request: async url => {
             calls.push(url);
@@ -143,6 +155,7 @@ test('five compact packs load all datasets, retain projected content and preserv
         assert.ok(Object.hasOwn(JSON.parse(output).files,'data/adventure/dungeon-index.json'));
         assert.equal(output, JSON.stringify(JSON.parse(output)));
         assert.deepEqual(await reader('data/adventure/skill-art.json'), compact('skill-art'));
+        assert.deepEqual(await reader('data/adventure/pets.json'), compactPets);
         assert.deepEqual(await reader('data/adventure/npc-catalog.json'), compact('npc-catalog'));
         for (const name of ['dungeon-index', 'monster-art', 'quest-journal', 'quest-runtime']) {
             assert.deepEqual(await reader(`data/adventure/${name}.json`), compact(name));

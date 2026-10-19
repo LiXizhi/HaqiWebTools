@@ -14,6 +14,7 @@ import {locationSnapshot,mapCoordinateVersion} from './adventure_coordinates_cor
 import {createIslandHeroNavigation} from './island_hero_navigation.js';
 import {timeScrollCity} from './adventure_time_scroll_core.js';
 import {checkedRoleProgress} from './adventure_roles_core.js';
+import {startWorldOnFoot} from './adventure_mounts_core.js';
 import {createEarthPlaces} from './adventure_earth_places.js';
 import {createLocalPlay} from './adventure_local_play.js';
 import {createPhotoHeadFeature} from './photo_head_feature.js';
@@ -152,9 +153,9 @@ let atlasView=null,atlasPortalFocus=null;
 function switchWorldMap(id){atlasPortalFocus=null;openPanel(id==='earth'?'earthmap':'worldmap');}
 let homeView=null,homeTicket=0;
 async function openHomePanel(){
-    if(stage!=='world')return;close({silent:true});panel='home';const ticket=++homeTicket;
+    if(stage!=='world')return;localPlay.closeAll();localPlay.clearKeys();close({silent:true});panel='home';const ticket=++homeTicket;
     try{const {openHomeSystem}=await import('./home_app.js');if(ticket!==homeTicket||panel!=='home')return;
-        const view=await openHomeSystem({root:nodes.overlay,close,cloud:cloudClient,assetMode:assets.mode,drawTree:(ctx,x,y,size,variant)=>assets.environmentArt?.draw(ctx,'campTrees',['tallPine','layeredPine','cypressPine','blossomTree'][variant%4],x-size*.56,y-size*1.06,size*1.12,size*1.08),drawHero:(ctx,hero,x,y,time,moving,scale,options)=>assets.hero.drawSave(ctx,hero,x,y,time,moving,scale,options),onScene:active=>{nodes.hud.hidden=active;nodes.world.hidden=active;},getContext:()=>({owner:roleStore.owner,roleId:roleStore.catalog.activeId,save,content:assets.content,active:panel==='home'&&stage==='world'&&ticket===homeTicket})});
+        const view=await openHomeSystem({root:nodes.overlay,close,cloud:cloudClient,assetMode:assets.mode,loadingAssets:assets,warmHero:()=>Promise.all([save,localPlay.second].filter(Boolean).map(hero=>assets.hero.ensure(assets.hero.appearance(hero,{mounted:false})))),drawTree:(ctx,x,y,size,variant)=>assets.environmentArt?.draw(ctx,'campTrees',['tallPine','layeredPine','cypressPine','blossomTree'][variant%4],x-size*.56,y-size*1.06,size*1.12,size*1.08),drawHero:(ctx,hero,x,y,time,moving,scale,options)=>assets.hero.drawSave(ctx,hero,x,y,time,moving,scale,options),onScene:active=>{nodes.hud.hidden=active;nodes.world.hidden=active;if(active){sceneLoading.invalidate();renderer.releaseScene();world.releaseSurface?.();}},getContext:()=>({owner:roleStore.owner,roleId:roleStore.catalog.activeId,save,secondSave:localPlay.second,secondFollowing:localPlay.secondFollowing,mouseOwner:localPlay.mouseOwner,settings:gameSettings.value,content:assets.content,active:panel==='home'&&stage==='world'&&ticket===homeTicket})});
         if(ticket!==homeTicket||panel!=='home'){view.dispose();return;}homeView=view;
     }catch(e){if(ticket===homeTicket){close();toast(e.message);}}
 }
@@ -213,7 +214,7 @@ async function openEarthNpc(npc){
     }catch(e){if(current===save&&ticket===earthViewTicket)renderEarthLoading(nodes.overlay,{close,localMap:world.isEarth?()=>openPanel('localmap'):null,message:e.message,retry:()=>openEarthNpc(npc)});}
 }
 let teleportEffect=null;
-let path=[],destination=null,moving=false,lastFrame=0,lastSave=0,toastTimer=0;
+let path=[],destination=null,moving=false,lastFrame=0,lastRuntimeSave=0,toastTimer=0;
 let fishingApproach=null,talkApproach=null;
 let fishingLoadEpoch=0;
 let warmCell='';
@@ -305,6 +306,7 @@ let joystick={x:0,y:0},heldPointer=null;
 function resetMovementInput(){heroNavigation.cancel();keys.clear();joystick={x:0,y:0};heldPointer=null;touchMovement.reset();}
 const sceneLoadingView=createIslandSceneLoadingView({retry:()=>sceneLoading.retry(),exit:()=>{sceneLoading.cancel();void showTitle();}});
 const sceneLoading=createIslandSceneLoading({
+    identity:()=>JSON.stringify([roleStore?.owner,roleStore?.catalog.activeId]),
     warm:target=>assets.warmScenery?.(target),
     prepare:(target,player)=>renderer.prepareScene(target,player,{visibleOnly:true,localSecond:localPlay.second,localSecondFollowing:localPlay.secondFollowing,low:adaptiveGraphics.reduced}),
     show:state=>sceneLoadingView.show(state,{assets,save,scope:world,roleId:roleStore?.catalog.activeId}),hide:()=>sceneLoadingView.hide(),
@@ -332,6 +334,7 @@ const localPlay=createLocalPlay({
     state:()=>({save,world,battle,stage,assets,store:roleStore,settings:gameSettings.value,renderer,animating:!!animation,battleRoot:nodes.battle,globalPaused:!!panel||!!dialog||document.hidden||characterChat.active||secondCharacterChat?.active||languageAdventure.active}),
     control:controllerAction,model:()=>model(),replaceSave:value=>{save=value;},activate:activateRole,toast,paintHud,track,travel,interact,sound:toggleSound,login:()=>void loginRoles(),mapDialogue,
     loadPetFile:(roleId,path)=>cloudClient.petFile(roleId,path),
+    onCoreChange:()=>{persist();queueCloudSave();},
     openMap:()=>openPanel('map'),onSpeech:awardLanguageSpeech,
     socialTeam:()=>islandSocial.team,prepareSocialTeam:()=>islandSocial.preparedTeam(),socialActors:()=>islandSocial.actors,socialGesture:()=>islandSocial.gesture,socialAccount:(p,kind)=>islandSocial.select(p,kind),
     characterAffinity:(owner,p)=>roleConversation(owner).affinity(p),
@@ -464,10 +467,13 @@ function toast(message, vars) {
     nodes.toast.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>nodes.toast.classList.remove('visible'),4200);
 }
 function safely(fn) {try{const value=fn();return value?.catch?value.catch(e=>{toast(e.message);return false;}):value;}catch(e){toast(e.message);return false;}}
-let persistTimer=0;
-function queuePersist() {
-    if(persistTimer)return;
-    persistTimer=setTimeout(()=>{persistTimer=0;persist();},0);
+function persistRuntime() {
+    if(!save||stage==='title')return;
+    try{
+        if(localPlay.active)localPlay.storeSaves(undefined,{runtimeOnly:true});
+        else roleStore.saveRuntime({[roleStore.catalog.activeId]:save});
+        lastRuntimeSave=performance.now();
+    }catch{if(!storageWarning)toast('本机状态未能保存，请检查存储后重试。');storageWarning=true;}
 }
 function awardLanguageSpeech(eventId,preferredKey=null,owner=0){
     const result=awardDailySpeech(owner?localPlay.second:save,assets.content,eventId,Date.now(),preferredKey);
@@ -477,10 +483,10 @@ function awardLanguageSpeech(eventId,preferredKey=null,owner=0){
 let lastLanguageDayCheck=0;
 function persist() {
     if(!save||stage==='title')return;
-    if(localPlay.active){try{localPlay.storeSaves();storageWarning=false;}catch(error){storageWarning=true;toast(error.message);}lastSave=performance.now();return;}
-    try {if(!roleStorage)throw Error('尚未选择角色');saveLocal(save,roleStorage);if(save.petInstanceVersion===1){const stored=roleStore.catalog.roles.find(r=>r.id===roleStore.catalog.activeId).save;save.petFileRefs=stored.petFileRefs;save.petPages=stored.petPages;}storageWarning=false;}catch {if(!storageWarning)toast('进度未能保存，可能是其他页面已更新。请勿关闭页面，检查存储后重试。');storageWarning=true;}
+    if(localPlay.active){try{localPlay.storeSaves();storageWarning=false;}catch(error){storageWarning=true;toast(error.message);}lastRuntimeSave=performance.now();return;}
+    try {if(!roleStorage)throw Error('尚未选择角色');roleStore.commitRoles({[roleStore.catalog.activeId]:save});if(save.petInstanceVersion===1){const stored=roleStore.catalog.roles.find(r=>r.id===roleStore.catalog.activeId).save;save.petFileRefs=stored.petFileRefs;save.petPages=stored.petPages;}storageWarning=false;}catch {if(!storageWarning)toast('进度未能保存，可能是其他页面已更新。请勿关闭页面，检查存储后重试。');storageWarning=true;}
     const indicator=document.querySelector('.save-indicator');if(indicator){setText(indicator,storageWarning?'存档未保存':'');indicator.hidden=!storageWarning;}
-    lastSave=performance.now();
+    lastRuntimeSave=performance.now();
 }
 function close({silent=false}={}) {if(!silent&&homeView&&!homeView.canClose())return;homeTicket++;homeView?.dispose();homeView=null;earthLoadingView.hide();earthLoadingRetry=null;earthLoadingExit=null;wordPractice.close();hanziMemory.close();dictionaryTicket++;dictionary?.close();dictionary=null;timeScrollTicket++;timeScrollLoad?.abort();timeScrollLoad=null;timeScroll?.close();timeScroll=null;hanziTicket++;hanziIsland?.close();nodes.overlay.disposeMap?.();atlasView?.dispose();atlasView=null;earthPractice?.close();earthViewTicket++;earthView?.dispose();earthView=null;if(earthTraveling){earthService?.cancelPending();earthTraveling=false;}battleIntro.close();dungeonStory.close();if(stage==='world')nodes.hud.hidden=false;if(!silent&&(panel||dialog))spellSound.play('close');characterChat.close();secondCharacterChat?.close();islandSocial.close();fishingLoadEpoch++;languageAdventure.close();fishingApproach=null;talkApproach=null;sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
 // Streaming/social updates repaint the HUD during held movement; only explicit
@@ -880,6 +886,7 @@ function activateRole(id) {
     autoSave.reset();roleStore.select(id);roleStorage=roleStore.scoped();
     if(roleStore.owner)void import('./home_app.js').then(m=>m.primeHomeDirectory(cloudClient,id));
     selected=null;discarded=[];shopView.page=0;petView.selected=null;
+    startWorldOnFoot(restored.save);
     return enterWorld(restored.save,restored.battle);
 }
 function beginOriginalImport() {
@@ -1573,12 +1580,12 @@ function frame(now) {
     const phasePrefix=world?.isEarth?'earth-':'island-';
     perf.frame(now,stage==='world'&&!document.hidden&&!panel&&!dialog);
     if(!renderer||!save)return;
-    if(sceneLoading.update(world,save,now,stage==='world')){
+    if(sceneLoading.update(world,save,now,stage==='world'&&panel!=='home')){
         // No world simulation or full-scene drawing competes with initial terrain preparation.
         lastFrame=now;lastCare=now;islandSocial.lastFrame=now;petScene.lastFrame=now;
         renderer.pauseFrameMeter?.();adaptiveGraphics.suspend(now);perf.frame(now,false);return;
     }
-    localPlay.pollInput(now);
+    if(panel!=='home')localPlay.pollInput(now);
     if(localPlay.paused){localPlay.tick(now,0);lastFrame=now;return;}
     if(now-lastLanguageDayCheck>1000){lastLanguageDayCheck=now;if(save.dailyLanguageBuff&&save.dailyLanguageBuff.day!==localBuffDay()){delete save.dailyLanguageBuff;persist();paintHud();if(panel==='learning-mode')paintPanel();}}
     void autoSave.tick();
@@ -1589,11 +1596,11 @@ function frame(now) {
     if(stage==='world'&&panel!=='home'&&!document.hidden&&now-lastCare>1000){lastCare=now;setTimeout(()=>{
         if(stage!=='world'||panel==='home'||!save||document.hidden||hanziAnimationActive())return;
         const started=perf.enabled?performance.now():0;
-        tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),true);updatePetStatus(document,save,assets.content);V.updateHeroHealth(nodes.hud.querySelector('[data-player="1"]')||nodes.hud,save,assets.content);if(localPlay.second){const title=nodes.hud.querySelector('[data-player="2"]');if(title)V.updateHeroHealth(title,localPlay.second,assets.content);}V.updateCheckin(nodes.hud,model());if(panel==='checkin')V.updateCheckin(nodes.overlay,model());if(performance.now()-lastSave>10000)persist();
+        if(tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),true)){persist();queueCloudSave();}updatePetStatus(document,save,assets.content);V.updateHeroHealth(nodes.hud.querySelector('[data-player="1"]')||nodes.hud,save,assets.content);if(localPlay.second){const title=nodes.hud.querySelector('[data-player="2"]');if(title)V.updateHeroHealth(title,localPlay.second,assets.content);}V.updateCheckin(nodes.hud,model());if(panel==='checkin')V.updateCheckin(nodes.overlay,model());if(performance.now()-lastRuntimeSave>30000)persistRuntime();
         if(started)perf.record(world.isEarth?'earth-care':'island-care',performance.now()-started);
     },0);}
     if((stage==='world'||stage==='battle')&&!document.hidden)tickCheckin(save,Date.now(),Math.min(1000,Math.max(0,now-lastFrame)));
-    const dt=Math.min(.055,(now-lastFrame)/1000||0);lastFrame=now;const wasMoving=moving;moving=false;
+    const dt=Math.min(.055,(now-lastFrame)/1000||0);lastFrame=now;moving=false;
     if(stage==='world'&&world.isEarth&&!panel&&!dialog){earthService?.update(save.position,now);earthService?.updateVisible(save.position,renderer.viewRect(),dt);if(world.error&&world.error!==world.reportedError){world.reportedError=world.error;toast(world.error);}}
     if(stage==='world'&&world.isEarth&&!panel&&now-lastTimeCityCheck>400){lastTimeCityCheck=now;const cityId=timeScrollCity(world,save)?.id||null;if(cityId!==lastTimeCityId){lastTimeCityId=cityId;paintHud();}}
     if(stage==='world')V.syncTeachPointer(nodes.hud,!!(destination||dialog||panel));
@@ -1639,7 +1646,6 @@ function frame(now) {
                 if(button.dataset.zh!==zh){if(next[1])setText(button,next[0],next[1]);else setText(button,next[0]);}
             }
         }
-        if((wasMoving&&!moving)||(moving&&now-lastSave>3000))queuePersist();
     }
     hanziMemory.tick(dt,stage==='world'&&!document.hidden&&!panel&&!dialog&&!languageAdventure.active&&!characterChat.active&&!secondCharacterChat?.active&&!localPlay.paused);
     const rewardEffect=rewardFeedback.tick(now,stage==='world'&&!panel&&!dialog&&!sceneFishing.active);

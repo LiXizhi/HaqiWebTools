@@ -8,11 +8,11 @@ export function selectLoadingPet(save,content){
     return ids.map(id=>pets[id]).find(pet=>pet&&content?.pets?.[pet.speciesId]?.art)||null;
 }
 
-export function createIslandSceneLoadingView({retry,exit}){
+export function createIslandSceneLoadingView({retry,exit,title='向冒险出发',exitLabel='返回开始画面'}){
     const root=document.createElement('dialog');root.className='loading-card island-scene-loading';
     root.setAttribute('aria-label','正在准备场景');
     const heading=document.createElement('h2'),caption=document.createElement('p'),progress=document.createElement('progress'),again=document.createElement('button');
-    setText(heading,'向冒险出发');caption.setAttribute('role','status');progress.setAttribute('aria-label','地形准备进度');
+    setText(heading,title);caption.setAttribute('role','status');progress.setAttribute('aria-label','地形准备进度');
     const scene=document.createElement('div');scene.className='loading-pet-scene';scene.setAttribute('aria-hidden','true');
     for(const name of ['sun','cloud','hills','road']){const part=document.createElement('div');part.className='loading-pet-'+name;scene.append(part);}
     const runner=document.createElement('div');runner.className='loading-pet-runner';
@@ -21,7 +21,7 @@ export function createIslandSceneLoadingView({retry,exit}){
     const dust=document.createElement('span');dust.className='loading-pet-dust';runner.append(shadow,dust,portrait);scene.append(runner);
     const note=document.createElement('p');note.className='loading-pet-note';setText(note,'小伙伴正在前方探路…');
     again.type='button';again.className='primary';setText(again,'重试');again.onclick=retry;
-    root.append(createCloseButton(exit,'返回开始画面'),heading,scene,note,caption,progress,again);document.body.append(root);
+    root.append(createCloseButton(exit,exitLabel),heading,scene,note,caption,progress,again);document.body.append(root);
     root.addEventListener('cancel',event=>{event.preventDefault();exit();});
     // Keep modal keyboard actions from becoming world shortcuts.
     root.addEventListener('keydown',event=>event.stopPropagation());root.addEventListener('keyup',event=>event.stopPropagation());
@@ -59,6 +59,7 @@ export function createIslandSceneLoadingView({retry,exit}){
             }
             if(!root.open)root.showModal();
         },
+        dispose(){portraitTicket++;root.close();root.remove();},
         hide(){portraitTicket++;portraitScope=null;portraitRole=null;if(root.open)root.close();last='';},
     };
 }

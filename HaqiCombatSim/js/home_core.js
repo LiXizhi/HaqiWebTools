@@ -157,11 +157,19 @@ export function canPlace(obj,objects,catalog){
 }
 export function visibleChunkKeys(camera,width,height,scale=40){const left=Math.floor((camera.x-width/scale/2)/32)-1,right=Math.floor((camera.x+width/scale/2)/32)+1,top=Math.floor((camera.y-height/scale/2)/32)-1,bottom=Math.floor((camera.y+height/scale/2)/32)+1,keys=[];for(let y=top;y<=bottom;y++)for(let x=left;x<=right;x++)keys.push(`${x},${y}`);return keys;}
 export function petHomePosition(seed,id,index){const rng=createRng(hashSeed(`${seed}:${id}`)),offset=n=>n%2?(n+1)/2:-n/2;return {x:offset(index%7)*3+rng.float(),y:offset(Math.floor(index/7))*3+3+rng.float()};}
+// The marker distinguishes an intentionally empty scene from an uninitialized legacy home.
+export function initializeHomeResidents(saved,records,seed){
+ if(saved.$selection?.version===1)return saved;
+ const residents={...saved,$selection:{version:1}};
+ Object.values(records).slice(0,6).forEach((pet,i)=>{residents[pet.id]??=petHomePosition(seed,pet.id,i);});
+ return residents;
+}
+export function homeResidentPets(records,residents){return Object.values(records).filter(p=>Object.hasOwn(residents,p.id));}
 export function petWish(petId,round,catalog,lang='en'){const rng=createRng(hashSeed(`${petId}:${round}`)),item=rng.pick(catalog.filter(i=>i.activity));return {itemId:item.id,text:lang==='en'?`I want ${/^[aeiou]/.test(item.en)?'an':'a'} ${item.en}.`:`我想要一个${item.zh}。`,translation:lang==='en'?`我想要一个${item.zh}。`:`I want ${/^[aeiou]/.test(item.en)?'an':'a'} ${item.en}.`};}
 export function validateHomePart(kind,value,catalog){
  if(!value||typeof value!=='object'||Array.isArray(value))throw Error('家园文件无效');
  if(kind==='chunk')for(const obj of Object.values(value)){if(!obj||(obj.interactionEnabled!==undefined&&typeof obj.interactionEnabled!=='boolean')||!validHomeSize(obj.sizeScale)||typeof obj.id!=='string'||!catalog.some(i=>i.id===obj.itemId)||!Number.isSafeInteger(obj.x)||!Number.isSafeInteger(obj.y)||Math.abs(obj.x)>1e9||Math.abs(obj.y)>1e9)throw Error('家园物品无效');}
  if(kind==='inventory')for(const [key,n]of Object.entries(value)){if(!catalog.some(i=>key.startsWith(`${i.id}:`))||!Number.isSafeInteger(n)||n<0)throw Error('家园库存无效');}
- if(kind==='residents')for(const p of Object.values(value))if(!p||!Number.isFinite(p.x)||!Number.isFinite(p.y)||Math.abs(p.x)>1e9||Math.abs(p.y)>1e9)throw Error('宠物位置无效');
+ if(kind==='residents')for(const [id,p] of Object.entries(value)){if(id==='$selection'){if(p?.version!==1)throw Error('宠物名单版本无效');continue;}if(!p||!Number.isFinite(p.x)||!Number.isFinite(p.y)||Math.abs(p.x)>1e9||Math.abs(p.y)>1e9)throw Error('宠物位置无效');}
  return value;
 }

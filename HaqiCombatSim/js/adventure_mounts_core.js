@@ -9,6 +9,12 @@ export const MOUNT_DIRECTIONS = ['down', 'left', 'right', 'up'];
 export function sceneMountSave(save,{inParty=false}={}) {
     return save.mountHidden||inParty||save.coopRun ? {...save,mountId:null} : save;
 }
+// Character select starts the roaming scene on foot. mountId stays equipped for combat.
+export function startWorldOnFoot(save) {
+    if (!save || typeof save !== 'object') throw new Error('角色存档无效');
+    save.mountHidden = true;
+    return save;
+}
 const FACING = ['down', 'left', 'right', 'up'];
 // Timed SKUs use names like “霸王虎(7天)” / “圣诞大麋鹿(31天)”; do not match 天 inside 霸天龙.
 const TIMED_MOUNT_NAME = /[（(]\d+天[）)]/;

@@ -104,7 +104,8 @@ export function projectRuntimeData(relativePath, value) {
         };
         case 'pets.json': return {
             ...value,
-            pets: map(value.pets, row => ({ ...row, ...(row.art ? { art: pick(row.art, urlFields) } : {}) })),
+            // Home portraits and scene actors need the atlas grid to select one pose/stage.
+            pets: map(value.pets, row => ({ ...row, ...(row.art ? { art: pick(row.art, [...urlFields, 'cols', 'rows']) } : {}) })),
         };
         default: return value;
     }

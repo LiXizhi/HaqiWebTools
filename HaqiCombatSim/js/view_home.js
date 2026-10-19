@@ -30,9 +30,10 @@ export function createHomeView(root,cb){
  let fpsLabel;
  let canvas,ctx,stage,side,items,category,catPills,tabs,input,example,bubble,bubbleText,tools,choice,summary,portal,edit,inventoryMode=false,petMode=false;
  const motionTrail=createMotionTrail(7319);
- const heroActor=createHeroActor(7419);
+ const heroActor=createHeroActor(7419),secondActor=createHeroActor(7420);
+ let prevSecondPos=null;
  let prevHeroPos=null,fallbackHero=null,fallbackHeroLoading=false;
- let envArt=null,decorArt=null,envLoaded=false;
+ let envArt=null,decorArt=null;
 
  const imageFor=art=>{
   const url=model?.assetMode==='local'&&art?.local?art.local:art?.cdn||art?.local;
@@ -48,23 +49,20 @@ export function createHomeView(root,cb){
   return image;
  };
 
+ let worldAtlasesPromise=null,terrainMissing=Infinity;
  function ensureWorldAtlases(){
-  if(envLoaded)return;
-  envLoaded=true;
+  if(worldAtlasesPromise)return worldAtlasesPromise;
   const readJson=url=>fetch(url).then(r=>{if(!r.ok)throw Error(url);return r.json();});
   const modeKey=model?.assetMode==='local'?'local':'cdn';
-  loadEnvironmentArt(modeKey,readJson,'data/adventure/environment-art.json').then(art=>{
+  worldAtlasesPromise=Promise.all([
+   loadEnvironmentArt(modeKey,readJson,'data/adventure/environment-art.json'),
+   loadEnvironmentArt(modeKey,readJson,'data/adventure/terrain-decoration-art.json')
+  ]).then(async([env,decor])=>{
+   await Promise.all([[env,['camp','campTrees','islandTrees','trees']],[decor,['meadow','stones','shore']]].flatMap(([art,keys])=>keys.filter(key=>art.manifest.atlases[key]).map(key=>art.ensure(key))));
    if(dead)return;
-   envArt=art;
-   terrain.clear();
-   void art.warm(['camp','campTrees','islandTrees','trees']).then(()=>{if(!dead)terrain.clear();});
-  }).catch(()=>{});
-  loadEnvironmentArt(modeKey,readJson,'data/adventure/terrain-decoration-art.json').then(art=>{
-   if(dead)return;
-   decorArt=art;
-   terrain.clear();
-   void art.warm(['meadow','stones','shore']).then(()=>{if(!dead)terrain.clear();});
-  }).catch(()=>{});
+   envArt=env;decorArt=decor;terrain.clear();terrainMissing=Infinity;
+  }).catch(error=>{worldAtlasesPromise=null;throw error;});
+  return worldAtlasesPromise;
  }
 
  function ensureFallbackHero(){
@@ -125,7 +123,7 @@ export function createHomeView(root,cb){
  }
 
  function scene(){
-  ensureWorldAtlases();
+  void ensureWorldAtlases().catch(()=>{});
   ensureFallbackHero();
   terrain.clear();
   exampleSignature='';body.dataset.drawer='';body.replaceChildren();body.className='home-body home-play';
@@ -298,7 +296,7 @@ export function createHomeView(root,cb){
   dock.append(
    button('建造',()=>show('build'),'home-dock-button'),
    button('语音召唤',()=>show('summon'),'home-dock-button'),
-   button('居民',()=>show('pets'),'home-dock-button'),
+   button('宠物背包',()=>show('pets'),'home-dock-button'),
    button('家园设置',()=>show('settings'),'home-dock-button')
   );
   const dockPaths=[
@@ -382,6 +380,8 @@ export function createHomeView(root,cb){
    if(g.moved&&g.hit&&(g.hit.kind==='pet'||g.hit.kind==='object')){
     run(()=>{
      if(g.hit.kind==='pet'){
+      const dropTarget=document.elementFromPoint(e.clientX,e.clientY);
+      if((body.dataset.drawer==='pets'&&side.contains(dropTarget))||dock.children[2].contains(dropTarget))return cb.recallPet(g.hit.id);
       const point=petDragPoint(g),r=canvas.getBoundingClientRect();
       return cb.drop(g.hit,{
        x:model.camera.x+(point.x-r.width/2)/model.scale,
@@ -513,10 +513,10 @@ export function createHomeView(root,cb){
    choice.append(button(item.zh,()=>run(()=>cb.choose(candidate))));
   }
 
-  const key=JSON.stringify([category.value,inventoryMode,petMode,next.inventory,next.pets?.map(p=>[p.id,p.name,p.stage,p.art,p.activity]),next.selection?.itemId,next.selection?.color]);
+  const key=JSON.stringify([category.value,inventoryMode,petMode,next.inventory,(next.petBag||next.pets)?.map(p=>[p.id,p.name,p.stage,p.art,p.activity]),next.selection?.itemId,next.selection?.color]);
   if(catalogDrag||key===signature)return;
   signature=key;
-  tabs.textContent=tr(petMode?'家园居民':inventoryMode?'我的仓库':'户外与家园设施');
+  tabs.textContent=tr(petMode?'家园宠物背包':inventoryMode?'我的仓库':'户外与家园设施');
   side.setAttribute('aria-label',tabs.textContent);
   category.hidden=petMode;
   catPills.hidden=petMode;
@@ -525,12 +525,12 @@ export function createHomeView(root,cb){
   }
   items.replaceChildren();
   if(petMode){
-   const pets=next.pets;
-   summary.textContent='';
+   const pets=next.petBag||next.pets;
+   summary.textContent=tr('拖入场景放出宠物；拖回背包或底部宠物背包按钮即可收回。');
    for(const pet of pets){
     const row=el('div','home-pet-card');
     row.homePetId=pet.id;
-    const infoBtn=button('',()=>cb.findPet(pet.id),'home-pet-name-btn');
+    const infoBtn=button('',()=>{},'home-pet-name-btn');
     const portrait=el('canvas','home-pet-portrait');
     portrait.width=80;portrait.height=80;portrait.setAttribute('aria-hidden','true');
     const portraitImage=imageFor(pet.art);
@@ -601,7 +601,7 @@ export function createHomeView(root,cb){
    gesture.steering=true;
    const bounds=canvas.getBoundingClientRect();
    // Reproject the held screen position every frame as the camera follows the hero.
-   cb.walk(homeHeldPointerTarget(model.hero,gesture.last,bounds,model.scale));
+   cb.walk(homeHeldPointerTarget(model.camera,gesture.last,bounds,model.scale));
   }
   cb.step?.(dt);
   const r=canvas.getBoundingClientRect();
@@ -630,7 +630,7 @@ export function createHomeView(root,cb){
   ctx.save();
   ctx.translate(r.width/2-model.camera.x*scale,r.height/2-model.camera.y*scale);
   ctx.scale(scale/40,scale/40);
-  terrain.draw(ctx,model.home.seed,worldRect,envArt,decorArt,ratio*scale/40,objects);
+  terrainMissing=terrain.draw(ctx,model.home.seed,worldRect,envArt,decorArt,ratio*scale/40,objects);
   ctx.restore();
 
   hits=[];
@@ -744,14 +744,15 @@ export function createHomeView(root,cb){
    ...landscape,
    ...objects.filter(o=>!grounds.includes(o)).map(o=>({kind:'object',o,y:o.y+footprint(o,model.catalog.items).h+(o.parentId?2:0)})),
    ...actors.map(o=>({kind:'pet',o,y:o.y+1})),
-   {kind:'hero',o:model.hero,y:model.hero.y}
+   {kind:'hero',o:model.hero,y:model.hero.y,owner:0},
+   ...(model.secondHero?[{kind:'hero',o:model.secondHero,y:model.secondHero.y,owner:1}]:[])
   ].sort((a,b)=>a.y-b.y);
 
   for(const row of sorted){
    if(row.kind==='tree'){
     const p=project(row.o.tx,row.o.ty);
     ctx.save();
-    if(Math.abs(model.hero.x-row.o.tx)<1.7&&model.hero.y<row.o.ty&&model.hero.y>row.o.ty-4)ctx.globalAlpha=.45;
+    if([model.hero,model.secondHero].filter(Boolean).some(h=>Math.abs(h.x-row.o.tx)<1.7&&h.y<row.o.ty&&h.y>row.o.ty-4))ctx.globalAlpha=.45;
     if(envArt){
      drawHomeWorldTree(ctx,row.o,p.x,p.y,scale/40,envArt);
     }else if(cb.drawTree){
@@ -761,11 +762,11 @@ export function createHomeView(root,cb){
     continue;
    }
    if(row.kind==='hero'){
-    const h=row.o,p=project(h.x,h.y);
-    const dx=prevHeroPos?(h.x-prevHeroPos.x)*40:0;
-    const dy=prevHeroPos?(h.y-prevHeroPos.y)*40:0;
-    prevHeroPos={x:h.x,y:h.y};
-    const pose=updateHeroActor(heroActor,{
+    const h=row.o,p=project(h.x,h.y),save=row.owner?model.secondSave:heroSave,previous=row.owner?prevSecondPos:prevHeroPos;
+    const dx=previous?(h.x-previous.x)*40:0;
+    const dy=previous?(h.y-previous.y)*40:0;
+    if(row.owner)prevSecondPos={x:h.x,y:h.y};else prevHeroPos={x:h.x,y:h.y};
+    const pose=updateHeroActor(row.owner?secondActor:heroActor,{
      dx,dy,x:h.x*40,y:h.y*40,time:sec,facing:h.facing,
      npcs:actors.map(pet=>({id:pet.id,x:pet.x*40,y:pet.y*40})),
      reducedMotion
@@ -774,12 +775,12 @@ export function createHomeView(root,cb){
     ctx.beginPath();
     ctx.ellipse(p.x,p.y+2,scale*.45,scale*.16,0,0,Math.PI*2);
     ctx.fill();
-    drawMotionAccessory(ctx,p.x,p.y,now,motionTrail.state);
+    if(!row.owner)drawMotionAccessory(ctx,p.x,p.y,now,motionTrail.state);
     const heroDrawOpts={mounted:false,head:pose.head,breath:pose.breath,walkTime:pose.walkTime,reducedMotion};
     if(cb.drawHero){
-     cb.drawHero(ctx,{...heroSave,mountId:null,facing:h.facing},p.x,p.y,sec,!!h.moving,scale/40,heroDrawOpts);
+     cb.drawHero(ctx,{...save,mountId:null,facing:h.facing},p.x,p.y,sec,!!h.moving,scale/40,heroDrawOpts);
     }else if(fallbackHero){
-     fallbackHero.drawSave(ctx,{...heroSave,mountId:null,facing:h.facing},p.x,p.y,sec,!!h.moving,scale/40,heroDrawOpts);
+     fallbackHero.drawSave(ctx,{...save,mountId:null,facing:h.facing},p.x,p.y,sec,!!h.moving,scale/40,heroDrawOpts);
     }else{
      ctx.fillStyle='#e8be72';ctx.beginPath();ctx.arc(p.x,p.y-scale*.9,scale*.23,0,0,Math.PI*2);ctx.fill();
      ctx.fillStyle='#537e91';ctx.fillRect(p.x-scale*.2,p.y-scale*.65,scale*.4,scale*.6);
@@ -787,7 +788,7 @@ export function createHomeView(root,cb){
     ctx.fillStyle='#fff8dc';
     ctx.font='bold 13px sans-serif';
     ctx.textAlign='center';
-    ctx.fillText('我',p.x,p.y+22);
+    ctx.fillText(model.secondHero?`${row.owner+1}号 · ${save?.name||'玩家'}`:'我',p.x,p.y+22);
     continue;
    }
    if(row.kind==='object'){
@@ -892,6 +893,23 @@ export function createHomeView(root,cb){
  frame=requestAnimationFrame(paint);
  return {
   render,
+  async prepare({isCurrent=()=>!dead,onProgress=()=>{}}={}){
+   await ensureWorldAtlases();
+   const art=[...(model.objects||[]).map(o=>model.catalog.items.find(i=>i.id===o.itemId)?.art),...(model.pets||[]).map(p=>p.art)].filter(Boolean);
+   await Promise.all([...new Set(art.map(imageFor))].filter(Boolean).map(async image=>{
+    try{await image.decode();}catch(error){images.delete(image.src);throw Error('家园图片加载失败，请重试。');}
+   }));
+   terrainMissing=Infinity;
+   const started=performance.now();
+   while(!dead&&isCurrent()){
+    await new Promise(resolve=>setTimeout(resolve,32));
+    if(dead||!isCurrent())break;
+    if(terrainMissing===0)return;
+    if(performance.now()-started>30000)throw Error('家园地块准备时间较长，请重试。');
+    onProgress({phase:'assets',message:'正在准备家园地块和环境细节…'});
+   }
+   throw Error('家园加载已取消');
+  },
   openSummon:openSummonDrawer,
   capture(){
    if(mode!=='scene'||!canvas?.width||!canvas?.height)return null;

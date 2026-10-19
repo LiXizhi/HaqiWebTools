@@ -1,5 +1,6 @@
 import {drawGatheringProgress} from './view_gathering_progress.js';
 import {migrateCampDrops,locationSnapshot} from './adventure_coordinates_core.js';
+import {startWorldOnFoot} from './adventure_mounts_core.js';
 import {selectCompanionId} from './adventure_companion_core.js';
 import {assignedKeyboardAction,normalizePlayerInputs} from './player_input_core.js';
 import {createPlayerInput} from './player_input.js';
@@ -188,11 +189,12 @@ export function createLocalPlay(api){
             if(receipt&&pending.ids.every(id=>state().store.catalog.roles.find(r=>r.id===id)?.save.rewardedEncounters.includes(receipt))){const next={...record,pending:null};await db.write(key,next);record=next;}
         })().finally(()=>{loading=null;});return loading;
     }
-    function storeSaves(next=saves()){
+    function storeSaves(next=saves(),{runtimeOnly=false}={}){
         const {store}=state(),updates={};
         ids().forEach((id,i)=>{if(next[i])updates[id]=next[i];});
         const secondRuntime=session&&{zone:next[1].zone,position:next[1].position,positionCoordinateVersion:next[1].positionCoordinateVersion,dungeonReturn:next[1].dungeonReturn};
         if(session)updates[ids()[1]]={...next[1],zone:session.returnTo.zone,position:session.returnTo.position,positionCoordinateVersion:session.returnTo.coordinateVersion??1,dungeonReturn:session.returnTo.dungeonReturn};
+        if(runtimeOnly){store.saveRuntime(updates);return;}
         store.commitRoles(updates);api.replaceSave(store.catalog.roles.find(r=>r.id===ids()[0]).save);
         if(session)session.second={...store.catalog.roles.find(r=>r.id===ids()[1]).save,...secondRuntime};
     }
@@ -217,7 +219,7 @@ export function createLocalPlay(api){
         const formation=record.formations[pair]||createLocalFormation([first,second],rows.map(r=>r.save));
         validateLocalFormation(formation,[first,second],rows.map(r=>r.save));
         followMotion.reset();
-        session={ids:[first,second],second:structuredClone(rows[1].save),formation,returnTo:{...locationSnapshot(rows[1].save,state().assets.content),dungeonReturn:rows[1].save.dungeonReturn},world:null};
+        session={ids:[first,second],second:startWorldOnFoot(structuredClone(rows[1].save)),formation,returnTo:{...locationSnapshot(rows[1].save,state().assets.content),dungeonReturn:rows[1].save.dungeonReturn},world:null};
         session.controller=(record.pending?.controller??controller??record.controllers?.[pair])==='ai'?'ai':'human';
         planner=createCompanionPlanner(pair,companionParams(state().assets.content));aiThinkAt=0;aiGoal=null;hintRound=null;aiCandidates=[];
         for(const seat of formation.slots)if(seat?.kind==='pet'){
@@ -565,7 +567,7 @@ export function createLocalPlay(api){
             if(!teamFollowing()&&!follow.some(Boolean)&&session.lastLeader&&!constrainLocalPosition(save.position,session.second.position,innerWidth,innerHeight))save.position={...session.lastLeader};
             session.lastLeader={...save.position};
             if(!teamFollowing()&&!follow[1]&&session.controller!=='ai'&&!panels[1]&&!dialogs[1]&&!state().globalPaused){const target=W.autoInteraction(world,session.second.position);if(target?.kind==='encounter'&&target.id!==session.secondContact)api.interact(target);session.secondContact=target?.id??null;}
-            if(now-careAt>1000){careAt=now;tickCare(session.second,state().assets.content,A.playerSpec(session.second,state().assets.content),Date.now(),true);}
+            if(now-careAt>1000){careAt=now;if(tickCare(session.second,state().assets.content,A.playerSpec(session.second,state().assets.content),Date.now(),true))api.onCoreChange();}
         }
         if(gatherWorld!==world){gatherWorld=world;gatherTick=0;gatherVisible=[];gatherProgress.fill(null);gatherEffects.length=0;smeltProgress.fill(null);petJobs.fill(null);petCooldown.fill(0);}
         if(now-gatherTick>500){

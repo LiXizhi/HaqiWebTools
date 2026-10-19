@@ -55,6 +55,7 @@ export function restoreRuntime(save, content, runtime) {
     if (result.pets) {result.heroHp = null;result.careAt = 0;result.careLog = [];}
     if (matching) {
         Object.assign(result,copy(runtime.values));
+        if(Number.isSafeInteger(runtime.liveRevision)&&runtime.liveRevision>=save.revision)result.revision=runtime.liveRevision;
         // The durable save can already be new while this device still has old coordinates.
         if(runtime.values?.position)result.positionCoordinateVersion=runtime.values.positionCoordinateVersion??1;
     }

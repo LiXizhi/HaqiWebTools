@@ -53,16 +53,18 @@ function eatFood(save,content,pet,itemId){
  save.careLog.push(`${content.pets[pet.speciesId].name}吃了${content.items[itemId].name}，饱食 +${Math.round(pet.hunger-before)}`);
 }
 export function feedFromSlots(save,content){
- if(save.pendingEncounter)return;
+ if(save.pendingEncounter)return false;
+ let changed=false;
  for(const id of save.formation.filter(Boolean)){
   const pet=save.pets[id];if(!pet)continue;
   while(pet.hunger<petParams(content).feedThreshold){
    const index=(save.petFoodSlots||[]).findIndex(row=>row?.count>0);if(index<0)break;
-   const row=save.petFoodSlots[index];eatFood(save,content,pet,row.itemId);
+   const row=save.petFoodSlots[index];eatFood(save,content,pet,row.itemId);changed=true;
    if(--row.count===0)save.petFoodSlots[index]=null;
   }
  }
  save.careLog=save.careLog.slice(-20);
+ return changed;
 }
 export function petStage(level,content){return petParams(content).stageLevels.filter(n=>level>=n).length-1;}
 // Appearance is cosmetic; growth, cards and combat always use the actual level.
@@ -210,13 +212,14 @@ export function tickCare(save,content,hero,now,online=false){
   const pet=save.pets[id];if(online){pet.hunger=Math.max(0,pet.hunger-minutes*p.hungerPerMinute*petHungerMultiplier(pet,content));
   }
  }
- if(online)feedFromSlots(save,content);
+ const coreChanged=online?feedFromSlots(save,content):false;
  // Web companion care: stored pets rest without consuming food, including
  // offline time (the same 24-hour elapsed cap and battle pause apply).
  const active=new Set(save.formation.filter(Boolean));
  for(const [id,pet] of Object.entries(save.pets))if(!active.has(id))pet.hunger=Math.min(100,pet.hunger+minutes*p.restingHungerPerMinute);
  if(!inDungeon)for(const pet of Object.values(save.pets))if(pet.hunger>0)pet.hp=Math.min(petMaxHp(pet,content),pet.hp+petMaxHp(pet,content)*p.regenPerMinute*minutes);
  save.careLog=save.careLog.slice(-20);
+ return coreChanged;
 }
 export function migratePetDeckRules(save,content){
  check(save.petDeckRulesVersion===undefined||save.petDeckRulesVersion===1,'宠物卡包规则版本无效');

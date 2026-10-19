@@ -9,6 +9,7 @@ import { MAX_ROLES, emptyRoles, validateRoles, addRole, selectRole, grantMagicBe
 
 export function createRoleStore({ content, dataset, storage = localStorage, uuid = () => crypto.randomUUID(), now = () => Date.now(), prepareSaves = async () => {}, runtimeStore = createRuntimeStore() }) {
     let owner = null, state, raw, lastCoreKey;
+    let durableRevisions=new Map(),hasDurableFormat=false;
     const preparationErrors = new Map();
     const scope=(accountKey,id)=>`${accountKey}.${id}`;
     const accountKey=account=>`haqi.roles.v1.${account===null?'guest':'account.'+encodeURIComponent(account)}`;
@@ -21,6 +22,27 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
             ? restoreRuntime(unpack(row.save,accountKey,row.id),content,runtimeStore.get(runtimeKey(accountKey,row.id))) : row.save}))};
     }
     function changed(catalog) {return state.dirty || coreCatalogKey(catalog)!==lastCoreKey;}
+    function saveRuntime(updates) {
+        if(storage.getItem(key())!==raw)throw Error('角色进度已在其他页面变化，请刷新后继续。');
+        if(Object.keys(updates).some(id=>!state.catalog.roles.some(row=>row.id===id)))throw Error('角色不存在');
+        if(!hasDurableFormat){
+            const catalog={...state.catalog,roles:state.catalog.roles.map(row=>updates[row.id]?{...row,save:updates[row.id]}:row)};
+            write({...state,catalog,dirty:changed(catalog)});return;
+        }
+        for(const [id,save] of Object.entries(updates)){
+            const runtime=runtimeValues(save);
+            // Runtime-only revisions must not require rewriting the durable catalog.
+            runtime.liveRevision=save.revision;runtime.revision=durableRevisions.get(id)??save.revision;
+            runtimeStore.set(runtimeKey(key(),id),runtime);
+        }
+    }
+    function commitCatalog(catalog) {
+        if(hasDurableFormat&&coreCatalogKey(catalog)===lastCoreKey){
+            saveRuntime(Object.fromEntries(catalog.roles.map(row=>[row.id,row.save])));
+            state={...state,catalog};return;
+        }
+        write({...state,catalog,dirty:true});
+    }
     function write(next) {
         if (storage.getItem(key()) !== raw) throw Error('角色进度已在其他页面变化，请刷新后继续。');
         if(state?.recoveryBackup)next={...next,recoveryBackup:state.recoveryBackup,recoveryResolved:next.recoveryResolved??state.recoveryResolved??false};
@@ -31,9 +53,12 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
         if(text!==raw)storage.setItem(key(),text);
         for(const row of next.catalog.roles)runtimeStore.set(runtimeKey(key(),row.id),runtimeValues(row.save));
         state=next;raw=text;lastCoreKey=coreCatalogKey(next.catalog);
+        durableRevisions=new Map(packed.map(row=>[row.id,row.save.revision]));
+        hasDurableFormat=true;
     }
     return {
         flushRuntime: () => runtimeStore.flush(),
+        saveRuntime,
         petFileIO(roleId){return fileIO(scope(key(),roleId));},
         // Cloud downloads can arrive before this store switches off the guest account.
         petFileIOFor(account,roleId){return fileIO(scope(accountKey(account),roleId));},
@@ -147,6 +172,8 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
                 next={catalog:recovered,base:source?.base??null,dirty:source?.dirty===true,recoveryBackup:{raw:nextRaw,legacy,reason:error.message,issues}};
             }
             owner = account;raw = nextRaw;state = next;lastCoreKey=coreCatalogKey(next.catalog);
+            let storedRoles;hasDurableFormat=false;try{const stored=JSON.parse(nextRaw);storedRoles=stored?.catalog?.roles;hasDurableFormat=stored?.localFormat===2;}catch{}
+            durableRevisions=new Map((storedRoles||next.catalog.roles).map(row=>[row.id,row.save.revision]));
             if (!raw && account === null && !state.recoveryBackup) {
                 const legacy = storage.getItem(SAVE_KEY);
                 if (legacy) {
@@ -163,7 +190,8 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
                 const same=previous&&coreCatalogKey({...catalog,roles:[previous]})===coreCatalogKey({...catalog,roles:[row]});
                 const durable=durableSave(row.save);
                 if(same)durable.revision=previous.save.revision;
-                return {...row,save:restoreRuntime(durable,content,same?(runtimeStore.get(runtimeKey(key(),row.id))||runtimeValues(previous.save)):row.save.pendingEncounter?runtimeValues(row.save):null)};
+                const runtime=same?(runtimeStore.get(runtimeKey(key(),row.id))||runtimeValues(previous.save)):row.save.pendingEncounter?runtimeValues(row.save):null;
+                return {...row,save:restoreRuntime(durable,content,same?{...runtime,revision:durable.revision}:runtime)};
             })};
             write({catalog:validateRoles(hydrated,content,dataset),base,dirty,...(resolveRecovery?{recoveryResolved:true}:{})});
         },
@@ -205,8 +233,8 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
         commitRoles(updates) {
             const ids=Object.keys(updates);
             if(!ids.length||ids.some(id=>!state.catalog.roles.some(row=>row.id===id)))throw Error('角色不存在');
-            const catalog={...state.catalog,roles:state.catalog.roles.map(row=>updates[row.id]?{...row,save:structuredClone(updates[row.id])}:row)};
-            write({...state,catalog,dirty:changed(catalog)});
+            const catalog={...state.catalog,roles:state.catalog.roles.map(row=>updates[row.id]?{...row,save:updates[row.id]}:row)};
+            commitCatalog(catalog);
             return ids.map(id=>state.catalog.roles.find(row=>row.id===id).save);
         },
         scoped(roleId=null) {
@@ -219,7 +247,7 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
                     assertCurrent();
                     if (k !== SAVE_KEY) { storage.setItem(`${accountKey}.${id}.${k}`, text);return; }
                     const catalog = { ...state.catalog, roles: state.catalog.roles.map(row => row.id === id ? { ...row, save: JSON.parse(text) } : row) };
-                    write({ ...state, catalog, dirty: changed(catalog) });
+                    commitCatalog(catalog);
                 },
             };
         },

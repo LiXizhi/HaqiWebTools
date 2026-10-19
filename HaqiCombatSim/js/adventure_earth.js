@@ -145,7 +145,7 @@ export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=
         return {zone:'earth',isEarth:true,bakeNaturalGround:true,earthBoating:true,w:info.w,h:info.h,earthRules:rules,terrainAt:typeAt,interactionParams:params?.adventure,monsterSceneParams:params?.monsterScene,
             center:{...p},npcs:[],encounters:[],paths:[],buildings:[],trees:[],landmarks:[],decorations:[],portal:{id:'portal',hidden:true,x:p.x,y:p.y},
             layout:{name:'现实世界',earth:true,w:info.w,h:info.h,spawn:{...p},regions:[],bridges:[],rivers:[],lakes:[],rules:{terrain:{ocean:'#438b9b'}},coast:[]},
-            terrainPainter:paint,prepareSurface(rect,options){return ensureSurface().prepareView(this,rect,options);},earthScheduler:work,prepareImageBounds,drawEarthDecoration:(ctx,o)=>surface?.decoration(ctx,o),earthDecorationBaked:o=>surface?.isBaked(o),get surfaceStats(){return surface?.stats;},error:'',revision:0};
+            terrainPainter:paint,releaseSurface(){surface?.dispose();surface=null;},prepareSurface(rect,options){return ensureSurface().prepareView(this,rect,options);},earthScheduler:work,prepareImageBounds,drawEarthDecoration:(ctx,o)=>surface?.decoration(ctx,o),earthDecorationBaked:o=>surface?.isBaked(o),get surfaceStats(){return surface?.stats;},error:'',revision:0};
     }
     async function build(target,p,cityRows,auth,token){
         const terrain=[...cache.entries.values()].map(row=>row.value).filter(t=>t.indices).map(({key,width,height,indices,types,version})=>({key,width,height,indices,types,version}));

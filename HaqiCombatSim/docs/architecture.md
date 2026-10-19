@@ -1263,3 +1263,50 @@ flowchart LR
 ```
 
 该保留策略只由家园的局部坐标失效显式开启；准备进度仍只统计最新地块，普通岛屿失效行为不变。
+
+
+## 2026-10-20：家园进入准备与外景释放
+
+```mermaid
+flowchart LR
+    Home[选择家园] --> Gate[复用跑步伙伴加载窗口]
+    Gate --> Data[读取居民、库存与可见地块]
+    Data --> Release[释放外景地形、树木、街景缓存与地形 Worker]
+    Data --> Art[等待环境图集、主角、家具与宠物图片]
+    Art --> Terrain[等待首屏地形完成绘制]
+    Terrain --> Ready[关闭加载窗口并允许家园移动]
+    Gate --> Retry[失败重试或返回列表]
+    Ready --> Exit[离开家园重新准备原场景]
+```
+
+`home_app.js` 管理进入代次及取消，`view_home.js.prepare` 检查图片解码和可见地形完成；加载中不推进移动与宠物活动。`adventure_renderer.releaseScene` 清理地形位图、后台 Worker、树木批次、街景、底图与缩略图画布；现实世界通过 `releaseSurface` 释放地面缓存及 Worker。保留角色进度、世界逻辑及共享角色资源；退出时使原场景加载门重新生效，不改变存档。
+
+## 2026-10-20：家园宠物放出与收回
+
+```mermaid
+flowchart LR
+  Owned[角色已拥有宠物] --> Init[首次初始化前6个 / 保留旧安置]
+  Init --> Residents[residents名单与坐标 / 初始化标记]
+  Residents --> Scene[场景宠物]
+  Owned --> Bag[未在名单内的家园宠物背包]
+  Bag -->|拖入| Save[串行保存 residents]
+  Scene -->|拖回背包或底部按钮| Save
+  Save --> Residents
+  Residents --> Cloud[既有家园分文件手动云同步]
+```
+
+空名单保留初始化标记，不按当前收藏重建默认宠物。视图通过 drop / recallPet 回调交给 home_app 保存，成功后更新场景及背包，失败保留状态与重试。纯名单初始化和筛选位于 home_core。
+
+### 家园双人输入与镜头（2026-10-20）
+
+```mermaid
+flowchart LR
+    Duo[adventure_local_play 双人会话] --> Context[adventure_app 家园上下文 / 双方外观与输入设置]
+    Context --> Home[home_app 独立家园坐标 / 双键盘与手柄输入]
+    Home --> Walk[home_walk_core 碰撞与寻路]
+    Home --> Camera[home_local_core 同屏约束与镜头]
+    Home --> View[view_home 双角色纵深排序与独立姿态]
+    Home --> Store[原 home_store / 当前主角色家园事务]
+```
+
+冒险手柄轮询在家园面板期间暂停，家园自行接管输入并在关闭时释放监听。双方冒险角色存档仅供读取外观，家园位置不回写冒险坐标或第二角色收藏。

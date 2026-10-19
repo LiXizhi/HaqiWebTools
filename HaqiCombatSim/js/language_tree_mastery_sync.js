@@ -1,13 +1,19 @@
 import {earnedMastery,restoreMastery,validateMasteryList} from './language_tree_dictionary_core.js';
 // Only word lists cross this IO boundary. Learning evidence and status stay local.
-export function createMasterySync({key,getKey=()=>key,store,language,remote}){
- let known=null,queue=Promise.resolve();const valid=()=>getKey()===key;
+export function createMasterySync({key,getKey=()=>key,store,language,remote,index=null,onConfirmed=null}){
+ let known=null,queue=Promise.resolve();const rewardPending=new Set();const valid=()=>getKey()===key;
  async function run(){if(!valid()||!remote)return;
-  if(!known){known=validateMasteryList(await remote.read());if(!valid())return;await store.update(key,s=>restoreMastery(s,known[language]));}
+  if(!known){known=validateMasteryList(await remote.read());if(!valid())return;known[language]=[...new Set(known[language].map(id=>index?.aliases.get(id)||id))];await store.update(key,s=>restoreMastery(s,known[language]));}
   const {state}=await store.read(key);if(!valid())return;
   const pending=earnedMastery(state).filter(id=>!known[language].includes(id));
   // A newly earned word causes one acknowledged list write. Retries never upload other fields.
-  for(const id of pending){if(!valid())return;const next=validateMasteryList({...known,[language]:[...known[language],id]});await remote.write(next);if(!valid())return;known=next;}
+  for(const id of pending){if(!valid())return;const next=validateMasteryList({...known,[language]:[...known[language],id]});await remote.write(next);if(!valid())return;known=next;if(onConfirmed){rewardPending.add(id);await store.update(key,s=>{s.masteryRewardPending=[...new Set([...(s.masteryRewardPending||[]),id])];});}}
+  if(valid()&&onConfirmed){
+   const latest=await store.read(key);if(!valid())return;
+   for(const id of latest.state.masteryRewardPending||[])if(known[language].includes(id))rewardPending.add(id);
+   const words=[...rewardPending];
+   if(words.length){await onConfirmed(language,words);if(!valid())return;await store.update(key,s=>{s.masteryRewardPending=(s.masteryRewardPending||[]).filter(id=>!words.includes(id));});for(const id of words)rewardPending.delete(id);}
+  }
  }
  return {sync(){const task=queue.catch(()=>{}).then(run);queue=task;return task;}};
 }

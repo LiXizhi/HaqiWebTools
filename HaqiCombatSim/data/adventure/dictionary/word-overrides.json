@@ -1,0 +1,8101 @@
+{
+  "en": [
+    {
+      "text": "worry",
+      "meaning": "担心",
+      "forms": [
+        "worried",
+        "worrying",
+        "worries"
+      ],
+      "senses": [
+        "haqi:worry"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "help",
+      "meaning": "帮助",
+      "forms": [
+        "helps",
+        "helped",
+        "helping"
+      ],
+      "senses": [
+        "haqi:help"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "follow",
+      "meaning": "跟随；追随",
+      "forms": [
+        "follows",
+        "followed",
+        "following"
+      ],
+      "senses": [
+        "haqi:follow"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "finish",
+      "meaning": "完成",
+      "forms": [
+        "finishes",
+        "finished",
+        "finishing"
+      ],
+      "senses": [
+        "haqi:finish"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "quest",
+      "meaning": "任务",
+      "forms": [
+        "quests"
+      ],
+      "senses": [
+        "haqi:quest"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "task",
+      "meaning": "任务",
+      "forms": [
+        "tasks"
+      ],
+      "senses": [
+        "haqi:quest"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "friend",
+      "meaning": "朋友",
+      "forms": [
+        "friends"
+      ],
+      "senses": [
+        "haqi:friend"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "book",
+      "meaning": "书",
+      "forms": [
+        "books"
+      ],
+      "senses": [
+        "haqi:book"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "water",
+      "meaning": "水",
+      "forms": [],
+      "senses": [
+        "haqi:water"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "eat",
+      "meaning": "吃",
+      "forms": [
+        "eats",
+        "ate",
+        "eaten",
+        "eating"
+      ],
+      "senses": [
+        "haqi:eat"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "go",
+      "meaning": "去",
+      "forms": [
+        "goes",
+        "went",
+        "gone",
+        "going"
+      ],
+      "senses": [
+        "haqi:go"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "hello",
+      "meaning": "你好",
+      "forms": [],
+      "senses": [
+        "haqi:hello"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "thank",
+      "meaning": "感谢",
+      "forms": [
+        "thanks",
+        "thanked",
+        "thanking"
+      ],
+      "senses": [
+        "haqi:thank"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "i",
+      "meaning": "我",
+      "forms": [],
+      "senses": [
+        "haqi:i"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "you",
+      "meaning": "你",
+      "forms": [],
+      "senses": [
+        "haqi:you"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "he",
+      "meaning": "他",
+      "forms": [],
+      "senses": [
+        "haqi:he"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "she",
+      "meaning": "她",
+      "forms": [],
+      "senses": [
+        "haqi:she"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "we",
+      "meaning": "我们",
+      "forms": [],
+      "senses": [
+        "haqi:we"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "they",
+      "meaning": "他们",
+      "forms": [],
+      "senses": [
+        "haqi:they"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "this",
+      "meaning": "这",
+      "forms": [],
+      "senses": [
+        "haqi:this"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "that",
+      "meaning": "那",
+      "forms": [],
+      "senses": [
+        "haqi:that"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "who",
+      "meaning": "谁",
+      "forms": [],
+      "senses": [
+        "haqi:who"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "what",
+      "meaning": "什么",
+      "forms": [],
+      "senses": [
+        "haqi:what"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "where",
+      "meaning": "哪里",
+      "forms": [],
+      "senses": [
+        "haqi:where"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "when",
+      "meaning": "什么时候",
+      "forms": [],
+      "senses": [
+        "haqi:when"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "why",
+      "meaning": "为什么",
+      "forms": [],
+      "senses": [
+        "haqi:why"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "how",
+      "meaning": "怎么",
+      "forms": [],
+      "senses": [
+        "haqi:how"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "not",
+      "meaning": "不",
+      "forms": [],
+      "senses": [
+        "haqi:not"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "yes",
+      "meaning": "是的",
+      "forms": [],
+      "senses": [
+        "haqi:yes"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "no",
+      "meaning": "不行",
+      "forms": [],
+      "senses": [
+        "haqi:no"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "all",
+      "meaning": "全部",
+      "forms": [],
+      "senses": [
+        "haqi:all"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "some",
+      "meaning": "一些",
+      "forms": [],
+      "senses": [
+        "haqi:some"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "many",
+      "meaning": "许多",
+      "forms": [],
+      "senses": [
+        "haqi:many"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "one",
+      "meaning": "一",
+      "forms": [],
+      "senses": [
+        "haqi:one"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "two",
+      "meaning": "二",
+      "forms": [],
+      "senses": [
+        "haqi:two"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "three",
+      "meaning": "三",
+      "forms": [],
+      "senses": [
+        "haqi:three"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "four",
+      "meaning": "四",
+      "forms": [],
+      "senses": [
+        "haqi:four"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "five",
+      "meaning": "五",
+      "forms": [],
+      "senses": [
+        "haqi:five"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "six",
+      "meaning": "六",
+      "forms": [],
+      "senses": [
+        "haqi:six"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "seven",
+      "meaning": "七",
+      "forms": [],
+      "senses": [
+        "haqi:seven"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "eight",
+      "meaning": "八",
+      "forms": [],
+      "senses": [
+        "haqi:eight"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "nine",
+      "meaning": "九",
+      "forms": [],
+      "senses": [
+        "haqi:nine"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "ten",
+      "meaning": "十",
+      "forms": [],
+      "senses": [
+        "haqi:ten"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "hundred",
+      "meaning": "百",
+      "forms": [],
+      "senses": [
+        "haqi:hundred"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "thousand",
+      "meaning": "千",
+      "forms": [],
+      "senses": [
+        "haqi:thousand"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "today",
+      "meaning": "今天",
+      "forms": [],
+      "senses": [
+        "haqi:today"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "yesterday",
+      "meaning": "昨天",
+      "forms": [],
+      "senses": [
+        "haqi:yesterday"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "tomorrow",
+      "meaning": "明天",
+      "forms": [],
+      "senses": [
+        "haqi:tomorrow"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "now",
+      "meaning": "现在",
+      "forms": [],
+      "senses": [
+        "haqi:now"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "morning",
+      "meaning": "早晨",
+      "forms": [],
+      "senses": [
+        "haqi:morning"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "night",
+      "meaning": "夜晚",
+      "forms": [],
+      "senses": [
+        "haqi:night"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "year",
+      "meaning": "年",
+      "forms": [],
+      "senses": [
+        "haqi:year"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "month",
+      "meaning": "月",
+      "forms": [],
+      "senses": [
+        "haqi:month"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "week",
+      "meaning": "星期",
+      "forms": [],
+      "senses": [
+        "haqi:week"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "hour",
+      "meaning": "小时",
+      "forms": [],
+      "senses": [
+        "haqi:hour"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "minute",
+      "meaning": "分钟",
+      "forms": [],
+      "senses": [
+        "haqi:minute"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "second",
+      "meaning": "秒",
+      "forms": [],
+      "senses": [
+        "haqi:second"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "mother",
+      "meaning": "母亲",
+      "forms": [],
+      "senses": [
+        "haqi:mother"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "father",
+      "meaning": "父亲",
+      "forms": [],
+      "senses": [
+        "haqi:father"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "family",
+      "meaning": "家庭",
+      "forms": [],
+      "senses": [
+        "haqi:family"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "child",
+      "meaning": "孩子",
+      "forms": [],
+      "senses": [
+        "haqi:child"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "person",
+      "meaning": "人",
+      "forms": [],
+      "senses": [
+        "haqi:person"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "name",
+      "meaning": "名字",
+      "forms": [],
+      "senses": [
+        "haqi:name"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "home",
+      "meaning": "家",
+      "forms": [],
+      "senses": [
+        "haqi:home"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "school",
+      "meaning": "学校",
+      "forms": [],
+      "senses": [
+        "haqi:school"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "teacher",
+      "meaning": "老师",
+      "forms": [],
+      "senses": [
+        "haqi:teacher"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "student",
+      "meaning": "学生",
+      "forms": [],
+      "senses": [
+        "haqi:student"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "language",
+      "meaning": "语言",
+      "forms": [],
+      "senses": [
+        "haqi:language"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "word",
+      "meaning": "词语",
+      "forms": [],
+      "senses": [
+        "haqi:word"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "story",
+      "meaning": "故事",
+      "forms": [],
+      "senses": [
+        "haqi:story"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "question",
+      "meaning": "问题",
+      "forms": [],
+      "senses": [
+        "haqi:question"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "answer",
+      "meaning": "答案",
+      "forms": [],
+      "senses": [
+        "haqi:answer"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "food",
+      "meaning": "食物",
+      "forms": [],
+      "senses": [
+        "haqi:food"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "rice",
+      "meaning": "米饭",
+      "forms": [],
+      "senses": [
+        "haqi:rice"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "bread",
+      "meaning": "面包",
+      "forms": [],
+      "senses": [
+        "haqi:bread"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "milk",
+      "meaning": "牛奶",
+      "forms": [],
+      "senses": [
+        "haqi:milk"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "tea",
+      "meaning": "茶",
+      "forms": [],
+      "senses": [
+        "haqi:tea"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "apple",
+      "meaning": "苹果",
+      "forms": [],
+      "senses": [
+        "haqi:apple"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "fruit",
+      "meaning": "水果",
+      "forms": [],
+      "senses": [
+        "haqi:fruit"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "vegetable",
+      "meaning": "蔬菜",
+      "forms": [],
+      "senses": [
+        "haqi:vegetable"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "meat",
+      "meaning": "肉",
+      "forms": [],
+      "senses": [
+        "haqi:meat"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "fish",
+      "meaning": "鱼",
+      "forms": [],
+      "senses": [
+        "haqi:fish"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "bird",
+      "meaning": "鸟",
+      "forms": [],
+      "senses": [
+        "haqi:bird"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "cat",
+      "meaning": "猫",
+      "forms": [],
+      "senses": [
+        "haqi:cat"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "dog",
+      "meaning": "狗",
+      "forms": [],
+      "senses": [
+        "haqi:dog"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "horse",
+      "meaning": "马",
+      "forms": [],
+      "senses": [
+        "haqi:horse"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "flower",
+      "meaning": "花",
+      "forms": [],
+      "senses": [
+        "haqi:flower"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "tree",
+      "meaning": "树",
+      "forms": [],
+      "senses": [
+        "haqi:tree"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "forest",
+      "meaning": "森林",
+      "forms": [],
+      "senses": [
+        "haqi:forest"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "mountain",
+      "meaning": "山",
+      "forms": [],
+      "senses": [
+        "haqi:mountain"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "river",
+      "meaning": "河",
+      "forms": [],
+      "senses": [
+        "haqi:river"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "sea",
+      "meaning": "海",
+      "forms": [],
+      "senses": [
+        "haqi:sea"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "sky",
+      "meaning": "天空",
+      "forms": [],
+      "senses": [
+        "haqi:sky"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "sun",
+      "meaning": "太阳",
+      "forms": [],
+      "senses": [
+        "haqi:sun"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "moon",
+      "meaning": "月亮",
+      "forms": [],
+      "senses": [
+        "haqi:moon"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "star",
+      "meaning": "星星",
+      "forms": [],
+      "senses": [
+        "haqi:star"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "rain",
+      "meaning": "雨",
+      "forms": [],
+      "senses": [
+        "haqi:rain"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "snow",
+      "meaning": "雪",
+      "forms": [],
+      "senses": [
+        "haqi:snow"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "wind",
+      "meaning": "风",
+      "forms": [],
+      "senses": [
+        "haqi:wind"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "fire",
+      "meaning": "火",
+      "forms": [],
+      "senses": [
+        "haqi:fire"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "ice",
+      "meaning": "冰",
+      "forms": [],
+      "senses": [
+        "haqi:ice"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "stone",
+      "meaning": "石头",
+      "forms": [],
+      "senses": [
+        "haqi:stone"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "road",
+      "meaning": "道路",
+      "forms": [],
+      "senses": [
+        "haqi:road"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "city",
+      "meaning": "城市",
+      "forms": [],
+      "senses": [
+        "haqi:city"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "country",
+      "meaning": "国家",
+      "forms": [],
+      "senses": [
+        "haqi:country"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "door",
+      "meaning": "门",
+      "forms": [],
+      "senses": [
+        "haqi:door"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "window",
+      "meaning": "窗户",
+      "forms": [],
+      "senses": [
+        "haqi:window"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "table",
+      "meaning": "桌子",
+      "forms": [],
+      "senses": [
+        "haqi:table"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "chair",
+      "meaning": "椅子",
+      "forms": [],
+      "senses": [
+        "haqi:chair"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "bed",
+      "meaning": "床",
+      "forms": [],
+      "senses": [
+        "haqi:bed"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "room",
+      "meaning": "房间",
+      "forms": [],
+      "senses": [
+        "haqi:room"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "hand",
+      "meaning": "手",
+      "forms": [],
+      "senses": [
+        "haqi:hand"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "foot",
+      "meaning": "脚",
+      "forms": [],
+      "senses": [
+        "haqi:foot"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "eye",
+      "meaning": "眼睛",
+      "forms": [],
+      "senses": [
+        "haqi:eye"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "mouth",
+      "meaning": "嘴",
+      "forms": [],
+      "senses": [
+        "haqi:mouth"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "head",
+      "meaning": "头",
+      "forms": [],
+      "senses": [
+        "haqi:head"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "heart",
+      "meaning": "心",
+      "forms": [],
+      "senses": [
+        "haqi:heart"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "money",
+      "meaning": "钱",
+      "forms": [],
+      "senses": [
+        "haqi:money"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "shop",
+      "meaning": "商店",
+      "forms": [],
+      "senses": [
+        "haqi:shop"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "bag",
+      "meaning": "包",
+      "forms": [],
+      "senses": [
+        "haqi:bag"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "clothes",
+      "meaning": "衣服",
+      "forms": [],
+      "senses": [
+        "haqi:clothes"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "shoe",
+      "meaning": "鞋",
+      "forms": [],
+      "senses": [
+        "haqi:shoe"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "hat",
+      "meaning": "帽子",
+      "forms": [],
+      "senses": [
+        "haqi:hat"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "red",
+      "meaning": "红色",
+      "forms": [],
+      "senses": [
+        "haqi:red"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "blue",
+      "meaning": "蓝色",
+      "forms": [],
+      "senses": [
+        "haqi:blue"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "yellow",
+      "meaning": "黄色",
+      "forms": [],
+      "senses": [
+        "haqi:yellow"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "green",
+      "meaning": "绿色",
+      "forms": [],
+      "senses": [
+        "haqi:green"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "white",
+      "meaning": "白色",
+      "forms": [],
+      "senses": [
+        "haqi:white"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "black",
+      "meaning": "黑色",
+      "forms": [],
+      "senses": [
+        "haqi:black"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "left",
+      "meaning": "左边",
+      "forms": [],
+      "senses": [
+        "haqi:left"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "right",
+      "meaning": "右边",
+      "forms": [],
+      "senses": [
+        "haqi:right"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "north",
+      "meaning": "北方",
+      "forms": [],
+      "senses": [
+        "haqi:north"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "south",
+      "meaning": "南方",
+      "forms": [],
+      "senses": [
+        "haqi:south"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "east",
+      "meaning": "东方",
+      "forms": [],
+      "senses": [
+        "haqi:east"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "west",
+      "meaning": "西方",
+      "forms": [],
+      "senses": [
+        "haqi:west"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "spring",
+      "meaning": "春天",
+      "forms": [],
+      "senses": [
+        "haqi:spring"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "summer",
+      "meaning": "夏天",
+      "forms": [],
+      "senses": [
+        "haqi:summer"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "autumn",
+      "meaning": "秋天",
+      "forms": [],
+      "senses": [
+        "haqi:autumn"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "winter",
+      "meaning": "冬天",
+      "forms": [],
+      "senses": [
+        "haqi:winter"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "can",
+      "meaning": "能够",
+      "forms": [],
+      "senses": [
+        "haqi:can"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "will",
+      "meaning": "将会",
+      "forms": [],
+      "senses": [
+        "haqi:will"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "a",
+      "meaning": "一个（不定冠词）",
+      "forms": [],
+      "senses": [
+        "haqi:a"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "an",
+      "meaning": "一个（不定冠词）",
+      "forms": [],
+      "senses": [
+        "haqi:an"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "the",
+      "meaning": "这个或那个（定冠词）",
+      "forms": [],
+      "senses": [
+        "haqi:the"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "in",
+      "meaning": "在里面",
+      "forms": [],
+      "senses": [
+        "haqi:in"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "on",
+      "meaning": "在上面",
+      "forms": [],
+      "senses": [
+        "haqi:on"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "at",
+      "meaning": "在某处或某时",
+      "forms": [],
+      "senses": [
+        "haqi:at"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "as",
+      "meaning": "作为；像",
+      "forms": [],
+      "senses": [
+        "haqi:as"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "by",
+      "meaning": "通过；在旁边",
+      "forms": [],
+      "senses": [
+        "haqi:by"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "to",
+      "meaning": "向；到",
+      "forms": [],
+      "senses": [
+        "haqi:to"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "of",
+      "meaning": "的",
+      "forms": [],
+      "senses": [
+        "haqi:of"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "for",
+      "meaning": "为了",
+      "forms": [],
+      "senses": [
+        "haqi:for"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "from",
+      "meaning": "从",
+      "forms": [],
+      "senses": [
+        "haqi:from"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "with",
+      "meaning": "和；用",
+      "forms": [],
+      "senses": [
+        "haqi:with"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "and",
+      "meaning": "和",
+      "forms": [],
+      "senses": [
+        "haqi:and"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "or",
+      "meaning": "或者",
+      "forms": [],
+      "senses": [
+        "haqi:or"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "but",
+      "meaning": "但是",
+      "forms": [],
+      "senses": [
+        "haqi:but"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "read",
+      "meaning": "读",
+      "forms": [
+        "reads",
+        "reading"
+      ],
+      "senses": [
+        "haqi:read"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "write",
+      "meaning": "写",
+      "forms": [
+        "writes",
+        "wrote",
+        "written",
+        "writing"
+      ],
+      "senses": [
+        "haqi:write"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "see",
+      "meaning": "看见",
+      "forms": [
+        "sees",
+        "saw",
+        "seen",
+        "seeing"
+      ],
+      "senses": [
+        "haqi:see"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "listen",
+      "meaning": "听",
+      "forms": [],
+      "senses": [
+        "haqi:listen"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "speak",
+      "meaning": "说话",
+      "forms": [
+        "speaks",
+        "spoke",
+        "spoken",
+        "speaking"
+      ],
+      "senses": [
+        "haqi:speak"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "drink",
+      "meaning": "喝",
+      "forms": [
+        "drinks",
+        "drank",
+        "drunk",
+        "drinking"
+      ],
+      "senses": [
+        "haqi:drink"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "sleep",
+      "meaning": "睡觉",
+      "forms": [
+        "sleeps",
+        "slept",
+        "sleeping"
+      ],
+      "senses": [
+        "haqi:sleep"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "walk",
+      "meaning": "走路",
+      "forms": [],
+      "senses": [
+        "haqi:walk"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "run",
+      "meaning": "跑",
+      "forms": [
+        "runs",
+        "ran",
+        "running"
+      ],
+      "senses": [
+        "haqi:run"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "come",
+      "meaning": "来",
+      "forms": [
+        "comes",
+        "came",
+        "coming"
+      ],
+      "senses": [
+        "haqi:come"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "return",
+      "meaning": "回来",
+      "forms": [],
+      "senses": [
+        "haqi:return"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "buy",
+      "meaning": "买",
+      "forms": [
+        "buys",
+        "bought",
+        "buying"
+      ],
+      "senses": [
+        "haqi:buy"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "sell",
+      "meaning": "卖",
+      "forms": [
+        "sells",
+        "sold",
+        "selling"
+      ],
+      "senses": [
+        "haqi:sell"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "make",
+      "meaning": "制作",
+      "forms": [
+        "makes",
+        "made",
+        "making"
+      ],
+      "senses": [
+        "haqi:make"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "use",
+      "meaning": "使用",
+      "forms": [],
+      "senses": [
+        "haqi:use"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "learn",
+      "meaning": "学习",
+      "forms": [],
+      "senses": [
+        "haqi:learn"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "teach",
+      "meaning": "教",
+      "forms": [
+        "teaches",
+        "taught",
+        "teaching"
+      ],
+      "senses": [
+        "haqi:teach"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "think",
+      "meaning": "想",
+      "forms": [
+        "thinks",
+        "thought",
+        "thinking"
+      ],
+      "senses": [
+        "haqi:think"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "know",
+      "meaning": "知道",
+      "forms": [
+        "knows",
+        "knew",
+        "known",
+        "knowing"
+      ],
+      "senses": [
+        "haqi:know"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "understand",
+      "meaning": "明白",
+      "forms": [
+        "understands",
+        "understood",
+        "understanding"
+      ],
+      "senses": [
+        "haqi:understand"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "remember",
+      "meaning": "记住",
+      "forms": [],
+      "senses": [
+        "haqi:remember"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "forget",
+      "meaning": "忘记",
+      "forms": [
+        "forgets",
+        "forgot",
+        "forgotten",
+        "forgetting"
+      ],
+      "senses": [
+        "haqi:forget"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "open",
+      "meaning": "打开",
+      "forms": [],
+      "senses": [
+        "haqi:open"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "close",
+      "meaning": "关闭",
+      "forms": [],
+      "senses": [
+        "haqi:close"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "wait",
+      "meaning": "等待",
+      "forms": [],
+      "senses": [
+        "haqi:wait"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "meet",
+      "meaning": "见面",
+      "forms": [
+        "meets",
+        "met",
+        "meeting"
+      ],
+      "senses": [
+        "haqi:meet"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "play",
+      "meaning": "玩",
+      "forms": [],
+      "senses": [
+        "haqi:play"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "work",
+      "meaning": "工作",
+      "forms": [],
+      "senses": [
+        "haqi:work"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "rest",
+      "meaning": "休息",
+      "forms": [],
+      "senses": [
+        "haqi:rest"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "swim",
+      "meaning": "游泳",
+      "forms": [
+        "swims",
+        "swam",
+        "swum",
+        "swimming"
+      ],
+      "senses": [
+        "haqi:swim"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "sing",
+      "meaning": "唱歌",
+      "forms": [
+        "sings",
+        "sang",
+        "sung",
+        "singing"
+      ],
+      "senses": [
+        "haqi:sing"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "laugh",
+      "meaning": "笑",
+      "forms": [],
+      "senses": [
+        "haqi:laugh"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "cry",
+      "meaning": "哭",
+      "forms": [],
+      "senses": [
+        "haqi:cry"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "stand",
+      "meaning": "站",
+      "forms": [
+        "stands",
+        "stood",
+        "standing"
+      ],
+      "senses": [
+        "haqi:stand"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "sit",
+      "meaning": "坐",
+      "forms": [
+        "sits",
+        "sat",
+        "sitting"
+      ],
+      "senses": [
+        "haqi:sit"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "find",
+      "meaning": "找到",
+      "forms": [
+        "finds",
+        "found",
+        "finding"
+      ],
+      "senses": [
+        "haqi:find"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "lose",
+      "meaning": "失去",
+      "forms": [
+        "loses",
+        "lost",
+        "losing"
+      ],
+      "senses": [
+        "haqi:lose"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "win",
+      "meaning": "赢",
+      "forms": [
+        "wins",
+        "won",
+        "winning"
+      ],
+      "senses": [
+        "haqi:win"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "choose",
+      "meaning": "选择",
+      "forms": [
+        "chooses",
+        "chose",
+        "chosen",
+        "choosing"
+      ],
+      "senses": [
+        "haqi:choose"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "carry",
+      "meaning": "搬运",
+      "forms": [],
+      "senses": [
+        "haqi:carry"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "protect",
+      "meaning": "保护",
+      "forms": [],
+      "senses": [
+        "haqi:protect"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "live",
+      "meaning": "生活",
+      "forms": [],
+      "senses": [
+        "haqi:live"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "love",
+      "meaning": "爱",
+      "forms": [],
+      "senses": [
+        "haqi:love"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "like",
+      "meaning": "喜欢",
+      "forms": [],
+      "senses": [
+        "haqi:like"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "be",
+      "meaning": "是；存在",
+      "forms": [
+        "am",
+        "is",
+        "are",
+        "was",
+        "were",
+        "been",
+        "being"
+      ],
+      "senses": [
+        "haqi:be"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "have",
+      "meaning": "有",
+      "forms": [
+        "has",
+        "had",
+        "having"
+      ],
+      "senses": [
+        "haqi:have"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "do",
+      "meaning": "做",
+      "forms": [
+        "does",
+        "did",
+        "done",
+        "doing"
+      ],
+      "senses": [
+        "haqi:do"
+      ],
+      "pos": "v"
+    }
+  ],
+  "zh": [
+    {
+      "text": "担心",
+      "meaning": "担忧，放心不下",
+      "forms": [],
+      "senses": [
+        "haqi:worry"
+      ]
+    },
+    {
+      "text": "帮助",
+      "meaning": "帮别人做事或解决困难",
+      "forms": [],
+      "senses": [
+        "haqi:help"
+      ]
+    },
+    {
+      "text": "跟随",
+      "meaning": "跟在后面一起走",
+      "forms": [],
+      "senses": [
+        "haqi:follow"
+      ]
+    },
+    {
+      "text": "完成",
+      "meaning": "把事情做好",
+      "forms": [],
+      "senses": [
+        "haqi:finish"
+      ]
+    },
+    {
+      "text": "任务",
+      "meaning": "需要完成的事情",
+      "forms": [],
+      "senses": [
+        "haqi:quest"
+      ]
+    },
+    {
+      "text": "朋友",
+      "meaning": "相互认识、关心的人",
+      "forms": [],
+      "senses": [
+        "haqi:friend"
+      ]
+    },
+    {
+      "text": "书",
+      "meaning": "供人阅读的文字作品",
+      "forms": [],
+      "senses": [
+        "haqi:book"
+      ]
+    },
+    {
+      "text": "水",
+      "meaning": "可以流动、供生命饮用的液体",
+      "forms": [],
+      "senses": [
+        "haqi:water"
+      ]
+    },
+    {
+      "text": "吃",
+      "meaning": "把食物送进嘴里咽下",
+      "forms": [],
+      "senses": [
+        "haqi:eat"
+      ]
+    },
+    {
+      "text": "去",
+      "meaning": "离开这里前往别处",
+      "forms": [],
+      "senses": [
+        "haqi:go"
+      ]
+    },
+    {
+      "text": "你好",
+      "meaning": "见面时问候别人",
+      "forms": [],
+      "senses": [
+        "haqi:hello"
+      ]
+    },
+    {
+      "text": "感谢",
+      "meaning": "表达谢意",
+      "forms": [],
+      "senses": [
+        "haqi:thank"
+      ]
+    },
+    {
+      "text": "心",
+      "meaning": "心脏；心情与想法",
+      "forms": [],
+      "senses": [
+        "haqi:heart"
+      ]
+    },
+    {
+      "text": "我",
+      "meaning": "我",
+      "forms": [],
+      "senses": [
+        "haqi:i"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "你",
+      "meaning": "你",
+      "forms": [],
+      "senses": [
+        "haqi:you"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "他",
+      "meaning": "他",
+      "forms": [],
+      "senses": [
+        "haqi:he"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "她",
+      "meaning": "她",
+      "forms": [],
+      "senses": [
+        "haqi:she"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "我们",
+      "meaning": "我们",
+      "forms": [],
+      "senses": [
+        "haqi:we"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "他们",
+      "meaning": "他们",
+      "forms": [],
+      "senses": [
+        "haqi:they"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "这",
+      "meaning": "这",
+      "forms": [],
+      "senses": [
+        "haqi:this"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "那",
+      "meaning": "那",
+      "forms": [],
+      "senses": [
+        "haqi:that"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "谁",
+      "meaning": "谁",
+      "forms": [],
+      "senses": [
+        "haqi:who"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "什么",
+      "meaning": "什么",
+      "forms": [],
+      "senses": [
+        "haqi:what"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "哪里",
+      "meaning": "哪里",
+      "forms": [],
+      "senses": [
+        "haqi:where"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "什么时候",
+      "meaning": "什么时候",
+      "forms": [],
+      "senses": [
+        "haqi:when"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "为什么",
+      "meaning": "为什么",
+      "forms": [],
+      "senses": [
+        "haqi:why"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "怎么",
+      "meaning": "怎么",
+      "forms": [],
+      "senses": [
+        "haqi:how"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "不",
+      "meaning": "不",
+      "forms": [],
+      "senses": [
+        "haqi:not"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "是的",
+      "meaning": "是的",
+      "forms": [],
+      "senses": [
+        "haqi:yes"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "不行",
+      "meaning": "不行",
+      "forms": [],
+      "senses": [
+        "haqi:no"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "全部",
+      "meaning": "全部",
+      "forms": [],
+      "senses": [
+        "haqi:all"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "一些",
+      "meaning": "一些",
+      "forms": [],
+      "senses": [
+        "haqi:some"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "许多",
+      "meaning": "许多",
+      "forms": [],
+      "senses": [
+        "haqi:many"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "一",
+      "meaning": "一",
+      "forms": [],
+      "senses": [
+        "haqi:one"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "二",
+      "meaning": "二",
+      "forms": [],
+      "senses": [
+        "haqi:two"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "三",
+      "meaning": "三",
+      "forms": [],
+      "senses": [
+        "haqi:three"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "四",
+      "meaning": "四",
+      "forms": [],
+      "senses": [
+        "haqi:four"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "五",
+      "meaning": "五",
+      "forms": [],
+      "senses": [
+        "haqi:five"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "六",
+      "meaning": "六",
+      "forms": [],
+      "senses": [
+        "haqi:six"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "七",
+      "meaning": "七",
+      "forms": [],
+      "senses": [
+        "haqi:seven"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "八",
+      "meaning": "八",
+      "forms": [],
+      "senses": [
+        "haqi:eight"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "九",
+      "meaning": "九",
+      "forms": [],
+      "senses": [
+        "haqi:nine"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "十",
+      "meaning": "十",
+      "forms": [],
+      "senses": [
+        "haqi:ten"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "百",
+      "meaning": "百",
+      "forms": [],
+      "senses": [
+        "haqi:hundred"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "千",
+      "meaning": "千",
+      "forms": [],
+      "senses": [
+        "haqi:thousand"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "今天",
+      "meaning": "今天",
+      "forms": [],
+      "senses": [
+        "haqi:today"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "昨天",
+      "meaning": "昨天",
+      "forms": [],
+      "senses": [
+        "haqi:yesterday"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "明天",
+      "meaning": "明天",
+      "forms": [],
+      "senses": [
+        "haqi:tomorrow"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "现在",
+      "meaning": "现在",
+      "forms": [],
+      "senses": [
+        "haqi:now"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "早晨",
+      "meaning": "早晨",
+      "forms": [],
+      "senses": [
+        "haqi:morning"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "夜晚",
+      "meaning": "夜晚",
+      "forms": [],
+      "senses": [
+        "haqi:night"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "年",
+      "meaning": "年",
+      "forms": [],
+      "senses": [
+        "haqi:year"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "月",
+      "meaning": "月",
+      "forms": [],
+      "senses": [
+        "haqi:month"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "星期",
+      "meaning": "星期",
+      "forms": [],
+      "senses": [
+        "haqi:week"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "小时",
+      "meaning": "小时",
+      "forms": [],
+      "senses": [
+        "haqi:hour"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "分钟",
+      "meaning": "分钟",
+      "forms": [],
+      "senses": [
+        "haqi:minute"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "秒",
+      "meaning": "秒",
+      "forms": [],
+      "senses": [
+        "haqi:second"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "母亲",
+      "meaning": "母亲",
+      "forms": [],
+      "senses": [
+        "haqi:mother"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "父亲",
+      "meaning": "父亲",
+      "forms": [],
+      "senses": [
+        "haqi:father"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "家庭",
+      "meaning": "家庭",
+      "forms": [],
+      "senses": [
+        "haqi:family"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "孩子",
+      "meaning": "孩子",
+      "forms": [],
+      "senses": [
+        "haqi:child"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "人",
+      "meaning": "人",
+      "forms": [],
+      "senses": [
+        "haqi:person"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "名字",
+      "meaning": "名字",
+      "forms": [],
+      "senses": [
+        "haqi:name"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "家",
+      "meaning": "家",
+      "forms": [],
+      "senses": [
+        "haqi:home"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "学校",
+      "meaning": "学校",
+      "forms": [],
+      "senses": [
+        "haqi:school"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "老师",
+      "meaning": "老师",
+      "forms": [],
+      "senses": [
+        "haqi:teacher"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "学生",
+      "meaning": "学生",
+      "forms": [],
+      "senses": [
+        "haqi:student"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "语言",
+      "meaning": "语言",
+      "forms": [],
+      "senses": [
+        "haqi:language"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "词语",
+      "meaning": "词语",
+      "forms": [],
+      "senses": [
+        "haqi:word"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "故事",
+      "meaning": "故事",
+      "forms": [],
+      "senses": [
+        "haqi:story"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "问题",
+      "meaning": "问题",
+      "forms": [],
+      "senses": [
+        "haqi:question"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "答案",
+      "meaning": "答案",
+      "forms": [],
+      "senses": [
+        "haqi:answer"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "食物",
+      "meaning": "食物",
+      "forms": [],
+      "senses": [
+        "haqi:food"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "米饭",
+      "meaning": "米饭",
+      "forms": [],
+      "senses": [
+        "haqi:rice"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "面包",
+      "meaning": "面包",
+      "forms": [],
+      "senses": [
+        "haqi:bread"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "牛奶",
+      "meaning": "牛奶",
+      "forms": [],
+      "senses": [
+        "haqi:milk"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "茶",
+      "meaning": "茶",
+      "forms": [],
+      "senses": [
+        "haqi:tea"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "苹果",
+      "meaning": "苹果",
+      "forms": [],
+      "senses": [
+        "haqi:apple"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "水果",
+      "meaning": "水果",
+      "forms": [],
+      "senses": [
+        "haqi:fruit"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "蔬菜",
+      "meaning": "蔬菜",
+      "forms": [],
+      "senses": [
+        "haqi:vegetable"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "肉",
+      "meaning": "肉",
+      "forms": [],
+      "senses": [
+        "haqi:meat"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "鱼",
+      "meaning": "鱼",
+      "forms": [],
+      "senses": [
+        "haqi:fish"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "鸟",
+      "meaning": "鸟",
+      "forms": [],
+      "senses": [
+        "haqi:bird"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "猫",
+      "meaning": "猫",
+      "forms": [],
+      "senses": [
+        "haqi:cat"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "狗",
+      "meaning": "狗",
+      "forms": [],
+      "senses": [
+        "haqi:dog"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "马",
+      "meaning": "马",
+      "forms": [],
+      "senses": [
+        "haqi:horse"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "花",
+      "meaning": "花",
+      "forms": [],
+      "senses": [
+        "haqi:flower"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "树",
+      "meaning": "树",
+      "forms": [],
+      "senses": [
+        "haqi:tree"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "森林",
+      "meaning": "森林",
+      "forms": [],
+      "senses": [
+        "haqi:forest"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "山",
+      "meaning": "山",
+      "forms": [],
+      "senses": [
+        "haqi:mountain"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "河",
+      "meaning": "河",
+      "forms": [],
+      "senses": [
+        "haqi:river"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "海",
+      "meaning": "海",
+      "forms": [],
+      "senses": [
+        "haqi:sea"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "天空",
+      "meaning": "天空",
+      "forms": [],
+      "senses": [
+        "haqi:sky"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "太阳",
+      "meaning": "太阳",
+      "forms": [],
+      "senses": [
+        "haqi:sun"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "月亮",
+      "meaning": "月亮",
+      "forms": [],
+      "senses": [
+        "haqi:moon"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "星星",
+      "meaning": "星星",
+      "forms": [],
+      "senses": [
+        "haqi:star"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "雨",
+      "meaning": "雨",
+      "forms": [],
+      "senses": [
+        "haqi:rain"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "雪",
+      "meaning": "雪",
+      "forms": [],
+      "senses": [
+        "haqi:snow"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "风",
+      "meaning": "风",
+      "forms": [],
+      "senses": [
+        "haqi:wind"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "火",
+      "meaning": "火",
+      "forms": [],
+      "senses": [
+        "haqi:fire"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "冰",
+      "meaning": "冰",
+      "forms": [],
+      "senses": [
+        "haqi:ice"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "石头",
+      "meaning": "石头",
+      "forms": [],
+      "senses": [
+        "haqi:stone"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "道路",
+      "meaning": "道路",
+      "forms": [],
+      "senses": [
+        "haqi:road"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "城市",
+      "meaning": "城市",
+      "forms": [],
+      "senses": [
+        "haqi:city"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "国家",
+      "meaning": "国家",
+      "forms": [],
+      "senses": [
+        "haqi:country"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "门",
+      "meaning": "门",
+      "forms": [],
+      "senses": [
+        "haqi:door"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "窗户",
+      "meaning": "窗户",
+      "forms": [],
+      "senses": [
+        "haqi:window"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "桌子",
+      "meaning": "桌子",
+      "forms": [],
+      "senses": [
+        "haqi:table"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "椅子",
+      "meaning": "椅子",
+      "forms": [],
+      "senses": [
+        "haqi:chair"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "床",
+      "meaning": "床",
+      "forms": [],
+      "senses": [
+        "haqi:bed"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "房间",
+      "meaning": "房间",
+      "forms": [],
+      "senses": [
+        "haqi:room"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "手",
+      "meaning": "手",
+      "forms": [],
+      "senses": [
+        "haqi:hand"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "脚",
+      "meaning": "脚",
+      "forms": [],
+      "senses": [
+        "haqi:foot"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "眼睛",
+      "meaning": "眼睛",
+      "forms": [],
+      "senses": [
+        "haqi:eye"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "嘴",
+      "meaning": "嘴",
+      "forms": [],
+      "senses": [
+        "haqi:mouth"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "头",
+      "meaning": "头",
+      "forms": [],
+      "senses": [
+        "haqi:head"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "钱",
+      "meaning": "钱",
+      "forms": [],
+      "senses": [
+        "haqi:money"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "商店",
+      "meaning": "商店",
+      "forms": [],
+      "senses": [
+        "haqi:shop"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "包",
+      "meaning": "包",
+      "forms": [],
+      "senses": [
+        "haqi:bag"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "衣服",
+      "meaning": "衣服",
+      "forms": [],
+      "senses": [
+        "haqi:clothes"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "鞋",
+      "meaning": "鞋",
+      "forms": [],
+      "senses": [
+        "haqi:shoe"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "帽子",
+      "meaning": "帽子",
+      "forms": [],
+      "senses": [
+        "haqi:hat"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "红色",
+      "meaning": "红色",
+      "forms": [],
+      "senses": [
+        "haqi:red"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "蓝色",
+      "meaning": "蓝色",
+      "forms": [],
+      "senses": [
+        "haqi:blue"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "黄色",
+      "meaning": "黄色",
+      "forms": [],
+      "senses": [
+        "haqi:yellow"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "绿色",
+      "meaning": "绿色",
+      "forms": [],
+      "senses": [
+        "haqi:green"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "白色",
+      "meaning": "白色",
+      "forms": [],
+      "senses": [
+        "haqi:white"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "黑色",
+      "meaning": "黑色",
+      "forms": [],
+      "senses": [
+        "haqi:black"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "左边",
+      "meaning": "左边",
+      "forms": [],
+      "senses": [
+        "haqi:left"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "右边",
+      "meaning": "右边",
+      "forms": [],
+      "senses": [
+        "haqi:right"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "北方",
+      "meaning": "北方",
+      "forms": [],
+      "senses": [
+        "haqi:north"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "南方",
+      "meaning": "南方",
+      "forms": [],
+      "senses": [
+        "haqi:south"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "东方",
+      "meaning": "东方",
+      "forms": [],
+      "senses": [
+        "haqi:east"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "西方",
+      "meaning": "西方",
+      "forms": [],
+      "senses": [
+        "haqi:west"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "春天",
+      "meaning": "春天",
+      "forms": [],
+      "senses": [
+        "haqi:spring"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "夏天",
+      "meaning": "夏天",
+      "forms": [],
+      "senses": [
+        "haqi:summer"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "秋天",
+      "meaning": "秋天",
+      "forms": [],
+      "senses": [
+        "haqi:autumn"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "冬天",
+      "meaning": "冬天",
+      "forms": [],
+      "senses": [
+        "haqi:winter"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "能够",
+      "meaning": "能够",
+      "forms": [],
+      "senses": [
+        "haqi:can"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "将会",
+      "meaning": "将会",
+      "forms": [],
+      "senses": [
+        "haqi:will"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "在里面",
+      "meaning": "在里面",
+      "forms": [],
+      "senses": [
+        "haqi:in"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "在上面",
+      "meaning": "在上面",
+      "forms": [],
+      "senses": [
+        "haqi:on"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "在某处或某时",
+      "meaning": "在某处或某时",
+      "forms": [],
+      "senses": [
+        "haqi:at"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "的",
+      "meaning": "的",
+      "forms": [],
+      "senses": [
+        "haqi:of"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "为了",
+      "meaning": "为了",
+      "forms": [],
+      "senses": [
+        "haqi:for"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "从",
+      "meaning": "从",
+      "forms": [],
+      "senses": [
+        "haqi:from"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "和",
+      "meaning": "和",
+      "forms": [],
+      "senses": [
+        "haqi:and"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "或者",
+      "meaning": "或者",
+      "forms": [],
+      "senses": [
+        "haqi:or"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "但是",
+      "meaning": "但是",
+      "forms": [],
+      "senses": [
+        "haqi:but"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "帮忙",
+      "meaning": "帮别人做事或解决困难",
+      "forms": [],
+      "senses": [
+        "haqi:help"
+      ]
+    },
+    {
+      "text": "追随",
+      "meaning": "跟在后面一起走",
+      "forms": [],
+      "senses": [
+        "haqi:follow"
+      ]
+    },
+    {
+      "text": "谢谢",
+      "meaning": "表达谢意",
+      "forms": [],
+      "senses": [
+        "haqi:thank"
+      ]
+    },
+    {
+      "text": "读",
+      "meaning": "读",
+      "forms": [],
+      "senses": [
+        "haqi:read"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "写",
+      "meaning": "写",
+      "forms": [],
+      "senses": [
+        "haqi:write"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "看见",
+      "meaning": "看见",
+      "forms": [],
+      "senses": [
+        "haqi:see"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "听",
+      "meaning": "听",
+      "forms": [],
+      "senses": [
+        "haqi:listen"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "说话",
+      "meaning": "说话",
+      "forms": [],
+      "senses": [
+        "haqi:speak"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "喝",
+      "meaning": "喝",
+      "forms": [],
+      "senses": [
+        "haqi:drink"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "睡觉",
+      "meaning": "睡觉",
+      "forms": [],
+      "senses": [
+        "haqi:sleep"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "走路",
+      "meaning": "走路",
+      "forms": [],
+      "senses": [
+        "haqi:walk"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "跑",
+      "meaning": "跑",
+      "forms": [],
+      "senses": [
+        "haqi:run"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "来",
+      "meaning": "来",
+      "forms": [],
+      "senses": [
+        "haqi:come"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "回来",
+      "meaning": "回来",
+      "forms": [],
+      "senses": [
+        "haqi:return"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "买",
+      "meaning": "买",
+      "forms": [],
+      "senses": [
+        "haqi:buy"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "卖",
+      "meaning": "卖",
+      "forms": [],
+      "senses": [
+        "haqi:sell"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "制作",
+      "meaning": "制作",
+      "forms": [],
+      "senses": [
+        "haqi:make"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "使用",
+      "meaning": "使用",
+      "forms": [],
+      "senses": [
+        "haqi:use"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "学习",
+      "meaning": "学习",
+      "forms": [],
+      "senses": [
+        "haqi:learn"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "教",
+      "meaning": "教",
+      "forms": [],
+      "senses": [
+        "haqi:teach"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "想",
+      "meaning": "想",
+      "forms": [],
+      "senses": [
+        "haqi:think"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "知道",
+      "meaning": "知道",
+      "forms": [],
+      "senses": [
+        "haqi:know"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "明白",
+      "meaning": "明白",
+      "forms": [],
+      "senses": [
+        "haqi:understand"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "记住",
+      "meaning": "记住",
+      "forms": [],
+      "senses": [
+        "haqi:remember"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "忘记",
+      "meaning": "忘记",
+      "forms": [],
+      "senses": [
+        "haqi:forget"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "打开",
+      "meaning": "打开",
+      "forms": [],
+      "senses": [
+        "haqi:open"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "关闭",
+      "meaning": "关闭",
+      "forms": [],
+      "senses": [
+        "haqi:close"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "等待",
+      "meaning": "等待",
+      "forms": [],
+      "senses": [
+        "haqi:wait"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "见面",
+      "meaning": "见面",
+      "forms": [],
+      "senses": [
+        "haqi:meet"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "玩",
+      "meaning": "玩",
+      "forms": [],
+      "senses": [
+        "haqi:play"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "工作",
+      "meaning": "工作",
+      "forms": [],
+      "senses": [
+        "haqi:work"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "休息",
+      "meaning": "休息",
+      "forms": [],
+      "senses": [
+        "haqi:rest"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "游泳",
+      "meaning": "游泳",
+      "forms": [],
+      "senses": [
+        "haqi:swim"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "唱歌",
+      "meaning": "唱歌",
+      "forms": [],
+      "senses": [
+        "haqi:sing"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "笑",
+      "meaning": "笑",
+      "forms": [],
+      "senses": [
+        "haqi:laugh"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "哭",
+      "meaning": "哭",
+      "forms": [],
+      "senses": [
+        "haqi:cry"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "站",
+      "meaning": "站",
+      "forms": [],
+      "senses": [
+        "haqi:stand"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "坐",
+      "meaning": "坐",
+      "forms": [],
+      "senses": [
+        "haqi:sit"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "找到",
+      "meaning": "找到",
+      "forms": [],
+      "senses": [
+        "haqi:find"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "失去",
+      "meaning": "失去",
+      "forms": [],
+      "senses": [
+        "haqi:lose"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "赢",
+      "meaning": "赢",
+      "forms": [],
+      "senses": [
+        "haqi:win"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "选择",
+      "meaning": "选择",
+      "forms": [],
+      "senses": [
+        "haqi:choose"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "搬运",
+      "meaning": "搬运",
+      "forms": [],
+      "senses": [
+        "haqi:carry"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "保护",
+      "meaning": "保护",
+      "forms": [],
+      "senses": [
+        "haqi:protect"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "生活",
+      "meaning": "生活",
+      "forms": [],
+      "senses": [
+        "haqi:live"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "爱",
+      "meaning": "爱",
+      "forms": [],
+      "senses": [
+        "haqi:love"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "喜欢",
+      "meaning": "喜欢",
+      "forms": [],
+      "senses": [
+        "haqi:like"
+      ],
+      "pos": "v"
+    }
+  ],
+  "ja": [
+    {
+      "text": "心配する",
+      "meaning": "担心",
+      "forms": [
+        "心配した",
+        "心配して",
+        "心配します",
+        "心配しています",
+        "心配している",
+        "心配しない",
+        "心配しません"
+      ],
+      "senses": [
+        "haqi:worry"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "助ける",
+      "meaning": "帮助",
+      "forms": [
+        "助けた",
+        "助けて",
+        "助けます",
+        "助けました",
+        "助けない"
+      ],
+      "senses": [
+        "haqi:help"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "ついていく",
+      "meaning": "跟随",
+      "forms": [
+        "ついてきて",
+        "ついていった",
+        "ついていきます"
+      ],
+      "senses": [
+        "haqi:follow"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "終える",
+      "meaning": "完成",
+      "forms": [
+        "終えた",
+        "終えて",
+        "終えます",
+        "終えました"
+      ],
+      "senses": [
+        "haqi:finish"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "任務",
+      "meaning": "任务",
+      "forms": [],
+      "senses": [
+        "haqi:quest"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "友達",
+      "meaning": "朋友",
+      "forms": [
+        "友だち"
+      ],
+      "senses": [
+        "haqi:friend"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "本",
+      "meaning": "书",
+      "forms": [],
+      "senses": [
+        "haqi:book"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "水",
+      "meaning": "水",
+      "forms": [],
+      "senses": [
+        "haqi:water"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "食べる",
+      "meaning": "吃",
+      "forms": [
+        "食べた",
+        "食べて",
+        "食べます",
+        "食べました",
+        "食べない",
+        "食べています"
+      ],
+      "senses": [
+        "haqi:eat"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "行く",
+      "meaning": "去",
+      "forms": [
+        "行った",
+        "行って",
+        "行きます",
+        "行きました",
+        "行かない"
+      ],
+      "senses": [
+        "haqi:go"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "こんにちは",
+      "meaning": "你好",
+      "forms": [],
+      "senses": [
+        "haqi:hello"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "ありがとう",
+      "meaning": "谢谢",
+      "forms": [
+        "ありがとうございます",
+        "ありがとうございました"
+      ],
+      "senses": [
+        "haqi:thank"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "私",
+      "meaning": "我",
+      "forms": [],
+      "senses": [
+        "haqi:i"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "あなた",
+      "meaning": "你",
+      "forms": [],
+      "senses": [
+        "haqi:you"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "彼",
+      "meaning": "他",
+      "forms": [],
+      "senses": [
+        "haqi:he"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "彼女",
+      "meaning": "她",
+      "forms": [],
+      "senses": [
+        "haqi:she"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "私たち",
+      "meaning": "我们",
+      "forms": [],
+      "senses": [
+        "haqi:we"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "彼ら",
+      "meaning": "他们",
+      "forms": [],
+      "senses": [
+        "haqi:they"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "これ",
+      "meaning": "这",
+      "forms": [],
+      "senses": [
+        "haqi:this"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "それ",
+      "meaning": "那",
+      "forms": [],
+      "senses": [
+        "haqi:that"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "誰",
+      "meaning": "谁",
+      "forms": [],
+      "senses": [
+        "haqi:who"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "何",
+      "meaning": "什么",
+      "forms": [],
+      "senses": [
+        "haqi:what"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "どこ",
+      "meaning": "哪里",
+      "forms": [],
+      "senses": [
+        "haqi:where"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "いつ",
+      "meaning": "什么时候",
+      "forms": [],
+      "senses": [
+        "haqi:when"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "なぜ",
+      "meaning": "为什么",
+      "forms": [],
+      "senses": [
+        "haqi:why"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "どう",
+      "meaning": "怎么",
+      "forms": [],
+      "senses": [
+        "haqi:how"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "はい",
+      "meaning": "是的",
+      "forms": [],
+      "senses": [
+        "haqi:yes"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "いいえ",
+      "meaning": "不行",
+      "forms": [],
+      "senses": [
+        "haqi:no"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "全部",
+      "meaning": "全部",
+      "forms": [],
+      "senses": [
+        "haqi:all"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "いくつか",
+      "meaning": "一些",
+      "forms": [],
+      "senses": [
+        "haqi:some"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "たくさん",
+      "meaning": "许多",
+      "forms": [],
+      "senses": [
+        "haqi:many"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "一",
+      "meaning": "一",
+      "forms": [],
+      "senses": [
+        "haqi:one"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "二",
+      "meaning": "二",
+      "forms": [],
+      "senses": [
+        "haqi:two"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "三",
+      "meaning": "三",
+      "forms": [],
+      "senses": [
+        "haqi:three"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "四",
+      "meaning": "四",
+      "forms": [],
+      "senses": [
+        "haqi:four"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "五",
+      "meaning": "五",
+      "forms": [],
+      "senses": [
+        "haqi:five"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "六",
+      "meaning": "六",
+      "forms": [],
+      "senses": [
+        "haqi:six"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "七",
+      "meaning": "七",
+      "forms": [],
+      "senses": [
+        "haqi:seven"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "八",
+      "meaning": "八",
+      "forms": [],
+      "senses": [
+        "haqi:eight"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "九",
+      "meaning": "九",
+      "forms": [],
+      "senses": [
+        "haqi:nine"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "十",
+      "meaning": "十",
+      "forms": [],
+      "senses": [
+        "haqi:ten"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "百",
+      "meaning": "百",
+      "forms": [],
+      "senses": [
+        "haqi:hundred"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "千",
+      "meaning": "千",
+      "forms": [],
+      "senses": [
+        "haqi:thousand"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "今日",
+      "meaning": "今天",
+      "forms": [],
+      "senses": [
+        "haqi:today"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "昨日",
+      "meaning": "昨天",
+      "forms": [],
+      "senses": [
+        "haqi:yesterday"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "明日",
+      "meaning": "明天",
+      "forms": [],
+      "senses": [
+        "haqi:tomorrow"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "今",
+      "meaning": "现在",
+      "forms": [],
+      "senses": [
+        "haqi:now"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "朝",
+      "meaning": "早晨",
+      "forms": [],
+      "senses": [
+        "haqi:morning"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "夜",
+      "meaning": "夜晚",
+      "forms": [],
+      "senses": [
+        "haqi:night"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "年",
+      "meaning": "年",
+      "forms": [],
+      "senses": [
+        "haqi:year"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "月",
+      "meaning": "月",
+      "forms": [],
+      "senses": [
+        "haqi:month",
+        "haqi:moon"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "週",
+      "meaning": "星期",
+      "forms": [],
+      "senses": [
+        "haqi:week"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "時間",
+      "meaning": "小时",
+      "forms": [],
+      "senses": [
+        "haqi:hour"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "分",
+      "meaning": "分钟",
+      "forms": [],
+      "senses": [
+        "haqi:minute"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "秒",
+      "meaning": "秒",
+      "forms": [],
+      "senses": [
+        "haqi:second"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "母",
+      "meaning": "母亲",
+      "forms": [],
+      "senses": [
+        "haqi:mother"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "父",
+      "meaning": "父亲",
+      "forms": [],
+      "senses": [
+        "haqi:father"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "家族",
+      "meaning": "家庭",
+      "forms": [],
+      "senses": [
+        "haqi:family"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "子供",
+      "meaning": "孩子",
+      "forms": [],
+      "senses": [
+        "haqi:child"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "人",
+      "meaning": "人",
+      "forms": [],
+      "senses": [
+        "haqi:person"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "名前",
+      "meaning": "名字",
+      "forms": [],
+      "senses": [
+        "haqi:name"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "家",
+      "meaning": "家",
+      "forms": [],
+      "senses": [
+        "haqi:home"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "学校",
+      "meaning": "学校",
+      "forms": [],
+      "senses": [
+        "haqi:school"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "先生",
+      "meaning": "老师",
+      "forms": [],
+      "senses": [
+        "haqi:teacher"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "学生",
+      "meaning": "学生",
+      "forms": [],
+      "senses": [
+        "haqi:student"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "言語",
+      "meaning": "语言",
+      "forms": [],
+      "senses": [
+        "haqi:language"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "単語",
+      "meaning": "词语",
+      "forms": [],
+      "senses": [
+        "haqi:word"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "物語",
+      "meaning": "故事",
+      "forms": [],
+      "senses": [
+        "haqi:story"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "質問",
+      "meaning": "问题",
+      "forms": [],
+      "senses": [
+        "haqi:question"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "答え",
+      "meaning": "答案",
+      "forms": [],
+      "senses": [
+        "haqi:answer"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "食べ物",
+      "meaning": "食物",
+      "forms": [],
+      "senses": [
+        "haqi:food"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "ご飯",
+      "meaning": "米饭",
+      "forms": [],
+      "senses": [
+        "haqi:rice"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "パン",
+      "meaning": "面包",
+      "forms": [],
+      "senses": [
+        "haqi:bread"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "牛乳",
+      "meaning": "牛奶",
+      "forms": [],
+      "senses": [
+        "haqi:milk"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "お茶",
+      "meaning": "茶",
+      "forms": [],
+      "senses": [
+        "haqi:tea"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "りんご",
+      "meaning": "苹果",
+      "forms": [],
+      "senses": [
+        "haqi:apple"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "果物",
+      "meaning": "水果",
+      "forms": [],
+      "senses": [
+        "haqi:fruit"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "野菜",
+      "meaning": "蔬菜",
+      "forms": [],
+      "senses": [
+        "haqi:vegetable"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "肉",
+      "meaning": "肉",
+      "forms": [],
+      "senses": [
+        "haqi:meat"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "魚",
+      "meaning": "鱼",
+      "forms": [],
+      "senses": [
+        "haqi:fish"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "鳥",
+      "meaning": "鸟",
+      "forms": [],
+      "senses": [
+        "haqi:bird"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "猫",
+      "meaning": "猫",
+      "forms": [],
+      "senses": [
+        "haqi:cat"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "犬",
+      "meaning": "狗",
+      "forms": [],
+      "senses": [
+        "haqi:dog"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "馬",
+      "meaning": "马",
+      "forms": [],
+      "senses": [
+        "haqi:horse"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "花",
+      "meaning": "花",
+      "forms": [],
+      "senses": [
+        "haqi:flower"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "木",
+      "meaning": "树",
+      "forms": [],
+      "senses": [
+        "haqi:tree"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "森",
+      "meaning": "森林",
+      "forms": [],
+      "senses": [
+        "haqi:forest"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "山",
+      "meaning": "山",
+      "forms": [],
+      "senses": [
+        "haqi:mountain"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "川",
+      "meaning": "河",
+      "forms": [],
+      "senses": [
+        "haqi:river"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "海",
+      "meaning": "海",
+      "forms": [],
+      "senses": [
+        "haqi:sea"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "空",
+      "meaning": "天空",
+      "forms": [],
+      "senses": [
+        "haqi:sky"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "太陽",
+      "meaning": "太阳",
+      "forms": [],
+      "senses": [
+        "haqi:sun"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "星",
+      "meaning": "星星",
+      "forms": [],
+      "senses": [
+        "haqi:star"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "雨",
+      "meaning": "雨",
+      "forms": [],
+      "senses": [
+        "haqi:rain"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "雪",
+      "meaning": "雪",
+      "forms": [],
+      "senses": [
+        "haqi:snow"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "風",
+      "meaning": "风",
+      "forms": [],
+      "senses": [
+        "haqi:wind"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "火",
+      "meaning": "火",
+      "forms": [],
+      "senses": [
+        "haqi:fire"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "氷",
+      "meaning": "冰",
+      "forms": [],
+      "senses": [
+        "haqi:ice"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "石",
+      "meaning": "石头",
+      "forms": [],
+      "senses": [
+        "haqi:stone"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "道",
+      "meaning": "道路",
+      "forms": [],
+      "senses": [
+        "haqi:road"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "都市",
+      "meaning": "城市",
+      "forms": [],
+      "senses": [
+        "haqi:city"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "国",
+      "meaning": "国家",
+      "forms": [],
+      "senses": [
+        "haqi:country"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "ドア",
+      "meaning": "门",
+      "forms": [],
+      "senses": [
+        "haqi:door"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "窓",
+      "meaning": "窗户",
+      "forms": [],
+      "senses": [
+        "haqi:window"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "テーブル",
+      "meaning": "桌子",
+      "forms": [],
+      "senses": [
+        "haqi:table"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "椅子",
+      "meaning": "椅子",
+      "forms": [],
+      "senses": [
+        "haqi:chair"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "ベッド",
+      "meaning": "床",
+      "forms": [],
+      "senses": [
+        "haqi:bed"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "部屋",
+      "meaning": "房间",
+      "forms": [],
+      "senses": [
+        "haqi:room"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "手",
+      "meaning": "手",
+      "forms": [],
+      "senses": [
+        "haqi:hand"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "足",
+      "meaning": "脚",
+      "forms": [],
+      "senses": [
+        "haqi:foot"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "目",
+      "meaning": "眼睛",
+      "forms": [],
+      "senses": [
+        "haqi:eye"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "口",
+      "meaning": "嘴",
+      "forms": [],
+      "senses": [
+        "haqi:mouth"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "頭",
+      "meaning": "头",
+      "forms": [],
+      "senses": [
+        "haqi:head"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "心",
+      "meaning": "心",
+      "forms": [],
+      "senses": [
+        "haqi:heart"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "お金",
+      "meaning": "钱",
+      "forms": [],
+      "senses": [
+        "haqi:money"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "店",
+      "meaning": "商店",
+      "forms": [],
+      "senses": [
+        "haqi:shop"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "かばん",
+      "meaning": "包",
+      "forms": [],
+      "senses": [
+        "haqi:bag"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "服",
+      "meaning": "衣服",
+      "forms": [],
+      "senses": [
+        "haqi:clothes"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "靴",
+      "meaning": "鞋",
+      "forms": [],
+      "senses": [
+        "haqi:shoe"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "帽子",
+      "meaning": "帽子",
+      "forms": [],
+      "senses": [
+        "haqi:hat"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "赤",
+      "meaning": "红色",
+      "forms": [],
+      "senses": [
+        "haqi:red"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "青",
+      "meaning": "蓝色",
+      "forms": [],
+      "senses": [
+        "haqi:blue"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "黄色",
+      "meaning": "黄色",
+      "forms": [],
+      "senses": [
+        "haqi:yellow"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "緑",
+      "meaning": "绿色",
+      "forms": [],
+      "senses": [
+        "haqi:green"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "白",
+      "meaning": "白色",
+      "forms": [],
+      "senses": [
+        "haqi:white"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "黒",
+      "meaning": "黑色",
+      "forms": [],
+      "senses": [
+        "haqi:black"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "左",
+      "meaning": "左边",
+      "forms": [],
+      "senses": [
+        "haqi:left"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "右",
+      "meaning": "右边",
+      "forms": [],
+      "senses": [
+        "haqi:right"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "北",
+      "meaning": "北方",
+      "forms": [],
+      "senses": [
+        "haqi:north"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "南",
+      "meaning": "南方",
+      "forms": [],
+      "senses": [
+        "haqi:south"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "東",
+      "meaning": "东方",
+      "forms": [],
+      "senses": [
+        "haqi:east"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "西",
+      "meaning": "西方",
+      "forms": [],
+      "senses": [
+        "haqi:west"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "春",
+      "meaning": "春天",
+      "forms": [],
+      "senses": [
+        "haqi:spring"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "夏",
+      "meaning": "夏天",
+      "forms": [],
+      "senses": [
+        "haqi:summer"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "秋",
+      "meaning": "秋天",
+      "forms": [],
+      "senses": [
+        "haqi:autumn"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "冬",
+      "meaning": "冬天",
+      "forms": [],
+      "senses": [
+        "haqi:winter"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "クエスト",
+      "meaning": "任务",
+      "forms": [],
+      "senses": [
+        "haqi:quest"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "読む",
+      "meaning": "读",
+      "forms": [
+        "読んだ",
+        "読んで",
+        "読みます",
+        "読みました",
+        "読まない",
+        "読んでいる"
+      ],
+      "senses": [
+        "haqi:read"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "書く",
+      "meaning": "写",
+      "forms": [
+        "書いた",
+        "書いて",
+        "書きます",
+        "書きました",
+        "書かない"
+      ],
+      "senses": [
+        "haqi:write"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "見る",
+      "meaning": "看见",
+      "forms": [
+        "見た",
+        "見て",
+        "見ます",
+        "見ました",
+        "見ない"
+      ],
+      "senses": [
+        "haqi:see"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "聞く",
+      "meaning": "听",
+      "forms": [
+        "聞いた",
+        "聞いて",
+        "聞きます",
+        "聞きました",
+        "聞かない"
+      ],
+      "senses": [
+        "haqi:listen"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "話す",
+      "meaning": "说话",
+      "forms": [
+        "話した",
+        "話して",
+        "話します",
+        "話しました",
+        "話さない"
+      ],
+      "senses": [
+        "haqi:speak"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "飲む",
+      "meaning": "喝",
+      "forms": [
+        "飲んだ",
+        "飲んで",
+        "飲みます",
+        "飲みました",
+        "飲まない"
+      ],
+      "senses": [
+        "haqi:drink"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "寝る",
+      "meaning": "睡觉",
+      "forms": [
+        "寝た",
+        "寝て",
+        "寝ます",
+        "寝ました",
+        "寝ない"
+      ],
+      "senses": [
+        "haqi:sleep"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "歩く",
+      "meaning": "走路",
+      "forms": [
+        "歩いた",
+        "歩いて",
+        "歩きます",
+        "歩きました",
+        "歩かない"
+      ],
+      "senses": [
+        "haqi:walk"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "走る",
+      "meaning": "跑",
+      "forms": [
+        "走った",
+        "走って",
+        "走ります",
+        "走りました",
+        "走らない"
+      ],
+      "senses": [
+        "haqi:run"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "来る",
+      "meaning": "来",
+      "forms": [
+        "来た",
+        "来て",
+        "来ます",
+        "来ました",
+        "来ない"
+      ],
+      "senses": [
+        "haqi:come"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "帰る",
+      "meaning": "回来",
+      "forms": [
+        "帰った",
+        "帰って",
+        "帰ります",
+        "帰りました",
+        "帰らない"
+      ],
+      "senses": [
+        "haqi:return"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "買う",
+      "meaning": "买",
+      "forms": [
+        "買った",
+        "買って",
+        "買います",
+        "買いました",
+        "買わない"
+      ],
+      "senses": [
+        "haqi:buy"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "売る",
+      "meaning": "卖",
+      "forms": [
+        "売った",
+        "売って",
+        "売ります",
+        "売りました",
+        "売らない"
+      ],
+      "senses": [
+        "haqi:sell"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "作る",
+      "meaning": "制作",
+      "forms": [
+        "作った",
+        "作って",
+        "作ります",
+        "作りました",
+        "作らない"
+      ],
+      "senses": [
+        "haqi:make"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "使う",
+      "meaning": "使用",
+      "forms": [
+        "使った",
+        "使って",
+        "使います",
+        "使いました",
+        "使わない"
+      ],
+      "senses": [
+        "haqi:use"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "学ぶ",
+      "meaning": "学习",
+      "forms": [
+        "学んだ",
+        "学んで",
+        "学びます",
+        "学びました",
+        "学ばない"
+      ],
+      "senses": [
+        "haqi:learn"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "教える",
+      "meaning": "教",
+      "forms": [
+        "教えた",
+        "教えて",
+        "教えます",
+        "教えました",
+        "教えない"
+      ],
+      "senses": [
+        "haqi:teach"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "考える",
+      "meaning": "想",
+      "forms": [
+        "考えた",
+        "考えて",
+        "考えます",
+        "考えました",
+        "考えない"
+      ],
+      "senses": [
+        "haqi:think"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "知る",
+      "meaning": "知道",
+      "forms": [
+        "知った",
+        "知って",
+        "知ります",
+        "知りました",
+        "知らない",
+        "知っている"
+      ],
+      "senses": [
+        "haqi:know"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "分かる",
+      "meaning": "明白",
+      "forms": [
+        "分かった",
+        "分かって",
+        "分かります",
+        "分かりました",
+        "分からない"
+      ],
+      "senses": [
+        "haqi:understand"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "覚える",
+      "meaning": "记住",
+      "forms": [
+        "覚えた",
+        "覚えて",
+        "覚えます",
+        "覚えました",
+        "覚えない"
+      ],
+      "senses": [
+        "haqi:remember"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "忘れる",
+      "meaning": "忘记",
+      "forms": [
+        "忘れた",
+        "忘れて",
+        "忘れます",
+        "忘れました",
+        "忘れない"
+      ],
+      "senses": [
+        "haqi:forget"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "開ける",
+      "meaning": "打开",
+      "forms": [
+        "開けた",
+        "開けて",
+        "開けます",
+        "開けました",
+        "開けない"
+      ],
+      "senses": [
+        "haqi:open"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "閉める",
+      "meaning": "关闭",
+      "forms": [
+        "閉めた",
+        "閉めて",
+        "閉めます",
+        "閉めました",
+        "閉めない"
+      ],
+      "senses": [
+        "haqi:close"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "待つ",
+      "meaning": "等待",
+      "forms": [
+        "待った",
+        "待って",
+        "待ちます",
+        "待ちました",
+        "待たない"
+      ],
+      "senses": [
+        "haqi:wait"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "会う",
+      "meaning": "见面",
+      "forms": [
+        "会った",
+        "会って",
+        "会います",
+        "会いました",
+        "会わない"
+      ],
+      "senses": [
+        "haqi:meet"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "遊ぶ",
+      "meaning": "玩",
+      "forms": [
+        "遊んだ",
+        "遊んで",
+        "遊びます",
+        "遊びました",
+        "遊ばない"
+      ],
+      "senses": [
+        "haqi:play"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "働く",
+      "meaning": "工作",
+      "forms": [
+        "働いた",
+        "働いて",
+        "働きます",
+        "働きました",
+        "働かない"
+      ],
+      "senses": [
+        "haqi:work"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "休む",
+      "meaning": "休息",
+      "forms": [
+        "休んだ",
+        "休んで",
+        "休みます",
+        "休みました",
+        "休まない"
+      ],
+      "senses": [
+        "haqi:rest"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "泳ぐ",
+      "meaning": "游泳",
+      "forms": [
+        "泳いだ",
+        "泳いで",
+        "泳ぎます",
+        "泳ぎました",
+        "泳がない"
+      ],
+      "senses": [
+        "haqi:swim"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "歌う",
+      "meaning": "唱歌",
+      "forms": [
+        "歌った",
+        "歌って",
+        "歌います",
+        "歌いました",
+        "歌わない"
+      ],
+      "senses": [
+        "haqi:sing"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "笑う",
+      "meaning": "笑",
+      "forms": [
+        "笑った",
+        "笑って",
+        "笑います",
+        "笑いました",
+        "笑わない"
+      ],
+      "senses": [
+        "haqi:laugh"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "泣く",
+      "meaning": "哭",
+      "forms": [
+        "泣いた",
+        "泣いて",
+        "泣きます",
+        "泣きました",
+        "泣かない"
+      ],
+      "senses": [
+        "haqi:cry"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "立つ",
+      "meaning": "站",
+      "forms": [
+        "立った",
+        "立って",
+        "立ちます",
+        "立ちました",
+        "立たない"
+      ],
+      "senses": [
+        "haqi:stand"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "座る",
+      "meaning": "坐",
+      "forms": [
+        "座った",
+        "座って",
+        "座ります",
+        "座りました",
+        "座らない"
+      ],
+      "senses": [
+        "haqi:sit"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "見つける",
+      "meaning": "找到",
+      "forms": [
+        "見つけた",
+        "見つけて",
+        "見つけます",
+        "見つけました",
+        "見つけない"
+      ],
+      "senses": [
+        "haqi:find"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "失う",
+      "meaning": "失去",
+      "forms": [
+        "失った",
+        "失って",
+        "失います",
+        "失いました",
+        "失わない"
+      ],
+      "senses": [
+        "haqi:lose"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "勝つ",
+      "meaning": "赢",
+      "forms": [
+        "勝った",
+        "勝って",
+        "勝ちます",
+        "勝ちました",
+        "勝たない"
+      ],
+      "senses": [
+        "haqi:win"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "選ぶ",
+      "meaning": "选择",
+      "forms": [
+        "選んだ",
+        "選んで",
+        "選びます",
+        "選びました",
+        "選ばない"
+      ],
+      "senses": [
+        "haqi:choose"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "運ぶ",
+      "meaning": "搬运",
+      "forms": [
+        "運んだ",
+        "運んで",
+        "運びます",
+        "運びました",
+        "運ばない"
+      ],
+      "senses": [
+        "haqi:carry"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "守る",
+      "meaning": "保护",
+      "forms": [
+        "守った",
+        "守って",
+        "守ります",
+        "守りました",
+        "守らない"
+      ],
+      "senses": [
+        "haqi:protect"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "暮らす",
+      "meaning": "生活",
+      "forms": [
+        "暮らした",
+        "暮らして",
+        "暮らします",
+        "暮らしました"
+      ],
+      "senses": [
+        "haqi:live"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "愛する",
+      "meaning": "爱",
+      "forms": [
+        "愛した",
+        "愛して",
+        "愛します",
+        "愛しました"
+      ],
+      "senses": [
+        "haqi:love"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "好む",
+      "meaning": "喜欢",
+      "forms": [
+        "好んだ",
+        "好んで",
+        "好みます",
+        "好みました"
+      ],
+      "senses": [
+        "haqi:like"
+      ],
+      "pos": "v"
+    }
+  ],
+  "ko": [
+    {
+      "text": "걱정하다",
+      "meaning": "担心",
+      "forms": [
+        "걱정해",
+        "걱정해요",
+        "걱정했어요",
+        "걱정합니다",
+        "걱정하는",
+        "걱정했다"
+      ],
+      "senses": [
+        "haqi:worry"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "돕다",
+      "meaning": "帮助",
+      "forms": [
+        "도와",
+        "도와요",
+        "도와주세요",
+        "도왔어요",
+        "돕습니다",
+        "돕는"
+      ],
+      "senses": [
+        "haqi:help"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "따르다",
+      "meaning": "跟随",
+      "forms": [
+        "따라",
+        "따라요",
+        "따랐다",
+        "따릅니다"
+      ],
+      "senses": [
+        "haqi:follow"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "완료하다",
+      "meaning": "完成",
+      "forms": [
+        "완료해",
+        "완료했어요",
+        "완료합니다",
+        "완료했다"
+      ],
+      "senses": [
+        "haqi:finish"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "임무",
+      "meaning": "任务",
+      "forms": [],
+      "senses": [
+        "haqi:quest"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "친구",
+      "meaning": "朋友",
+      "forms": [],
+      "senses": [
+        "haqi:friend"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "책",
+      "meaning": "书",
+      "forms": [],
+      "senses": [
+        "haqi:book"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "물",
+      "meaning": "水",
+      "forms": [],
+      "senses": [
+        "haqi:water"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "먹다",
+      "meaning": "吃",
+      "forms": [
+        "먹어",
+        "먹어요",
+        "먹었어요",
+        "먹습니다",
+        "먹는",
+        "먹었다"
+      ],
+      "senses": [
+        "haqi:eat"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "가다",
+      "meaning": "去",
+      "forms": [
+        "가요",
+        "갔어요",
+        "갑니다",
+        "갔다"
+      ],
+      "senses": [
+        "haqi:go"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "안녕하세요",
+      "meaning": "你好",
+      "forms": [
+        "안녕"
+      ],
+      "senses": [
+        "haqi:hello"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "감사하다",
+      "meaning": "感谢",
+      "forms": [
+        "감사합니다",
+        "감사해요",
+        "감사했다"
+      ],
+      "senses": [
+        "haqi:thank"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "나",
+      "meaning": "我",
+      "forms": [],
+      "senses": [
+        "haqi:i"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "너",
+      "meaning": "你",
+      "forms": [],
+      "senses": [
+        "haqi:you"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "그",
+      "meaning": "他",
+      "forms": [],
+      "senses": [
+        "haqi:he"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "그녀",
+      "meaning": "她",
+      "forms": [],
+      "senses": [
+        "haqi:she"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "우리",
+      "meaning": "我们",
+      "forms": [],
+      "senses": [
+        "haqi:we"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "그들",
+      "meaning": "他们",
+      "forms": [],
+      "senses": [
+        "haqi:they"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "이것",
+      "meaning": "这",
+      "forms": [],
+      "senses": [
+        "haqi:this"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "그것",
+      "meaning": "那",
+      "forms": [],
+      "senses": [
+        "haqi:that"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "누구",
+      "meaning": "谁",
+      "forms": [],
+      "senses": [
+        "haqi:who"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "무엇",
+      "meaning": "什么",
+      "forms": [],
+      "senses": [
+        "haqi:what"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "어디",
+      "meaning": "哪里",
+      "forms": [],
+      "senses": [
+        "haqi:where"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "언제",
+      "meaning": "什么时候",
+      "forms": [],
+      "senses": [
+        "haqi:when"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "왜",
+      "meaning": "为什么",
+      "forms": [],
+      "senses": [
+        "haqi:why"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "어떻게",
+      "meaning": "怎么",
+      "forms": [],
+      "senses": [
+        "haqi:how"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "네",
+      "meaning": "是的",
+      "forms": [],
+      "senses": [
+        "haqi:yes"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "아니요",
+      "meaning": "不行",
+      "forms": [],
+      "senses": [
+        "haqi:no"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "모두",
+      "meaning": "全部",
+      "forms": [],
+      "senses": [
+        "haqi:all"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "몇몇",
+      "meaning": "一些",
+      "forms": [],
+      "senses": [
+        "haqi:some"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "많이",
+      "meaning": "许多",
+      "forms": [],
+      "senses": [
+        "haqi:many"
+      ],
+      "pos": "function"
+    },
+    {
+      "text": "하나",
+      "meaning": "一",
+      "forms": [],
+      "senses": [
+        "haqi:one"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "둘",
+      "meaning": "二",
+      "forms": [],
+      "senses": [
+        "haqi:two"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "셋",
+      "meaning": "三",
+      "forms": [],
+      "senses": [
+        "haqi:three"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "넷",
+      "meaning": "四",
+      "forms": [],
+      "senses": [
+        "haqi:four"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "다섯",
+      "meaning": "五",
+      "forms": [],
+      "senses": [
+        "haqi:five"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "여섯",
+      "meaning": "六",
+      "forms": [],
+      "senses": [
+        "haqi:six"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "일곱",
+      "meaning": "七",
+      "forms": [],
+      "senses": [
+        "haqi:seven"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "여덟",
+      "meaning": "八",
+      "forms": [],
+      "senses": [
+        "haqi:eight"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "아홉",
+      "meaning": "九",
+      "forms": [],
+      "senses": [
+        "haqi:nine"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "열",
+      "meaning": "十",
+      "forms": [],
+      "senses": [
+        "haqi:ten"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "백",
+      "meaning": "百",
+      "forms": [],
+      "senses": [
+        "haqi:hundred"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "천",
+      "meaning": "千",
+      "forms": [],
+      "senses": [
+        "haqi:thousand"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "오늘",
+      "meaning": "今天",
+      "forms": [],
+      "senses": [
+        "haqi:today"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "어제",
+      "meaning": "昨天",
+      "forms": [],
+      "senses": [
+        "haqi:yesterday"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "내일",
+      "meaning": "明天",
+      "forms": [],
+      "senses": [
+        "haqi:tomorrow"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "지금",
+      "meaning": "现在",
+      "forms": [],
+      "senses": [
+        "haqi:now"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "아침",
+      "meaning": "早晨",
+      "forms": [],
+      "senses": [
+        "haqi:morning"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "밤",
+      "meaning": "夜晚",
+      "forms": [],
+      "senses": [
+        "haqi:night"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "년",
+      "meaning": "年",
+      "forms": [],
+      "senses": [
+        "haqi:year"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "월",
+      "meaning": "月",
+      "forms": [],
+      "senses": [
+        "haqi:month"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "주",
+      "meaning": "星期",
+      "forms": [],
+      "senses": [
+        "haqi:week"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "시간",
+      "meaning": "小时",
+      "forms": [],
+      "senses": [
+        "haqi:hour"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "분",
+      "meaning": "分钟",
+      "forms": [],
+      "senses": [
+        "haqi:minute"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "초",
+      "meaning": "秒",
+      "forms": [],
+      "senses": [
+        "haqi:second"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "어머니",
+      "meaning": "母亲",
+      "forms": [],
+      "senses": [
+        "haqi:mother"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "아버지",
+      "meaning": "父亲",
+      "forms": [],
+      "senses": [
+        "haqi:father"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "가족",
+      "meaning": "家庭",
+      "forms": [],
+      "senses": [
+        "haqi:family"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "아이",
+      "meaning": "孩子",
+      "forms": [],
+      "senses": [
+        "haqi:child"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "사람",
+      "meaning": "人",
+      "forms": [],
+      "senses": [
+        "haqi:person"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "이름",
+      "meaning": "名字",
+      "forms": [],
+      "senses": [
+        "haqi:name"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "집",
+      "meaning": "家",
+      "forms": [],
+      "senses": [
+        "haqi:home"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "학교",
+      "meaning": "学校",
+      "forms": [],
+      "senses": [
+        "haqi:school"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "선생님",
+      "meaning": "老师",
+      "forms": [],
+      "senses": [
+        "haqi:teacher"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "학생",
+      "meaning": "学生",
+      "forms": [],
+      "senses": [
+        "haqi:student"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "언어",
+      "meaning": "语言",
+      "forms": [],
+      "senses": [
+        "haqi:language"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "단어",
+      "meaning": "词语",
+      "forms": [],
+      "senses": [
+        "haqi:word"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "이야기",
+      "meaning": "故事",
+      "forms": [],
+      "senses": [
+        "haqi:story"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "질문",
+      "meaning": "问题",
+      "forms": [],
+      "senses": [
+        "haqi:question"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "답",
+      "meaning": "答案",
+      "forms": [],
+      "senses": [
+        "haqi:answer"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "음식",
+      "meaning": "食物",
+      "forms": [],
+      "senses": [
+        "haqi:food"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "밥",
+      "meaning": "米饭",
+      "forms": [],
+      "senses": [
+        "haqi:rice"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "빵",
+      "meaning": "面包",
+      "forms": [],
+      "senses": [
+        "haqi:bread"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "우유",
+      "meaning": "牛奶",
+      "forms": [],
+      "senses": [
+        "haqi:milk"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "차",
+      "meaning": "茶",
+      "forms": [],
+      "senses": [
+        "haqi:tea"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "사과",
+      "meaning": "苹果",
+      "forms": [],
+      "senses": [
+        "haqi:apple"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "과일",
+      "meaning": "水果",
+      "forms": [],
+      "senses": [
+        "haqi:fruit"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "채소",
+      "meaning": "蔬菜",
+      "forms": [],
+      "senses": [
+        "haqi:vegetable"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "고기",
+      "meaning": "肉",
+      "forms": [],
+      "senses": [
+        "haqi:meat"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "물고기",
+      "meaning": "鱼",
+      "forms": [],
+      "senses": [
+        "haqi:fish"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "새",
+      "meaning": "鸟",
+      "forms": [],
+      "senses": [
+        "haqi:bird"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "고양이",
+      "meaning": "猫",
+      "forms": [],
+      "senses": [
+        "haqi:cat"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "개",
+      "meaning": "狗",
+      "forms": [],
+      "senses": [
+        "haqi:dog"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "말",
+      "meaning": "马",
+      "forms": [],
+      "senses": [
+        "haqi:horse"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "꽃",
+      "meaning": "花",
+      "forms": [],
+      "senses": [
+        "haqi:flower"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "나무",
+      "meaning": "树",
+      "forms": [],
+      "senses": [
+        "haqi:tree"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "숲",
+      "meaning": "森林",
+      "forms": [],
+      "senses": [
+        "haqi:forest"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "산",
+      "meaning": "山",
+      "forms": [],
+      "senses": [
+        "haqi:mountain"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "강",
+      "meaning": "河",
+      "forms": [],
+      "senses": [
+        "haqi:river"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "바다",
+      "meaning": "海",
+      "forms": [],
+      "senses": [
+        "haqi:sea"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "하늘",
+      "meaning": "天空",
+      "forms": [],
+      "senses": [
+        "haqi:sky"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "태양",
+      "meaning": "太阳",
+      "forms": [],
+      "senses": [
+        "haqi:sun"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "달",
+      "meaning": "月亮",
+      "forms": [],
+      "senses": [
+        "haqi:moon"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "별",
+      "meaning": "星星",
+      "forms": [],
+      "senses": [
+        "haqi:star"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "비",
+      "meaning": "雨",
+      "forms": [],
+      "senses": [
+        "haqi:rain"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "눈",
+      "meaning": "雪",
+      "forms": [],
+      "senses": [
+        "haqi:snow",
+        "haqi:eye"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "바람",
+      "meaning": "风",
+      "forms": [],
+      "senses": [
+        "haqi:wind"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "불",
+      "meaning": "火",
+      "forms": [],
+      "senses": [
+        "haqi:fire"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "얼음",
+      "meaning": "冰",
+      "forms": [],
+      "senses": [
+        "haqi:ice"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "돌",
+      "meaning": "石头",
+      "forms": [],
+      "senses": [
+        "haqi:stone"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "길",
+      "meaning": "道路",
+      "forms": [],
+      "senses": [
+        "haqi:road"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "도시",
+      "meaning": "城市",
+      "forms": [],
+      "senses": [
+        "haqi:city"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "나라",
+      "meaning": "国家",
+      "forms": [],
+      "senses": [
+        "haqi:country"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "문",
+      "meaning": "门",
+      "forms": [],
+      "senses": [
+        "haqi:door"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "창문",
+      "meaning": "窗户",
+      "forms": [],
+      "senses": [
+        "haqi:window"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "탁자",
+      "meaning": "桌子",
+      "forms": [],
+      "senses": [
+        "haqi:table"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "의자",
+      "meaning": "椅子",
+      "forms": [],
+      "senses": [
+        "haqi:chair"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "침대",
+      "meaning": "床",
+      "forms": [],
+      "senses": [
+        "haqi:bed"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "방",
+      "meaning": "房间",
+      "forms": [],
+      "senses": [
+        "haqi:room"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "손",
+      "meaning": "手",
+      "forms": [],
+      "senses": [
+        "haqi:hand"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "발",
+      "meaning": "脚",
+      "forms": [],
+      "senses": [
+        "haqi:foot"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "입",
+      "meaning": "嘴",
+      "forms": [],
+      "senses": [
+        "haqi:mouth"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "머리",
+      "meaning": "头",
+      "forms": [],
+      "senses": [
+        "haqi:head"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "마음",
+      "meaning": "心",
+      "forms": [],
+      "senses": [
+        "haqi:heart"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "돈",
+      "meaning": "钱",
+      "forms": [],
+      "senses": [
+        "haqi:money"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "가게",
+      "meaning": "商店",
+      "forms": [],
+      "senses": [
+        "haqi:shop"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "가방",
+      "meaning": "包",
+      "forms": [],
+      "senses": [
+        "haqi:bag"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "옷",
+      "meaning": "衣服",
+      "forms": [],
+      "senses": [
+        "haqi:clothes"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "신발",
+      "meaning": "鞋",
+      "forms": [],
+      "senses": [
+        "haqi:shoe"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "모자",
+      "meaning": "帽子",
+      "forms": [],
+      "senses": [
+        "haqi:hat"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "빨강",
+      "meaning": "红色",
+      "forms": [],
+      "senses": [
+        "haqi:red"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "파랑",
+      "meaning": "蓝色",
+      "forms": [],
+      "senses": [
+        "haqi:blue"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "노랑",
+      "meaning": "黄色",
+      "forms": [],
+      "senses": [
+        "haqi:yellow"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "초록",
+      "meaning": "绿色",
+      "forms": [],
+      "senses": [
+        "haqi:green"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "하양",
+      "meaning": "白色",
+      "forms": [],
+      "senses": [
+        "haqi:white"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "검정",
+      "meaning": "黑色",
+      "forms": [],
+      "senses": [
+        "haqi:black"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "왼쪽",
+      "meaning": "左边",
+      "forms": [],
+      "senses": [
+        "haqi:left"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "오른쪽",
+      "meaning": "右边",
+      "forms": [],
+      "senses": [
+        "haqi:right"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "북쪽",
+      "meaning": "北方",
+      "forms": [],
+      "senses": [
+        "haqi:north"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "남쪽",
+      "meaning": "南方",
+      "forms": [],
+      "senses": [
+        "haqi:south"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "동쪽",
+      "meaning": "东方",
+      "forms": [],
+      "senses": [
+        "haqi:east"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "서쪽",
+      "meaning": "西方",
+      "forms": [],
+      "senses": [
+        "haqi:west"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "봄",
+      "meaning": "春天",
+      "forms": [],
+      "senses": [
+        "haqi:spring"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "여름",
+      "meaning": "夏天",
+      "forms": [],
+      "senses": [
+        "haqi:summer"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "가을",
+      "meaning": "秋天",
+      "forms": [],
+      "senses": [
+        "haqi:autumn"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "겨울",
+      "meaning": "冬天",
+      "forms": [],
+      "senses": [
+        "haqi:winter"
+      ],
+      "pos": ""
+    },
+    {
+      "text": "퀘스트",
+      "meaning": "任务",
+      "forms": [],
+      "senses": [
+        "haqi:quest"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "읽다",
+      "meaning": "读",
+      "forms": [
+        "읽어요",
+        "읽었어요",
+        "읽습니다",
+        "읽는"
+      ],
+      "senses": [
+        "haqi:read"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "쓰다",
+      "meaning": "写",
+      "forms": [
+        "써요",
+        "썼어요",
+        "씁니다",
+        "쓰는"
+      ],
+      "senses": [
+        "haqi:write"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "보다",
+      "meaning": "看见",
+      "forms": [
+        "봐요",
+        "봤어요",
+        "봅니다",
+        "보는"
+      ],
+      "senses": [
+        "haqi:see"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "듣다",
+      "meaning": "听",
+      "forms": [
+        "들어요",
+        "들었어요",
+        "듣습니다",
+        "듣는"
+      ],
+      "senses": [
+        "haqi:listen"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "말하다",
+      "meaning": "说话",
+      "forms": [
+        "말해요",
+        "말했어요",
+        "말합니다",
+        "말하는"
+      ],
+      "senses": [
+        "haqi:speak"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "마시다",
+      "meaning": "喝",
+      "forms": [
+        "마셔요",
+        "마셨어요",
+        "마십니다",
+        "마시는"
+      ],
+      "senses": [
+        "haqi:drink"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "자다",
+      "meaning": "睡觉",
+      "forms": [
+        "자요",
+        "잤어요",
+        "잡니다",
+        "자는"
+      ],
+      "senses": [
+        "haqi:sleep"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "걷다",
+      "meaning": "走路",
+      "forms": [
+        "걸어요",
+        "걸었어요",
+        "걷습니다",
+        "걷는"
+      ],
+      "senses": [
+        "haqi:walk"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "달리다",
+      "meaning": "跑",
+      "forms": [
+        "달려요",
+        "달렸어요",
+        "달립니다",
+        "달리는"
+      ],
+      "senses": [
+        "haqi:run"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "오다",
+      "meaning": "来",
+      "forms": [
+        "와요",
+        "왔어요",
+        "옵니다",
+        "오는"
+      ],
+      "senses": [
+        "haqi:come"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "돌아오다",
+      "meaning": "回来",
+      "forms": [
+        "돌아와요",
+        "돌아왔어요",
+        "돌아옵니다"
+      ],
+      "senses": [
+        "haqi:return"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "사다",
+      "meaning": "买",
+      "forms": [
+        "사요",
+        "샀어요",
+        "삽니다",
+        "사는"
+      ],
+      "senses": [
+        "haqi:buy"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "팔다",
+      "meaning": "卖",
+      "forms": [
+        "팔아요",
+        "팔았어요",
+        "팝니다",
+        "파는"
+      ],
+      "senses": [
+        "haqi:sell"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "만들다",
+      "meaning": "制作",
+      "forms": [
+        "만들어요",
+        "만들었어요",
+        "만듭니다",
+        "만드는"
+      ],
+      "senses": [
+        "haqi:make"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "사용하다",
+      "meaning": "使用",
+      "forms": [
+        "사용해요",
+        "사용했어요",
+        "사용합니다"
+      ],
+      "senses": [
+        "haqi:use"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "배우다",
+      "meaning": "学习",
+      "forms": [
+        "배워요",
+        "배웠어요",
+        "배웁니다"
+      ],
+      "senses": [
+        "haqi:learn"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "가르치다",
+      "meaning": "教",
+      "forms": [
+        "가르쳐요",
+        "가르쳤어요",
+        "가르칩니다"
+      ],
+      "senses": [
+        "haqi:teach"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "생각하다",
+      "meaning": "想",
+      "forms": [
+        "생각해요",
+        "생각했어요",
+        "생각합니다"
+      ],
+      "senses": [
+        "haqi:think"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "알다",
+      "meaning": "知道",
+      "forms": [
+        "알아요",
+        "알았어요",
+        "압니다",
+        "아는"
+      ],
+      "senses": [
+        "haqi:know"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "이해하다",
+      "meaning": "明白",
+      "forms": [
+        "이해해요",
+        "이해했어요",
+        "이해합니다"
+      ],
+      "senses": [
+        "haqi:understand"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "기억하다",
+      "meaning": "记住",
+      "forms": [
+        "기억해요",
+        "기억했어요",
+        "기억합니다"
+      ],
+      "senses": [
+        "haqi:remember"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "잊다",
+      "meaning": "忘记",
+      "forms": [
+        "잊어요",
+        "잊었어요",
+        "잊습니다"
+      ],
+      "senses": [
+        "haqi:forget"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "열다",
+      "meaning": "打开",
+      "forms": [
+        "열어요",
+        "열었어요",
+        "엽니다"
+      ],
+      "senses": [
+        "haqi:open"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "닫다",
+      "meaning": "关闭",
+      "forms": [
+        "닫아요",
+        "닫았어요",
+        "닫습니다"
+      ],
+      "senses": [
+        "haqi:close"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "기다리다",
+      "meaning": "等待",
+      "forms": [
+        "기다려요",
+        "기다렸어요",
+        "기다립니다"
+      ],
+      "senses": [
+        "haqi:wait"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "만나다",
+      "meaning": "见面",
+      "forms": [
+        "만나요",
+        "만났어요",
+        "만납니다"
+      ],
+      "senses": [
+        "haqi:meet"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "놀다",
+      "meaning": "玩",
+      "forms": [
+        "놀아요",
+        "놀았어요",
+        "놉니다"
+      ],
+      "senses": [
+        "haqi:play"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "일하다",
+      "meaning": "工作",
+      "forms": [
+        "일해요",
+        "일했어요",
+        "일합니다"
+      ],
+      "senses": [
+        "haqi:work"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "쉬다",
+      "meaning": "休息",
+      "forms": [
+        "쉬어요",
+        "쉬었어요",
+        "쉽니다"
+      ],
+      "senses": [
+        "haqi:rest"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "수영하다",
+      "meaning": "游泳",
+      "forms": [
+        "수영해요",
+        "수영했어요",
+        "수영합니다"
+      ],
+      "senses": [
+        "haqi:swim"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "노래하다",
+      "meaning": "唱歌",
+      "forms": [
+        "노래해요",
+        "노래했어요",
+        "노래합니다"
+      ],
+      "senses": [
+        "haqi:sing"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "웃다",
+      "meaning": "笑",
+      "forms": [
+        "웃어요",
+        "웃었어요",
+        "웃습니다"
+      ],
+      "senses": [
+        "haqi:laugh"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "울다",
+      "meaning": "哭",
+      "forms": [
+        "울어요",
+        "울었어요",
+        "웁니다"
+      ],
+      "senses": [
+        "haqi:cry"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "서다",
+      "meaning": "站",
+      "forms": [
+        "서요",
+        "섰어요",
+        "섭니다"
+      ],
+      "senses": [
+        "haqi:stand"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "앉다",
+      "meaning": "坐",
+      "forms": [
+        "앉아요",
+        "앉았어요",
+        "앉습니다"
+      ],
+      "senses": [
+        "haqi:sit"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "찾다",
+      "meaning": "找到",
+      "forms": [
+        "찾아요",
+        "찾았어요",
+        "찾습니다"
+      ],
+      "senses": [
+        "haqi:find"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "잃다",
+      "meaning": "失去",
+      "forms": [
+        "잃어요",
+        "잃었어요",
+        "잃습니다"
+      ],
+      "senses": [
+        "haqi:lose"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "이기다",
+      "meaning": "赢",
+      "forms": [
+        "이겨요",
+        "이겼어요",
+        "이깁니다"
+      ],
+      "senses": [
+        "haqi:win"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "고르다",
+      "meaning": "选择",
+      "forms": [
+        "골라요",
+        "골랐어요",
+        "고릅니다"
+      ],
+      "senses": [
+        "haqi:choose"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "나르다",
+      "meaning": "搬运",
+      "forms": [
+        "날라요",
+        "날랐어요",
+        "나릅니다"
+      ],
+      "senses": [
+        "haqi:carry"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "보호하다",
+      "meaning": "保护",
+      "forms": [
+        "보호해요",
+        "보호했어요",
+        "보호합니다"
+      ],
+      "senses": [
+        "haqi:protect"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "살다",
+      "meaning": "生活",
+      "forms": [
+        "살아요",
+        "살았어요",
+        "삽니다"
+      ],
+      "senses": [
+        "haqi:live"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "사랑하다",
+      "meaning": "爱",
+      "forms": [
+        "사랑해요",
+        "사랑했어요",
+        "사랑합니다"
+      ],
+      "senses": [
+        "haqi:love"
+      ],
+      "pos": "v"
+    },
+    {
+      "text": "좋아하다",
+      "meaning": "喜欢",
+      "forms": [
+        "좋아해요",
+        "좋아했어요",
+        "좋아합니다"
+      ],
+      "senses": [
+        "haqi:like"
+      ],
+      "pos": "v"
+    }
+  ],
+  "englishIrregular": {
+    "be": [
+      "am",
+      "is",
+      "are",
+      "was",
+      "were",
+      "been",
+      "being"
+    ],
+    "have": [
+      "has",
+      "had",
+      "having"
+    ],
+    "do": [
+      "does",
+      "did",
+      "done",
+      "doing"
+    ],
+    "run": [
+      "runs",
+      "ran",
+      "running"
+    ],
+    "see": [
+      "sees",
+      "saw",
+      "seen",
+      "seeing"
+    ],
+    "find": [
+      "finds",
+      "found",
+      "finding"
+    ],
+    "make": [
+      "makes",
+      "made",
+      "making"
+    ],
+    "take": [
+      "takes",
+      "took",
+      "taken",
+      "taking"
+    ],
+    "get": [
+      "gets",
+      "got",
+      "gotten",
+      "getting"
+    ],
+    "give": [
+      "gives",
+      "gave",
+      "given",
+      "giving"
+    ],
+    "come": [
+      "comes",
+      "came",
+      "coming"
+    ],
+    "think": [
+      "thinks",
+      "thought",
+      "thinking"
+    ],
+    "buy": [
+      "buys",
+      "bought",
+      "buying"
+    ],
+    "say": [
+      "says",
+      "said",
+      "saying"
+    ],
+    "tell": [
+      "tells",
+      "told",
+      "telling"
+    ],
+    "write": [
+      "writes",
+      "wrote",
+      "written",
+      "writing"
+    ],
+    "read": [
+      "reads",
+      "reading"
+    ],
+    "child": [
+      "children"
+    ],
+    "person": [
+      "people"
+    ],
+    "man": [
+      "men"
+    ],
+    "woman": [
+      "women"
+    ],
+    "foot": [
+      "feet"
+    ],
+    "tooth": [
+      "teeth"
+    ],
+    "mouse": [
+      "mice"
+    ],
+    "good": [
+      "better",
+      "best"
+    ],
+    "bad": [
+      "worse",
+      "worst"
+    ],
+    "stop": [
+      "stops",
+      "stopped",
+      "stopping"
+    ],
+    "sit": [
+      "sits",
+      "sat",
+      "sitting"
+    ],
+    "swim": [
+      "swims",
+      "swam",
+      "swum",
+      "swimming"
+    ],
+    "begin": [
+      "begins",
+      "began",
+      "begun",
+      "beginning"
+    ],
+    "sleep": [
+      "sleeps",
+      "slept",
+      "sleeping"
+    ],
+    "feel": [
+      "feels",
+      "felt",
+      "feeling"
+    ],
+    "keep": [
+      "keeps",
+      "kept",
+      "keeping"
+    ],
+    "leave": [
+      "leaves",
+      "left",
+      "leaving"
+    ],
+    "know": [
+      "knows",
+      "knew",
+      "known",
+      "knowing"
+    ],
+    "hear": [
+      "hears",
+      "heard",
+      "hearing"
+    ],
+    "meet": [
+      "meets",
+      "met",
+      "meeting"
+    ],
+    "put": [
+      "puts",
+      "putting"
+    ],
+    "send": [
+      "sends",
+      "sent",
+      "sending"
+    ],
+    "speak": [
+      "speaks",
+      "spoke",
+      "spoken",
+      "speaking"
+    ],
+    "stand": [
+      "stands",
+      "stood",
+      "standing"
+    ],
+    "understand": [
+      "understands",
+      "understood",
+      "understanding"
+    ],
+    "win": [
+      "wins",
+      "won",
+      "winning"
+    ],
+    "lose": [
+      "loses",
+      "lost",
+      "losing"
+    ],
+    "bring": [
+      "brings",
+      "brought",
+      "bringing"
+    ],
+    "build": [
+      "builds",
+      "built",
+      "building"
+    ],
+    "catch": [
+      "catches",
+      "caught",
+      "catching"
+    ],
+    "teach": [
+      "teaches",
+      "taught",
+      "teaching"
+    ],
+    "drink": [
+      "drinks",
+      "drank",
+      "drunk",
+      "drinking"
+    ],
+    "plan": [
+      "plans",
+      "planned",
+      "planning"
+    ],
+    "prefer": [
+      "prefers",
+      "preferred",
+      "preferring"
+    ],
+    "admit": [
+      "admits",
+      "admitted",
+      "admitting"
+    ],
+    "permit": [
+      "permits",
+      "permitted",
+      "permitting"
+    ],
+    "occur": [
+      "occurs",
+      "occurred",
+      "occurring"
+    ],
+    "refer": [
+      "refers",
+      "referred",
+      "referring"
+    ],
+    "control": [
+      "controls",
+      "controlled",
+      "controlling"
+    ],
+    "travel": [
+      "travels",
+      "traveled",
+      "travelled",
+      "traveling",
+      "travelling"
+    ],
+    "cut": [
+      "cuts",
+      "cutting"
+    ],
+    "hit": [
+      "hits",
+      "hitting"
+    ],
+    "set": [
+      "sets",
+      "setting"
+    ],
+    "let": [
+      "lets",
+      "letting"
+    ],
+    "fall": [
+      "falls",
+      "fell",
+      "fallen",
+      "falling"
+    ],
+    "fly": [
+      "flies",
+      "flew",
+      "flown",
+      "flying"
+    ],
+    "draw": [
+      "draws",
+      "drew",
+      "drawn",
+      "drawing"
+    ],
+    "break": [
+      "breaks",
+      "broke",
+      "broken",
+      "breaking"
+    ],
+    "choose": [
+      "chooses",
+      "chose",
+      "chosen",
+      "choosing"
+    ],
+    "grow": [
+      "grows",
+      "grew",
+      "grown",
+      "growing"
+    ],
+    "hold": [
+      "holds",
+      "held",
+      "holding"
+    ],
+    "pay": [
+      "pays",
+      "paid",
+      "paying"
+    ],
+    "sell": [
+      "sells",
+      "sold",
+      "selling"
+    ],
+    "wear": [
+      "wears",
+      "wore",
+      "worn",
+      "wearing"
+    ],
+    "forget": [
+      "forgets",
+      "forgot",
+      "forgotten",
+      "forgetting"
+    ],
+    "drive": [
+      "drives",
+      "drove",
+      "driven",
+      "driving"
+    ],
+    "ride": [
+      "rides",
+      "rode",
+      "ridden",
+      "riding"
+    ],
+    "sing": [
+      "sings",
+      "sang",
+      "sung",
+      "singing"
+    ],
+    "big": [
+      "bigger",
+      "biggest"
+    ],
+    "small": [
+      "smaller",
+      "smallest"
+    ],
+    "large": [
+      "larger",
+      "largest"
+    ],
+    "long": [
+      "longer",
+      "longest"
+    ],
+    "short": [
+      "shorter",
+      "shortest"
+    ],
+    "old": [
+      "older",
+      "oldest"
+    ],
+    "young": [
+      "younger",
+      "youngest"
+    ],
+    "new": [
+      "newer",
+      "newest"
+    ],
+    "high": [
+      "higher",
+      "highest"
+    ],
+    "low": [
+      "lower",
+      "lowest"
+    ],
+    "fast": [
+      "faster",
+      "fastest"
+    ],
+    "slow": [
+      "slower",
+      "slowest"
+    ],
+    "quick": [
+      "quicker",
+      "quickest"
+    ],
+    "warm": [
+      "warmer",
+      "warmest"
+    ],
+    "cold": [
+      "colder",
+      "coldest"
+    ],
+    "hot": [
+      "hotter",
+      "hottest"
+    ],
+    "cool": [
+      "cooler",
+      "coolest"
+    ],
+    "happy": [
+      "happier",
+      "happiest"
+    ],
+    "busy": [
+      "busier",
+      "busiest"
+    ],
+    "easy": [
+      "easier",
+      "easiest"
+    ],
+    "hard": [
+      "harder",
+      "hardest"
+    ],
+    "heavy": [
+      "heavier",
+      "heaviest"
+    ],
+    "light": [
+      "lighter",
+      "lightest"
+    ],
+    "strong": [
+      "stronger",
+      "strongest"
+    ],
+    "weak": [
+      "weaker",
+      "weakest"
+    ],
+    "rich": [
+      "richer",
+      "richest"
+    ],
+    "poor": [
+      "poorer",
+      "poorest"
+    ],
+    "nice": [
+      "nicer",
+      "nicest"
+    ],
+    "pretty": [
+      "prettier",
+      "prettiest"
+    ],
+    "early": [
+      "earlier",
+      "earliest"
+    ],
+    "late": [
+      "later",
+      "latest"
+    ],
+    "close": [
+      "closer",
+      "closest"
+    ],
+    "far": [
+      "farther",
+      "farthest"
+    ]
+  },
+  "excluded": {
+    "en": [
+      "fuck",
+      "fucking",
+      "shit",
+      "bullshit",
+      "asshole",
+      "bitch",
+      "bastard",
+      "piss",
+      "porn",
+      "pornography"
+    ],
+    "zh": [
+      "性交",
+      "性交的",
+      "色情",
+      "淫荡",
+      "肏",
+      "操逼"
+    ],
+    "ja": [
+      "性交",
+      "ポルノ",
+      "セックス"
+    ],
+    "ko": [
+      "섹스",
+      "씨발",
+      "씹하다",
+      "포르노"
+    ]
+  }
+}

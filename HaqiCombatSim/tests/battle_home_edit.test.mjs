@@ -11,14 +11,23 @@ test('furniture keeps its grabbed corner across zoom levels and negative world c
  }
 });
 
-test('sub-cell pointer movement does not make a grabbed object jump to the pointer cell',()=>{
- assert.deepEqual(homeFurnitureDragPosition({x:5,y:6},{sx:199,sy:202},{sx:205,sy:196},40),{x:5,y:6});
+test('sub-cell pointer movement preserves fractional positions across zoom levels',()=>{
+ for(const scale of [20,40,80]){
+  assert.deepEqual(homeFurnitureDragPosition({x:-5.25,y:6.125},{sx:199,sy:202},{sx:204,sy:197},scale),{x:-5.25+5/scale,y:6.125-5/scale});
+ }
 });
 
 // Execute the production handlers with isolated callbacks, without a DOM or player saves.
 import {readFileSync} from 'node:fs';
 const appSource=readFileSync(new URL('../js/home_app.js',import.meta.url),'utf8');
 const viewSource=readFileSync(new URL('../js/view_home.js',import.meta.url),'utf8');
+test('canvas pointer coordinates preserve fractional world positions for catalog drops',()=>{
+ const source=viewSource.slice(viewSource.indexOf(' function position(e)'),viewSource.indexOf(' function render(next)'));
+ const position=new Function('canvas','model',source+';return position;')(
+  {getBoundingClientRect:()=>({left:10,top:20,width:800,height:600})},
+  {camera:{x:-.25,y:.125},scale:40});
+ assert.deepEqual(position({clientX:415,clientY:315}),{sx:405,sy:295,x:-.125,y:0});
+});
 test('clicking the ground after selecting existing or catalog furniture never writes a placement',async()=>{
  const source=appSource.slice(appSource.indexOf(' async function tap('),appSource.indexOf(' async function drop('));
  for(const selection of [{id:'placed-chair',itemId:'chair'},{itemId:'chair'}]){
@@ -42,6 +51,29 @@ import {footprint,validateHomePart} from '../js/home_core.js';
 import {applyHomeAction} from '../js/home_actions_core.js';
 const resizeCatalog=[{id:'box',size:[2,1],layer:'solid'}];
 const resizeParts=()=>({inventory:{},'chunk:0,0':{a:{id:'a',itemId:'box',x:0,y:0}}});
+test('fractional furniture placement survives movement across chunks and save validation',()=>{
+ const parts={inventory:{'box:':1},'chunk:0,0':{},'chunk:-1,1':{}};
+ applyHomeAction(parts,{type:'place',object:{id:'a',itemId:'box',x:.125,y:.375}},resizeCatalog);
+ applyHomeAction(parts,{type:'move',id:'a',position:{x:-.25,y:32.625}},resizeCatalog);
+ const restored=JSON.parse(JSON.stringify(parts));
+ assert.deepEqual(restored['chunk:0,0'],{});
+ validateHomePart('chunk',restored['chunk:-1,1'],resizeCatalog);
+ assert.equal(restored['chunk:-1,1'].a.x,-.25);
+ assert.equal(restored['chunk:-1,1'].a.y,32.625);
+ for(const x of [NaN,Infinity,'1.25',null,1e9+1]){
+  assert.throws(()=>validateHomePart('chunk',{a:{...restored['chunk:-1,1'].a,x}},resizeCatalog));
+  assert.throws(()=>applyHomeAction(parts,{type:'move',id:'a',position:{x}},resizeCatalog));
+ }
+});
+
+test('placement resolver keeps the exact drop point even when another object occupies it',()=>{
+ const source=appSource.slice(appSource.indexOf(' function at('),appSource.indexOf(' async function placeItemAt('));
+ const resolve=new Function('selection','rotation','catalog','homeObjects','parts','footprint',source+';return resolvePlacement;')(
+  null,0,{items:resizeCatalog},()=>[{id:'other',itemId:'box',x:0,y:0}],{},footprint);
+ const obj=resolve('box',{x:.125,y:.375},{id:'a'});
+ assert.equal(obj.x,.125);assert.equal(obj.y,.375);
+ assert.throws(()=>applyHomeAction({inventory:{'box:':1},'chunk:0,0':{other:{id:'other',itemId:'box',x:0,y:0}}},{type:'place',object:obj},resizeCatalog),/这里已有物品/);
+});
 test('resizing persists per furniture, changes footprint and clamps to 50–200 percent',()=>{
  const parts=resizeParts();
  for(let i=0;i<8;i++)applyHomeAction(parts,{type:'resize',id:'a',delta:.25},resizeCatalog);

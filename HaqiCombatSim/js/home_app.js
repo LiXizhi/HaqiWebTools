@@ -1,5 +1,5 @@
 import {stepHomeWalk,findHomePath} from './home_walk_core.js';
-import {homeObjectInteractive,createHome,homeScope,chunkKey,inventoryKey,visibleChunkKeys,parseSummon,canPlace,footprint,petHomePosition,petWish,summonSentences} from './home_core.js';
+import {homeObjectInteractive,createHome,homeScope,chunkKey,inventoryKey,visibleChunkKeys,matchHomeSpell,canPlace,footprint,petHomePosition,petWish} from './home_core.js';
 import {homeObjects,applyHomeAction} from './home_actions_core.js';
 import {createHomeStore} from './home_store.js';
 import {createHomeCloud} from './home_cloud.js';
@@ -12,6 +12,7 @@ export async function primeHomeDirectory(cloud,role){if(!cloud?.owner||!role)ret
 export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn',drawHero,drawTree,onScene=()=>{},catalog:providedCatalog,store:providedStore,voice:providedVoice}){
  const context=getContext(),scope=homeScope(context.owner,context.roleId),store=providedStore||createHomeStore(scope);
  let dead=false,home=null,parts={},homes=[],guests=null,selection=null,preview=null,inventory={},pets=[],camera={x:0,y:0},scale=40,status='正在加载家园…',pending=null,candidates=[],quiet=false,wish=null,translation=false,rotation=0,loadTicket=0,round=0,recording=null,mutation=Promise.resolve(),busy=false;
+ let spellEpoch=0;
  let walkChunk=null;let hero={x:0,y:0,facing:0}, destination=null,build=false,walkPath=[];
  const valid=()=>{const c=getContext();return !dead&&!!c.roleId&&scope===homeScope(c.owner,c.roleId)&&c.active!==false;};
  const check=()=>{if(!valid())throw Error('角色或账号已变化');};
@@ -22,7 +23,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
  const remote=context.owner&&cloud?.owner===context.owner?createHomeCloud({store,roleId:context.roleId,catalog:catalog.items,valid,io:{read:async(path,options)=>{if(path.endsWith('/index.json')&&!options?.refresh&&directories.has(scope))return directories.get(scope);const value=await cloud.homeRead(path,options);if(path.endsWith('/index.json'))directories.set(scope,value||{version:1,entries:{}});return value;},write:async(path,value)=>{await cloud.homeWrite(path,value);if(path.endsWith('/index.json'))directories.set(scope,value);}}}):null;
 
  function at(itemId,position,extra={}){
-  const px=Math.round(position.x),py=Math.round(position.y);
+  const px=position.x,py=position.y;
   const obj={id:crypto.randomUUID(),itemId,color:selection?.color||'',rotation,...extra,x:px,y:py};
   const item=catalog.items.find(i=>i.id===itemId);
   if(item?.layer==='top'){
@@ -33,29 +34,22 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
  }
 
  function resolvePlacement(itemId,position,extra={}){
-  const objs=homeObjects(parts);
-  const offsets=[[0,0],[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1],[2,0],[-2,0],[0,2],[0,-2]];
-  for(const [dx,dy] of offsets){
-   const cand=at(itemId,{x:Math.round(position.x)+dx,y:Math.round(position.y)+dy},extra);
-   if(canPlace(cand,objs,catalog.items).ok)return cand;
-  }
   return at(itemId,position,extra);
  }
 
- async function placeItemAt(itemId,color='',position,extra={}){
-  const obj=resolvePlacement(itemId,position,{...extra,color});
+ async function placeItemAt(itemId,color='',position,{fromInventory=false}={}){
+  const obj=resolvePlacement(itemId,position,{color});
   const key=inventoryKey(itemId,color);
-  if((inventory[key]||0)>0){
+  if(fromInventory&&(inventory[key]||0)>0){
    return commit({type:'place',object:obj});
   }
-  return commit({
-   type:'summon',
-   receipt:crypto.randomUUID(),
-   input:'build',
-   itemId,
-   color:color||'',
-   object:obj
-  });
+  const test=canPlace(obj,homeObjects(parts),catalog.items);
+  if(!test.ok)throw Error(test.reason);
+  select(itemId,color);
+  selection.spellPosition={x:obj.x,y:obj.y};
+  preview={...obj,valid:true};
+  emit();
+  view.openSummon();
  }
 
  const view=createHomeView(root,{
@@ -63,7 +57,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
   drawTree,
   walk:p=>{walkPath=[];destination=p;},
   stopWalk:()=>{walkPath=[];destination=null;hero={...hero,moving:false};emit();},
-  mode:value=>{build=!!value;if(!build){selection=null;preview=null;}emit();},
+  mode:value=>{if(!value)spellEpoch++;build=!!value;if(!build){selection=null;preview=null;}emit();},
   step:dt=>{
    if(!home||!destination)return;
    const target=walkPath[0]||destination,previous=hero;
@@ -98,19 +92,19 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
   resize:()=>void loadChunks().catch(error),
   reload:()=>loadChunks(),
   take:async(row,p)=>{
-   await placeItemAt(row.itemId,row.color||'',p);
+   await placeItemAt(row.itemId,row.color||'',p,{fromInventory:row.fromInventory});
   },
-  color:value=>{if(selection){selection.color=value;if(preview)preview.color=value;emit();}},
+  color:value=>{if(selection){spellEpoch++;selection.color=value;if(preview)preview.color=value;emit();}},
   helpWish:()=>{
    if(wish){
     select(wish.itemId,wish.color||'',wish.phase==='place');
-    const item=catalog.items.find(i=>i.id===wish.itemId);
-    if(item)view.setInput(lang()==='en'?`I want ${/^[aeiou]/.test(item.en)?'an':'a'} ${item.en}.`:`我想要一个${item.zh}。`);
+    view.setInput('');
     view.openSummon?.();
    }
   },
   speakWish:()=>wish?voice.speak(wish.text,lang()==='en'?'en':'zh-CN',abort.signal):null,
   select,
+  practice:(itemId,color='')=>{select(itemId,color);view.openSummon();},
   tap,
   drop,
   hover,
@@ -118,7 +112,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
   resizeFurniture:delta=>build&&selection?.id?commit({type:'resize',id:selection.id,delta}):null,
   recall,
   toggleActive:()=>build&&selection?.id?commit({type:'toggleInteraction',id:selection.id}):null,
-  cancel:()=>{selection=null;preview=null;emit();},
+  cancel:()=>{spellEpoch++;selection=null;preview=null;emit();},
   quiet:()=>{quiet=!quiet;emit();},
   findPet:id=>{const p=pets.find(p=>p.id===id);if(p){navigate(p);emit();}},
   translate:()=>{translation=!translation;emit();},
@@ -127,7 +121,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
   choose,
   record,
   finish,
-  cancelVoice:()=>{recording=null;return voice.cancel();}
+  cancelVoice:()=>{spellEpoch++;recording=null;return voice.cancel();}
  });
 
  function navigate(p){
@@ -142,18 +136,20 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
   const rows=Object.values(index?.entries||{}).filter(row=>!local.some(h=>h.id===row.id));homes=[...local,...rows.map(row=>({...row,cloudOnly:true}))];emit();}
  async function create(name){check();const id=crypto.randomUUID();await store.create(createHome(id,name,hashSeed(id)));check();await enter({id});}
  function roster(){const records=ownedPetRecords(getContext().save),saved=parts.residents||{},previous=new Map(pets.map(p=>[p.id,p]));pets=Object.values(records).map((pet,i)=>{const definition=getContext().content.pets[pet.speciesId]||{},position=saved[pet.id]||petHomePosition(home.seed,pet.id,i),old=previous.get(pet.id);return {...pet,name:pet.name||definition.name||'宠物',art:definition.art,stage:pet.appearanceStage??Math.min(3,[1,10,25,40].filter(n=>pet.level>=n).length-1),...position,...(old&&old.homeId===home.id?{x:old.x,y:old.y,activity:old.activity,until:old.until,targetId:old.targetId}:{}),homeId:home.id};});}
- async function enter(row){check();if(pending)throw Error('请先重试保存未完成的操作');loadTicket++;await voice.cancel();recording=null;selection=null;preview=null;wish=null;pets=[];parts={};
+ async function enter(row){check();spellEpoch++;if(pending)throw Error('请先重试保存未完成的操作');loadTicket++;await voice.cancel();recording=null;selection=null;preview=null;wish=null;pets=[];parts={};
   if(row.cloudOnly){if(!remote)throw Error('请先登录');await remote.download(row);check();}
   home=await store.get(row.id);check();if(!home||home.deleted)throw Error('家园已移除');parts.residents=await store.read(home.id,'residents');inventory=await store.read(home.id,'inventory');parts.inventory=inventory;check();camera={x:0,y:0};hero={x:0,y:0,facing:0};destination=null;walkPath=[];build=false;walkChunk=null;visitElapsed=0;visitClock=performance.now();visitCheckpoint=0;nextPetThink=Date.now()+20000;onScene(true);status='已保存到本机；点击草地控制主角移动。';roster();emit();await loadChunks();}
- async function back(){if(pending)throw Error('请先点击重试保存');await saveVisit(true);await voice.cancel();loadTicket++;onScene(false);destination=null;walkPath=[];home=null;parts={};pets=[];selection=null;preview=null;wish=null;await list();}
+ async function back(){spellEpoch++;if(pending)throw Error('请先点击重试保存');await saveVisit(true);await voice.cancel();loadTicket++;onScene(false);destination=null;walkPath=[];home=null;parts={};pets=[];selection=null;preview=null;wish=null;await list();}
  async function loadChunks(){if(!home||!valid())return;const ticket=++loadTicket,id=home.id,{width,height}=view.size,keys=visibleChunkKeys(camera,width,height,scale).map(k=>`chunk:${k}`);const values=await Promise.all(keys.map(k=>remote?remote.loadPart(home,k):store.read(id,k)));if(ticket!==loadTicket||home?.id!==id||!valid())return;for(const k of Object.keys(parts))if(k.startsWith('chunk:')&&!keys.includes(k))delete parts[k];keys.forEach((k,i)=>{parts[k]=values[i];});if(walkPath.length&&destination)navigate(destination);emit();}
 
  function select(itemId,color='',fromInventory=false){
+  spellEpoch++;
   build=true;
   selection={itemId,color,fromInventory,rotation};
   preview=null;
   const item=catalog.items.find(i=>i.id===itemId);
-  if(item)status=`已选择「${item.zh}」，按住物品拖到地面摆放`;
+  if(item)status=`你需要读出下面句子才能召唤${item.zh}`;
+  view.setInput('');
   emit();
  }
 
@@ -222,32 +218,38 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
  async function summon(text,input){
   if(busy)throw Error('正在召唤，请稍候');
   check();
-  let phrase=String(text||'').trim();
-  if(!phrase){
-   const item=selection?.itemId?catalog.items.find(i=>i.id===selection.itemId):catalog.items.find(i=>i.id==='chair');
-   phrase=item?summonSentences(item,lang(),selection?.color||'')[0]:(lang()==='en'?'I want a chair.':'我想要一把椅子。');
-  }
-  const result=parseSummon(phrase,catalog.items,lang());
+  const result=matchHomeSpell(text,catalog.items,lang(),selection?.id?null:selection);
   if(!result.candidates.length)throw Error(result.error);
-  attempt={receipt:crypto.randomUUID(),input,homeId:home?.id};
+  attempt={receipt:crypto.randomUUID(),input,homeId:home?.id,selection};
   candidates=result.candidates;
   if(candidates.length>1){status='请选择你想要的物品';emit();return;}
   await choose(candidates[0]);
  }
  async function choose(candidate){
   check();
-  if(!attempt||home?.id!==attempt.homeId)throw Error('召唤已过期，请重新说一句');
+  if(!attempt||home?.id!==attempt.homeId||selection!==attempt.selection)throw Error('召唤已过期，请重新说一句');
+  if(!candidates.some(c=>c.itemId===candidate.itemId&&c.color===candidate.color))throw Error('请重新完成召唤句子');
   if(busy)return;
   busy=true;
   try{
-   const object=preview?.valid&&preview.itemId===candidate.itemId?{...preview,color:candidate.color,id:crypto.randomUUID()}:null;
-   await commit({type:'summon',...candidate,...attempt,object});
+   const object=spellPlacement(candidate);
+   await commit({type:'summon',...candidate,receipt:attempt.receipt,input:attempt.input,object});
    attempt=null;
    view.setInput('');
   }finally{busy=false;}
  }
- async function record(){check();if(recording)return;const token={id:home?.id,starting:null};recording=token;status='正在准备麦克风…';emit();token.starting=voice.start(abort.signal,{onPartial:text=>{if(recording===token&&valid())view.setInput(text);}});try{await token.starting;if(recording===token&&valid()){status='正在听，松开后召唤';emit();}}catch(e){if(recording===token)recording=null;throw e;}}
- async function finish(){const token=recording;if(!token)return;await token.starting;if(recording!==token||!valid())return;const text=await voice.finish();recording=null;if(token.id!==home?.id||!valid())return;view.setInput(text);await summon(text,'speech');}
+ function spellPlacement(candidate){
+  const fixed=selection?.spellPosition;
+  const positions=fixed?[fixed]:Array.from({length:81},(_,i)=>({x:hero.x+2+(i%9)*2,y:hero.y-8+Math.floor(i/9)*2})).sort((a,b)=>Math.hypot(a.x-hero.x,a.y-hero.y)-Math.hypot(b.x-hero.x,b.y-hero.y));
+  for(const p of positions){
+   if(!Object.hasOwn(parts,`chunk:${chunkKey(p.x,p.y)}`))continue;
+   const obj=at(candidate.itemId,p,{color:candidate.color});
+   if(canPlace(obj,homeObjects(parts),catalog.items).ok)return obj;
+  }
+  throw Error('这里放不下，请从建造目录拖到一处空地，再念咒语。');
+ }
+ async function record(){check();if(recording)return;const token={id:home?.id,epoch:spellEpoch,selection,language:lang(),color:selection?.color,starting:null};recording=token;status='正在准备麦克风…';emit();token.starting=voice.start(abort.signal,{onPartial:text=>{if(recording===token&&valid())view.setInput(text);}});try{await token.starting;if(recording===token&&valid()){status='正在听，松开后召唤';emit();}}catch(e){if(recording===token)recording=null;throw e;}}
+ async function finish(){const token=recording;if(!token)return;await token.starting;if(recording!==token||!valid())return;recording=null;const text=await voice.finish();if(token.epoch!==spellEpoch||token.id!==home?.id||!valid()||token.selection!==selection||token.language!==lang()||token.color!==selection?.color)return;view.setInput(text);await summon(text,'speech');}
  async function movePet(id,p){check();if(!parts[`chunk:${chunkKey(p.x,p.y)}`])throw Error('土地尚未加载，请重试加载后安置宠物');const target=homeObjects(parts).findLast(o=>{const b=footprint(o,catalog.items);return b.item.activity&&p.x>=b.x&&p.x<b.x+b.w&&p.y>=b.y&&p.y<b.y+b.h;});
   if(target&&pets.some(pet=>pet.id!==id&&pet.targetId===target.id&&pet.until>Date.now()))throw Error('这个设施已有宠物在使用');
   const obstacle=homeObjects(parts).find(o=>{const b=footprint(o,catalog.items);return b.item.layer==='solid'&&!b.item.activity&&p.x>=b.x&&p.x<b.x+b.w&&p.y>=b.y&&p.y<b.y+b.h;});if(obstacle)throw Error('这里有障碍，请换一个位置');

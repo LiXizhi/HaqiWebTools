@@ -1,3 +1,4 @@
+import {validateTreeClaims} from './language_tree_rewards_core.js';
 import {mapCoordinateVersion,migrateSaveCoordinates} from './adventure_coordinates_core.js';
 import {hanziBattleSpec,validateHanziBattleSpec} from './hanzi_battle_core.js';
 import {grantHanziQuestCard} from './hanzi_core.js';
@@ -694,6 +695,7 @@ export function parseSave(raw,content) {
     assert(s.defaultPocketVersion===undefined||s.defaultPocketVersion===1,'默认口袋规则版本无效');
     validateCheckin(s);
     validateSpeechClaims(s);
+    validateTreeClaims(s);
     validateFishingRecords(s);
     validateMagicStarClaims(s,content);
     assert(SCHOOLS.includes(s.school) && (islandFor(s.zone)||dungeonFor(content,s.zone)?.playable),'存档角色无效');

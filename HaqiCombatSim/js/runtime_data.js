@@ -42,12 +42,13 @@ export function createJsonReader({ packed = productionPacks, request = defaultRe
         return response.json();
     }
     return async function readJson(url) {
-        if (!packed) {
+        const key = String(url).replace(/^\.\//, '');
+        // The prologue is emitted as standalone JSON, outside the startup packs.
+        if (!packed || /^data\/prologue\/(script|art)\.json$/.test(key)) {
             if(!pending.has(url))pending.set(url,download(url).finally(()=>pending.delete(url)));
             return structuredClone(await pending.get(url));
         }
-        const key = String(url).replace(/^\.\//, '');
-        const match = /^data\/(adventure|kids|teen|sample)\/((?:(?:maps|island-packs)\/)?[a-zA-Z0-9_-]+\.json)$/.exec(key);
+        const match = /^data\/(adventure|kids|teen|sample)\/((?:(?:maps|island-packs|dictionary)\/)?[a-zA-Z0-9_-]+\.json)$/.exec(key);
         if (!match) throw new Error(`未知的数据路径：${url}`);
         const group = match[2] === 'manifest.json' && match[1] !== 'adventure' ? 'datasets' : match[1];
         const packUrl = `data/${group}.json`;

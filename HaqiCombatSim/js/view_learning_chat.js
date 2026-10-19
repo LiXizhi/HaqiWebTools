@@ -163,7 +163,7 @@ export function createLearningChatView(cb){
                     const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d','M4 9h4l5-4v14l-5-4H4z M16 8c2 2 2 6 0 8 M19 5c4 4 4 10 0 14');path.setAttribute('fill','none');path.setAttribute('stroke','currentColor');path.setAttribute('stroke-width','1.8');path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');icon.append(path);
                     const answerLine=el('span','camp-chat-original',answer);answerReveal={node:answerLine,container:hintRow};
                     if(s.practice?.id===turn.id&&s.practice?.feedback?.parts)renderSpeechWords(answerLine,s.practice.feedback.parts);
-                    sample.append(answerLine,icon);hint.append(sample);
+                    sample.append(icon);const sampleRow=el('div','camp-chat-sample-row');sampleRow.append(sample,answerLine);hint.append(sampleRow);
                     if(s.practice?.id===turn.id&&s.practice?.feedback)hint.append(el('small','camp-chat-practice',fill(`命中 {v0}% · 累计 {v1}/{v2}`,{v0:String(Math.round(s.practice.feedback.accuracy*100)),v1:String(s.practice.qualified),v2:String(s.practice.params.speechPracticeCount)}).text));
                     if(s.hintLevel&&s.showChinese){
                         const native=s.locale==='en'?'zh-CN':'en',translation=turn.answer[native],gloss=el('p','camp-chat-translation',translation);hint.append(gloss);answerReveal.translation=gloss;

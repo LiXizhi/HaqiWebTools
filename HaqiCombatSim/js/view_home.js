@@ -422,8 +422,8 @@ export function createHomeView(root,cb){
   return {
    sx:e.clientX-r.left,
    sy:e.clientY-r.top,
-   x:Math.floor(model.camera.x+(e.clientX-r.left-r.width/2)/model.scale),
-   y:Math.floor(model.camera.y+(e.clientY-r.top-r.height/2)/model.scale)
+   x:model.camera.x+(e.clientX-r.left-r.width/2)/model.scale,
+   y:model.camera.y+(e.clientY-r.top-r.height/2)/model.scale
   };
  }
 
@@ -452,7 +452,7 @@ export function createHomeView(root,cb){
    return;
   }
   body.classList.toggle('is-building',!!next.build);
-  body.classList.toggle('has-selection',!!next.build&&!!next.selection);
+  body.classList.toggle('has-selection',!!next.build&&!!next.selection?.id);
   if(edit){
    const size=next.selection?.sizeScale??1;
    const toggle=edit.querySelector('.home-interaction-toggle'),enabled=homeObjectInteractive(next.selection,next.catalog.items);
@@ -475,13 +475,15 @@ export function createHomeView(root,cb){
   const nextExample=JSON.stringify([next.selection?.itemId,next.selection?.color,next.lang]);
   if(nextExample!==exampleSignature){
    exampleSignature=nextExample;
-   if(next.selection?.itemId){
+   if(next.selection?.itemId&&!next.selection.id){
     const item=next.catalog.items.find(i=>i.id===next.selection.itemId);
     example.replaceChildren();
+    example.append(el('strong','',tr('你需要读出下面句子才能召唤{item}').replace('{item}',item.zh)),el('p','','从简单到挑战，正确读出或输入任意一句即可召唤。'));
     const chipRow=el('div','home-example-chips');
-    for(const sentence of summonSentences(item,next.lang,next.selection.color)){
-     const b=button(sentence,()=>{input.value=sentence;input.focus();},'home-sentence-chip');
-     chipRow.append(b);
+    for(const [index,sentence] of summonSentences(item,next.lang,next.selection.color).entries()){
+     const row=el('div','home-spell-line');
+     row.append(el('span','home-spell-level',['简单','进阶','挑战'][index]),el('span','home-spell-text',sentence),button('听示范',()=>run(()=>cb.speak(sentence)),'home-sentence-chip'));
+     chipRow.append(row);
     }
     const swatchRow=el('div','home-swatch-row');
     const colors=el('select','home-color-select-sr');
@@ -500,10 +502,10 @@ export function createHomeView(root,cb){
      dot.setAttribute('aria-label',`染为${tr(label)}`);
      swatchRow.append(dot);
     }
-    swatchRow.append(button('听示范',()=>run(()=>cb.speak(summonSentences(item,next.lang,next.selection.color)[0])),'home-speak-btn'));
+    swatchRow.append(button('取消召唤',()=>{cb.cancel();body.dataset.drawer='build';signature='';render(model);},'home-speak-btn'));
     example.append(chipRow,swatchRow);
    }else{
-    example.textContent=tr('点击示范句或按住说话，召唤设施到仓库或空地。');
+    example.textContent=tr('先从建造目录选择物品，读出或正确输入咒语后召唤到场景。');
    }
   }
 
@@ -557,7 +559,7 @@ export function createHomeView(root,cb){
    .slice()
    .sort((a,b)=>(CATEGORY_PRIORITY[a.category]??9)-(CATEGORY_PRIORITY[b.category]??9));
 
-  summary.textContent=tr('左右滑动挑选，按住物品拖到场景摆放。');
+  summary.textContent=tr('点击物品练习召唤；拖到场景可指定召唤位置。');
   for(const item of rows){
    const variants=inventoryMode
     ?Object.entries(next.inventory||{}).filter(([key,n])=>key.startsWith(`${item.id}:`)&&n>0).map(([key,n])=>({color:key.split(':')[1],n}))
@@ -565,7 +567,8 @@ export function createHomeView(root,cb){
    for(const v of variants){
     const isSelected=next.selection?.itemId===item.id&&(next.selection?.color||'')===v.color;
     const card=button('',()=>{
-     cb.select(item.id,v.color,inventoryMode);
+     if(inventoryMode)cb.select(item.id,v.color,true);
+     else cb.practice(item.id,v.color);
     },'home-item'+(isSelected?' is-selected':''));
     card.setAttribute('aria-label',`${COLORS[v.color]||''}${item.zh}`);
     card.title=`${COLORS[v.color]||''}${item.zh} · ${item.en}`;
@@ -579,7 +582,7 @@ export function createHomeView(root,cb){
     }
     drawHomeObject(thumb.getContext('2d'),item,{color:v.color},10,12,100,68,artImg,0,true);
     const meta=el('div','home-item-meta');
-    meta.append(el('strong','',`${COLORS[v.color]||''}${item.zh}${v.n===null?'':` ×${v.n}`}`),el('small','',isSelected?tr('拖到场景摆放'):item.en));
+    meta.append(el('strong','',`${COLORS[v.color]||''}${item.zh}${v.n===null?'':` ×${v.n}`}`),el('small','',isSelected?tr('念咒语召唤'):item.en));
     const kind=homeInteractiveKind(item.id);
     if(kind||item.activity){
      const badge=el('span','home-item-badge',tr(INTERACTIVE_BADGES[kind]||activities[item.activity]||'可互动'));
@@ -589,7 +592,7 @@ export function createHomeView(root,cb){
     items.append(card);
    }
   }
-  if(!items.children.length)items.append(el('p','home-empty-hint','这里还没有物品，可在「建造」中拖出物品摆放，或用「语音召唤」获取！'));
+  if(!items.children.length)items.append(el('p','home-empty-hint','这里还没有物品，请在「建造」中选择物品并练习召唤咒语。'));
  }
 
  function paint(now){

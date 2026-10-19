@@ -88,7 +88,7 @@ function setup(t,reduced=false,options={}){
     const backdrop={closest:()=>null};
     const box={isConnected:true,classList:{add:c=>classes.add(c),remove:c=>classes.delete(c)},focus(){document.activeElement=this;},querySelectorAll:()=>[button],contains:node=>node!==backdrop};
     const root={addEventListener:(k,fn)=>listeners.set(k,fn),removeEventListener:k=>listeners.delete(k)};
-    const text={textContent:'你好，年轻的魔法师。',replaceChildren(...children){this.children=children;},append(child){this.children.push(child);}};
+    const text={dataset:{},textContent:'你好，年轻的魔法师。',replaceChildren(...children){this.children=children;},append(child){this.children.push(child);}};
     const hint=node();
     t.mock.method(globalThis,'setTimeout',()=>1);
     t.mock.method(globalThis,'clearTimeout',()=>{});
@@ -138,7 +138,7 @@ test('learning dialogue displays both languages; reading does not trigger quest 
     assert.deepEqual(ui.text.children.slice(0,2).map(n=>n.textContent),['Hello!','你好！']);assert.equal(ui.classes.has('is-speaking'),false);
     ui.click({target:{closest:selector=>selector==='.camp-chat-replay'?ui.text.children[0].children[0]:null}});assert.equal(ui.calls,0);
     await ui.text.children[0].children[0].onclick();await ui.text.children[0].children[0].onclick();
-    assert.equal(ui.text.children.length,2,'actions do not add another text row');assert.equal(ui.text.children[0].children[0].children.length,2,'clickable sentence contains text and speaker SVG');assert.equal(calls[0].signal.aborted,true);assert.equal(calls[1].locale,'en');assert.equal(ui.calls,0);
+    assert.equal(ui.text.children.length,2,'actions do not add another text row');assert.equal(ui.text.children[0].children[0].children.length,1,'speaker button is separate from clickable word text');assert.equal(calls[0].signal.aborted,true);assert.equal(calls[1].locale,'en');assert.equal(ui.calls,0);
     ui.root.disposeDialogue();assert.equal(calls[1].signal.aborted,true);
 });
 
@@ -169,7 +169,7 @@ test('automatic reading failure keeps manual retry available and late failures c
 
 test('translation maps once without speaking or advancing and ignores late result after closing',async t=>{
     let resolve,calls=0,signal;const ui=setup(t,false,{lines:[{text:'Go',locale:'en'},{text:'走',locale:'zh-CN'}],readAloud:()=>{throw Error('must not speak');},mapWords:(_,s)=>{calls++;signal=s;return new Promise(r=>{resolve=r;});}});
-    const pending=ui.text.children[1].children[1].onclick();await ui.text.children[1].children[1].onclick();assert.equal(calls,1);assert.equal(ui.calls,0);
+    const pending=ui.text.children[1].children[1].onclick();await new Promise(done=>setImmediate(done));await ui.text.children[1].children[1].onclick();assert.equal(calls,1);assert.equal(ui.calls,0);
     ui.root.disposeDialogue();assert.equal(signal.aborted,true);resolve([]);await pending;
     assert.equal(ui.text.children[0].textContent,'Go');
 });
@@ -178,10 +178,10 @@ test('shared NPC mapping appears only after clicking and draws paired connectors
     let generated=0,peeked=0;const mapWords=async()=>{generated++;return [[{text:'Go',color:'#A23'}],[{text:'走',color:'#A23'}]];};
     mapWords.peek=async()=>{peeked++;};
     const ui=setup(t,false,{lines:[{text:'Go',locale:'en'},{text:'走',locale:'zh-CN'}],mapWords});
-    assert.equal(generated,0);assert.equal(peeked,1);
+    assert.equal(generated,0);assert.equal(peeked,0);
     await ui.text.children[1].children[1].onclick();
-    assert.equal(ui.text.children[0].children[0].children[0].children[0].style.color,'#A23');
-    assert.equal(ui.text.children[1].children[1].title,'已映射');ui.drawLinks();
+    assert.equal(ui.text.children[0].children[1].children[0].style.color,'#A23');
+    assert.equal(ui.text.children[1].children[1].title,'已补齐');ui.drawLinks();
     const links=ui.text.children[2];assert.equal(links.attributes['aria-hidden'],'true');
     assert.equal(links.children.length,1);assert.equal(links.children[0].attributes.stroke,'#A23');
     assert.match(links.children[0].attributes.d,/^M /);
@@ -189,22 +189,22 @@ test('shared NPC mapping appears only after clicking and draws paired connectors
 });
 
 
-test('cached mappings appear automatically after reveal without a model call',async t=>{
+test('old model caches do not override automatic local vocabulary matching',async t=>{
     let generated=0;const result=[[{text:'Go',color:'#A23'}],[{text:'走',color:'#A23'}]];
     const mapWords=async()=>{generated++;return result;};mapWords.peek=async()=>result;
     const ui=setup(t,false,{lines:[{text:'Go',locale:'en'},{text:'走',locale:'zh-CN'}],mapWords});
     await new Promise(resolve=>setImmediate(resolve));
-    assert.notEqual(ui.text.children[1].children[1].title,'已映射');
+    assert.notEqual(ui.text.children[1].children[1].title,'已补齐');
     ui.key();
     await new Promise(resolve=>setImmediate(resolve));
-    assert.equal(ui.text.children[1].children[1].title,'已映射');
+    assert.equal(ui.text.children[1].children[1].title,'模型补齐');
     assert.equal(generated,0);ui.root.disposeDialogue();
 });
 
 test('late cached mappings do not update a closed dialogue',async t=>{
     let resolve;const mapWords=()=>{throw Error('no generation');};mapWords.peek=()=>new Promise(done=>resolve=done);
     const ui=setup(t,false,{lines:[{text:'Go',locale:'en'},{text:'走',locale:'zh-CN'}],mapWords});
-    ui.root.disposeDialogue();resolve([[{text:'Go',color:'#A23'}],[{text:'走',color:'#A23'}]]);
+    ui.root.disposeDialogue();assert.equal(resolve,undefined,'old model cache is not read automatically');
     await new Promise(resolve=>setImmediate(resolve));
-    assert.notEqual(ui.text.children[1].children[1].title,'已映射');
+    assert.notEqual(ui.text.children[1].children[1].title,'已补齐');
 });

@@ -10392,3 +10392,17 @@ VIP 有效期由账号下所有角色共享；魔豆放入当前角色背包，�
 火把（huǒ bǎ）：在黑夜里照亮前路的温暖火炬。||huǒ bǎ — a warm torch lighting the path through night.
 花火（huā huǒ）：夜空中如繁花般绽放的璀璨火星。||huā huǒ — sparkling fireworks blooming in the night sky.
 星火跃动，照亮寒夜——你已经学会了温暖明亮的「火」字！||Sparks dance and light the cold night — you have mastered 火!
+你需要读出下面句子才能召唤{item}||Read a spell below aloud to summon {item}
+从简单到挑战，正确读出或输入任意一句即可召唤。||From easy to challenging: say or type any one sentence correctly to summon.
+简单||Easy
+进阶||Intermediate
+挑战||Challenge
+取消召唤||Cancel summon
+念咒语召唤||Cast a word spell
+先从建造目录选择物品，读出或正确输入咒语后召唤到场景。||Choose an item from Build, then say or type its spell correctly to summon it into the scene.
+点击物品练习召唤；拖到场景可指定召唤位置。||Click an item to practice its spell; drag it into the scene to choose its summon position.
+请先读出或正确输入一句召唤咒语。||First say or type a summoning spell correctly.
+句子还不正确，请读出或输入下面任意一句完整的咒语。||Try again. Say or type one complete spell shown below.
+这里放不下，请从建造目录拖到一处空地，再念咒语。||There is no room here. Drag the item from Build to a clear spot and cast its spell.
+请重新完成召唤句子||Please complete the summoning sentence again
+这里还没有物品，请在「建造」中选择物品并练习召唤咒语。||No items yet. Choose an item in Build and practice its summoning spell.

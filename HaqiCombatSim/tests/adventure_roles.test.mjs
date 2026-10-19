@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import { createAdventure, beginEncounter, recordDecision } from '../js/adventure_core.js';
 import { restorePveBattle, playPveRound } from '../js/combat_pve_core.js';
 import { createRoleStore } from '../js/adventure_roles.js';
-import { checkedRoleProgress, validateRoles, emptyRoles, addRole, roleLimit, MAX_ROLES_VIP, directSignInRequested, startupRoleId } from '../js/adventure_roles_core.js';
+import { checkedRoleProgress, validateRoles, emptyRoles, addRole, roleLimit, MAX_ROLES_VIP, directSignInRequested, familyPadSignInRequested, startupRoleId } from '../js/adventure_roles_core.js';
 import { SAVE_KEY, saveLocal, readLocal, replaceLocalWithBackup, readBackup } from '../js/adventure_assets.js';
 import { storeDebugEdit, restoreDebugBackup, hasDebugBackup } from '../js/adventure_debug.js';
 import { createCloudClient } from '../js/adventure_cloud.js';
@@ -542,6 +542,14 @@ test('incomplete or cross-role cloud parts fail closed without replacing the man
     const reader=m.client();await reader.connect();await assert.rejects(reader.roles());assert.equal(m.remote.get(path),text);
     manifest.catalog.roles[0].files.items=`roles/${id(999)}/items/${id(3)}.json`;
     m.remote.set(path,JSON.stringify(manifest));await assert.rejects(reader.roles({refresh:true}),/路径/);
+});
+
+test('family pad credentials request online entry even on the first visit or from older launchers', () => {
+    assert.equal(familyPadSignInRequested('?host=family-pad&token=fixture'), true);
+    assert.equal(familyPadSignInRequested('?host=family-pad&token=fixture&signin=direct'), true);
+    for (const search of ['', '?signin=direct', '?token=fixture', '?host=other&token=fixture', '?host=family-pad', '?host=family-pad&token=', '?host=family-pad&token=%20']) {
+        assert.equal(familyPadSignInRequested(search), false);
+    }
 });
 
 test('startup stays on the title unless signin=direct names a playable role', () => {

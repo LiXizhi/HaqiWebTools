@@ -13,7 +13,7 @@ const localFields = ['hanziMemoryRuntime','positionCoordinateVersion','timeScrol
 const prefFields = ['magicStarFollow','mountHidden'];
 const itemFields = ['petMergedIds','petPages','petFileRefs','petWorld','pets','equipmentInstances','nextEquipmentGuid','upgrades','cards','pet'];
 const battleFields = ['inventory','petFoodSlots','equipment','equipmentGuids','mountId','formation','heroSlot','deck'];
-const recordFields = ['timeScrollProgress','hanzi','earthProgress','earthCityProgress','transactions','rewardedEncounters','fishingRecords','learnerMemory','socialActivity','socialPvpRecords','socialChallenges','relationshipEvents'];
+const recordFields = ['languageTreeClaims','timeScrollProgress','hanzi','earthProgress','earthCityProgress','transactions','rewardedEncounters','fishingRecords','learnerMemory','socialActivity','socialPvpRecords','socialChallenges','relationshipEvents'];
 export const storageParts = ['items','battle','records','towers'];
 
 export function stableJson(value) {

@@ -7,6 +7,7 @@ import {createRuntimeStore} from '../js/adventure_runtime_store.js';
 import {createAdventure,beginEncounter,playerSpec} from '../js/adventure_core.js';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 import {tickCare,FOOD_ID} from '../js/adventure_pets_core.js';
+import {tickCheckin} from '../js/adventure_checkin_core.js';
 const read=path=>JSON.parse(readFileSync(new URL('../data/'+path,import.meta.url)));
 const {content,dataset}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),read('adventure/pets.json'),read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));
 function fixture(count=1){
@@ -53,6 +54,14 @@ test('pending battle is checkpointed locally and stale runtime cannot overwrite 
     save.pendingEncounter=null;save.revision++;save.name='新的旅程';f.store.commitRoles({[id]:save});
     f.runtimeStore.set(runtimeKey,old);const newer=f.make();newer.open();assert.equal(newer.catalog.roles[0].save.pendingEncounter,null);
 });
+test('unchanged explicit commits retain the last successful core snapshot on later write failure',()=>{
+    const f=fixture(),row=f.store.catalog.roles[0],next=structuredClone(row.save);
+    next.heroHp=3;f.store.commitRoles({[row.id]:next});
+    const before=f.store.checkpoint();next.name='尚未保存';
+    f.data.set('haqi.roles.v1.guest','changed by another page');
+    assert.throws(()=>f.store.commitRoles({[row.id]:next}),/其他页面/);
+    assert.equal(f.store.checkpoint(),before);
+});
 test('duo runtime path preserves the second player return point without replacing either live save',()=>{
     const source=readFileSync(new URL('../js/adventure_local_play.js',import.meta.url),'utf8');
     const fn=source.slice(source.indexOf('    function storeSaves('),source.indexOf('    async function loadPet('));
@@ -70,4 +79,11 @@ test('care requests a core save only when auto feeding consumes food and grants 
     assert.equal(tickCare(save,content,hero,3000,true),true);
     assert.ok(save.petFoodSlots[0].count<10);
     assert.equal(tickCare(save,content,hero,4000,true),false);
+});
+test('checkin saves a new day once while online time stays runtime-only',()=>{
+    const save={};
+    assert.equal(tickCheckin(save,100000,1000),true);
+    assert.equal(tickCheckin(save,101000,1000),false);
+    assert.equal(tickCheckin(save,100000+86400000,1000),true);
+    assert.equal(tickCheckin(save,101000+86400000,1000),false);
 });

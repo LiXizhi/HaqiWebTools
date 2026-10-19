@@ -39,9 +39,12 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
     function commitCatalog(catalog) {
         if(hasDurableFormat&&coreCatalogKey(catalog)===lastCoreKey){
             saveRuntime(Object.fromEntries(catalog.roles.map(row=>[row.id,row.save])));
-            state={...state,catalog};return;
+            state={...state,catalog:{...catalog,roles:catalog.roles.map(row=>({...row,save:structuredClone(row.save)}))}};return;
         }
-        write({...state,catalog,dirty:true});
+        // Core commits retain an isolated snapshot so failed later writes cannot
+        // mutate the last successful pair through the caller's objects.
+        const snapshot={...catalog,roles:catalog.roles.map(row=>({...row,save:structuredClone(row.save)}))};
+        write({...state,catalog:snapshot,dirty:true});
     }
     function write(next) {
         if (storage.getItem(key()) !== raw) throw Error('角色进度已在其他页面变化，请刷新后继续。');

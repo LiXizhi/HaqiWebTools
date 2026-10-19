@@ -30,7 +30,9 @@ export function tickCheckin(save,now,elapsedMs){
     const state=dayState(save,now),sinceMidnight=(now+8*3600000)%DAY_MS;
     const delta=Math.min(Math.floor(elapsedMs),sinceMidnight);
     state.onlineMs=Math.min(DAY_MS,state.onlineMs+delta);
+    const coreChanged=save.checkin!==state;
     save.checkin=state;
+    return coreChanged;
 }
 // MiJiuHuLu.lua: base flags 50321–50341, separate VIP flag 50342.
 export function claimCheckin(save,content,now,index,access={},bonus=false){

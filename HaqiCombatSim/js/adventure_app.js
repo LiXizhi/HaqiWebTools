@@ -1603,7 +1603,7 @@ function frame(now) {
         if(tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),true)){persist();queueCloudSave();}updatePetStatus(document,save,assets.content);V.updateHeroHealth(nodes.hud.querySelector('[data-player="1"]')||nodes.hud,save,assets.content);if(localPlay.second){const title=nodes.hud.querySelector('[data-player="2"]');if(title)V.updateHeroHealth(title,localPlay.second,assets.content);}V.updateCheckin(nodes.hud,model());if(panel==='checkin')V.updateCheckin(nodes.overlay,model());if(performance.now()-lastRuntimeSave>30000)persistRuntime();
         if(started)perf.record(world.isEarth?'earth-care':'island-care',performance.now()-started);
     },0);}
-    if((stage==='world'||stage==='battle')&&!document.hidden)tickCheckin(save,Date.now(),Math.min(1000,Math.max(0,now-lastFrame)));
+    if((stage==='world'||stage==='battle')&&!document.hidden&&tickCheckin(save,Date.now(),Math.min(1000,Math.max(0,now-lastFrame))))persist();
     const dt=Math.min(.055,(now-lastFrame)/1000||0);lastFrame=now;moving=false;
     if(stage==='world'&&world.isEarth&&!panel&&!dialog){earthService?.update(save.position,now);earthService?.updateVisible(save.position,renderer.viewRect(),dt);if(world.error&&world.error!==world.reportedError){world.reportedError=world.error;toast(world.error);}}
     if(stage==='world'&&world.isEarth&&!panel&&now-lastTimeCityCheck>400){lastTimeCityCheck=now;const cityId=timeScrollCity(world,save)?.id||null;if(cityId!==lastTimeCityId){lastTimeCityId=cityId;paintHud();}}

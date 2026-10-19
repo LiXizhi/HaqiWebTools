@@ -3937,3 +3937,10 @@ Node词树专项31/31通过，含单个新标记即时生成、服务器写失�
 - 家园Node专项45/45通过；新增 scripts/check_home_spells.mjs 在Edge无头1280px与390px均通过，覆盖点击、空/错输入、试听不自动填入、正确输入、模拟语音、拖出不创建、正确练习后精确落点及取消。已查看390px截图并修复原76px高度截断，三句均可见。验收使用独立QA库。
 - 最终 npm run test:battle：1244项，1240通过、4失败，和本任务前一轮失败项相同：political atlas preserves original geographic bounds and records a verified WebP source；surface loading overlay shows actual tile progress and disappears when ready；all 30 island words resolve to their own standalone character, including dance rather than martial wu；new standalone pages preserve dictionary stroke geometry and parse without network imports。未跳过或宣称全部通过。
 - node --check 与本次文件 git diff --check 通过。未验证真实麦克风/实体手机、真实云读写，未构建、提交、推送或发布。
+
+## 2026-10-20：单人/双人保存频率与核心变化检测
+
+- 移除停步、移动3秒、护理10秒整份存档提交；本机运行快照改为30秒一次。核心事件保存，重复核心状态不写角色目录/宠物文件、不额外置云同步dirty；自动喂食及签到跨日保留显式核心提交。
+- 保存、角色、双人原子提交、家园输入专项最终88/88通过；验证无核心写入、位置恢复、临时版本和战斗恢复、过期运行记录隔离、写入失败保护与二号角色返回点。
+- `npm run test:battle`最终1268项中1264通过、4失败。3项为已有surface loading overlay文案与汉字独立页标记/笔画解析失败，另1项家园输入在外部合并期间读到冲突标记；冲突解除后该组已复测通过。未宣称全套通过。
+- 日志 `.cache/core-save-battle-final.log`、`.cache/core-save-verified.log`。语法及最终diff空白检查通过；未浏览器实测帧耗时、未构建或发布。

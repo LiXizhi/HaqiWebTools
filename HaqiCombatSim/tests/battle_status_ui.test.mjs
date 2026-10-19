@@ -60,7 +60,7 @@ test('variant qualities use a thick bottom strip without a whole-card outline',(
     for(const color of [null,'#93ee87','#80c9ff','#d09aff','#ffdb70']){
         const rects=[],strokes=[];
         const c=new Proxy({fillRect(...args){rects.push({color:this.fillStyle,args});},strokeRect(...args){strokes.push(args);},createRadialGradient:()=>({addColorStop(){}})}, {get:(o,k)=>k in o?o[k]:()=>{}});
-        const renderer=new CardRenderer({images:new Map(),effects:{cards:{test:{base:'test',variant:{rank:'quality'},name:'测试'}},variantAuras:{quality:{color}}},drawSubject(){}});
+        const renderer=new CardRenderer({images:new Map([['frame:ice',{}]]),effects:{cards:{test:{base:'test',variant:{rank:'quality'},name:'测试'}},variantAuras:{quality:{color}}},drawSubject(){}});
         renderer.draw(c,{key:'test',type:'Pass',spellSchool:'ice',params:{}},{details:false});
         assert.equal(strokes.length,0);
         assert.equal(rects.some(r=>r.color===color&&r.args.join(',')==='7,441,288,15'),!!color);

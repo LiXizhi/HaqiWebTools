@@ -157,7 +157,7 @@ test('five compact packs load all datasets, retain projected content and preserv
         assert.deepEqual(await reader('data/adventure/skill-art.json'), compact('skill-art'));
         assert.deepEqual(await reader('data/adventure/pets.json'), compactPets);
         assert.deepEqual(await reader('data/adventure/npc-catalog.json'), compact('npc-catalog'));
-        for (const name of ['dungeon-index', 'monster-art', 'quest-journal', 'quest-runtime']) {
+        for (const name of ['dungeon-index', 'monster-art', 'quest-journal', 'quest-runtime', 'environment-art', 'terrain-decoration-art', 'hero-art']) {
             assert.deepEqual(await reader(`data/adventure/${name}.json`), compact(name));
         }
         for(const id of ['camp','town','fire','ice','desert','dark','index'])assert.deepEqual(await reader(`data/adventure/maps/${id}.json`),read(`maps/${id}`));

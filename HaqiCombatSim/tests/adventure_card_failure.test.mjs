@@ -19,7 +19,7 @@ test('missing art, draw exceptions and unavailable canvas retain readable playab
     assert.equal(normal.children[0].tag,'canvas');
 });
 
-test('failed CDN frames and subjects do not block loading; failed subjects can retry',async t=>{
+test('failed CDN frames and subjects do not block loading; failed frames and subjects recover together without duplicate downloads',async t=>{
     const originals=Object.fromEntries(['fetch','Image'].map(k=>[k,Object.getOwnPropertyDescriptor(globalThis,k)]));
     const warn=console.warn;console.warn=()=>{};
     t.after(()=>{console.warn=warn;for(const [key,descriptor]of Object.entries(originals)){if(descriptor)Object.defineProperty(globalThis,key,descriptor);else delete globalThis[key];}});
@@ -34,7 +34,11 @@ test('failed CDN frames and subjects do not block loading; failed subjects can r
     assert.equal(art.images.size,0);
     const before=requests;fail=false;
     await art.ensure(base);
-    assert.equal(requests,before+1);assert.equal(art.images.size,1);
+    const frameCount=Object.keys(JSON.parse(fs.readFileSync(new URL('../data/adventure/card-frames.json',import.meta.url))).entries).length;
+    assert.equal(requests,before+1+frameCount);assert.equal(art.images.size,1+frameCount);
+    assert.ok(art.images.has('frame:fire'));assert.ok(art.images.has('frame:wordInk'));
+    const loaded=requests;await Promise.all([art.ensure(base),art.ensure(base)]);
+    assert.equal(requests,loaded,'已加载卡底和并发请求不重复下载');
 });
 
 test('a battle view exception retains retry and retreat controls without changing the save',async t=>{
@@ -56,4 +60,18 @@ test('a battle view exception retains retry and retreat controls without changin
     buttons()[0].onclick();assert.equal(buttons().length,2);
     buttons()[1].onclick();assert.equal(retreats,1);
     assert.equal(JSON.stringify(model.save),before);
+});
+
+
+test('a visible text fallback repaints its card once image retry succeeds',async t=>{
+    const warn=console.warn;console.warn=()=>{};t.after(()=>{console.warn=warn;});
+    let ready=false,finish;
+    const retry=new Promise(resolve=>{finish=resolve;});
+    const face=createCardFace({
+        el:(...args)=>({...el(...args),isConnected:true,replaceChildren(...children){this.children=children;}}),
+        name:'烈火卡牌',cost:'1',cooldown:0,description:'伤害',draw:()=>ready,retry:()=>retry,
+    });
+    assert.match(face.cls,/fallback/);
+    ready=true;finish();await retry;await Promise.resolve();
+    assert.equal(face.className,'spell-face');assert.equal(face.children[0].tag,'canvas');
 });

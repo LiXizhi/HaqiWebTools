@@ -14,6 +14,7 @@ const CHROME={
     brand:{'zh-CN':'魔法哈奇 · 序章','en':'Magic Haqi · Prologue'},
     skip:{'zh-CN':'跳过本幕','en':'Skip scene'},
     exit:{'zh-CN':'退出序章','en':'Leave prologue'},
+    auto:{'zh-CN':'自动播放','en':'Auto play'},
     read:{'zh-CN':'朗读','en':'Read aloud'},
     lang:{'zh-CN':'English','en':'中文'},
     replay:{'zh-CN':'再看一遍','en':'Watch again'},
@@ -40,7 +41,7 @@ export async function mountPrologue(host,ctx){
 
     const cinema=createCinema(stageNode,{manifest:artManifest,mode:assets.mode,reducedMotion});
     const dialog=createPrologueDialog(stageNode);
-    let epoch=0,disposed=false,narration=null,readAloud=false,autoPlay=false,tapResolvers=new Set(),skipResolvers=new Set();
+    let epoch=0,disposed=false,narration=null,readAloud=false,autoPlay=true,tapResolvers=new Set(),skipResolvers=new Set();
     const state={school:null,appearance:null,draft:null,battles:{}};
 
     // ----- waiting primitives (tap / auto / skip) -----
@@ -114,7 +115,7 @@ export async function mountPrologue(host,ctx){
         hideDialog:()=>dialog.hide(),
     });
     function continueStory(){if(dialog.typing)dialog.stopTyping();else tap();}
-    dialog.onAutoPlay=()=>{autoPlay=!autoPlay;dialog.setAutoPlay(autoPlay);};
+    dialog.onAutoPlay=()=>{autoPlay=!autoPlay;paintChrome();};
     const onClick=event=>{
         if(event.target?.closest?.('button,input,textarea,select,a,[role="button"],iframe'))return;
         continueStory();
@@ -125,12 +126,16 @@ export async function mountPrologue(host,ctx){
     const bar=make('header','pl-chrome');
     const brand=make('span','pl-brand');
     const langBtn=make('button','pl-chip');langBtn.type='button';
+    const autoBtn=make('button','pl-chip pl-auto-toggle');autoBtn.type='button';
+    autoBtn.onclick=()=>{autoPlay=!autoPlay;paintChrome();};
     const readBtn=make('button','pl-chip');readBtn.type='button';readBtn.setAttribute('aria-pressed','false');
     const skipBtn=make('button','pl-chip');skipBtn.type='button';
     const status=make('span','pl-status');status.setAttribute('role','status');
     const close=createCloseButton(()=>finish({finished:false}),CHROME.exit[pair.native],'pl-close');
-    bar.append(brand,status,langBtn,readBtn,skipBtn,close);layer.append(bar);
+    bar.append(brand,status,langBtn,autoBtn,readBtn,skipBtn,close);layer.append(bar);
     function paintChrome(){
+        autoBtn.textContent=CHROME.auto[pair.native];autoBtn.setAttribute('aria-pressed',String(autoPlay));
+        dialog.setAutoPlay(autoPlay);
         brand.textContent=`${CHROME.brand[pair.native]}《${script.title[pair.native]}》`;
         langBtn.textContent=CHROME.lang[pair.native];readBtn.textContent=CHROME.read[pair.native];skipBtn.textContent=CHROME.skip[pair.native];
         close.title=CHROME.exit[pair.native];close.setAttribute('aria-label',CHROME.exit[pair.native]);

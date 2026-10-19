@@ -27,11 +27,12 @@ export async function loadSkillArt(effects, mode, read=fetchJson) {
         const results=await Promise.allSettled(requests);
         for(const result of results)if(result.status==='rejected')console.warn('卡牌图片暂不可用：',result.reason);
     }
-    await optionalImages(Object.entries(frames.entries).map(([school,row])=>load('frame:'+school,row)));
+    const ensureFrames=()=>optionalImages(Object.entries(frames.entries).map(([school,row])=>load('frame:'+school,row)));
+    await ensureFrames();
     function ensure(base){
         const row=manifest.bases[base];if(!row)return Promise.reject(new Error('缺少技能主体：'+base));
         const id=row.effectAtlas||row.atlas;
-        return load(id,manifest.sheets[id]);
+        return Promise.all([load(id,manifest.sheets[id]),ensureFrames()]).then(([image])=>image);
     }
     function drawSubject(c,base,x,y,w,h,progress=null){
         const cached=subjectFrames.get(base);

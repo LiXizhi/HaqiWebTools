@@ -555,7 +555,7 @@ function spellFace(assets,card,artCard=card) {
     const description=artCard.wordDescription||spellHint(card,assets.dataset);
     const base=assets.effects.cards[card.key]?.base;
     return createCardFace({el,name:artCard.name,cost,cooldown:rounds,description,
-        draw:context=>{assets.skillArt.drawCard(context,card,{name:artCard.name,cooldown:rounds,description,wordCard:!!artCard.wordDescription});assets.hanziPresentation?.badge(context,card);},
+        draw:context=>{const drawn=assets.skillArt.drawCard(context,card,{name:artCard.name,cooldown:rounds,description,wordCard:!!artCard.wordDescription});if(drawn)assets.hanziPresentation?.badge(context,card);return drawn;},
         retry:base?()=>assets.skillArt.ensure(base):undefined});
 }
 export function renderPanel(root,kind,model,cb) {

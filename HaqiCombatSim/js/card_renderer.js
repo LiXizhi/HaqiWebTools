@@ -28,6 +28,7 @@ export class CardRenderer {
         const {effects,images,drawSubject}=this;
         const reference=effects.cards[card.key],base=reference?.base;if(!base)return false;
         const school=card.spellSchool,background=images.get(wordCard?'frame:wordInk':'frame:'+(school==='balance'?'storm':school))||images.get('frame:'+(school==='balance'?'storm':school));
+        if(!background)return false;
         c.save();c.scale(width/302,height/460);c.clearRect(0,0,302,460);c.drawImage(background,0,0,302,460);
         if(backgroundOnly){c.restore();return true;}
         c.textAlign='center';c.textBaseline='middle';c.lineJoin='round';c.lineWidth=5;c.strokeStyle='#172431';

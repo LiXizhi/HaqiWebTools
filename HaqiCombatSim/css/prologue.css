@@ -135,6 +135,8 @@
 
 @media (max-width:650px),(orientation:portrait){
   .prologue-layer .pl-brand{display:none}
+  .prologue-layer .pl-chrome{gap:4px;padding:8px;flex-wrap:wrap}
+  .prologue-layer .pl-chrome .pl-chip{padding:6px 8px;white-space:nowrap}
   .prologue-layer .pl-dialog{padding:14px 62px 14px 16px;bottom:14px}
   .prologue-layer .pl-bars.on i{height:0}
   .prologue-layer .pl-school-grid{grid-template-columns:repeat(3,1fr)}

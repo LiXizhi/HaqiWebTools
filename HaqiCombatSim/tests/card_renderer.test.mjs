@@ -29,3 +29,10 @@ test('shared card renderer draws graphic corners and keeps only values as corner
  texts.length=0;circles.length=0;renderer.draw(ctx,{key:'trap',spellSchool:'fire'},{backgroundOnly:true});
  assert.equal(texts.length,0);assert.equal(circles.length,0);assert.equal(depth,0);
 });
+
+
+test('missing card background returns false before altering canvas state',()=>{
+ const renderer=new CardRenderer({images:new Map(),effects:{cards:{test:{base:'test'}}},drawSubject:()=>true});
+ const ctx=new Proxy({},{get:()=>()=>assert.fail('missing art must not modify the canvas')});
+ assert.equal(renderer.draw(ctx,{key:'test',spellSchool:'fire'}),false);
+});

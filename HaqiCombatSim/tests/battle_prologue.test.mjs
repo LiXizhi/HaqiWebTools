@@ -106,6 +106,7 @@ test('序章 12 张 WebP 插画（含带翅膀黑暗魔王立绘）体积 < 200K
     const bytes = fs.readFileSync(file);
     assert.equal(bytes.length, entry.size, `${id} 字节数不匹配`);
     assert.ok(bytes.length < 200000, `${id} 超过 200KB 上限: ${bytes.length}`);
+    assert.equal(new URL(entry.cdn).origin, 'https://cdn.keepwork.com', `${id} 缺少永久 CDN 地址`);
     const sha = createHash('sha256').update(bytes).digest('hex');
     assert.equal(sha, entry.sha256, `${id} sha256 不匹配`);
   }

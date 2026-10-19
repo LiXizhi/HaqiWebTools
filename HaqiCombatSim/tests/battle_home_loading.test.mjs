@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
+import {createJsonReader} from '../js/runtime_data.js';
+import {loadEnvironmentArt} from '../js/adventure_environment_art.js';
 const source=readFileSync(new URL('../js/view_home.js',import.meta.url),'utf8');
 const method=source.slice(source.indexOf('  async prepare('),source.indexOf('  openSummon:'));
 function fixture({decode=async()=>{}}={}){
@@ -9,6 +11,27 @@ function fixture({decode=async()=>{}}={}){
  const view=vm.runInNewContext('({'+method+'})',state);return {view,state};
 }
 const flush=()=>new Promise(setImmediate);
+test('home atlas entry uses the release pack and retries a failed download',async()=>{
+ const paths=['environment-art','terrain-decoration-art'];
+ const files=Object.fromEntries(paths.map(name=>[`data/adventure/${name}.json`,JSON.parse(readFileSync(new URL(`../data/adventure/${name}.json`,import.meta.url)))]));
+ const calls=[];let fail=true;
+ const fetchJson=createJsonReader({packed:true,request:async url=>{
+  calls.push(url);assert.equal(url,'data/adventure.json');
+  return {ok:!fail,status:503,json:async()=>({schemaVersion:1,files})};
+ }});
+ const loaded=[];
+ const context={fetchJson,model:{assetMode:'cdn'},dead:false,terrain:{clear(){}},loadEnvironmentArt:async(...args)=>{
+  const art=await loadEnvironmentArt(...args);
+  art.ensure=async key=>{assert.ok(art.manifest.atlases[key].cdn);loaded.push(key);};
+  return art;
+ }};
+ const start=source.indexOf(' let worldAtlasesPromise='),end=source.indexOf(' function ensureFallbackHero()');
+ const load=vm.runInNewContext(source.slice(start,end)+';ensureWorldAtlases',context);
+ await assert.rejects(load(),/503/);
+ fail=false;await load();await load();
+ assert.deepEqual(calls,['data/adventure.json','data/adventure.json']);
+ assert.deepEqual(loaded.sort(),['campTrees','islandTrees','meadow','shore','stones','trees'].sort());
+});
 test('home gate waits for decoded furniture and the final visible terrain tile',async()=>{
  let decode;const f=fixture({decode:()=>new Promise(resolve=>decode=resolve)});let ready=false;
  const work=f.view.prepare().then(()=>ready=true);await flush();assert.equal(f.state.tick,undefined);

@@ -3,7 +3,7 @@
   "entries": {
     "word-tree": {
       "local": "assets/prologue/word-tree-c45b0a4ff7b3.webp",
-      "cdn": "",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/prologue/word-tree-c45b0a4ff7b3.webp",
       "width": 1376,
       "height": 768,
       "size": 170726,
@@ -17,7 +17,7 @@
     },
     "dark-lord-steals": {
       "local": "assets/prologue/dark-lord-steals-3959470da926.webp",
-      "cdn": "",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/prologue/dark-lord-steals-3959470da926.webp",
       "width": 1376,
       "height": 768,
       "size": 178442,
@@ -31,7 +31,7 @@
     },
     "blank-signposts": {
       "local": "assets/prologue/blank-signposts-be89f2b4fc6f.webp",
-      "cdn": "",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/prologue/blank-signposts-be89f2b4fc6f.webp",
       "width": 1376,
       "height": 768,
       "size": 181958,
@@ -45,7 +45,7 @@
     },
     "masters-assemble": {
       "local": "assets/prologue/masters-assemble-19e651d0df2e.webp",
-      "cdn": "",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/prologue/masters-assemble-19e651d0df2e.webp",
       "width": 1376,
       "height": 768,
       "size": 179098,
@@ -59,7 +59,7 @@
     },
     "camp-night-battle-bg": {
       "local": "assets/prologue/camp-night-battle-bg-760bf41441cf.webp",
-      "cdn": "",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/prologue/camp-night-battle-bg-760bf41441cf.webp",
       "width": 1376,
       "height": 768,
       "size": 153134,
@@ -73,7 +73,7 @@
     },
     "light-shatters": {
       "local": "assets/prologue/light-shatters-aca7e4fe3ef3.webp",
-      "cdn": "",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/prologue/light-shatters-aca7e4fe3ef3.webp",
       "width": 1376,
       "height": 768,
       "size": 172612,
@@ -87,7 +87,7 @@
     },
     "blank-cards": {
       "local": "assets/prologue/blank-cards-24a5af3f87e1.webp",
-      "cdn": "",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/prologue/blank-cards-24a5af3f87e1.webp",
       "width": 1376,
       "height": 768,
       "size": 114738,
@@ -101,7 +101,7 @@
     },
     "spark-in-hand": {
       "local": "assets/prologue/spark-in-hand-b7080c5b4521.webp",
-      "cdn": "",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/prologue/spark-in-hand-b7080c5b4521.webp",
       "width": 1376,
       "height": 768,
       "size": 68902,
@@ -115,7 +115,7 @@
     },
     "dawn-signpost": {
       "local": "assets/prologue/dawn-signpost-a733572e5e1b.webp",
-      "cdn": "",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/prologue/dawn-signpost-a733572e5e1b.webp",
       "width": 1376,
       "height": 768,
       "size": 179172,
@@ -129,7 +129,7 @@
     },
     "two-worlds-pullback": {
       "local": "assets/prologue/two-worlds-pullback-0116290a22da.webp",
-      "cdn": "",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/prologue/two-worlds-pullback-0116290a22da.webp",
       "width": 1376,
       "height": 768,
       "size": 172396,
@@ -143,7 +143,7 @@
     },
     "title": {
       "local": "assets/prologue/title-d1e4141ce72a.webp",
-      "cdn": "",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/prologue/title-d1e4141ce72a.webp",
       "width": 1376,
       "height": 768,
       "size": 119446,
@@ -157,7 +157,7 @@
     },
     "dark-lord-boss": {
       "local": "assets/prologue/dark-lord-boss-e3dd97182d66.webp",
-      "cdn": "",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/prologue/dark-lord-boss-e3dd97182d66.webp",
       "width": 256,
       "height": 256,
       "size": 27406,

@@ -6,6 +6,7 @@ import {createMotionTrail,drawMotionAccessory,drawMotionTrail,motionStyle} from 
 import {createHeroActor,updateHeroActor} from './hero_pose_core.js';
 import {loadHeroLibrary} from './hero_renderer.js';
 import {loadEnvironmentArt} from './adventure_environment_art.js';
+import {fetchJson} from './runtime_data.js';
 import {tr} from './locale_runtime.js';
 import {petIdleLift} from './view_adventure_pet_mood.js';
 import {homeHeldPointerTarget} from './home_walk_core.js';
@@ -52,11 +53,10 @@ export function createHomeView(root,cb){
  let worldAtlasesPromise=null,terrainMissing=Infinity;
  function ensureWorldAtlases(){
   if(worldAtlasesPromise)return worldAtlasesPromise;
-  const readJson=url=>fetch(url).then(r=>{if(!r.ok)throw Error(url);return r.json();});
   const modeKey=model?.assetMode==='local'?'local':'cdn';
   worldAtlasesPromise=Promise.all([
-   loadEnvironmentArt(modeKey,readJson,'data/adventure/environment-art.json'),
-   loadEnvironmentArt(modeKey,readJson,'data/adventure/terrain-decoration-art.json')
+   loadEnvironmentArt(modeKey,fetchJson,'data/adventure/environment-art.json'),
+   loadEnvironmentArt(modeKey,fetchJson,'data/adventure/terrain-decoration-art.json')
   ]).then(async([env,decor])=>{
    await Promise.all([[env,['camp','campTrees','islandTrees','trees']],[decor,['meadow','stones','shore']]].flatMap(([art,keys])=>keys.filter(key=>art.manifest.atlases[key]).map(key=>art.ensure(key))));
    if(dead)return;
@@ -68,7 +68,7 @@ export function createHomeView(root,cb){
  function ensureFallbackHero(){
   if(cb.drawHero||fallbackHero||fallbackHeroLoading)return;
   fallbackHeroLoading=true;
-  loadHeroLibrary(url=>fetch(url).then(r=>{if(!r.ok)throw Error(url);return r.json();}),{mounts:[],mountByItem:{}},{local:model?.assetMode==='local'}).then(h=>{
+  loadHeroLibrary(fetchJson,{mounts:[],mountByItem:{}},{local:model?.assetMode==='local'}).then(h=>{
    if(!dead)fallbackHero=h;
   }).catch(()=>{});
  }

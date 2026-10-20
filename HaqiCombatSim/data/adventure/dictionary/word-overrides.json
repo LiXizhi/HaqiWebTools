@@ -1998,6 +1998,33 @@
         "haqi:do"
       ],
       "pos": "v"
+    },
+    {
+      "text": "chimney",
+      "meaning": "烟囱",
+      "forms": [],
+      "senses": [
+        "haqi:roof-chimney"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "windmill",
+      "meaning": "风车",
+      "forms": [],
+      "senses": [
+        "haqi:roof-windmill"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "castle",
+      "meaning": "城堡",
+      "forms": [],
+      "senses": [
+        "haqi:building-castle"
+      ],
+      "pos": "n"
     }
   ],
   "zh": [
@@ -3748,6 +3775,51 @@
         "haqi:like"
       ],
       "pos": "v"
+    },
+    {
+      "text": "地板",
+      "meaning": "地板",
+      "forms": [],
+      "senses": [
+        "haqi:floor"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "屋顶",
+      "meaning": "屋顶",
+      "forms": [],
+      "senses": [
+        "haqi:roof"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "烟囱",
+      "meaning": "烟囱",
+      "forms": [],
+      "senses": [
+        "haqi:roof-chimney"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "风车",
+      "meaning": "风车",
+      "forms": [],
+      "senses": [
+        "haqi:roof-windmill"
+      ],
+      "pos": "n"
+    },
+    {
+      "text": "城堡",
+      "meaning": "城堡",
+      "forms": [],
+      "senses": [
+        "haqi:building-castle"
+      ],
+      "pos": "n"
     }
   ],
   "ja": [

@@ -374,22 +374,27 @@ function pathLength(origin,points){
 function gridPath(world,start,destination,bounds=null){
     const steps=gridPathSteps(world,start,destination,bounds);let result;do{result=steps.next();}while(!result.done);return result.value;
 }
-function* gridPathSteps(world,start,destination,bounds=null){
+function* gridPathSteps(world,start,destination,bounds=null,maxNodes=Infinity){
     const size=24,cols=Math.ceil(world.w/size),rows=Math.ceil(world.h/size);
     const cell=p=>({x:Math.floor(p.x/size),y:Math.floor(p.y/size)}),point=p=>({x:p.x*size+size/2,y:p.y*size+size/2});
     const inside=p=>!bounds||(p.x>=bounds.minX&&p.y>=bounds.minY&&p.x<=bounds.maxX&&p.y<=bounds.maxY);
     let from=cell(start);const target=cell(destination),key=p=>p.y*cols+p.x;
+    const walkCache=new Map(),canWalk=p=>{
+        if(p.x<0||p.y<0||p.x>=cols||p.y>=rows)return false;
+        const k=key(p);if(!walkCache.has(k)){const v=point(p);walkCache.set(k,walkable(world,v.x,v.y));}
+        return walkCache.get(k);
+    };
     const starts=[];
     for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const p={x:from.x+dx,y:from.y+dy};if(inside(point(p))&&clearSegment(world,start,point(p)))starts.push(p);}
     starts.sort((a,b)=>distance(start,point(a))-distance(start,point(b)));
     from=starts[0];if(!from)return [];
     // A blocked click resolves to the closest reachable neighboring tile.
     let goal=target;
-    if(!inside(point(goal))||!walkable(world,point(goal).x,point(goal).y)) {
+    if(!inside(point(goal))||!canWalk(goal)) {
         const options=[];
         for(let y=-4;y<=4;y++)for(let x=-4;x<=4;x++) {
             const p={x:target.x+x,y:target.y+y},wp=point(p);
-            if(inside(wp)&&walkable(world,wp.x,wp.y))options.push(p);
+            if(inside(wp)&&canWalk(p))options.push(p);
         }
         options.sort((a,b)=>distance(point(a),destination)-distance(point(b),destination));goal=options[0];
     }
@@ -397,7 +402,7 @@ function* gridPathSteps(world,start,destination,bounds=null){
     const open=createPathQueue(),cost=new Map([[key(from),0]]),parent=new Map(),closed=new Set();
     open.push(from,key(from),distance(from,goal));
     const dirs=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
-    while(open.length&&(!world.isEarth||closed.size<world.earthRules.maxPathNodes)) {
+    while(open.length&&closed.size<maxNodes&&(!world.isEarth||closed.size<world.earthRules.maxPathNodes)) {
         yield;
         const p=open.shift(),k=key(p);if(closed.has(k))continue;closed.add(k);
         if(k===key(goal)) {
@@ -412,10 +417,11 @@ function* gridPathSteps(world,start,destination,bounds=null){
         }
         for(const [dx,dy] of dirs) {
             const n={x:p.x+dx,y:p.y+dy},v=point(n),nk=key(n);
-            if(!inside(v)||n.x<0||n.y<0||n.x>=cols||n.y>=rows||closed.has(nk)||!walkable(world,v.x,v.y)||!clearSegment(world,point(p),v))continue;
-            if(dx&&dy&&(!walkable(world,point({x:p.x+dx,y:p.y}).x,point({x:p.x+dx,y:p.y}).y)||!walkable(world,point({x:p.x,y:p.y+dy}).x,point({x:p.x,y:p.y+dy}).y)))continue;
             const score=cost.get(k)+Math.hypot(dx,dy);
-            if(score<(cost.get(nk)??Infinity)) {cost.set(nk,score);parent.set(nk,p);open.push(n,nk,score+distance(n,goal));}
+            if(!inside(v)||n.x<0||n.y<0||n.x>=cols||n.y>=rows||closed.has(nk)||score>=(cost.get(nk)??Infinity)||!canWalk(n))continue;
+            if(dx&&dy&&(!canWalk({x:p.x+dx,y:p.y})||!canWalk({x:p.x,y:p.y+dy})))continue;
+            if(!clearSegment(world,point(p),v))continue;
+            cost.set(nk,score);parent.set(nk,p);open.push(n,nk,score+distance(n,goal));
         }
     }
     return [];
@@ -452,6 +458,13 @@ function* islandPathSteps(world,start,destination) {
     // Start from the actual position, without a detour to the current grid center.
     if(yield* clearSegmentSteps(world,start,destination))return [{x:destination.x,y:destination.y}];
     if(world.layout){
+        // A nearby tree should not require building/connecting the entire road
+        // graph. Bound this attempt; rivers and long detours still use roads.
+        const straight=distance(start,destination);
+        if(straight<=480&&walkable(world,destination.x,destination.y)){
+            const local=yield* gridPathSteps(world,start,destination,{minX:Math.min(start.x,destination.x)-96,minY:Math.min(start.y,destination.y)-96,maxX:Math.max(start.x,destination.x)+96,maxY:Math.max(start.y,destination.y)+96},512);
+            if(local.length&&distance(local.at(-1),destination)<.5&&pathLength(start,local)<=straight*1.2+48)return local;
+        }
         const road=yield* shortcutPathSteps(world,start,yield* roadPathSteps(world,start,destination));
         if(road.length){
             const straight=distance(start,destination),roadLen=pathLength(start,road);
@@ -490,14 +503,15 @@ function* roadPathSteps(world,start,destination){
         const result=[];for(const [index,n]of ranked.entries())if((index<10||n.d<=960)&&(yield* clearSegmentSteps(world,p,nodes[n.i])))result.push(n);return result;
     };
     const starts=yield* near(start),goals=new Map((yield* near(destination)).map(n=>[n.i,n.d]));
-    const costs=new Map(starts.map(n=>[n.i,n.d])),parents=new Map(),open=starts.map(n=>n.i),closed=new Set();
+    const costs=new Map(starts.map(n=>[n.i,n.d])),parents=new Map(),open=createPathQueue(),closed=new Set();
+    for(const n of starts)open.push(n.i,n.i,n.d);
     let goal=null,best=Infinity;
     while(open.length){
         yield;
-        open.sort((a,b)=>costs.get(a)-costs.get(b));const i=open.shift();if(closed.has(i))continue;closed.add(i);
+        const i=open.shift();if(closed.has(i))continue;closed.add(i);
         const cost=costs.get(i);if(cost>=best)continue;
         if(goals.has(i)&&cost+goals.get(i)<best){goal=i;best=cost+goals.get(i);}
-        for(const [j,d] of links[i])if(cost+d<(costs.get(j)??Infinity)){costs.set(j,cost+d);parents.set(j,i);open.push(j);}
+        for(const [j,d] of links[i])if(cost+d<(costs.get(j)??Infinity)){costs.set(j,cost+d);parents.set(j,i);open.push(j,j,cost+d);}
     }
     if(goal===null)return [];
     const result=[{...destination}];let i=goal;

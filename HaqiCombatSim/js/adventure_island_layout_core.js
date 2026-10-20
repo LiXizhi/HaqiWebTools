@@ -23,13 +23,27 @@ export function insidePolygon(x,y,points) {
 export function onLargeIsland(world,x,y,padding=0) {
     if(!insidePolygon(x,y,world.layout.coast))return false;
     if(padding<=0)return true;
-    return world.layout.coast.every(([ax,ay],i)=>{const [bx,by]=world.layout.coast[(i+1)%world.layout.coast.length];return segmentDistance({x,y},{x:ax,y:ay},{x:bx,y:by})>=padding;});
+    return world.layout.coast.every(([ax,ay],i)=>{
+        const [bx,by]=world.layout.coast[(i+1)%world.layout.coast.length];
+        // Most edges are far away: their expanded bounds suffice to reject
+        // them without allocating points or calculating a square root.
+        if(x<Math.min(ax,bx)-padding||x>Math.max(ax,bx)+padding||y<Math.min(ay,by)-padding||y>Math.max(ay,by)+padding)return true;
+        return segmentDistance({x,y},{x:ax,y:ay},{x:bx,y:by})>=padding;
+    });
 }
 export function riverBlocks(world,x,y) {
     if(!world.layout)return false;
     if(world.layout.lakes?.some(l=>((x-l.x)/(l.rx+12))**2+((y-l.y)/(l.ry+12))**2<1))return true;
     if(world.layout.bridges.some(b=>onBridge(b,x,y,7)))return false;
-    return world.layout.rivers.some(r=>r.points.slice(1).some(([bx,by],i)=>segmentDistance({x,y},{x:r.points[i][0],y:r.points[i][1]},{x:bx,y:by})<r.width/2+12));
+    for(const r of world.layout.rivers){
+        const radius=r.width/2+12;
+        for(let i=1;i<r.points.length;i++){
+            const [ax,ay]=r.points[i-1],[bx,by]=r.points[i];
+            if(x<Math.min(ax,bx)-radius||x>Math.max(ax,bx)+radius||y<Math.min(ay,by)-radius||y>Math.max(ay,by)+radius)continue;
+            if(segmentDistance({x,y},{x:ax,y:ay},{x:bx,y:by})<radius)return true;
+        }
+    }
+    return false;
 }
 export function regionAt(world,p) {
     return world.layout?.regions?.reduce((best,r)=>{

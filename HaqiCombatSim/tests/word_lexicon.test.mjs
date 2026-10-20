@@ -1,23 +1,77 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {parseWordLexicon,buildWordIndex,canonicalWord,matchWordText,localWordMapping,supplementWordMapping,seedWordLexicon,migrateWordLexicon,sentenceWordTokens,wordTreeKey} from '../js/word_lexicon_core.js';
+import {parseWordLexicon,buildWordIndex,canonicalWord,matchWordText,localWordMapping,supplementWordMapping,seedWordLexicon,migrateWordLexicon,sentenceWordTokens,wordTreeKey,wordTreeDisplayState} from '../js/word_lexicon_core.js';
 import {createWordLexiconLoader} from '../js/word_lexicon.js';
 import {emptyLanguageTree,recordTreeExposure,setTreeMark,treeWordStatus,validateTreeQuestions} from '../js/language_tree_core.js';
 import {localePackageFiles} from '../scripts/package_locale.mjs';
 const texts=Object.fromEntries(['en','zh','ja','ko'].map(language=>[language,fs.readFileSync(new URL(`../data/adventure/locale/word_${language}.txt`,import.meta.url),'utf8')]));
 const indexes=Object.fromEntries(Object.entries(texts).map(([language,text])=>[language,buildWordIndex(parseWordLexicon(text,language))]));
 
-test('four real vocabulary files contain their expected unique lemmas with definitions and indexed senses',()=>{
- for(const index of Object.values(indexes)){assert.equal(index.entries.size,index.language==='zh'?2005:index.language==='en'?2003:2000);for(const row of index.entries.values()){assert.ok(row.meaning.trim());assert.ok(row.senses.length);for(const sense of row.senses)assert.ok(index.senses.get(sense).has(row.id));}}
+test('all languages share exactly the Chinese key list and index explicit forms',()=>{
+ assert.equal(indexes.zh.data.keys.length,2000);
+ assert.ok(texts.zh.trim().split(/\r?\n/).every(line=>/^\p{Script=Han}+(?:,\p{Script=Han}+)*$/u.test(line)));
+ for(const index of Object.values(indexes)){assert.deepEqual(new Set(index.data.keys),new Set(indexes.zh.data.keys));for(const row of index.entries.values()){assert.ok(row.meaning.trim());assert.ok(row.senses.length);for(const sense of row.senses)assert.ok(index.senses.get(sense).has(row.id));}}
  const files=localePackageFiles(new URL('../data/adventure/locale/',import.meta.url).pathname.replace(/^\/([A-Za-z]:)/,'$1'));
- for(const lang of Object.keys(indexes)){const f=files.find(f=>f.fileName.endsWith(`word_${lang}.txt`));assert.match(f.source,/Copyright|CC BY-SA/);assert.equal(f.source,texts[lang]);}
+ for(const lang of Object.keys(indexes)){const f=files.find(f=>f.fileName.endsWith(`word_${lang}.txt`));assert.equal(f.source,texts[lang]);}
+ assert.match(files.find(f=>f.fileName.endsWith('word-LICENSE.txt')).source,/Copyright|CC BY-SA/);
 });
 test('selected language loads once, including concurrent opens; failed loads can retry',async()=>{
  const calls=[];let fail=true;
  const load=createWordLexiconLoader(async url=>{const lang=String(url).match(/word_(\w+)\.txt$/)[1];calls.push(lang);if(lang==='ko'&&fail)throw Error('offline');return texts[lang];});
- assert.deepEqual(calls,[]);const [a,b]=await Promise.all([load('en'),load('en')]);assert.equal(a,b);assert.deepEqual(calls,['en']);
- assert.equal(await load('en'),a);await load('ja-JP');assert.deepEqual(calls,['en','ja']);await assert.rejects(load('ko'));fail=false;await load('ko');assert.deepEqual(calls,['en','ja','ko','ko']);await assert.rejects(load('xx'));assert.equal(calls.length,4);
+ assert.deepEqual(calls,[]);const [a,b]=await Promise.all([load('en'),load('en')]);assert.equal(a,b);assert.deepEqual(calls,['en','zh']);
+ assert.equal(await load('en'),a);await load('ja-JP');assert.deepEqual(calls,['en','zh','ja']);await assert.rejects(load('ko'));fail=false;await load('ko');assert.deepEqual(calls,['en','zh','ja','ko','ko']);await assert.rejects(load('xx'));assert.equal(calls.length,5);
+});
+test('English to Japanese uses the Chinese bridge for all worry inflections',()=>{
+ for(const form of ['worry','worried','worrying','worries']){
+  const lines=[{text:form,locale:'en'},{text:'心配しています',locale:'ja'}];
+  const parts=localWordMapping(lines,[indexes.en,indexes.ja]);
+  assert.equal(parts[0][0].wordId,'worry');assert.equal(parts[1][0].wordId,'worry');assert.ok(parts[0][0].color);assert.equal(parts[0][0].color,parts[1][0].color);
+ }
+});
+test('empty translations do not create words and mismatched keys fail loading',async()=>{
+ assert.equal(parseWordLexicon('担心||\n','ja').entries.length,0);
+ assert.throws(()=>parseWordLexicon('担心||worry\n担心||worried','en'));
+ assert.throws(()=>parseWordLexicon('担心||{}','zh'));
+ const load=createWordLexiconLoader(async url=>String(url).endsWith('word_zh.txt')?'担心\n':'书||book\n');
+ await assert.rejects(load('en'),/中文键不一致/);
+});
+test('bridge uses the matched form keys without borrowing a synonym other meanings',()=>{
+ const en=buildWordIndex(parseWordLexicon('笑||smile,smiles\n微笑||grin,smile\n','en'));
+ const ja=buildWordIndex(parseWordLexicon('笑||笑う\n微笑||微笑む\n','ja'));
+ assert.ok(!localWordMapping([{text:'smiles'},{text:'微笑む'}],[en,ja])[0][0].color);
+ assert.ok(localWordMapping([{text:'smile'},{text:'微笑む'}],[en,ja])[0][0].color);
+});
+test('comma-grouped Chinese keys match every meaning and bridge to independently grouped languages',async()=>{
+ const text='模仿,复制,副本||copy,copied,copies,copying\n书||book\n';
+ const en=buildWordIndex(parseWordLexicon(text,'en'));
+ const zh=buildWordIndex(parseWordLexicon('模仿\n复制\n副本\n书\n','zh'));
+ const ja=buildWordIndex(parseWordLexicon('副本||コピー\n模仿,复制||写す,写した\n书||本\n','ja'));
+ for(const word of ['copy','copied','copies','copying']){
+  for(const key of ['模仿','复制','副本']){
+   const parts=localWordMapping([{text:word},{text:key}],[en,zh]);
+   assert.equal(parts[1][0].wordId,'copy');assert.ok(parts[1][0].color);
+  }
+  assert.ok(localWordMapping([{text:word},{text:'コピー'}],[en,ja])[1][0].color);
+ }
+ const load=createWordLexiconLoader(async url=>String(url).endsWith('word_zh.txt')?'书\n副本\n复制\n模仿\n':text);
+ assert.equal(canonicalWord(await load('en'),'copied'),'copy');
+ for(const invalid of ['模仿,模仿||copy','模仿,||copy','模仿,复制||copy\n复制||duplicate'])assert.throws(()=>parseWordLexicon(invalid,'en'));
+ assert.deepEqual(parseWordLexicon('模仿,复制','zh').keys,['模仿','复制']);
+});
+test('compact Chinese list preserves each word identity and cross-language matching',async()=>{
+ const text='蝗虫,蚂蚱,蚱蜢\n书\n',zh=buildWordIndex(parseWordLexicon(text,'zh'));
+ const ko=buildWordIndex(parseWordLexicon('蝗虫,蚂蚱,蚱蜢||메뚜기\n书||책','ko'));
+ for(const key of ['蝗虫','蚂蚱','蚱蜢']){
+  assert.equal(canonicalWord(zh,key),key);
+  assert.ok(localWordMapping([{text:key},{text:'메뚜기'}],[zh,ko])[0][0].color);
+ }
+ assert.equal(zh.entries.size,4);
+ assert.throws(()=>parseWordLexicon('蝗虫,蚂蚱\n蚂蚱','zh'));
+ assert.throws(()=>parseWordLexicon('蝗虫,','zh'));
+ const load=createWordLexiconLoader(async url=>String(url).endsWith('word_zh.txt')?text:'书||book\n蝗虫,蚂蚱,蚱蜢||grasshopper');
+ assert.equal(canonicalWord(await load('en'),'grasshopper'),'grasshopper');
+ // Rare examples remain valid format fixtures without requiring them in the common list.
 });
 test('English canonical forms and original offsets preserve spelling, punctuation and whole words',()=>{
  const text='Ｗorried, worrying; WORRIES! unworriedly.';
@@ -70,5 +124,22 @@ test('Korean and Japanese questions normalize inflections while keeping differen
  ]){const state=emptyLanguageTree();seedWordLexicon(state,indexes[language]);for(const id of targets){assert.ok(state.words[id]);setTreeMark(state,id,'know',1);}for(const id of nouns){assert.ok(state.words[id]);setTreeMark(state,id,'basic',1);}
   const rows=targets.map((target,i)=>({target,sentence:sentences[i],translation:'新的句子含义',options:[{text:'新的句子含义',explanation:'词语的正确含义'},{text:'其他含义',explanation:'不是这个意思'},{text:'另一含义',explanation:'没有这个意思'}],answer:0,glosses}));
   const parsed=validateTreeQuestions({questions:rows},state,indexes[language]);assert.equal(new Set(parsed.map(q=>q.id)).size,3);
+ }
+});
+
+test('tree shows only each line first word while every form still matches and saved records remain intact',()=>{
+ for(const [language,text,primary,alias] of [
+ ['en','朋友||friend,friends','friend','friends'],
+ ['ja','朋友||友達,友だち','友達','友だち'],
+ ['ko','担心||걱정하다,걱정해요','걱정하다','걱정해요'],
+ ['zh','蝗虫,蚂蚱,蚱蜢','蝗虫','蚂蚱'],
+ ]){
+  const index=buildWordIndex(parseWordLexicon(text,language)),state=emptyLanguageTree();seedWordLexicon(state,index);
+  // Older saves or the detailed dictionary may contain a separate variant node.
+  state.words[alias]={...state.words[primary],id:alias,mark:'know',count:10};
+  const before=structuredClone(state),display=wordTreeDisplayState(state,index);
+  assert.deepEqual(Object.keys(display.words),[primary]);assert.deepEqual(state,before);
+  assert.equal(matchWordText(index,alias).length,1);
+  if(language!=='zh')assert.equal(canonicalWord(index,alias),primary);
  }
 });

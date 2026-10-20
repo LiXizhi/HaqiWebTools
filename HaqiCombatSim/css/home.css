@@ -77,6 +77,8 @@
 .home-bubble-wrap[hidden]{display:none!important}
 .home-bubble{white-space:pre-line;padding:11px 14px;border-radius:18px 18px 18px 4px;background:#fff9ea;color:#314d36;border:2px solid #c9b584;box-shadow:0 6px 18px rgba(36,58,38,0.22);text-align:left;font-size:13px;line-height:1.4;cursor:pointer}
 .home-bubble-actions{display:flex;gap:6px}
+.home-bubble-wrap.is-collapsed .home-bubble-actions{display:none}
+.home-bubble-wrap.is-collapsed .home-bubble{min-width:36px;min-height:28px;padding:0 8px;text-align:center;font-size:20px;line-height:24px;box-shadow:0 2px 6px rgba(36,58,38,0.16)}
 .home-world .home-bubble-mini{min-height:30px!important;padding:3px 10px!important;border-radius:999px!important;font-size:11px!important}
 .home-world .home-bubble-mini.primary{background:#31573f!important;color:#fff6e0!important;border-color:#254430!important}
 
@@ -251,3 +253,22 @@
 
 .home-world .home-capacity{white-space:nowrap;font-size:12px;padding:5px 10px;border:1px solid #d8c698;border-radius:999px;background:rgba(255,249,233,.94);color:#304b36}
 @media(max-width:650px){.home-world .home-capacity{position:absolute;top:48px;right:0;font-size:11px;padding:4px 8px}}
+
+/* Keep the prompt, feedback and input in one measured flow above the dock. */
+.home-world .home-composer{display:none;position:absolute;z-index:4;left:50%;transform:translateX(-50%);bottom:calc(max(8px,env(safe-area-inset-bottom)) + 86px);width:min(580px,calc(100% - 24px));max-height:calc(100% - 156px);overflow:auto;box-sizing:border-box;flex-direction:column;gap:12px;padding:6px}
+.home-world .home-play[data-drawer=summon] .home-composer{display:flex}
+.home-world .home-composer .home-example,.home-world .home-composer .home-summon,.home-world .home-composer .home-choices{position:static;transform:none;width:100%;max-width:none;max-height:none;box-sizing:border-box;margin:0;flex-shrink:0}
+.home-world .home-composer .home-summon{align-items:center;gap:10px;padding:10px;border-radius:20px}
+.home-world .home-composer .home-summon input{width:0;min-height:44px;box-sizing:border-box;outline-offset:2px}
+.home-world .home-composer .home-summon button:not(.close-button){padding:8px 12px!important;min-height:44px}
+.home-world .home-composer .home-summon .close-button{position:static;flex:0 0 48px;width:48px;height:48px;padding:0!important}
+.home-world .home-composer .home-example{padding:12px 14px;gap:10px}
+.home-world .home-composer .home-choices:empty{display:none}
+.home-spell-text .story-speech-matched{color:#25623b;background:#dceccf;border-radius:4px;padding:0 2px}
+.home-spell-text .story-speech-missing{color:#9b442b;text-decoration:underline;text-decoration-style:dotted}
+@media(max-width:600px){
+ .home-world .home-composer{bottom:calc(max(6px,env(safe-area-inset-bottom)) + 72px);max-height:calc(100% - 132px);width:calc(100% - 12px);gap:10px}
+ .home-world .home-composer .home-summon{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:8px}
+ .home-world .home-composer .home-summon input{width:100%;font-size:14px}
+ .home-world .home-composer .home-mic{grid-column:2 / -1}
+}

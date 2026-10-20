@@ -362,209 +362,211 @@
       }
     },
     "islandLandmarks": {
-      "local": "assets/adventure/environment/island-landmarks-269827954af5.webp",
-      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/island-landmarks-269827954af5.webp",
+      "local": "assets/adventure/environment/island-landmarks-alpha-09f2f46802f2.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/island-landmarks-alpha-09f2f46802f2.webp",
       "width": 864,
       "height": 576,
-      "size": 165930,
-      "sha256": "269827954af52885b58280a8c28d6c73ca13e01bf4b952f9f6b1da4ccddb92bf",
+      "size": 185364,
+      "sha256": "09f2f46802f2d30ec8e11221c16c578d0f9633c0924953dd2f2e1327e7cfeda0",
       "source": {
         "generator": "image_gen",
-        "sha256": "21ef8a789b5d0ddeb1c3bd050e24d5333a039890abbe74f51ec258669d25c7ef",
-        "width": 1264,
-        "height": 848
+        "sha256": "9944b37d0da46bbc8d095c2999fe51d7bc11fad8914aa939e0bf0d83bf860ff2",
+        "width": 1536,
+        "height": 1024,
+        "prompt": "assets/adventure/environment/prompts.json#islandLandmarksAlpha",
+        "reference": "assets/adventure/environment/island-landmarks-269827954af5.webp"
       },
       "encoding": {
         "lossless": false,
-        "quality": 94
+        "quality": 90
       },
       "frames": {
         "townCastle": {
           "rect": [
-            30,
+            36,
             8,
-            227,
+            215,
             272
           ],
           "sourceRect": [
-            80,
-            9,
-            341,
-            409
+            43,
+            12,
+            399,
+            505
           ]
         },
         "townWindmill": {
           "rect": [
-            315,
+            318,
             8,
-            233,
+            228,
             272
           ],
           "sourceRect": [
-            491,
-            29,
-            322,
-            376
+            539,
+            10,
+            424,
+            506
           ]
         },
         "fireGoldTree": {
           "rect": [
-            602,
+            600,
             8,
-            235,
+            239,
             272
           ],
           "sourceRect": [
-            886,
-            21,
-            339,
-            392
+            1051,
+            15,
+            449,
+            512
           ]
         },
         "desertPyramid": {
           "rect": [
             8,
-            337,
+            339,
             272,
-            231
+            229
           ],
           "sourceRect": [
-            25,
-            469,
-            396,
-            337
+            29,
+            566,
+            518,
+            436
           ]
         },
         "darkCitadelRuins": {
           "rect": [
+            321,
             296,
-            312,
-            272,
-            256
+            222,
+            272
           ],
           "sourceRect": [
-            421,
-            440,
-            399,
-            376
+            600,
+            526,
+            396,
+            486
           ]
         },
         "iceCrystalSanctum": {
           "rect": [
-            606,
+            611,
             296,
-            228,
+            217,
             272
           ],
           "sourceRect": [
-            912,
-            446,
-            309,
-            369
+            1087,
+            517,
+            392,
+            492
           ]
         }
       }
     },
     "islandTrees": {
-      "local": "assets/adventure/environment/island-trees-d820d27bf5de.webp",
-      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/island-trees-d820d27bf5de.webp",
+      "local": "assets/adventure/environment/island-trees-alpha-1b839451cfda.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/island-trees-alpha-1b839451cfda.webp",
       "width": 864,
       "height": 576,
-      "size": 197450,
-      "sha256": "d820d27bf5deb7d9308a5692014cb1c0e53c40c0b3e8bf571e146f2fd9a77214",
+      "size": 192516,
+      "sha256": "1b839451cfdab71a3667c880cca76b5331650c9e9a91135acc69fd117fcff97a",
       "source": {
         "generator": "image_gen",
-        "sha256": "2c3895d6cfa6be5109c478d4638a55be266fa0828d11449cbb1af863a6d375ec",
-        "width": 1264,
-        "height": 848
+        "sha256": "be4047eae3066aac1b4cdc480dd584cc6edc8592e40179520310b6d8c8084c77",
+        "width": 1536,
+        "height": 1024
       },
       "encoding": {
         "lossless": false,
-        "quality": 94
+        "quality": 82
       },
       "frames": {
         "autumnGoldTree": {
           "rect": [
-            20,
+            23,
             8,
-            247,
+            242,
             272
           ],
           "sourceRect": [
-            44,
-            27,
-            332,
-            366
+            38,
+            14,
+            438,
+            492
           ]
         },
         "tropicalPalm": {
           "rect": [
             296,
-            12,
+            13,
             272,
-            268
+            267
           ],
           "sourceRect": [
-            449,
-            28,
-            373,
-            368
+            520,
+            15,
+            498,
+            488
           ]
         },
         "desertCactus": {
           "rect": [
-            622,
+            621,
             8,
-            196,
+            198,
             272
           ],
           "sourceRect": [
-            936,
-            42,
-            257,
-            356
+            1105,
+            14,
+            358,
+            493
           ]
         },
         "charredEmberTree": {
           "rect": [
             19,
             296,
-            250,
+            249,
             272
           ],
           "sourceRect": [
-            42,
-            443,
-            347,
-            378
+            30,
+            520,
+            454,
+            495
           ]
         },
         "darkShadowTree": {
           "rect": [
-            308,
+            304,
             296,
-            248,
+            256,
             272
           ],
           "sourceRect": [
-            460,
-            444,
-            346,
-            379
+            532,
+            519,
+            467,
+            496
           ]
         },
         "darkWeepingTree": {
           "rect": [
-            601,
+            595,
             296,
-            238,
+            249,
             272
           ],
           "sourceRect": [
-            892,
-            448,
-            325,
-            372
+            1057,
+            521,
+            452,
+            494
           ]
         }
       }
@@ -1056,19 +1058,19 @@
       "layer": "terrain"
     },
     "fireProps": {
-      "local": "assets/adventure/environment/fire-props-ae8d4fdfd8be.webp",
-      "cdn": "https://cdn.keepwork.com/keepwork/cdn/island-scene-art/fire-props-ae8d4fdfd8be.webp",
+      "local": "assets/adventure/environment/fire-props-alpha-8b156dd45660.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/fire-props-alpha-8b156dd45660.webp",
       "width": 816,
       "height": 544,
-      "size": 143942,
-      "sha256": "ae8d4fdfd8bea54924b9585fa4be5a3a4f527d201918d91e61f0010cefa9bb71",
+      "size": 182784,
+      "sha256": "8b156dd456609051bde2fa0c4b929678d067e25f3422416f8cd2b0816c468557",
       "source": {
         "generator": "image_gen",
-        "sha256": "620f2c45f6cc06e4320a86935257375afcb29455873e0d1473db8935f3d66757",
+        "sha256": "c91abefaa77f26e211a43a52a202417554b5b8fe36255f11fc5b65af3391c260",
         "width": 1536,
         "height": 1024,
-        "prompt": "assets/adventure/environment/prompts.json#islandSceneArt.fire",
-        "reference": "data/adventure/world-map-art.json#fire"
+        "prompt": "assets/adventure/environment/prompts.json#firePropsAlpha",
+        "reference": "assets/adventure/environment/fire-props-ae8d4fdfd8be.webp"
       },
       "encoding": {
         "lossless": false,
@@ -1078,85 +1080,85 @@
         "obsidianRocks": {
           "rect": [
             8,
-            63,
+            57,
             256,
-            201
+            207
           ],
           "sourceRect": [
-            37,
-            100,
-            457,
-            358
+            28,
+            124,
+            478,
+            386
           ]
         },
         "lavaVent": {
           "rect": [
             280,
-            13,
-            256,
-            251
+            8,
+            255,
+            256
           ],
           "sourceRect": [
-            553,
-            55,
-            430,
-            421
+            540,
+            38,
+            475,
+            476
           ]
         },
         "emberBrazier": {
           "rect": [
-            552,
-            23,
-            256,
-            241
+            558,
+            8,
+            243,
+            256
           ],
           "sourceRect": [
-            1081,
-            109,
-            378,
-            356
+            1058,
+            48,
+            439,
+            463
           ]
         },
         "charredFence": {
           "rect": [
             8,
-            338,
+            336,
             256,
-            198
+            200
           ],
           "sourceRect": [
-            44,
-            582,
-            442,
-            341
+            23,
+            589,
+            484,
+            378
           ]
         },
         "bonePile": {
           "rect": [
             280,
-            360,
+            363,
             256,
-            176
+            173
           ],
           "sourceRect": [
-            545,
-            611,
-            446,
-            306
+            532,
+            651,
+            505,
+            341
           ]
         },
         "magmaCrystal": {
           "rect": [
-            552,
-            289,
-            256,
-            247
+            556,
+            280,
+            247,
+            256
           ],
           "sourceRect": [
-            1085,
-            561,
-            401,
-            387
+            1070,
+            529,
+            447,
+            463
           ]
         }
       },

@@ -1,25 +1,88 @@
 import {WALL_AO_RADIUS} from './home_building_ao_core.js';
-import {buildingBounds,isEdge} from './home_building_core.js';
+import {buildingBounds,buildingWallFeet,isEdge} from './home_building_core.js';
 // The same painter runs in the live canvas and the background raster worker.
 export function buildingVisualBounds(o,item){
- const b=buildingBounds(o,item),height=isEdge(item)?1.25*(o.sizeScale??1):item.building.type==='roof'?1.4:0;
- return {x:b.x*40-2,y:(b.y-height)*40-2,w:Math.max(b.w*40,item.building.type==='door'&&o.doorOpen&&(o.rotation||0)%2?40:0)+4,h:(b.h+height)*40+4};
+ const s=o.sizeScale??1,b=buildingBounds(o,item),wall=isEdge(item),height=wall?1.25*s:item.building.type==='roof'?1.4:0;
+ const w=wall?40*s:b.w*40,h=wall?40*s:b.h*40;
+ return {x:o.x*40-4,y:(o.y-height)*40-4,w:w+8,h:h+height*40+8};
 }
-export function drawBuilding(c,item,o,image,connections=[1,1],ao=[]){
- const b=buildingBounds(o,item),x=b.x*40,y=b.y*40,w=b.w*40,h=b.h*40,wall=isEdge(item),height=50*(o.sizeScale??1),crop=item.art?.crop;
+export function drawBuilding(c,item,o,image,connections=0,ao=[]){
+ const s=o.sizeScale??1,b=buildingBounds(o,item),x=o.x*40,y=o.y*40,cellW=40*s,cellH=40*s;
+ const type=item.building.type,style=item.building.style,wall=isEdge(item),height=(type==='fence'?28:50)*s,crop=item.art?.crop;
+ const baseColor=style==='wood'?'#b38856':'#858c95',topColor=style==='wood'?'#cfa36e':'#a3aab3',trimColor=style==='wood'?'#755637':'#626971',skirtColor=style==='wood'?'rgba(62,41,22,0.34)':'rgba(44,50,58,0.34)';
  c.save();
- const fill=(dx,dy,dw,dh)=>{c.fillStyle=item.building.style==='wood'?'#b38856':'#858c95';c.fillRect(dx,dy,dw,dh);if(image&&crop&&(image.naturalWidth||image.width)&&image.complete!==false)c.drawImage(image,...crop,dx,dy,dw,dh);};
- if(!wall){fill(x,y-(item.building.type==='roof'?56:0),w,h);if(item.building.type==='floor')drawFloorAO(c,b,ao);}
- else if(o.doorOpen&&item.building.type==='door'){
-  // Open leaf at the hinge leaves a visible, walkable opening.
-  if((o.rotation||0)%2)fill(x,y-height,40,8);else fill(x,y-height,Math.min(w,7),height+h);
- }else{
-  if((o.rotation||0)%2){
-   c.save();c.transform(1,0,0,h/height,0,y-height);fill(x,0,w,height*2);c.restore();
-  }else fill(x,y-height,w,height+h);
-  c.fillStyle=item.building.style==='wood'?'#755637':'#626971';
-  if(connections[0]===1)c.fillRect(x,y-height,2,height+h);
-  if(connections[1]===1)c.fillRect(x+w-2,y-height,2,height+h);
+ const hasImg=Boolean(image&&crop&&(image.naturalWidth||image.width)&&image.complete!==false);
+ const fill=(dx,dy,dw,dh)=>{
+  if(dw<=0||dh<=0)return;
+  c.fillStyle=baseColor;c.fillRect(dx,dy,dw,dh);
+  if(hasImg)c.drawImage(image,...crop,dx,dy,dw,dh);
+ };
+ if(!wall){
+  if(type==='roof'){
+   fill(x,y-56,b.w*40,b.h*40);
+  }else{
+   const mask=typeof connections==='number'?connections&15:15;
+   c.fillStyle=skirtColor;
+   if(!(mask&1))c.fillRect(x,y-3,cellW,3);
+   if(!(mask&4))c.fillRect(x,y+cellH,cellW,4);
+   if(!(mask&8))c.fillRect(x-3,y,3,cellH);
+   if(!(mask&2))c.fillRect(x+cellW,y,3,cellH);
+   fill(x,y,b.w*40,b.h*40);
+   c.fillStyle=topColor;
+   if(!(mask&1))c.fillRect(x,y,cellW,2);
+   if(!(mask&8))c.fillRect(x,y,2,cellH);
+   c.fillStyle=trimColor;
+   if(!(mask&4))c.fillRect(x,y+cellH-3,cellW,3);
+   if(!(mask&2))c.fillRect(x+cellW-2,y,2,cellH);
+   drawFloorAO(c,b,ao);
+  }
+  c.restore();
+  return buildingVisualBounds(o,item);
+ }
+ const feet=buildingWallFeet(o,connections);
+ const t=7.2*s,verticalFoot=feet.find(f=>f.vertical),horizontalFoot=feet.find(f=>!f.vertical);
+ const hx=verticalFoot?verticalFoot.x*40:x+(cellW-t)/2,hy=horizontalFoot?horizontalFoot.y*40:y+(cellH-t)/2,cx=hx+t/2,cy=hy+t/2;
+ const horiz=Boolean(horizontalFoot);
+ const drawPlinth=(rx,ry,rw,rh)=>{
+  c.fillStyle=skirtColor;c.fillRect(rx-2,ry+rh-1,rw+4,4);
+  c.fillStyle=trimColor;c.fillRect(rx-1,ry+rh-3,rw+2,3);
+ };
+ const drawWallBox=(rx,ry,rw,rh)=>{
+  drawPlinth(rx,ry,rw,rh);
+  // Extrude the ground footprint: side walls have a continuous thin top,
+  // not a full front-facing facade stretched along the north/south axis.
+  fill(rx,ry+rh-height,rw,height);
+  c.fillStyle=topColor;c.fillRect(rx,ry-height,rw,rh);
+  c.fillStyle=trimColor;
+  c.fillRect(rx,ry-height,rw,1.5);
+  c.fillRect(rx,ry+rh-height,rw,1.5);
+ };
+ if(type==='door'&&o.doorOpen){
+  if(horiz){
+   drawWallBox(x,hy,Math.round(9*s),t);
+   drawWallBox(x+cellW-Math.round(9*s),hy,Math.round(9*s),t);
+   drawWallBox(x+Math.round(7*s),hy-Math.round(14*s),Math.round(6*s),Math.round(16*s));
+  }else{
+   drawWallBox(hx,y,t,Math.round(9*s));
+   drawWallBox(hx,y+cellH-Math.round(9*s),t,Math.round(9*s));
+   drawWallBox(hx>x+cellW/2?hx-Math.round(16*s):hx+t,y+Math.round(7*s),Math.round(16*s),Math.round(6*s));
+  }
+  c.restore();
+  return buildingVisualBounds(o,item);
+ }
+ for(const f of feet)drawWallBox(f.x*40,f.y*40,f.w*40,f.h*40);
+ if(type==='window'){
+  const wx=horiz?cx-10*s:hx+2,wy=(horiz?hy:cy)-height*.68,ww=horiz?20*s:Math.max(4,t-4),wh=height*.38;
+  c.fillStyle=trimColor;c.fillRect(wx-2,wy-2,ww+4,wh+4);
+  c.fillStyle='rgba(175,226,245,0.78)';c.fillRect(wx,wy,ww,wh);
+  c.fillStyle=trimColor;
+  if(horiz)c.fillRect(wx+ww/2-1,wy,2,wh);
+  c.fillRect(wx,wy+wh/2-1,ww,2);
+ }else if(type==='door'){
+  const dx=horiz?cx-9*s:hx+1,dy=(horiz?hy+t:cy+8*s)-height*.76,dw=horiz?18*s:Math.max(5,t-2),dh=height*.76;
+  c.fillStyle=trimColor;c.fillRect(dx-2,dy-2,dw+4,dh+2);
+  c.fillStyle=style==='wood'?'#8c5e35':'#5c4a38';c.fillRect(dx,dy,dw,dh);
+  c.fillStyle='#f0c869';c.fillRect(dx+dw-5,dy+dh*.52,3,3);
  }
  c.restore();
  return buildingVisualBounds(o,item);

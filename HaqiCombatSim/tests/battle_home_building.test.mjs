@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {buildingPlacement,buildingConnections,roofSections,obstruction} from '../js/home_building_core.js';
+import {buildingPlacement,buildingConnections,buildingConnectionMask,roofSections,obstruction} from '../js/home_building_core.js';
 import {applyHomeAction,homeObjects} from '../js/home_actions_core.js';
 import {canPlace,validateHomePart} from '../js/home_core.js';
 import {isHomePassable,findHomePath} from '../js/home_walk_core.js';
@@ -12,14 +12,37 @@ const catalog=JSON.parse(fs.readFileSync(new URL('../data/adventure/home/catalog
 const obj=(type,x=0,y=0,extra={})=>({id:type+x+':'+y,itemId:'build-wood-'+type,x,y,rotation:0,...extra});
 const item=type=>catalog.find(i=>i.id==='build-wood-'+type);
 const parts=()=>({inventory:{'build-wood-wall:':20,'build-wood-door:':1},'chunk:0,0':{},'chunk:-1,0':{},'chunk:1,0':{}});
-test('building snaps to integer cells but legacy and disabled snapping preserve fractions',()=>{assert.equal(buildingPlacement(obj('wall',-.6,.2),item('wall')).x,-1);assert.equal(buildingPlacement(obj('wall',.25,0,{properties:{snap:false}}),item('wall')).x,.25);assert.equal(buildingPlacement({x:.25},catalog[0]).x,.25);});
-test('floors, roofs and wall edges coexist, duplicate slots do not',()=>{const rows=[obj('floor'),obj('wall'),obj('wall',0,0,{id:'vertical',rotation:1})];assert.equal(canPlace(obj('roof'),rows,catalog).ok,true);assert.equal(canPlace(obj('wall',0,0,{id:'duplicate'}),rows,catalog).ok,false);assert.equal(canPlace(rows[2],rows.slice(0,2),catalog).ok,true);});
-test('replacing a wall with a door atomically returns the wall',()=>{const p=parts();applyHomeAction(p,{type:'place',object:obj('wall')},catalog);applyHomeAction(p,{type:'place',object:obj('door')},catalog);assert.equal(p.inventory['build-wood-wall:'],20);assert.equal(p.inventory['build-wood-door:'],1);assert.equal(homeObjects(p).length,1);assert.equal(homeObjects(p)[0].itemId,'build-wood-door');});
+test('building snaps to integer cells containing the cursor while legacy and disabled snapping preserve fractions',()=>{assert.equal(buildingPlacement(obj('wall',-.6,.2),item('wall')).x,-1);assert.deepEqual(buildingPlacement(obj('floor',.8,.9),item('floor')),{...obj('floor',.8,.9),x:0,y:0});assert.deepEqual(buildingPlacement(obj('floor',-.2,-.1),item('floor')),{...obj('floor',-.2,-.1),x:-1,y:-1});assert.equal(buildingPlacement(obj('wall',.25,0,{properties:{snap:false}}),item('wall')).x,.25);assert.equal(buildingPlacement({x:.25},catalog[0]).x,.25);});
+test('floors, roofs and wall edges coexist; roofs require floor; same-kind cells replace each other',()=>{
+ const rows=[obj('floor'),obj('wall')];
+ assert.equal(canPlace(obj('roof'),rows,catalog).ok,true);
+ assert.equal(canPlace(obj('roof',2,2),rows,catalog).ok,false);
+ assert.equal(canPlace(obj('roof',2,2),rows,catalog).reason,'屋顶必须放在地板上');
+ assert.equal(canPlace(obj('wall',0,0,{id:'replace-wall'}),rows,catalog).ok,true);
+ const p=parts();
+ applyHomeAction(p,{type:'place',object:obj('floor')},catalog);
+ applyHomeAction(p,{type:'place',object:{id:'stone-floor',itemId:'build-stone-floor',x:0,y:0}},catalog);
+ assert.equal(homeObjects(p).filter(o=>o.itemId.endsWith('-floor')).length,1);
+ assert.equal(homeObjects(p).find(o=>o.itemId.endsWith('-floor')).itemId,'build-stone-floor');
+});
+test('replacing a wall with a door atomically replaces the wall slot',()=>{const p=parts();applyHomeAction(p,{type:'place',object:obj('wall')},catalog);applyHomeAction(p,{type:'place',object:obj('door')},catalog);assert.equal(p.inventory['build-wood-wall:'],20);assert.equal(p.inventory['build-wood-door:'],1);assert.equal(homeObjects(p).length,1);assert.equal(homeObjects(p)[0].itemId,'build-wood-door');});
 test('open door permits passage and closed door blocks a thin base',()=>{const p=parts();applyHomeAction(p,{type:'place',object:obj('door')},catalog);assert.equal(isHomePassable(.5,.09,homeObjects(p),catalog),false);assert.equal(isHomePassable(.5,.5,homeObjects(p),catalog),true);applyHomeAction(p,{type:'door',id:obj('door').id},catalog);assert.equal(isHomePassable(.5,.09,homeObjects(p),catalog),true);assert.throws(()=>applyHomeAction(p,{type:'door',id:obj('door').id,actors:[{x:.5,y:.09}]},catalog),/角色/);});
-test('obstruction overrides rotate, scale, persist and do not release occupancy',()=>{const o=obj('wall',2,3,{rotation:1,sizeScale:2,properties:{width:.5,depth:.2,offsetX:.1,offsetY:.3}});assert.deepEqual(obstruction(o,item('wall')),{x:2.6,y:3.2,w:.4,h:1});const transparent=obj('wall',0,0,{properties:{enabled:false}});assert.equal(isHomePassable(.5,0,[transparent],catalog),true);assert.equal(canPlace({...transparent,id:'other'},[transparent],catalog).ok,false);validateHomePart('chunk',{o:JSON.parse(JSON.stringify(o))},catalog);for(const properties of [{width:NaN},{enabled:1},{offsetX:9},{depth:0},{unknown:true}])assert.throws(()=>validateHomePart('chunk',{o:{...o,properties}},catalog));});
+test('obstruction overrides rotate, scale, persist and same-kind wall replaces existing wall',()=>{const o=obj('wall',2,3,{rotation:1,sizeScale:2,properties:{width:.5,depth:.2,offsetX:.1,offsetY:.3}});assert.deepEqual(obstruction(o,item('wall')),{x:2.6,y:3.2,w:.4,h:1});const transparent=obj('wall',0,0,{properties:{enabled:false}});assert.equal(isHomePassable(.5,0,[transparent],catalog),true);assert.equal(canPlace({...transparent,id:'other'},[transparent],catalog).ok,true);validateHomePart('chunk',{o:JSON.parse(JSON.stringify(o))},catalog);for(const properties of [{width:NaN},{enabled:1},{offsetX:9},{depth:0},{unknown:true}])assert.throws(()=>validateHomePart('chunk',{o:{...o,properties}},catalog));});
 test('reading receipts do not create inventory',()=>{const p=parts();p['receipt:r']={};const a={type:'summon',itemId:'build-wood-floor',input:'text',receipt:'r'};applyHomeAction(p,a,catalog);applyHomeAction(p,a,catalog);assert.equal(p.inventory['build-wood-floor:'],undefined);p['receipt:s']={};applyHomeAction(p,{...a,receipt:'s'},catalog);assert.equal(p.inventory['build-wood-floor:'],undefined);});
 test('placement is unlimited without inventory',()=>{const p=parts();delete p.inventory;applyHomeAction(p,{type:'place',object:obj('wall')},catalog);assert.equal(homeObjects(p).length,1);assert.equal(p.inventory,undefined);});
 test('joins and roof sections cross chunk boundaries and split after removal',()=>{const a=obj('wall',31),b=obj('wall',32),corner=obj('wall',32,0,{rotation:1,id:'corner'}),joins=buildingConnections([a,b,corner],catalog);assert.deepEqual(joins.get(a.id),[1,3]);const roofs=[31,32,33].map(x=>obj('roof',x));assert.equal(roofSections(roofs,catalog).get(roofs[0].id).length,3);assert.equal(roofSections([roofs[0],roofs[2]],catalog).get(roofs[0].id).length,1);});
+test('1x1 walls, windows and doors auto-shape into 4-directional walls from floors and neighbors',()=>{
+ const floors=[];
+ for(let y=0;y<3;y++)for(let x=0;x<3;x++)floors.push(obj('floor',x,y,{id:`f-${x}-${y}`}));
+ const nwCorner=obj('wall',0,0,{id:'w-nw'});
+ const northEdge=obj('window',1,0,{id:'w-n'});
+ const westEdge=obj('wall',0,1,{id:'w-w'});
+ assert.equal(buildingConnectionMask(nwCorner,[...floors,nwCorner],catalog)&15,6);
+ assert.equal(buildingConnectionMask(northEdge,[...floors,northEdge],catalog)&15,10);
+ assert.equal(buildingConnectionMask(westEdge,[...floors,westEdge],catalog)&15,5);
+ const crossCenter=obj('wall',1,1,{id:'c'}),n=obj('wall',1,0,{id:'n'}),e=obj('door',2,1,{id:'e'}),s=obj('window',1,2,{id:'s'}),w=obj('wall',0,1,{id:'w'});
+ assert.equal(buildingConnectionMask(crossCenter,[crossCenter,n,e,s,w],catalog)&15,15);
+});
 test('movement across chunks leaves no duplicate and rotation keeps thin collision',()=>{const p=parts();applyHomeAction(p,{type:'place',object:obj('wall',31)},catalog);applyHomeAction(p,{type:'move',id:obj('wall',31).id,position:{x:32,y:0,rotation:1}},catalog);assert.equal(Object.keys(p['chunk:0,0']).length,0);assert.equal(homeObjects(p).length,1);assert.equal(isHomePassable(32.05,.5,homeObjects(p),catalog),false);});
 test('pathfinding goes through open door instead of closed wall',()=>{const walls=[-2,-1,0,1,2].map(x=>obj(x===0?'door':'wall',x,0));const path=findHomePath({x:.5,y:-1},{x:.5,y:1},walls.map(o=>({...o,doorOpen:true})),catalog);assert.ok(path.length);assert.equal(isHomePassable(.5,.09,walls,catalog),false);});
 test('new art uses verified permanent URLs and bounded WebP material files',()=>{for(const i of catalog.filter(i=>i.building)){const bytes=fs.readFileSync(new URL('../'+i.art.local,import.meta.url));assert.ok(bytes.length<=200000);assert.equal(bytes.toString('ascii',8,12),'WEBP');assert.match(i.art.cdn,/^https:\/\/cdn.keepwork.com\//);}});
@@ -28,8 +51,13 @@ test('one practice per event, tenth becomes basic, manual downgrade starts fresh
 test('wrong answers and demonstration playback never count; higher marks stay higher',()=>{const s=emptyLanguageTree();seedWordLexicon(s,index);assert.equal(recordEffectivePractice(s,{id:'x',input:'text',words:['wall'],valid:false,at:1},index),false);setTreeMark(s,'wall','know',1);for(let n=0;n<11;n++)recordEffectivePractice(s,{id:'e'+n,input:'speech',words:['wall'],valid:true,at:n},index);assert.equal(s.words.wall.mark,'know');assert.equal(s.words.wall.selfMark,'know');});
 
 import {homeStrokeCells} from '../js/home_edit_core.js';
-test('fast pointer strokes fill gaps and repeated event cells can be deduplicated',()=>{const seen=new Set();for(const cell of [...homeStrokeCells({x:0,y:0},{x:5,y:0}),...homeStrokeCells({x:5,y:0},{x:3,y:0})])seen.add(`${cell.x},${cell.y}`);assert.equal(seen.size,6);assert.deepEqual(homeStrokeCells({x:0,y:0},{x:3,y:3}),[{x:0,y:0},{x:1,y:1},{x:2,y:2},{x:3,y:3}]);});
+test('fast pointer strokes fill gaps and repeated event cells can be deduplicated',()=>{const seen=new Set();for(const cell of [...homeStrokeCells({x:0,y:0},{x:5,y:0}),...homeStrokeCells({x:5,y:0},{x:3,y:0})])seen.add(`${cell.x},${cell.y}`);assert.equal(seen.size,6);assert.deepEqual(homeStrokeCells({x:0,y:0},{x:3,y:3}),[{x:0,y:0},{x:1,y:1},{x:2,y:2},{x:3,y:3}]);assert.deepEqual(homeStrokeCells({x:.8,y:.9},{x:2.8,y:.9}),[{x:0,y:0},{x:1,y:0},{x:2,y:0}]);});
 test('practice outbox is part of summon transaction and receipt replay cannot duplicate it',()=>{const p=parts();p['receipt:r']={};p['local:practice']={};const a={type:'summon',itemId:'build-wood-floor',receipt:'r',input:'text',practice:{id:'r',language:'en',input:'text'}};applyHomeAction(p,a,catalog);delete p['local:practice'].r;applyHomeAction(p,a,catalog);assert.deepEqual(p['local:practice'],{});assert.equal(p.inventory['build-wood-floor:'],undefined);});
 test('matching enlarged roof tiles remain one connected section',()=>{const roofs=[obj('roof',0,0,{sizeScale:2}),obj('roof',2,0,{sizeScale:2})];assert.equal(roofSections(roofs,catalog).get(roofs[0].id).length,2);});
-test('roof does not reserve the furniture or loose tabletop layer underneath',()=>{const roof=obj('roof');assert.equal(canPlace({id:'book',itemId:'book',x:0,y:0},[roof],catalog).ok,true);assert.equal(canPlace({id:'chair',itemId:'chair',x:0,y:0},[roof],catalog).ok,true);});
-test('building occupancy respects enlarged legacy furniture',()=>{const chair={id:'legacy',itemId:'chair',x:0,y:0,sizeScale:2};assert.equal(canPlace(obj('wall',1.5,0),[chair],catalog).ok,false);});
+test('ordinary items can be placed on floors, walls, and under roofs',()=>{
+ const floor=obj('floor'),wall=obj('wall'),roof=obj('roof');
+ assert.equal(canPlace({id:'book',itemId:'book',x:0,y:0},[floor,wall,roof],catalog).ok,true);
+ assert.equal(canPlace({id:'chair',itemId:'chair',x:0,y:0},[floor,wall,roof],catalog).ok,true);
+ const chair={id:'legacy',itemId:'chair',x:0,y:0,sizeScale:2};
+ assert.equal(canPlace(obj('wall',1,0),[chair],catalog).ok,true);
+});

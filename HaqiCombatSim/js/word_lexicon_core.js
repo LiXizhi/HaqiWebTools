@@ -1,24 +1,43 @@
 // Static vocabulary only; no IO, DOM or probabilistic stemming.
+// Compatibility for a previously loaded WordTree that imported this helper here.
+export {wordTreeDisplayState} from './word_tree_display_core.js';
 export const WORD_LANGUAGES=['zh','en','ja','ko'];
 export const wordLanguage=value=>({ 'zh-CN':'zh',jp:'ja' }[value]||String(value||'').split('-')[0]);
 export const normalizeWord=value=>String(value).normalize('NFKC').toLowerCase().replaceAll('’',"'");
 export const wordTreeKey=(key,language)=>language==='en'?key:`${key}:${language}`;
 export function parseWordLexicon(text,language){
  language=wordLanguage(language);if(!WORD_LANGUAGES.includes(language))throw Error('不支持的词库语言');
- const entries=[],seen=new Set();let line=0;
+ const entries=[],seen=new Set(),byId=new Map(),keys=[],formKeys=new Map(),displayIds=new Set();let line=0;
  for(const raw of String(text).split(/\r?\n/)){line++;if(!raw.trim()||raw.trimStart().startsWith('#'))continue;
-  const at=raw.indexOf('||');if(at<1)throw Error(`词库第 ${line} 行格式无效`);
-  const id=normalizeWord(raw.slice(0,at).trim());let row;try{row=JSON.parse(raw.slice(at+2));}catch{throw Error(`词库第 ${line} 行内容无效`);}
-  if(seen.has(id)||id.length>48||!/^\p{L}[\p{L}\p{M}\s'’-]*$/u.test(id)||typeof row.meaning!=='string'||!row.meaning.trim()||!Array.isArray(row.forms)||!Array.isArray(row.senses)||row.forms.some(x=>typeof x!=='string'||!x||x.length>80)||row.senses.some(x=>typeof x!=='string'||!x))throw Error(`词库第 ${line} 行词条无效`);
-  seen.add(id);entries.push({id,text:id,meaning:row.meaning,forms:[...new Set(row.forms.map(normalizeWord))].filter(x=>x!==id),senses:[...new Set(row.senses)],pos:row.pos||'',pronunciation:row.reading||''});
+  const at=raw.indexOf('||'),rowKeys=(language==='zh'?raw:raw.slice(0,at)).split(',').map(key=>key.trim());
+  if((language==='zh'?at!==-1:at<1)||rowKeys.some(key=>!(/^\p{Script=Han}+$/u.test(key))||seen.has(key))||new Set(rowKeys).size!==rowKeys.length)throw Error(`词库第 ${line} 行中文键无效`);
+  for(const key of rowKeys){seen.add(key);keys.push(key);}
+  if(language==='zh'){
+   displayIds.add(rowKeys[0]);
+   // Grouping compresses the source, not the learner's independent Chinese records.
+   for(const key of rowKeys){const senses=[`zh:${key}`];formKeys.set(key,senses);entries.push({id:key,text:key,meaning:key,forms:[],senses,keys:[key],pos:'',pronunciation:''});}
+   continue;
+  }
+  const values=language==='zh'?rowKeys:raw.slice(at+2).trim()?raw.slice(at+2).split(',').map(x=>normalizeWord(x.trim())):[];
+  if(values.some(x=>!x||x.length>80||!/^\p{L}[\p{L}\p{M}\s'’-]*$/u.test(x)))throw Error(`词库第 ${line} 行词形无效`);
+  if(!values.length)continue; // Explicitly untranslated; never invent a translation.
+  const rowSenses=rowKeys.map(key=>`zh:${key}`);
+  for(const form of values){if(!formKeys.has(form))formKeys.set(form,[]);formKeys.get(form).push(...rowSenses);}
+  const [id,...forms]=[...new Set(values)];
+  displayIds.add(id);
+  if(byId.has(id)){const entry=byId.get(id);entry.forms=[...new Set([...entry.forms,...forms])];entry.senses.push(...rowSenses);entry.keys.push(...rowKeys);entry.meaning=entry.keys.join('；');}
+  else {const entry={id,text:id,meaning:rowKeys.join('；'),forms,senses:rowSenses,keys:rowKeys,pos:'',pronunciation:''};byId.set(id,entry);entries.push(entry);}
  }
- return {version:1,language,title:'常用字词',entries};
+ return {version:2,language,title:'常用字词',keys,entries,formKeys,displayIds};
 }
 export function buildWordIndex(data){
  const entries=new Map(),aliases=new Map(),senses=new Map(),trie=new Map();
  for(const entry of data.entries){entries.set(entry.id,entry);for(const form of [entry.id,...entry.forms]){const key=normalizeWord(form);if(!aliases.has(key))aliases.set(key,entry.id);else if(aliases.get(key)!==entry.id)aliases.set(key,null);}
   for(const sense of entry.senses){if(!senses.has(sense))senses.set(sense,new Set());senses.get(sense).add(entry.id);}}
- // Ambiguous spellings stay ambiguous, including a lemma which is another word's inflection.
+ // V2 Chinese keys describe meanings; overlapping translations are not lost.
+ // Prefer the primary spelling for existing learning records. Matching uses the
+ // exact surface form's Chinese keys, not the union of its synonym's meanings.
+ if(data.version===2){for(const entry of data.entries)for(const form of [entry.id,...entry.forms]){const key=normalizeWord(form);if(!aliases.get(key))aliases.set(key,entry.id);}for(const entry of data.entries)aliases.set(entry.id,entry.id);}
  let maxLength=0;for(const [form,id] of aliases){maxLength=Math.max(maxLength,form.length);let node=trie;for(const char of form){if(!node.has(char))node.set(char,new Map());node=node.get(char);}node.id=id;node.terminal=true;}
  return {language:data.language,data,entries,aliases,senses,trie,maxLength};
 }
@@ -46,9 +65,10 @@ export function matchWordText(index,text,{stats}={}){
 }
 export function localWordMapping(lines,indexes,state){
  const matches=lines.map((line,i)=>matchWordText(indexes[i],line.text)),pairs=[],used=new Set(),bySense=new Map();
- for(const word of matches[1])for(const sense of indexes[1].entries.get(word.id).senses){if(!bySense.has(sense))bySense.set(sense,[]);bySense.get(sense).push(word);}
+ const keys=(index,word)=>index.data.formKeys?.get(normalizeWord(word.text))||index.entries.get(word.id).senses;
+ for(const word of matches[1])for(const sense of keys(indexes[1],word)){if(!bySense.has(sense))bySense.set(sense,[]);bySense.get(sense).push(word);}
  const target=matches[0].filter(w=>state?.words?.[w.id]?.mark!=='know');
- for(const word of target){const candidates=new Set();for(const sense of indexes[0].entries.get(word.id).senses)for(const other of bySense.get(sense)||[])if(!used.has(other.start))candidates.add(other);
+ for(const word of target){const candidates=new Set();for(const sense of keys(indexes[0],word))for(const other of bySense.get(sense)||[])if(!used.has(other.start))candidates.add(other);
   // Multiple occurrences of the same lemma are paired in reading order. Different lemmas are ambiguous.
   if(new Set([...candidates].map(w=>w.id)).size!==1)continue;const other=[...candidates].sort((a,b)=>a.start-b.start)[0];used.add(other.start);pairs.push({target:word,native:other});}
  const ranges=[target.map(w=>({...w,wordId:w.id})),pairs.map(p=>({...p.native,wordId:p.target.id}))];

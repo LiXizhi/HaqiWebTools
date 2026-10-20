@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import {createJsonReader} from '../js/runtime_data.js';
 import {loadEnvironmentArt} from '../js/adventure_environment_art.js';
+import {createScheduledTerrainCache} from '../js/terrain_tile_scheduler.js';
 const source=readFileSync(new URL('../js/view_home.js',import.meta.url),'utf8');
 const method=source.slice(source.indexOf('  async prepare('),source.indexOf('  openSummon:'));
 function fixture({decode=async()=>{}}={}){
@@ -11,6 +12,37 @@ function fixture({decode=async()=>{}}={}){
  const view=vm.runInNewContext('({'+method+'})',state);return {view,state};
 }
 const flush=()=>new Promise(setImmediate);
+test('home camera zoom reuses baked terrain and keeps building raster density stable',()=>{
+ const draw=source.slice(source.indexOf('  const worldRect={'),source.indexOf('  const sections=buildings.sections()'));
+ for(const ratio of [1,1.5,2]){
+  const callbacks=new Map(),world={unbounded:true,layout:{}};
+  const painted=new Set();let id=0;
+  const cache=createScheduledTerrainCache({
+   createCanvas:()=>({getContext:()=>({translate(){},scale(){}})}),
+   schedule:fn=>{callbacks.set(++id,fn);return id;},cancel:key=>callbacks.delete(key),
+   paint:function*(c,w,rect){
+    const key=`${rect.x},${rect.y},${rect.w}`;
+    assert.ok(!painted.has(key),'zoom must not repaint already cached terrain');
+    painted.add(key);
+   }
+  });
+  const state={
+   model:{camera:{x:5,y:5},home:{seed:1},catalog:{items:[]}},
+   r:{width:200,height:200},ratio,objects:[],envArt:null,decorArt:null,gesture:null,
+   ctx:{save(){},restore(){},translate(){},scale(){},drawImage(){}},
+   terrain:{draw(c,seed,rect,env,decor,density){return cache.draw(c,world,rect,()=>{},density);}},
+   buildings:{prepare(objects,catalog,rect,density){assert.equal(density,ratio);return [];}}
+  };
+  const render=scale=>{
+   vm.runInNewContext(draw,{...state,scale});
+   while(callbacks.size){const [key,fn]=callbacks.entries().next().value;callbacks.delete(key);fn();}
+  };
+  try{
+   render(24);assert.ok(painted.size>0);
+   for(const scale of [40,44,60,72,36,24])render(scale);
+  }finally{cache.clear();}
+ }
+});
 test('home atlas entry uses the release pack and retries a failed download',async()=>{
  const paths=['environment-art','terrain-decoration-art'];
  const files=Object.fromEntries(paths.map(name=>[`data/adventure/${name}.json`,JSON.parse(readFileSync(new URL(`../data/adventure/${name}.json`,import.meta.url)))]));

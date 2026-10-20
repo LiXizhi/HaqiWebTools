@@ -1,8 +1,9 @@
+import {renderSpeechWords} from './view_bilingual_dialogue.js';
 import {homeCapacity} from './home_capacity_core.js';
 import {BUILDING_TEMPLATES,buildingTemplateObjects} from './home_building_templates_core.js';
 import {createHomeBuildingCache} from './home_building_cache.js';
 import {drawBuilding,buildingVisualBounds} from './view_home_building.js';
-import {isRoofDecoration,buildingItem,obstruction,buildingBounds} from './home_building_core.js';
+import {isRoofDecoration,buildingItem,obstruction,buildingBounds,buildingConnectionMask} from './home_building_core.js';
 import {openBuildingProperties} from './view_home_building_properties.js';
 import {createHomeTerrainCache} from './home_terrain_cache.js';
 import {createCloseButton} from './view_adventure_controls.js';
@@ -44,6 +45,7 @@ export function createHomeView(root,cb){
  const images=new Map(),terrain=createHomeTerrainCache();
  const frameMeter=createFrameMeter(),framePacer=createFramePacer();
  let fpsLabel;
+ let speechFeedback,speechProgress;
  let canvas,ctx,stage,side,items,category,catPills,tabs,input,example,bubble,bubbleText,tools,choice,summary,portal,edit,petMode=false;
  const motionTrail=createMotionTrail(7319);
  const heroActor=createHeroActor(7419),secondActor=createHeroActor(7420);
@@ -263,7 +265,7 @@ export function createHomeView(root,cb){
   // Interactive Pet Wish Bubble
   bubble=el('div','home-bubble-wrap');
   bubble.hidden=true;
-  bubbleText=button('',()=>cb.translate(),'home-bubble');
+  bubbleText=button('',()=>model.wish?.expanded?cb.translate():cb.openWish(),'home-bubble');
   const bubbleActions=el('div','home-bubble-actions');
   const listenBtn=button('朗读',()=>run(cb.speakWish),'home-bubble-mini');
   const fulfillBtn=button('帮它实现',cb.helpWish,'home-bubble-mini primary');
@@ -299,7 +301,8 @@ export function createHomeView(root,cb){
 
   example=el('div','home-example');
   choice=el('div','home-choices');
-  main.append(form,example,choice);
+  const composer=el('section','home-composer',example,choice,form);
+  main.append(composer);
 
   // Build & Inventory Sidebar Drawer
   side=el('aside','home-sidebar');
@@ -489,7 +492,7 @@ export function createHomeView(root,cb){
    if(!gesture)return;
    if(Math.hypot(p.sx-gesture.start.sx,p.sy-gesture.start.sy)>6)gesture.moved=true;
    if(gesture.moved&&gesture.hit&&(gesture.hit.kind==='pet'||gesture.hit.kind==='object')){
-    cb.hover(gesture.origin?homeFurnitureDragPosition(gesture.origin,gesture.start,p,model.scale):p,gesture.hit);
+    cb.hover(gesture.origin&&!(gesture.origin.properties?.snap??buildingItem(gesture.origin,model.catalog.items)?.building?.snap??false)?homeFurnitureDragPosition(gesture.origin,gesture.start,p,model.scale):gesture.origin?{x:p.x+Math.floor(gesture.origin.x)-Math.floor(gesture.start.x),y:p.y+Math.floor(gesture.origin.y)-Math.floor(gesture.start.y)}:p,gesture.hit);
    }
    gesture.last=p;
   };
@@ -511,7 +514,7 @@ export function createHomeView(root,cb){
        y:model.camera.y+(point.y-r.height/2)/model.scale
       });
      }
-     return cb.drop(g.hit,homeFurnitureDragPosition(g.origin,g.start,p,model.scale));
+     return cb.drop(g.hit,g.origin&&!(g.origin.properties?.snap??buildingItem(g.origin,model.catalog.items)?.building?.snap??false)?homeFurnitureDragPosition(g.origin,g.start,p,model.scale):g.origin?{x:p.x+Math.floor(g.origin.x)-Math.floor(g.start.x),y:p.y+Math.floor(g.origin.y)-Math.floor(g.start.y)}:p);
     });
    }else if(!g.moved){
     if(g.hit?.kind==='portal')cb.close();
@@ -614,11 +617,11 @@ export function createHomeView(root,cb){
    if(next.selection?.itemId&&!next.selection.id){
     const item=[...next.catalog.items,...(next.practiceItems||[])].find(i=>i.id===next.selection.itemId);
     example.replaceChildren();
-    example.append(el('strong','',tr('你需要读出下面句子才能召唤{item}').replace('{item}',item.zh)),el('p','','从简单到挑战，正确读出或输入任意一句即可召唤。'));
     const chipRow=el('div','home-example-chips');
     for(const [index,sentence] of summonSentences(item,next.lang,next.selection.color).entries()){
-     const row=el('div','home-spell-line');
-     row.append(el('span','home-spell-level',['简单','进阶','挑战'][index]),el('span','home-spell-text',sentence),button('听示范',()=>run(()=>cb.speak(sentence)),'home-sentence-chip'));
+     const row=el('div','home-spell-line'),textSpan=el('span','home-spell-text',sentence);
+     textSpan.dataset.sentence=sentence;
+     row.append(el('span','home-spell-level',['简单','进阶','挑战'][index]),textSpan,button('听示范',()=>run(()=>cb.speak(sentence)),'home-sentence-chip'));
      chipRow.append(row);
     }
     const swatchRow=el('div','home-swatch-row');
@@ -705,7 +708,7 @@ export function createHomeView(root,cb){
     const thumb=el('canvas','home-item-thumb');thumb.width=120;thumb.height=92;
     const c=thumb.getContext('2d');c.translate(8,20);c.scale(100/(template.width*40),65/(template.depth*40));
     const objects=buildingTemplateObjects(template.id);
-    for(const o of objects.filter(o=>!o.itemId.endsWith('-roof')).sort((a,b)=>a.y-b.y)){const item=buildingItem(o,next.catalog.items);drawBuilding(c,item,o,imageFor(item.art));}
+    for(const o of objects.filter(o=>!o.itemId.endsWith('-roof')).sort((a,b)=>a.y-b.y)){const item=buildingItem(o,next.catalog.items);drawBuilding(c,item,o,imageFor(item.art),buildingConnectionMask(o,objects,next.catalog.items));}
     const meta=el('div','home-item-meta');meta.append(el('strong','',template.name+' · 模板'),el('small','','阅读后创建完整建筑'));
     card.append(thumb,meta);items.append(card);
    }
@@ -783,11 +786,13 @@ export function createHomeView(root,cb){
   ctx.save();
   ctx.translate(r.width/2-model.camera.x*scale,r.height/2-model.camera.y*scale);
   ctx.scale(scale/40,scale/40);
-  terrainMissing=terrain.draw(ctx,model.home.seed,worldRect,envArt,decorArt,ratio*scale/40,objects);
+  // Match Haqi world: camera zoom transforms cached world-space images;
+  // only device pixel density controls raster resolution, never camera scale.
+  terrainMissing=terrain.draw(ctx,model.home.seed,worldRect,envArt,decorArt,ratio,objects);
   ctx.restore();
 
   hits=[];
-  const groups=buildings.prepare(objects,model.catalog.items,worldRect,ratio*scale/40,model.selection?.id||gesture?.hit?.id||'');
+  const groups=buildings.prepare(objects,model.catalog.items,worldRect,ratio,model.selection?.id||gesture?.hit?.id||'');
   const sections=buildings.sections(),hiddenRoofs=new Set();
   for(const actor of [model.hero,model.secondHero].filter(Boolean)){for(const o of objects){const item=buildingItem(o,model.catalog.items);if(item?.building?.type!=='roof')continue;const b=buildingBounds(o,item);if(actor.x>=b.x&&actor.x<=b.x+b.w&&actor.y>=b.y&&actor.y<=b.y+b.h)hiddenRoofs.add(sections.get(o.id)?.[0]?.id);}}
   const wallFades=({o,item})=>item.building&&['wall','window'].includes(item.building.type)&&[model.hero,model.secondHero].filter(Boolean).some(h=>h.x>=o.x-.3&&h.x<=o.x+buildingBounds(o,item).w+.3&&h.y<o.y&&h.y>o.y-1.4);
@@ -1035,7 +1040,7 @@ export function createHomeView(root,cb){
     const b=footprint(o,model.catalog.items),p=project(o.x,o.y-(isRoofDecoration(o)?1.4:0));
     ctx.save();
     ctx.globalAlpha=.68;
-    if(item.building){ctx.translate(p.x,p.y);ctx.scale(scale/40,scale/40);ctx.translate(-o.x*40,-o.y*40);drawBuilding(ctx,item,o,imageFor(item.art));}else drawHomeObject(ctx,item,o,p.x,p.y,b.w*scale,b.h*scale,imageFor(item.art),sec);
+    if(item.building){ctx.translate(p.x,p.y);ctx.scale(scale/40,scale/40);ctx.translate(-o.x*40,-o.y*40);drawBuilding(ctx,item,o,imageFor(item.art),buildingConnectionMask(o,[...objects,o],model.catalog.items));}else drawHomeObject(ctx,item,o,p.x,p.y,b.w*scale,b.h*scale,imageFor(item.art),sec);
     ctx.restore();
     ctx.fillStyle=o.valid?'rgba(154,230,140,0.22)':'rgba(220,90,82,0.28)';
     ctx.strokeStyle=o.valid?'#b8f59e':'#ff7b72';
@@ -1052,7 +1057,9 @@ export function createHomeView(root,cb){
   bubble.hidden=!pet||model.quiet;
   if(pet&&!model.quiet){
    const p=gesture?.moved&&gesture.hit?.kind==='pet'&&gesture.hit.id===pet.id?petDragPoint(gesture):project(pet.x,pet.y);
-   bubbleText.textContent=model.translation?`${wish.text}\n${wish.translation}`:wish.text;
+   bubble.classList.toggle('is-collapsed',!wish.expanded);
+   bubbleText.textContent=wish.expanded?(model.translation?`${wish.text}\n${wish.translation}`:wish.text):'…';
+   bubbleText.setAttribute('aria-label',wish.expanded?bubbleText.textContent:tr('听宠物愿望'));
    bubble.style.left=`${p.x+28}px`;
    bubble.style.top=`${p.y-scale*1.8}px`;
    bubble.hidden=p.x<0||p.x>r.width||p.y<0||p.y>r.height;
@@ -1093,6 +1100,15 @@ export function createHomeView(root,cb){
    return shot.toDataURL('image/webp',.8);
   },
   setInput:text=>{if(input)input.value=text;},
+  setSpeechFeedback:(feedback)=>{
+   if(!example)return;
+   const spans=[...example.querySelectorAll('.home-spell-text')];
+   spans.forEach(span=>{if(span.dataset.sentence)span.textContent=span.dataset.sentence;});
+   if(feedback?.parts?.length){
+    const target=spans[feedback.lineIndex??0]||spans[0];
+    if(target)renderSpeechWords(target,feedback.parts);
+   }
+  },
   dispose(){
    dead=true;
    activeDialog?.destroy();

@@ -63,7 +63,7 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],autoRead
     box.classList.add('is-speaking');
     if(lines.length){
         ready=true;box.classList.remove('is-speaking');box.classList.add('dialogue-learning');text.replaceChildren();
-        const idleHint='点击词语标记理解程度；同色连线表示对应词义，点击按钮可用模型补齐。';
+        const idleHint='同色词语已自动对应；点击词语标记理解程度，模型按钮可补充连线。';
         const makeButton=(label,run,cls)=>{const node=document.createElement('button');node.type='button';node.className=cls;node.textContent=label;node.onclick=run;return node;};
         const bilingual=createBilingualDialogue({button:makeButton,mapWords});
         const read=async()=>{

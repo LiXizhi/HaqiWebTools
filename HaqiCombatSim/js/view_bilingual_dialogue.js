@@ -31,19 +31,19 @@ export function createBilingualDialogue({button,mapWords,createWordLearning=crea
             closeWord=showDialogueWordMark({entry,surface,language:learner.language,onRead:async(word,language)=>{wordAbort?.abort();wordAbort=new AbortController();if(!wordVoice){const {createLearningVoice}=await import('./language_adventure_voice.js');wordVoice=createLearningVoice();}if(disposed||!learner.valid())return;await wordVoice.speak(word,{zh:'zh-CN',en:'en-US',ja:'ja-JP',ko:'ko-KR'}[language],wordAbort.signal);},onMark:async mark=>{if(disposed||!learner.valid())return;const r=await learner.mark(id,mark);if(!disposed&&learner.valid())showLocal();return r;},onClose:()=>{wordAbort?.abort();void wordVoice?.cancel();}});
         }
         let currentResult=null;
-        function show(result){currentResult=result;links();links=renderDialogueMapping(container,[originalLabel,glossLabel],result,{onWord:learner?openWord:null});mappingLabel(mapped?'已补齐':'模型补齐');update();}
+        function show(result){currentResult=result;links();links=renderDialogueMapping(container,[originalLabel,glossLabel],result,{onWord:learner?openWord:null});mappingLabel(mapped?'已连线':'模型连线');update();}
         function showLocal(){if(!learner?.valid())return;const local=learner.mapping();show(modelResult?supplementWordMapping(lines,local,modelResult,learner.index,learner.state):local);}
         if(gloss&&translation&&text){
             mapping=control('',async()=>{
                 if(disabled||disposed||busy||mapped)return;finishDialogueReveal(originalLabel);busy=true;update();mapping.setAttribute('aria-busy','true');mappingLabel('映射中…');abort=new AbortController();
                 try{await learningReady;if(disposed||abort.signal.aborted)return;
-                    const excluded=learner?[...new Set([...learner.mapping()[0].filter(p=>p.color).map(p=>p.text),...matchWordText(learner.index,text).filter(w=>learner.state.words[w.id]?.mark==='know').map(w=>w.text)])]:[];
+                    const excluded=learner?[...new Set([...matchWordText(learner.index,text).filter(w=>learner.state.words[w.id]?.mark==='know').map(w=>w.text)])]:[];
                     const requestLines=excluded.length?[{...lines[0],excludeWords:excluded},lines[1]]:lines,requestKey=JSON.stringify(requestLines);
                     if(learner&&!learner.valid())return;const result=results.get(requestKey)||await mapper(requestLines,abort.signal);if(disposed||abort.signal.aborted||learner&&!learner.valid())return;remember(results,requestKey,result);modelResult=result;mapped=true;if(learner)showLocal();else show(result);}
                 catch(error){if(!disposed&&!abort.signal.aborted){mappingLabel('重试映射');mapping.title=error.message;onError(error);}}
                 finally{busy=false;if(!disposed){mapping.setAttribute('aria-busy','false');update();}}
             },'camp-chat-replay camp-chat-map',gloss);
-            mapping.append(icon('map'));mappingLabel('模型补齐');
+            mapping.append(icon('map'));mappingLabel('模型连线');
             // A cache miss never generates a cloud request. Preserve sequential reveal
             // and pronunciation feedback while the IndexedDB read is in flight.
             learningReady=(async()=>{
@@ -57,7 +57,7 @@ export function createBilingualDialogue({button,mapWords,createWordLearning=crea
                 }catch{/* Local cache unavailable: keep the explicit mapping action. */}
             })();
         }
-        const view={textNode:originalLabel,translationNode:gloss,setDisabled(value){disabled=value;update();},feedback(parts){hasFeedback=true;links();links=()=>{};mapped=false;if(mapping)mappingLabel('模型补齐');renderSpeechWords(originalLabel,parts);update();},dispose(){if(disposed)return;disposed=true;unsubscribe();abort?.abort();closeWord();wordAbort?.abort();void wordVoice?.cancel();links();views.delete(view);}};
+        const view={textNode:originalLabel,translationNode:gloss,setDisabled(value){disabled=value;update();},feedback(parts){hasFeedback=true;links();links=()=>{};mapped=false;if(mapping)mappingLabel('模型连线');renderSpeechWords(originalLabel,parts);update();},dispose(){if(disposed)return;disposed=true;unsubscribe();abort?.abort();closeWord();wordAbort?.abort();void wordVoice?.cancel();links();views.delete(view);}};
         views.add(view);return view;
     }
     return {attach,clear(){for(const view of [...views])view.dispose();},close(){this.clear();results.clear();}};

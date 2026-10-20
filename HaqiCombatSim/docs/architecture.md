@@ -216,6 +216,8 @@ flowchart LR
     Actors --> PetPaths[宠物绕障与自动聚会选址：共享按需路径Worker]
     PetPaths --> OriginalPath[原findPath与聚会算法 / 几何版本及离场检查]
     OriginalPath --> Actors
+    OriginalPath --> LocalPath[近距离先做有界局部绕障 / 失败回退道路图]
+    LocalPath --> GridRules[共享格点缓存 / 先比较路径代价再碰撞检查]
     Click[营地主角点击] --> Direct[原碰撞直线检查]
     Direct -->|绕障| HeroNav[island_hero_navigation：角色 / 场景 / 请求序号]
     HeroNav --> HeroWorker[island_path_worker：独立主角实例 / 可取消分片]
@@ -227,6 +229,8 @@ flowchart LR
     MarkerCache --> Actors
     MarkerCache --> Minimap[小地图与交谈邀请复用]
 ```
+
+2026-10-20 寻路优化：岛屿距离不超过480的非直达目标先在起终点外扩96的区域搜索，最多512节点；仅接受到达原目标且长度不超过直线1.2倍加48的路线，否则沿用道路与全局格网回退。道路队列复用稳定最小堆；岛屿／地球格网缓存单次搜索的节点通行结果，城市和家园同样先排除无法改善代价的邻居。海岸和河段先用扩展包围盒排除远处边，再按原公式精算，采样间距和桥梁规则不变。主角、宠物、社交居民及宣传路线均通过原共享入口受益，未新增线程、存档或第三方依赖。
 
 2026-10-17：粗指针触屏设备从首帧将场景画布 DPR 上限设为 1.25、地形纹理 DPR 上限设为 1；DOM 文字与交互坐标保持原样。桌面地形支持四分之一档密度，不将 1.25/1.5 一律提升为 2。地形密度独立于自动降画质，准备与绘制共用策略，避免缓存重建。后台地形仅复制新增或替换的图集；切岛复用已有图集，移除或替换时关闭旧位图。资源到达仅使实际使用该图集的地块失效，在途结果返回后核对依赖，无关图集不会取消任务。
 
@@ -1413,3 +1417,27 @@ flowchart LR
 ### 家园地板 AO 数据流（2026-10-20）
 
 `home_building_ao_core.js` 场景墙脚空间桶 → 每块地板的邻墙视觉几何 → `home_building_cache.js` 分组签名 → `view_home_building.js` 地板裁剪渐变 → worker 或分时主线程烘焙原地板 bitmap。对象变化才重新索引；碰撞与存储独立。地形32MiB + 建筑32MiB预算保持不变。
+
+
+### 2026-10-21 家园召唤判定与反馈
+
+`home_app` 将打字／ASR结果交给 `home_core.matchHomeSpell`，后者复用 NPC 的纯核心 `compareDungeonSpeech` 返回候选与逐词反馈。`view_home` 用现有 `renderSpeechWords` 渲染独立反馈，文本框不接收ASR。语音完成计数仅在当前目标会话内，第三次容错召唤仍沿用原物品事务；未匹配目标物品词不提交有效学习回执。详见[家园](home.md)。
+
+## 2026-10-20：词表统一中文键
+
+```mermaid
+flowchart LR
+  ZH[word_zh：纯中文键 / 逗号分组] --> Check[按需加载与键一致性校验]
+  Forms[word_en / ja / ko：分组中文键与词形列表] --> Check
+  Check --> Index[词形索引 / 最长匹配]
+  Index --> Bridge[原文词形 → 中文键 → 译文词形]
+  Index --> Learning[各语言独立本地学习记录]
+```
+
+对话视图在显现完成后调用共享本地配对函数，以中文键桥接两侧词语并自动显示连线；模型按钮只由用户显式触发并补充未配对范围。来源许可独立随包保留。
+
+2026-10-20 词树展示收口：`parseWordLexicon.displayIds`记录每行首词，`word_tree_display_core.wordTreeDisplayState`只投影画布输入，`WordTree.changed`使用此投影；完整学习状态仍保留在原角色IndexedDB中。跨语对话继续经中文键自动配对，覆盖中英日韩12种有向组合。
+
+2026-10-20 词树加载兼容修复：展示投影放在无依赖的word_tree_display_core.js，WordTree直接导入新模块，不再要求已加载的word_lexicon_core提供新增命名导出；词库核心仍保留重导出以兼容上一版调用。旧索引没有displayIds时使用entries首词集合。
+
+2026-10-20 中文词树释义：adventure_app将角色languageLearning.target传给mountDictionaryWordTree，再交给WordTree；中文页且第二语言为英文时按需复用英文词库缓存，word_tree_gloss_core通过中文键生成英文释义，其余情况输出显式空释义。

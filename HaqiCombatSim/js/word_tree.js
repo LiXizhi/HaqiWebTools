@@ -1,9 +1,11 @@
 import {emptyLanguageTree} from './language_tree_core.js';
-import {treeGlossary,treeGloss} from './language_tree_gloss_core.js';
+import {treeGloss} from './language_tree_gloss_core.js';
+import {wordTreeGlossary} from './word_tree_gloss_core.js';
 import {createLanguageTreeSession} from './language_tree_session.js';
 import {createWordTreeView} from './view_word_tree.js';
-import {appendWordMarkChoices} from './view_word_mark.js';
+import {appendWordMarkChoices,createWordPronounceButton} from './view_word_mark.js';
 import {loadWordLexicon} from './word_lexicon.js';
+import {wordTreeDisplayState} from './word_tree_display_core.js';
 /** One reusable tree implementation. Each instance owns its DOM, audio and session. */
 export class WordTree {
  #controller;
@@ -44,16 +46,13 @@ function stopSpeech(){speechAbort?.abort();speechAbort=null;void speech?.cancel(
 popup.addEventListener('close',stopSpeech);
 function addPronunciation(text){
  const heading=popup.querySelector('h2'),row=el('div');row.className='tree-word-heading';heading.replaceWith(row);row.append(heading);
- const read=el('button');read.type='button';read.className='tree-pronounce';read.title='朗读';read.setAttribute('aria-label',`朗读：${text}`);
- // Same speaker artwork as the NPC bilingual dialogue's read icon.
- const svg=document.createElementNS('http://www.w3.org/2000/svg','svg'),path=document.createElementNS('http://www.w3.org/2000/svg','path');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');path.setAttribute('d','M4 9h4l5-4v14l-5-4H4z M16 8c2 2 2 6 0 8 M19 5c4 4 4 10 0 14');for(const [key,value] of Object.entries({fill:'none',stroke:'currentColor','stroke-width':'1.8','stroke-linecap':'round','stroke-linejoin':'round'}))path.setAttribute(key,value);svg.append(path);read.append(svg);row.append(read);
+ const read=createWordPronounceButton(text);row.append(read);
  read.onclick=async()=>{stopSpeech();const abort=new AbortController();speechAbort=abort;read.disabled=true;read.setAttribute('aria-busy','true');try{
   if(!speech){const {createLearningVoice}=await import('./language_adventure_voice.js');speech??=createLearningVoice();}
   if(abort.signal.aborted)return;await speech.speak(text,{zh:'zh-CN',en:'en-US',ja:'ja-JP',ko:'ko-KR'}[options.data?.language]||'en-US',abort.signal);
  }catch(error){if(!abort.signal.aborted)message(error.message||'朗读暂时不可用');}finally{read.disabled=false;read.removeAttribute('aria-busy');}};
 }
-function showWord(id){const word=state.words[id];if(!word||!openPopup(id))return;popup.setAttribute('aria-label','词语理解');addPronunciation(id);popup.append(el('p',treeGloss(id,glossary)));appendWordMarkChoices(popup,button,async mark=>{await session.mark(id,mark);stopSpeech();popup.close();if(mark==='unknown'){if(!options.onUnknown?.(id))showLearningCard(id);return;}canvas.focus({preventScroll:true});void prepare(true);});}
-function showLearningCard(id){if(!openPopup(id))return;popup.setAttribute('aria-label','词语学习卡');addPronunciation(id);popup.append(el('p',treeGloss(id,glossary)));for(const c of (state.words[id]?.contexts||[]).slice(0,2)){popup.append(el('p',c.text));if(c.zh&&c.zh!==c.text)popup.append(el('small',c.zh));}popup.append(button('返回语言树',async()=>{stopSpeech();popup.close();canvas.focus({preventScroll:true});}));}
+function showWord(id){const word=state.words[id];if(!word||!openPopup(id))return;popup.setAttribute('aria-label','词语理解');addPronunciation(id);popup.append(el('p',treeGloss(id,glossary)));appendWordMarkChoices(popup,button,async mark=>{await session.mark(id,mark);stopSpeech();popup.close();if(mark==='unknown'){if(!options.onUnknown?.(id))canvas.focus({preventScroll:true});return;}canvas.focus({preventScroll:true});void prepare(true);});}
 function showFruit(q){
  if(!openPopup(q.sentence))return;
  popup.setAttribute('aria-label','果实题目');popup.append(el('p','请选择整句话的含义'));
@@ -69,14 +68,15 @@ function showFruit(q){
  const unknown=button('我不会',()=>answer(-1));unknown.className='tree-fruit-unknown';choices.append(unknown);popup.append(choices);
 }
 async function prepare(immediate=false){if(preparing&&immediate){prepareAgain=true;return;}if(closed||document.hidden||preparing||(!immediate&&Date.now()<nextPrepare))return;preparing=true;nextPrepare=Date.now()+60000;try{await session.prepare();}finally{preparing=false;if(prepareAgain){prepareAgain=false;void prepare(true);}}}
-function changed(result){if(closed)return;state=result.state;view.setState(state);view.setQuestions(state.questions.filter(q=>['know','basic'].includes(state.words[q.target]?.mark)));if(result.warning)message(result.warning);}
+function changed(result){if(closed)return;state=result.state;const display=wordTreeDisplayState(state,options.index);view.setState(display);view.setQuestions(state.questions.filter(q=>['know','basic'].includes(display.words[q.target]?.mark)));if(result.warning)message(result.warning);}
 async function start(){
  await stylesReady;if(closed)return;
  let entries=options.data?.entries;
  if(!entries){const response=await fetch(new URL('../data/adventure/dictionary/en.json',import.meta.url),{signal:loadAbort.signal});if(!response.ok)throw Error('词语加载失败');entries=(await response.json()).entries;}
  options.index??=await loadWordLexicon(options.data?.language||'en');
- const supplement=Object.fromEntries(options.index.data.entries.map(e=>[e.id,e.meaning]));
- if(closed)return;glossary=treeGlossary(entries,supplement);view.setGlossary(glossary);
+ const englishIndex=options.index.language==='zh'&&String(options.secondaryLanguage||'').split('-')[0]==='en'
+  ?await loadWordLexicon('en').catch(()=>null):null;
+ if(closed)return;glossary=wordTreeGlossary(entries,options.index,{secondaryLanguage:options.secondaryLanguage,englishIndex});view.setGlossary(glossary);
  session=createLanguageTreeSession({...options,onChange:changed});await session.open();if(closed)return;unsubscribe=options.store.subscribe?.(options.key,()=>{if(!closed&&(!options.getKey||options.getKey()===options.key))void session.open();})||(()=>{});
  if(options.syncMastery){try{await options.syncMastery();if(!closed)await session.open();}catch{if(!closed)message('掌握清单暂未同步，本地记录仍可使用。');}}
  if(!closed)await prepare();

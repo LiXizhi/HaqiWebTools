@@ -18,7 +18,13 @@ export function streetFindPath(scene,start,target){
         const n=pop(),k=n.k;if(closed.has(k)||n.g!==cost.get(k))continue;closed.add(k);
         if(goals.has(k)){const raw=[{...target}];let cursor=k;while(cursor!==undefined){raw.unshift(point(cursor));cursor=parent.get(cursor);}const out=[];let previous=start,i=0;while(i<raw.length){let end=i;for(let j=raw.length-1;j>i;j--)if(clearStreetSegment(scene,previous,raw[j])){end=j;break;}out.push(raw[end]);previous=raw[end];i=end+1;}return out;}
         const p=point(k),x=k%cols,y=Math.floor(k/cols);
-        for(const [dx,dy]of directions){const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=cols||ny>=rows)continue;const nk=key(nx,ny);if(closed.has(nk)||!walk(nk)||dx&&dy&&(!walk(key(nx,y))||!walk(key(x,ny)))||!clearStreetSegment(scene,p,point(nk)))continue;const g=n.g+step*Math.hypot(dx,dy);if(g>=(cost.get(nk)??Infinity))continue;cost.set(nk,g);parent.set(nk,k);push({k:nk,g,f:g+length(point(nk),target)});}
+        for(const [dx,dy]of directions){
+            const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=cols||ny>=rows)continue;
+            const nk=key(nx,ny),g=n.g+step*Math.hypot(dx,dy);
+            // Reject non-improving arrivals before the expensive foot sweep.
+            if(closed.has(nk)||g>=(cost.get(nk)??Infinity)||!walk(nk)||dx&&dy&&(!walk(key(nx,y))||!walk(key(x,ny)))||!clearStreetSegment(scene,p,point(nk)))continue;
+            cost.set(nk,g);parent.set(nk,k);push({k:nk,g,f:g+length(point(nk),target)});
+        }
     }
     return [];
 }

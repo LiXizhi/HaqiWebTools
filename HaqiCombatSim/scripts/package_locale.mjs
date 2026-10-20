@@ -10,6 +10,6 @@ export function localePackageFiles(directory) {
         .map(name => ({
             fileName: `data/adventure/locale/${name}`,
             // WordNet licenses must accompany adapted vocabulary, including release assets.
-            source: name.startsWith('word_')?readFileSync(path.join(directory,name),'utf8'):stripLocaleComments(readFileSync(path.join(directory, name), 'utf8')),
+            source: name.startsWith('word_')||name==='word-LICENSE.txt'?readFileSync(path.join(directory,name),'utf8'):stripLocaleComments(readFileSync(path.join(directory, name), 'utf8')),
         }));
 }

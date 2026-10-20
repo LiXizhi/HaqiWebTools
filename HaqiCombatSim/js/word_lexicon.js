@@ -4,7 +4,11 @@ const urls={zh:new URL('../data/adventure/locale/word_zh.txt',import.meta.url),e
 export function createWordLexiconLoader(fetchText=async url=>{const r=await fetch(url);if(!r.ok)throw Error('词库暂时无法加载');return r.text();}){
  const cache=new Map();
  return function load(language){language=wordLanguage(language);if(!urls[language])return Promise.reject(Error('不支持的词库语言'));
-  if(!cache.has(language)){const task=Promise.resolve().then(()=>fetchText(urls[language])).then(text=>buildWordIndex(parseWordLexicon(text,language))).catch(error=>{cache.delete(language);throw error;});cache.set(language,task);}return cache.get(language);
+  if(!cache.has(language)){const task=Promise.resolve().then(()=>fetchText(urls[language])).then(async text=>{
+   const data=parseWordLexicon(text,language);
+   if(language!=='zh'){const chinese=await load('zh'),keys=new Set(chinese.data.keys);if(data.keys.length!==keys.size||data.keys.some(key=>!keys.has(key)))throw Error('词库中文键不一致');}
+   return buildWordIndex(data);
+  }).catch(error=>{cache.delete(language);throw error;});cache.set(language,task);}return cache.get(language);
  };
 }
 export const loadWordLexicon=createWordLexiconLoader();

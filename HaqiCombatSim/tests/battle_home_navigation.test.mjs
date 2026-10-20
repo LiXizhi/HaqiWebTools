@@ -44,3 +44,31 @@ test('home route stays in loaded chunks and rejects invalid or very distant inpu
  assert.deepEqual(findHomePath({x:0,y:0},{x:Infinity,y:0},[],catalog),[]);
  assert.deepEqual(findHomePath({x:0,y:0},{x:10000,y:0},[],catalog),[]);
 });
+test('home search reads each furniture footprint once, even while detouring across a river',()=>{
+ let reads=0;
+ const objects=Array.from({length:400},(_,i)=>({
+  get itemId(){reads++;return 'wall';},x:30+i%20*3,y:30+Math.floor(i/20)*4
+ }));
+ const y=homeRiverCenterY(42,5),start={x:5,y:y+3},target={x:5,y:y-3};
+ const expected=findHomePath(start,target,[],catalog,42);
+ assert.deepEqual(findHomePath(start,target,objects,catalog,42),expected);
+ assert.equal(reads,objects.length);
+});
+test('home collision snapshot respects placed bridges, solid overlaps and subsequent edits',()=>{
+ const items=[...catalog,{id:'bridge',layer:'ground',size:[2,8]}],seed=42,y=homeRiverCenterY(seed,5);
+ const start={x:5,y:y+3},target={x:5,y:y-3};
+ const bridge={itemId:'bridge',x:4,y:y-4},objects=[bridge];
+ assert.deepEqual(findHomePath(start,target,objects,items,seed),[target]);
+ const wall={itemId:'wall',x:4,y:y-1};
+ objects.push(wall);
+ const path=findHomePath(start,target,objects,items,seed);
+ assert.ok(path.length>1);
+ let from=start;
+ for(const to of path){
+  const steps=Math.ceil(Math.hypot(to.x-from.x,to.y-from.y)/.1);
+  for(let i=1;i<=steps;i++)assert.ok(isHomePassable(from.x+(to.x-from.x)*i/steps,from.y+(to.y-from.y)*i/steps,objects,items,seed));
+  from=to;
+ }
+ wall.x=40;
+ assert.deepEqual(findHomePath(start,target,objects,items,seed),[target]);
+});

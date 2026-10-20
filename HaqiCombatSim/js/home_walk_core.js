@@ -5,11 +5,41 @@ import {footprint,homeBiomeAt,homeBridgeAt,homeRoadAt,homeWaterAt} from './home_
 
 const BRIDGE_ITEMS=new Set(['bridge','stepping-stones','wood-floor','stone-path','brick-path','porch']);
 
+// A click owns its collision snapshot: edits and newly loaded chunks are picked
+// up by the next plan. Only inspect furniture in the sample's four-cell bucket.
+function pathPassability(objects,catalog,seed,allowed){
+ const buckets=new Map(),size=4;
+ for(const o of objects){
+  const b=footprint(o,catalog),bridge=BRIDGE_ITEMS.has(b.item.id);
+  const block=bridge?b:obstruction(o,b.item);
+  if(!block)continue;
+  const px=bridge?.15:.18,py=bridge?.15:.12;
+  const row={x:block.x-px,y:block.y-py,right:block.x+block.w+px,bottom:block.y+block.h+py,bridge};
+  for(let x=Math.floor(row.x/size);x<=Math.floor(row.right/size);x++){
+   for(let y=Math.floor(row.y/size);y<=Math.floor(row.bottom/size);y++){
+    const key=`${x},${y}`;if(!buckets.has(key))buckets.set(key,[]);
+    buckets.get(key).push(row);
+   }
+  }
+ }
+ return p=>{
+  if(!allowed(p))return false;
+  const rows=buckets.get(`${Math.floor(p.x/size)},${Math.floor(p.y/size)}`)||[];
+  let onBridge=false;
+  for(const b of rows){
+   if(b.bridge){
+    if(p.x>=b.x&&p.x<=b.right&&p.y>=b.y&&p.y<=b.bottom)onBridge=true;
+   }else if(p.x>b.x&&p.x<b.right&&p.y>b.y&&p.y<b.bottom)return false;
+  }
+  return seed===null||seed===undefined||!homeWaterAt(seed,p.x,p.y).water||!!homeBridgeAt(seed,p.x,p.y)||onBridge;
+ };
+}
+
 // Half-tile A*, bounded for the infinite home world. Use the same collision
 // rules as manual walking, including placed bridges and rotated furniture.
 export function findHomePath(start,target,objects=[],catalog=null,seed=null,allowed=()=>true){
  if(![start.x,start.y,target.x,target.y].every(Number.isFinite)||Math.hypot(target.x-start.x,target.y-start.y)>64||!allowed(target))return [];
- const pass=p=>allowed(p)&&isHomePassable(p.x,p.y,objects,catalog,seed);
+ const pass=pathPassability(objects,catalog,seed,allowed);
  const clear=(a,b)=>{
   const steps=Math.max(1,Math.ceil(Math.hypot(b.x-a.x,b.y-a.y)/.1));
   for(let i=1;i<=steps;i++)if(!pass({x:a.x+(b.x-a.x)*i/steps,y:a.y+(b.y-a.y)*i/steps}))return false;
@@ -17,6 +47,8 @@ export function findHomePath(start,target,objects=[],catalog=null,seed=null,allo
  };
  if(clear(start,target))return [{x:target.x,y:target.y}];
  const point=n=>({x:start.x+n.x*.5,y:start.y+n.y*.5}),key=n=>`${n.x},${n.y}`;
+ const passCache=new Map();
+ const nodePass=n=>{const k=key(n);if(!passCache.has(k))passCache.set(k,pass(point(n)));return passCache.get(k);};
  const distance=p=>Math.hypot(p.x-target.x,p.y-target.y),exact=pass(target);
  const minX=Math.min(start.x,target.x)-26,maxX=Math.max(start.x,target.x)+26;
  const minY=Math.min(start.y,target.y)-26,maxY=Math.max(start.y,target.y)+26;
@@ -26,15 +58,15 @@ export function findHomePath(start,target,objects=[],catalog=null,seed=null,allo
  while(open.length&&closed.size<12000){
   const n=open.shift(),k=key(n);if(closed.has(k))continue;closed.add(k);
   const p=point(n),d=distance(p);
-  if(d<best&&pass(p)){nearest=n;best=d;}
-  if(!exact&&d<=.5&&pass(p)){goal=n;break;}
+  if(d<best&&nodePass(n)){nearest=n;best=d;}
+  if(!exact&&d<=.5&&nodePass(n)){goal=n;break;}
   if(exact&&d<=.75&&clear(p,target)){goal=n;break;}
   for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]]){
    const next={x:n.x+dx,y:n.y+dy},nk=key(next),q=point(next);
-   if(closed.has(nk)||q.x<minX||q.x>maxX||q.y<minY||q.y>maxY||!clear(p,q))continue;
-   if(dx&&dy&&(!pass(point({x:n.x+dx,y:n.y}))||!pass(point({x:n.x,y:n.y+dy}))))continue;
    const score=cost.get(k)+Math.hypot(dx,dy)*.5;
    if(score>=(cost.get(nk)??Infinity))continue;
+   if(closed.has(nk)||q.x<minX||q.x>maxX||q.y<minY||q.y>maxY||!nodePass(next)||!clear(p,q))continue;
+   if(dx&&dy&&(!nodePass({x:n.x+dx,y:n.y})||!nodePass({x:n.x,y:n.y+dy})))continue;
    cost.set(nk,score);parents.set(nk,n);open.push(next,nk,score+distance(q));
   }
  }

@@ -1,5 +1,5 @@
 import {buildingFloorAO} from './home_building_ao_core.js';
-import {isRoofDecoration,buildingConnections,buildingItem,buildingBounds,roofSections} from './home_building_core.js';
+import {isRoofDecoration,buildingConnections,buildingConnectionMask,buildingItem,buildingBounds,roofSections} from './home_building_core.js';
 import {buildingVisualBounds,drawBuilding} from './view_home_building.js';
 import {homeInteractiveKind} from './home_core.js';
 import {drawHomeObject,homeObjectVisualBounds} from './view_home_art.js';
@@ -7,7 +7,7 @@ const LIMIT=32*1024*1024;
 const overlap=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
 const close=bitmap=>{if(bitmap?.close)bitmap.close();else if(bitmap)bitmap.width=bitmap.height=0;};
 export function createHomeBuildingCache({imageFor,enabled=true}={}){
- let source=null,excluded='',groups=[],connections=new Map(),sections=new Map(),epoch=0,disposed=false,density=1,worker=null,active=null,timer=null,nextId=0;
+ let source=null,excluded='',groups=[],connections=new Map(),masks=new Map(),sections=new Map(),epoch=0,disposed=false,density=1,worker=null,active=null,timer=null,nextId=0;
  const entries=new Map(),sent=new Set();let bytes=0,bakes=0,bakeMs=0,hits=0,live=0;
  try{if(typeof Worker!=='undefined'&&typeof OffscreenCanvas!=='undefined')worker=new Worker(new URL('./home_building_worker.js',import.meta.url),{type:'module'});}catch{}
  const release=key=>{const row=entries.get(key);if(row){bytes-=row.bytes;close(row.bitmap);entries.delete(key);}};
@@ -16,7 +16,7 @@ export function createHomeBuildingCache({imageFor,enabled=true}={}){
  if(worker){worker.onmessage=({data})=>{const job=active;if(!job||job.id!==data.id){close(data.bitmap);return;}if(data.error){worker.terminate();worker=null;active=null;return;}finish(job,data.bitmap);};worker.onerror=()=>{worker?.terminate();worker=null;active=null;};}
  function index(objects,catalog,exclude){
   if(source===objects&&excluded===exclude)return;
-  source=objects;excluded=exclude;cancel();connections=buildingConnections(objects,catalog);sections=roofSections(objects,catalog);
+  source=objects;excluded=exclude;cancel();connections=buildingConnections(objects,catalog);masks=new Map(objects.map(o=>[o.id,buildingConnectionMask(o,objects,catalog)]));sections=roofSections(objects,catalog);
   const map=new Map(),ao=buildingFloorAO(objects,catalog,exclude);
   for(const o of objects){const item=buildingItem(o,catalog);if(!item)continue;
    const type=item.building?.type,decoration=isRoofDecoration(o),ground=item.layer==='ground'&&!decoration,roof=type==='roof'||decoration,b=buildingBounds(o,item);
@@ -27,7 +27,7 @@ export function createHomeBuildingCache({imageFor,enabled=true}={}){
    const depth=o.y+b.h+(o.parentId?2:0),section=roof?sections.get(decoration?o.parentId:o.id)?.[0]?.id:'',key=dynamic?`live:${o.id}`:decoration?`roof-decoration:${o.id}`:!item.building&&!ground?`furniture:${o.id}`:`${roof?'roof:'+section:ground?'ground':'depth:'+depth}:${Math.floor(o.x/8)},${Math.floor(o.y/8)}`;
    let group=map.get(key);if(!group){group={key,rows:[],ground,roof,decoration,section,depth,dynamic,bounds:{...bounds}};map.set(key,group);}
    const endX=Math.max(group.bounds.x+group.bounds.w,bounds.x+bounds.w),endY=Math.max(group.bounds.y+group.bounds.h,bounds.y+bounds.h);group.bounds.x=Math.min(group.bounds.x,bounds.x);group.bounds.y=Math.min(group.bounds.y,bounds.y);group.bounds.w=endX-group.bounds.x;group.bounds.h=endY-group.bounds.y;
-   group.rows.push({o,item,ao:ao.get(o.id)||[],connections:connections.get(o.id)||[1,1]});
+   group.rows.push({o,item,ao:ao.get(o.id)||[],connections:masks.get(o.id)??connections.get(o.id)??0});
   }
   groups=[...map.values()];for(const g of groups)g.signature=JSON.stringify(g.rows.map(r=>[r.o,r.connections,r.item.art,r.ao]));
   const byKey=new Map(groups.map(g=>[g.key,g]));for(const [key,row]of entries)if(byKey.get(key)?.signature!==row.signature)release(key);

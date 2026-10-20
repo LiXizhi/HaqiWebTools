@@ -4,6 +4,7 @@ Requires wordfreq for offline selection only; caches inputs under tmp/word-lexic
 import collections, hashlib, json, pathlib, re, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from wordfreq import get_frequency_dict
+from word_bridge_format import write_bridge
 FREQUENCIES = {lang: get_frequency_dict(lang) for lang in ['en','zh','ja','ko']}
 def zipf_frequency(word, lang, **kwargs):
     return FREQUENCIES[lang].get(word, 0)
@@ -69,7 +70,7 @@ irregular = overrides.get('englishIrregular', {})
 for word, row in selected['en'].items():
     forms = set(row['forms'])
     if word in irregular: forms.update(irregular[word])
-    elif 'v' in row.get('pos', '') or 'n' in row.get('pos', ''):
+    elif row.get('pos') != 'function' and ('v' in row.get('pos', '') or 'n' in row.get('pos', '')):
         plural = word[:-1]+'ies' if re.search(r'[^aeiou]y$', word) else word+'es' if re.search(r'(s|x|z|ch|sh)$', word) else word+'s'
         forms.add(plural)
         if 'v' in row.get('pos', ''):
@@ -78,7 +79,8 @@ for word, row in selected['en'].items():
             forms.update([past, ing])
     row['forms'] = sorted(f for f in forms-{word} if f in irregular.get(word,[]) or f in row['forms'] or zipf_frequency(f,'en')>0)
 
-manifest = {'description': '词库为基础常用词选集，不代表语言精通认证。词义来自共享 WordNet 词义编号；歧义留给上下文及显式模型补齐。', 'sources': {}}
+manifest = {'formatVersion': 2, 'description': '所有语言共用中文键；中文表为逗号分隔中文键列表，非中文表为逗号分隔中文键||逗号分隔词形，相同词形列表合并，空值表示尚无译词。许可证见locale/word-LICENSE.txt。', 'sources': {}}
+notices = {}
 for lang, chosen in selected.items():
     folder, name = SOURCES[lang]; paths = files[lang]
     notice = paths[1].read_text(encoding='utf8')+'\n'+paths[2].read_text(encoding='utf8')
@@ -88,11 +90,15 @@ for lang, chosen in selected.items():
     header += '# Selection ranking: wordfreq 3.1.1 by Robyn Speer, https://github.com/rspeer/wordfreq ; no frequency scores shipped.\n'
     header += '# '+notice.replace('\n', '\n# ')+'\n'
     if lang == 'ko': header += '# Adapted Korean word data: CC BY-SA 3.0 https://creativecommons.org/licenses/by-sa/3.0/ ; Wiktionary contributors.\n'
-    rows=[]
-    for word,row in chosen.items():
-        value={k:v for k,v in row.items() if k!='text'}
-        rows.append(word+'||'+json.dumps(value,ensure_ascii=False,separators=(',',':')))
-    (OUT/f'word_{lang}.txt').write_text(header+'\n'.join(rows)+'\n',encoding='utf8')
+    notices[lang] = header
     manifest['sources'][lang]={'url':BASE+folder+'/'+name,'sha256':hashlib.sha256(paths[0].read_bytes()).hexdigest(),'entries':len(chosen),'forms':sum(len(r['forms']) for r in chosen.values())}
     print('written',lang,len(chosen),flush=True)
+keys, tables = write_bridge(OUT, selected, notices, FREQUENCIES['zh'],
+                            required=[row['text'] for row in overrides['zh']])
+manifest['selection'] = {'limit': 2000, 'ranking': 'wordfreq 3.1.1 Chinese frequency',
+                         'required': 'word-overrides.json zh entries',
+                         'unit': 'expanded Chinese keys, shared by all languages'}
+for lang, source in manifest['sources'].items():
+    source['keys'] = len(keys)
+    source['translatedKeys'] = len(keys) if lang == 'zh' else len(tables[lang])
 (ROOT/'data/adventure/dictionary/word-sources.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf8')

@@ -1,4 +1,5 @@
-import {isRoofDecoration,roofAt,buildingBounds,buildingConflict,replacementFor,validBuildingProperties} from './home_building_core.js';
+import {compareDungeonSpeech} from './dungeon_speech_core.js';
+import {isRoofDecoration,roofAt,buildingBounds,buildingGridBounds,buildingConflict,replacementFor,validBuildingProperties,buildingItem,buildingSlotKind,isEdgeLike} from './home_building_core.js';
 // Home rules are independent of adventure progression and browser IO.
 import {createRng,hashSeed} from './rng_core.js';
 export const CHUNK_SIZE=32;
@@ -120,17 +121,27 @@ export function summonSentences(item,lang='en',color=''){
  const sentences=lang==='en'?[`Create ${article} ${noun}.`,`I want ${article} ${noun}.`,`Can I have ${article} ${noun}?`]:[`创造一个${noun}。`,`我想要一个${noun}。`,`可以给我一个${noun}吗？`];
  return !color&&item.sentences?.[lang]?.length?item.sentences[lang].slice(0,3):sentences;
 }
-// ASR and typed answers use the same complete-sentence check, without fuzzy spelling.
-export function matchHomeSpell(text,catalog,lang='en',selection=null){
- const answer=normalize(text||'');
- if(!answer)return {candidates:[],error:'请先读出或正确输入一句召唤咒语。'};
- const candidates=[];
+export const HOME_SPELL_PASS_ACCURACY=0.8;
+// Share NPC dialogue word coverage for both typed and spoken answers.
+// An answer with >= 80% accuracy passes immediately.
+// The third completed, nonempty recording may unlock a selected item without
+// claiming that its unmatched vocabulary was correctly practised.
+export function matchHomeSpell(text,catalog,lang='en',selection=null,{input='text',speechAttempts=0}={}){
+ const locale=lang==='en'?'en':'zh-CN';
+ if(!String(text||'').match(/[\p{L}\p{N}]/u))return {candidates:[],feedback:null,error:'没有听清，请读出或输入一句召唤咒语。'};
+ const candidates=[];let feedback=null;
  for(const item of catalog){
   if(selection?.itemId&&selection.itemId!==item.id)continue;
   const colors=selection?.itemId?[selection.color||'']:['',...Object.keys(COLORS)];
-  for(const color of colors)if(summonSentences(item,lang,color).some(s=>normalize(s)===answer))candidates.push({itemId:item.id,color});
+  for(const color of colors){
+   const rows=summonSentences(item,lang,color).map((s,lineIndex)=>({...compareDungeonSpeech(text,s,locale),lineIndex})).sort((a,b)=>b.accuracy-a.accuracy||a.lineIndex-b.lineIndex);
+   const best=rows[0];
+   if(!feedback||best.accuracy>feedback.accuracy)feedback=best;
+   const passAccuracy=selection?.itemId?HOME_SPELL_PASS_ACCURACY:1;
+   if(best.accuracy>=passAccuracy||(input==='speech'&&speechAttempts>=3&&selection?.itemId))candidates.push({itemId:item.id,color});
+  }
  }
- return {candidates,error:candidates.length?'':'句子还不正确，请读出或输入下面任意一句完整的咒语。'};
+ return {candidates,feedback,error:candidates.length?'':'请看看标出的词，再完整说一次或输入句子。'};
 }
 export function parseSummon(text,catalog,lang='en'){
  let value=normalize(text),noun;
@@ -164,6 +175,11 @@ export function canPlace(obj,objects,catalog){
  objects=objects.filter(o=>!isRoofDecoration(o));
  const replacement=replacementFor(obj,objects,catalog);
  const box=footprint(obj,catalog),others=objects.filter(o=>o.id!==obj.id&&o.id!==replacement?.id);
+ const structural=buildingItem(obj,catalog),structuralType=structural?.building?.type;
+ if(structuralType==='roof'){
+  const floor=others.find(o=>buildingItem(o,catalog)?.building?.type==='floor'&&buildingSlotKind(buildingItem(o,catalog))==='floor'&&buildingGridBounds(o,buildingItem(o,catalog)).x===Math.floor(obj.x)&&buildingGridBounds(o,buildingItem(o,catalog)).y===Math.floor(obj.y));
+  if(!floor)return {ok:false,reason:'屋顶必须放在地板上'};
+ }
  if(box.item.layer==='top'){
   if(obj.parentId){
    const parent=others.find(o=>o.id===obj.parentId);if(!parent)return {ok:false,reason:'请放在桌面槽位上'};
@@ -173,12 +189,12 @@ export function canPlace(obj,objects,catalog){
   }
   for(const other of others){
    const b=footprint(other,catalog);
-   if(b.item.layer==='solid'&&b.item.building?.type!=='roof'&&overlaps(box,b))return {ok:false,reason:'请放在桌面槽位上'};
+   if(b.item.layer==='solid'&&!b.item.building&&overlaps(box,b))return {ok:false,reason:'请放在桌面槽位上'};
    if(b.item.layer==='top'&&!other.parentId&&overlaps(box,b))return {ok:false,reason:'这里已有物品'};
   }
   return {ok:true};
  }
- for(const other of others){const conflict=buildingConflict(obj,other,catalog);if(conflict!==null){if(conflict)return {ok:false,reason:'这里已有建筑构件'};continue;}const b=footprint(other,catalog);if(box.item.layer!==b.item.layer||box.item.layer==='top')continue;if(overlaps(box,b))return {ok:false,reason:'这里已有物品'};}
+ for(const other of others){const conflict=buildingConflict(obj,other,catalog);if(conflict!==null){if(conflict)return {ok:false,reason:'这里已有建筑构件'};continue;}const otherItem=buildingItem(other,catalog);const supportLayer=otherItem?.building?.type==='floor'||isEdgeLike(otherItem);if(supportLayer&&structuralType===undefined)continue;const b=footprint(other,catalog);if(box.item.layer!==b.item.layer||box.item.layer==='top')continue;if(overlaps(box,b))return {ok:false,reason:'这里已有物品'};}
  return {ok:true};
 }
 export function visibleChunkKeys(camera,width,height,scale=40){const left=Math.floor((camera.x-width/scale/2)/32)-1,right=Math.floor((camera.x+width/scale/2)/32)+1,top=Math.floor((camera.y-height/scale/2)/32)-1,bottom=Math.floor((camera.y+height/scale/2)/32)+1,keys=[];for(let y=top;y<=bottom;y++)for(let x=left;x<=right;x++)keys.push(`${x},${y}`);return keys;}

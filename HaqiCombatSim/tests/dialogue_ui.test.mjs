@@ -181,7 +181,7 @@ test('shared NPC mapping appears only after clicking and draws paired connectors
     assert.equal(generated,0);assert.equal(peeked,0);
     await ui.text.children[1].children[1].onclick();
     assert.equal(ui.text.children[0].children[1].children[0].style.color,'#A23');
-    assert.equal(ui.text.children[1].children[1].title,'已补齐');ui.drawLinks();
+    assert.equal(ui.text.children[1].children[1].title,'已连线');ui.drawLinks();
     const links=ui.text.children[2];assert.equal(links.attributes['aria-hidden'],'true');
     assert.equal(links.children.length,1);assert.equal(links.children[0].attributes.stroke,'#A23');
     assert.match(links.children[0].attributes.d,/^M /);
@@ -194,10 +194,10 @@ test('old model caches do not override automatic local vocabulary matching',asyn
     const mapWords=async()=>{generated++;return result;};mapWords.peek=async()=>result;
     const ui=setup(t,false,{lines:[{text:'Go',locale:'en'},{text:'走',locale:'zh-CN'}],mapWords});
     await new Promise(resolve=>setImmediate(resolve));
-    assert.notEqual(ui.text.children[1].children[1].title,'已补齐');
+    assert.notEqual(ui.text.children[1].children[1].title,'已连线');
     ui.key();
     await new Promise(resolve=>setImmediate(resolve));
-    assert.equal(ui.text.children[1].children[1].title,'模型补齐');
+    assert.equal(ui.text.children[1].children[1].title,'模型连线');
     assert.equal(generated,0);ui.root.disposeDialogue();
 });
 
@@ -206,5 +206,5 @@ test('late cached mappings do not update a closed dialogue',async t=>{
     const ui=setup(t,false,{lines:[{text:'Go',locale:'en'},{text:'走',locale:'zh-CN'}],mapWords});
     ui.root.disposeDialogue();assert.equal(resolve,undefined,'old model cache is not read automatically');
     await new Promise(resolve=>setImmediate(resolve));
-    assert.notEqual(ui.text.children[1].children[1].title,'已补齐');
+    assert.notEqual(ui.text.children[1].children[1].title,'已连线');
 });

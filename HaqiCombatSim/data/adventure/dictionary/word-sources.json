@@ -1,29 +1,44 @@
 {
-  "description": "词库为基础常用词选集，不代表语言精通认证。词义来自共享 WordNet 词义编号；歧义留给上下文及显式模型补齐。",
+  "description": "所有语言共用中文键；中文表为逗号分隔的中文键列表，非中文词表为逗号分隔中文键||逗号分隔词形；空值表示尚无译词。许可证见locale/word-LICENSE.txt。",
   "sources": {
     "en": {
       "url": "https://raw.githubusercontent.com/omwn/omw-data/406bf83b3c507a3d1f26e88252d5d66893fd36bf/wns/eng/wn-data-eng.tab",
       "sha256": "d1409d88addcdb890b1606dd280b558cca4258b1f33bd580d54ed949daad1ede",
       "entries": 2000,
-      "forms": 3306
+      "forms": 3306,
+      "keys": 2000,
+      "translatedKeys": 1453
     },
     "zh": {
       "url": "https://raw.githubusercontent.com/omwn/omw-data/406bf83b3c507a3d1f26e88252d5d66893fd36bf/wns/cow/wn-data-cmn.tab",
       "sha256": "379fd2e41d3e1395f9f27cf23a39c6181849ffb4020c14a07ed2a4d4dd651122",
       "entries": 2000,
-      "forms": 0
+      "forms": 0,
+      "keys": 2000,
+      "translatedKeys": 2000
     },
     "ja": {
       "url": "https://raw.githubusercontent.com/omwn/omw-data/406bf83b3c507a3d1f26e88252d5d66893fd36bf/wns/jpn/wn-data-jpn.tab",
       "sha256": "f47fefb11824b86d8556c632f5b71438397abac79677b607070cd0bdcb9ac212",
       "entries": 2000,
-      "forms": 252
+      "forms": 252,
+      "keys": 2000,
+      "translatedKeys": 1260
     },
     "ko": {
       "url": "https://raw.githubusercontent.com/omwn/omw-data/406bf83b3c507a3d1f26e88252d5d66893fd36bf/wns/wikt/wn-wikt-kor.tab",
       "sha256": "50134a5fa559130cba7cb3fa1f14c3a67ed05cafd6fdf59e7603d4230a92571f",
       "entries": 2000,
-      "forms": 180
+      "forms": 180,
+      "keys": 2000,
+      "translatedKeys": 840
     }
+  },
+  "formatVersion": 2,
+  "selection": {
+    "limit": 2000,
+    "ranking": "wordfreq 3.1.1 Chinese frequency",
+    "required": "word-overrides.json zh entries",
+    "unit": "expanded Chinese keys, shared by all languages"
   }
 }

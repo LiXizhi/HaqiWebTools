@@ -8,8 +8,8 @@ import {localePackageFiles} from '../scripts/package_locale.mjs';
 const texts=Object.fromEntries(['en','zh','ja','ko'].map(language=>[language,fs.readFileSync(new URL(`../data/adventure/locale/word_${language}.txt`,import.meta.url),'utf8')]));
 const indexes=Object.fromEntries(Object.entries(texts).map(([language,text])=>[language,buildWordIndex(parseWordLexicon(text,language))]));
 
-test('four real vocabulary files contain 2000 unique lemmas with definitions and indexed senses',()=>{
- for(const index of Object.values(indexes)){assert.equal(index.entries.size,2000);for(const row of index.entries.values()){assert.ok(row.meaning.trim());assert.ok(row.senses.length);for(const sense of row.senses)assert.ok(index.senses.get(sense).has(row.id));}}
+test('four real vocabulary files contain their expected unique lemmas with definitions and indexed senses',()=>{
+ for(const index of Object.values(indexes)){assert.equal(index.entries.size,index.language==='zh'?2005:index.language==='en'?2003:2000);for(const row of index.entries.values()){assert.ok(row.meaning.trim());assert.ok(row.senses.length);for(const sense of row.senses)assert.ok(index.senses.get(sense).has(row.id));}}
  const files=localePackageFiles(new URL('../data/adventure/locale/',import.meta.url).pathname.replace(/^\/([A-Za-z]:)/,'$1'));
  for(const lang of Object.keys(indexes)){const f=files.find(f=>f.fileName.endsWith(`word_${lang}.txt`));assert.match(f.source,/Copyright|CC BY-SA/);assert.equal(f.source,texts[lang]);}
 });

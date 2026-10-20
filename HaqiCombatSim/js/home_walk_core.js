@@ -1,3 +1,4 @@
+import {obstruction} from './home_building_core.js';
 import {facingToward} from './hero_pose_core.js';
 import {createPathQueue} from './path_queue_core.js';
 import {footprint,homeBiomeAt,homeBridgeAt,homeRoadAt,homeWaterAt} from './home_core.js';
@@ -50,7 +51,8 @@ export function findHomePath(start,target,objects=[],catalog=null,seed=null,allo
 export function isHomePassable(x,y,objects=[],catalog=null,seed=null){
  const blockedBySolid=objects.some(o=>{
   const b=footprint(o,catalog);
-  return b.item.layer==='solid'&&!BRIDGE_ITEMS.has(b.item.id)&&x+.18>b.x&&x-.18<b.x+b.w&&y+.12>b.y&&y-.12<b.y+b.h;
+  const block=BRIDGE_ITEMS.has(b.item.id)?null:obstruction(o,b.item);
+  return block&&x+.18>block.x&&x-.18<block.x+block.w&&y+.12>block.y&&y-.12<block.y+block.h;
  });
  if(blockedBySolid)return false;
  if(seed!==null&&seed!==undefined){

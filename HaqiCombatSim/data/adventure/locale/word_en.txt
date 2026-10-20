@@ -2089,3 +2089,6 @@ sensitive||{"meaning":"敏感；机密；过敏","forms":["sensitives"],"senses"
 server||{"meaning":"服务员；侍者","forms":["servers"],"senses":["wn30:04175039-n","wn30:04175147-n","wn30:10582604-n","wn30:10763383-n"],"pos":"n"}
 shock||{"meaning":"昏迷；电击；休克","forms":["shocked","shocking","shocks"],"senses":["wn30:00090186-v","wn30:00090386-v","wn30:00839292-n","wn30:01172252-n","wn30:01386308-v","wn30:01561713-v","wn30:01783022-v","wn30:01809064-v","wn30:01810447-v","wn30:04198797-n","wn30:07298982-n","wn30:07339098-n","wn30:07429276-n","wn30:07510625-n","wn30:07962500-n","wn30:07962707-n","wn30:14067076-n"],"pos":"nv"}
 silence||{"meaning":"沉默；安静；保密","forms":["silenced","silences","silencing"],"senses":["wn30:00461493-v","wn30:00463007-v","wn30:04651974-n","wn30:04652177-n","wn30:04982207-n","wn30:13925550-n"],"pos":"nv"}
+chimney||{"meaning": "烟囱", "forms": [], "senses": ["haqi:roof-chimney"], "pos": "n"}
+windmill||{"meaning": "风车", "forms": [], "senses": ["haqi:roof-windmill"], "pos": "n"}
+castle||{"meaning":"城堡","forms":[],"senses":["haqi:building-castle"],"pos":"n"}

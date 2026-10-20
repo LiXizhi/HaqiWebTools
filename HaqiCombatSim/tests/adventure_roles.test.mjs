@@ -565,6 +565,21 @@ test('startup stays on the title unless signin=direct names a playable role', ()
     assert.equal(startupRoleId({ activeId: null, roles: [] }, { direct: true }), null);
 });
 
+test('family pad signs in but never resumes a role automatically, including legacy direct links', () => {
+    for (const search of ['?host=family-pad&token=fixture', '?host=family-pad&token=fixture&signin=direct']) {
+        assert.equal(familyPadSignInRequested(search), true);
+        const direct = directSignInRequested(search);
+        assert.equal(direct, false);
+        for (const catalog of [
+            { activeId: 'recent', roles: [{ id: 'recent' }, { id: 'other' }] },
+            { activeId: 'only', roles: [{ id: 'only' }] },
+            { activeId: null, roles: [] },
+        ]) assert.equal(startupRoleId(catalog, { direct }), null);
+    }
+    assert.equal(directSignInRequested('?host=family-pad&signin=direct'), false);
+    assert.equal(directSignInRequested('?host=other&signin=direct'), true);
+});
+
 test('single-client save uses its loaded manifest without remote conflict reads',async()=>{
     const m=cloudMock(),c=m.client();await c.connect();
     const catalog=addRole(emptyRoles(),id(1),hero('角色'),1);

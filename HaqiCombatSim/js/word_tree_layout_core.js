@@ -34,7 +34,7 @@ export function fitCamera(nodes,width,height,yaw=0){
 export const TREE_WORD_LIMIT=600;
 // Limit rendering only; learning records remain complete. Active fruit targets stay visible.
 export function createEncounterTree(words,priorityIds=new Set()){
-    const priority=w=>priorityIds.has(w.id)?2:(w.mark||w.count>0?1:0);
+    const priority=w=>priorityIds.has(w.id)?2:(w.mark||w.count>0||w.practiceCount>0?1:0);
     const ordered=[...words].sort((a,b)=>priority(b)-priority(a)||Math.max(b.markAt||0,b.lastAt||0)-Math.max(a.markAt||0,a.lastAt||0)||a.ordinal-b.ordinal||a.id.localeCompare(b.id)).slice(0,TREE_WORD_LIMIT).sort((a,b)=>a.ordinal-b.ordinal),branches=[],nodes=[];
     for(let b=0;b<18;b++){const angle=b*2.39996,radius=95+(b%3)*28;branches.push({start:{x:Math.sin(b)*9,y:-80+b*5,z:Math.cos(b)*9},end:{x:Math.cos(angle)*radius,y:80+(b%6)*24,z:Math.sin(angle)*radius},width:9-b*.25});}
     for(const word of ordered){const branch=hashSeed(word.id)%18,tip=branches[branch].end,rng=createRng(hashSeed(word.id)),angle=rng.float()*Math.PI*2,u=rng.float()*2-1,r=Math.cbrt(rng.float());
@@ -62,7 +62,13 @@ export function chooseLearningLabels(points,limit,width,height,measure,selectedI
     const groups=new Map(kinds.map(k=>[k,[]])),counts=Object.fromEntries(kinds.map(k=>[k,0])),chosen=[];
     const ordered=[...points].sort((a,b)=>Number(lowPriority.has(a.node.id))-Number(lowPriority.has(b.node.id))||b.depth-a.depth||a.node.id.localeCompare(b.node.id));
     for(const p of ordered)(groups.get(p.node.status?.kind)||groups.get('seen')).push(p);
-    function add(p){const labels=chooseLabels([...chosen,p].reverse(),chosen.length+1,width,height,measure,null,true);if(labels.length<=chosen.length)return false;chosen.push(labels.at(-1));counts[p.node.status?.kind in counts?p.node.status.kind:'seen']++;return true;}
+    function add(p){
+        // Existing labels already passed bounds/collision checks; only measure the new candidate.
+        const w=measure(p.node.entry.text)+24,h=46,box={left:p.x-w/2,top:p.y-h/2,right:p.x+w/2,bottom:p.y+h/2};
+        if(box.left<10||box.right>width-10||box.top<10||box.bottom>height-10)return false;
+        if(chosen.some(q=>box.left<q.box.right+9&&box.right>q.box.left-9&&box.top<q.box.bottom+7&&box.bottom>q.box.top-7))return false;
+        chosen.push({...p,box});counts[p.node.status?.kind in counts?p.node.status.kind:'seen']++;return true;
+    }
     if(limit<=0)return chosen;
     const selected=ordered.find(p=>p.node.id===selectedId);if(selected)add(selected);
     while(chosen.length<limit){

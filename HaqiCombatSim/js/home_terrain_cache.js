@@ -2,7 +2,7 @@ import {createScheduledTerrainCache} from './terrain_tile_scheduler.js';
 import {createIslandTerrainRasterizer} from './island_terrain_rasterizer.js';
 import {paintHomeWorldTerrainSteps} from './view_home_art.js';
 
-// The island scheduler owns preparation, prefetch, bitmap lifetime and the 64 MiB budget.
+// The island scheduler owns preparation, prefetch, bitmap lifetime and a 32 MiB terrain budget; building caches reserve the other 32 MiB.
 export function createHomeTerrainCache(){
  const art={manifest:{atlases:{}},images:{}};
  let world=null,environment=null,decoration=null;
@@ -12,7 +12,7 @@ export function createHomeTerrainCache(){
   pattern(c,atlas,...args){atlases.add(prefix+atlas);return source?.pattern(c,atlas,...args)||null;}
  });
  const cache=createScheduledTerrainCache({
-  budget:2,rasterize:rasterize?async(...args)=>{
+  budget:2,maxBytes:32*1024*1024,rasterize:rasterize?async(...args)=>{
    const result=await rasterize(...args);
    for(const atlas of result.atlases){
     const slash=atlas.indexOf('/'),source=atlas.startsWith('env/')?environment:decoration;

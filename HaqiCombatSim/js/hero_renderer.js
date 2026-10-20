@@ -4,10 +4,12 @@ import {publicPhotoHead} from './photo_head_core.js';
 import {verifyHeadAsset} from './photo_head_images.js';
 
 // One UI scheduler; detached portraits release their actor state automatically.
-const views=new Set();let viewFrame=0;
+const views=new Set();let viewFrame=0,lastViewTime=-Infinity;
 function animateViews(time){
     viewFrame=0;
-    for(const view of views){if(view.node.isConnected){view.connected=true;if(!document.hidden)view.paint(time/1000);}else if(view.connected){views.delete(view);}}
+    const render=time<lastViewTime||time-lastViewTime>=46;
+    if(render)lastViewTime=time;
+    for(const view of views){if(view.node.isConnected){view.connected=true;if(render&&!document.hidden)view.paint(time/1000);}else if(view.connected){views.delete(view);}}
     if(views.size)viewFrame=requestAnimationFrame(animateViews);
 }
 function scheduleView(view){views.add(view);if(!viewFrame)viewFrame=requestAnimationFrame(animateViews);}

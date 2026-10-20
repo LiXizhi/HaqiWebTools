@@ -1,7 +1,7 @@
 // Browser-side cooperative raster work; no drawing or image callbacks touch the live canvas.
 function scheduleSlice(fn){const task={frame:null,timer:null};task.frame=requestAnimationFrame(()=>{task.timer=setTimeout(fn,0);});return task;}
 function cancelSlice(task){cancelAnimationFrame(task.frame);if(task.timer!==null)clearTimeout(task.timer);}
-export function createScheduledTerrainCache({paint,createCanvas,rasterize=null,schedule=scheduleSlice,cancel=cancelSlice,now=()=>performance.now(),budget=4,limit=24,onMetric=()=>{}}){
+export function createScheduledTerrainCache({paint,createCanvas,rasterize=null,schedule=scheduleSlice,cancel=cancelSlice,now=()=>performance.now(),budget=4,limit=24,maxBytes=64*1024*1024,onMetric=()=>{}}){
     const tiles=new Map(),keys=new WeakMap();let scope=null,density=0,queue=[],active=null,timer=null,previous=null,protectedKeys=new Set(),capacity=limit;
     function identity(world){if(!keys.has(world))keys.set(world,{layout:world.layout||world,geometry:JSON.stringify([world.npcs?.map(n=>[n.id,n.x,n.y]),world.encounters?.map(e=>[e.id,e.x,e.y])])});return keys.get(world);}
     function same(a,b){return a?.layout===b?.layout&&a?.geometry===b?.geometry;}
@@ -35,7 +35,7 @@ export function createScheduledTerrainCache({paint,createCanvas,rasterize=null,s
     function prepare(world,rect,pixelRatio=1,path=[],{visibleOnly=false}={}){
         const next=identity(world),d=Math.min(2,Math.max(1,Math.ceil(pixelRatio*4)/4));
         if(!same(scope,next)||density!==d){stop();for(const row of tiles.values())discard(row);tiles.clear();scope=next;density=d;previous=null;}
-        capacity=Math.max(1,Math.min(limit,Math.floor(64*1024*1024/((512*d+4)**2*4))));
+        capacity=Math.max(1,Math.min(limit,Math.max(1,Math.floor(maxBytes/((512*d+4)**2*4))-1)));
         let size=512;while((Math.ceil(rect.w/size)+1)*(Math.ceil(rect.h/size)+1)>capacity)size*=2;
         const min=world.unbounded?-Infinity:0,maxX=world.unbounded?Infinity:Math.ceil(world.w/size)-1,maxY=world.unbounded?Infinity:Math.ceil(world.h/size)-1;
         const x0=Math.max(min,Math.floor(rect.x/size)),y0=Math.max(min,Math.floor(rect.y/size)),x1=Math.min(maxX,Math.floor((rect.x+rect.w)/size)),y1=Math.min(maxY,Math.floor((rect.y+rect.h)/size));
@@ -74,6 +74,6 @@ export function createScheduledTerrainCache({paint,createCanvas,rasterize=null,s
         },
         clear(){stop();for(const row of tiles.values())discard(row);tiles.clear();scope=null;previous=null;},
         get size(){return tiles.size;},get pending(){return queue.length+(active?1:0);},
-        stats:()=>({bytes:(tiles.size+(active?1:0))*(512*density+4)**2*4,limitBytes:64*1024*1024,mode:rasterize?'worker':'fallback'})
+        stats:()=>({bytes:(tiles.size+(active?1:0))*(512*density+4)**2*4,limitBytes:maxBytes,mode:rasterize?'worker':'fallback'})
     };
 }

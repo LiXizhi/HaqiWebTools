@@ -1,3 +1,4 @@
+import {isRoofDecoration,roofAt,buildingBounds,buildingConflict,replacementFor,validBuildingProperties} from './home_building_core.js';
 // Home rules are independent of adventure progression and browser IO.
 import {createRng,hashSeed} from './rng_core.js';
 export const CHUNK_SIZE=32;
@@ -112,6 +113,7 @@ export function homeInteractiveKind(item){
 
 const normalize=s=>String(s).normalize('NFKC').toLowerCase().replace(/[.,!?。！？，、]/g,'').replace(/\s+/g,' ').trim();
 function oneEdit(a,b){if(Math.abs(a.length-b.length)>1)return false;let i=0,j=0,edits=0;while(i<a.length&&j<b.length){if(a[i]===b[j]){i++;j++;continue;}if(++edits>1)return false;if(a.length>=b.length)i++;if(b.length>=a.length)j++;}return edits+(a.length-i)+(b.length-j)<=1;}
+export const requiresReading=item=>item?.requiresReading!==false;
 export function summonSentences(item,lang='en',color=''){
  const noun=lang==='en'?[color,item.en].filter(Boolean).join(' '):`${COLORS[color]||''}${item.zh}`;
  const article=item.article==='some'?'some':/^[aeiou]/.test(noun)?'an':'a';
@@ -144,13 +146,24 @@ export function parseSummon(text,catalog,lang='en'){
 }
 export function homeObjectInteractive(obj,catalog){return typeof obj?.interactionEnabled==='boolean'?obj.interactionEnabled:catalog.find(i=>i.id===obj?.itemId)?.interactionEnabled===true;}
 export const validHomeSize=value=>value===undefined||(Number.isFinite(value)&&value>=.5&&value<=2);
-export function footprint(obj,catalog){const item=catalog.find(i=>i.id===obj.itemId);if(!item)throw Error('物品不存在');let [w,h]=item.size; if((obj.rotation||0)%2)[w,h]=[h,w];const size=obj.sizeScale??1;return {x:obj.x,y:obj.y,w:w*size,h:h*size,item};}
+export function footprint(obj,catalog){const item=catalog.find(i=>i.id===obj.itemId);if(!item)throw Error('物品不存在');if(item.building)return {...buildingBounds(obj,item),item};let [w,h]=item.size; if((obj.rotation||0)%2)[w,h]=[h,w];const size=obj.sizeScale??1;return {x:obj.x,y:obj.y,w:w*size,h:h*size,item};}
 export const overlaps=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
 export function canPlace(obj,objects,catalog){
  if(obj.interactionEnabled!==undefined&&typeof obj.interactionEnabled!=='boolean')return {ok:false,reason:'互动设置无效'};
  if(!validHomeSize(obj.sizeScale))return {ok:false,reason:'物品大小须在50%至200%之间'};
  if(!Number.isFinite(obj.x)||!Number.isFinite(obj.y)||Math.abs(obj.x)>1e9||Math.abs(obj.y)>1e9)return {ok:false,reason:'位置超出支持范围'};
- const box=footprint(obj,catalog),others=objects.filter(o=>o.id!==obj.id);
+ if(!validBuildingProperties(obj))return {ok:false,reason:'建筑属性无效'};
+ const mounted=isRoofDecoration(obj);
+ if(mounted){
+  if(catalog.find(i=>i.id===obj.itemId)?.building)return {ok:false,reason:'结构积木不能作为屋顶装饰'};
+  const roof=roofAt(obj,objects,catalog);if(!roof||obj.parentId!==roof.id)return {ok:false,reason:'请放在屋顶上'};
+  const box=footprint(obj,catalog);
+  if(objects.some(o=>o.id!==obj.id&&isRoofDecoration(o)&&overlaps(box,footprint(o,catalog))))return {ok:false,reason:'屋顶这里已有装饰'};
+  return {ok:true};
+ }
+ objects=objects.filter(o=>!isRoofDecoration(o));
+ const replacement=replacementFor(obj,objects,catalog);
+ const box=footprint(obj,catalog),others=objects.filter(o=>o.id!==obj.id&&o.id!==replacement?.id);
  if(box.item.layer==='top'){
   if(obj.parentId){
    const parent=others.find(o=>o.id===obj.parentId);if(!parent)return {ok:false,reason:'请放在桌面槽位上'};
@@ -160,12 +173,12 @@ export function canPlace(obj,objects,catalog){
   }
   for(const other of others){
    const b=footprint(other,catalog);
-   if(b.item.layer==='solid'&&overlaps(box,b))return {ok:false,reason:'请放在桌面槽位上'};
+   if(b.item.layer==='solid'&&b.item.building?.type!=='roof'&&overlaps(box,b))return {ok:false,reason:'请放在桌面槽位上'};
    if(b.item.layer==='top'&&!other.parentId&&overlaps(box,b))return {ok:false,reason:'这里已有物品'};
   }
   return {ok:true};
  }
- for(const other of others){const b=footprint(other,catalog);if(box.item.layer!==b.item.layer||box.item.layer==='top')continue;if(overlaps(box,b))return {ok:false,reason:'这里已有物品'};}
+ for(const other of others){const conflict=buildingConflict(obj,other,catalog);if(conflict!==null){if(conflict)return {ok:false,reason:'这里已有建筑构件'};continue;}const b=footprint(other,catalog);if(box.item.layer!==b.item.layer||box.item.layer==='top')continue;if(overlaps(box,b))return {ok:false,reason:'这里已有物品'};}
  return {ok:true};
 }
 export function visibleChunkKeys(camera,width,height,scale=40){const left=Math.floor((camera.x-width/scale/2)/32)-1,right=Math.floor((camera.x+width/scale/2)/32)+1,top=Math.floor((camera.y-height/scale/2)/32)-1,bottom=Math.floor((camera.y+height/scale/2)/32)+1,keys=[];for(let y=top;y<=bottom;y++)for(let x=left;x<=right;x++)keys.push(`${x},${y}`);return keys;}
@@ -181,7 +194,7 @@ export function homeResidentPets(records,residents){return Object.values(records
 export function petWish(petId,round,catalog,lang='en'){const rng=createRng(hashSeed(`${petId}:${round}`)),item=rng.pick(catalog.filter(i=>i.activity));return {itemId:item.id,text:lang==='en'?`I want ${/^[aeiou]/.test(item.en)?'an':'a'} ${item.en}.`:`我想要一个${item.zh}。`,translation:lang==='en'?`我想要一个${item.zh}。`:`I want ${/^[aeiou]/.test(item.en)?'an':'a'} ${item.en}.`};}
 export function validateHomePart(kind,value,catalog){
  if(!value||typeof value!=='object'||Array.isArray(value))throw Error('家园文件无效');
- if(kind==='chunk')for(const obj of Object.values(value)){if(!obj||(obj.interactionEnabled!==undefined&&typeof obj.interactionEnabled!=='boolean')||!validHomeSize(obj.sizeScale)||typeof obj.id!=='string'||!catalog.some(i=>i.id===obj.itemId)||!Number.isFinite(obj.x)||!Number.isFinite(obj.y)||Math.abs(obj.x)>1e9||Math.abs(obj.y)>1e9)throw Error('家园物品无效');}
+ if(kind==='chunk')for(const obj of Object.values(value)){if(!obj||!validBuildingProperties(obj)||(obj.interactionEnabled!==undefined&&typeof obj.interactionEnabled!=='boolean')||!validHomeSize(obj.sizeScale)||typeof obj.id!=='string'||!catalog.some(i=>i.id===obj.itemId)||!Number.isFinite(obj.x)||!Number.isFinite(obj.y)||Math.abs(obj.x)>1e9||Math.abs(obj.y)>1e9)throw Error('家园物品无效');}
  if(kind==='inventory')for(const [key,n]of Object.entries(value)){if(!catalog.some(i=>key.startsWith(`${i.id}:`))||!Number.isSafeInteger(n)||n<0)throw Error('家园库存无效');}
  if(kind==='residents')for(const [id,p] of Object.entries(value)){if(id==='$selection'){if(p?.version!==1)throw Error('宠物名单版本无效');continue;}if(!p||!Number.isFinite(p.x)||!Number.isFinite(p.y)||Math.abs(p.x)>1e9||Math.abs(p.y)>1e9)throw Error('宠物位置无效');}
  return value;

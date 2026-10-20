@@ -11040,3 +11040,34 @@ Word · 回忆拼写||Word · Recall Spelling
 词语理解||Word Understanding
 关闭词语理解||Close Word Understanding
 记录未保存，本次仅保存在内存中。||Records are not saved; they stay in memory for this session only.
+# Connected home building
+物品属性||Object Properties
+吸附网格||Snap to Grid
+阻挡通行||Block Movement
+阻挡宽度||Obstacle Width
+阻挡深度||Obstacle Depth
+横向偏移||Horizontal Offset
+纵向偏移||Vertical Offset
+保存属性||Save Properties
+显示屋顶||Show Roofs
+隐藏屋顶||Hide Roofs
+开门||Open Door
+关门||Close Door
+拖动铺设 · R旋转||Drag to Build · R to Rotate
+正确完成一次，获得16块积木；词语练习计一次。||Complete one practice to get 16 blocks; it counts as one word practice.
+木屋地板||Timber Floor Block
+木屋墙段||Timber Wall Block
+木屋窗墙||Timber Window Wall
+木屋门墙||Timber Door Wall
+木屋屋顶||Timber Roof Block
+石堡地板||Castle Floor Block
+石堡墙段||Castle Wall Block
+石堡窗墙||Castle Window Wall
+石堡门墙||Castle Door Wall
+石堡屋顶||Castle Roof Block
+恢复默认||Reset to Defaults
+建筑属性无效||Invalid building properties
+这里已有建筑构件||A building piece already occupies this space
+这里有角色，请换一个位置||A character is here. Choose another position.
+这一组积木已用完，请再次练习召唤||This block pack is empty. Practice again to summon another.
+词语练习尚未保存，请重试||Word practice has not been saved. Please retry.

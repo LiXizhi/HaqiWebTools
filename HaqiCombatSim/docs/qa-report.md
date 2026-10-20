@@ -3950,3 +3950,67 @@ Node词树专项31/31通过，含单个新标记即时生成、服务器写失�
 序章12张图上传并核验远端 HTTP/SHA-256/解码/尺寸/CORS，魔王alpha正常；6张既有卡底CDN均HTTP 200、哈希一致、CORS为*。序章默认自动播放，顶栏与对白开关同步。共享卡底首次失败后随卡面重试恢复，缺图不调用无效drawImage，不污染canvas状态。
 
 序章、卡底/渲染、缺图恢复、状态UI专项最终21/21通过。快速回归首轮1270项1267通过、3失败；卡底改动后1271项1267通过、4失败，其中品质条测试旧夹具未提供卡底，已补入模拟图像并在最终专项复测通过。其余3项与此前QA相同：surface loading overlay、30字动画目录、独立页面笔画解析。不宣称全套通过。日志位于系统临时目录 haqi-prologue-battle-tests-final.txt。未做浏览器实测（浏览器连接失败，用户实际页面网址待提供），未构建或发布游戏；仅上传序章资源，未提交、推送，用户选择不复制额外Git镜像。
+
+## 2026-10-20：连接式家园建筑与静态烘焙
+
+- 新增木屋／石堡各5种构件，目录170项；纯规则覆盖吸附、占位与独立阻挡、开关门、墙替换返还、跨块连接、屋顶分组、16块发放及回执／学习事件去重。新增缓存用例覆盖旧worker回复丢弃、缺图到图、主线程回退、选择排除和退出释放。
+- 1280×900及390×900（DPR2）隔离浏览器检查通过：使用正式`home_app`／`view_home`建造入口，放置扣库存、属性保存、重载保持一致；页面错误0。证据：`tmp/home-building/build-1280.png`、`build-390.png`、`properties-1280.png`、`properties-390.png`。
+- 10张建筑WebP永久CDN全部HTTP成功，CORS、SHA-256和≤200,000字节预算核验通过；约37–43KB/张。只有资源上传，无游戏构建／发布，无Git提交／推送。
+- Chrome headless建筑渲染层基准（1280×900；同场景对照；单位ms）：1000件闲置p50/p95从0.40/0.90降至0.20/0.40，图像绘制391→51次/帧；5000件从0.80/1.60降至0.40/0.90，939→114次/帧。5000件平移p95为1.40→0.80。编辑仍需重建变更索引，缓存版p95约6ms，不宣称编辑场景总是更快。
+- 预热后两档闲置追加烘焙均为0；缓存/实时对照平均通道差0.211/255；删除即使缓存失效，不展示旧内容。缓存释放后统计字节归零。完整结果保存在`tmp/home-building/benchmark.json`。
+- 完整家园视图基准：1000/5000件，缓存开关各跑闲置及移动，各90帧。各组p50约16.6–16.7ms（受60Hz刷新限制）；5000件缓存版闲置p95 17.9ms、移动20.2ms，实时版18.5/18.6ms。缓存减少绘制工作，不宣称整体FPS显著提高。合计地形＋建筑缓存最高约34.3MiB，小于64MiB；源图和浏览器画布开销不计入纹理预算。完整结果见`tmp/home-building/scene-benchmark.json`。
+- 本轮未做真实账号云同步或真实麦克风识别；相关既有核心测试不替代账号实测。此实现为单层建筑，屋顶为视觉层，不支持上楼。
+- 最终专项：家园／美术／WordTree／词库140/140通过，地形调度与worker14/14通过。最终`npm run test:battle`：1298项中1295通过、3失败，未跳过。失败为既有`surface loading overlay shows actual tile progress and disappears when ready`、`all 30 island words resolve to their own standalone character, including dance rather than martial wu`、`new standalone pages preserve dictionary stroke geometry and parse without network imports`；与前述QA已有记录一致，相关来源文件未在本任务修改。不宣称全套通过。
+
+### 2026-10-20 建筑积木独立试玩
+
+- `node --test tests/battle_home*.test.mjs tests/home_art.test.mjs`：99/99。新增示例保存校验、无占位冲突、陆地布局、双风格屋顶覆盖、闭门阻挡与开门通行测试。
+- `scripts/check_home_building_demo.mjs`：Chrome 1440×960、390×960均通过；正式Canvas双门点击开关、默认建筑积木十项、墙段属性保存和刷新恢复、无pageerror。截图位于本机 `tmp/home-building/demo-*.png`。
+- 全量 `npm run test:battle`：1301项，1297通过，4失败。失败为 `battle_earth_labels` 的加载HUD断言、`battle_hanzi_story_catalog` 两项，以及 `battle_held_movement` 的异步 `framePacer is not defined`（测试提取代码运行）。这些文件不属于本次试玩改动，仍需另行处理；不宣称整体回归通过。
+- 新增试玩不改变上一轮缓存性能结论；本轮没有重复性能基准，没有游戏部署。
+
+## 2026-10-20：120Hz 高刷上限与静态场景自适应降帧
+
+- `js/frame_meter_core.js` 新增 `createFramePacer`，在 120Hz Mac ProMotion 等高刷屏上将活动场景（行走、镜头缩放、战斗演出、地形流送及操作后 300ms 保持窗口）上限控制在 60 FPS，静态/待机场景（主世界站立、战斗等待选牌、家园静止）自动降至 20 FPS（每 6 个 120Hz vsync 或每 3 个 60Hz vsync 渲染 1 帧），并在键盘、鼠标、触控或状态变化时于下一帧立即唤醒至 60 FPS；`hero_renderer.js` 头像预览同步节流至约 20 FPS。
+- 静态降帧期间暂停 `adaptiveGraphics` 低帧率采样与 `performanceDiagnostics` 慢帧计数，避免把主动节能误判为设备卡顿。
+- 验证：`node --test tests/battle_scene_performance.test.mjs tests/battle_held_movement.test.mjs tests/battle_island_scene_loading.test.mjs tests/battle_hanzi_animation_pause.test.mjs tests/battle_home_loading.test.mjs tests/battle_home_edit.test.mjs tests/battle_home_residents.test.mjs tests/battle_home.test.mjs` 82/82 通过；`battle_held_movement` 10/10 通过。
+
+### 2026-10-20 正式建筑模板、全隐藏屋顶
+
+- 家园专项 `tests/battle_home*.test.mjs tests/home_art.test.mjs`：102/102；新增两种模板跨地块、库存不足、占位冲突、角色相交不部分提交，以及放置后独立门/收回操作。
+- `scripts/check_home_templates.mjs` Chrome1440×960：两个分类模板按钮实际放置成功，253→499对象，刷新后保持499，无页面异常；截图 `tmp/home-building/templates-interior.png` 目视确认角色所在木屋屋顶完全消失，其他独立屋顶仍显示。
+- `npm run test:battle`：1304项，1301通过，3失败，仍为earth加载HUD和hanzi目录两项；本轮held_movement通过。未宣称全量通过。
+
+### 2026-10-20 屋顶装饰归属
+
+- `node --test tests/battle_home*.test.mjs tests/home_art.test.mjs tests/word_lexicon.test.mjs`：116/116。覆盖屋顶与室内共存、地面碰撞豁免、支撑及占位校验、跨块移动/回收、归属加载校验、缓存/实时装饰共享屋顶连通组。
+- `scripts/check_home_roof_decor.mjs`：Chrome1440×960实际选择砖砌烟囱，在显示屋顶/隐藏屋顶时分别放置；检查支撑关系、属性下拉切换、刷新保存，均通过，无pageerror。
+- 本机截图 `tmp/home-building/roof-decor-outside.png`、`roof-decor-inside.png` 目视确认木屋屋顶和两个装饰在室内完全隐藏，石堡屋顶及烟囱保留。新增风车为静态装饰。
+- `npm run test:battle`：1307项中1304通过，3项原有earth加载HUD/hanzi目录失败。新增三张WebP CDN均HTTP可读、SHA-256与本地一致，允许跨域；约40–56KB/张。
+
+### 2026-10-20 阅读创建策略及面板关闭
+
+- 家园/资源/词库专项118/118：默认阅读、显式false无库存创建、模板必须有阅读回执、整栋创建原子性、回执重试不重复建筑或练习事件。
+- `scripts/check_home_reading.mjs` Chrome1440×960和390×960：卡片无库存数字；点模板先显示阅读不创建；错误输入不创建且保留面板；关闭按钮返回建造不创建；正确句子才创建并自动收起；免阅读积木直接摆放且库存不变。两端均通过，无pageerror。
+- `scripts/check_home_templates.mjs`：两种模板均通过完整句子召唤和刷新恢复。截图 `tmp/home-building/reading-*.png` 与 `reading-done-*.png`，手机关闭按钮与句子均可见。
+- 全量战斗1309项中1306通过，3项原有earth加载HUD/hanzi目录失败。未提交、推送或发布。
+
+### 2026-10-20 无限物品与库存移除
+
+- 家园/资源/词库专项119/119：替换/移除不增减计数，无inventory可正常放置，云端旧库存不请求也不上传，新目录去除引用。
+- `scripts/check_home_unlimited.mjs`：浏览器创建真实v1库，v2升级后直接检查IndexedDB确认旧inventory记录已删除，物件和阅读回执保留，迁移后快照无库存；新试玩也无库存。
+- `scripts/check_home_reading.mjs`：1440×960、390×960通过，阅读要求/错误保留/关闭/正确后收起/直接摆放仍正常。库存缺失不再导致连续铺设提前结束。
+- 全量战斗回归1310项中1307通过、3项既有earth加载HUD/hanzi目录失败，未宣称全部通过。
+
+### 2026-10-20 家园20,000物件容量
+
+- 家园/资源/词库专项121/121：总数含未显示地块、缺失计数不假装已知、边界20,000可用、超额净增长拒绝、旧超额不增长可编辑。
+- `scripts/check_home_capacity.mjs`：真实IndexedDB含远方19,999件；当前地块增加1件成功，再增加2件时对象、receipt和practice全回滚；满额修改与删除正常。容量显示桌面/390px手机均在画面内，无pageerror；截图 `tmp/home-building/capacity*.png`。
+- 全量战斗1312项中1309通过，3项既有earth加载HUD/hanzi目录失败。未宣称全部通过。
+
+### 2026-10-20 家园墙脚 AO
+
+- 家园专项107/107；新增跨地块邻墙、阻挡独立、开门/旋转/缩放/屋顶排除、空间桶去重与局部缓存失效测试。
+- `check_home_building_demo.mjs`：1440和390宽度通过，无页面异常；开门、属性编辑及重载通过，检查桌面室内截图。
+- `benchmark_home_building.mjs`：1,000件缓存idle/pan/edit绘制P95为0.4/0.4/3.2ms，5,000件为0.6/0.5/9.4ms。这是本机Canvas层CPU测量，非整帧耗时。5,000件实时idle P95 1.7ms、939次drawImage，缓存114次。两种规模稳定idle零重烘焙。建筑峰值15.50MiB，AO不新增bitmap，现有合计64MiB上限不变。5,000件累计246次烘焙含排队/消息耗时约1,337.5ms；销毁后0字节。缓存/实时平均像素通道差0.2104/255。
+- `npm run test:battle`：1316项中1313通过，3项既有失败仍为earth加载HUD与两项hanzi目录/字形检查。未发布。

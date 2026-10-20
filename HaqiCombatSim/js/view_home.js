@@ -1,7 +1,14 @@
+import {homeCapacity} from './home_capacity_core.js';
+import {BUILDING_TEMPLATES,buildingTemplateObjects} from './home_building_templates_core.js';
+import {createHomeBuildingCache} from './home_building_cache.js';
+import {drawBuilding,buildingVisualBounds} from './view_home_building.js';
+import {isRoofDecoration,buildingItem,obstruction,buildingBounds} from './home_building_core.js';
+import {openBuildingProperties} from './view_home_building_properties.js';
 import {createHomeTerrainCache} from './home_terrain_cache.js';
 import {createCloseButton} from './view_adventure_controls.js';
-import {collectHomeWorldTrees,drawHomeObject,drawHomeWorldTree} from './view_home_art.js';
-import {homeObjectInteractive,footprint,summonSentences,COLORS,homeBiomeAt,homeInteractiveKind} from './home_core.js';
+import {DetailDialog} from './view_detail_dialog.js';
+import {collectHomeWorldTrees,drawHomeObject,drawHomeWorldTree,homeObjectVisualBounds} from './view_home_art.js';
+import {requiresReading,homeObjectInteractive,footprint,summonSentences,COLORS,HOME_BIOMES,homeBiomeAt,homeInteractiveKind} from './home_core.js';
 import {createMotionTrail,drawMotionAccessory,drawMotionTrail,motionStyle} from './adventure_motion_effects.js';
 import {createHeroActor,updateHeroActor} from './hero_pose_core.js';
 import {loadHeroLibrary} from './hero_renderer.js';
@@ -10,26 +17,34 @@ import {fetchJson} from './runtime_data.js';
 import {tr} from './locale_runtime.js';
 import {petIdleLift} from './view_adventure_pet_mood.js';
 import {homeHeldPointerTarget} from './home_walk_core.js';
-import {homeFurnitureDragPosition} from './home_edit_core.js';
-import {createFrameMeter} from './frame_meter_core.js';
+import {homeFurnitureDragPosition,homeStrokeCells} from './home_edit_core.js';
+import {createFrameMeter,createFramePacer} from './frame_meter_core.js';
 
-const el=(tag,cls='',text='')=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text)e.textContent=tr(text);return e;};
+const el=(tag,cls='',...children)=>{
+ const e=document.createElement(tag);
+ if(cls)e.className=cls;
+ for(const child of children){
+  if(child==null)continue;
+  e.append(typeof child==='object'?child:tr(child));
+ }
+ return e;
+};
 const button=(text,fn,cls='secondary')=>{const b=el('button',cls,text);b.type='button';b.onclick=fn;return b;};
 const activities={sleep:'睡觉',sit:'坐下休息',eat:'吃饭',drink:'喝水',bathe:'洗澡',swing:'荡秋千',slide:'玩滑梯',ball:'玩球',read:'读书',water:'浇花',dance:'跳舞',picnic:'野餐'};
 const COLOR_HEX={red:'#dc7065',blue:'#70a5ce',green:'#8eb679',yellow:'#eac773',pink:'#e4a2b3',purple:'#b19ac9',white:'#f5efdf',orange:'#e5a061',brown:'#b98b61'};
 const INTERACTIVE_BADGES={light:'可点亮',music:'可演奏',water:'流水互动',cook:'烹饪互动',screen:'屏幕互动'};
-const CATEGORY_PRIORITY={garden:0,play:1,building:2,party:3,living:4,bedroom:5,kitchen:6,bathroom:7};
+const CATEGORY_PRIORITY={blocks:-1,garden:0,play:1,building:2,party:3,living:4,bedroom:5,kitchen:6,bathroom:7};
 
 export function createHomeView(root,cb){
  root.replaceChildren();root.className='overlay visible';
  const modal=el('section','modal home-modal'),header=el('header','modal-header'),title=el('h2','','家园'),body=el('div','home-body'),status=el('p','home-status');
  modal.setAttribute('role','dialog');modal.setAttribute('aria-label','宠物家园');modal.setAttribute('aria-modal','true');status.setAttribute('role','status');
  header.append(title,createCloseButton(cb.close));modal.append(header,body,status);root.append(modal);
- let model=null,mode='',signature='',exampleSignature='',gesture=null,catalogDrag=null,hits=[],frame=0,dead=false,lastPaint=0;
+ let model=null,mode='',signature='',exampleSignature='',gesture=null,catalogDrag=null,hits=[],frame=0,dead=false,lastPaint=0,activeDialog=null;
  const images=new Map(),terrain=createHomeTerrainCache();
- const frameMeter=createFrameMeter();
+ const frameMeter=createFrameMeter(),framePacer=createFramePacer();
  let fpsLabel;
- let canvas,ctx,stage,side,items,category,catPills,tabs,input,example,bubble,bubbleText,tools,choice,summary,portal,edit,inventoryMode=false,petMode=false;
+ let canvas,ctx,stage,side,items,category,catPills,tabs,input,example,bubble,bubbleText,tools,choice,summary,portal,edit,petMode=false;
  const motionTrail=createMotionTrail(7319);
  const heroActor=createHeroActor(7419),secondActor=createHeroActor(7420);
  let prevSecondPos=null;
@@ -50,6 +65,8 @@ export function createHomeView(root,cb){
   return image;
  };
 
+ const buildings=createHomeBuildingCache({imageFor,enabled:!new URLSearchParams(location.search).has('noBuildingCache')});
+ let paintStroke=null;
  let worldAtlasesPromise=null,terrainMissing=Infinity;
  function ensureWorldAtlases(){
   if(worldAtlasesPromise)return worldAtlasesPromise;
@@ -74,6 +91,102 @@ export function createHomeView(root,cb){
  }
 
  const run=fn=>Promise.resolve().then(fn).catch(cb.error);
+
+ function openNameDialog({trigger,home:targetHome=null}={}){
+  activeDialog?.destroy();
+  const isRename=!!targetHome;
+  const dialog=new DetailDialog(modal,{el,title:tr(isRename?'重命名':'新建家园'),className:'equipment-item-dialog home-name-dialog'});
+  activeDialog=dialog;
+  dialog.dialog.addEventListener('close',()=>{if(activeDialog===dialog)activeDialog=null;dialog.dialog.remove();});
+
+  const banner=el('div','home-dialog-banner');
+  const biomeBadges=el('div','home-dialog-biomes');
+  for(const b of [HOME_BIOMES.meadow,HOME_BIOMES.blossom,HOME_BIOMES.mystic]){
+   const badge=el('span','home-dialog-biome-pill',b.name);
+   badge.style.setProperty('--biome-dot',b.grassA);
+   biomeBadges.append(badge);
+  }
+  banner.append(
+   biomeBadges,
+   el('strong','home-dialog-lead','为伙伴创造一个家'),
+   el('p','home-dialog-sub','说出一句话，召唤一件家具。拖动宠物，一起生活。')
+  );
+
+  const existing=new Set((model?.homes||[]).map(h=>h.name));
+  const presetBiomes=Object.values(HOME_BIOMES);
+  const heroDefault=model?.heroSave?.name?`${model.heroSave.name}${tr('的家园')}`:'';
+  const defaultName=isRename
+   ?targetHome.name
+   :(heroDefault&&!existing.has(heroDefault)?heroDefault:tr((presetBiomes.find(b=>!existing.has(tr(b.name)))||presetBiomes[0]).name));
+
+  const form=el('form','home-dialog-form');
+  const label=el('label','home-dialog-label','新家园的名字');
+  label.htmlFor='home-name-input';
+  const nameInput=el('input','home-name-input');
+  nameInput.id='home-name-input';
+  nameInput.type='text';
+  nameInput.maxLength=40;
+  nameInput.autocomplete='off';
+  nameInput.placeholder=tr('给家园起个名字，开始创造。');
+  nameInput.value=defaultName;
+
+  const presets=el('div','home-name-presets');
+  const presetBtns=presetBiomes.map(b=>{
+   const text=tr(b.name);
+   const chip=button(b.name,()=>{
+    nameInput.value=text;
+    refreshState();
+    nameInput.focus();
+   },'home-name-chip');
+   chip.style.setProperty('--biome-dot',b.grassA);
+   presets.append(chip);
+   return {chip,text};
+  });
+
+  const cancelBtn=button('取消',()=>dialog.close(),'secondary');
+  const submitBtn=button(isRename?'重命名':'新建家园',()=>submit(),'primary');
+
+  function refreshState(){
+   const trimmed=nameInput.value.trim();
+   submitBtn.disabled=!trimmed;
+   for(const {chip,text} of presetBtns){
+    const active=trimmed===text;
+    chip.classList.toggle('is-active',active);
+    chip.setAttribute('aria-pressed',String(active));
+   }
+  }
+  function submit(){
+   const trimmed=nameInput.value.trim().slice(0,40);
+   if(!trimmed)return;
+   dialog.close();
+   if(isRename)run(()=>cb.rename(targetHome,trimmed));
+   else run(()=>cb.create(trimmed));
+  }
+  nameInput.oninput=refreshState;
+  form.onsubmit=e=>{e.preventDefault();submit();};
+  form.append(label,nameInput,presets);
+  dialog.body.append(banner,form);
+  dialog.footer.append(cancelBtn,submitBtn);
+  refreshState();
+  dialog.open(trigger);
+  nameInput.focus({preventScroll:true});
+  nameInput.select();
+ }
+
+ function openRemoveDialog(targetHome,trigger){
+  if(!targetHome)return;
+  activeDialog?.destroy();
+  const dialog=new DetailDialog(modal,{el,title:tr('删除家园'),className:'equipment-item-dialog home-name-dialog'});
+  activeDialog=dialog;
+  dialog.dialog.addEventListener('close',()=>{if(activeDialog===dialog)activeDialog=null;dialog.dialog.remove();});
+  const msg=el('p','home-dialog-confirm-text');
+  msg.textContent=`${tr('删除')}“${targetHome.name}”？${tr('此操作不能撤销。')}`;
+  const cancelBtn=button('取消',()=>dialog.close(),'secondary');
+  const confirmBtn=button('删除家园',()=>{dialog.close();run(()=>cb.remove(targetHome,true));},'primary danger');
+  dialog.body.append(msg);
+  dialog.footer.append(cancelBtn,confirmBtn);
+  dialog.open(trigger);
+ }
 
  function manager(){
   body.replaceChildren();body.className='home-body home-manager';
@@ -106,15 +219,15 @@ export function createHomeView(root,cb){
    );
    card.append(info);list.append(card);
   }
-  const createBtn=button('新建家园',()=>{const name=prompt(tr('新家园的名字'));if(name?.trim())run(()=>cb.create(name));},'home-card home-entry home-new');
+  const createBtn=button('新建家园',e=>openNameDialog({trigger:e.currentTarget}),'home-card home-entry home-new');
   list.append(createBtn);
   body.append(heroBanner,list);
  }
 
+ function closeSummonDrawer(){if(!body)return;body.dataset.drawer='build';signature='';render(model);canvas?.focus();}
  function openSummonDrawer(){
   if(!body)return;
   body.dataset.drawer='summon';
-  inventoryMode=false;
   petMode=false;
   cb.mode(true);
   signature='';
@@ -136,8 +249,8 @@ export function createHomeView(root,cb){
    button('重试加载',()=>run(cb.reload)),
    button('听宠物愿望',()=>run(cb.speakWish)),
    button('帮它实现',cb.helpWish),
-   button('重命名',()=>run(()=>cb.rename(model.home))),
-   button('删除家园',()=>run(()=>cb.remove(model.home))),
+   button('重命名',e=>openNameDialog({trigger:e.currentTarget,home:model.home})),
+   button('删除家园',e=>openRemoveDialog(model.home,e.currentTarget)),
    button('安静模式',cb.quiet)
   );
 
@@ -180,7 +293,8 @@ export function createHomeView(root,cb){
   mic.onpointercancel=()=>run(cb.cancelVoice);
   mic.onkeydown=e=>{if(e.code==='Space'&&!e.repeat){e.preventDefault();run(cb.record);}};
   mic.onkeyup=e=>{if(e.code==='Space'){e.preventDefault();run(cb.finish);}};
-  form.append(input,button('召唤',()=>run(()=>cb.summon(input.value)),'primary'),mic);
+  const readingClose=createCloseButton(()=>{cb.cancel();run(cb.cancelVoice);closeSummonDrawer();});readingClose.setAttribute('aria-label','关闭阅读');
+  form.append(readingClose,input,button('召唤',()=>run(()=>cb.summon(input.value)),'primary'),mic);
   form.onsubmit=e=>{e.preventDefault();run(()=>cb.summon(input.value));};
 
   example=el('div','home-example');
@@ -199,6 +313,7 @@ export function createHomeView(root,cb){
   category.setAttribute('aria-label','物品分类');
   category.append(new Option(tr('全部分类'),''));
   for(const c of model.catalog.categories)category.append(new Option(tr(c.name),c.id));
+  category.value=cb.initialCategory||'';
   category.onchange=()=>{signature='';render(model);};
 
   // Visual Category Filter Pills (outdoor categories first)
@@ -244,7 +359,7 @@ export function createHomeView(root,cb){
    // A new gesture must not inherit the synthetic-click suppression of a drag.
    suppressTrayClick=false;
    const card=e.target.closest('.home-item,.home-pet-card');
-   if(!card||e.button!==0||trayGesture)return;
+   if(!card||card.classList.contains('home-template')||e.button!==0||trayGesture)return;
    suppressTrayClick=false;
    trayGesture={id:e.pointerId,x:e.clientX,y:e.clientY,row:{...card.homeItem},petId:card.homePetId,card,active:false};
   };
@@ -286,7 +401,6 @@ export function createHomeView(root,cb){
   const show=kind=>{
    const same=body.dataset.drawer===kind;
    body.dataset.drawer=same?'':kind;
-   inventoryMode=kind==='stock';
    petMode=kind==='pets';
    cb.mode(!same&&(kind==='build'||kind==='stock'||kind==='summon'));
    signature='';
@@ -328,6 +442,7 @@ export function createHomeView(root,cb){
    iconAction('旋转','M20 8a8 8 0 1 0 0 8 M20 3v5h-5',cb.rotate),
    iconAction('互动','M12 3v9 M6.3 5.6a8 8 0 1 0 11.4 0',()=>cb.toggleActive?.(),'home-interaction-toggle'),
    enlarge,shrink,
+   iconAction('物品属性','M4 6h16 M4 12h16 M4 18h16 M8 3v6 M16 9v6 M10 15v6',()=>{if(!model.selection?.id)return;activeDialog?.destroy();activeDialog=openBuildingProperties(modal,{el,button,obj:model.selection,item:buildingItem(model.selection,model.catalog.items),save:cb.properties});}),
    iconAction('收回','M3 9h18v12H3Z M3 9l3-5h3 M21 9l-3-5h-3 M12 2v12 M8 10l4 4 4-4',cb.recall,'danger'),
    iconAction('取消选择','m6 6 12 12 M18 6 6 18',cb.cancel)
   );
@@ -339,7 +454,9 @@ export function createHomeView(root,cb){
   topbar.append(
    closeBtn,
    button('家园列表',()=>run(cb.back),'home-nav-pill'),
-   el('strong','home-world-name',model.home.name)
+   el('strong','home-world-name',model.home.name),
+   el('span','home-capacity home-nav-pill'),
+   button('显示屋顶',cb.roofs,'home-roof-toggle home-nav-pill')
   );
 
   body.append(main,side,topbar,dock);
@@ -350,6 +467,9 @@ export function createHomeView(root,cb){
    canvas.setPointerCapture(e.pointerId);
    const p=position(e);
    const hit=[...hits].reverse().find(h=>p.sx>=h.sx&&p.sx<=h.sx+h.sw&&p.sy>=h.sy&&p.sy<=h.sy+h.sh);
+   if(model.build&&model.selection&&!model.selection.id&&buildingItem(model.selection,model.catalog.items)?.building){
+    paintStroke={seen:new Set(),row:{...model.selection},id:e.pointerId};paintAt(p);return;
+   }
    gesture={
     start:p,
     last:p,
@@ -362,6 +482,8 @@ export function createHomeView(root,cb){
    };
   };
   canvas.onpointermove=e=>{
+   if(paintStroke){if(paintStroke.id===e.pointerId)paintAt(position(e));return;}
+   if(!gesture&&model.build&&model.selection&&!model.selection.id&&buildingItem(model.selection,model.catalog.items)?.building)cb.hover(position(e));
    if(gesture&&gesture.id!==e.pointerId)return;
    const p=position(e);
    if(!gesture)return;
@@ -372,6 +494,7 @@ export function createHomeView(root,cb){
    gesture.last=p;
   };
   canvas.onpointerup=e=>{
+   if(paintStroke?.id===e.pointerId){paintStroke=null;if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);return;}
    if(!gesture||gesture.id!==e.pointerId)return;
    const g=gesture,p=position(e);
    gesture=null;
@@ -395,7 +518,7 @@ export function createHomeView(root,cb){
     else run(()=>cb.tap(g.hit,p));
    }
   };
-  const cancelPointer=()=>{if(gesture?.steering)cb.stopWalk();gesture=null;cb.hover(null);};
+  const cancelPointer=()=>{paintStroke=null;if(gesture?.steering)cb.stopWalk();gesture=null;cb.hover(null);};
   canvas.onpointercancel=cancelPointer;
   canvas.onlostpointercapture=cancelPointer;
   canvas.onwheel=e=>{e.preventDefault();cb.zoom(e.deltaY>0?.9:1.1);};
@@ -416,6 +539,14 @@ export function createHomeView(root,cb){
   };
  }
 
+ function paintAt(p){
+  const stroke=paintStroke;if(!stroke)return;cb.hover(p);
+  for(const cell of homeStrokeCells(stroke.last||p,p)){
+   const key=`${cell.x},${cell.y}`;if(stroke.seen.has(key))continue;stroke.seen.add(key);
+   run(()=>cb.take({...stroke.row,fromInventory:true},cell));
+  }
+  stroke.last=p;
+ }
  function petDragPoint(g){return {x:g.last.sx+g.hit.sx+g.hit.sw/2-g.start.sx,y:g.last.sy+g.hit.sy+g.hit.sh-20-g.start.sy};}
  function position(e){
   const r=canvas.getBoundingClientRect();
@@ -429,7 +560,9 @@ export function createHomeView(root,cb){
 
  function render(next){
   if(dead)return;
+  framePacer.wake();
   model=next;
+  if(next.home){const capacity=homeCapacity(next.home),label=body.querySelector('.home-capacity');if(label){label.textContent=`容量 ${capacity.used===null?'待统计':capacity.used.toLocaleString('en-US')} / ${capacity.limit.toLocaleString('en-US')}`;label.title='每块积木或摆设占用1件容量；地形和宠物不计入';}}
   status.textContent=tr(next.status||'');
   if(next.unsaved)status.append(button('重试保存',()=>run(cb.retry),'primary'));
   status.hidden=!next.unsaved&&(!next.status||next.status.startsWith('已保存到本机')||next.status==='宠物已安置，位置已保存到本机'||!next.home&&next.status==='家园自动保存到本机，云端同步由你手动开启。');
@@ -447,18 +580,21 @@ export function createHomeView(root,cb){
    if(mode==='scene')scene();
   }
   if(mode==='manager'){
+   buildings.clear();terrain.clear();
    const key=JSON.stringify([next.homes,next.guests]);
    if(signature!==key){signature=key;manager();}
    return;
   }
   body.classList.toggle('is-building',!!next.build);
+  const roofToggle=body.querySelector('.home-roof-toggle');if(roofToggle){roofToggle.setAttribute('aria-pressed',String(next.showRoofs));roofToggle.textContent=tr(next.showRoofs?'隐藏屋顶':'显示屋顶');}
   body.classList.toggle('has-selection',!!next.build&&!!next.selection?.id);
   if(edit){
    const size=next.selection?.sizeScale??1;
    const toggle=edit.querySelector('.home-interaction-toggle'),enabled=homeObjectInteractive(next.selection,next.catalog.items);
    toggle.disabled=!next.selection?.id;
    toggle.setAttribute('aria-pressed',String(enabled));
-   const label=tr(enabled?'互动已开启，点击关闭自由拖动':'互动已关闭，点击开启自由拖动');
+   const door=buildingItem(next.selection,next.catalog.items)?.building?.type==='door';
+   const label=door?tr(next.selection?.doorOpen?'关门':'开门'):tr(enabled?'互动已开启，点击关闭自由拖动':'互动已关闭，点击开启自由拖动');
    toggle.setAttribute('aria-label',label);toggle.title=label;
    toggle.querySelector('path').setAttribute('d',enabled?'M12 3v9 M6.3 5.6a8 8 0 1 0 11.4 0':'M12 3v9 M6.3 5.6a8 8 0 1 0 11.4 0 M3 3l18 18');
 
@@ -476,7 +612,7 @@ export function createHomeView(root,cb){
   if(nextExample!==exampleSignature){
    exampleSignature=nextExample;
    if(next.selection?.itemId&&!next.selection.id){
-    const item=next.catalog.items.find(i=>i.id===next.selection.itemId);
+    const item=[...next.catalog.items,...(next.practiceItems||[])].find(i=>i.id===next.selection.itemId);
     example.replaceChildren();
     example.append(el('strong','',tr('你需要读出下面句子才能召唤{item}').replace('{item}',item.zh)),el('p','','从简单到挑战，正确读出或输入任意一句即可召唤。'));
     const chipRow=el('div','home-example-chips');
@@ -494,8 +630,8 @@ export function createHomeView(root,cb){
     colors.onchange=()=>cb.color(colors.value);
     swatchRow.append(colors);
     const defaultDot=button('原色',()=>cb.color(''),'home-color-dot'+(next.selection.color?'':' is-active'));
-    swatchRow.append(defaultDot);
-    for(const [key,label] of Object.entries(COLORS)){
+    if(!item.templateId)swatchRow.append(defaultDot);
+    for(const [key,label] of (item.templateId?[]:Object.entries(COLORS))){
      const dot=button('',()=>cb.color(key),'home-color-dot'+(next.selection.color===key?' is-active':''));
      dot.style.setProperty('--swatch',COLOR_HEX[key]||'#ccc');
      dot.title=tr(label);
@@ -511,14 +647,14 @@ export function createHomeView(root,cb){
 
   choice.replaceChildren();
   for(const candidate of next.candidates||[]){
-   const item=next.catalog.items.find(i=>i.id===candidate.itemId);
+   const item=[...next.catalog.items,...(next.practiceItems||[])].find(i=>i.id===candidate.itemId);
    choice.append(button(item.zh,()=>run(()=>cb.choose(candidate))));
   }
 
-  const key=JSON.stringify([category.value,inventoryMode,petMode,next.inventory,(next.petBag||next.pets)?.map(p=>[p.id,p.name,p.stage,p.art,p.activity]),next.selection?.itemId,next.selection?.color]);
+  const key=JSON.stringify([category.value,petMode,(next.petBag||next.pets)?.map(p=>[p.id,p.name,p.stage,p.art,p.activity]),next.selection?.itemId,next.selection?.color]);
   if(catalogDrag||key===signature)return;
   signature=key;
-  tabs.textContent=tr(petMode?'家园宠物背包':inventoryMode?'我的仓库':'户外与家园设施');
+  tabs.textContent=tr(petMode?'家园宠物背包':'户外与家园设施');
   side.setAttribute('aria-label',tabs.textContent);
   category.hidden=petMode;
   catPills.hidden=petMode;
@@ -560,19 +696,31 @@ export function createHomeView(root,cb){
    .sort((a,b)=>(CATEGORY_PRIORITY[a.category]??9)-(CATEGORY_PRIORITY[b.category]??9));
 
   summary.textContent=tr('点击物品练习召唤；拖到场景可指定召唤位置。');
+  if(category.value==='blocks'){
+   for(const template of BUILDING_TEMPLATES){
+
+    const card=button('',()=>run(()=>cb.practiceTemplate(template.id)),'home-item home-template');
+    card.setAttribute('aria-label',template.name+'模板');
+    card.title='阅读后创建完整建筑';
+    const thumb=el('canvas','home-item-thumb');thumb.width=120;thumb.height=92;
+    const c=thumb.getContext('2d');c.translate(8,20);c.scale(100/(template.width*40),65/(template.depth*40));
+    const objects=buildingTemplateObjects(template.id);
+    for(const o of objects.filter(o=>!o.itemId.endsWith('-roof')).sort((a,b)=>a.y-b.y)){const item=buildingItem(o,next.catalog.items);drawBuilding(c,item,o,imageFor(item.art));}
+    const meta=el('div','home-item-meta');meta.append(el('strong','',template.name+' · 模板'),el('small','','阅读后创建完整建筑'));
+    card.append(thumb,meta);items.append(card);
+   }
+  }
   for(const item of rows){
-   const variants=inventoryMode
-    ?Object.entries(next.inventory||{}).filter(([key,n])=>key.startsWith(`${item.id}:`)&&n>0).map(([key,n])=>({color:key.split(':')[1],n}))
-    :[{color:'',n:null}];
+   const variants=[{color:''}];
    for(const v of variants){
     const isSelected=next.selection?.itemId===item.id&&(next.selection?.color||'')===v.color;
     const card=button('',()=>{
-     if(inventoryMode)cb.select(item.id,v.color,true);
+     if(!requiresReading(item))cb.select(item.id,v.color,true);
      else cb.practice(item.id,v.color);
     },'home-item'+(isSelected?' is-selected':''));
     card.setAttribute('aria-label',`${COLORS[v.color]||''}${item.zh}`);
     card.title=`${COLORS[v.color]||''}${item.zh} · ${item.en}`;
-    card.homeItem={itemId:item.id,color:v.color,fromInventory:inventoryMode};
+    card.homeItem={itemId:item.id,color:v.color,fromInventory:false};
     card.draggable=false;
     const thumb=el('canvas','home-item-thumb');
     thumb.width=120;thumb.height=92;
@@ -582,7 +730,7 @@ export function createHomeView(root,cb){
     }
     drawHomeObject(thumb.getContext('2d'),item,{color:v.color},10,12,100,68,artImg,0,true);
     const meta=el('div','home-item-meta');
-    meta.append(el('strong','',`${COLORS[v.color]||''}${item.zh}${v.n===null?'':` ×${v.n}`}`),el('small','',isSelected?tr('念咒语召唤'):item.en));
+    meta.append(el('strong','',`${COLORS[v.color]||''}${item.zh}`),el('small','',isSelected?tr(!requiresReading(item)?'直接摆放 · R旋转':'念咒语召唤'):item.en));
     const kind=homeInteractiveKind(item.id);
     if(kind||item.activity){
      const badge=el('span','home-item-badge',tr(INTERACTIVE_BADGES[kind]||activities[item.activity]||'可互动'));
@@ -597,8 +745,10 @@ export function createHomeView(root,cb){
 
  function paint(now){
   frame=requestAnimationFrame(paint);
-  if(dead||mode!=='scene'||!canvas?.isConnected||document.hidden){lastPaint=0;frameMeter.sample(0,false);return;}
-  const dt=lastPaint?Math.min(.05,(now-lastPaint)/1000):0;
+  if(dead||mode!=='scene'||!canvas?.isConnected||document.hidden){lastPaint=0;framePacer.reset();frameMeter.sample(0,false);return;}
+  const sceneActive=Boolean(model.hero?.moving||model.secondHero?.moving||model.destination||gesture||paintStroke||model.preview||terrainMissing>0);
+  if(!framePacer.shouldRender(now,sceneActive))return;
+  const dt=lastPaint?Math.min(.065,(now-lastPaint)/1000):0;
   lastPaint=now;
   if(gesture&&!gesture.hit&&(gesture.moved||now-gesture.since>=180)){
    gesture.steering=true;
@@ -637,18 +787,33 @@ export function createHomeView(root,cb){
   ctx.restore();
 
   hits=[];
-  const grounds=objects.filter(o=>model.catalog.items.find(i=>i.id===o.itemId)?.layer==='ground');
+  const groups=buildings.prepare(objects,model.catalog.items,worldRect,ratio*scale/40,model.selection?.id||gesture?.hit?.id||'');
+  const sections=buildings.sections(),hiddenRoofs=new Set();
+  for(const actor of [model.hero,model.secondHero].filter(Boolean)){for(const o of objects){const item=buildingItem(o,model.catalog.items);if(item?.building?.type!=='roof')continue;const b=buildingBounds(o,item);if(actor.x>=b.x&&actor.x<=b.x+b.w&&actor.y>=b.y&&actor.y<=b.y+b.h)hiddenRoofs.add(sections.get(o.id)?.[0]?.id);}}
+  const wallFades=({o,item})=>item.building&&['wall','window'].includes(item.building.type)&&[model.hero,model.secondHero].filter(Boolean).some(h=>h.x>=o.x-.3&&h.x<=o.x+buildingBounds(o,item).w+.3&&h.y<o.y&&h.y>o.y-1.4);
+  function drawGroup(g){
+   if(g.roof&&hiddenRoofs.has(g.section))return;
+   if(g.dynamic){g.rows.forEach(row=>drawObject(row.o,true,row));return;}
+   ctx.save();ctx.translate(r.width/2-model.camera.x*scale,r.height/2-model.camera.y*scale);ctx.scale(scale/40,scale/40);
+   if(g.rows.some(wallFades)){for(const row of g.rows)buildings.draw(ctx,{...g,rows:[row]},{alpha:wallFades(row)?.4:1,forceLive:true});}
+   else buildings.draw(ctx,g);
+   ctx.restore();for(const {o}of g.rows)drawObject(o,false);
+  }
 
-  function drawObject(o){
+
+  function drawObject(o,draw=true,buildingRow){
    const item=model.catalog.items.find(i=>i.id===o.itemId);
    if(!item)return;
-   const b=footprint(o,model.catalog.items),p=project(o.x,o.y);
+   const b=footprint(o,model.catalog.items),p=project(o.x,o.y-(isRoofDecoration(o)?1.4:0));
    if(p.x>r.width+60||p.y>r.height+120||p.x+b.w*scale<-60||p.y+b.h*scale<-60)return;
    ctx.save();
    if(gesture?.moved&&gesture.hit?.id===o.id)ctx.globalAlpha=.25;
-   const bounds=drawHomeObject(ctx,item,o,p.x,p.y,b.w*scale,b.h*scale,imageFor(item.art),sec);
+   let bounds;
+   if(item.building){const visual=buildingVisualBounds(o,item);bounds={x:project(visual.x/40,visual.y/40).x,y:project(visual.x/40,visual.y/40).y,w:visual.w*scale/40,h:visual.h*scale/40};if(draw){ctx.translate(p.x,p.y);ctx.scale(scale/40,scale/40);ctx.translate(-o.x*40,-o.y*40);drawBuilding(ctx,item,o,imageFor(item.art),buildingRow?.connections,buildingRow?.ao);}}
+   else if(draw)bounds=drawHomeObject(ctx,item,o,p.x,p.y,b.w*scale,b.h*scale,imageFor(item.art),sec);
+   else bounds=homeObjectVisualBounds(item,o,p.x,p.y,b.w*scale,b.h*scale);
    ctx.restore();
-   if(model.build||homeObjectInteractive(o,model.catalog.items))hits.push({kind:'object',id:o.id,sx:bounds?.x??p.x,sy:bounds?.y??p.y-12,sw:bounds?.w??b.w*scale,sh:bounds?.h??b.h*scale+12});
+   if(model.build||item.building?.type==='door'||homeObjectInteractive(o,model.catalog.items))hits.push({kind:'object',id:o.id,sx:bounds?.x??p.x,sy:bounds?.y??p.y-12,sw:bounds?.w??b.w*scale,sh:bounds?.h??b.h*scale+12});
    if(model.build&&model.selection?.id===o.id){
     ctx.save();
     ctx.strokeStyle='#ffe885';
@@ -658,10 +823,11 @@ export function createHomeView(root,cb){
     ctx.beginPath();
     ctx.roundRect(p.x-2,p.y-2,b.w*scale+4,b.h*scale+4,6);
     ctx.stroke();
+    const block=obstruction(o,item);if(block){const q=project(block.x,block.y);ctx.strokeStyle='#e96655';ctx.lineWidth=2;ctx.setLineDash([4,3]);ctx.strokeRect(q.x,q.y,block.w*scale,block.h*scale);}
     ctx.restore();
    }
   }
-  grounds.forEach(drawObject);
+  groups.filter(g=>g.ground&&!g.roof).forEach(drawGroup);
 
   // Position contextual floating action wheel directly above the selected object
   if(edit){
@@ -745,7 +911,7 @@ export function createHomeView(root,cb){
 
   const sorted=[
    ...landscape,
-   ...objects.filter(o=>!grounds.includes(o)).map(o=>({kind:'object',o,y:o.y+footprint(o,model.catalog.items).h+(o.parentId?2:0)})),
+   ...groups.filter(g=>!g.ground&&!g.roof).map(g=>({kind:'group',o:g,y:g.depth})),
    ...actors.map(o=>({kind:'pet',o,y:o.y+1})),
    {kind:'hero',o:model.hero,y:model.hero.y,owner:0},
    ...(model.secondHero?[{kind:'hero',o:model.secondHero,y:model.secondHero.y,owner:1}]:[])
@@ -794,8 +960,8 @@ export function createHomeView(root,cb){
     ctx.fillText(model.secondHero?`${row.owner+1}号 · ${save?.name||'玩家'}`:'我',p.x,p.y+22);
     continue;
    }
-   if(row.kind==='object'){
-    drawObject(row.o);
+   if(row.kind==='group'){
+    drawGroup(row.o);
     continue;
    }
    const pet=row.o;
@@ -860,14 +1026,16 @@ export function createHomeView(root,cb){
    hits.push({kind:'pet',id:pet.id,sx:p.x-size/2,sy:p.y-size,sw:size,sh:size+20});
   }
 
+  if(model.showRoofs)groups.filter(g=>g.roof).sort((a,b)=>Number(a.decoration)-Number(b.decoration)||a.depth-b.depth).forEach(drawGroup);
+
   // 7. Placement Preview Ghost
   if(model.preview){
    const o=model.preview,item=model.catalog.items.find(i=>i.id===o.itemId);
    if(item){
-    const b=footprint(o,model.catalog.items),p=project(o.x,o.y);
+    const b=footprint(o,model.catalog.items),p=project(o.x,o.y-(isRoofDecoration(o)?1.4:0));
     ctx.save();
     ctx.globalAlpha=.68;
-    drawHomeObject(ctx,item,o,p.x,p.y,b.w*scale,b.h*scale,imageFor(item.art),sec);
+    if(item.building){ctx.translate(p.x,p.y);ctx.scale(scale/40,scale/40);ctx.translate(-o.x*40,-o.y*40);drawBuilding(ctx,item,o,imageFor(item.art));}else drawHomeObject(ctx,item,o,p.x,p.y,b.w*scale,b.h*scale,imageFor(item.art),sec);
     ctx.restore();
     ctx.fillStyle=o.valid?'rgba(154,230,140,0.22)':'rgba(220,90,82,0.28)';
     ctx.strokeStyle=o.valid?'#b8f59e':'#ff7b72';
@@ -914,6 +1082,7 @@ export function createHomeView(root,cb){
    throw Error('家园加载已取消');
   },
   openSummon:openSummonDrawer,
+  closeSummon:closeSummonDrawer,
   capture(){
    if(mode!=='scene'||!canvas?.width||!canvas?.height)return null;
    const shot=document.createElement('canvas');
@@ -926,11 +1095,13 @@ export function createHomeView(root,cb){
   setInput:text=>{if(input)input.value=text;},
   dispose(){
    dead=true;
+   activeDialog?.destroy();
    root.classList.remove('home-world-active');
    cancelAnimationFrame(frame);
    images.clear();
-   terrain.dispose();
+   terrain.dispose();buildings.dispose();
   },
+  stats:()=>({terrain:terrain.stats(),buildings:buildings.stats()}),
   get size(){
    const r=canvas?.getBoundingClientRect();
    return {width:r?.width||800,height:r?.height||500};

@@ -111,6 +111,16 @@ function drawInteractiveEffect(ctx,kind,w,h,now=0){
  ctx.restore();
 }
 
+// Geometry-only hit bounds, also used when a sprite is already baked into a texture.
+export function homeObjectVisualBounds(item,object,x,y,w,h,isThumb=false){
+ if(item.layer==='ground'&&!isThumb){const grow=1.04*HOME_GROUND_SCALE;return {x:x+w*(1-grow)/2,y:y+h*(1-grow)/2,w:w*grow,h:h*grow};}
+ const [,,sw,sh]=item.art?.crop||[0,0,item.art?.width||1,item.art?.height||1];
+ const indoor=!isThumb&&INDOOR_CATEGORIES.has(item.category)&&!OUTDOOR_EXCEPTIONS.has(item.id);
+ const scale=Math.min(w*(isThumb?1.08:indoor?.82:1.24)/sw,h*(isThumb?1.08:indoor?.86:1.34)/sh)*(isThumb?1:HOME_FURNITURE_SCALE*(item.renderScale||1));
+ const dw=sw*scale,dh=sh*scale,dy=isThumb?-dh/2:h*(indoor?.36:.46)-dh;
+ return {x:x+w/2-dw/2,y:y+h/2+dy,w:dw,h:dh};
+}
+
 export function drawHomeObject(ctx,item,object,x,y,w,h,image,now=0,isThumb=false){
  const rot=(object?.rotation||0)%4;
  const colorHex=COLOR_HEX[object?.color]||null;

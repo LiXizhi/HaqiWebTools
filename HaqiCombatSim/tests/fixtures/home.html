@@ -8,7 +8,15 @@ const save={pets:Object.fromEntries(Object.values(definitions.pets).slice(0,40).
 const store=createHomeStore(homeScope(null,'qa-home'),{name:'haqi-home-qa-only'}),mutate=store.mutate;
 // Keep automated drag targets clear of autonomous pet hit boxes. The production
 // spawn arrangement is covered independently; all 40 residents remain available.
-const create=store.create;store.create=async home=>{await create(home);const result=await mutate(home.id,['residents'],(_,parts)=>{Object.values(save.pets).forEach((pet,i)=>{parts.residents[pet.id]={x:(i%7-3)*3,y:7+Math.floor(i/7)*3};});});return result.home;};
+const create=store.create;store.create=async home=>{await create(home);const result=await mutate(home.id,['residents'],(_,parts)=>{Object.values(save.pets).forEach((pet,i)=>{parts.residents[pet.id]={x:(i%7-3)*3,y:7+Math.floor(i/7)*3};});});if(new URLSearchParams(location.search).has('buildings')){
+ const {applyHomeAction}=await import('./js/home_actions_core.js');
+ await mutate(home.id,['chunk:0,0','chunk:0,-1','chunk:-1,0','chunk:-1,-1'],(_,parts)=>{
+  let serial=0;const place=(kind,x,y,rotation=0,style='wood')=>applyHomeAction(parts,{type:'place',object:{id:'demo-'+serial++,itemId:'build-'+style+'-'+kind,x,y,rotation}},catalog.items);
+  for(let y=2;y<7;y++)for(let x=-4;x<3;x++){place('floor',x,y);place('roof',x,y);}
+  for(let x=-4;x<3;x++){place(x===-1?'window':'wall',x,2);place(x===0?'door':'wall',x,7);}
+  for(let y=2;y<7;y++){place('wall',-4,y,1);place('wall',3,y,1);}
+ });
+}return result.home;};
 let fail=false;store.mutate=(...args)=>fail?Promise.reject(new DOMException('测试磁盘已满','QuotaExceededError')):mutate(...args);
 window.homeQA={store,context,fail:value=>fail=value,ready:false};
 const voice={start:async()=>{},finish:async()=> 'I want a chair.',cancel:async()=>{},speak:async()=>{}};

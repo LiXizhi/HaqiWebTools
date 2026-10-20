@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "id": "brick-chimney",
+      "local": "assets/adventure/home/brick-chimney-db984b6484d0.webp",
+      "width": 171,
+      "height": 240,
+      "crop": [
+        0,
+        0,
+        171,
+        240
+      ],
+      "bytes": 57250,
+      "sha256": "db984b6484d03ab10aa5444f2bca9c35d858177ac8dfe69a61ae5e2da7274d03",
+      "sourceSha256": "9f3f8f3263cf83358fafef442bfb9acc53b44b3375cc70efde455be0dcd9ffb0",
+      "sourceRect": [
+        70,
+        200,
+        520,
+        805
+      ],
+      "source": "Native transparent image_gen roof props; complete visually verified silhouettes; 2026-10-20",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/brick-chimney-db984b6484d0.webp"
+    },
+    {
+      "id": "stone-chimney",
+      "local": "assets/adventure/home/stone-chimney-7c6d629d5e8c.webp",
+      "width": 121,
+      "height": 240,
+      "crop": [
+        0,
+        0,
+        121,
+        240
+      ],
+      "bytes": 40886,
+      "sha256": "7c6d629d5e8c9362d5691a06ae1234a086c7a96074a5ac44a258fcfde4c0749d",
+      "sourceSha256": "9f3f8f3263cf83358fafef442bfb9acc53b44b3375cc70efde455be0dcd9ffb0",
+      "sourceRect": [
+        665,
+        25,
+        1075,
+        813
+      ],
+      "source": "Native transparent image_gen roof props; complete visually verified silhouettes; 2026-10-20",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/stone-chimney-7c6d629d5e8c.webp"
+    },
+    {
+      "id": "roof-windmill",
+      "local": "assets/adventure/home/roof-windmill-55c7dc51c71f.webp",
+      "width": 174,
+      "height": 240,
+      "crop": [
+        0,
+        0,
+        174,
+        240
+      ],
+      "bytes": 45754,
+      "sha256": "55c7dc51c71f5c095cebeb68b4c643bc7598e40f279a13f179d2554b89770c08",
+      "sourceSha256": "9f3f8f3263cf83358fafef442bfb9acc53b44b3375cc70efde455be0dcd9ffb0",
+      "sourceRect": [
+        1280,
+        20,
+        1865,
+        812
+      ],
+      "source": "Native transparent image_gen roof props; complete visually verified silhouettes; 2026-10-20",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/roof-windmill-55c7dc51c71f.webp"
+    }
+  ]
+}

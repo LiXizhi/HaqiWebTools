@@ -57,9 +57,10 @@ export function selectRole(catalog, id, now) {
     if (!catalog.roles.some(row => row.id === id)) throw Error('角色不存在');
     return { ...catalog, activeId: id, roles: catalog.roles.map(row => row.id === id ? { ...row, lastPlayedAt: now } : row) };
 }
-// 默认停在标题页。Haqi.html?signin=direct 才在启动时进入最近角色。
+// 默认停在标题页。Family Pad 只自动登录，旧入口的 signin=direct 也不能跳过选角。
 export function directSignInRequested(search) {
-    return new URLSearchParams(String(search || '')).get('signin') === 'direct';
+    const query = new URLSearchParams(String(search || ''));
+    return query.get('host') !== 'family-pad' && query.get('signin') === 'direct';
 }
 export function familyPadSignInRequested(search) {
     const query = new URLSearchParams(String(search || ''));

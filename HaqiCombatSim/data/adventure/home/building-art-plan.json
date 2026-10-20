@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "generator": "built-in image_gen",
+  "transparent_background": true,
+  "prompt": "Production sprite atlas for a cozy hand-painted 2D orthographic top-down RPG building kit. Ten separated rectangular material panels, two rows of five on transparent alpha. Wooden house: overhead floor, plaster/timber wall elevation, window wall, closed door wall, overhead terracotta roof. Stone castle: overhead stone floor, masonry wall, arched window wall, arched door wall, overhead slate roof. No perspective skew, diamonds, external shadows, words, labels, props or grass. Straight aligned edges, consistent scale, warm storybook art. Materials mapped to connected geometry, not standalone buildings.",
+  "packing": "scripts/prepare_home_building_art.py; visually verified panel rectangles, native alpha retained; wall direction produced by geometry transform",
+  "sourceSha256": "ad38df8d9bf4ed4ccd6c5fa0bd25743a4564b0683c4d26186aedac2d81e67e36"
+}

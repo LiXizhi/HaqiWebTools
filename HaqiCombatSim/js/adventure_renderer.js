@@ -207,7 +207,9 @@ export function createRenderer(canvas,assets) {
         if(world.isEarth)return world.prepareSurface(rect,{visibleOnly});
         return terrainTiles.prepare(world,rect,rasterPixelRatio,[],{visibleOnly});
     }
+    let zoomUntil=-Infinity;
     function zoomBy(factor) {
+        zoomUntil=performance.now()+300;
         return cameraZoom.zoomBy(factor);
     }
     function size(low=false) {
@@ -777,6 +779,6 @@ export function createRenderer(canvas,assets) {
         return Object.fromEntries(Object.entries(positions).map(([id,at])=>[id,{x:(at.x+shakeX)*scale,y:(at.y+shakeY)*scale}]));
     }
     function releaseScene(){terrainTiles.clear();terrainRasterizer?.dispose();terrainRasterizer=null;islandScenery.clear();streetPainter.reset();if(backing)backing.width=backing.height=0;backing=null;backingZone=null;if(overview)overview.width=overview.height=0;overview=null;overviewWorld=null;canvas.width=canvas.height=1;}
-    return {releaseScene,prepareScene,frameStats:()=>frameMeter.value,pauseFrameMeter:()=>frameMeter.sample(0,false),environmentStats:()=>earthEnvironment.stats,streetStats:streetPainter.stats,streetPeople:streetPainter.people,terrainStats:()=>({tiles:terrainTiles.size,pending:terrainTiles.pending,...terrainTiles.stats(),scenery:islandScenery.stats()}),resetZoom:()=>cameraZoom.reset(),render,minimap,worldToScreen:point=>({x:(point.x-cam.x)*cam.scale,y:(point.y-cam.y)*cam.scale}),screenToWorld,renderBattle,zoomBy,setFishingCamera:active=>cameraZoom.setFishing(active),viewRect:()=>viewRect?{...viewRect}:null,bubbleTarget:()=>bubbleTarget,greetingTarget:()=>greetingTarget,companionTarget:()=>companion?{x:companion.position.x,y:companion.position.y}:null};
+    return {releaseScene,prepareScene,isAnimating:()=>cameraZoom.active||performance.now()<zoomUntil||terrainTiles.pending>0||!!(weatherFade?.previous&&weatherFade.previousWeight>.01),frameStats:()=>frameMeter.value,pauseFrameMeter:()=>frameMeter.sample(0,false),environmentStats:()=>earthEnvironment.stats,streetStats:streetPainter.stats,streetPeople:streetPainter.people,terrainStats:()=>({tiles:terrainTiles.size,pending:terrainTiles.pending,...terrainTiles.stats(),scenery:islandScenery.stats()}),resetZoom:()=>{zoomUntil=performance.now()+300;return cameraZoom.reset();},render,minimap,worldToScreen:point=>({x:(point.x-cam.x)*cam.scale,y:(point.y-cam.y)*cam.scale}),screenToWorld,renderBattle,zoomBy,setFishingCamera:active=>cameraZoom.setFishing(active),viewRect:()=>viewRect?{...viewRect}:null,bubbleTarget:()=>bubbleTarget,greetingTarget:()=>greetingTarget,companionTarget:()=>companion?{x:companion.position.x,y:companion.position.y}:null};
 }
 

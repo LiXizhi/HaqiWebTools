@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createFrameMeter} from '../js/frame_meter_core.js';
+import {createFrameMeter,createFramePacer} from '../js/frame_meter_core.js';
 import {createWorldViewQuery,nearbyWorldObjects,invalidateWorldObjects} from '../js/adventure_world_core.js';
 import {mergeSceneObjects} from '../js/scene_order_core.js';
 
@@ -11,6 +11,28 @@ test('frame meter counts rendered cadence, includes hitches and resets pauses',(
     meter.sample(1200);for(let i=1;i<=15;i++)meter.sample(1200+i*1000/30);
     assert.equal(meter.value.fps,30);meter.sample(10000);assert.equal(meter.value,null);
     meter.sample(10500);assert.equal(meter.value.fps,2);
+});
+test('frame pacer caps 120Hz active ticks at 60 FPS, throttles static scenes to 20 FPS and wakes immediately on input',()=>{
+    const pacer=createFramePacer({activeFps:60,idleFps:20,holdMs:300}),meter=createFrameMeter();
+    let rendered=0;
+    for(let i=0;i<=120;i++){
+        const t=i*1000/120;
+        if(pacer.shouldRender(t,true)){rendered++;meter.sample(t);}
+    }
+    assert.equal(rendered,61);assert.equal(meter.value.fps,60);
+    // Stop activity at 1000ms; after the 300ms hold window, 120Hz ticks drop to 20 FPS.
+    let staticRendered=0;
+    for(let i=121;i<=360;i++){
+        const t=i*1000/120;
+        if(pacer.shouldRender(t,false)){if(t>=1350)staticRendered++;meter.sample(t);}
+    }
+    assert.equal(pacer.isActive(3000),false);
+    assert.equal(meter.value.fps,20);
+    assert.ok(staticRendered>=32&&staticRendered<=35);
+    // Input wake renders on the very next 120Hz vsync without waiting for the 50ms idle window.
+    pacer.wake();
+    assert.equal(pacer.isActive(3008.33),true);
+    assert.equal(pacer.shouldRender(3008.33,false),true);
 });
 test('moving camera reuses scenery order but refreshes edges, stream changes and worlds',()=>{
     const world={trees:Array.from({length:200},(_,i)=>({id:i,x:i*32,y:i%5*40})),npcs:[],encounters:[]};

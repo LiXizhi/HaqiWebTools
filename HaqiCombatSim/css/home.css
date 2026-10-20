@@ -18,6 +18,31 @@
 .home-entry-placeholder{display:flex;align-items:flex-end;justify-content:flex-start;padding:10px;box-sizing:border-box}
 .home-entry-biome-tag{padding:3px 9px;border-radius:999px;background:rgba(255,252,240,0.88);color:#2d523a;font-size:11px;font-weight:700}
 
+/* Home Create / Rename / Remove Dialog */
+.home-name-dialog{width:min(480px,calc(100vw - 24px));border-radius:18px;border:2px solid #cbb47c;background:#fffaf0;box-shadow:0 22px 64px rgba(24,46,32,0.38)}
+.home-name-dialog .equipment-dialog-header{padding:12px 18px;background:linear-gradient(180deg,#fdf4dc,#f6ead0);border-bottom:1px solid #dfd0a8}
+.home-name-dialog .equipment-dialog-header strong{font-size:18px;color:#284a34}
+.home-name-dialog .equipment-detail{display:flex;flex-direction:column;gap:14px;padding:18px 20px}
+.home-dialog-banner{display:flex;flex-direction:column;gap:6px;padding:14px 16px;border-radius:14px;background:linear-gradient(135deg,#2e5840,#4a7f5b 62%,#6a9f6c);color:#fff9e8;box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 6px 16px rgba(38,68,48,0.15)}
+.home-dialog-biomes{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:2px}
+.home-dialog-biome-pill{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;background:rgba(255,251,238,0.18);border:1px solid rgba(255,248,224,0.28);font-size:11px;font-weight:600;color:#fffdf4}
+.home-dialog-biome-pill::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--biome-dot,#8fb967);box-shadow:0 0 0 1.5px rgba(255,255,255,0.65)}
+.home-dialog-lead{font-size:16px;color:#fffef6;letter-spacing:.01em}
+.home-dialog-sub{margin:0;font-size:12px;line-height:1.45;color:rgba(255,249,232,0.88)}
+.home-dialog-form{display:flex;flex-direction:column;gap:10px;margin:0}
+.home-dialog-label{font-size:13px;font-weight:700;color:#38543d}
+.home-name-input{width:100%;box-sizing:border-box;padding:11px 14px;border-radius:12px;border:1.5px solid #c9b689;background:#fffdf8;color:#26422f;font:inherit;font-size:15px;font-weight:600;box-shadow:inset 0 2px 4px rgba(82,68,38,0.06);transition:border-color .14s ease,box-shadow .14s ease}
+.home-name-input:focus{outline:none;border-color:#2f593f;box-shadow:0 0 0 3px rgba(47,89,63,0.18)}
+.home-name-presets{display:flex;flex-wrap:wrap;gap:6px}
+.home-name-dialog .home-name-chip{display:inline-flex;align-items:center;gap:5px;min-height:30px!important;padding:4px 11px!important;border-radius:999px!important;border:1px solid #d5c396!important;background:#f7efd8!important;background-image:none!important;border-image:none!important;box-shadow:none!important;text-shadow:none!important;color:#4a3f2b!important;font-size:12px!important;font-weight:600;cursor:pointer}
+.home-name-dialog .home-name-chip::before{content:""!important;display:inline-block!important;position:static!important;width:8px;height:8px;border-radius:50%;background:var(--biome-dot,#8fb967)}
+.home-name-dialog .home-name-chip::after{display:none!important}
+.home-name-dialog .home-name-chip:hover{background:#efe3c2!important;border-color:#8aa874!important}
+.home-name-dialog .home-name-chip.is-active{background:#2f593f!important;color:#fff7e2!important;border-color:#234430!important}
+.home-dialog-confirm-text{margin:4px 0;font-size:15px;line-height:1.55;color:#3a3222}
+.home-name-dialog .equipment-detail-footer{justify-content:flex-end;padding:12px 20px;background:#f7eed6;border-top:1px solid #dfd0a8}
+.home-name-dialog .equipment-detail-footer button.danger{background:#9e3b33!important;border-color:#7d2c25!important;color:#fff7f5!important}
+
 /* Fullscreen Entered Home Scene */
 .overlay.home-world-active{position:fixed;inset:0;padding:0;background:#8eb768;backdrop-filter:none;display:block;z-index:50}
 .home-modal.home-world{position:absolute;inset:0;width:100%;max-width:none;height:100%;max-height:none;padding:0;border:0;border-radius:0;background:#8eb768;box-shadow:none;overflow:hidden}
@@ -218,3 +243,11 @@
 .home-wheel-btn:disabled{opacity:.4;cursor:default}
 
 .home-world .home-edit-actions .home-interaction-toggle[aria-pressed=true]{background:#31573f!important;color:#fff7e2!important;border-color:#f4ca69!important;box-shadow:inset 0 0 0 2px #f4ca69}
+
+.home-building-properties { display:grid; gap:12px; min-width:240px; }
+.home-building-properties label { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.home-building-properties input[type=number] { width:92px; padding:8px; }
+.home-building-properties input[type=checkbox] { width:24px; height:24px; }
+
+.home-world .home-capacity{white-space:nowrap;font-size:12px;padding:5px 10px;border:1px solid #d8c698;border-radius:999px;background:rgba(255,249,233,.94);color:#304b36}
+@media(max-width:650px){.home-world .home-capacity{position:absolute;top:48px;right:0;font-size:11px;padding:4px 8px}}

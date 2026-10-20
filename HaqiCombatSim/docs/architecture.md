@@ -138,6 +138,18 @@ flowchart LR
 
 ## 架构图
 
+### Family Pad 启动（2026-10-20）
+
+```mermaid
+flowchart LR
+    Pad[Family Pad：host与token] --> Login[既有Keepwork登录：解析对应账号]
+    Login --> Roles[读取该账号角色目录]
+    Roles --> Title[角色选择页 / 无角色时新建]
+    Title -->|用户选择角色| World[进入世界]
+```
+
+Family Pad 不再触发自动恢复最近角色，即使旧入口带有 `signin=direct`。其他入口的显式直入参数保持原行为。
+
 ### 战斗设计尺寸（2026-10-18）
 
 ```mermaid
@@ -1364,3 +1376,40 @@ flowchart LR
 ```
 
 移动和护理不再按停步/3秒/10秒提交整份存档。自动喂食消耗与成长、签到跨日显式报告核心变化；核心未变化不重复打包收藏。运行快照使用持久化版本作为恢复锚点，并另存liveRevision保持本机战斗与随机序列恢复。详情见[用户存储](user-storage.md#2026-10-20单人和双人按核心变化保存)。
+
+
+### 2026-10-20：家园连接建筑与分层烘焙
+
+```mermaid
+flowchart LR
+  Catalog[建筑目录 / 实例属性] --> Geometry[home_building_core 纯几何]
+  Geometry --> Edit[预览 / 事务摆放 / 门与属性]
+  Geometry --> Walk[步行与寻路阻挡]
+  Edit --> Local[IndexedDB 库存 / 分块 / 回执]
+  Local --> Cloud[原手动云同步：只上传变化文件]
+  Local --> Outbox[local:practice 本机待处理事件]
+  Outbox --> Practice[language_practice_core / 统一词库 / WordTree]
+  Geometry --> Cache[home_building_cache 地面 / 同深度 / 连通屋顶]
+  Cache --> Worker[home_building_worker / 主线程分片回退]
+  Worker --> View[静态纹理与动态角色按深度合并]
+  Edit --> Live[门 / 选中 / 拖放预览实时绘制]
+  Live --> View
+```
+
+地形与建筑分别32MiB，共64MiB纹理预算；局部变化按批次内容签名失效，未完成时实时绘制，过期worker结果关闭bitmap。屋顶淡化只改变合成透明度，遮挡墙回退逐件绘制。几何、点击命中及碰撞独立于纹理缓存。源图片与浏览器画布开销不包含在该纹理预算内。
+
+2026-10-20 建筑试玩入口：`HomeBuildingDemo.html → home_building_demo_core.js（确定性初始快照）→ 独立 home_store → openHomeSystem → 正式家园视图/动作/缓存`。`initialHomeId`、`initialCategory`、`initialPosition` 为入口选项，常规冒险入口默认行为不变；试玩无独立渲染或碰撞实现。
+
+2026-10-20 追加：`home_building_templates_core → demo布局 / home_app模板搜索 / home_actions_core模板事务` 共享结构件布局与整栋校验；事务写入普通逐块对象，沿用现有地块存储与缓存失效。屋顶连通组在合成入口按玩家位置完全跳过绘制及命中。
+
+2026-10-20 屋顶装饰：`home_building_core` 提供屋顶支撑查找与摆放层判定；`properties.surface + parentId` 持久化到普通对象地块，`home_actions_core` 验证并处理支撑移动/回收；缓存从支撑屋顶派生连通组与显示层，屋内同时跳过屋顶及装饰。屋顶装饰不进入地面阻挡，旧实例默认地面层。
+
+2026-10-20创建策略更新：`home_core.requiresReading` 统一默认需要阅读／显式免阅读规则。免阅读 `create` 动作只校验摆放并写普通对象，不扣库存或记学习事件；模板阅读使用独立练习目录，复用语句校验和练习outbox，模板回执与整栋逐块写入同一事务。UI成功后统一收起阅读抽屉，关闭使录音token过期。
+
+2026-10-20用户更新：家园物品全无限，移除inventory数据流。home_store v2迁移删除旧库存及引用；创建/阅读/替换/拆除事务只修改物件、回执和学习outbox。云端加载忽略旧库存，新目录与文件上传不包含库存。是否阅读依然由requiresReading独立控制。
+
+2026-10-20总容量：`home_capacity_core` 定义20,000物件上限及只限制净增长的规则；`home_store`维护本地逐块objectCounts，事务后计数校验失败时回滚全部物件/回执/outbox。`home_app`首次编辑前补齐缺失的云地块计数，`view_home`显示总量并在已知满容量时标记新增预览无效。计数是本地派生索引，不属于库存或云端上传字段。
+
+### 家园地板 AO 数据流（2026-10-20）
+
+`home_building_ao_core.js` 场景墙脚空间桶 → 每块地板的邻墙视觉几何 → `home_building_cache.js` 分组签名 → `view_home_building.js` 地板裁剪渐变 → worker 或分时主线程烘焙原地板 bitmap。对象变化才重新索引；碰撞与存储独立。地形32MiB + 建筑32MiB预算保持不变。

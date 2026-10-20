@@ -2044,3 +2044,9 @@
 重复||{"meaning":"重复；反复；重演","forms":[],"senses":["wn30:00441173-r","wn30:01734502-v","wn30:01964632-a","wn30:02595662-v","wn30:07342049-n"],"pos":"anrv"}
 顾问||{"meaning":"顾问；指导教授","forms":[],"senses":["wn30:09774266-n"],"pos":"n"}
 书籍||{"meaning":"书；书籍","forms":[],"senses":["wn30:02870092-n","wn30:06410904-n"],"pos":"n"}
+
+地板||{"meaning":"地板","forms":[],"senses":["haqi:floor"],"pos":"n"}
+屋顶||{"meaning":"屋顶","forms":[],"senses":["haqi:roof"],"pos":"n"}
+烟囱||{"meaning": "烟囱", "forms": [], "senses": ["haqi:roof-chimney"], "pos": "n"}
+风车||{"meaning": "风车", "forms": [], "senses": ["haqi:roof-windmill"], "pos": "n"}
+城堡||{"meaning":"城堡","forms":[],"senses":["haqi:building-castle"],"pos":"n"}

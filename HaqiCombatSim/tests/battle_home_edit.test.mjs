@@ -1,3 +1,4 @@
+import {buildingItem,buildingPlacement} from '../js/home_building_core.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {homeFurnitureDragPosition} from '../js/home_edit_core.js';
@@ -32,8 +33,8 @@ test('clicking the ground after selecting existing or catalog furniture never wr
  const source=appSource.slice(appSource.indexOf(' async function tap('),appSource.indexOf(' async function drop('));
  for(const selection of [{id:'placed-chair',itemId:'chair'},{itemId:'chair'}]){
   const writes=[],walks=[];
-  const tap=new Function('selection','build','navigate','emit','commit','placeItemAt',source+';return tap;')(
-   selection,true,p=>walks.push(p),()=>{},action=>writes.push(action),(...args)=>writes.push(args));
+  const tap=new Function('selection','build','navigate','emit','commit','placeItemAt','buildingItem','catalog','requiresReading',source+';return tap;')(
+   selection,true,p=>walks.push(p),()=>{},action=>writes.push(action),(...args)=>writes.push(args),buildingItem,{items:[{id:'chair'}]},item=>item?.requiresReading!==false );
   await tap(null,{x:9,y:12});
   assert.equal(writes.length,0);
   assert.deepEqual(walks,[{x:9,y:12}]);
@@ -42,7 +43,7 @@ test('clicking the ground after selecting existing or catalog furniture never wr
 test('moving the mouse without a pressed drag never previews selected furniture',()=>{
  const source=viewSource.slice(viewSource.indexOf('  canvas.onpointermove=e=>{'),viewSource.indexOf('  canvas.onpointerup=e=>{'));
  const canvas={},previews=[];
- new Function('canvas','gesture','position','cb',source)(canvas,null,()=>({x:9,y:12}),{hover:p=>previews.push(p)});
+ new Function('canvas','gesture','position','cb','paintStroke','model',source)(canvas,null,()=>({x:9,y:12}),{hover:p=>previews.push(p)},null,{build:false});
  canvas.onpointermove({pointerId:1,buttons:0});
  assert.deepEqual(previews,[]);
 });
@@ -68,8 +69,8 @@ test('fractional furniture placement survives movement across chunks and save va
 
 test('placement resolver keeps the exact drop point even when another object occupies it',()=>{
  const source=appSource.slice(appSource.indexOf(' function at('),appSource.indexOf(' async function placeItemAt('));
- const resolve=new Function('selection','rotation','catalog','homeObjects','parts','footprint',source+';return resolvePlacement;')(
-  null,0,{items:resizeCatalog},()=>[{id:'other',itemId:'box',x:0,y:0}],{},footprint);
+ const resolve=new Function('selection','rotation','catalog','currentObjects','parts','footprint','buildingPlacement','showRoofs','isRoofDecoration',source+';return resolvePlacement;')(
+  null,0,{items:resizeCatalog},()=>[{id:'other',itemId:'box',x:0,y:0}],{},footprint,buildingPlacement,false,()=>false);
  const obj=resolve('box',{x:.125,y:.375},{id:'a'});
  assert.equal(obj.x,.125);assert.equal(obj.y,.375);
  assert.throws(()=>applyHomeAction({inventory:{'box:':1},'chunk:0,0':{other:{id:'other',itemId:'box',x:0,y:0}}},{type:'place',object:obj},resizeCatalog),/这里已有物品/);
@@ -124,7 +125,7 @@ test('normal-mode drag commits only enabled objects, while editing can move disa
  const source=appSource.slice(appSource.indexOf(' async function drop('),appSource.indexOf(' async function rotate('));
  for(const [build,enabled,expected] of [[false,false,0],[false,true,1],[true,false,1]]){
   const obj={id:'a',itemId:'cup',x:0,y:0,interactionEnabled:enabled},writes=[];
-  const drop=new Function('build','homeObjects','parts','homeObjectInteractive','catalog','commit','resolvePlacement',source+';return drop;')(
+  const drop=new Function('build','currentObjects','parts','homeObjectInteractive','catalog','commit','resolvePlacement',source+';return drop;')(
    build,()=>[obj],{},homeObjectInteractive,{items:realCatalog},action=>writes.push(action),(_,p)=>p);
   await drop({kind:'object',id:'a'},{x:5,y:3});
   assert.equal(writes.length,expected);

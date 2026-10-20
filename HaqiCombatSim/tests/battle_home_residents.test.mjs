@@ -39,7 +39,7 @@ const view=readFileSync(new URL('../js/view_home.js',import.meta.url),'utf8');
 test('scene pointer release recalls onto the open backpack or dock and otherwise places the pet',()=>{
  const handler=view.slice(view.indexOf('  canvas.onpointerup=e=>{'),view.indexOf('  const cancelPointer='));
  for(const target of ['bag','dock','ground']){
-  const calls=[],context={canvas:{hasPointerCapture:()=>false,getBoundingClientRect:()=>({width:800,height:600})},gesture:{id:1,moved:true,hit:{kind:'pet',id:'p0'}},position:()=>({}),run:fn=>fn(),document:{elementFromPoint:()=>target},body:{dataset:{drawer:'pets'}},side:{contains:t=>t==='bag'},dock:{children:[null,null,{contains:t=>t==='dock'}]},petDragPoint:()=>({x:400,y:300}),model:{camera:{x:0,y:0},scale:40},cb:{recallPet:id=>calls.push(['recall',id]),drop:hit=>calls.push(['place',hit.id])}};
+  const calls=[],context={paintStroke:null,canvas:{hasPointerCapture:()=>false,getBoundingClientRect:()=>({width:800,height:600})},gesture:{id:1,moved:true,hit:{kind:'pet',id:'p0'}},position:()=>({}),run:fn=>fn(),document:{elementFromPoint:()=>target},body:{dataset:{drawer:'pets'}},side:{contains:t=>t==='bag'},dock:{children:[null,null,{contains:t=>t==='dock'}]},petDragPoint:()=>({x:400,y:300}),model:{camera:{x:0,y:0},scale:40},cb:{recallPet:id=>calls.push(['recall',id]),drop:hit=>calls.push(['place',hit.id])}};
   vm.runInNewContext(handler,context);context.canvas.onpointerup({pointerId:1,clientX:20,clientY:30});
   assert.deepEqual(calls,[[target==='ground'?'place':'recall','p0']]);
  }

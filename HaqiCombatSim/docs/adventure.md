@@ -129,7 +129,7 @@ npm test                      # 69例，包含原34例、五系章节、资源�
 - `http://127.0.0.1:8791/Haqi.html`：默认永久Keepwork CDN；`localhost` / IPv6 loopback与所有线上域名同样处理（2026-09-18更新）。
 - `Haqi.html?assets=cdn`：本机验收线上资源模式；其余域名（包括局域网 IP）默认 CDN。
 - `Haqi.html?assets=local`：仅源码HTTP服务中明确使用 Git 资源，可用于无网开发。dist与CDN发布不包含美术，不使用此参数。
-- `Haqi.html?signin=direct`：启动后直接进入最近使用的角色。不加此参数时先停在标题页。
+- `Haqi.html?signin=direct`：启动后直接进入最近使用的角色。不加此参数时先停在标题页。Family Pad 入口（`host=family-pad`）例外：携带 token 时自动登录对应 Keepwork 账号并读取角色，但始终先选角，忽略旧入口的 `signin=direct`；没有角色时沿用新建流程。
 - 91项资源（90张 WebP、1段可选 Ogg）合计8,326,728字节；转换前10,823,856字节，减少23.1%。原PNG从当前工作树移除，历史仍在Git；原始完整条目可重新下载。
 - 图片加载在设置 `src` 前指定 `crossOrigin='anonymous'`；所有资源的HTTP、CORS、尺寸、内容哈希已经核验。可选音乐失败不影响游戏。
 

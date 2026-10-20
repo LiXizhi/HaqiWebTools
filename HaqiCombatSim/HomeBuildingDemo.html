@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>建筑积木试玩 · 木屋与石堡</title>
+<link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_world_map.css"><link rel="stylesheet" href="css/home.css">
+<style>
+body{margin:0;background:#f4eedb;font-family:system-ui,sans-serif}#demo-help{position:fixed;z-index:11000;top:70px;left:12px;width:min(320px,calc(100vw - 48px));padding:12px;border:1px solid #cdbb8c;border-radius:14px;background:#fffaeeeF;color:#304b36;box-shadow:0 3px 15px #23352222;font-size:13px;line-height:1.6}#demo-help summary{cursor:pointer;font-weight:700}#demo-help p{margin:8px 0}#demo-help button{border:1px solid #b5a477;background:#fff9e9;border-radius:8px;padding:6px 12px;color:inherit;cursor:pointer}#demo-error{position:fixed;z-index:12000;inset:35%;background:#fff;padding:24px} @media(max-width:600px){#demo-help{top:62px;font-size:12px;width:230px}}
+</style></head><body><div id="overlay"></div>
+<details id="demo-help"><summary>建筑积木试玩 · 操作说明</summary>
+<p><a href="?view=wood">进入木屋</a> · <a href="?view=stone">进入石堡</a> · <a href="?view=all">查看全景</a></p>
+<p>左侧是木屋，右侧是四角塔楼石堡。两座建筑已铺好地板、窗墙、门和屋顶，并放置家具。</p>
+<p>点击草地行走；点击门开关，再点击室内进入。站到屋顶下时，整片相连屋顶及其装饰会完全隐藏。</p>
+<p>显示屋顶时可把烟囱、风车或其他摆设放上屋顶；隐藏屋顶时放在室内。属性里的「摆放位置」可手动调整。点击「建造」，在「建筑积木」分类可阅读召唤完整木屋或石堡，也可免阅读连续放置或拖动铺设单块。按 R 旋转，按 Esc 取消待放置积木。所有物品数量无限，不记录库存。</p>
+<p>取消待放置积木后，点击已有墙段，再点击「物品属性」，可调整吸附、阻挡开关、宽深和偏移，或恢复默认。建造时屋顶默认隐藏，可用屋顶按钮切换。</p>
+<p>试玩修改自动保存在独立的本机存档中。</p><button id="reset-demo">重置木屋与石堡</button>
+</details>
+<script type="module">
+import {openHomeSystem} from './js/home_app.js';
+import {createHomeStore} from './js/home_store.js';
+import {homeScope} from './js/home_core.js';
+import {applyHomeAction,homeObjects} from './js/home_actions_core.js';
+import {roofAt} from './js/home_building_core.js';
+import {createBuildingDemo} from './js/home_building_demo_core.js';
+const dbName='haqi-connected-building-demo-v1';
+try{
+ const catalog=await fetch('data/adventure/home/catalog.json').then(r=>r.json());
+ const context={owner:null,roleId:'building-demo',save:{pets:{},languageLearning:{target:'en'}},content:{pets:{}},active:true};
+ const store=createHomeStore(homeScope(null,context.roleId),{name:dbName});
+ if(!await store.get('connected-building-demo')){const {home,parts}=createBuildingDemo(catalog.items);await store.install(home,parts);}
+ if(!(await store.read('connected-building-demo','local:roof-examples')).installed){
+  const snapshot=await store.snapshot('connected-building-demo');
+  await store.mutate(snapshot.home.id,['local:roof-examples',...Object.keys(snapshot.parts).filter(k=>k.startsWith('chunk:'))],(_,parts)=>{
+   for(const [itemId,x,y]of [['brick-chimney',-8,4],['roof-windmill',-4,4],['stone-chimney',3,3]]){
+    const objects=homeObjects(parts),roof=roofAt({x,y},objects,catalog.items);
+    if(roof&&!objects.some(o=>o.itemId===itemId))try{applyHomeAction(parts,{type:'place',object:{id:'roof-example-'+itemId,itemId,x,y,properties:{surface:'roof'},parentId:roof.id}},catalog.items);}catch{}
+   }
+   parts['local:roof-examples'].installed=true;
+  });
+ }
+ const focus=new URLSearchParams(location.search).get('view')||(innerWidth<600?'wood':'all');
+ const initialPosition=focus==='wood'?{x:-5.5,y:7.5}:focus==='stone'?{x:6.5,y:6.5}:{x:0,y:7};
+ const app=await openHomeSystem({root:document.getElementById('overlay'),getContext:()=>context,close:()=>location.reload(),catalog,store,initialHomeId:'connected-building-demo',initialCategory:'blocks',initialPosition});
+ window.buildingDemo={app,store,ready:true};
+ document.getElementById('reset-demo').onclick=async()=>{if(!confirm('重置会清除本试玩页面的修改，并恢复两座示例建筑。继续吗？'))return;app.dispose();await store.close();const req=indexedDB.deleteDatabase(dbName);req.onsuccess=()=>location.reload();req.onblocked=()=>alert('请关闭其他建筑试玩页面后重试。');};
+}catch(error){const p=document.createElement('p');p.id='demo-error';p.textContent='试玩加载失败：'+error.message;document.body.append(p);}
+</script></body></html>

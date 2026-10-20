@@ -31,14 +31,14 @@ export function recordTreeExposure(state,event,aliases=new Map()){
         w.relations.sort((a,b)=>b.sentence-a.sentence||b.passage-a.passage||b.lastAt-a.lastAt);w.relations=w.relations.slice(0,12);
     }return true;
 }
-export function setTreeMark(state,id,mark,at=Date.now()){if(!Object.hasOwn(state.words,id)||![null,'know','basic','unknown','curious'].includes(mark))throw Error('无效词语标记');const w=state.words[id];w.mark=mark==='curious'?'unknown':mark;w.selfMark=w.mark;w.markAt=at;if(w.mark!=='know')w.cloudMastered=false;}
+export function setTreeMark(state,id,mark,at=Date.now()){if(!Object.hasOwn(state.words,id)||![null,'know','basic','unknown','curious'].includes(mark))throw Error('无效词语标记');const w=state.words[id];w.mark=mark==='curious'?'unknown':mark;w.selfMark=w.mark;w.markAt=at;w.practiceBaseline=w.practiceCount||0;if(w.mark!=='know')w.cloudMastered=false;}
 export function treeWordStatus(w,now=Date.now()){
     const evidence=w.evidence||[],last=evidence.at(-1);let streak=0;const sentences=new Set();
     for(let i=evidence.length-1;i>=0;i--){const e=evidence[i];if(!e.correct||e.hinted||!e.first)break;if(!sentences.has(e.sentence)){sentences.add(e.sentence);streak++;}}
     const verified=streak>=2||!!w.cloudMastered,kind=verified&&w.mark==='know'?'mastered':w.mark==='curious'?'unknown':['know','basic','unknown'].includes(w.mark)?w.mark:'seen';
     return {kind,verified,showTranslation:kind!=='mastered',streak,uncertain:!!last&&!last.correct,recent:now-w.lastAt<3*TREE_DAY,due:!!last&&(!last.correct||now-last.at>=TREE_DAY)};
 }
-export function treeReadiness(state){const words=Object.values(state.words).filter(w=>w.count>0),marked=words.filter(w=>['know','basic'].includes(w.mark)).length,contexts=Object.keys(state.contexts).length;return {words:words.length,marked,contexts,ready:Object.values(state.words).some(w=>['know','basic'].includes(w.mark)&&!treeWordStatus(w).verified)};}
+export function treeReadiness(state){const words=Object.values(state.words).filter(w=>w.count>0||w.practiceCount>0),marked=words.filter(w=>['know','basic'].includes(w.mark)).length,contexts=Object.keys(state.contexts).length;return {words:words.length,marked,contexts,ready:Object.values(state.words).some(w=>['know','basic'].includes(w.mark)&&!treeWordStatus(w).verified)};}
 export function treeLearnedWords(state){return Object.values(state.words).filter(w=>['know','basic'].includes(w.mark)).map(w=>w.id);}
 export function treeCanGenerate(state){
     const previous=new Set(state.generatedWords||state.questions.map(q=>q.target));

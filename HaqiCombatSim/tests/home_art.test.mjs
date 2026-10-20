@@ -12,7 +12,7 @@ function draw(item,thumb=false){
  return calls[0];
 }
 test('home crops match the manifest and stay inside each atlas cell',()=>{
- for(const item of catalog){
+ for(const item of catalog.filter(i=>!i.building&&!i.roofDecoration)){
   const a=item.art,frame=manifest.atlases[a.atlas].frames[item.id];
   assert.deepEqual(a.crop,frame.rect,item.id);
   const [x,y,w,h]=a.crop,cell=a.atlasWidth/4;
@@ -57,4 +57,14 @@ test('draw returns the visible sprite bounds for build-mode picking',()=>{
  const bounds=drawHomeObject(ctx,item,{active:false},100,200,40,40,{complete:true,naturalWidth:768});
  const call=calls[0];
  assert.deepEqual(bounds,{x:120+call[5],y:220+call[6],w:call[7],h:call[8]});
+});
+
+import {homeObjectVisualBounds} from '../js/view_home_art.js';
+test('cached legacy hit bounds match live sprite drawing exactly',()=>{
+ const ctx=new Proxy({}, {get:()=>()=>{}});
+ for(const item of catalog.filter(i=>!i.building&&!i.roofDecoration))for(const rotation of [0,1]){
+  const o={rotation,active:false},w=item.size[rotation?1:0]*40,h=item.size[rotation?0:1]*40;
+  const live=drawHomeObject(ctx,item,o,30,70,w,h,{complete:true,naturalWidth:768},0);
+  assert.deepEqual(homeObjectVisualBounds(item,o,30,70,w,h),live,item.id);
+ }
 });

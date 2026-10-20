@@ -1,0 +1,235 @@
+{
+  "version": 1,
+  "materials": [
+    {
+      "local": "assets/adventure/home/building-0-77ef7b2d7f69.webp",
+      "sha256": "77ef7b2d7f69bcbb62547c8a3d9f5dab9912b70744cc95ac274b92d1f02a9e8d",
+      "bytes": 37592,
+      "width": 160,
+      "height": 160,
+      "crop": [
+        0,
+        0,
+        160,
+        160
+      ],
+      "sourceRect": [
+        28,
+        80,
+        350,
+        402
+      ],
+      "sourceSha256": "ad38df8d9bf4ed4ccd6c5fa0bd25743a4564b0683c4d26186aedac2d81e67e36",
+      "source": "Built-in image_gen native transparent material atlas; verified individual panel boundaries",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-0-77ef7b2d7f69.webp",
+      "kind": "material"
+    },
+    {
+      "local": "assets/adventure/home/building-1-df35af2ae1f3.webp",
+      "sha256": "df35af2ae1f3fcf1fb6ae91725523a2b073a9e6ef8141311e8539b869aea9a3b",
+      "bytes": 38876,
+      "width": 160,
+      "height": 160,
+      "crop": [
+        0,
+        0,
+        160,
+        160
+      ],
+      "sourceRect": [
+        376,
+        82,
+        696,
+        400
+      ],
+      "sourceSha256": "ad38df8d9bf4ed4ccd6c5fa0bd25743a4564b0683c4d26186aedac2d81e67e36",
+      "source": "Built-in image_gen native transparent material atlas; verified individual panel boundaries",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-1-df35af2ae1f3.webp",
+      "kind": "material"
+    },
+    {
+      "local": "assets/adventure/home/building-2-abdc60f7c1b3.webp",
+      "sha256": "abdc60f7c1b3f5f73faf66bf50110a5ec416aadf275337eea88013c6c5ca659f",
+      "bytes": 40104,
+      "width": 160,
+      "height": 160,
+      "crop": [
+        0,
+        0,
+        160,
+        160
+      ],
+      "sourceRect": [
+        729,
+        82,
+        1044,
+        400
+      ],
+      "sourceSha256": "ad38df8d9bf4ed4ccd6c5fa0bd25743a4564b0683c4d26186aedac2d81e67e36",
+      "source": "Built-in image_gen native transparent material atlas; verified individual panel boundaries",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-2-abdc60f7c1b3.webp",
+      "kind": "material"
+    },
+    {
+      "local": "assets/adventure/home/building-3-0d78ebd853b0.webp",
+      "sha256": "0d78ebd853b0717cffb07e7826473714ac0221c2b6a228c49259ed8af1ff556b",
+      "bytes": 38920,
+      "width": 160,
+      "height": 160,
+      "crop": [
+        0,
+        0,
+        160,
+        160
+      ],
+      "sourceRect": [
+        1077,
+        82,
+        1396,
+        400
+      ],
+      "sourceSha256": "ad38df8d9bf4ed4ccd6c5fa0bd25743a4564b0683c4d26186aedac2d81e67e36",
+      "source": "Built-in image_gen native transparent material atlas; verified individual panel boundaries",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-3-0d78ebd853b0.webp",
+      "kind": "material"
+    },
+    {
+      "local": "assets/adventure/home/building-4-b19cf501f2e2.webp",
+      "sha256": "b19cf501f2e21d6f173a7c58672fcdbb067373e21cf90847029354b334a37d69",
+      "bytes": 42830,
+      "width": 160,
+      "height": 160,
+      "crop": [
+        0,
+        0,
+        160,
+        160
+      ],
+      "sourceRect": [
+        1426,
+        80,
+        1745,
+        402
+      ],
+      "sourceSha256": "ad38df8d9bf4ed4ccd6c5fa0bd25743a4564b0683c4d26186aedac2d81e67e36",
+      "source": "Built-in image_gen native transparent material atlas; verified individual panel boundaries",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-4-b19cf501f2e2.webp",
+      "kind": "material"
+    },
+    {
+      "local": "assets/adventure/home/building-5-583451c1537c.webp",
+      "sha256": "583451c1537c5e4f0fb5f3c104e3d6d85f93b74d84668bbd5db4ed8525dec53d",
+      "bytes": 39036,
+      "width": 160,
+      "height": 160,
+      "crop": [
+        0,
+        0,
+        160,
+        160
+      ],
+      "sourceRect": [
+        30,
+        479,
+        350,
+        793
+      ],
+      "sourceSha256": "ad38df8d9bf4ed4ccd6c5fa0bd25743a4564b0683c4d26186aedac2d81e67e36",
+      "source": "Built-in image_gen native transparent material atlas; verified individual panel boundaries",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-5-583451c1537c.webp",
+      "kind": "material"
+    },
+    {
+      "local": "assets/adventure/home/building-6-d44c23c720c0.webp",
+      "sha256": "d44c23c720c02567c05ec76081cd761fcd5b3e561ca00436d6dd18e3aa02b7d5",
+      "bytes": 41596,
+      "width": 160,
+      "height": 160,
+      "crop": [
+        0,
+        0,
+        160,
+        160
+      ],
+      "sourceRect": [
+        377,
+        479,
+        695,
+        793
+      ],
+      "sourceSha256": "ad38df8d9bf4ed4ccd6c5fa0bd25743a4564b0683c4d26186aedac2d81e67e36",
+      "source": "Built-in image_gen native transparent material atlas; verified individual panel boundaries",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-6-d44c23c720c0.webp",
+      "kind": "material"
+    },
+    {
+      "local": "assets/adventure/home/building-7-323d3bceaa5b.webp",
+      "sha256": "323d3bceaa5b22fe3167eddbdb6cd316d2fddc9bde67126032979a2a1e4200df",
+      "bytes": 43494,
+      "width": 160,
+      "height": 160,
+      "crop": [
+        0,
+        0,
+        160,
+        160
+      ],
+      "sourceRect": [
+        730,
+        479,
+        1043,
+        793
+      ],
+      "sourceSha256": "ad38df8d9bf4ed4ccd6c5fa0bd25743a4564b0683c4d26186aedac2d81e67e36",
+      "source": "Built-in image_gen native transparent material atlas; verified individual panel boundaries",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-7-323d3bceaa5b.webp",
+      "kind": "material"
+    },
+    {
+      "local": "assets/adventure/home/building-8-36840a3f59ae.webp",
+      "sha256": "36840a3f59ae44e5298ccbfe7acb33e11575c07e735cf3b008bfc79e2facd562",
+      "bytes": 41718,
+      "width": 160,
+      "height": 160,
+      "crop": [
+        0,
+        0,
+        160,
+        160
+      ],
+      "sourceRect": [
+        1078,
+        479,
+        1395,
+        793
+      ],
+      "sourceSha256": "ad38df8d9bf4ed4ccd6c5fa0bd25743a4564b0683c4d26186aedac2d81e67e36",
+      "source": "Built-in image_gen native transparent material atlas; verified individual panel boundaries",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-8-36840a3f59ae.webp",
+      "kind": "material"
+    },
+    {
+      "local": "assets/adventure/home/building-9-68851b1eb2b6.webp",
+      "sha256": "68851b1eb2b6ea49437f85d09ee7525099fe8f8e482140c666c0f15b28b7f348",
+      "bytes": 37796,
+      "width": 160,
+      "height": 160,
+      "crop": [
+        0,
+        0,
+        160,
+        160
+      ],
+      "sourceRect": [
+        1426,
+        479,
+        1745,
+        793
+      ],
+      "sourceSha256": "ad38df8d9bf4ed4ccd6c5fa0bd25743a4564b0683c4d26186aedac2d81e67e36",
+      "source": "Built-in image_gen native transparent material atlas; verified individual panel boundaries",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-9-68851b1eb2b6.webp",
+      "kind": "material"
+    }
+  ]
+}

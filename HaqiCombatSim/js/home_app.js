@@ -233,7 +233,8 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
   selection={itemId,color,fromInventory,rotation};
   preview=null;
   const item=catalog.items.find(i=>i.id===itemId);
-  if(item)status=requiresReading(item)?`你需要读出下面句子才能召唤${item.zh}`:'点击或拖动摆放，可连续创建；按 R 旋转。';
+  if(item)status=requiresReading(item)?'读出或输入上方任意句子即可建造':'点击或拖动摆放，可连续创建；按 R 旋转。';
+  else if(itemId?.startsWith('template-'))status='读出或输入上方任意句子即可建造';
   view.setInput('');view.setSpeechFeedback(null);
   emit();
  }
@@ -267,7 +268,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
    if(!validateTemplatePlacement(rows,currentObjects(),catalog.items,actors,home.seed))continue;
    if(home.id!==id)return;
    await commit({type:'template',templateId,x,y,prefix,seed:home.seed,object:{x,y},receipt:practiceAttempt.receipt,practice:practiceAttempt.practiceValid?{id:practiceAttempt.receipt,input:practiceAttempt.input,itemId:'template-'+templateId,language:practiceAttempt.language,at:practiceAttempt.at}:null});
-   build=true;showRoofs=false;camera={x:x+3.5,y:y+3.5};status='完整建筑已放置，点击任意积木可单独编辑。';emit();return;
+   build=true;showRoofs=false;camera={x:x+3.5,y:y+3.5};status='完整建筑已放置，点击任意积木可单独编辑。';emit();return {x:x+3.5,y:y+3.5,w:6,h:5};
   }
   throw Error('附近没有足够的空地，请走到更开阔的位置再放置');
  }
@@ -377,12 +378,14 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
    const item=[...catalog.items,...TEMPLATE_PRACTICE].find(i=>i.id===candidate.itemId);
    attempt.practiceValid=compareDungeonSpeech(attempt.text,item[attempt.language==='en'?'en':'zh'],attempt.language==='en'?'en':'zh-CN').accuracy===1;
    const template=TEMPLATE_PRACTICE.find(i=>i.id===candidate.itemId);
-   if(template){await placeTemplate(template.templateId,attempt);attempt=null;speechSession=null;view.setInput('');view.closeSummon();return;}
+   if(template){const placedAt=await placeTemplate(template.templateId,attempt);attempt=null;speechSession=null;view.setInput('');view.closeSummon();if(placedAt)view.celebrateSummon?.(placedAt);return;}
    const object=spellPlacement(candidate);
    const practice=attempt.practiceValid?{id:attempt.receipt,input:attempt.input,itemId:candidate.itemId,language:attempt.language,at:attempt.at}:null;
    await commit({type:'summon',...candidate,receipt:attempt.receipt,input:attempt.input,object,practice});
    attempt=null;speechSession=null;
    view.setInput('');view.closeSummon();
+   const b=footprint(object,catalog.items);
+   view.celebrateSummon?.({x:b.x+b.w/2,y:b.y+b.h*.75,w:b.w,h:b.h});
   }finally{busy=false;}
  }
  async function drainPractice(id){

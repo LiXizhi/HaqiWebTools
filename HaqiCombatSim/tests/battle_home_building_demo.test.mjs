@@ -13,10 +13,10 @@ test('demo has two furnished connected houses, valid save parts and isolated blo
  assert.ok(catalog.filter(i=>i.building).every(i=>i.category==='blocks'));
  assert.ok(catalog.filter(i=>i.category==='building').every(i=>!i.building));
 });
-test('both demo doors block closed and permit passage when open',()=>{
+test('both demo doors permit automatic passage in either saved state',()=>{
  const {parts}=createBuildingDemo(catalog);
  for(const door of homeObjects(parts).filter(o=>o.itemId.endsWith('-door'))){
-  assert.equal(isHomePassable(door.x+.5,door.y,homeObjects(parts),catalog),false);
+  assert.equal(isHomePassable(door.x+.5,door.y,homeObjects(parts),catalog),true);
   applyHomeAction(parts,{type:'door',id:door.id},catalog);
   assert.equal(isHomePassable(door.x+.5,door.y,homeObjects(parts),catalog),true);
  }

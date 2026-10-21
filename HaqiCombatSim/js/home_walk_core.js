@@ -1,4 +1,4 @@
-import {obstruction} from './home_building_core.js';
+import {walkingObstructions} from './home_building_core.js';
 import {facingToward} from './hero_pose_core.js';
 import {createPathQueue} from './path_queue_core.js';
 import {footprint,homeBiomeAt,homeBridgeAt,homeRoadAt,homeWaterAt} from './home_core.js';
@@ -11,14 +11,15 @@ function pathPassability(objects,catalog,seed,allowed){
  const buckets=new Map(),size=4;
  for(const o of objects){
   const b=footprint(o,catalog),bridge=BRIDGE_ITEMS.has(b.item.id);
-  const block=bridge?b:obstruction(o,b.item);
-  if(!block)continue;
-  const px=bridge?.15:.18,py=bridge?.15:.12;
-  const row={x:block.x-px,y:block.y-py,right:block.x+block.w+px,bottom:block.y+block.h+py,bridge};
-  for(let x=Math.floor(row.x/size);x<=Math.floor(row.right/size);x++){
-   for(let y=Math.floor(row.y/size);y<=Math.floor(row.bottom/size);y++){
-    const key=`${x},${y}`;if(!buckets.has(key))buckets.set(key,[]);
-    buckets.get(key).push(row);
+  const blocks=bridge?[b]:walkingObstructions(o,b.item,objects,catalog);
+  for(const block of blocks){
+   const px=bridge?.15:.18,py=bridge?.15:.12;
+   const row={x:block.x-px,y:block.y-py,right:block.x+block.w+px,bottom:block.y+block.h+py,bridge};
+   for(let x=Math.floor(row.x/size);x<=Math.floor(row.right/size);x++){
+    for(let y=Math.floor(row.y/size);y<=Math.floor(row.bottom/size);y++){
+     const key=`${x},${y}`;if(!buckets.has(key))buckets.set(key,[]);
+     buckets.get(key).push(row);
+    }
    }
   }
  }
@@ -83,8 +84,8 @@ export function findHomePath(start,target,objects=[],catalog=null,seed=null,allo
 export function isHomePassable(x,y,objects=[],catalog=null,seed=null){
  const blockedBySolid=objects.some(o=>{
   const b=footprint(o,catalog);
-  const block=BRIDGE_ITEMS.has(b.item.id)?null:obstruction(o,b.item);
-  return block&&x+.18>block.x&&x-.18<block.x+block.w&&y+.12>block.y&&y-.12<block.y+block.h;
+  const blocks=BRIDGE_ITEMS.has(b.item.id)?[]:walkingObstructions(o,b.item,objects,catalog,{x,y});
+  return blocks.some(block=>x+.18>block.x&&x-.18<block.x+block.w&&y+.12>block.y&&y-.12<block.y+block.h);
  });
  if(blockedBySolid)return false;
  if(seed!==null&&seed!==undefined){

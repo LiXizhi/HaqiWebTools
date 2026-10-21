@@ -3,7 +3,7 @@ import {homeCapacity} from './home_capacity_core.js';
 import {BUILDING_TEMPLATES,buildingTemplateObjects} from './home_building_templates_core.js';
 import {createHomeBuildingCache} from './home_building_cache.js';
 import {drawBuilding,buildingVisualBounds} from './view_home_building.js';
-import {isRoofDecoration,buildingItem,obstruction,buildingBounds,buildingConnectionMask,buildingWallFeet,isEdge} from './home_building_core.js';
+import {homeDoorIsOpen,isRoofDecoration,buildingItem,obstruction,buildingBounds,buildingConnectionMask,buildingWallFeet,isEdge} from './home_building_core.js';
 import {openBuildingProperties} from './view_home_building_properties.js';
 import {createHomeTerrainCache} from './home_terrain_cache.js';
 import {createCloseButton} from './view_adventure_controls.js';
@@ -851,7 +851,7 @@ export function createHomeView(root,cb){
   const groups=buildings.prepare(objects,model.catalog.items,worldRect,ratio,model.selection?.id||gesture?.hit?.id||'');
   const sections=buildings.sections(),hiddenRoofs=new Set();
   for(const actor of [model.hero,model.secondHero].filter(Boolean)){for(const o of objects){const item=buildingItem(o,model.catalog.items);if(item?.building?.type!=='roof')continue;const b=buildingBounds(o,item);if(actor.x>=b.x&&actor.x<=b.x+b.w&&actor.y>=b.y&&actor.y<=b.y+b.h)hiddenRoofs.add(sections.get(o.id)?.[0]?.id);}}
-  const wallFades=({o,item})=>item.building&&['wall','window'].includes(item.building.type)&&[model.hero,model.secondHero].filter(Boolean).some(h=>h.x>=o.x-.3&&h.x<=o.x+buildingBounds(o,item).w+.3&&h.y<o.y&&h.y>o.y-1.4);
+  const wallFades=({o,item,connections})=>item.building&&['wall','window'].includes(item.building.type)&&buildingWallFeet(o,connections).some(b=>[model.hero,model.secondHero].filter(Boolean).some(h=>h.x>=b.x-.3&&h.x<=b.x+b.w+.3&&h.y<b.y+b.h&&h.y>b.y-1.4));
   function drawGroup(g){
    if(g.roof&&hiddenRoofs.has(g.section))return;
    if(g.dynamic){g.rows.forEach(row=>drawObject(row.o,true,row));return;}
@@ -870,7 +870,7 @@ export function createHomeView(root,cb){
    ctx.save();
    if(gesture?.moved&&gesture.hit?.id===o.id)ctx.globalAlpha=.25;
    let bounds;
-   if(item.building){const visual=buildingVisualBounds(o,item);bounds={x:project(visual.x/40,visual.y/40).x,y:project(visual.x/40,visual.y/40).y,w:visual.w*scale/40,h:visual.h*scale/40};if(draw){ctx.translate(p.x,p.y);ctx.scale(scale/40,scale/40);ctx.translate(-o.x*40,-o.y*40);drawBuilding(ctx,item,o,imageFor(item.art),buildingRow?.connections,buildingRow?.ao);}}
+   if(item.building){const visual=buildingVisualBounds(o,item);bounds={x:project(visual.x/40,visual.y/40).x,y:project(visual.x/40,visual.y/40).y,w:visual.w*scale/40,h:visual.h*scale/40};if(draw){ctx.translate(p.x,p.y);ctx.scale(scale/40,scale/40);ctx.translate(-o.x*40,-o.y*40);drawBuilding(ctx,item,item.building.type==='door'?{...o,doorOpen:homeDoorIsOpen(o,[model.hero,model.secondHero],buildingRow?.connections)}:o,imageFor(item.art),buildingRow?.connections,buildingRow?.ao);}}
    else if(draw)bounds=drawHomeObject(ctx,item,o,p.x,p.y,b.w*scale,b.h*scale,imageFor(item.art),sec);
    else bounds=homeObjectVisualBounds(item,o,p.x,p.y,b.w*scale,b.h*scale);
    ctx.restore();

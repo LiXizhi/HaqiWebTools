@@ -72,6 +72,23 @@ export function buildingWallFeet(obj,connections=0){
  return feet;
 }
 export const isRoofDecoration=obj=>obj.properties?.surface==='roof';
+// Use the painted feet for default walls; explicit collision boxes remain editable.
+export function walkingObstructions(obj,item,objects,catalog,point=null){
+ if(item.building?.type==='door')return [];
+ const block=obstruction(obj,item);
+ if(!block)return [];
+ if(isEdge(item)&&!['width','depth','offsetX','offsetY'].some(k=>obj.properties?.[k]!==undefined)){
+  // Distant cells cannot touch this actor; avoid neighbour scans on every step.
+  const s=obj.sizeScale??1;
+  if(point&&(point.x+.18<=obj.x||point.x-.18>=obj.x+s||point.y+.12<=obj.y||point.y-.12>=obj.y+s))return [];
+  return buildingWallFeet(obj,buildingConnectionMask(obj,objects,catalog));
+ }
+ return [block];
+}
+// Presentation only: never write the temporary opening into the home object.
+export function homeDoorIsOpen(obj,actors,connections=0){
+ return !!obj.doorOpen||buildingWallFeet(obj,connections).some(b=>actors.some(p=>p&&p.x>b.x-.4&&p.x<b.x+b.w+.4&&p.y>b.y-.55&&p.y<b.y+b.h+.55));
+}
 export function roofAt(obj,objects,catalog){return objects.find(r=>{if(buildingItem(r,catalog)?.building?.type!=='roof')return false;const b=buildingGridBounds(r,buildingItem(r,catalog));return obj.x>=b.x&&obj.x<b.x+b.w&&obj.y>=b.y&&obj.y<b.y+b.h;});}
 export function obstruction(obj,item){if(isRoofDecoration(obj))return null;const defaults=item.building?.obstruction||{enabled:item.layer==='solid',width:item.size[0],depth:item.size[1],offsetX:0,offsetY:0};const p={...defaults,...obj.properties};if(!p.enabled||(item.building?.type==='door'&&obj.doorOpen))return null;const s=obj.sizeScale??1,b={x:p.offsetX||0,y:p.offsetY||0,w:p.width,h:p.depth};if((obj.rotation||0)%2)[b.x,b.y,b.w,b.h]=[b.y,b.x,b.h,b.w];return {x:obj.x+b.x*s,y:obj.y+b.y*s,w:b.w*s,h:b.h*s};}
 export const intersects=(a,b)=>a.x<b.x+b.w-1e-7&&a.x+a.w>b.x+1e-7&&a.y<b.y+b.h-1e-7&&a.y+a.h>b.y+1e-7;

@@ -24,7 +24,7 @@ test('legacy object levels share ordinary ground slots, neighbours and collision
  assert.equal(buildingSlot(floor,item),buildingSlot(upper,item));
  assert.equal(buildingConnectionMask(floor,[{...upper,x:1}],catalog),2);
  const wall={id:'w',itemId:'build-brick-wall',x:0,y:0,level:2};
- assert.equal(isHomePassable(.5,.1,[wall],catalog),false);
+ assert.equal(isHomePassable(.5,.5,[wall],catalog),false);
  const parts={'chunk:0,0':{w:wall}};applyHomeAction(parts,{type:'recall',id:'w'},catalog);assert.deepEqual(parts['chunk:0,0'],{});
  assert.equal(isHomePassable(20,20,[],catalog),true);
 });

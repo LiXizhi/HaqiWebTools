@@ -127,6 +127,10 @@ const SIMPLE_CHARS_ZH=new Set([...'请一的个张把朵盏本块棵只套座栋
 function isSimpleSpellDiff(diff,locale){
  return locale==='en'?SIMPLE_WORDS_EN.has(diff.expected):SIMPLE_CHARS_ZH.has(diff.expected);
 }
+function isSimplePart(text,locale){
+ const key=String(text||'').trim().toLowerCase();
+ return locale==='en'?SIMPLE_WORDS_EN.has(key):SIMPLE_CHARS_ZH.has(key);
+}
 function effectiveSpellAccuracy(result,locale){
  if(!result.differences.length)return 1;
  const significant=result.differences.filter(d=>!isSimpleSpellDiff(d,locale));
@@ -149,7 +153,8 @@ export function matchHomeSpell(text,catalog,lang='en',selection=null,{input='tex
   for(const color of colors){
    const rows=summonSentences(item,lang,color).map((s,lineIndex)=>{
     const res=compareDungeonSpeech(text,s,locale);
-    return {...res,effectiveAccuracy:effectiveSpellAccuracy(res,locale),lineIndex};
+    const parts=res.accuracy>0?res.parts.map(p=>p.missing&&isSimplePart(p.text,locale)?{...p,missing:false}:p):res.parts;
+    return {...res,parts,effectiveAccuracy:effectiveSpellAccuracy(res,locale),lineIndex};
    }).sort((a,b)=>b.effectiveAccuracy-a.effectiveAccuracy||b.accuracy-a.accuracy||a.lineIndex-b.lineIndex);
    const best=rows[0];
    if(!feedback||best.effectiveAccuracy>feedback.effectiveAccuracy||(best.effectiveAccuracy===feedback.effectiveAccuracy&&best.accuracy>feedback.accuracy))feedback=best;

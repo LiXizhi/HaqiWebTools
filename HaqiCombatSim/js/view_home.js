@@ -3,7 +3,7 @@ import {homeCapacity} from './home_capacity_core.js';
 import {BUILDING_TEMPLATES,buildingTemplateObjects} from './home_building_templates_core.js';
 import {createHomeBuildingCache} from './home_building_cache.js';
 import {drawBuilding,buildingVisualBounds} from './view_home_building.js';
-import {isRoofDecoration,buildingItem,obstruction,buildingBounds,buildingConnectionMask} from './home_building_core.js';
+import {isRoofDecoration,buildingItem,obstruction,buildingBounds,buildingConnectionMask,buildingWallFeet,isEdge} from './home_building_core.js';
 import {openBuildingProperties} from './view_home_building_properties.js';
 import {createHomeTerrainCache} from './home_terrain_cache.js';
 import {createCloseButton} from './view_adventure_controls.js';
@@ -45,7 +45,7 @@ export function createHomeView(root,cb){
  const images=new Map(),terrain=createHomeTerrainCache();
  const frameMeter=createFrameMeter(),framePacer=createFramePacer();
  let fpsLabel;
- let speechFeedback,speechProgress;
+ let statusTimer=0,lastStatus='';
  let canvas,ctx,stage,side,items,category,catPills,tabs,input,example,bubble,bubbleText,tools,choice,summary,portal,edit,petMode=false;
  const motionTrail=createMotionTrail(7319);
  const heroActor=createHeroActor(7419),secondActor=createHeroActor(7420);
@@ -68,7 +68,8 @@ export function createHomeView(root,cb){
  };
 
  const buildings=createHomeBuildingCache({imageFor,enabled:!new URLSearchParams(location.search).has('noBuildingCache')});
- let paintStroke=null;
+ let paintStroke=null,eraseStroke=null,hoverPoint=null,buildTip=null,historyTools=null,showGrid=false;
+ let cancelScenePointer=()=>{};
  let worldAtlasesPromise=null,terrainMissing=Infinity;
  function ensureWorldAtlases(){
   if(worldAtlasesPromise)return worldAtlasesPromise;
@@ -92,6 +93,17 @@ export function createHomeView(root,cb){
   }).catch(()=>{});
  }
 
+ const editKey=e=>{
+  if(!model?.home||e.target.closest?.('input,textarea,select,[contenteditable=true],dialog')||modal.querySelector('dialog[open]')||e.altKey)return;
+  const key=e.key.toLowerCase(),command=e.ctrlKey||e.metaKey;
+  if(model.build&&command&&(key==='z'||key==='y')){e.preventDefault();e.stopPropagation();if(!e.repeat){cancelScenePointer();run(key==='y'||e.shiftKey?cb.redo:cb.undo);}return;}
+  if(model.build&&!command&&key==='g'){e.preventDefault();if(!e.repeat){showGrid=!showGrid;render(model);}}
+ };
+ window.addEventListener('keydown',editKey);
+ const blurEdit=()=>cancelScenePointer();
+ window.addEventListener('blur',blurEdit);
+ const hideEdit=()=>{if(document.hidden)cancelScenePointer();};
+ document.addEventListener('visibilitychange',hideEdit);
  const run=fn=>Promise.resolve().then(fn).catch(cb.error);
 
  function openNameDialog({trigger,home:targetHome=null}={}){
@@ -301,7 +313,7 @@ export function createHomeView(root,cb){
 
   example=el('div','home-example');
   choice=el('div','home-choices');
-  const composer=el('section','home-composer',example,choice,form);
+  const composer=el('section','home-composer',status,example,choice,form);
   main.append(composer);
 
   // Build & Inventory Sidebar Drawer
@@ -462,18 +474,28 @@ export function createHomeView(root,cb){
    button('显示屋顶',cb.roofs,'home-roof-toggle home-nav-pill')
   );
 
-  body.append(main,side,topbar,dock);
+  historyTools=el('div','home-build-tools');
+  const undo=button('撤销',()=>{cancelScenePointer();run(cb.undo);});undo.dataset.history='undo';undo.title='撤销（Ctrl / ⌘ + Z）';
+  const redo=button('重做',()=>{cancelScenePointer();run(cb.redo);});redo.dataset.history='redo';redo.title='重做（Ctrl + Y / ⌘ + Shift + Z）';
+  historyTools.append(undo,redo);
+  buildTip=el('div','home-build-tip');buildTip.setAttribute('role','tooltip');buildTip.hidden=true;
+  body.append(main,side,topbar,dock,historyTools,buildTip);
 
   canvas.onpointerdown=e=>{
-   if(e.button!==0||gesture)return;
+   if(gesture||paintStroke||eraseStroke)return;
+   const target=hitAt(position(e));
+   if(e.button===1&&model.build){e.preventDefault();if(target?.kind==='object')cb.pick(target.id);return;}
+   if(e.button===2&&model.build){e.preventDefault();canvas.focus();canvas.setPointerCapture(e.pointerId);eraseStroke={id:e.pointerId,group:crypto.randomUUID(),seen:new Set()};eraseAt(position(e));return;}
+   if(e.button!==0)return;
    canvas.focus();
    canvas.setPointerCapture(e.pointerId);
    const p=position(e);
-   const hit=[...hits].reverse().find(h=>p.sx>=h.sx&&p.sx<=h.sx+h.sw&&p.sy>=h.sy&&p.sy<=h.sy+h.sh);
-   if(model.build&&model.selection&&!model.selection.id&&buildingItem(model.selection,model.catalog.items)?.building){
-    paintStroke={seen:new Set(),row:{...model.selection},id:e.pointerId};paintAt(p);return;
+   const hit=hitAt(p);hoverPoint=p;
+   if(model.build&&model.selection&&!model.selection.id&&buildingItem(model.selection,model.catalog.items)?.building&&hit?.kind!=='object'&&hit?.kind!=='pet'){
+    paintStroke={seen:new Set(),row:{...model.selection},id:e.pointerId,group:crypto.randomUUID()};paintAt(p);return;
    }
    gesture={
+    pendingPaint:model.build&&hit?.kind==='object'&&model.selection&&!model.selection.id&&buildingItem(model.selection,model.catalog.items)?.building?{...model.selection}:null,
     start:p,
     last:p,
     hit,
@@ -484,25 +506,34 @@ export function createHomeView(root,cb){
     moved:false
    };
   };
+  canvas.oncontextmenu=e=>{if(model.build)e.preventDefault();};
+  canvas.onpointerleave=()=>{if(!gesture&&!paintStroke&&!eraseStroke){hoverPoint=null;cb.hover(null);if(buildTip)buildTip.hidden=true;}};
   canvas.onpointermove=e=>{
+   hoverPoint=model.build?position(e):null;
+   if((paintStroke||eraseStroke)&&document.elementFromPoint(e.clientX,e.clientY)!==canvas){if(paintStroke)paintStroke.last=null;if(eraseStroke)eraseStroke.last=null;hoverPoint=null;cb.hover(null);return;}
+   if(eraseStroke){if(eraseStroke.id===e.pointerId)eraseAt(hoverPoint);return;}
    if(paintStroke){if(paintStroke.id===e.pointerId)paintAt(position(e));return;}
    if(!gesture&&model.build&&model.selection&&!model.selection.id&&buildingItem(model.selection,model.catalog.items)?.building)cb.hover(position(e));
    if(gesture&&gesture.id!==e.pointerId)return;
    const p=position(e);
    if(!gesture)return;
    if(Math.hypot(p.sx-gesture.start.sx,p.sy-gesture.start.sy)>6)gesture.moved=true;
+   if(gesture.moved&&gesture.pendingPaint){paintStroke={seen:new Set(),row:gesture.pendingPaint,id:e.pointerId,group:crypto.randomUUID()};const start=gesture.start;gesture=null;paintAt(start);paintAt(p);return;}
    if(gesture.moved&&gesture.hit&&(gesture.hit.kind==='pet'||gesture.hit.kind==='object')){
     cb.hover(gesture.origin&&!(gesture.origin.properties?.snap??buildingItem(gesture.origin,model.catalog.items)?.building?.snap??false)?homeFurnitureDragPosition(gesture.origin,gesture.start,p,model.scale):gesture.origin?{x:p.x+Math.floor(gesture.origin.x)-Math.floor(gesture.start.x),y:p.y+Math.floor(gesture.origin.y)-Math.floor(gesture.start.y)}:p,gesture.hit);
    }
    gesture.last=p;
   };
   canvas.onpointerup=e=>{
+   if(eraseStroke?.id===e.pointerId){eraseStroke=null;if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);return;}
    if(paintStroke?.id===e.pointerId){paintStroke=null;if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);return;}
    if(!gesture||gesture.id!==e.pointerId)return;
    const g=gesture,p=position(e);
    gesture=null;
    if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);
    if(g.steering){cb.stopWalk();return;}
+   if(document.elementFromPoint(e.clientX,e.clientY)!==canvas&&g.hit?.kind!=='pet'){cb.hover(null);return;}
+   if(g.pendingPaint&&!g.moved){run(()=>cb.take(g.pendingPaint,p));return;}
    if(g.moved&&g.hit&&(g.hit.kind==='pet'||g.hit.kind==='object')){
     run(()=>{
      if(g.hit.kind==='pet'){
@@ -521,11 +552,13 @@ export function createHomeView(root,cb){
     else run(()=>cb.tap(g.hit,p));
    }
   };
-  const cancelPointer=()=>{paintStroke=null;if(gesture?.steering)cb.stopWalk();gesture=null;cb.hover(null);};
+  const cancelPointer=()=>{const id=gesture?.id??paintStroke?.id??eraseStroke?.id;paintStroke=null;eraseStroke=null;hoverPoint=null;if(gesture?.steering)cb.stopWalk();gesture=null;cb.hover(null);if(buildTip)buildTip.hidden=true;if(id!==undefined&&canvas.hasPointerCapture(id))canvas.releasePointerCapture(id);};
+  cancelScenePointer=cancelPointer;
   canvas.onpointercancel=cancelPointer;
   canvas.onlostpointercapture=cancelPointer;
   canvas.onwheel=e=>{e.preventDefault();cb.zoom(e.deltaY>0?.9:1.1);};
   canvas.onkeydown=e=>{
+   if(e.ctrlKey||e.metaKey||e.altKey)return;
    const moves={
     ArrowLeft:[-3,0],a:[-3,0],A:[-3,0],
     ArrowRight:[3,0],d:[3,0],D:[3,0],
@@ -537,16 +570,21 @@ export function createHomeView(root,cb){
     cb.walk({x:model.hero.x+moves[e.key][0],y:model.hero.y+moves[e.key][1]});
    }
    if(e.key==='Escape'){e.stopPropagation();cancelPointer();cb.cancel();}
-   if(e.key.toLowerCase()==='r')cb.rotate();
-   if(e.key==='Delete')run(cb.recall);
+   if(e.key.toLowerCase()==='r'&&!e.repeat)cb.rotate();
+   if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();if(!e.repeat)run(cb.recall);}
   };
  }
 
+ function hitAt(p){return [...hits].reverse().find(h=>p.sx>=h.sx&&p.sx<=h.sx+h.sw&&p.sy>=h.sy&&p.sy<=h.sy+h.sh);}
+ function eraseAt(p){
+  hoverPoint=p;const stroke=eraseStroke;if(!stroke)return;const from=stroke.last||p,steps=Math.max(1,Math.ceil(Math.hypot(p.sx-from.sx,p.sy-from.sy)/6));
+  for(let i=0;i<=steps;i++){const hit=hitAt({sx:from.sx+(p.sx-from.sx)*i/steps,sy:from.sy+(p.sy-from.sy)*i/steps});if(hit?.kind!=='object'||stroke.seen.has(hit.id))continue;stroke.seen.add(hit.id);run(()=>cb.erase(hit.id,stroke.group));}stroke.last=p;
+ }
  function paintAt(p){
   const stroke=paintStroke;if(!stroke)return;cb.hover(p);
   for(const cell of homeStrokeCells(stroke.last||p,p)){
    const key=`${cell.x},${cell.y}`;if(stroke.seen.has(key))continue;stroke.seen.add(key);
-   run(()=>cb.take({...stroke.row,fromInventory:true},cell));
+   run(()=>cb.take({...stroke.row,fromInventory:true,group:stroke.group},cell));
   }
   stroke.last=p;
  }
@@ -568,7 +606,18 @@ export function createHomeView(root,cb){
   if(next.home){const capacity=homeCapacity(next.home),label=body.querySelector('.home-capacity');if(label){label.textContent=`容量 ${capacity.used===null?'待统计':capacity.used.toLocaleString('en-US')} / ${capacity.limit.toLocaleString('en-US')}`;label.title='每块积木或摆设占用1件容量；地形和宠物不计入';}}
   status.textContent=tr(next.status||'');
   if(next.unsaved)status.append(button('重试保存',()=>run(cb.retry),'primary'));
-  status.hidden=!next.unsaved&&(!next.status||next.status.startsWith('已保存到本机')||next.status==='宠物已安置，位置已保存到本机'||!next.home&&next.status==='家园自动保存到本机，云端同步由你手动开启。');
+  const shouldHideStatus=!next.unsaved&&(!next.status||next.status.startsWith('已保存到本机')||next.status==='宠物已安置，位置已保存到本机'||!next.home&&next.status==='家园自动保存到本机，云端同步由你手动开启。');
+  const statusKey=`${next.unsaved}:${next.status||''}`;
+  if(statusKey!==lastStatus){
+   lastStatus=statusKey;
+   clearTimeout(statusTimer);
+   status.hidden=shouldHideStatus;
+   if(!shouldHideStatus&&!next.unsaved){
+    statusTimer=setTimeout(()=>{if(!dead&&!model?.unsaved)status.hidden=true;},3000);
+   }
+  }else if(shouldHideStatus||next.unsaved){
+   status.hidden=shouldHideStatus;
+  }
   title.textContent=next.home?.name||tr('家园');
   const worldName=body.querySelector('.home-world-name');
   if(worldName)worldName.textContent=next.home?.name||'';
@@ -579,16 +628,20 @@ export function createHomeView(root,cb){
   modal.setAttribute('role',nextMode==='scene'?'region':'dialog');
   modal.setAttribute('aria-modal',String(nextMode!=='scene'));
   if(mode!==nextMode){
-   mode=nextMode;signature='';
+   mode=nextMode;signature='';paintStroke=null;eraseStroke=null;gesture=null;hoverPoint=null;
    if(mode==='scene')scene();
   }
   if(mode==='manager'){
    buildings.clear();terrain.clear();
+   if(status.parentElement!==modal)modal.append(status);
    const key=JSON.stringify([next.homes,next.guests]);
    if(signature!==key){signature=key;manager();}
    return;
   }
   body.classList.toggle('is-building',!!next.build);
+
+  if(historyTools){historyTools.hidden=!next.build;historyTools.querySelector('[data-history=undo]').disabled=!next.history?.canUndo||next.unsaved;historyTools.querySelector('[data-history=redo]').disabled=!next.history?.canRedo||next.unsaved;}
+  if(!next.build){paintStroke=null;eraseStroke=null;hoverPoint=null;if(buildTip)buildTip.hidden=true;}
   const roofToggle=body.querySelector('.home-roof-toggle');if(roofToggle){roofToggle.setAttribute('aria-pressed',String(next.showRoofs));roofToggle.textContent=tr(next.showRoofs?'隐藏屋顶':'显示屋顶');}
   body.classList.toggle('has-selection',!!next.build&&!!next.selection?.id);
   if(edit){
@@ -749,10 +802,13 @@ export function createHomeView(root,cb){
  function paint(now){
   frame=requestAnimationFrame(paint);
   if(dead||mode!=='scene'||!canvas?.isConnected||document.hidden){lastPaint=0;framePacer.reset();frameMeter.sample(0,false);return;}
-  const sceneActive=Boolean(model.hero?.moving||model.secondHero?.moving||model.destination||gesture||paintStroke||model.preview||terrainMissing>0);
+  const sceneActive=Boolean(model.hero?.moving||model.secondHero?.moving||model.destination||gesture||paintStroke||eraseStroke||hoverPoint||model.preview||terrainMissing>0);
   if(!framePacer.shouldRender(now,sceneActive))return;
   const dt=lastPaint?Math.min(.065,(now-lastPaint)/1000):0;
   lastPaint=now;
+  if(model.build&&gesture?.hit?.kind==='object'&&!gesture.moved&&now-gesture.since>=550){
+   eraseStroke={id:gesture.id,group:crypto.randomUUID(),seen:new Set()};const p=gesture.last;gesture=null;cb.hover(null);eraseAt(p);
+  }
   if(gesture&&!gesture.hit&&(gesture.moved||now-gesture.since>=180)){
    gesture.steering=true;
    const bounds=canvas.getBoundingClientRect();
@@ -802,7 +858,7 @@ export function createHomeView(root,cb){
    ctx.save();ctx.translate(r.width/2-model.camera.x*scale,r.height/2-model.camera.y*scale);ctx.scale(scale/40,scale/40);
    if(g.rows.some(wallFades)){for(const row of g.rows)buildings.draw(ctx,{...g,rows:[row]},{alpha:wallFades(row)?.4:1,forceLive:true});}
    else buildings.draw(ctx,g);
-   ctx.restore();for(const {o}of g.rows)drawObject(o,false);
+   ctx.restore();for(const row of g.rows)drawObject(row.o,false,row);
   }
 
 
@@ -818,7 +874,10 @@ export function createHomeView(root,cb){
    else if(draw)bounds=drawHomeObject(ctx,item,o,p.x,p.y,b.w*scale,b.h*scale,imageFor(item.art),sec);
    else bounds=homeObjectVisualBounds(item,o,p.x,p.y,b.w*scale,b.h*scale);
    ctx.restore();
-   if(model.build||item.building?.type==='door'||homeObjectInteractive(o,model.catalog.items))hits.push({kind:'object',id:o.id,sx:bounds?.x??p.x,sy:bounds?.y??p.y-12,sw:bounds?.w??b.w*scale,sh:bounds?.h??b.h*scale+12});
+   if(model.build||item.building?.type==='door'||homeObjectInteractive(o,model.catalog.items)){
+    if(isEdge(item)){const height=(item.building.type==='fence'?.7:1.25)*(o.sizeScale??1);for(const foot of buildingWallFeet(o,buildingRow?.connections)){const q=project(foot.x,foot.y-height);hits.push({kind:'object',id:o.id,sx:q.x-3,sy:q.y-2,sw:foot.w*scale+6,sh:(foot.h+height)*scale+4});}}
+    else hits.push({kind:'object',id:o.id,sx:bounds?.x??p.x,sy:bounds?.y??p.y-12,sw:bounds?.w??b.w*scale,sh:bounds?.h??b.h*scale+12});
+   }
    if(model.build&&model.selection?.id===o.id){
     ctx.save();
     ctx.strokeStyle='#ffe885';
@@ -826,9 +885,9 @@ export function createHomeView(root,cb){
     ctx.shadowColor='rgba(255,215,90,0.65)';
     ctx.shadowBlur=8;
     ctx.beginPath();
-    ctx.roundRect(p.x-2,p.y-2,b.w*scale+4,b.h*scale+4,6);
+    ctx.roundRect(p.x-2,p.y-2,(item.building?o.sizeScale??1:b.w)*scale+4,(item.building?o.sizeScale??1:b.h)*scale+4,3);
     ctx.stroke();
-    const block=obstruction(o,item);if(block){const q=project(block.x,block.y);ctx.strokeStyle='#e96655';ctx.lineWidth=2;ctx.setLineDash([4,3]);ctx.strokeRect(q.x,q.y,block.w*scale,block.h*scale);}
+    const block=obstruction(o,item);if(block&&o.properties){const q=project(block.x,block.y);ctx.strokeStyle='#e96655';ctx.lineWidth=2;ctx.setLineDash([4,3]);ctx.strokeRect(q.x,q.y,block.w*scale,block.h*scale);}
     ctx.restore();
    }
   }
@@ -1046,9 +1105,36 @@ export function createHomeView(root,cb){
     ctx.strokeStyle=o.valid?'#b8f59e':'#ff7b72';
     ctx.lineWidth=2.5;
     ctx.beginPath();
-    ctx.roundRect(p.x,p.y,b.w*scale,b.h*scale,6);
+    ctx.roundRect(p.x,p.y,(item.building?o.sizeScale??1:b.w)*scale,(item.building?o.sizeScale??1:b.h)*scale,3);
     ctx.fill();
     ctx.stroke();
+   }
+  }
+
+  if(model.build&&showGrid){
+   ctx.save();ctx.strokeStyle='rgba(255,250,224,.25)';ctx.lineWidth=1;ctx.beginPath();
+   const left=Math.floor(model.camera.x-r.width/scale/2),top=Math.floor(model.camera.y-r.height/scale/2);
+   for(let x=left;x<=left+r.width/scale+1;x++){const q=project(x,0);ctx.moveTo(q.x,0);ctx.lineTo(q.x,r.height);}
+   for(let y=top;y<=top+r.height/scale+1;y++){const q=project(0,y);ctx.moveTo(0,q.y);ctx.lineTo(r.width,q.y);}
+   ctx.stroke();ctx.restore();
+  }
+  if(model.build&&model.preview){
+   const o=model.preview,item=buildingItem(o,model.catalog.items);
+   if(isEdge(item)){ctx.save();ctx.strokeStyle=o.valid?'#b8f59e':'#ff7b72';ctx.lineWidth=2;
+    for(const foot of buildingWallFeet(o,buildingConnectionMask(o,[...objects,o],model.catalog.items))){const q=project(foot.x,foot.y);ctx.strokeRect(q.x,q.y,foot.w*scale,foot.h*scale);}ctx.restore();}
+  }
+  if(buildTip){
+   const p=hoverPoint,hit=p&&hitAt(p),o=model.preview||(hit?.kind==='object'&&objects.find(o=>o.id===hit.id)),item=o&&buildingItem(o,model.catalog.items);
+   buildTip.hidden=!model.build||!p||!item;
+   if(!buildTip.hidden){
+    const holding=gesture?.hit?.kind==='object'&&!gesture.moved;
+    const detail=eraseStroke?'拖动连续拆除':holding?'长按拆除 · 移动可拖拽':model.preview?(model.preview.valid?'可放置':model.preview.reason||'此处不可放置'):'右键或长按拆除 · 中键取样';
+    buildTip.textContent=`${item.zh} · ${Math.floor(o.x)}, ${Math.floor(o.y)}\n${detail}`;
+    buildTip.classList.toggle('is-invalid',model.preview?.valid===false);
+    buildTip.style.left=`${Math.max(8,Math.min(r.width-buildTip.offsetWidth-8,p.sx+18))}px`;
+    const tray=side?.getBoundingClientRect(),bottom=tray&&tray.height&&tray.top<r.bottom?tray.top-r.top:r.height;
+    buildTip.style.top=`${Math.max(8,Math.min(bottom-buildTip.offsetHeight-8,p.sy-buildTip.offsetHeight-18))}px`;
+    if(holding){ctx.save();ctx.strokeStyle='#ffb26e';ctx.lineWidth=4;ctx.beginPath();ctx.arc(p.sx,p.sy,15,-Math.PI/2,-Math.PI/2+Math.PI*2*Math.min(1,(now-gesture.since)/550));ctx.stroke();ctx.restore();}
    }
   }
 
@@ -1110,7 +1196,9 @@ export function createHomeView(root,cb){
    }
   },
   dispose(){
-   dead=true;
+   clearTimeout(statusTimer);
+   cancelScenePointer();dead=true;
+   window.removeEventListener('keydown',editKey);window.removeEventListener('blur',blurEdit);document.removeEventListener('visibilitychange',hideEdit);
    activeDialog?.destroy();
    root.classList.remove('home-world-active');
    cancelAnimationFrame(frame);

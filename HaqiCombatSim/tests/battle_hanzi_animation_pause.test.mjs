@@ -33,11 +33,15 @@ test('animation gate bypasses background updates and refreshes clocks until resu
     const source=readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
     const code=source.slice(source.indexOf('function frame(now) {'),source.indexOf('// Opt-in, local diagnostics.'));
     let active=true,scheduled=0;
-    const c=vm.createContext({wordPractice:{active:false},hanziAnimationActive:()=>active,requestAnimationFrame:()=>scheduled++,lastFrame:0,lastCare:0,islandSocial:{},petScene:{},renderer:{pauseFrameMeter(){}},adaptiveGraphics:{suspend(){}},perf:{frame(){}}});
+    const c=vm.createContext({document:{hidden:false},wordPractice:{active:false},hanziAnimationActive:()=>active,requestAnimationFrame:()=>scheduled++,lastFrame:0,lastCare:0,islandSocial:{},petScene:{},renderer:{pauseFrameMeter(){}},adaptiveGraphics:{suspend(){}},perf:{frame(){}}});
     vm.runInContext(code+';frame(1000);frame(9000);',c);
     assert.equal(scheduled,2);assert.equal(c.lastFrame,9000);assert.equal(c.lastCare,9000);
     assert.equal(c.islandSocial.lastFrame,9000);assert.equal(c.petScene.lastFrame,9000);
     active=false;
+    c.document.hidden=true;
+    vm.runInContext('frame(9010)',c);
+    assert.equal(c.lastFrame,9010);assert.equal(c.petScene.lastFrame,9010);
+    c.document.hidden=false;
     // The first regular-frame dependency is deliberately absent: reaching it
     // proves the released gate no longer suppresses the normal game loop.
     assert.throws(()=>vm.runInContext('frame(9016)',c),/stage is not defined/);

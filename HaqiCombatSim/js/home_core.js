@@ -122,8 +122,21 @@ export function summonSentences(item,lang='en',color=''){
  return !color&&item.sentences?.[lang]?.length?item.sentences[lang].slice(0,3):sentences;
 }
 export const HOME_SPELL_PASS_ACCURACY=0.8;
+const SIMPLE_WORDS_EN=new Set(['a','an','the','some','one','please']);
+const SIMPLE_CHARS_ZH=new Set([...'请一的个张把朵盏本块棵只套座栋片条面架台盆盏']);
+function isSimpleSpellDiff(diff,locale){
+ return locale==='en'?SIMPLE_WORDS_EN.has(diff.expected):SIMPLE_CHARS_ZH.has(diff.expected);
+}
+function effectiveSpellAccuracy(result,locale){
+ if(!result.differences.length)return 1;
+ const significant=result.differences.filter(d=>!isSimpleSpellDiff(d,locale));
+ if(!significant.length&&result.accuracy>0)return 1;
+ const total=result.parts.filter(p=>p.matched||p.missing).length;
+ return total?Math.max(result.accuracy,1-significant.length/total):result.accuracy;
+}
 // Share NPC dialogue word coverage for both typed and spoken answers.
-// An answer with >= 80% accuracy passes immediately.
+// Missing simple function words (articles/classifiers) are forgiven, and an answer
+// with >= 80% accuracy passes immediately.
 // The third completed, nonempty recording may unlock a selected item without
 // claiming that its unmatched vocabulary was correctly practised.
 export function matchHomeSpell(text,catalog,lang='en',selection=null,{input='text',speechAttempts=0}={}){
@@ -134,11 +147,14 @@ export function matchHomeSpell(text,catalog,lang='en',selection=null,{input='tex
   if(selection?.itemId&&selection.itemId!==item.id)continue;
   const colors=selection?.itemId?[selection.color||'']:['',...Object.keys(COLORS)];
   for(const color of colors){
-   const rows=summonSentences(item,lang,color).map((s,lineIndex)=>({...compareDungeonSpeech(text,s,locale),lineIndex})).sort((a,b)=>b.accuracy-a.accuracy||a.lineIndex-b.lineIndex);
+   const rows=summonSentences(item,lang,color).map((s,lineIndex)=>{
+    const res=compareDungeonSpeech(text,s,locale);
+    return {...res,effectiveAccuracy:effectiveSpellAccuracy(res,locale),lineIndex};
+   }).sort((a,b)=>b.effectiveAccuracy-a.effectiveAccuracy||b.accuracy-a.accuracy||a.lineIndex-b.lineIndex);
    const best=rows[0];
-   if(!feedback||best.accuracy>feedback.accuracy)feedback=best;
+   if(!feedback||best.effectiveAccuracy>feedback.effectiveAccuracy||(best.effectiveAccuracy===feedback.effectiveAccuracy&&best.accuracy>feedback.accuracy))feedback=best;
    const passAccuracy=selection?.itemId?HOME_SPELL_PASS_ACCURACY:1;
-   if(best.accuracy>=passAccuracy||(input==='speech'&&speechAttempts>=3&&selection?.itemId))candidates.push({itemId:item.id,color});
+   if(best.effectiveAccuracy>=passAccuracy||(input==='speech'&&speechAttempts>=3&&selection?.itemId))candidates.push({itemId:item.id,color});
   }
  }
  return {candidates,feedback,error:candidates.length?'':'请看看标出的词，再完整说一次或输入句子。'};

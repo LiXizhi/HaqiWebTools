@@ -13429,6 +13429,1334 @@
         ]
       },
       "requiresReading": false
+    },
+    {
+      "id": "build-brick-floor",
+      "category": "blocks",
+      "zh": "红砖地板",
+      "en": "brick floor",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "ground",
+      "slots": 0,
+      "activity": null,
+      "interactionEnabled": false,
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      },
+      "art": {
+        "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp",
+        "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+        "bytes": 131452,
+        "width": 640,
+        "height": 640,
+        "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+        "index": 0,
+        "sourceRect": [
+          42,
+          31,
+          292,
+          269
+        ],
+        "crop": [
+          6,
+          9,
+          148,
+          141
+        ],
+        "kind": "material",
+        "source": "Native transparent image_gen; verified component bounds; building-expansion-art.json"
+      },
+      "requiresReading": false,
+      "building": {
+        "type": "floor",
+        "style": "brick",
+        "snap": true,
+        "spriteHeight": 1,
+        "obstruction": {
+          "enabled": false,
+          "width": 1,
+          "depth": 1,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      },
+      "sentences": {
+        "en": [
+          "Create brick floor.",
+          "I want brick floor.",
+          "Please create brick floor."
+        ],
+        "zh": [
+          "创造红砖地板。",
+          "我想要红砖地板。",
+          "请给我红砖地板。"
+        ]
+      },
+      "practiceWords": {
+        "en": [
+          "floor"
+        ],
+        "zh": [
+          "红砖地板"
+        ]
+      }
+    },
+    {
+      "id": "build-sandstone-floor",
+      "category": "blocks",
+      "zh": "砂岩地板",
+      "en": "sandstone floor",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "ground",
+      "slots": 0,
+      "activity": null,
+      "interactionEnabled": false,
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      },
+      "art": {
+        "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp",
+        "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+        "bytes": 131452,
+        "width": 640,
+        "height": 640,
+        "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+        "index": 1,
+        "sourceRect": [
+          373,
+          31,
+          624,
+          269
+        ],
+        "crop": [
+          166,
+          10,
+          148,
+          140
+        ],
+        "kind": "material",
+        "source": "Native transparent image_gen; verified component bounds; building-expansion-art.json"
+      },
+      "requiresReading": false,
+      "building": {
+        "type": "floor",
+        "style": "sandstone",
+        "snap": true,
+        "spriteHeight": 1,
+        "obstruction": {
+          "enabled": false,
+          "width": 1,
+          "depth": 1,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      },
+      "sentences": {
+        "en": [
+          "Create sandstone floor.",
+          "I want sandstone floor.",
+          "Please create sandstone floor."
+        ],
+        "zh": [
+          "创造砂岩地板。",
+          "我想要砂岩地板。",
+          "请给我砂岩地板。"
+        ]
+      },
+      "practiceWords": {
+        "en": [
+          "floor"
+        ],
+        "zh": [
+          "砂岩地板"
+        ]
+      }
+    },
+    {
+      "id": "build-moss-floor",
+      "category": "blocks",
+      "zh": "苔石地板",
+      "en": "mossy stone floor",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "ground",
+      "slots": 0,
+      "activity": null,
+      "interactionEnabled": false,
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      },
+      "art": {
+        "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp",
+        "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+        "bytes": 131452,
+        "width": 640,
+        "height": 640,
+        "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+        "index": 2,
+        "sourceRect": [
+          704,
+          31,
+          956,
+          269
+        ],
+        "crop": [
+          326,
+          10,
+          148,
+          140
+        ],
+        "kind": "material",
+        "source": "Native transparent image_gen; verified component bounds; building-expansion-art.json"
+      },
+      "requiresReading": false,
+      "building": {
+        "type": "floor",
+        "style": "moss",
+        "snap": true,
+        "spriteHeight": 1,
+        "obstruction": {
+          "enabled": false,
+          "width": 1,
+          "depth": 1,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      },
+      "sentences": {
+        "en": [
+          "Create mossy stone floor.",
+          "I want mossy stone floor.",
+          "Please create mossy stone floor."
+        ],
+        "zh": [
+          "创造苔石地板。",
+          "我想要苔石地板。",
+          "请给我苔石地板。"
+        ]
+      },
+      "practiceWords": {
+        "en": [
+          "floor"
+        ],
+        "zh": [
+          "苔石地板"
+        ]
+      }
+    },
+    {
+      "id": "build-slate-floor",
+      "category": "blocks",
+      "zh": "板岩地板",
+      "en": "slate floor",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "ground",
+      "slots": 0,
+      "activity": null,
+      "interactionEnabled": false,
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      },
+      "art": {
+        "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp",
+        "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+        "bytes": 131452,
+        "width": 640,
+        "height": 640,
+        "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+        "index": 3,
+        "sourceRect": [
+          1035,
+          31,
+          1286,
+          269
+        ],
+        "crop": [
+          486,
+          10,
+          148,
+          140
+        ],
+        "kind": "material",
+        "source": "Native transparent image_gen; verified component bounds; building-expansion-art.json"
+      },
+      "requiresReading": false,
+      "building": {
+        "type": "floor",
+        "style": "slate",
+        "snap": true,
+        "spriteHeight": 1,
+        "obstruction": {
+          "enabled": false,
+          "width": 1,
+          "depth": 1,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      },
+      "sentences": {
+        "en": [
+          "Create slate floor.",
+          "I want slate floor.",
+          "Please create slate floor."
+        ],
+        "zh": [
+          "创造板岩地板。",
+          "我想要板岩地板。",
+          "请给我板岩地板。"
+        ]
+      },
+      "practiceWords": {
+        "en": [
+          "floor"
+        ],
+        "zh": [
+          "板岩地板"
+        ]
+      }
+    },
+    {
+      "id": "build-brick-wall",
+      "category": "blocks",
+      "zh": "红砖墙段",
+      "en": "brick wall",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "solid",
+      "slots": 0,
+      "activity": null,
+      "interactionEnabled": false,
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      },
+      "art": {
+        "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp",
+        "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+        "bytes": 131452,
+        "width": 640,
+        "height": 640,
+        "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+        "index": 4,
+        "sourceRect": [
+          31,
+          317,
+          308,
+          532
+        ],
+        "crop": [
+          6,
+          182,
+          148,
+          115
+        ],
+        "kind": "material",
+        "source": "Native transparent image_gen; verified component bounds; building-expansion-art.json"
+      },
+      "requiresReading": false,
+      "building": {
+        "type": "wall",
+        "style": "brick",
+        "snap": true,
+        "spriteHeight": 1,
+        "obstruction": {
+          "enabled": true,
+          "width": 1,
+          "depth": 0.18,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      },
+      "sentences": {
+        "en": [
+          "Create brick wall.",
+          "I want brick wall.",
+          "Please create brick wall."
+        ],
+        "zh": [
+          "创造红砖墙段。",
+          "我想要红砖墙段。",
+          "请给我红砖墙段。"
+        ]
+      },
+      "practiceWords": {
+        "en": [
+          "wall"
+        ],
+        "zh": [
+          "红砖墙段"
+        ]
+      }
+    },
+    {
+      "id": "build-sandstone-wall",
+      "category": "blocks",
+      "zh": "砂岩墙段",
+      "en": "sandstone wall",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "solid",
+      "slots": 0,
+      "activity": null,
+      "interactionEnabled": false,
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      },
+      "art": {
+        "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp",
+        "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+        "bytes": 131452,
+        "width": 640,
+        "height": 640,
+        "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+        "index": 5,
+        "sourceRect": [
+          362,
+          317,
+          633,
+          532
+        ],
+        "crop": [
+          166,
+          181,
+          148,
+          117
+        ],
+        "kind": "material",
+        "source": "Native transparent image_gen; verified component bounds; building-expansion-art.json"
+      },
+      "requiresReading": false,
+      "building": {
+        "type": "wall",
+        "style": "sandstone",
+        "snap": true,
+        "spriteHeight": 1,
+        "obstruction": {
+          "enabled": true,
+          "width": 1,
+          "depth": 0.18,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      },
+      "sentences": {
+        "en": [
+          "Create sandstone wall.",
+          "I want sandstone wall.",
+          "Please create sandstone wall."
+        ],
+        "zh": [
+          "创造砂岩墙段。",
+          "我想要砂岩墙段。",
+          "请给我砂岩墙段。"
+        ]
+      },
+      "practiceWords": {
+        "en": [
+          "wall"
+        ],
+        "zh": [
+          "砂岩墙段"
+        ]
+      }
+    },
+    {
+      "id": "build-glass-window",
+      "category": "blocks",
+      "zh": "玻璃窗墙",
+      "en": "glass window",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "solid",
+      "slots": 0,
+      "activity": null,
+      "interactionEnabled": false,
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      },
+      "art": {
+        "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp",
+        "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+        "bytes": 131452,
+        "width": 640,
+        "height": 640,
+        "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+        "index": 6,
+        "sourceRect": [
+          715,
+          309,
+          945,
+          543
+        ],
+        "crop": [
+          327,
+          166,
+          145,
+          148
+        ],
+        "kind": "sprite",
+        "source": "Native transparent image_gen; verified component bounds; building-expansion-art.json"
+      },
+      "requiresReading": false,
+      "building": {
+        "type": "window",
+        "style": "wood",
+        "snap": true,
+        "spriteHeight": 1.25,
+        "obstruction": {
+          "enabled": true,
+          "width": 1,
+          "depth": 0.18,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      },
+      "sentences": {
+        "en": [
+          "Create glass window.",
+          "I want glass window.",
+          "Please create glass window."
+        ],
+        "zh": [
+          "创造玻璃窗墙。",
+          "我想要玻璃窗墙。",
+          "请给我玻璃窗墙。"
+        ]
+      },
+      "practiceWords": {
+        "en": [
+          "window"
+        ],
+        "zh": [
+          "玻璃窗墙"
+        ]
+      }
+    },
+    {
+      "id": "build-iron-railing",
+      "category": "blocks",
+      "zh": "铁艺栏杆",
+      "en": "iron railing",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "solid",
+      "slots": 0,
+      "activity": null,
+      "interactionEnabled": false,
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      },
+      "art": {
+        "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp",
+        "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+        "bytes": 131452,
+        "width": 640,
+        "height": 640,
+        "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+        "index": 7,
+        "sourceRect": [
+          1008,
+          342,
+          1308,
+          521
+        ],
+        "crop": [
+          486,
+          196,
+          148,
+          88
+        ],
+        "kind": "sprite",
+        "source": "Native transparent image_gen; verified component bounds; building-expansion-art.json"
+      },
+      "requiresReading": false,
+      "building": {
+        "type": "fence",
+        "style": "iron",
+        "snap": true,
+        "spriteHeight": 0.7,
+        "obstruction": {
+          "enabled": true,
+          "width": 1,
+          "depth": 0.18,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      },
+      "sentences": {
+        "en": [
+          "Create iron railing.",
+          "I want iron railing.",
+          "Please create iron railing."
+        ],
+        "zh": [
+          "创造铁艺栏杆。",
+          "我想要铁艺栏杆。",
+          "请给我铁艺栏杆。"
+        ]
+      },
+      "practiceWords": {
+        "en": [
+          "fence"
+        ],
+        "zh": [
+          "铁艺栏杆"
+        ]
+      }
+    },
+    {
+      "id": "build-oak-stairs",
+      "category": "blocks",
+      "zh": "橡木楼梯",
+      "en": "oak stairs",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "solid",
+      "slots": 0,
+      "activity": null,
+      "interactionEnabled": false,
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      },
+      "art": {
+        "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp",
+        "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+        "bytes": 131452,
+        "width": 640,
+        "height": 640,
+        "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+        "index": 8,
+        "sourceRect": [
+          40,
+          588,
+          299,
+          845
+        ],
+        "crop": [
+          6,
+          326,
+          148,
+          147
+        ],
+        "kind": "sprite",
+        "source": "Native transparent image_gen; verified component bounds; building-expansion-art.json"
+      },
+      "requiresReading": false,
+      "building": {
+        "type": "stairs",
+        "style": "wood",
+        "snap": true,
+        "spriteHeight": 1.35,
+        "obstruction": {
+          "enabled": false,
+          "width": 1,
+          "depth": 1,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      },
+      "sentences": {
+        "en": [
+          "Create oak stairs.",
+          "I want oak stairs.",
+          "Please create oak stairs."
+        ],
+        "zh": [
+          "创造橡木楼梯。",
+          "我想要橡木楼梯。",
+          "请给我橡木楼梯。"
+        ]
+      },
+      "practiceWords": {
+        "en": [
+          "stairs"
+        ],
+        "zh": [
+          "橡木楼梯"
+        ]
+      }
+    },
+    {
+      "id": "build-stone-stairs",
+      "category": "blocks",
+      "zh": "石阶楼梯",
+      "en": "stone stairs",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "solid",
+      "slots": 0,
+      "activity": null,
+      "interactionEnabled": false,
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      },
+      "art": {
+        "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp",
+        "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+        "bytes": 131452,
+        "width": 640,
+        "height": 640,
+        "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+        "index": 9,
+        "sourceRect": [
+          374,
+          584,
+          625,
+          843
+        ],
+        "crop": [
+          168,
+          326,
+          143,
+          148
+        ],
+        "kind": "sprite",
+        "source": "Native transparent image_gen; verified component bounds; building-expansion-art.json"
+      },
+      "requiresReading": false,
+      "building": {
+        "type": "stairs",
+        "style": "stone",
+        "snap": true,
+        "spriteHeight": 1.35,
+        "obstruction": {
+          "enabled": false,
+          "width": 1,
+          "depth": 1,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      },
+      "sentences": {
+        "en": [
+          "Create stone stairs.",
+          "I want stone stairs.",
+          "Please create stone stairs."
+        ],
+        "zh": [
+          "创造石阶楼梯。",
+          "我想要石阶楼梯。",
+          "请给我石阶楼梯。"
+        ]
+      },
+      "practiceWords": {
+        "en": [
+          "stairs"
+        ],
+        "zh": [
+          "石阶楼梯"
+        ]
+      }
+    },
+    {
+      "id": "build-sandstone-pillar",
+      "category": "blocks",
+      "zh": "砂岩立柱",
+      "en": "sandstone pillar",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "solid",
+      "slots": 0,
+      "activity": null,
+      "interactionEnabled": false,
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      },
+      "art": {
+        "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp",
+        "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+        "bytes": 131452,
+        "width": 640,
+        "height": 640,
+        "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+        "index": 10,
+        "sourceRect": [
+          727,
+          574,
+          888,
+          852
+        ],
+        "crop": [
+          357,
+          326,
+          86,
+          148
+        ],
+        "kind": "sprite",
+        "source": "Native transparent image_gen; verified component bounds; building-expansion-art.json"
+      },
+      "requiresReading": false,
+      "building": {
+        "type": "pillar",
+        "style": "sandstone",
+        "snap": true,
+        "spriteHeight": 1.6,
+        "obstruction": {
+          "enabled": true,
+          "width": 0.55,
+          "depth": 0.55,
+          "offsetX": 0.225,
+          "offsetY": 0.225
+        }
+      },
+      "sentences": {
+        "en": [
+          "Create sandstone pillar.",
+          "I want sandstone pillar.",
+          "Please create sandstone pillar."
+        ],
+        "zh": [
+          "创造砂岩立柱。",
+          "我想要砂岩立柱。",
+          "请给我砂岩立柱。"
+        ]
+      },
+      "practiceWords": {
+        "en": [
+          "pillar"
+        ],
+        "zh": [
+          "砂岩立柱"
+        ]
+      }
+    },
+    {
+      "id": "build-oak-beam",
+      "category": "blocks",
+      "zh": "橡木横梁",
+      "en": "oak beam",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "solid",
+      "slots": 0,
+      "activity": null,
+      "interactionEnabled": false,
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      },
+      "art": {
+        "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp",
+        "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+        "bytes": 131452,
+        "width": 640,
+        "height": 640,
+        "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+        "index": 11,
+        "sourceRect": [
+          956,
+          658,
+          1305,
+          794
+        ],
+        "crop": [
+          486,
+          371,
+          148,
+          58
+        ],
+        "kind": "sprite",
+        "source": "Native transparent image_gen; verified component bounds; building-expansion-art.json"
+      },
+      "requiresReading": false,
+      "building": {
+        "type": "beam",
+        "style": "wood",
+        "snap": true,
+        "spriteHeight": 0.7,
+        "obstruction": {
+          "enabled": false,
+          "width": 1,
+          "depth": 1,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      },
+      "sentences": {
+        "en": [
+          "Create oak beam.",
+          "I want oak beam.",
+          "Please create oak beam."
+        ],
+        "zh": [
+          "创造橡木横梁。",
+          "我想要橡木横梁。",
+          "请给我橡木横梁。"
+        ]
+      },
+      "practiceWords": {
+        "en": [
+          "beam"
+        ],
+        "zh": [
+          "橡木横梁"
+        ]
+      }
+    },
+    {
+      "id": "build-stone-arch",
+      "category": "blocks",
+      "zh": "石拱门",
+      "en": "stone archway",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "solid",
+      "slots": 0,
+      "activity": null,
+      "interactionEnabled": false,
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      },
+      "art": {
+        "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp",
+        "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+        "bytes": 131452,
+        "width": 640,
+        "height": 640,
+        "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+        "index": 12,
+        "sourceRect": [
+          33,
+          866,
+          300,
+          1148
+        ],
+        "crop": [
+          10,
+          486,
+          140,
+          148
+        ],
+        "kind": "sprite",
+        "source": "Native transparent image_gen; verified component bounds; building-expansion-art.json"
+      },
+      "requiresReading": false,
+      "building": {
+        "type": "arch",
+        "style": "sandstone",
+        "snap": true,
+        "spriteHeight": 1.6,
+        "obstruction": {
+          "enabled": false,
+          "width": 1,
+          "depth": 1,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      },
+      "sentences": {
+        "en": [
+          "Create stone archway.",
+          "I want stone archway.",
+          "Please create stone archway."
+        ],
+        "zh": [
+          "创造石拱门。",
+          "我想要石拱门。",
+          "请给我石拱门。"
+        ]
+      },
+      "practiceWords": {
+        "en": [
+          "arch"
+        ],
+        "zh": [
+          "石拱门"
+        ]
+      }
+    },
+    {
+      "id": "build-stone-slab",
+      "category": "blocks",
+      "zh": "半高石台",
+      "en": "stone slab",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "solid",
+      "slots": 0,
+      "activity": null,
+      "interactionEnabled": false,
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      },
+      "art": {
+        "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp",
+        "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+        "bytes": 131452,
+        "width": 640,
+        "height": 640,
+        "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+        "index": 13,
+        "sourceRect": [
+          365,
+          970,
+          634,
+          1128
+        ],
+        "crop": [
+          166,
+          516,
+          148,
+          87
+        ],
+        "kind": "sprite",
+        "source": "Native transparent image_gen; verified component bounds; building-expansion-art.json"
+      },
+      "requiresReading": false,
+      "building": {
+        "type": "slab",
+        "style": "stone",
+        "snap": true,
+        "spriteHeight": 0.7,
+        "obstruction": {
+          "enabled": true,
+          "width": 1,
+          "depth": 1,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      },
+      "sentences": {
+        "en": [
+          "Create stone slab.",
+          "I want stone slab.",
+          "Please create stone slab."
+        ],
+        "zh": [
+          "创造半高石台。",
+          "我想要半高石台。",
+          "请给我半高石台。"
+        ]
+      },
+      "practiceWords": {
+        "en": [
+          "slab"
+        ],
+        "zh": [
+          "半高石台"
+        ]
+      }
+    },
+    {
+      "id": "build-stone-battlement",
+      "category": "blocks",
+      "zh": "城垛墙段",
+      "en": "stone battlement",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "solid",
+      "slots": 0,
+      "activity": null,
+      "interactionEnabled": false,
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      },
+      "art": {
+        "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp",
+        "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+        "bytes": 131452,
+        "width": 640,
+        "height": 640,
+        "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+        "index": 14,
+        "sourceRect": [
+          690,
+          936,
+          967,
+          1128
+        ],
+        "crop": [
+          326,
+          508,
+          148,
+          103
+        ],
+        "kind": "sprite",
+        "source": "Native transparent image_gen; verified component bounds; building-expansion-art.json"
+      },
+      "requiresReading": false,
+      "building": {
+        "type": "fence",
+        "style": "stone",
+        "snap": true,
+        "spriteHeight": 0.7,
+        "obstruction": {
+          "enabled": true,
+          "width": 1,
+          "depth": 0.18,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      },
+      "sentences": {
+        "en": [
+          "Create stone battlement.",
+          "I want stone battlement.",
+          "Please create stone battlement."
+        ],
+        "zh": [
+          "创造城垛墙段。",
+          "我想要城垛墙段。",
+          "请给我城垛墙段。"
+        ]
+      },
+      "practiceWords": {
+        "en": [
+          "fence"
+        ],
+        "zh": [
+          "城垛墙段"
+        ]
+      }
+    },
+    {
+      "id": "build-copper-roof",
+      "category": "blocks",
+      "zh": "铜绿屋顶",
+      "en": "copper roof",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "solid",
+      "slots": 0,
+      "activity": null,
+      "interactionEnabled": false,
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      },
+      "art": {
+        "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp",
+        "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+        "bytes": 131452,
+        "width": 640,
+        "height": 640,
+        "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+        "index": 15,
+        "sourceRect": [
+          1005,
+          884,
+          1306,
+          1148
+        ],
+        "crop": [
+          486,
+          495,
+          148,
+          130
+        ],
+        "kind": "sprite",
+        "source": "Native transparent image_gen; verified component bounds; building-expansion-art.json"
+      },
+      "requiresReading": false,
+      "building": {
+        "type": "roof",
+        "style": "copper",
+        "snap": true,
+        "spriteHeight": 1,
+        "obstruction": {
+          "enabled": false,
+          "width": 1,
+          "depth": 1,
+          "offsetX": 0,
+          "offsetY": 0
+        }
+      },
+      "sentences": {
+        "en": [
+          "Create copper roof.",
+          "I want copper roof.",
+          "Please create copper roof."
+        ],
+        "zh": [
+          "创造铜绿屋顶。",
+          "我想要铜绿屋顶。",
+          "请给我铜绿屋顶。"
+        ]
+      },
+      "practiceWords": {
+        "en": [
+          "roof"
+        ],
+        "zh": [
+          "铜绿屋顶"
+        ]
+      }
     }
   ],
   "colors": {

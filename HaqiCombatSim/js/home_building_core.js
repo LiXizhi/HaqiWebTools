@@ -4,7 +4,7 @@ export function buildingItem(obj,catalog){let map=catalogs.get(catalog);if(!map)
 export const isEdge=item=>['wall','fence','window','door'].includes(item?.building?.type);
 export const isStructural=item=>['floor','wall','fence','window','door','roof'].includes(item?.building?.type);
 export const isEdgeLike=item=>['wall','fence','window','door'].includes(item?.building?.type);
-export function buildingSlotKind(item){const type=item?.building?.type;if(type==='floor')return 'floor';if(type==='roof')return 'roof';if(isEdgeLike(item))return 'edge';return null;}
+export function buildingSlotKind(item){const type=item?.building?.type;if(type==='floor')return 'floor';if(type==='roof')return 'roof';if(type==='stairs')return 'stairs';if(['pillar','beam','arch','slab'].includes(type))return 'structure';if(isEdgeLike(item))return 'edge';return null;}
 // Placement is always a one-cell operation. Visual wall geometry is derived from neighbouring cells.
 export function buildingGridBounds(obj,item){const s=obj.sizeScale??1;return {x:Math.floor(obj.x),y:Math.floor(obj.y),w:s,h:s};}
 export function buildingPlacement(obj,item){if(!(obj.properties?.snap??item?.building?.snap??false))return obj;return {...obj,x:Math.floor(obj.x),y:Math.floor(obj.y)};}

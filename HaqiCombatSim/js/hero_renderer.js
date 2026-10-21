@@ -2,17 +2,11 @@ import { resolveMountDrawPose, MOUNT_DIRECTIONS } from './adventure_mounts_core.
 import { createHeroActor, updateHeroActor, BODY_TO_HEAD, headBreath, walkFrameIndex, headFrameIndex } from './hero_pose_core.js';
 import {publicPhotoHead} from './photo_head_core.js';
 import {verifyHeadAsset} from './photo_head_images.js';
+import {createPortraitScheduler} from './portrait_scheduler.js';
 
 // One UI scheduler; detached portraits release their actor state automatically.
-const views=new Set();let viewFrame=0,lastViewTime=-Infinity;
-function animateViews(time){
-    viewFrame=0;
-    const render=time<lastViewTime||time-lastViewTime>=46;
-    if(render)lastViewTime=time;
-    for(const view of views){if(view.node.isConnected){view.connected=true;if(render&&!document.hidden)view.paint(time/1000);}else if(view.connected){views.delete(view);}}
-    if(views.size)viewFrame=requestAnimationFrame(animateViews);
-}
-function scheduleView(view){views.add(view);if(!viewFrame)viewFrame=requestAnimationFrame(animateViews);}
+let views;
+function scheduleView(view){(views??=createPortraitScheduler()).add(view);}
 
 /** Shared world/battle/UI library. Original source crops/layout bounds are immutable.
  * Hosts own placement, time, scene ordering and animation. UI and world use draw().
@@ -260,8 +254,8 @@ export class HeroRenderer {
             const breath=lockHead?{x:0,y:pose.breath.y,angle:0}:pose.breath;
             this.draw(c,current,{x:canvas.width/2,y:canvas.height*.88,size:78,time,head,breath,reducedMotion:reduced?.matches,...settings});};
         const view={node:canvas,paint,connected:false};
-        const update=async(a=current,o=settings)=>{current=a;settings=o;const rev=++revision;await this.ensure({...a,standing:o.standing});if(rev===revision&&!disposed){paint();if(settings.animate&&canvas.isConnected)scheduleView(view);}};
-        return {node:canvas,update,dispose(){disposed=true;revision++;views.delete(view);},ready:update()};
+        const update=async(a=current,o=settings)=>{current=a;settings=o;const rev=++revision;await this.ensure({...a,standing:o.standing});if(rev===revision&&!disposed){paint();if(settings.animate&&canvas.isConnected)scheduleView(view);else views?.delete(view);}};
+        return {node:canvas,update,dispose(){disposed=true;revision++;views?.delete(view);},ready:update()};
     }
 }
 

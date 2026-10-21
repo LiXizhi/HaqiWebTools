@@ -2,7 +2,7 @@ import {WALL_AO_RADIUS} from './home_building_ao_core.js';
 import {buildingBounds,buildingWallFeet,isEdge} from './home_building_core.js';
 // The same painter runs in the live canvas and the background raster worker.
 export function buildingVisualBounds(o,item){
- const s=o.sizeScale??1,b=buildingBounds(o,item),wall=isEdge(item),height=wall?1.25*s:item.building.type==='roof'?1.4:0;
+ const s=o.sizeScale??1,b=buildingBounds(o,item),wall=isEdge(item),height=item.art?.kind==='sprite'?(item.building.spriteHeight||1)*s:wall?1.25*s:item.building.type==='roof'?1.4:0;
  const w=wall?40*s:b.w*40,h=wall?40*s:b.h*40;
  return {x:o.x*40-4,y:(o.y-height)*40-4,w:w+8,h:h+height*40+8};
 }
@@ -12,6 +12,16 @@ export function drawBuilding(c,item,o,image,connections=0,ao=[]){
  const baseColor=style==='wood'?'#b38856':'#858c95',topColor=style==='wood'?'#cfa36e':'#a3aab3',trimColor=style==='wood'?'#755637':'#626971',skirtColor=style==='wood'?'rgba(62,41,22,0.34)':'rgba(44,50,58,0.34)';
  c.save();
  const hasImg=Boolean(image&&crop&&(image.naturalWidth||image.width)&&image.complete!==false);
+ if(item.art?.kind==='sprite'){
+  const h=(item.building.spriteHeight||1)*cellH,vertical=(o.rotation||0)%2;
+  // Preserve alpha openings in railings and arches; don't fill an opaque rectangle behind them.
+  if(hasImg){
+   if(type==='stairs'){c.translate(x+cellW/2,y+cellH/2);c.rotate((o.rotation||0)*Math.PI/2);c.drawImage(image,...crop,-cellW/2,-cellH/2,cellW,cellH);}
+   else if(wall){for(const foot of buildingWallFeet(o,connections))c.drawImage(image,...crop,foot.x*40,(foot.y+foot.h)*40-h,foot.w*40,h);}
+   else{const w=vertical&&['beam','arch'].includes(type)?cellW*.22:cellW;c.drawImage(image,...crop,x+(cellW-w)/2,y+cellH-h,w,h);}
+  }
+  c.restore();return buildingVisualBounds(o,item);
+ }
  const fill=(dx,dy,dw,dh)=>{
   if(dw<=0||dh<=0)return;
   c.fillStyle=baseColor;c.fillRect(dx,dy,dw,dh);

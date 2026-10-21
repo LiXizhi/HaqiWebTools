@@ -1578,14 +1578,13 @@ function backgroundScenePaused(){return pauseBackgroundScene({stage,hidden:docum
 function frame(now) {
     requestAnimationFrame(frame);
     const pacer=typeof framePacer==='object'?framePacer:null;
-    if(hanziAnimationActive()||wordPractice.active){
+    if(document.hidden||hanziAnimationActive()||wordPractice.active){
         // Freeze all background frame work, including local play and battle.
         // Advance clocks so closing the player never replays the suspended interval.
         pacer?.reset();lastFrame=now;lastCare=now;islandSocial.lastFrame=now;petScene.lastFrame=now;
         renderer?.pauseFrameMeter?.();adaptiveGraphics.suspend(now);perf.frame(now,false);return;
     }
     if(stage!=='world'||document.hidden||panel||dialog||keys.size||joystick.x||joystick.y||heldPointer?.active||localPlay.paused)heroNavigation.cancel();
-    hanziIsland?.tick();dictionary?.tick();
     if(!renderer||!save)return;
     if(sceneLoading.update(world,save,now,stage==='world'&&panel!=='home')){
         // No world simulation or full-scene drawing competes with initial terrain preparation.
@@ -1601,6 +1600,7 @@ function frame(now) {
             ||renderer.isAnimating?.()
         );
     if(pacer&&!pacer.shouldRender(now,sceneActive))return;
+    hanziIsland?.tick();dictionary?.tick();
     const earthFrameStart=perf.enabled?performance.now():0;
     const phasePrefix=world?.isEarth?'earth-':'island-';
     perf.frame(now,stage==='world'&&!document.hidden&&!panel&&!dialog&&(!pacer||pacer.isActive(now)));

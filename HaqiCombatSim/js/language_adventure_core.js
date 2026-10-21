@@ -1,6 +1,6 @@
 // Web learning rules: language-neutral curriculum, isolated RNG and reward ledger.
 import {createRng, hashSeed} from './rng_core.js';
-import {resolveParams} from './combat_params_core.js';
+import {resolveParamGroup} from './combat_params_core.js';
 
 const own = (o, k) => Object.hasOwn(o || {}, k);
 const assert = (ok, message) => { if (!ok) throw Error(message); };
@@ -25,7 +25,7 @@ export function courseAvailable(catalog,course,locale) {
     return !!catalog.languages?.[locale]?.content&&!!table&&[course.scenario,...course.goals.map(g=>g.text),...course.pairs.flatMap(p=>[p.question,p.answer])].every(key=>typeof table[key]==='string'&&table[key].trim());
 }
 export function learningParams(content = {}) {
-    return resolveParams({cards:{}}, content.balanceParams || {}).languageAdventure;
+    return resolveParamGroup(content.balanceParams, 'languageAdventure');
 }
 export function renderLearningTemplate(source, locale, dictionaries, slots = {}) {
     const template = dictionaries[locale]?.[source];

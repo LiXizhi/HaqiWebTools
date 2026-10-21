@@ -1421,7 +1421,7 @@ flowchart LR
 
 ### 2026-10-21 家园召唤判定与反馈
 
-`home_app` 将打字／ASR结果交给 `home_core.matchHomeSpell`，后者复用 NPC 的纯核心 `compareDungeonSpeech` 返回候选与逐词反馈。`view_home` 用现有 `renderSpeechWords` 渲染独立反馈，文本框不接收ASR。语音完成计数仅在当前目标会话内，第三次容错召唤仍沿用原物品事务；未匹配目标物品词不提交有效学习回执。详见[家园](home.md)。
+`home_app` 将打字／ASR结果交给 `home_core.matchHomeSpell`，后者复用 NPC 的纯核心 `compareDungeonSpeech` 返回候选与逐词反馈（已选物品达到 80% 匹配度即放行）。`view_home` 用现有 `renderSpeechWords` 直接在对应示范句（`.home-spell-text`）上原位渲染逐词反馈，不设额外提示行，文本框不接收ASR。语音完成计数仅在当前目标会话内，第三次容错召唤仍沿用原物品事务；未匹配目标物品词不提交有效学习回执。详见[家园](home.md)。
 
 ## 2026-10-20：词表统一中文键
 
@@ -1441,3 +1441,54 @@ flowchart LR
 2026-10-20 词树加载兼容修复：展示投影放在无依赖的word_tree_display_core.js，WordTree直接导入新模块，不再要求已加载的word_lexicon_core提供新增命名导出；词库核心仍保留重导出以兼容上一版调用。旧索引没有displayIds时使用entries首词集合。
 
 2026-10-20 中文词树释义：adventure_app将角色languageLearning.target传给mountDictionaryWordTree，再交给WordTree；中文页且第二语言为英文时按需复用英文词库缓存，word_tree_gloss_core通过中文键生成英文释义，其余情况输出显式空释义。
+
+## 2026-10-20：家园编辑历史与手势
+
+```mermaid
+flowchart LR
+    Input[view_home 鼠标 / 触屏 / 快捷键] --> Intent[home_app 串行动作队列]
+    Intent --> Actions[home_actions_core 既有摆放规则]
+    Actions --> Store[home_store IndexedDB原子事务 / 容量检查]
+    Store -->|成功后的对象差量| History[home_edit_history_core 会话50步 / 按手势合并]
+    Input -->|撤销 / 重做| Intent
+    Intent -->|读取历史 / 检查预期对象| History
+    History -->|只恢复chunk物品| Store
+    Store --> View[对象引用更新 / 缓存失效 / 重绘]
+```
+
+历史不记录回执、学习outbox、居民或云目录，不新增云文件或数据库schema。提交失败不移动历史游标，新的成功编辑清除重做。绘制与点击共用墙脚几何；预览单独展示完整格和墙脚。手势token把连续铺设及拆除归为一个历史步骤；切换家园等待已有动作结束并清空历史。
+
+## 2026-10-20：启动与不可见渲染开销
+
+```mermaid
+flowchart LR
+    HTML[Haqi.html modulepreload] --> Module[预取冒险模块 / 仍由语言启动器执行]
+    Reader[createJsonReader 隔离配置对象] --> Queue[六路启动队列 / 不再第二次深拷贝]
+    Queue --> Mount[坐骑目录安装]
+    Mount --> Hero[并行准备角色图片]
+    Mount --> Catalog[继续安装其他目录与美术]
+    Hero --> Ready[等待必要资源后进入游戏]
+    Catalog --> Ready
+    Portrait[共享HeroRenderer头像] --> Visibility[IntersectionObserver / 页面可见性]
+    Visibility --> Visible[可见头像沿用约20FPS]
+    Visibility --> Hidden[全部不可见时取消帧回调]
+    Page[页面隐藏] --> Gate[主循环提前返回并刷新帧时钟]
+```
+
+启动队列收到的对象已由运行时数据读取器隔离，不重复克隆；各读取器和数据包之间仍保留原隔离保证。角色准备提前启动，最终仍等待成功或走原失败处理。头像不改变图集、尺寸、动画节奏；无 IntersectionObserver 时回退原可见页面调度。学习入口 tick 移到主循环降帧门之后，避免高刷新率设备在跳过绘制时仍重复检查。存档、战斗公式及云同步规则不变。
+
+2026-10-20 用户要求移除多楼层：控制器直接把所有已加载对象交给缓存/视图，动作、历史与寻路仅采用单平面几何。移除home_levels_core和楼层状态/快捷键；旧对象level字段仅作为兼容存档余留数据，不产生行为。扩展图集及普通装饰楼梯保留。
+
+### 2026-10-20：首次移动备用图准备
+
+```mermaid
+flowchart LR
+    Loading[原入场Loading] --> Overview[原画笔生成560px备用图 / 按layout复用]
+    Overview --> Visible[准备可见地形块]
+    Visible --> World[解除Loading / 正常移动]
+    World --> Pending[新可见地块仍在Worker中]
+    Pending --> Cached[直接绘制已准备备用图]
+    Params[每帧附近学习NPC检查] --> Group[只读取BalanceParams.languageAdventure]
+```
+
+地图外观、碰撞、地块预算与释放方式保持原规则。备用图仍为原Canvas绘制方式，不切换软件栅格后端。性能脚本的隔离新角色禁止自动序章，避免测量混入另一个战斗场景；正式新访客序章行为不变。

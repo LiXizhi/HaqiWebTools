@@ -205,6 +205,10 @@ export function createRenderer(canvas,assets) {
         // so preparation and drawing choose the same tile-size/cache-capacity tier.
         const rect={x:origin.x,y:origin.y,w:w/actualScale,h:h/actualScale};
         if(world.isEarth)return world.prepareSurface(rect,{visibleOnly});
+        // The first newly visible tile can still be in flight when walking starts.
+        // Prepare its existing low-resolution fallback during the loading gate,
+        // instead of painting the whole island synchronously on that moving frame.
+        ground(world);
         return terrainTiles.prepare(world,rect,rasterPixelRatio,[],{visibleOnly});
     }
     let zoomUntil=-Infinity;
@@ -221,7 +225,9 @@ export function createRenderer(canvas,assets) {
         if(world.layout){
             if(overviewWorld===(world.layout||world))return overview;
             overviewWorld=world.layout||world;overview=document.createElement('canvas');overview.width=560;overview.height=Math.round(560*world.h/world.w);
+            const started=perf.enabled?performance.now():0;
             const c=overview.getContext('2d');c.scale(overview.width/world.w,overview.height/world.h);paintLargeTerrain(c,world,undefined,true);
+            if(perf.enabled)perf.record('island-overview-prepare',performance.now()-started);
             return overview;
         }
         if(backingZone===world)return backing;

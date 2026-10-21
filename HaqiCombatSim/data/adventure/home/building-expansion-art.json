@@ -1,0 +1,254 @@
+{
+  "version": 1,
+  "tool": "image_gen native transparent_background=true",
+  "sourceSha256": "73f6fc68ee9223b24246a31e100dd02920607ee5bc9ddaa78d518010503ae111",
+  "local": "assets/adventure/home/building-expansion-45d92020a1ea.webp",
+  "sha256": "45d92020a1eaf482a551cc96b46ab81359712762b4a81e5e29afb981c5a385ca",
+  "bytes": 131452,
+  "width": 640,
+  "height": 640,
+  "frames": [
+    {
+      "index": 0,
+      "sourceRect": [
+        42,
+        31,
+        292,
+        269
+      ],
+      "crop": [
+        6,
+        9,
+        148,
+        141
+      ]
+    },
+    {
+      "index": 1,
+      "sourceRect": [
+        373,
+        31,
+        624,
+        269
+      ],
+      "crop": [
+        166,
+        10,
+        148,
+        140
+      ]
+    },
+    {
+      "index": 2,
+      "sourceRect": [
+        704,
+        31,
+        956,
+        269
+      ],
+      "crop": [
+        326,
+        10,
+        148,
+        140
+      ]
+    },
+    {
+      "index": 3,
+      "sourceRect": [
+        1035,
+        31,
+        1286,
+        269
+      ],
+      "crop": [
+        486,
+        10,
+        148,
+        140
+      ]
+    },
+    {
+      "index": 4,
+      "sourceRect": [
+        31,
+        317,
+        308,
+        532
+      ],
+      "crop": [
+        6,
+        182,
+        148,
+        115
+      ]
+    },
+    {
+      "index": 5,
+      "sourceRect": [
+        362,
+        317,
+        633,
+        532
+      ],
+      "crop": [
+        166,
+        181,
+        148,
+        117
+      ]
+    },
+    {
+      "index": 6,
+      "sourceRect": [
+        715,
+        309,
+        945,
+        543
+      ],
+      "crop": [
+        327,
+        166,
+        145,
+        148
+      ]
+    },
+    {
+      "index": 7,
+      "sourceRect": [
+        1008,
+        342,
+        1308,
+        521
+      ],
+      "crop": [
+        486,
+        196,
+        148,
+        88
+      ]
+    },
+    {
+      "index": 8,
+      "sourceRect": [
+        40,
+        588,
+        299,
+        845
+      ],
+      "crop": [
+        6,
+        326,
+        148,
+        147
+      ]
+    },
+    {
+      "index": 9,
+      "sourceRect": [
+        374,
+        584,
+        625,
+        843
+      ],
+      "crop": [
+        168,
+        326,
+        143,
+        148
+      ]
+    },
+    {
+      "index": 10,
+      "sourceRect": [
+        727,
+        574,
+        888,
+        852
+      ],
+      "crop": [
+        357,
+        326,
+        86,
+        148
+      ]
+    },
+    {
+      "index": 11,
+      "sourceRect": [
+        956,
+        658,
+        1305,
+        794
+      ],
+      "crop": [
+        486,
+        371,
+        148,
+        58
+      ]
+    },
+    {
+      "index": 12,
+      "sourceRect": [
+        33,
+        866,
+        300,
+        1148
+      ],
+      "crop": [
+        10,
+        486,
+        140,
+        148
+      ]
+    },
+    {
+      "index": 13,
+      "sourceRect": [
+        365,
+        970,
+        634,
+        1128
+      ],
+      "crop": [
+        166,
+        516,
+        148,
+        87
+      ]
+    },
+    {
+      "index": 14,
+      "sourceRect": [
+        690,
+        936,
+        967,
+        1128
+      ],
+      "crop": [
+        326,
+        508,
+        148,
+        103
+      ]
+    },
+    {
+      "index": 15,
+      "sourceRect": [
+        1005,
+        884,
+        1306,
+        1148
+      ],
+      "crop": [
+        486,
+        495,
+        148,
+        130
+      ]
+    }
+  ],
+  "prompt": "Original Minecraft-like chunky voxel construction kit, orthographic frontal slightly elevated view; 4x4 separate complete native-transparent sprites: brick/sandstone/moss/slate floors, brick/sandstone walls, glass window, iron railing, oak/stone stairs, sandstone pillar, oak beam, stone arch, half slab, battlement, copper roof. No text, no shadows, no background matte.",
+  "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/building-expansion-45d92020a1ea.webp"
+}

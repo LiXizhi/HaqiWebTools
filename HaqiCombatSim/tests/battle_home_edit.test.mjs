@@ -43,7 +43,7 @@ test('clicking the ground after selecting existing or catalog furniture never wr
 test('moving the mouse without a pressed drag never previews selected furniture',()=>{
  const source=viewSource.slice(viewSource.indexOf('  canvas.onpointermove=e=>{'),viewSource.indexOf('  canvas.onpointerup=e=>{'));
  const canvas={},previews=[];
- new Function('canvas','gesture','position','cb','paintStroke','model',source)(canvas,null,()=>({x:9,y:12}),{hover:p=>previews.push(p)},null,{build:false});
+ new Function('canvas','gesture','position','cb','paintStroke','model','eraseStroke','hoverPoint',source)(canvas,null,()=>({x:9,y:12}),{hover:p=>previews.push(p)},null,{build:false},null,null);
  canvas.onpointermove({pointerId:1,buttons:0});
  assert.deepEqual(previews,[]);
 });

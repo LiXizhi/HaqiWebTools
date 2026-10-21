@@ -55,7 +55,8 @@ export async function loadResources(progress) {
     for(const url of startupFiles){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});promise.catch(()=>{});prepared.set(url,{promise,resolve,reject});}
     const workerRead=async()=>{while(startupCursor<startupFiles.length){const url=startupFiles[startupCursor++],row=prepared.get(url);try{row.resolve(await read(url));}catch(error){row.reject(error);}}};
     for(let i=0;i<6;i++)void workerRead();
-    const json=url=>prepared.has(url)?prepared.get(url).promise.then(value=>structuredClone(value)).finally(()=>prepared.delete(url)):read(url);
+    // createJsonReader already gives this loader an isolated mutable object.
+    const json=url=>prepared.has(url)?prepared.get(url).promise.finally(()=>prepared.delete(url)):read(url);
     progress?.({ label: '正在连接资源服务器', value: null });
     const [content,dataset,manifest,media,effects]=await Promise.all(['chapter','combat','assets','media','spell-effects'].map(n=>json(`data/adventure/${n}.json`)));
     validateAdventureContent(content,dataset,manifest);
@@ -165,6 +166,9 @@ export async function loadResources(progress) {
     const dungeons={...regularDungeons,load:(id,options)=>id?.startsWith('city:')?cityDungeons.load(id,options):regularDungeons.load(id),prepareSaves:async saves=>{await cityDungeons.prepareSaves(saves);await regularDungeons.prepareSaves(saves);}};
     installNpcCatalog(content,await json('data/adventure/npc-catalog.json'));
     installMountCatalog(content,await json('data/adventure/mount-catalog.json'));
+    // Start actor image preparation while the remaining catalogs/art are installed.
+    const heroReady=loadHeroLibrary(json,content.mountCatalog,{local:mode==='local',sprites:media.entries.sprites.legacyCharacterSource||media.entries.sprites,prepareBounds});
+    heroReady.catch(()=>{}); // Awaited below; an early failure must not be unhandled.
     for(const mount of content.mountCatalog.mounts)if(mount.art?.cdn)lazyImages.set(`mount:${mount.id}`,mount.art);
     for(const [id,art] of Object.entries(content.mountCatalog.sheets||{}))if(art?.cdn)lazyImages.set(`mount-sheet:${id}`,art);
     const npcArt=await json('data/adventure/npc-art.json');
@@ -231,7 +235,7 @@ export async function loadResources(progress) {
             terrainDecorationArt?.warm(needed.terrain),
         ]);
     }
-    hero=await loadHeroLibrary(json,content.mountCatalog,{local:mode==='local',sprites:media.entries.sprites.legacyCharacterSource||media.entries.sprites,prepareBounds});
+    hero=await heroReady;
     function sceneryTile(ctx,index,x,y,w,h){
         return draw(ctx,{id:'sprites',crop:tileRect('sprites',index,media.entries.sprites)},x,y,w,h,true,false);
     }

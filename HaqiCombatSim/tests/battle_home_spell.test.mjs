@@ -18,14 +18,19 @@ test('home typing and speech share NPC word coverage, 80% pass threshold, and in
   assert.equal(result.candidates.length,1,text);
   assert.equal(result.feedback.accuracy,1);
  }
- // 80% accuracy passes for a selected item (e.g., 4/5 words in "Create a wooden house." or "Can I have chair?")
- const eighty=matchHomeSpell('Create wooden house.',[{id:'template-wood',zh:'完整木屋',en:'wooden house'}],'en',{itemId:'template-wood',color:''});
- assert.equal(eighty.feedback.accuracy,0.75); // 3/4 is 75%, fails
+ // Missing simple words (e.g. articles 'a', 'the', 'please') and minor typos pass (>= 80% effective accuracy)
+ const forgivenArticle=matchHomeSpell('Create wooden house.',[{id:'template-wood',zh:'完整木屋',en:'wooden house'}],'en',{itemId:'template-wood',color:''});
+ assert.equal(forgivenArticle.feedback.effectiveAccuracy,1);
+ assert.equal(forgivenArticle.candidates.length,1);
+ const typoAndMissingArticle=matchHomeSpell('create wooen house',[{id:'template-wood',zh:'完整木屋',en:'wooden house'}],'en',{itemId:'template-wood',color:''});
+ assert.equal(typoAndMissingArticle.feedback.effectiveAccuracy,1);
+ assert.equal(typoAndMissingArticle.candidates.length,1);
+ assert.ok(!typoAndMissingArticle.feedback.parts.some(p=>p.missing));
  const eightyPass=matchHomeSpell('I want wooden house.',[{id:'template-wood',zh:'完整木屋',en:'wooden house'}],'en',{itemId:'template-wood',color:''});
- assert.equal(eightyPass.feedback.accuracy,0.8); // 4/5 is 80%, passes
  assert.equal(eightyPass.candidates.length,1);
  assert.equal(eightyPass.feedback.lineIndex,1);
- for(const text of ['', ' ', 'chair','I want chair.', 'I want a table.'])assert.equal(matchHomeSpell(text,catalog,'en',selected).candidates.length,0,text);
+ for(const text of ['', ' ', 'chair', 'I want a table.'])assert.equal(matchHomeSpell(text,catalog,'en',selected).candidates.length,0,text);
+ assert.equal(matchHomeSpell('I want chair.',catalog,'en',selected).candidates.length,1);
  const partial=matchHomeSpell('I want a table',catalog,'en',selected);
  assert.equal(partial.feedback.lineIndex,1);
  assert.ok(partial.feedback.parts.some(p=>p.text==='chair'&&p.missing));

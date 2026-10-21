@@ -44,8 +44,32 @@ export function createHomeView(root,cb){
  let model=null,mode='',signature='',exampleSignature='',gesture=null,catalogDrag=null,hits=[],frame=0,dead=false,lastPaint=0,activeDialog=null;
  const images=new Map(),terrain=createHomeTerrainCache();
  const frameMeter=createFrameMeter(),framePacer=createFramePacer();
- let fpsLabel;
+ let fpsLabel,spellTip=null,summonAudioCtx=null;
  let statusTimer=0,lastStatus='';
+ const summonEffects=[];
+ const DEFAULT_SUMMON_TIP='读出或输入上方任意句子即可建造';
+ function playSummonChime(){
+  if(model?.quiet||document.hidden)return;
+  const AudioCtx=globalThis.AudioContext||globalThis.webkitAudioContext;
+  if(!AudioCtx)return;
+  try{
+   summonAudioCtx??=new AudioCtx();
+   if(summonAudioCtx.state==='suspended')void summonAudioCtx.resume().catch(()=>{});
+   const now=summonAudioCtx.currentTime;
+   [523.25,659.25,783.99,1046.5].forEach((freq,i)=>{
+    const osc=summonAudioCtx.createOscillator(),gain=summonAudioCtx.createGain();
+    osc.type=i===3?'triangle':'sine';
+    const t=now+i*.075,dur=i===3?.28:.18;
+    osc.frequency.setValueAtTime(freq,t);
+    osc.frequency.exponentialRampToValueAtTime(freq*1.02,t+dur);
+    gain.gain.setValueAtTime(.0001,t);
+    gain.gain.exponentialRampToValueAtTime(.08,t+.015);
+    gain.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    osc.connect(gain);gain.connect(summonAudioCtx.destination);
+    osc.start(t);osc.stop(t+dur+.02);
+   });
+  }catch{}
+ }
  let canvas,ctx,stage,side,items,category,catPills,tabs,input,example,bubble,bubbleText,tools,choice,summary,portal,edit,petMode=false;
  const motionTrail=createMotionTrail(7319);
  const heroActor=createHeroActor(7419),secondActor=createHeroActor(7420);
@@ -313,7 +337,7 @@ export function createHomeView(root,cb){
 
   example=el('div','home-example');
   choice=el('div','home-choices');
-  const composer=el('section','home-composer',status,example,choice,form);
+  const composer=el('section','home-composer',example,choice,form);
   main.append(composer);
 
   // Build & Inventory Sidebar Drawer
@@ -606,14 +630,25 @@ export function createHomeView(root,cb){
   if(next.home){const capacity=homeCapacity(next.home),label=body.querySelector('.home-capacity');if(label){label.textContent=`容量 ${capacity.used===null?'待统计':capacity.used.toLocaleString('en-US')} / ${capacity.limit.toLocaleString('en-US')}`;label.title='每块积木或摆设占用1件容量；地形和宠物不计入';}}
   status.textContent=tr(next.status||'');
   if(next.unsaved)status.append(button('重试保存',()=>run(cb.retry),'primary'));
-  const shouldHideStatus=!next.unsaved&&(!next.status||next.status.startsWith('已保存到本机')||next.status==='宠物已安置，位置已保存到本机'||!next.home&&next.status==='家园自动保存到本机，云端同步由你手动开启。');
+  const shouldHideStatus=!next.unsaved&&(!next.status||next.status===DEFAULT_SUMMON_TIP||body?.dataset.drawer==='summon'||next.status.startsWith('已保存到本机')||next.status==='宠物已安置，位置已保存到本机'||!next.home&&next.status==='家园自动保存到本机，云端同步由你手动开启。');
+  const isSummonTipTransient=Boolean(next.status&&next.status!==DEFAULT_SUMMON_TIP&&!next.status.startsWith('已保存到本机')&&next.status!=='宠物已安置，位置已保存到本机'&&next.status!=='点击或拖动摆放，可连续创建；按 R 旋转。');
+  const syncSpellTip=(transient=isSummonTipTransient)=>{
+   if(!spellTip)return;
+   spellTip.textContent=tr(transient?next.status:DEFAULT_SUMMON_TIP);
+   spellTip.classList.toggle('is-transient',transient);
+  };
   const statusKey=`${next.unsaved}:${next.status||''}`;
   if(statusKey!==lastStatus){
    lastStatus=statusKey;
    clearTimeout(statusTimer);
    status.hidden=shouldHideStatus;
-   if(!shouldHideStatus&&!next.unsaved){
-    statusTimer=setTimeout(()=>{if(!dead&&!model?.unsaved)status.hidden=true;},3000);
+   syncSpellTip(isSummonTipTransient);
+   if((!shouldHideStatus||isSummonTipTransient)&&!next.unsaved){
+    statusTimer=setTimeout(()=>{
+     if(dead)return;
+     if(!model?.unsaved)status.hidden=true;
+     if(spellTip){spellTip.textContent=tr(DEFAULT_SUMMON_TIP);spellTip.classList.remove('is-transient');}
+    },3000);
    }
   }else if(shouldHideStatus||next.unsaved){
    status.hidden=shouldHideStatus;
@@ -694,10 +729,15 @@ export function createHomeView(root,cb){
      dot.setAttribute('aria-label',`染为${tr(label)}`);
      swatchRow.append(dot);
     }
-    swatchRow.append(button('取消召唤',()=>{cb.cancel();body.dataset.drawer='build';signature='';render(model);},'home-speak-btn'));
+    if(!item.templateId)swatchRow.append(el('span','home-swatch-break'));
+    spellTip=el('span','home-spell-tip',DEFAULT_SUMMON_TIP);
+    syncSpellTip();
+    swatchRow.append(spellTip,button('取消召唤',()=>{cb.cancel();body.dataset.drawer='build';signature='';render(model);},'home-speak-btn'));
     example.append(chipRow,swatchRow);
    }else{
-    example.textContent=tr('先从建造目录选择物品，读出或正确输入咒语后召唤到场景。');
+    spellTip=el('span','home-spell-tip',DEFAULT_SUMMON_TIP);
+    syncSpellTip();
+    example.replaceChildren(spellTip);
    }
   }
 
@@ -802,7 +842,8 @@ export function createHomeView(root,cb){
  function paint(now){
   frame=requestAnimationFrame(paint);
   if(dead||mode!=='scene'||!canvas?.isConnected||document.hidden){lastPaint=0;framePacer.reset();frameMeter.sample(0,false);return;}
-  const sceneActive=Boolean(model.hero?.moving||model.secondHero?.moving||model.destination||gesture||paintStroke||eraseStroke||hoverPoint||model.preview||terrainMissing>0);
+  for(let i=summonEffects.length-1;i>=0;i--)if(now-summonEffects[i].since>=1200)summonEffects.splice(i,1);
+  const sceneActive=Boolean(model.hero?.moving||model.secondHero?.moving||model.destination||gesture||paintStroke||eraseStroke||hoverPoint||model.preview||terrainMissing>0||summonEffects.length>0);
   if(!framePacer.shouldRender(now,sceneActive))return;
   const dt=lastPaint?Math.min(.065,(now-lastPaint)/1000):0;
   lastPaint=now;
@@ -1138,6 +1179,35 @@ export function createHomeView(root,cb){
    }
   }
 
+  for(const fx of summonEffects){
+   const progress=Math.max(0,Math.min(1,(now-fx.since)/1200)),fade=1-progress,p=project(fx.x,fx.y),radius=Math.max(1.4,Math.hypot(fx.w||2,fx.h||2)*.48)*scale;
+   ctx.save();
+   ctx.strokeStyle=`rgba(255,233,138,${(fade*.85).toFixed(3)})`;
+   ctx.lineWidth=3*fade+1;
+   ctx.beginPath();
+   ctx.ellipse(p.x,p.y,radius*(.45+progress*.75),radius*(.24+progress*.4),0,0,Math.PI*2);
+   ctx.stroke();
+   ctx.strokeStyle=`rgba(168,246,233,${(fade*.75).toFixed(3)})`;
+   ctx.lineWidth=2;
+   ctx.beginPath();
+   ctx.ellipse(p.x,p.y-progress*18,radius*(.3+progress*.55),radius*(.16+progress*.28),0,0,Math.PI*2);
+   ctx.stroke();
+   if(!reducedMotion){
+    for(let i=0;i<10;i++){
+     const a=i*Math.PI*.2+progress*2.2,dist=radius*(.2+progress*.65)*(.65+(i%3)*.18);
+     const sx=p.x+Math.cos(a)*dist,sy=p.y+Math.sin(a)*dist*.45-progress*(28+(i%4)*14);
+     const sr=(3.5+(i%3)*1.5)*fade;
+     ctx.fillStyle=i%2?'#ffe98a':'#a8f6e9';
+     ctx.globalAlpha=fade;
+     ctx.beginPath();
+     ctx.moveTo(sx,sy-sr*1.5);ctx.lineTo(sx+sr*.5,sy-sr*.5);ctx.lineTo(sx+sr*1.5,sy);ctx.lineTo(sx+sr*.5,sy+sr*.5);
+     ctx.lineTo(sx,sy+sr*1.5);ctx.lineTo(sx-sr*.5,sy+sr*.5);ctx.lineTo(sx-sr*1.5,sy);ctx.lineTo(sx-sr*.5,sy-sr*.5);
+     ctx.closePath();ctx.fill();
+    }
+   }
+   ctx.restore();
+  }
+
   // 8. Pet Wish Speech Bubble
   const wish=model.wish,pet=wish&&actors.find(p=>p.id===wish.petId);
   bubble.hidden=!pet||model.quiet;
@@ -1176,6 +1246,11 @@ export function createHomeView(root,cb){
   },
   openSummon:openSummonDrawer,
   closeSummon:closeSummonDrawer,
+  celebrateSummon(pos={}){
+   playSummonChime();
+   summonEffects.push({x:pos.x??model?.hero?.x??0,y:pos.y??model?.hero?.y??0,w:pos.w??2,h:pos.h??2,since:performance.now()});
+   framePacer.wake();
+  },
   capture(){
    if(mode!=='scene'||!canvas?.width||!canvas?.height)return null;
    const shot=document.createElement('canvas');
@@ -1197,6 +1272,7 @@ export function createHomeView(root,cb){
   },
   dispose(){
    clearTimeout(statusTimer);
+   void summonAudioCtx?.close?.().catch(()=>{});summonAudioCtx=null;
    cancelScenePointer();dead=true;
    window.removeEventListener('keydown',editKey);window.removeEventListener('blur',blurEdit);document.removeEventListener('visibilitychange',hideEdit);
    activeDialog?.destroy();

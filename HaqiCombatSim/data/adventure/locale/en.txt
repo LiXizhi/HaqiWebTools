@@ -11071,3 +11071,4 @@ Word · 回忆拼写||Word · Recall Spelling
 这里有角色，请换一个位置||A character is here. Choose another position.
 这一组积木已用完，请再次练习召唤||This block pack is empty. Practice again to summon another.
 词语练习尚未保存，请重试||Word practice has not been saved. Please retry.
+读出或输入上方任意句子即可建造||Type or speak any sentence above to build

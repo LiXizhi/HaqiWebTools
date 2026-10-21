@@ -4058,3 +4058,9 @@ Node词树专项31/31通过，含单个新标记即时生成、服务器写失�
 当前已发布CDN版本三轮匿名浏览器冷启动：入口DOM就绪1.73–2.15秒，序章首图可见1.89–2.37秒；本地源码+CDN美术两轮约2.84/3.11秒。HTTP缓存禁用，未清CDN边缘及OS DNS缓存；不是弱网/手机/回源冷启动测试，也不是同一构建的提速对照。除自动favicon 404外无游戏资源错误，未读取真实玩家数据。原始报告、复现命令入口、测试失败边界见[当日开发日志](devlog/devlog_2026-10-20.md)。本轮未提交、推送或发布。
 
 本轮最终必跑快速回归：1362项，1358通过、4项已知失败（体力跨日、旧地面加载提示、两项汉字独立页检查），没有跳过或称作全套通过。相关专项38/38通过。日志tmp/movement-regression-battle.log及tmp/movement-regression-focused.log；源码/发布版CDN首图均已查看截图。完整旧地图parity仍有两处地形像素差异；新增备用图一致性专项通过，不与其混称全部通过。
+
+## 2026-10-21：家园召唤简单词容错、内嵌3秒提示与召唤成功视听反馈
+
+- `js/home_core.js`：`matchHomeSpell` 增加 `effectiveSpellAccuracy`，豁免缺失的简单虚词（`a`、`an`、`the`、`some`、`one`、`please` 及中文量词）并保持 80% 通过阈值（如 `"create wooen house"` 直接通过且不将缺失冠词标为错误）。
+- `js/view_home.js` / `js/home_app.js` / `css/home.css`：在 `.home-example` 底部“取消召唤”左侧内嵌 `.home-spell-tip`，初始提示为“读出或输入上方任意句子即可建造”；召唤抽屉打开时隐藏左上角 `.home-status` 浮窗，错误或录音状态在内嵌位置显示 3 秒后自动恢复初始提示。召唤成功时调用 `celebrateSummon` 播放四音魔法音效与世界坐标光环星芒特效。
+- 验证：`node --test tests/battle_home_spell.test.mjs tests/battle_home.test.mjs tests/battle_home_edit.test.mjs tests/battle_home_residents.test.mjs` 53/53 通过。

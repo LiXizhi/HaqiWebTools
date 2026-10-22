@@ -7,6 +7,8 @@
     "main": "shell/electron/main.js",
     "scripts": {
         "dev": "vite --host 127.0.0.1 --open /Haqi.html",
+        "presence": "node server/presence/index.js",
+        "presence:load": "node --test tests/presence_capacity.test.mjs",
         "build": "npm run generate:maps && npm run check:maps && node scripts/package_island_encounters.mjs --check && vite build",
         "build:app": "npm run generate:maps && npm run check:maps && node scripts/package_island_encounters.mjs --check && node scripts/build_app.mjs",
         "desktop": "electron shell/electron/main.js",

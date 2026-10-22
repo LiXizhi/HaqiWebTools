@@ -54,7 +54,7 @@ test('AI costume selection is stable, gender-safe and reaches reference costumes
    assert.ok(validHeroBodyId(id,appearance));seen.add(id);
   }
   assert.ok(seen.has(appearance==='girl'?'female-ref':'male-ref'));
-  assert.equal(seen.size,48); // Eight era and sixteen seasonal child costumes per gender.
+  assert.equal(seen.size,appearance==='girl'?52:48); // Eight era and sixteen seasonal child costumes per gender.
  }
  assert.equal(randomHeroBodyId({},'girl',1),'female');
 });

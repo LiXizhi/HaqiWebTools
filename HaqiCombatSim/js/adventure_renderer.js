@@ -366,7 +366,7 @@ export function createRenderer(canvas,assets) {
             }
             if(!o.hidden)for(const pose of monsterScenePositions(world,o))objects.push({...o,...pose,monsterIds:null,groupSize:o.monsterIds?.length||1});
         }
-        objects.push({...save.position,kind:'hero'});
+        if(!save.observer) objects.push({...save.position,kind:'hero'});
         if(localSecond&&!title)objects.push({...localSecond.position,kind:'local-player',save:localSecond});
         const petId=selectCompanionId(save,assets.content);
         if(petId&&!petScene){
@@ -492,7 +492,7 @@ export function createRenderer(canvas,assets) {
                 const onBoat=drawEarthBoatRider(ctx,assets,world,o,a.facing,(x,y)=>avatar(ctx,{...p,mountId:null,facing:a.facing},x,y,0,false,1,false,earthBoatRiderPose(pose,a.facing)));
                 const nameY=onBoat?o.y+32:avatar(ctx,{...p,mountId:null,facing:pose?.facing??a.facing},o.x,o.y,t,a.moving,1,false,pose||null);
                 if(graphics.trails&&fx?.motion&&!title&&!motionHidden)drawMotionAccessory(ctx,fx.motion,o,time,reducedMotion.matches,true);
-                plate(ctx,`${tr(p.name)} · ${tr(p.native==='zh'?'中文':'英语')}`,o.x,nameY+16,PLATE.social);
+                plate(ctx,p.sceneLabel || `${tr(p.name)} · ${tr(p.native==='zh'?'中文':'英语')}`,o.x,nameY+16,PLATE.social);
                 if(gesturePose){const head=socialHeadAnchor(o);text(ctx,gesturePose.icon,head.x,head.y+9,27,'#fff');}ctx.restore();
             }
             if(o.kind==='social-pet'){

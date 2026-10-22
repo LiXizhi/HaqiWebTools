@@ -4064,3 +4064,16 @@ Node词树专项31/31通过，含单个新标记即时生成、服务器写失�
 - `js/home_core.js`：`matchHomeSpell` 增加 `effectiveSpellAccuracy`，豁免缺失的简单虚词（`a`、`an`、`the`、`some`、`one`、`please` 及中文量词）并保持 80% 通过阈值（如 `"create wooen house"` 直接通过且不将缺失冠词标为错误）。
 - `js/view_home.js` / `js/home_app.js` / `css/home.css`：在 `.home-example` 底部“取消召唤”左侧内嵌 `.home-spell-tip`，初始提示为“读出或输入上方任意句子即可建造”；召唤抽屉打开时隐藏左上角 `.home-status` 浮窗，错误或录音状态在内嵌位置显示 3 秒后自动恢复初始提示。召唤成功时调用 `celebrateSummon` 播放四音魔法音效与世界坐标光环星芒特效。
 - 验证：`node --test tests/battle_home_spell.test.mjs tests/battle_home.test.mjs tests/battle_home_edit.test.mjs tests/battle_home_residents.test.mjs` 53/53 通过。
+
+## 2026-10-22 Shared AI personas
+
+Focused character/picker/customization tests: 30/30 pass. Eight active WebP
+assets are below 200,000 bytes; actual CDN responses match SHA-256 and expose
+CORS. Company sprite-lab/browser verifies side-facing head/neck joins and sole
+alignment using the byte-identical renderer. The company suite and static build
+pass; subset clone/check tooling has isolated synthetic tests.
+
+Battle fast regression: 1356/1359 pass. Three existing failures (surface loading
+overlay, standalone Hanzi catalogue, standalone stroke geometry) reproduce on
+unchanged HEAD in an isolated archive. They are not marked passed or changed by
+this work. Game source remains uncommitted/unpublished; art CDN upload only.

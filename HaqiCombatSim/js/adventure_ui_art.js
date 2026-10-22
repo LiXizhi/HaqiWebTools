@@ -56,3 +56,20 @@ export async function loadUiArt(mode,read=fetchJson) {
     document.documentElement.classList.add('storybook-ui');
     return manifest;
 }
+
+// CSP-compatible single-icon adapter for consumers that disallow injected styles.
+// Call after the atlas decodes; the caller keeps its textual/vector fallback on failure.
+export function applyUiIcon(element,manifest,name,mode='cdn'){
+    const frame=manifest.frames[name];
+    const url=mode==='local'?manifest.local:manifest.cdn;
+    if(!frame?.cell||!url)return false;
+    if(mode!=='local'&&!url.startsWith('https://cdn.keepwork.com/'))throw Error('界面图集缺少有效的资源地址');
+    const [column,row]=frame.cell,columns=manifest.columns||4,rows=manifest.rows||4;
+    element.style.backgroundImage=`url(${JSON.stringify(url)})`;
+    element.style.backgroundSize=`${columns*100}% ${rows*100}%`;
+    element.style.backgroundPosition=`${column/(columns-1)*100}% ${row/(rows-1)*100}%`;
+    element.style.backgroundRepeat='no-repeat';
+    element.style.fontSize='0';
+    for(const child of element.children)child.style.visibility='hidden';
+    return true;
+}

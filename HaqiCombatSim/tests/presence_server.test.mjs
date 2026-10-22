@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
+import {spawn} from 'node:child_process';
+import {createServer} from 'node:net';
 import test from 'node:test';
+import {fileURLToPath} from 'node:url';
 import {createPresenceClient, smoothPosition} from '../server/presence/client.js';
 import {planSplit} from '../server/presence/gateway/balance.js';
 import {createRegistry} from '../server/presence/gateway/registry.js';
@@ -315,6 +318,79 @@ test('clients smooth samples and see a near move through the websocket', async (
         bob.close();
         await game.close();
         await gateway.close();
+    }
+});
+
+test('a busy game port moves the world server to the next free port', async () => {
+    const occupied = createServer();
+    await new Promise((resolve, reject) => {
+        occupied.once('error', reject);
+        occupied.listen(0, '127.0.0.1', resolve);
+    });
+    const busyPort = occupied.address().port;
+    const presence = await startPresence({gatewayPort: 0, gamePort: busyPort, machineId: 'local-1'});
+    try {
+        assert.equal(presence.game.ok, true);
+        assert.notEqual(presence.game.port, busyPort);
+        const state = await (await fetch(`${presence.gateway.url}/api/admin/state`)).json();
+        assert.equal(state.machines[0].advertiseUrl, presence.game.url);
+    } finally {
+        await presence.close();
+        await new Promise(resolve => occupied.close(resolve));
+    }
+});
+
+function spawnPresence(entry, port) {
+    const child = spawn(process.execPath, [entry], {
+        env: {...process.env, PRESENCE_GATEWAY_PORT: String(port), PRESENCE_GAME_PORT: '0'},
+        stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    let output = '';
+    child.stdout.on('data', chunk => {
+        output += chunk;
+    });
+    child.stderr.on('data', chunk => {
+        output += chunk;
+    });
+    return {
+        child,
+        text: () => output,
+    };
+}
+
+async function waitForOutput(read, ms = 8000) {
+    const deadline = Date.now() + ms;
+    while (Date.now() < deadline) {
+        if (read()) return;
+        await new Promise(resolve => setTimeout(resolve, 30));
+    }
+    throw new Error(read.toString());
+}
+
+test('starting presence again replaces the previous process', async () => {
+    const probe = createServer();
+    await new Promise((resolve, reject) => {
+        probe.once('error', reject);
+        probe.listen(0, '127.0.0.1', resolve);
+    });
+    const port = probe.address().port;
+    await new Promise(resolve => probe.close(resolve));
+    const entry = fileURLToPath(new URL('../server/presence/index.js', import.meta.url));
+    const first = spawnPresence(entry, port);
+    let second = null;
+    try {
+        await waitForOutput(() => first.text().includes('presence ready'));
+        second = spawnPresence(entry, port);
+        await waitForOutput(() => second.text().includes('Game server:'));
+        assert.match(second.text(), new RegExp(`Gateway: http://127\\.0\\.0\\.1:${port}/admin`));
+        assert.match(second.text(), /Game server: ws:\/\/127\.0\.0\.1:\d+/);
+        await waitForOutput(() => first.child.exitCode !== null);
+        const state = await (await fetch(`http://127.0.0.1:${port}/api/admin/state`)).json();
+        assert.equal(state.localServers.length, 1);
+        assert.match(second.text(), new RegExp(state.localServers[0].url.replaceAll('.', '\\.')));
+    } finally {
+        if (second && second.child.exitCode === null) second.child.kill('SIGKILL');
+        if (first.child.exitCode === null) first.child.kill('SIGKILL');
     }
 });
 

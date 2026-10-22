@@ -2,7 +2,7 @@ import {createRng,hashSeed} from './rng_core.js';
 // Stable cosmetic identifiers; old saves resolve to their original body.
 export function validHeroBodyId(id,appearance){
  const gender=appearance==='girl'?'female':'male';
- return typeof id==='string'&&id.length<=64&&(new RegExp(`^${gender}(?:[2-9]|1[0-3]|-ref|-urban-[a-z0-9]+(?:-[a-z0-9]+)*)?$`).test(id)||new RegExp(`^era-(1950|1960|1970|1980|1990|2000|2010|2020)-${gender}$`).test(id)||new RegExp(`^child-(1950|1960|1970|1980)-(spring|summer|autumn|winter)-${gender}$`).test(id));
+ return typeof id==='string'&&id.length<=64&&((gender==='female'&&/^female-ai-(astra|claude|deepseek|gemini)$/.test(id))||new RegExp(`^${gender}(?:[2-9]|1[0-3]|-ref|-urban-[a-z0-9]+(?:-[a-z0-9]+)*)?$`).test(id)||new RegExp(`^era-(1950|1960|1970|1980|1990|2000|2010|2020)-${gender}$`).test(id)||new RegExp(`^child-(1950|1960|1970|1980)-(spring|summer|autumn|winter)-${gender}$`).test(id));
 }
 export function resolvedBodyId(save){return validHeroBodyId(save.bodyId,save.appearance)?save.bodyId:save.appearance==='girl'?'female':'male';}
 

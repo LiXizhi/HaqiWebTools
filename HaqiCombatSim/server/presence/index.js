@@ -1,10 +1,81 @@
 // Local dev entry: one gateway and one stateless game server on this machine.
 
+import {execFile} from 'node:child_process';
+import {connect} from 'node:net';
 import {fileURLToPath} from 'node:url';
 import {createRegistry} from './gateway/registry.js';
 import {startGateway} from './gateway/server.js';
 import {createLocalSpawner} from './gateway/spawn.js';
 import {loadRoomCatalog} from './protocol.js';
+
+function execText(file, args) {
+    return new Promise(resolve => {
+        execFile(file, args, {timeout: 2000}, (error, stdout) => {
+            resolve(error ? '' : String(stdout || ''));
+        });
+    });
+}
+
+function portAccepts(host, port) {
+    return new Promise(resolve => {
+        const socket = connect({host, port});
+        const finish = open => {
+            socket.destroy();
+            resolve(open);
+        };
+        socket.setTimeout(300);
+        socket.once('connect', () => finish(true));
+        socket.once('timeout', () => finish(false));
+        socket.once('error', () => finish(false));
+    });
+}
+
+async function waitForPort(host, port, open, timeoutMs) {
+    const deadline = Date.now() + timeoutMs;
+    while (Date.now() < deadline) {
+        if (await portAccepts(host, port) === open) return true;
+        await new Promise(resolve => setTimeout(resolve, 40));
+    }
+    return false;
+}
+
+function signal(pid, name) {
+    try {
+        process.kill(pid, name);
+    } catch (error) {
+        if (error.code !== 'ESRCH') throw error;
+    }
+}
+
+async function presenceListener(port) {
+    const listed = await execText('lsof', ['-nP', `-iTCP:${port}`, '-sTCP:LISTEN', '-t']);
+    const pids = listed.split(/\s+/).map(Number).filter(pid => pid > 1 && pid !== process.pid);
+    for (const pid of pids) {
+        const command = await execText('ps', ['-p', String(pid), '-o', 'command=']);
+        if (command.includes('presence/index.js')) return pid;
+    }
+    return 0;
+}
+
+export async function replacePreviousPresence({host, port} = {}) {
+    if (!port) return false;
+    let page = '';
+    try {
+        const response = await fetch(`http://${host}:${port}/admin`, {signal: AbortSignal.timeout(1000)});
+        if (!response.ok) return false;
+        page = await response.text();
+    } catch {
+        return false;
+    }
+    if (!page.includes('<h1>在场网关</h1>')) return false;
+    const pid = await presenceListener(port);
+    if (!pid) throw new Error(`presence on ${port} did not stop`);
+    signal(pid, 'SIGTERM');
+    if (await waitForPort(host, port, false, 3000)) return true;
+    signal(pid, 'SIGKILL');
+    if (await waitForPort(host, port, false, 1000)) return true;
+    throw new Error(`presence on ${port} did not stop`);
+}
 
 export async function startPresence({
     host = process.env.PRESENCE_HOST || '127.0.0.1',
@@ -17,8 +88,14 @@ export async function startPresence({
     const local = createLocalSpawner({host, catalog});
     const gateway = await startGateway({registry, host, port: gatewayPort, local});
     local.gatewayUrl = gateway.url;
-    const game = await local.add({port: gamePort, machineId});
-    if (!game.ok) throw new Error(game.error || 'spawn');
+    let game = await local.add({port: gamePort, machineId});
+    if (!game.ok && game.error === 'EADDRINUSE') {
+        game = await local.add({machineId});
+    }
+    if (!game.ok) {
+        await gateway.close();
+        throw new Error(game.error || 'spawn');
+    }
     return {
         gateway,
         game,
@@ -32,9 +109,12 @@ export async function startPresence({
 
 const entry = process.argv[1] ? fileURLToPath(import.meta.url) === process.argv[1] : false;
 if (entry) {
-    const presence = await startPresence();
-    console.log(`在场网关 ${presence.gateway.url}/admin`);
-    console.log(`游戏服 ${presence.game.url}`);
+    const host = process.env.PRESENCE_HOST || '127.0.0.1';
+    const gatewayPort = Number(process.env.PRESENCE_GATEWAY_PORT || 8787);
+    await replacePreviousPresence({host, port: gatewayPort});
+    const presence = await startPresence({host, gatewayPort});
+    console.log(`Gateway: ${presence.gateway.url}/admin`);
+    console.log(`Game server: ${presence.game.url}`);
     console.log(`presence ready gateway=${presence.gateway.url}/admin game=${presence.game.url}`);
     const shutdown = async () => {
         await presence.close();

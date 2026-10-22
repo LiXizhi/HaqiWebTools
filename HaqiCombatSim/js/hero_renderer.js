@@ -39,6 +39,13 @@ export class HeroRenderer {
     createActor(seed) { return createHeroActor(seed); }
     headId(gender,id){return !this.failedHeads.has(id)&&this.headArt(id)?.gender===gender?id:gender==='female'?'elf-girl':'elf-boy';}
     bodyVariant(gender,id){const variant=this.manifest.bodyVariants?.[id];return variant?.gender===gender?variant:null;}
+    // Variants may own frame geometry as well as textures. Classic recolors
+    // inherit the base geometry; shared persona sheets carry their own anchors.
+    bodyArt(key,{gender='male',bodyId}={}){
+        const base=this.manifest.bodies[key],variant=this.bodyVariant(gender,bodyId);
+        if(key!==gender+'-walk'||!variant?.geometry)return base;
+        return {...base,...variant.geometry,...variant,walk:{...base.walk,...variant,...variant.geometry.walk}};
+    }
     walkKey(gender,id){return 'walk:'+(this.bodyVariant(gender,id)?.id||gender);}
     updateActor(actor, input) { return updateHeroActor(actor, input); }
     async image(id, art, mountAsset = false) {
@@ -98,17 +105,17 @@ export class HeroRenderer {
         headId=this.headId(gender,headId);
         const keys = mount ? [...new Set([0,1,2,3].map(facing=>this.layout({gender,mount},{facing}).key))]
             : [standing?(gender==='female'?'female-standing':'standing'):gender+'-walk'];
-        const originals = keys.filter(key=>!this.manifest.bodies[key].selfContained).map(key => this.image('original:'+key,this.manifest.bodies[key].source));
+        const originals = keys.filter(key=>!this.bodyArt(key,{gender,bodyId}).selfContained).map(key => this.image('original:'+key,this.bodyArt(key,{gender,bodyId}).source));
         if (mount) originals.push(this.image('mount:'+mount.id,mount.art,true));
         await Promise.all(originals);
-        if(this.prepareBounds)for(const key of keys){const body=this.manifest.bodies[key];if(body.selfContained)continue;
+        if(this.prepareBounds)for(const key of keys){const body=this.bodyArt(key,{gender,bodyId});if(body.selfContained)continue;
             for(const [cell,frame] of body.frames.entries()){const id=key+':'+cell;if(this.sourceBounds.has(id))continue;
                 const prepared=await this.prepareBounds(this.images.get('original:'+key),frame.crop);
                 if(prepared)this.sourceBounds.set(id,prepared);else this.originalBounds(key,cell);
             }
         }
         const results = await Promise.allSettled(keys.map(async key => {
-            const body=this.manifest.bodies[key];
+            const body=this.bodyArt(key,{gender,bodyId});
             if(this.headArt(headId))await Promise.all([
                 body.walk?.idleFrames ? this.image(this.walkKey(gender,bodyId),this.bodyVariant(gender,bodyId)||body.walk) : this.image('body:'+(body.atlas||key),body),
                 this.image('head:'+headId,this.headArt(headId)).catch(async error=>{
@@ -151,7 +158,7 @@ export class HeroRenderer {
     }
     draw(ctx, appearance, options={}) {
         const {x=0,y=0,original=false,debug=false,overlay=false,head=BODY_TO_HEAD[options.facing??0]}=options;
-        const pose=options.pose||this.layout(appearance,options),body=this.manifest.bodies[pose.key];
+        const pose=options.pose||this.layout(appearance,options),body=this.bodyArt(pose.key,appearance);
         let frame=body.frames[pose.rider.cell];
         const source=this.images.get('original:'+pose.key);
         if(!body.selfContained&&!source)return {ready:false};
@@ -175,6 +182,10 @@ export class HeroRenderer {
         // Same aspect-fit and original alpha trimming as the existing game renderer.
         const ratio=Math.min(r.w/crop[2],r.h/crop[3]);
         const rect={x:r.x+(r.w-crop[2]*ratio)/2,y:r.y+(r.h-crop[3]*ratio)/2,w:crop[2]*ratio,h:crop[3]*ratio};
+        // Ground self-contained sheets by their measured sole, not transparent
+        // cell padding. Mounted/custom placements retain their supplied pose.
+        if(Number.isFinite(frame.footY)&&!appearance.mount&&!options.bodyRect&&!options.pose)
+            rect.y=-frame.footY*ratio;
         const neck=[rect.x+(frame.crop[0]+frame.neck[0]-crop[0])*ratio,rect.y+(frame.crop[1]+frame.neck[1]-crop[1])*ratio];
         // Move the walking body toward its head without moving the head attachment.
         const bodyRect=walking?{...rect,y:rect.y+(frame.bodyOffsetY||0)*ratio}:rect;

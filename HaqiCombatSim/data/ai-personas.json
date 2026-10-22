@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "characters": {
+    "astra": {
+      "headId": "astra",
+      "bodyId": "female-ai-astra"
+    },
+    "claude": {
+      "headId": "claude",
+      "bodyId": "female-ai-claude"
+    },
+    "deepseek": {
+      "headId": "deepseek",
+      "bodyId": "female-ai-deepseek"
+    },
+    "gemini": {
+      "headId": "gemini",
+      "bodyId": "female-ai-gemini"
+    }
+  }
+}

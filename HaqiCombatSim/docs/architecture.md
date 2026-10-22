@@ -1506,3 +1506,31 @@ flowchart LR
 ```
 
 地图外观、碰撞、地块预算与释放方式保持原规则。备用图仍为原Canvas绘制方式，不切换软件栅格后端。性能脚本的隔离新角色禁止自动序章，避免测量混入另一个战斗场景；正式新访客序章行为不变。
+
+## Shared engine subset: AI Work Company
+
+```mermaid
+flowchart LR
+  Art[Shared head/body catalogue and WebP] --> Renderer[HeroRenderer / adventure_renderer]
+  Renderer --> Haqi[Haqi game and avatar picker]
+  Renderer --> Sync[AI Work Company subset sync]
+  Art --> Sync
+  Sync --> Company[Company autonomous policy adapter]
+```
+
+Haqi owns the shared renderer, independent textures and neck/sole anchors.
+`bodyVariants.geometry` supplies per-variant frames; classic recolors still
+inherit base geometry. Optional `footY` grounds unmounted/default poses.
+`save.observer` omits the player object; social `sceneLabel` overrides bottom
+text. Existing defaults remain unchanged. The company copies exact source and
+art bytes, keeping task/account/permission policy in its own adapters.
+`data/ai-personas.json` identifies the four unofficial AI personas.
+
+### Shared city scenery and CSP-safe map icons (2026-10-22)
+
+`data/adventure/neural-city-art.json` provides six independent WebP scenery
+textures plus `homeItems` consumable by the existing home renderer, building cache
+and collision catalogue. The map illustration is separate from navigable terrain.
+`applyUiIcon` in `adventure_ui_art.js` applies the existing atlas cell directly to
+an element for strict-CSP consumers, without injecting a stylesheet. It does not
+change `loadUiArt` or the existing Haqi GUI.

@@ -29,7 +29,7 @@ export function createHomeBuildingCache({imageFor,enabled=true}={}){
    const endX=Math.max(group.bounds.x+group.bounds.w,bounds.x+bounds.w),endY=Math.max(group.bounds.y+group.bounds.h,bounds.y+bounds.h);group.bounds.x=Math.min(group.bounds.x,bounds.x);group.bounds.y=Math.min(group.bounds.y,bounds.y);group.bounds.w=endX-group.bounds.x;group.bounds.h=endY-group.bounds.y;
    group.rows.push({o,item,ao:ao.get(o.id)||[],connections:masks.get(o.id)??connections.get(o.id)??0});
   }
-  groups=[...map.values()];for(const g of groups)g.signature=JSON.stringify(g.rows.map(r=>[r.o,r.connections,r.item.art,r.ao]));
+  groups=[...map.values()];for(const g of groups)g.signature=JSON.stringify(g.rows.map(r=>[r.o,r.connections,r.item.art,r.item.building?.theme,r.ao]));
   const byKey=new Map(groups.map(g=>[g.key,g]));for(const [key,row]of entries)if(byKey.get(key)?.signature!==row.signature)release(key);
  }
  function paintRows(c,g){for(const row of g.rows){const {o,item}=row,image=imageFor(item.art);if(item.building)drawBuilding(c,item,o,image?.complete&&image.naturalWidth?image:null,row.connections,row.ao);else{const b=buildingBounds(o,item);drawHomeObject(c,item,o,o.x*40,(o.y-(isRoofDecoration(o)?1.4:0))*40,b.w*40,b.h*40,image,0);}}}

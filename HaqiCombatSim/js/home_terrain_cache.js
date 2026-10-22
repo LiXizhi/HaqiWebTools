@@ -3,10 +3,10 @@ import {createIslandTerrainRasterizer} from './island_terrain_rasterizer.js';
 import {paintHomeWorldTerrainSteps} from './view_home_art.js';
 
 // The island scheduler owns preparation, prefetch, bitmap lifetime and a 32 MiB terrain budget; building caches reserve the other 32 MiB.
-export function createHomeTerrainCache(){
+export function createHomeTerrainCache({theme=null}={}){
  const art={manifest:{atlases:{}},images:{}};
  let world=null,environment=null,decoration=null;
- const rasterize=createIslandTerrainRasterizer(art,{workerUrl:new URL('./home_terrain_worker.js',import.meta.url),snapshotWorld:world=>({seed:world.seed,objects:world.objects})});
+ const rasterize=createIslandTerrainRasterizer(art,{workerUrl:new URL('./home_terrain_worker.js',import.meta.url),snapshotWorld:world=>({seed:world.seed,objects:world.objects,theme:world.theme})});
  const track=(source,prefix,atlases)=>({
   draw(c,atlas,...args){atlases.add(prefix+atlas);return source?.draw(c,atlas,...args)||false;},
   pattern(c,atlas,...args){atlases.add(prefix+atlas);return source?.pattern(c,atlas,...args)||null;}
@@ -20,7 +20,7 @@ export function createHomeTerrainCache(){
    }
    return result;
   }:null,createCanvas:()=>document.createElement('canvas'),
-  paint:function*(c,world,rect,atlases){yield* paintHomeWorldTerrainSteps(c,world.seed,rect,track(environment,'env/',atlases),track(decoration,'decor/',atlases),world.objects);}
+  paint:function*(c,world,rect,atlases){yield* paintHomeWorldTerrainSteps(c,world.seed,rect,track(environment,'env/',atlases),track(decoration,'decor/',atlases),world.objects,world.theme);}
  });
  function sync(source,prefix){
   for(const [key,row] of Object.entries(source?.manifest.atlases||{}))art.manifest.atlases[prefix+key]=row;
@@ -33,7 +33,7 @@ export function createHomeTerrainCache(){
   draw(c,seed,rect,env,decor,pixelRatio,objects=[]){
    // Only positions affect natural tree suppression; inventory/selection/animation do not.
    const positions=new Map(objects.map(o=>[`${o.x},${o.y}`,{x:o.x,y:o.y}]));
-   if(!world||world.seed!==seed)world={seed,unbounded:true,layout:{},positions,objects:[...positions.values()]};
+   if(!world||world.seed!==seed)world={seed,theme,unbounded:true,layout:{},positions,objects:[...positions.values()]};
    else {
     const changed=[...world.positions].filter(([key])=>!positions.has(key)).concat([...positions].filter(([key])=>!world.positions.has(key)));
     if(changed.length){
@@ -43,7 +43,7 @@ export function createHomeTerrainCache(){
    }
    environment=env;decoration=decor;
    sync(env,'env/');sync(decor,'decor/');
-   return cache.draw(c,world,rect,(c,x,y,size)=>{c.fillStyle='#8eb768';c.fillRect(x,y,size,size);},pixelRatio);
+   return cache.draw(c,world,rect,(c,x,y,size)=>{c.fillStyle=theme==='neural-city'?'#f3ecdb':'#8eb768';c.fillRect(x,y,size,size);},pixelRatio);
   },
   clear(){cache.clear();},
   dispose(){cache.clear();rasterize?.dispose();},

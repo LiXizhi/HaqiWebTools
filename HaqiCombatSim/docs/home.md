@@ -299,3 +299,14 @@ residents 的 `$selection: {version: 1}` 标记表示名单已初始化；其余
 玩家寻路和连续行走可直接通过门；靠近门时临时显示开启，离开后恢复原来的开关外观。此状态仅用于绘制，不修改家园对象、持久化数据或手动开关门操作。主玩家与第二玩家均可触发临时开启。
 
 默认墙体、窗和围栏的行走碰撞与绘制共用连接后的墙脚位置，深度排序及遮挡淡化也使用实际墙脚，避免站在前墙附近时与墙体重叠。用户明确编辑过的阻挡矩形及关闭阻挡属性仍保留。
+
+## Optional neural-city presentation theme (2026-10-22)
+
+`createHomeTerrainCache({theme:'neural-city'})` enables ivory marble terraces,
+gold/teal promenades, matching canals and marble bridges. The worker snapshot
+carries the theme into the same terrain painter used by the fallback. Catalogue
+`building.theme:'neural-city'` changes connected wall/floor/roof materials; cache
+signatures include the theme. `drawHomeWorldTree` accepts the optional theme as its
+last argument for ivory planters and existing cypress/blossom art. This consumer
+skin changes no collision, water, bridge, door or roof-section geometry. Default
+Haqi worlds keep their existing art. Tests: `home_neural_theme.test.mjs`.

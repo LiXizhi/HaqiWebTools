@@ -1,3 +1,4 @@
+import {paintNeuralMaterial} from './view_home_neural.js';
 import {WALL_AO_RADIUS} from './home_building_ao_core.js';
 import {buildingBounds,buildingWallFeet,isEdge} from './home_building_core.js';
 // The same painter runs in the live canvas and the background raster worker.
@@ -9,7 +10,8 @@ export function buildingVisualBounds(o,item){
 export function drawBuilding(c,item,o,image,connections=0,ao=[]){
  const s=o.sizeScale??1,b=buildingBounds(o,item),x=o.x*40,y=o.y*40,cellW=40*s,cellH=40*s;
  const type=item.building.type,style=item.building.style,wall=isEdge(item),height=(type==='fence'?28:50)*s,crop=item.art?.crop;
- const baseColor=style==='wood'?'#b38856':'#858c95',topColor=style==='wood'?'#cfa36e':'#a3aab3',trimColor=style==='wood'?'#755637':'#626971',skirtColor=style==='wood'?'rgba(62,41,22,0.34)':'rgba(44,50,58,0.34)';
+ const neural=item.building.theme==='neural-city';
+ const baseColor=neural?'#f2e7cd':style==='wood'?'#b38856':'#858c95',topColor=neural?'#fff5da':style==='wood'?'#cfa36e':'#a3aab3',trimColor=neural?'#bf9b54':style==='wood'?'#755637':'#626971',skirtColor=style==='wood'?'rgba(62,41,22,0.34)':'rgba(44,50,58,0.34)';
  c.save();
  const hasImg=Boolean(image&&crop&&(image.naturalWidth||image.width)&&image.complete!==false);
  if(item.art?.kind==='sprite'){
@@ -25,7 +27,8 @@ export function drawBuilding(c,item,o,image,connections=0,ao=[]){
  const fill=(dx,dy,dw,dh)=>{
   if(dw<=0||dh<=0)return;
   c.fillStyle=baseColor;c.fillRect(dx,dy,dw,dh);
-  if(hasImg)c.drawImage(image,...crop,dx,dy,dw,dh);
+  if(neural)paintNeuralMaterial(c,type,dx,dy,dw,dh);
+  else if(hasImg)c.drawImage(image,...crop,dx,dy,dw,dh);
  };
  if(!wall){
   if(type==='roof'){
@@ -84,14 +87,14 @@ export function drawBuilding(c,item,o,image,connections=0,ao=[]){
  if(type==='window'){
   const wx=horiz?cx-10*s:hx+2,wy=(horiz?hy:cy)-height*.68,ww=horiz?20*s:Math.max(4,t-4),wh=height*.38;
   c.fillStyle=trimColor;c.fillRect(wx-2,wy-2,ww+4,wh+4);
-  c.fillStyle='rgba(175,226,245,0.78)';c.fillRect(wx,wy,ww,wh);
+  c.fillStyle=neural?'#6bbcb3':'rgba(175,226,245,0.78)';c.fillRect(wx,wy,ww,wh);
   c.fillStyle=trimColor;
   if(horiz)c.fillRect(wx+ww/2-1,wy,2,wh);
   c.fillRect(wx,wy+wh/2-1,ww,2);
  }else if(type==='door'){
   const dx=horiz?cx-9*s:hx+1,dy=(horiz?hy+t:cy+8*s)-height*.76,dw=horiz?18*s:Math.max(5,t-2),dh=height*.76;
   c.fillStyle=trimColor;c.fillRect(dx-2,dy-2,dw+4,dh+2);
-  c.fillStyle=style==='wood'?'#8c5e35':'#5c4a38';c.fillRect(dx,dy,dw,dh);
+  c.fillStyle=neural?'#387d7c':style==='wood'?'#8c5e35':'#5c4a38';c.fillRect(dx,dy,dw,dh);
   c.fillStyle='#f0c869';c.fillRect(dx+dw-5,dy+dh*.52,3,3);
  }
  c.restore();

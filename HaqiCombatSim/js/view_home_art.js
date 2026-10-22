@@ -1,3 +1,4 @@
+import {paintNeuralHomeTerrain} from './view_home_neural.js';
 // Home furniture sprite renderer + baked static Haqi island terrain, river, road, plaza & bridge texture tile painter.
 import {createRng,hashSeed} from './rng_core.js';
 import {homeBiomeAt,homeBridgeAt,homeInteractiveKind,homeRiverCenterX,homeRiverCenterY,homeRoadAt,homeWaterAt} from './home_core.js';
@@ -312,11 +313,12 @@ function paintHomeCampPlaza(c,rect,envArt){
 }
 
 // Deterministic, 100% static world-space terrain painter baked into texture tiles.
-export function paintHomeWorldTerrain(c,seed,rect,envArt=null,decorArt=null,objects=[]){
- for(const step of paintHomeWorldTerrainSteps(c,seed,rect,envArt,decorArt,objects)){}
+export function paintHomeWorldTerrain(c,seed,rect,envArt=null,decorArt=null,objects=[],theme=null){
+ for(const step of paintHomeWorldTerrainSteps(c,seed,rect,envArt,decorArt,objects,theme)){}
 }
 
-export function* paintHomeWorldTerrainSteps(c,seed,rect,envArt=null,decorArt=null,objects=[]){
+export function* paintHomeWorldTerrainSteps(c,seed,rect,envArt=null,decorArt=null,objects=[],theme=null){
+ if(theme==='neural-city'){paintNeuralHomeTerrain(c,seed,rect);yield;return;}
  c.save();
  c.lineJoin='round';
  c.lineCap='round';
@@ -596,13 +598,19 @@ export function collectHomeWorldTrees(seed,rect,objects=[]){
  return list;
 }
 
-export function drawHomeWorldTree(c,tree,px,py,scaleRatio,envArt){
+export function drawHomeWorldTree(c,tree,px,py,scaleRatio,envArt,theme=null){
  if(!envArt)return;
  const size=tree.size*scaleRatio;
  c.save();
  c.translate(px,py);
  if(tree.flip)c.scale(-1,1);
- envArt.draw(c,tree.atlas,tree.frame,-size*.56,-size*1.04+8*scaleRatio,size*1.12,size*1.06);
+ if(theme==='neural-city'){
+  oval(c,0,3*scaleRatio,size*.25,size*.09,'#b49a61');
+  oval(c,0,0,size*.26,size*.08,'#fff0cf');
+  oval(c,0,-2*scaleRatio,size*.22,size*.06,'#7eaa8a');
+  const frame=Math.abs(Math.round(tree.wx+tree.wy))%3?'cypressPine':'blossomTree';
+  envArt.draw(c,'campTrees',frame,-size*.45,-size*.94,size*.9,size*.95);
+ }else envArt.draw(c,tree.atlas,tree.frame,-size*.56,-size*1.04+8*scaleRatio,size*1.12,size*1.06);
  c.restore();
 }
 

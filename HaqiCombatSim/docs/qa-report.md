@@ -4077,3 +4077,22 @@ Battle fast regression: 1356/1359 pass. Three existing failures (surface loading
 overlay, standalone Hanzi catalogue, standalone stroke geometry) reproduce on
 unchanged HEAD in an isolated archive. They are not marked passed or changed by
 this work. Game source remains uncommitted/unpublished; art CDN upload only.
+
+### 2026-10-22 · Shared neural-city scenery / map consumer
+
+Seven WebPs uploaded (six native-alpha scenery objects + prior illustration as
+map), each <=200,000 bytes; all CDN GET SHA-256 and wildcard CORS verified.
+Company home catalogue uses the six objects through original home building/cache
+and walking modules. Focused character suite 30/30; new strict-CSP icon consumer
+case 1/1. Company suite 92/92, subset parity and static build pass. Desktop and
+narrow in-app browser show the shared map/close sprites and illustrated overview;
+workshop pin centers the observer, Escape closes and restores opener focus.
+Game source remains local; no full game deployment or Git mirror copy.
+
+### 2026-10-22 · Ivory/gold/teal home theme
+
+129 focused home/theme tests pass, including worker/fallback command parity and
+unchanged roof/footprint bounds. Company 92/92 and static build pass. Broad battle
+regression 1356/1359: the same previously baseline-confirmed loading-overlay test
+and two hanzi-story-catalog tests fail. Browser verified matching terrain/building
+materials with no console errors. No source commit, push or game deployment.

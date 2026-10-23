@@ -23,10 +23,10 @@ const record = (name, details) => report.checks.push({name, ...details});
 async function request(path, options = {}) {
     return fetch(new URL(path, gateway), {...options, signal: AbortSignal.timeout(10000)});
 }
-async function connect(suffix) {
+async function connect(suffix, roleSuffix = suffix) {
     let playerId = `haqi_qa_${runId}_${suffix}`;
     const identity = {playerId, roomId, x: 100, y: 100,
-        ...(credentials ? {username: credentials.username, project: 'haqi', roleId: `qa_${runId}_${suffix}`} : {})};
+        ...(credentials ? {username: credentials.username, project: 'haqi', roleId: `qa_${runId}_${roleSuffix}`} : {})};
     const response = await request('/api/join', {
         method: 'POST', headers: {'content-type': 'application/json', Origin: origin,
             ...(credentials ? {Authorization: `Bearer ${credentials.token}`} : {})},
@@ -106,7 +106,8 @@ try {
     }
     if (!credentials) throw Error('拒绝测试完成；成功登录验收需要 --auth-stdin 测试会话');
     const first = await connect('a');
-    const second = await connect('b');
+    const second = await connect('b', 'a');
+    assert.notEqual(second.playerId, first.playerId);
     await first.waitFor(message => message.type === 'joined' && message.id === second.playerId);
     await second.waitFor(message => message.type === 'roster' && message.players?.some(player => player.id === first.playerId));
     record('two-player-roster', {ok: true});
@@ -121,7 +122,7 @@ try {
     record('leave-room', {ok: true});
     first.socket.close();
     const reconnected = await connect('a');
-    assert.equal(reconnected.playerId, first.playerId);
+    assert.notEqual(reconnected.playerId, first.playerId);
     record('reconnect', {ok: true});
     report.protocolPassed = true;
 } catch (error) {

@@ -30,11 +30,15 @@ test('authored city name replaces CSV label while separate places and interior l
 });
 
 
-test('surface loading overlay shows actual tile progress and disappears when ready',()=>{
-    const draw=source.slice(source.indexOf('        if(world.isEarth&&!title&&!motionHidden){'),source.indexOf('        const meter=frameMeter.sample'));
-    const render=status=>{const labels=[],bars=[];vm.runInNewContext(draw,{world:{isEarth:true,surfaceStats:status},title:false,motionHidden:false,w:390,h:844,tr:s=>s,ctx:{save(){},restore(){},fillRect(...args){bars.push(args);},fillText(text){labels.push(text);}}});return {labels,bars};};
-    assert.deepEqual(render({artReady:false}).labels,['正在加载地面图片…']);
-    assert.deepEqual(render({artReady:false,artError:true}).labels,['地图图片加载失败，正在重试…']);
-    const pending=render({artReady:true,visibleReady:3,visibleTotal:12});assert.deepEqual(pending.labels,['正在绘制附近地面… 3/12']);assert.equal(pending.bars.at(-1)[2],65);
-    assert.deepEqual(render({artReady:true,visibleReady:12,visibleTotal:12}).labels,[]);
+test('surface loading uses the shared gate, not an obsolete canvas overlay',async()=>{
+    const {createIslandSceneLoading}=await import('../js/island_scene_loading.js');
+    const states=[];let hidden=0,progress={ready:3,total:12};
+    const gate=createIslandSceneLoading({warm:async()=>{},prepare:()=>progress,show:s=>states.push(s),hide:()=>hidden++});
+    const world={isEarth:true,layout:{}},save={};
+    assert.equal(gate.update(world,save,0),true);
+    await new Promise(setImmediate);
+    assert.equal(gate.update(world,save,1),true);
+    assert.deepEqual(states.at(-1),{phase:'terrain',ready:3,total:12});
+    progress={ready:12,total:12};assert.equal(gate.update(world,save,2),false);assert.equal(hidden,1);
+    gate.invalidate();
 });

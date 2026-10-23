@@ -1,3 +1,4 @@
+import {visibleSocialActors} from './adventure_presence_core.js';
 import {socialSpawnDescriptors,streamSocialActors} from './adventure_social_stream_core.js';
 import {socialActionOptions,socialActionParams} from './adventure_social_actions_core.js';
 import {createArenaClock,createArenaArrivals} from './adventure_arena_clock.js';
@@ -84,7 +85,8 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
     const teamMembers=()=>ui.allies.filter(Boolean);
     const heroCard=()=>{const {save}=getState();return save?{id:'hero',name:save.name||'你',school:save.school,level:save.level,appearance:save.appearance,kind:'self'}:null;};
     const partyDungeon=()=>{const {assets}=getState();return ui.partyDungeonId&&assets?dungeonFor(assets.content,ui.partyDungeonId)||null:null;};
-    const scenePlayers=()=>(worldRef===getState().world?actors:[]).map(a=>({...a.profile,position:{...a.position}}));
+    const visibleActors=()=>visibleSocialActors(worldRef===getState().world?actors:[],getState().remotePlayerCount||0,teamMembers().map(p=>p.id));
+    const scenePlayers=()=>visibleActors().map(a=>({...a.profile,position:{...a.position}}));
     const lineupCount=()=>{const allies=teamMembers().length;if(allies)return Math.min(4,(getState().localSecond?2:1)+allies);const save=getState().save;if(!save?.formation)return 1;return Math.min(4,1+save.formation.filter((id,i)=>id&&i!==save.heroSlot).length);};
     function arenaLobby(){
         const {save,assets}=getState();
@@ -267,11 +269,11 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
             const token=epoch;await ready();await localArena.prepare([arenaKey]);if(token!==epoch||getState().world!==world)return;ui.arenaRecord=localArena.get(arenaKey)||emptyArenaRecord();if(ui.arenaRecord.active&&!ui.pvp)saveArena(finishArenaRecord(ui.arenaRecord,ui.arenaRecord.active.id,'loss',arenaRules()));installRoster();if(getOwner()&&Date.now()-lastRefresh>60000)void run(refresh);
         },
         get gesture(){return gesture?.world===getState().world&&gesture.until>Date.now()?gesture:null;},
-        get actors(){return worldRef===getState().world?actors:[];},get team(){return teamMembers();},
+        get actors(){return visibleActors();},get team(){return teamMembers();},
         preparedTeam(){const fresh=fillers();ui.allies=ui.allies.map(p=>p?.kind==='companion'?fresh.find(f=>f.id===p.id)||p:p);return teamMembers();},
         pickPartyDungeon,fillOpenSlot,depart,cancelDungeonPick(){if(ui.pickingDungeon){ui.pickingDungeon=false;onChange();}},
         step(dt,options={}){const s=getState();if(worldRef!==s.world)return;const team=teamMembers().map(p=>p.id);if(s.world.isEarth&&!s.paused)actors=streamSocialActors(actors,earthSpawns,dt,{leader:s.save?.position,view:options.view,team,seed:placementSeed,params:{...SOCIAL_DEFAULTS,...s.assets.content.balanceParams?.islandSocial}});stepSocialActors(actors,s.world,dt,{paused:s.paused,locked:s.locked?ui.selected?.id:null,team:teamMembers().map(p=>p.id),leader:s.save?{...s.save.position,facing:s.save.facing}:null,view:options.view,localSecond:s.localSecond,partyKey,params:{...SOCIAL_DEFAULTS,...s.assets.content.balanceParams?.islandSocial}});},
-        pick(p){return pickSocialBubble(actors,getState().save?.position,p,{gesture:api.gesture,at:Date.now(),inParty:teamMembers().length>0||!!getState().save?.coopRun});},
+        pick(p){return pickSocialBubble(visibleActors(),getState().save?.position,p,{gesture:api.gesture,at:Date.now(),inParty:teamMembers().length>0||!!getState().save?.coopRun});},
         select(p,kind='social-profile'){const a=actors.find(a=>a.profile.id===p.id),leader=getState().save.position;if(a){a.path=[];a.moving=false;const dx=leader.x-a.position.x,dy=leader.y-a.position.y;a.facing=socialFacing(dx,dy);}ui.selected=p;ui.dialogue=null;ui.dialogueDraft='';ui.actionAffinity=null;onOpen(kind);const ticket=++actionTicket,token=epoch;
             if(kind==='social-actions')void (async()=>{
                 if(p.kind==='account'&&getOwner()&&!friendsReady){try{await client.refreshFriends();if(token===epoch)friendsReady=true;}catch{/* Unknown friendship stays temporary. */}}

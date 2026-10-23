@@ -1,3 +1,11 @@
+
+## 2026-10-23：游戏服断线恢复与服务器切换
+
+- 公网只读探测：北京时间22:44–22:47，HTTPS `/api/health` 200；`https://cdn.keepwork.com` 来源的 `/api/join` OPTIONS 204，允许 authorization/content-type。没有可访问的用户 Haqi 标签页或本轮真实账号会话，不能确定用户这一次断开的唯一原因，也不能把健康检查当作真实入场成功。
+- 代码证据：服务端30秒无消息断线；原客户端没有响应超时检测，后台节流/网络恢复后只能等待原退避。服务端 replaced 会踢旧连接，原客户端把所有 reject 当作鉴权失败并自动抢回连接；这些分支现已修正。
+- 新增旅途设置的游戏服务器区：持续显示状态与网关、手动重连、切换地址、恢复默认。仅美国一区为已核验部署，未虚构其他上线服务器；自定义地址限制 Keepwork 游戏服HTTPS域名，本机偏好不进角色/云存档。网关拒绝重定向，跨网关切换取消旧异步结果；仍须收到welcome才在线。
+- 新增回归涵盖互踢抑制、无响应、发送异常、换服旧请求隔离、无效地址不影响现有连接及503与身份失败区分。连接专项10/10通过；语法与diff检查通过。战斗快速回归1359项中1356通过、3失败：battle_earth_labels地面加载提示，battle_hanzi_story_catalog协议和笔顺提取；与此前QA记录同类失败，未修改这些模块，不宣称全通过。未进行本轮真实账号鉴权、WSS welcome或正式页面UI验收；未部署、提交或推送。
+
 # 2026-10-23 Game Server Lite 账号认证上线与Haqi正式入口验证
 
 用户追加要求：由游戏服向Keepwork API验证token有效且用户名一致。本轮已完成服务器实现与部署、Haqi源码接入；未提交或推送Git，未发布Haqi网页。
@@ -4134,3 +4142,71 @@ unchanged roof/footprint bounds. Company 92/92 and static build pass. Broad batt
 regression 1356/1359: the same previously baseline-confirmed loading-overlay test
 and two hanzi-story-catalog tests fail. Browser verified matching terrain/building
 materials with no console errors. No source commit, push or game deployment.
+
+
+### 3002来源问题已复现（2026-10-23 23:02北京时间）
+用户补充实际地址 `http://127.0.0.1:3002/Haqi.html`。公网入场OPTIONS对此Origin返回403 / origin，确定为来源白名单阻断，不能靠客户端重连解决。独立服务器仓库已更新示例白名单、回归和部署说明；公网环境文件仍需精确追加该Origin并重启服务。本机无可用SSH配置，尚未应用或验证真实账号入场。
+
+
+### 3002来源公网修复完成（2026-10-23 23:42北京时间）
+经用户授权SSH登录游戏服，实际白名单位于systemd的 `haqi-game-server-lite.service.d/auth.conf`。保留备份，仅追加 `http://127.0.0.1:3002`；daemon-reload及restart后active。公网复测health 200、3002和原CDN预检204、未登记来源403、缺token仍401；本次来源阻断已消除。无真实Keepwork账号WSS welcome复测，未部署网页或提交推送源码。SSH会话已关闭；凭据不写入文件或日志。
+
+
+## 2026-10-23：任意页面来源与同账号10个游戏客户端
+
+用户更新：允许127.0.0.1任意端口及其他IP/域名来源，只凭Keepwork服务端核验的有效token和匹配username入场；同账号最多10个同时连接，允许同角色多开。
+
+独立HaqiGameServerLite已实现并部署至 `multiclient-20261023`：入场通配CORS、每次join随机playerId、共享auth按账号计数10条、并发第11条拒绝、不替换已连客户端、断开及入场失败释放名额。原服务/配置备份保留，管理接口不开放。当前所有世界服同进程共享上限；跨进程扩容须先共享原子名额。网页本地源码新增超限中文提示和30秒退避，公网复测脚本不再假设重连playerId稳定，并改为验证同角色双开。
+
+验证：本地服务端31/31、网页连接11/11、服务器隔离发布包25/25通过；上游profile为受控stub，实际HTTP/WebSocket测试覆盖10条/第11条、跨角色项目token、跨世界服、其他账号、断开及失败释放。公网health200，多个本地端口/IPv4/IPv6/域名/null来源预检204且Allow-Origin为*，缺token401，假token首轮上游超时503后重测401，管理写接口403。没有本轮真实Keepwork会话的10客户端公网入场验收，不将预检当登录成功。
+
+容量回归未通过：本机新版本spread far relay 1311.7ms、HEAD基线1289.7ms均超过800ms；服务器新旧发布包均在慢连接测试111行失败。未跳过、降低门槛或称为通过。服务端连接策略已上线；网页更新留本地，未提交、推送或发布网页。
+
+
+## 2026-10-24：独立游戏服容量修复已部署
+
+HaqiGameServerLite修复重复扩圈查询和发送队列预算/丢帧统计；生产目录 `capacity-20261024`，未修改网页业务。新增广播名单等价和真实背压/恢复测试，原800ms/1000ms门槛未变。服务器功能26/26、完整8000连接容量1/1通过：远距广播162.1ms、真实群发60.1ms；8000客户端收到广播、第8001条拒绝。本机功能32/32，远距广播282.4ms和慢连接测试通过，但Windows真实群发4704.8ms仍超过1000ms，本机完整容量未通过。性能采样主要耗时在Node原生TCP writeBuffer；未伪报全平台通过。
+
+服务器配置/旧目录已备份，切换后active、公网health200、任意本地端口预检204；保留token核验和同账号10条上限。测试未使用真实用户存档或进行真实Keepwork账号8000用户入场。细节见独立仓库docs/devlog/devlog_2026-10-24.md；未提交/推送Git。
+
+## 2026-10-24 地图服务器实例选择（本地）
+
+客户端会话专项14/14、独立游戏服 npm test 33/33通过：分页排序、CORS隔离、不泄露玩家/管理信息、指定实例、满员/不存在拒绝、旧回包隔离、welcome及迁移编号。负载测试失败：8000连接广播4973.7ms > 1000ms，未称作通过。未做浏览器视觉、正式页面公网账号切服或发布验收；新增 /api/instances 及指定实例入场需要部署游戏服及代理路由。
+
+
+## 2026-10-24：同角色游戏服接管与角色目录自动刷新
+
+- 网页角色/会话专项：`node --test tests/game_server_session.test.mjs tests/adventure_roles.test.mjs`，70/70通过。覆盖目录变更后读取、welcome 前禁止入场、replaced 通知、过期连接事件不踢当前页面及禁止自动抢回。
+- 独立服务端 `npm test`：36/36通过，真实本地 WebSocket + 测试鉴权，覆盖跨世界服同角色接管、无效 hello 保留旧连接、其他角色不互踢、账号容量及房间离开通知。不是线上真实 Keepwork 账号验收。
+- `npm run test:battle`：1360项，1357通过、3失败。失败为 `battle_earth_labels.test.mjs:33` 地面加载提示，以及 `battle_hanzi_story_catalog.test.mjs:11/:21` 动画协议和笔画提取，与既有记录一致；不宣称全通过。
+- 服务端 `npm run test:load` 未通过：8000 socket fanout 首次5067.4ms，停止并行战斗测试后单独复测4924.8ms，超出1000ms阈值。未降低阈值、未跳过。
+- 本地实现，未提交、推送或部署；正式页面双客户端退出登录流程及线上真实账号接管尚未浏览器验收。角色归属共享范围为同一网关进程内各世界服，跨独立进程仍需共享会话协调。
+
+## 2026-10-24：地图服务器列表公网403修复
+
+原 /api/instances 被 Nginx 默认规则拒绝且无CORS。已基于线上容量包隔离发布 instances-20261024，配置及旧目录保留备份，仅加入列表/指定实例网关与精确GET/OPTIONS代理。公网127.0.0.1:3002列表GET200、真实实例数据与跨域*，65535预检204；缺token入场401，管理写403。服务器发布包28/28；Windows27/28，8000连接fanout 5173.9ms失败。此为公网接口验收，不代表真实账号切服welcome或完整浏览器验收。网页本地错误处理专项5/5通过，Git未提交/推送。
+
+
+## 2026-10-24：游戏服接管部署与真实双页面验收通过
+
+按用户明确授权部署至 us1.gameserver.keepwork.com。实际运行 `instances-takeover-20261024`，保留同期上线的服务器列表功能和既有容量修复；服务器隔离功能28/28通过，health200、列表200/CORS *、无token入场401。systemd active，已保留原版本与配置回滚备份。用户明确本次不跑8000人负载，未运行。
+
+两个Chrome既有正式源码页面 `http://127.0.0.1:3002/Haqi.html`，真实账号lixizhi、同一5级寒冰系小哈奇：A先继续旅程入场，B再继续旅程成功接管；B游戏内设置显示“已连接游戏服务器 · https://us1.gameserver.keepwork.com”。A自动重新加载到“选择进入方式”，显示“该角色已在其他页面登录，你已被踢下线，请重新登录”，提供登录Keepwork与本地访客按钮。随后手动刷新A，仍停留登录入口；额外等待35秒（超过30秒重连退避窗口）后A保持被踢状态、B保持在线，没有自动抢回或循环互踢。未提取、输出或落盘用户token。
+
+截图证据：`C:/Users/Administrator/AppData/Local/Temp/haqi-takeover-evidence/old-page-kicked.png`、`new-page-connected.png`、`old-page-after-refresh.png`。本轮验证的是本地正式网页源码连接已部署公网游戏服；未发布网页CDN，未提交或推送Git。
+
+## 2026-10-24：入场503修复验收
+
+Node默认250ms地址尝试窗口不足以覆盖美国到Keepwork的TCP握手，复现IPv4 ETIMEDOUT及IPv6 ENETUNREACH。线上auth-network-20261024将窗口下限设为1500ms，保留8秒鉴权总超时和严格token/username核验。修复后12次公网无效token鉴权全部401/token-invalid，无503；真实既有Chrome 3002/Haqi.html页面以lixizhi的5级寒冰系小哈奇成功入场，显示“已连接游戏服务器”。截图：C:/Users/Administrator/AppData/Local/Temp/haqi-503-fixed.png。连接及角色71/71、最终连接专项18/18；服务器本地37/37、隔离发布包28/28通过。不含完整发布QA或容量验收，网页CDN未发布。
+
+## 2026-10-24：双页面远端玩家显示与移动
+
+真实Chrome两个既有3002/Haqi.html页面，分别使用lixizhi下的小哈奇（5级）与小虎队 - 西咪（50级），同服同地图双方都能看到对方姓名和人物。移动小哈奇，另一页确认其从广场左上移动至右下。证据C:/Users/Administrator/AppData/Local/Temp/haqi-remote-players-fixed.png。服务器remote-avatars-20261024已上线；网页仍为本地源码，未发布CDN。接收名单、外观、插值、换房/断线清除专项22/22，服务器本地38/38、隔离线上29/29通过。
+
+战斗快速回归两轮均1357/1360，3项既有失败：battle_earth_labels.test.mjs:33旧地面加载层断言（HEAD/current截取内容均为空），battle_hanzi_story_catalog.test.mjs:11及:21的汉字HTML标记/结构断言（文件未修改）。未称整体回归通过。此次仅玩家本体，不含远端宠物、坐骑、照片头像与战斗同步；未读取用户token或创建测试角色，未提交推送。
+
+## 2026-10-24：既有三项回归修复，全量战斗回归通过
+
+最终npm run test:battle为1367/1367、0失败、0跳过。旧地面加载测试改验证共享门的真实进度与关闭；汉字测试覆盖已完成独立手写页，不依赖旧STORY模板。撤下17个尚不存在的动画入口，30词条笔画保留；水/火/木修复标准宿主协议，木额外修复控件和音效引用导致的启动报错。新增协议安全、晚握手、独立运行与木书写/尾声事件测试。家园缓存的15ms时序依赖改为有超时的完成状态等待。
+
+真实浏览器验证水/火开始与字幕、木开始进入催芽场景；截图C:/Users/Administrator/AppData/Local/Temp/haqi-mu-regression-fixed.png，未进行全部分镜或完整多语言验收。locale:check仍有既有31项英文缺失和ja/ko各55项对齐缺失（errors=0），不宣称该审计通过。未发布、提交或推送。完整回归日志C:/Users/Administrator/AppData/Local/Temp/haqi-regression-complete.log。

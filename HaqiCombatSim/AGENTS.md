@@ -1,5 +1,7 @@
 # AGENTS.md — `web/HaqiCombatSim/`
 
+服务器操作前先读 [SSH配置入口](docs/ssh-setup.md)，再读独立 HaqiGameServerLite 仓库的 `docs/ssh-setup.md`。每台新电脑先建立并验证统一 `haqi-us1` 别名及独立密钥；优先复用已有配置，不重复索要可用登录方式，不在仓库保存密码或私钥（用户约定，2026-10-24）。
+
 魔法哈奇 2D 网页战斗模拟器与 `Haqi.html` 单人冒险。父级规则见 [/AGENTS.md](../../AGENTS.md)；本目录是独立的纯前端 H5 子项目，**不适用** NPL 的 `NPL.load` / `commonlib.gettable` 规则。
 
 ## 先读什么
@@ -143,3 +145,14 @@ Three.js 两种版本二选一，插件必须匹配所选版本；当前 Canvas 
 
 修改开场互动电影《失落的光》、双语剧本 `data/prologue/script.json`、插画清单 `data/prologue/art.json` 或序章四系大师／文字卡战斗前，先读 [docs/prologue.md](docs/prologue.md) 与 [docs/story/prologue-lost-light.md](docs/story/prologue-lost-light.md)。
 
+
+
+## 游戏服多客户端（用户约定，2026-10-23）
+- 游戏服允许任意网页来源/IP连接，包括127.0.0.1任意端口，仍须服务端验证Keepwork token有效且username一致；管理接口不随入场CORS开放。
+- 同一Keepwork账号最多同时10个游戏客户端，包括同角色多开；每条连接独立playerId，重连ID可变化，第11条明确拒绝。名额服务端核验并维护，客户端不伪造在线状态或绕过上限。
+
+## 同角色接管（用户更新，2026-10-24）
+- 覆盖此前同角色多开约定：Haqi 同一已核验账号、同一角色仅保留最新入场连接，由游戏服踢出旧连接并通知其返回登录页；不同角色仍共享每账号10条连接上限。大厅不参与角色互踢。
+
+## 游戏服验证分层（用户更新，2026-10-24）
+- 日常游戏服连接修改和部署不必每次跑8000人负载测试；本次接管部署以功能回归及真实双页面同角色验收为准。容量/广播性能修改或明确要求时再运行负载测试。

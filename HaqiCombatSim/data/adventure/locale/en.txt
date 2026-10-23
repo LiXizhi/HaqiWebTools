@@ -11072,3 +11072,34 @@ Word · 回忆拼写||Word · Recall Spelling
 这一组积木已用完，请再次练习召唤||This block pack is empty. Practice again to summon another.
 词语练习尚未保存，请重试||Word practice has not been saved. Please retry.
 读出或输入上方任意句子即可建造||Type or speak any sentence above to build
+
+游戏服务器||Game Server
+游戏服务器地址||Game Server Address
+切换服务器||Switch Server
+重新连接||Reconnect
+恢复默认服务器||Restore Default Server
+游戏服未连接||Game server disconnected
+默认连接美国一区。可填写其他已开通的 Keepwork 游戏服 HTTPS 地址；切换不改变角色存档。||Connects to US Region 1 by default. Enter another available Keepwork game server HTTPS address to switch without changing your character save.
+
+同一 Keepwork 账号最多同时连接10个客户端，请关闭其他客户端后重试||A Keepwork account supports up to 10 simultaneous clients. Close another client and retry.
+
+选择服务器||Select Server
+服务器 {id}||Server {id}
+当前服务器||Current Server
+流畅||Available
+拥挤||Crowded
+已满||Full
+维护中||Unavailable
+正在读取服务器列表…||Loading servers…
+暂无可用服务器||No servers available
+第 {page} / {pages} 页||Page {page} / {pages}
+跳转||Go
+所选服务器暂不可用，请选择其他服务器||The selected server is unavailable. Please choose another.
+无法读取服务器列表，请稍后刷新||Unable to load servers. Please refresh later.
+请先登录后再切换服务器||Please sign in before switching servers.
+战斗中无法切换服务器||You cannot switch servers during battle.
+
+该角色已在其他页面登录，你已被踢下线，请重新登录。||This character signed in elsewhere. You have been disconnected. Please sign in again.
+游戏服登录超时，请重试||Game server sign-in timed out. Please try again.
+
+语言未设置||Language not set

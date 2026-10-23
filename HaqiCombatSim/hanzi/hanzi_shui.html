@@ -399,128 +399,46 @@
     #fact-note { display: none; }
     .intro-panel { padding: 16px 22px 20px; }
   }
+
+.haqi-sub-trans { display:block; font-size:.78em; opacity:.85; margin-top:6px; }
 </style>
-<script id="haqi-h5-protocol-v1">
-(function () {
-  if (window.__haqiHanziProtocolV1) return;
-  window.__haqiHanziProtocolV1 = true;
+<script>
+// Haqi H5 protocol v1: independent pages remain usable without a parent.
+(()=>{let context=null,written=false,finished=false,serial=0;const callbacks=new Map(),subCache=new Map(),uiCache=new Map(),pending=new Set(),uiNodes=new Map();
+const isZh=loc=>!loc||/^zh\b/i.test(loc);
+const send=data=>{if(context)parent.postMessage({channel:'haqi-hanzi',version:1,entryId:context.entryId,sessionId:context.sessionId,...data},context.origin);};
+const refreshDom=()=>{for(const[el,zh]of uiNodes){if(!el?.isConnected){uiNodes.delete(el);continue;}const tr=!isZh(context?.locale)&&uiCache.get(zh);const next=(tr&&tr!==zh)?tr:zh;if(el.dataset.haqiKind==='seal'){const seal=el.querySelector('.seal');el.textContent=next;if(seal)el.prepend(seal);}else if(el.dataset.haqiKind==='tag'){const i1=document.createElement('i'),i2=document.createElement('i');el.replaceChildren(i1,document.createTextNode(next),i2);}else el.textContent=next;}document.querySelectorAll('[data-haqi-caption]').forEach(el=>renderCaption(el,el.dataset.haqiCaption));};
+const flushPending=()=>{if(!context||!pending.size)return;const texts=[...pending];pending.clear();window.haqiHanziTranslate(texts);};
+const ensureTexts=texts=>{const need=[];for(const t of texts){const s=typeof t==='string'?t.trim():'';if(s&&(!subCache.has(s)||!uiCache.has(s))&&!pending.has(s)){pending.add(s);need.push(s);}}if(need.length&&context)flushPending();};
+const renderCaption=(el,zh)=>{if(!el)return;el.dataset.haqiCaption=zh||'';let sub=el.querySelector('.haqi-sub-trans');if(!zh||isZh(context?.subtitleLocale||context?.locale)){sub?.remove();return;}const tr=subCache.get(zh);if(!tr||tr===zh){sub?.remove();ensureTexts([zh]);return;}if(!sub){sub=document.createElement('span');sub.className='haqi-sub-trans';const host=el.querySelector('#capText')||el;if(host!==el&&host.parentNode===el)host.insertAdjacentElement('afterend',sub);else el.appendChild(sub);}sub.textContent=tr;};
+const trackUi=(el,zh,kind='')=>{if(!el||!zh)return;if(kind)el.dataset.haqiKind=kind;uiNodes.set(el,zh);ensureTexts([zh]);};
+const scanStatic=()=>{if(!document.body)return;document.querySelectorAll('#start,#replay,#mute,#demo,#action,#progress li,#seasonBar button,#note,.introBottom .mean,.introBottom .sub,.introBottom .meta,.heading .eyebrow,.heading h1,.heading .deck,.edition,.colophon,#glyphLabel,#targets .svg-label').forEach(el=>{const zh=(el.textContent||'').trim();if(zh&&!uiNodes.has(el))trackUi(el,zh);});document.querySelectorAll('#brand,.brand').forEach(el=>{if(uiNodes.has(el))return;const clone=el.cloneNode(true);clone.querySelector?.('.seal')?.remove();const zh=(clone.textContent||'').trim();if(zh)trackUi(el,zh,'seal');});document.querySelectorAll('.introTop .tag,.tag').forEach(el=>{if(uiNodes.has(el))return;const zh=(el.textContent||'').trim();if(zh)trackUi(el,zh,'tag');});refreshDom();};
+if(document.readyState==='loading')addEventListener('DOMContentLoaded',scanStatic,{once:true});else scanStatic();
+window.haqiHanziWritten=()=>{written=true;send({type:'written'});};
+window.haqiHanziComplete=()=>{if(!written){written=true;send({type:'written'});}finished=true;send({type:'completed'});};
+window.haqiHanziPrefetch=texts=>ensureTexts(Array.isArray(texts)?texts:[texts]);
+window.haqiHanziUi=(zh,el)=>{const s=typeof zh==='string'?zh.trim():'';if(!s)return zh;if(el)trackUi(el,s);else ensureTexts([s]);const tr=!isZh(context?.locale)&&uiCache.get(s);return(tr&&tr!==s)?tr:zh;};
+window.haqiHanziCaption=(el,zh)=>{const s=typeof zh==='string'?zh.trim():'';if(s)ensureTexts([s]);renderCaption(el,s);};
+window.haqiHanziTranslate=texts=>new Promise(resolve=>{const list=(Array.isArray(texts)?texts:[]).map(t=>typeof t==='string'?t.trim():'').filter(Boolean);if(!context||!list.length){resolve({});return;}const requestId=String(++serial);const timer=setTimeout(()=>{callbacks.delete(requestId);resolve({});},1500);callbacks.set(requestId,msg=>{clearTimeout(timer);const sub=msg?.translations||{},ui=msg?.uiTranslations||sub;for(const[k,v]of Object.entries(sub))if(typeof v==='string'&&v.trim())subCache.set(k,v.trim());for(const[k,v]of Object.entries(ui))if(typeof v==='string'&&v.trim())uiCache.set(k,v.trim());refreshDom();resolve(sub);});send({type:'translate',requestId,texts:list});});
+addEventListener('message',event=>{const m=event.data;if(event.source!==parent||parent===window||m?.channel!=='haqi-hanzi'||m.version!==1)return;
+if(m.type==='init'&&typeof m.sessionId==='string'&&typeof m.entryId==='string'){if(document.referrer&&event.origin!==new URL(document.referrer).origin)return;context={...m,origin:event.origin};scanStatic();flushPending();refreshDom();if(written)send({type:'written'});if(finished)send({type:'completed'});}
+else if(context&&event.origin===context.origin&&m.sessionId===context.sessionId&&m.type==='translations'){callbacks.get(m.requestId)?.(m);callbacks.delete(m.requestId);}});
+if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'ready'},'*');})();
 
-  const HANZI_CHAR = "水";
-  let lang = (new URLSearchParams(location.search).get('lang') || '').trim();
-  let dict = {};
-  let writtenSent = false;
-  let completedSent = false;
-  let lastCaption = { zh: '', sub: '' };
-
-  function post(type, extra) {
-    const payload = Object.assign({
-      protocol: 'haqi-h5-v1',
-      type: type,
-      char: HANZI_CHAR,
-      hanzi: HANZI_CHAR,
-      timestamp: Date.now()
-    }, extra || {});
-    try {
-      if (window.parent && window.parent !== window) {
-        window.parent.postMessage(payload, '*');
-      }
-    } catch (_) {}
-  }
-
-  function norm(s) {
-    return String(s || '').replace(/\s+/g, ' ').trim();
-  }
-
-  function stripTags(s) {
-    return norm(String(s || '').replace(/<[^>]*>/g, ''));
-  }
-
-  function lookup(text) {
-    if (!lang || lang === 'zh' || lang === 'zh-CN') return '';
-    const k1 = norm(text);
-    const k2 = stripTags(text);
-    return (k1 && dict[k1]) || (k2 && dict[k2]) || '';
-  }
-
-  function applyCaption(zh, sub) {
-    lastCaption = { zh: zh || '', sub: sub || '' };
-    const cap = document.getElementById('caption');
-    const zhEl = document.getElementById('cap-zh') || (cap && cap.querySelector('.zh'));
-    const subEl = document.getElementById('cap-sub') || (cap && cap.querySelector('.sub'));
-    if (!cap || !zhEl) return;
-    if (!zh) {
-      cap.classList.remove('show');
-      return;
-    }
-    zhEl.innerHTML = zh;
-    const trans = lookup(zh);
-    const finalSub = trans || sub || '';
-    if (subEl) {
-      subEl.textContent = finalSub;
-      subEl.style.display = finalSub ? 'block' : 'none';
-    }
-    cap.classList.add('show');
-  }
-
-  function applyElementTranslation(el) {
-    if (!el) return;
-    const orig = el.getAttribute('data-zh-orig') ?? el.textContent;
-    if (!el.hasAttribute('data-zh-orig')) el.setAttribute('data-zh-orig', orig);
-    const trans = lookup(orig);
-    el.textContent = trans ? orig + ' · ' + trans : orig;
-  }
-
-  function scanStatic() {
-    ['#prompt', '#act-btn', '#replay', '#hud-label', '#stroke-counter', '#fact-note', '.intro-sub', '.start-btn', '.mini-btn', '.w-desc'].forEach(sel => {
-      document.querySelectorAll(sel).forEach(applyElementTranslation);
-    });
-    if (lastCaption.zh) applyCaption(lastCaption.zh, lastCaption.sub);
-  }
-
-  window.haqiHanziSetLang = function (nextLang, nextDict) {
-    if (typeof nextLang === 'string') lang = nextLang.trim();
-    if (nextDict && typeof nextDict === 'object') dict = Object.assign({}, dict, nextDict);
-    scanStatic();
-  };
-
-  window.haqiHanziCaption = applyCaption;
-  window.haqiHanziUi = applyElementTranslation;
-
-  window.haqiHanziWritten = function (detail) {
-    if (writtenSent) return;
-    writtenSent = true;
-    post('written', detail || {});
-  };
-
-  window.haqiHanziComplete = function (detail) {
-    if (!writtenSent) {
-      writtenSent = true;
-      post('written', { auto: true });
-    }
-    if (completedSent) return;
-    completedSent = true;
-    post('completed', detail || {});
-  };
-
-  window.addEventListener('message', function (ev) {
-    const d = ev && ev.data;
-    if (!d || typeof d !== 'object') return;
-    if (d.type === 'init' || d.type === 'haqi:init' || d.type === 'translate' || d.type === 'haqi:translate') {
-      window.haqiHanziSetLang(d.lang || d.language || lang, d.dict || d.translations || d.map || {});
-    }
-  });
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
-      scanStatic();
-      post('ready');
-    });
-  } else {
-    setTimeout(function () {
-      scanStatic();
-      post('ready');
-    }, 0);
-  }
+// Compatibility for these authored pages' caption(text, subtitle) / ui(element) calls.
+(()=>{
+ const caption=window.haqiHanziCaption,ui=window.haqiHanziUi;
+ window.haqiHanziUi=(text,el)=>{if(text&&typeof text==='object'){el=text;text=el.textContent;}const value=ui(text,el);if(el)el.textContent=value;return value;};
+ window.haqiHanziCaption=(text,sub)=>{
+  if(typeof text!=='string')return caption(text,sub);
+  const box=document.getElementById('caption'),zh=box?.querySelector('.zh'),secondary=box?.querySelector('.sub');
+  if(!box||!zh)return;
+  zh.innerHTML=text;box.classList.toggle('show',!!text);
+  if(secondary)secondary.hidden=true;
+  caption(zh,zh.textContent);
+ };
+ const scan=()=>document.querySelectorAll('#prompt,#prompt-text,#act-btn,#hud-label,#stroke-counter,#fact-note,.intro-sub,.start-btn,.mini-btn,.w-desc').forEach(el=>{if(!el.children.length)window.haqiHanziUi(el);});
+ if(document.readyState==='loading')addEventListener('DOMContentLoaded',scan,{once:true});else scan();
 })();
 </script>
 </head>
@@ -665,7 +583,7 @@
       const data = buf.getChannelData(0);
       let b0 = 0, b1 = 0, b2 = 0;
       for (let i = 0; i < len; i++) {
-        const w = (Math.random() * 2 - 1);
+        const w = (rng() * 2 - 1);
         b0 = 0.996 * b0 + w * 0.04;
         b1 = 0.98 * b1 + w * 0.08;
         b2 = 0.90 * b2 + w * 0.14;
@@ -1133,7 +1051,7 @@
           const rate = state.holdingSpring ? 0.68 : autoRate;
           if (rate > 0) {
             state.springProgress = clamp(state.springProgress + dt * rate, 0, 1);
-            if (Math.random() < dt * 10) {
+            if (rng() < dt * 10) {
               sfx.waterDrop(520 + state.springProgress * 360, 0.08);
               spawnDroplets(800, 175, 3, '#a8e4ff');
             }
@@ -2200,7 +2118,7 @@
       const u = clamp((wp.y - 175) / 560, 0, 1);
       if (u + 0.08 > state.streamProgress) {
         state.streamProgress = clamp(u + 0.08, 0.18, 1);
-        if (Math.random() < 0.35) {
+        if (rng() < 0.35) {
           const c = streamCenterPoint(state.streamProgress);
           spawnDroplets(c.x, c.y, 3, '#a8e4ff');
         }

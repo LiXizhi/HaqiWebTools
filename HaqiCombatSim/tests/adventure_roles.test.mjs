@@ -648,3 +648,16 @@ test('concurrent identical local saves share the acknowledged revision without d
     const [first,second]=await Promise.all([c.saveRoles(catalog,null),c.saveRoles(catalog,null)]);
     assert.equal(first,second);assert.equal(puts,4);
 });
+
+
+test('stale role list can reload latest local progress without overwriting another page', async () => {
+    const l=local(),first=l.make(),second=l.make();
+    first.open('alice');second.open('alice');
+    const role=first.create(hero('新角色'));
+    assert.equal(second.stale,true);
+    await second.prepareOpen('alice',{recover:true});second.open('alice',{recover:true});
+    assert.equal(second.stale,false);
+    assert.equal(second.catalog.roles[0].id,role);
+    second.select(role);
+    assert.equal(first.catalog.roles[0].save.name,'新角色');
+});

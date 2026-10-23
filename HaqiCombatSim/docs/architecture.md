@@ -1,12 +1,14 @@
-## 2026-10-22：在场网关与无状态世界服
+## 2026-10-23：共享在场服务器已迁出
 
-浏览器冒险仍不接入此链路。网关负责任务分配、实例增减和中文管理页，并在本进程的其他端口拉起世界服；游戏服只保存当前连接的房间、外观和坐标。房间名由客户端自定，只有第二个人进入才建立房间对象。每个实例最多 500 人，一台游戏服进程最多 8000 人。人少的房间每秒共用一帧；超过 64 名可见玩家时优先同步最近的人。散开的房间只查附近格子。慢连接丢移动帧，不拖住进程。岛屿和家园是房间，进出房间不重连。同一房间按距离以 1 Hz、0.25 Hz、0.125 Hz 转发移动，客户端自行插值。同一台机器上的实例在冷却 10 分钟后才会合并或按区域拆分，并提前 8 秒通知。详见 [server/presence/README.md](../server/presence/README.md)。
+源码、服务器测试和 VS Code 启动任务已迁至独立仓库 [HaqiGameServerLite](https://github.com/LiXizhi/HaqiGameServerLite)，供 HaqiCombatSim、AI-work-company 和 AIChat 共用。默认网关端口8797、世界服端口8798，避开 AI-work-company 的8787端口。三个项目正式页面尚未接入；接入约定见新仓库的 docs/integration.md。
+
+网关负责任务分配、实例增减和中文管理页；游戏服只保存当前连接的房间、外观和坐标。房间名由客户端自定，第二个人进入才建立房间对象。每个实例最多500人，一台游戏服最多8000人。移动按距离分档转发，慢连接丢移动帧；同机实例冷却10分钟后可合并或按区域拆分，并提前8秒通知。
 
 ```mermaid
 flowchart LR
     Admin[管理页] --> Gateway[网关]
-    Clients[客户端] --> Gateway
-    Clients --> Game[无状态游戏服]
+    Clients[HaqiCombatSim / AI-work-company / AIChat] -. 待接入 .-> Gateway
+    Clients -. 待接入 .-> Game[HaqiGameServerLite 无状态游戏服]
     Gateway --> Game
     Game --> Instance[实例]
     Instance --> Room[岛屿或家园房间]

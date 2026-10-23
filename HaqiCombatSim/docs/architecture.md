@@ -1,14 +1,21 @@
 ## 2026-10-23：共享在场服务器已迁出
 
-源码、服务器测试和 VS Code 启动任务已迁至独立仓库 [HaqiGameServerLite](https://github.com/LiXizhi/HaqiGameServerLite)，供 HaqiCombatSim、AI-work-company 和 AIChat 共用。默认网关端口8797、世界服端口8798，避开 AI-work-company 的8787端口。三个项目正式页面尚未接入；接入约定见新仓库的 docs/integration.md。
+源码、服务器测试和 VS Code 启动任务已迁至独立仓库 [HaqiGameServerLite](https://github.com/LiXizhi/HaqiGameServerLite)，供 HaqiCombatSim、AI-work-company 和 AIChat 共用。默认内部网关端口8797、世界服端口8798。2026-10-23 Haqi 源码正式入口已接入 `adventure_game_server.js`，公网为 `https://us1.gameserver.keepwork.com`；其他两个项目待接入，本轮Haqi网页未发布。接入约定见新仓库 docs/integration.md。
+
+`adventure_cloud.gameServerCredentials()` 只在有效的现有SDK会话中提供内存凭据。适配器每秒采样账号/角色/区域与坐标；服务端验证token及username，签发60秒一次性票据，世界服核验后返回welcome才显示已连接。退出/账号变化/pagehide立即关闭，角色变化重新入场、区域变化enterRoom、断线有限退避重试，旧异步回包不得恢复前一个身份。访客不请求游戏服，网络失败保留本地玩法。此轮仅建立在场连接与发送坐标，不新增远端玩家绘制、资产权限或战斗同步。
 
 网关负责任务分配、实例增减和中文管理页；游戏服只保存当前连接的房间、外观和坐标。房间名由客户端自定，第二个人进入才建立房间对象。每个实例最多500人，一台游戏服最多8000人。移动按距离分档转发，慢连接丢移动帧；同机实例冷却10分钟后可合并或按区域拆分，并提前8秒通知。
 
 ```mermaid
 flowchart LR
     Admin[管理页] --> Gateway[网关]
-    Clients[HaqiCombatSim / AI-work-company / AIChat] -. 待接入 .-> Gateway
-    Clients -. 待接入 .-> Game[HaqiGameServerLite 无状态游戏服]
+    Haqi[Haqi正式源码入口] --> Session[adventure_game_server / 内存连接生命周期]
+    Cloud[adventure_cloud / SDK会话] --> Session
+    Session -->|HTTPS Bearer token与username| Gateway
+    Gateway -->|查询profile核对username| Keepwork[Keepwork API]
+    Gateway -->|一次性签名票据| Session
+    Session -->|WSS hello与票据| Game[HaqiGameServerLite 无状态游戏服]
+    Clients[AI-work-company / AIChat] -. 待接入 .-> Gateway
     Gateway --> Game
     Game --> Instance[实例]
     Instance --> Room[岛屿或家园房间]

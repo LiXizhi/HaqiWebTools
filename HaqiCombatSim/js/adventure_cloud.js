@@ -203,6 +203,10 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
     }
     return {
         get owner() { return owner; },
+        gameServerCredentials() {
+            check({owner, version: authVersion});
+            return {username: owner, token: authToken};
+        },
         // Independent home storage; shares authenticated cache IO and write ordering.
         homeRead:(path,{refresh=false}={})=>guarded(async()=>{
             if(!/^homes\/[a-zA-Z0-9_-]+\/(?:index\.json|[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+\.json)$/.test(path))throw new CloudError('家园路径无效');

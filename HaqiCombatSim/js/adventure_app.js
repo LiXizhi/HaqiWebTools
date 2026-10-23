@@ -112,6 +112,7 @@ import { bindTouchMovement } from './view_adventure_movement.js';
 import { loadResources,saveLocal,readLocal,localUpdatedAt,replaceLocalWithBackup,readBackup } from './adventure_assets.js';
 import { createRenderer } from './adventure_renderer.js';
 import { createCloudClient } from './adventure_cloud.js';
+import {createGameServerSession} from './adventure_game_server.js';
 import { checkedProgress } from './adventure_cloud_core.js';
 import { renderCloud } from './view_adventure_cloud.js';
 import {renderMaps} from './view_adventure_maps.js';
@@ -223,7 +224,7 @@ let warmCell='';
 let selected=null,discarded=[],animation=null,music=null,storageWarning=false;
 let petCardsOpen=false;
 let runeCardsOpen=false;
-let cloudClient;
+let cloudClient,gameServerSession;
 let roleStore,roleStorage=null,roleEpoch=0,lastRoleSync=0;
 const roles={busy:'',error:'',message:'',conflict:null,localOnly:false,duoSelection:null,duoController:'human'};
 const roleRecoveryMessage='部分角色暂时无法读取，原存档已保留，云端同步已暂停。请重新读取本地角色，或刷新云端角色后选择恢复。';
@@ -991,6 +992,7 @@ function connectRoles(interactive=true, {enter=false,transfer=null}={}) {
         if(localPlay.active){persist();localPlay.leave();}
         const owner=await cloudClient.connect({interactive});
         cloud.owner=owner;cloud.preview=null;cloud.paths=[];
+        gameServerSession?.start();
         await membership.refresh().catch(error=>toast(error.message));
         let remote,readError;
         try{remote=await cloudClient.roles();}catch(error){readError=error;console.warn('云端角色读取失败',error);}
@@ -1011,6 +1013,7 @@ function connectRoles(interactive=true, {enter=false,transfer=null}={}) {
     });
 }
 function resetRoleAccount() {
+    gameServerSession?.stop();
     // Persist against the old scope before changing identity. Never assign an
     // account's active save to the guest namespace on logout/auth expiration.
     persist();if(localPlay.active)localPlay.leave();autoSave.reset();roleEpoch++;roleStore.open(null,{recover:true});roleStorage=roleStore.catalog.activeId?roleStore.scoped():null;
@@ -1844,6 +1847,16 @@ async function boot(){
         await settingsReady;spellSound.configure(gameSettings.value);
         roleStorage=roleStore.catalog.activeId?roleStore.scoped():null;
         cloudClient=createCloudClient({petFileStore:id=>roleStore?.petFileIOFor(cloudClient.owner,id),content:assets.content,dataset:assets.dataset,prepareSaves:assets.dungeons.prepareSaves,onAccountChange:()=>{resetRoleAccount();cloud.message='登录状态已变化，请重新连接。';}});
+        gameServerSession=createGameServerSession({
+            getCredentials:()=>cloudClient.gameServerCredentials(),
+            getState:()=>({owner:roleStore?.owner,roleId:roleStore?.catalog.activeId||'lobby',
+                roomId:stage==='title'?'haqi:lobby':`haqi:${String(save?.zone||'camp').slice(0,48)}`,
+                name:save?.name||'哈奇玩家',x:Number(save?.position?.x)||0,y:Number(save?.position?.y)||0}),
+            onStatus:message=>{if(roleStore?.owner)toast(message);},
+        });
+        gameServerSession.start();
+        window.addEventListener('pagehide',()=>gameServerSession.stop());
+        window.addEventListener('pageshow',()=>gameServerSession.start());
         creationPreview=createCreationPreview(assets);
         renderer=createRenderer(nodes.world,assets);requestAnimationFrame(frame);
         // Keep the loading screen until session restoration chooses the final screen.

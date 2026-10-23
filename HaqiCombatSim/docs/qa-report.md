@@ -1,3 +1,41 @@
+# 2026-10-23 Game Server Lite 账号认证上线与Haqi正式入口验证
+
+用户追加要求：由游戏服向Keepwork API验证token有效且用户名一致。本轮已完成服务器实现与部署、Haqi源码接入；未提交或推送Git，未发布Haqi网页。
+
+- 服务端固定GET `https://api.keepwork.com/core/v0/users/profile`，严格比对username，禁止重定向，8秒超时；不相信客户端playerId。验证成功签发60秒一次性HMAC票据，世界服核验身份、房间、实例、有效期和重放后才welcome。token仅走HTTPS请求头，票据仅走WSS hello，均不写入日志或存档。现存连接最长一小时后重新核验；不宣称注销后立即吊销其他已连接会话。
+- 2026-10-23 18:47（北京时间）公网真实账号测试：HTTPS health 200，CORS OPTIONS 204（Origin `https://cdn.keepwork.com`，允许Authorization/content-type）；缺token、无效token、正确token配错误username均401。正确账号两个临时角色join 200，WSS `wss://us1.gameserver.keepwork.com/world/8798` welcome核验通过，成员/移动同步、离房、同身份重连通过。报告 `accountLoginVerified:true`，房间 `haqi:qa-3335292a12904c65`。无真实游戏角色或存档写入操作。
+- Edge无头隔离浏览器打开本地正式 `http://127.0.0.1:8791/Haqi.html`，复用真实测试账号的SDK cookie会话：收到1次join 200、1次welcome及2次moved心跳；界面出现“已连接游戏服务器”，页面异常0。停在角色选择页，不进行游戏操作，关闭上下文清理连接。第一次测试只预置localStorage token，没有SDK cookie，因而未登录；纠正测试会话后复测通过，未将首轮算作通过。此为本地源码正式入口验证，不代表线上Haqi页面已更新。
+- 客户端 `tests/game_server_session.test.mjs` 5/5通过：访客不连接、welcome前不报在线、心跳/换房、断线退避、角色切换、退出关闭、错误token、旧异步身份、禁止明文网关及异域WebSocket。语法检查及diff检查通过。
+- 服务端共享工作区 `npm test` 25/25（含并行统计测试）；仅认证发布包隔离测试21/21；服务器现场认证测试3/3；`npm run test:load` 1/1，覆盖8000玩家。部署包没有包含并行统计功能，部署详情在独立仓库 `docs/deployment.md`。
+- 必跑战斗回归 `npm run test:battle`：**1355/1359，4项失败**，未跳过或计为通过：`battle_earth.test.mjs` 的地图WebP哈希、`battle_earth_labels.test.mjs` 的地面加载提示、`battle_hanzi_story_catalog.test.mjs` 的独立动画桥接标记与笔画几何解析。相关测试/素材/渲染源码本轮未改动，三份测试不依赖本轮登录模块。额外云存储联合回归17/18，失败为既有SDK URL断言仍要求 `haqi-storage` 参数，而当前源码及部署规范早已使用 `v=<hash>`；本轮未改SDK URL，不将该失败计为通过。
+
+复测脚本：`node scripts/check_game_server.mjs --auth-stdin`，只从标准输入读取 `{username,token}`；不得把真实值写进命令行、仓库或报告。不带会话可验证匿名拒绝，但会以非零退出明确提示成功登录未验收。脚本输出不含账号名、token或票据。浏览器业务层仍保留本地访客和断网玩法；本轮不新增远端人物绘制、云角色资产授权或战斗同步。
+
+# 2026-10-23 Game Server Lite 公网实测
+
+测试时间：2026-10-23 18:10（北京时间）。用户要求 Haqi 用户实际登录 `us1.gameserver.keepwork.com`，本轮检查正式入口源码并用 Node 原生 fetch/WebSocket 请求真实公网服务；没有使用真实账号、密码或 token，没有修改玩家存档、服务配置或发布游戏。
+
+**结论：匿名在场协议通过，Haqi 用户真实登录尚未完成。** 当前 `js/adventure_app.js` 未接入 Game Server Lite；Keepwork 登录不能代替游戏服入场。服务端协议及部署依据为独立仓库的 `docs/integration.md`、`docs/deployment.md` 和 `src/presence/gameserver/instance.js`。
+
+| 检查 | 实际结果 |
+| --- | --- |
+| DNS | `us1.gameserver.keepwork.com` → `43.130.151.173` |
+| 网关健康 | `http://us1.gameserver.keepwork.com:8797/api/health` 返回 HTTP 200，`ok: true` |
+| 网关分配 | 两个临时角色 POST `/api/join` 均返回 200，分配 instance 1，世界服地址为 `ws://43.130.151.173:8798` |
+| 实际入场 | 两条 WebSocket 均收到 `welcome`，核对返回的 self.id 与 roomId；不是仅测试 socket open |
+| 同房间同步 | 第一客户端收到第二客户端的 `joined`，第二客户端 roster 包含第一客户端 |
+| 移动 | 第一客户端从 (100,100) 移到 (120,110)，收到 `moved`；第二客户端收到相同坐标的 `relay` |
+| 离开与重连 | `leaveRoom` 收到 `leftRoom`，另一客户端收到 `left`；同一临时身份重新分配连接后再次收到 `welcome` |
+| HTTPS 443 | `/api/health` 连接失败：`ECONNREFUSED` |
+| TLS 8797 | `/api/health` 连接失败：`ERR_SSL_WRONG_VERSION_NUMBER` |
+| 跨域预检 | Origin `https://cdn.keepwork.com`，OPTIONS `/api/join` 返回 404，无 Access-Control-Allow-Origin/Methods/Headers；实际 POST 也无 Allow-Origin |
+| 账号身份验证 | 请求未发送任何凭据仍可入场；源码按客户端声明 playerId 接受 hello，不能称为 Keepwork 身份认证成功 |
+| 正式 Haqi 页面 | 未接入；本轮未做浏览器 UI 验收。HTTPS 页面无法直接使用当前 HTTP/WS 链路，且跨域访问缺少预检支持 |
+
+复测：`node scripts/check_game_server.mjs`（Node 22.12+）。可选第一参数覆盖网关 origin，第二参数覆盖待检查页面 origin。脚本使用独立 `haqi:qa-<随机标识>` 房间和两个临时玩家，finally 关闭所有测试连接；不访问管理接口。此次房间为 `haqi:qa-3fe021ce47d24329`，输出 `protocolPassed: true`、`accountLoginVerified: false`、`haqiUiVerified: false`。协议成功退出码不代表真实登录验收通过，仍须检查 TLS/CORS 与这两个未验收标志。
+
+待完成：部署 HTTPS/WSS 及可供页面访问的同源代理或限定源 CORS；服务端验证 Keepwork 身份并约束角色归属；Haqi 正式入口接入分配/welcome、心跳、断线重连、切换角色和退出清理；最后使用真实账号在正式入口验收。当前不能通过改客户端地址绕过这些缺项。本轮仅新增复测脚本和文档，未改战斗代码，因此未运行战斗回归或构建。
+
 # 2026-10-18 互动序章《失落的光》（`Haqi.html?prologue`）
 
 - 剧本与美术清单校验：`data/prologue/script.json`（8 个场景、全具名 NPC 头像对白、移除选系选男女镜头）与 `data/prologue/art.json`（11 张 `1376×768` 16:9 WebP + 1 张 `256×256` 透明去背带翅膀 `dark-lord-boss` 独立立绘 WebP，共 12 张，体积 `27,406B–198,298B`，全部 `< 200,000B`，SHA-256 与原图哈希分离记录）通过 `python scripts/prepare_prologue_art.py --check` 与 `validateScript` 严格校验。

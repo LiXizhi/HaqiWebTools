@@ -71,8 +71,8 @@ body.started #controls{opacity:1;pointer-events:auto}
 #intro.off{opacity:0;transform:scale(1.03)}
 #intro.off *{pointer-events:none!important}
 .introTop,.introBottom{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
-.introTop{bottom:calc(100% - var(--gTop,140px) + 18px)}
-.introBottom{top:calc(var(--gBottom,560px) + 18px);gap:8px}
+.introTop{top:max(16px,env(safe-area-inset-top))}
+.introBottom{bottom:max(12px,env(safe-area-inset-bottom));gap:8px}
 .tag{display:flex;align-items:center;gap:10px;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.3em;color:var(--gold)}
 .tag i{display:block;width:clamp(24px,5vw,60px);height:1px;background:currentColor;opacity:.6}
 .pinyin{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:clamp(30px,5.2vh,46px);line-height:1;color:var(--cream);letter-spacing:.06em}
@@ -95,8 +95,7 @@ body.portrait #hint{top:max(92px,calc(env(safe-area-inset-top) + 82px))}
 body.portrait #note{display:none}
 body.portrait #capText{font-size:clamp(18px,4.8vw,22px);line-height:1.62}
 body.portrait #progress li{font-size:11px}
-body.portrait .introBottom{top:auto;bottom:max(18px,env(safe-area-inset-bottom))}
-body.portrait .introTop{bottom:auto;top:max(18px,env(safe-area-inset-top))}
+body.portrait .sub{font-size:15px;letter-spacing:.06em}
 @media (max-height:540px){#capText{font-size:17px;line-height:1.5}#caption{padding:8px 14px 6px}.actions{margin-top:6px}}
 @media (prefers-reduced-motion: reduce){
   #intro,#caption{transition-duration:.4s}
@@ -232,10 +231,10 @@ let SW = 1, SH = 1, DPR = 1, portrait = false;
 const cam = { x: 1000, y: 560, w: 1500, h: 900, pw: 860, pcy: 0.46 };
 const CV = { x: 0, y: 0, k: 1, cy: 0 };
 const VIEW = {
-  intro:  { x: 980, y: 560, w: 1680, h: 980, pw: 920, pcy: 0.48 },
-  wait:   { x: 860, y: 560, w: 980, h: 760, pw: 640, pcy: 0.42 },
-  action: { x: 1080, y: 680, w: 1180, h: 820, pw: 700, pcy: 0.42 },
-  meet:   { x: 1290, y: 780, w: 780, h: 640, pw: 520, pcy: 0.40 },
+  intro:  { x: 1080, y: 560, w: 1280, h: 860, pw: 760, pcy: 0.42 },
+  wait:   { x: 860, y: 520, w: 860, h: 680, pw: 560, pcy: 0.40 },
+  action: { x: 1080, y: 700, w: 920, h: 700, pw: 640, pcy: 0.38 },
+  meet:   { x: 1230, y: 760, w: 560, h: 500, pw: 430, pcy: 0.36 },
   glyph:  { x: 1040, y: 560, w: 1320, h: 1120, pw: 820, pcy: 0.38 },
   finale: { x: 1040, y: 700, w: 1280, h: 860, pw: 760, pcy: 0.44 },
 };
@@ -243,7 +242,7 @@ function frameW(v) { return portrait ? (v.pw ?? v.w * 0.62) : v.w; }
 function updateView() {
   const usableH = SH * (portrait ? 0.62 : 0.78);
   CV.k = Math.min(SW / frameW(cam), usableH / cam.h);
-  CV.cy = SH * (portrait ? cam.pcy : 0.46);
+  CV.cy = SH * cam.pcy;
   CV.x = cam.x; CV.y = cam.y;
 }
 function setCam(c) {
@@ -269,16 +268,16 @@ function resize() {
 
 // The path runs uphill toward the left. The person ahead stops and looks back downhill.
 const ROAD = [
-  { x: 460, y: 390 },
-  { x: 640, y: 460 },
-  { x: 800, y: 540 },
-  { x: 960, y: 630 },
-  { x: 1100, y: 720 },
-  { x: 1220, y: 800 },
-  { x: 1460, y: 920 },
-  { x: 1680, y: 1040 },
+  { x: 520, y: 430 },
+  { x: 680, y: 490 },
+  { x: 820, y: 560 },
+  { x: 960, y: 650 },
+  { x: 1080, y: 730 },
+  { x: 1188, y: 800 },
+  { x: 1360, y: 900 },
+  { x: 1560, y: 1020 },
 ];
-const MEET_B = { x: 1348, y: 848 };
+const MEET_B = { x: 1284, y: 836 };
 const PINES = [
   { x: 360, y: 620, s: 1.15 },
   { x: 560, y: 390, s: 0.72 },
@@ -329,8 +328,8 @@ function strokeEnds(i) {
 
 const W = {};
 function resetWorld() {
-  W.a = { x: ROAD[2].x, y: ROAD[2].y, dir: -1, look: 1, wave: 1, phase: 0.4, s: 1.22, alpha: 1, lean: 0, stroke: 0, cloth: '#c45b3a', clothDeep: '#8d3b2c', skin: '#efbd91', hair: '#2c211c' };
-  W.b = { x: ROAD[6].x, y: ROAD[6].y, dir: -1, look: -1, wave: 1, phase: 1.4, s: 1.12, alpha: 1, lean: 0, stroke: 1, cloth: '#3d6a78', clothDeep: '#244854', skin: '#f0c8a8', hair: '#241c1c' };
+  W.a = { x: ROAD[2].x, y: ROAD[2].y, dir: -1, look: 1, wave: 1, phase: 0.4, s: 1.55, alpha: 1, lean: 0, stroke: 0, cloth: '#c45b3a', clothDeep: '#8d3b2c', skin: '#efbd91', hair: '#2c211c' };
+  W.b = { x: ROAD[6].x, y: ROAD[6].y, dir: -1, look: -1, wave: 1, phase: 1.4, s: 1.42, alpha: 1, lean: 0, stroke: 1, cloth: '#3d6a78', clothDeep: '#244854', skin: '#f0c8a8', hair: '#241c1c' };
   W.next = 3;
   W.guide = false;
   W.peopleFront = true;
@@ -342,7 +341,7 @@ function resetWorld() {
   W.trace = null;
   W.wordOn = -1;
   W.finale = false;
-  placeGlyph(1180, 320, portrait ? 240 : 340);
+  placeGlyph(1100, 290, portrait ? 230 : 300);
 }
 
 function ribbon(pts, half) {
@@ -531,73 +530,88 @@ function drawUpright(p) {
   ctx.beginPath();
   ctx.ellipse(0, 8, 28, 8, 0, 0, 6.283);
   ctx.fill();
+  const back = p.wave && p.look !== p.dir;
   const step = reduceMotion ? 0 : Math.sin((p.phase || 0) * 2) * 8;
+  const face = p.dir || 1;
   ctx.strokeStyle = '#3a2a24';
-  ctx.lineWidth = 5;
+  ctx.lineWidth = 5.5;
   ctx.lineCap = 'round';
   ctx.beginPath();
-  ctx.moveTo(-4, -36);
-  ctx.lineTo(-16 - step, 2);
-  ctx.moveTo(5, -36);
-  ctx.lineTo(16 + step, 2);
+  ctx.moveTo(face * 4, -36);
+  ctx.lineTo(face * 18 - step * 0.2, 4);
+  ctx.moveTo(face * -2, -34);
+  ctx.lineTo(face * -8 + step, 2);
   ctx.stroke();
   ctx.fillStyle = '#f4e2cc';
   ctx.beginPath();
-  ctx.ellipse(-16 - step, 2, 6, 3.5, 0, 0, 6.283);
-  ctx.ellipse(16 + step, 2, 6, 3.5, 0, 0, 6.283);
+  ctx.ellipse(face * 18 - step * 0.2, 4, 7, 3.6, face * -0.3, 0, 6.283);
+  ctx.ellipse(face * -8 + step, 2, 6, 3.2, 0, 0, 6.283);
   ctx.fill();
   ctx.save();
-  ctx.transform(1, 0, p.dir * -0.12, 1, 0, 0);
+  ctx.transform(1, 0, face * -0.22, 1, face * 6, 0);
   ctx.fillStyle = p.cloth;
   ctx.beginPath();
-  ctx.moveTo(-16, -78);
-  ctx.lineTo(-20, -34);
-  ctx.quadraticCurveTo(0, -24, 20, -34);
-  ctx.lineTo(15, -78);
+  ctx.moveTo(-18, -82);
+  ctx.lineTo(-22, -32);
+  ctx.quadraticCurveTo(0, -18, 22, -32);
+  ctx.lineTo(16, -82);
   ctx.closePath();
   ctx.fill();
   ctx.fillStyle = p.clothDeep;
-  ctx.fillRect(-4, -78, 8, 46);
+  ctx.fillRect(face > 0 ? -2 : -8, -80, 10, 50);
   ctx.fillStyle = '#efbd91';
-  ctx.fillRect(-14, -58, 28, 5);
+  ctx.fillRect(-16, -58, 30, 6);
   ctx.restore();
+  ctx.strokeStyle = '#efbd91';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(face * -2, -78);
+  ctx.quadraticCurveTo(face * 24, -64, face * 40, -90);
+  ctx.stroke();
   ctx.strokeStyle = p.clothDeep;
   ctx.lineWidth = 6;
   ctx.beginPath();
-  if (p.wave) {
-    ctx.moveTo(-6, -70);
-    ctx.quadraticCurveTo(p.look * 20, -108, p.look * 34, -86);
+  if (back) {
+    ctx.moveTo(face * -8, -70);
+    ctx.quadraticCurveTo(p.look * 10, -118, p.look * 46, -74);
+  } else if (p.wave) {
+    ctx.moveTo(0, -70);
+    ctx.quadraticCurveTo(p.look * 18, -108, p.look * 28, -82);
   } else {
-    ctx.moveTo(-6, -70);
-    ctx.lineTo(p.dir * -18, -46);
+    ctx.moveTo(face * 4, -68);
+    ctx.lineTo(face * 22, -44);
   }
-  ctx.moveTo(6, -68);
-  ctx.lineTo(p.dir * 16, -42);
+  ctx.moveTo(face * 8, -66);
+  ctx.lineTo(face * 24, -40);
   ctx.stroke();
   ctx.fillStyle = p.skin;
   ctx.beginPath();
-  if (p.wave) ctx.arc(p.look * 34, -86, 5, 0, 6.283);
-  ctx.arc(p.dir * 16, -40, 4.5, 0, 6.283);
+  if (back) ctx.arc(p.look * 46, -74, 5.5, 0, 6.283);
+  else if (p.wave) ctx.arc(p.look * 28, -82, 5, 0, 6.283);
+  ctx.arc(face * 24, -38, 4.5, 0, 6.283);
   ctx.fill();
   ctx.save();
-  ctx.translate(p.look * 4, -96);
-  ctx.rotate(p.look * 0.45);
+  ctx.translate(back ? p.look * 10 : face * 2, -100);
+  ctx.rotate(back ? p.look * 1.05 : p.look * 0.2);
   ctx.fillStyle = p.skin;
   ctx.beginPath();
-  ctx.ellipse(0, 0, 15, 17, 0, 0, 6.283);
+  ctx.ellipse(0, 0, 16, 18, 0, 0, 6.283);
+  ctx.fill();
+  ctx.fillStyle = p.skin;
+  ctx.beginPath();
+  ctx.ellipse(12, 2, 5, 3.4, 0, 0, 6.283);
   ctx.fill();
   ctx.fillStyle = p.hair;
   ctx.beginPath();
-  ctx.ellipse(0, -4, 15, 12, 0, Math.PI, Math.PI * 2);
+  ctx.ellipse(-1, -5, 16, 13, 0, Math.PI, Math.PI * 2);
   ctx.fill();
   ctx.beginPath();
-  ctx.ellipse(-1, -2, 15, 8, -0.2, Math.PI * 1.15, Math.PI * 1.9);
+  ctx.ellipse(-2, -1, 16, 9, -0.3, Math.PI * 1.05, Math.PI * 1.85);
   ctx.fill();
   ctx.fillStyle = '#2a211c';
-  const ex = 3.5 + p.look * 2.5;
   ctx.beginPath();
-  ctx.arc(-5, 1, 1.6, 0, 6.283);
-  ctx.arc(ex, 1, 1.6, 0, 6.283);
+  ctx.arc(6, 0, 1.8, 0, 6.283);
+  ctx.arc(12, 1, 1.5, 0, 6.283);
   ctx.fill();
   ctx.restore();
   ctx.restore();
@@ -951,7 +965,7 @@ function hint(text) {
     const s = span('', '');
     s.textContent = window.haqiHanziUi ? window.haqiHanziUi(text, s) : text;
     ui.hint.replaceChildren(s); ui.hint.classList.add('on');
-  } else ui.hint.classList.remove('on');
+  } else { ui.hint.classList.remove('on'); ui.hint.replaceChildren(); }
 }
 function progress(i) {
   ui.prog.forEach((li, j) => { li.classList.toggle('on', j === i); li.classList.toggle('done', j < i); });
@@ -1327,7 +1341,7 @@ function placeIntro() {
   box.style.setProperty('--gBottom', `${b.y}px`);
 }
 async function introPlay(tk) {
-  placeGlyph(1180, 320, portrait ? 240 : 340);
+  placeGlyph(1100, 290, portrait ? 230 : 300);
   Object.assign(cam, VIEW.intro);
   W.glyph.alpha = 1;
   W.glyph.ghost = 0.35;
@@ -1359,7 +1373,7 @@ function pose(name) {
   if (name === 'intro') {
     document.body.classList.remove('started');
     $('#intro').classList.remove('off');
-    placeGlyph(1180, 320, portrait ? 240 : 340);
+    placeGlyph(1100, 290, portrait ? 230 : 300);
     Object.assign(cam, VIEW.intro);
     W.glyph.alpha = 1;
     W.glyph.ghost = 0.2;
@@ -1442,7 +1456,7 @@ window.__ren = {
 resize();
 render();
 document.documentElement.dataset.fixtureReady = '1';
-  addEventListener('resize', () => { resize(); if (window.__ren.scene === 'intro') placeGlyph(1180, 320, portrait ? 240 : 340); render(); placeIntro(); });
+  addEventListener('resize', () => { resize(); if (window.__ren.scene === 'intro') placeGlyph(1100, 290, portrait ? 230 : 300); render(); placeIntro(); });
 requestAnimationFrame(loop);
 bg(introPlay(token = { dead: false }));
 

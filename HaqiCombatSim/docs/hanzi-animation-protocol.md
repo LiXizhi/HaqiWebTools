@@ -99,3 +99,5 @@
 - 仓库内 `hanzi/` 目录下的 8 个正式汉字动画（`门`、`休`、`森`、`光`、`国`、`雨`、`明`、`武`）均已完整接入本协议，并在 [`js/adventure_dictionary.js`](../js/adventure_dictionary.js) 的 `localAnimations` 中映射到本地 `hanzi/hanzi_<拼音>.html`。
 
 - 2026-10-18新增23个单文件故事，补齐当前字源岛30字。新增URL集中于 `js/hanzi_story_animations.js`，由现有 `localAnimations` 合并；`wu` 词条现在正确指向 `hanzi_wu_dance.html`（舞），原 `hanzi_wu.html`（武）作为额外独立故事保留。规范笔画、离线运行、协议内联及作者源说明见[汉字独立动画](hanzi-stories.md)。
+
+- 2026-10-24 「手」`hanzi/hanzi_shou.html` 按同一 `haqi-hanzi` v1 接入。四笔描红全部完成后才发送 `written`，只在余韵 `sFinale` 发送 `completed`。片头 `introPlay` 不发这两个事件。本地与 CDN 地址见 `js/hanzi_story_animations.js` 与 `js/adventure_dictionary.js`。

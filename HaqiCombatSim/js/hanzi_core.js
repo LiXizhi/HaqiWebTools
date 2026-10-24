@@ -49,7 +49,11 @@ function sample(points,n=24){
 }
 function normalize(strokes){
  const points=strokes.flat();const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);const minX=Math.min(...xs),minY=Math.min(...ys),w=Math.max(...xs)-minX,h=Math.max(...ys)-minY,scale=Math.max(w,h);
- if(scale<.045)return null;return strokes.map(s=>s.map(([x,y])=>[(x-minX-w/2)/scale+.5,(y-minY-h/2)/scale+.5]));
+ if(scale<.04)return null;return strokes.map(s=>s.map(([x,y])=>[(x-minX-w/2)/scale+.5,(y-minY-h/2)/scale+.5]));
+}
+function normalizeStroke(s){
+ const xs=s.map(p=>p[0]),ys=s.map(p=>p[1]),minX=Math.min(...xs),minY=Math.min(...ys),w=Math.max(...xs)-minX,h=Math.max(...ys)-minY,scale=Math.max(w,h);
+ if(scale<.025)return null;return s.map(([x,y])=>[(x-minX-w/2)/scale+.5,(y-minY-h/2)/scale+.5]);
 }
 // Pointer points are normalized to the writing square; template has the same orientation.
 export function compareHanziWriting(strokes,medians){
@@ -57,14 +61,26 @@ export function compareHanziWriting(strokes,medians){
  if(strokes.some(s=>!Array.isArray(s)||s.length<2||s.length>4096||s.some(p=>!Array.isArray(p)||p.length!==2||p.some(n=>!Number.isFinite(n)||n<0||n>1))))return {ok:false,reason:'shape'};
  const input=normalize(strokes),target=normalize(medians);if(!input||!target)return {ok:false,reason:'shape'};
  let sum=0;
+ const pathLength=s=>s.slice(1).reduce((v,p,k)=>v+distance(p,s[k]),0);
  for(let i=0;i<input.length;i++){
+  const rawLen=pathLength(strokes[i]);if(rawLen<.035)return {ok:false,reason:'stroke',stroke:i};
   const a=sample(input[i]),b=sample(target[i]);if(!a||!b)return {ok:false,reason:'shape',stroke:i};
-  const error=a.reduce((s,p,k)=>s+distance(p,b[k]),0)/a.length;
-  const pathLength=s=>s.slice(1).reduce((v,p,k)=>v+distance(p,s[k]),0);
+  const aRaw=sample(strokes[i]),bRaw=sample(medians[i]);
+  const aLoc=sample(normalizeStroke(strokes[i])||input[i]),bLoc=sample(normalizeStroke(medians[i])||target[i]);
+  const errGlobal=a.reduce((s,p,k)=>s+distance(p,b[k]),0)/a.length;
+  const errRaw=aRaw&&bRaw?aRaw.reduce((s,p,k)=>s+distance(p,bRaw[k]),0)/aRaw.length:errGlobal;
+  const errLoc=aLoc&&bLoc?aLoc.reduce((s,p,k)=>s+distance(p,bLoc[k]),0)/aLoc.length:errGlobal;
+  const error=Math.min(errGlobal,errRaw,errLoc*0.65+Math.min(errGlobal,errRaw)*0.35);
+  const startD=Math.min(distance(a[0],b[0]),aRaw&&bRaw?distance(aRaw[0],bRaw[0]):1,aLoc&&bLoc?distance(aLoc[0],bLoc[0])*0.85+Math.min(distance(a[0],b[0]),aRaw&&bRaw?distance(aRaw[0],bRaw[0]):1)*0.15:1);
+  const endD=Math.min(distance(a.at(-1),b.at(-1)),aRaw&&bRaw?distance(aRaw.at(-1),bRaw.at(-1)):1,aLoc&&bLoc?distance(aLoc.at(-1),bLoc.at(-1))*0.85+Math.min(distance(a.at(-1),b.at(-1)),aRaw&&bRaw?distance(aRaw.at(-1),bRaw.at(-1)):1)*0.15:1);
+  const ivx=strokes[i].at(-1)[0]-strokes[i][0][0],ivy=strokes[i].at(-1)[1]-strokes[i][0][1];
+  const tvx=medians[i].at(-1)[0]-medians[i][0][0],tvy=medians[i].at(-1)[1]-medians[i][0][1];
+  const iSpan=Math.hypot(ivx,ivy),tSpan=Math.hypot(tvx,tvy);
+  const dirCos=(iSpan>.02&&tSpan>.02)?(ivx*tvx+ivy*tvy)/(iSpan*tSpan):1;
   const ratio=pathLength(input[i])/pathLength(target[i]);
-  if(error>.16||distance(a[0],b[0])>.25||distance(a.at(-1),b.at(-1))>.25||ratio<.5||ratio>1.9)return {ok:false,reason:'stroke',stroke:i};sum+=error;
+  if(dirCos<-0.15||error>.34||startD>.45||endD>.45||ratio<.22||ratio>3.2)return {ok:false,reason:'stroke',stroke:i};sum+=error;
  }
- return {ok:sum/input.length<.12,reason:'shape',error:sum/input.length};
+ return {ok:sum/input.length<.28,reason:'shape',error:sum/input.length};
 }
 export function equipHanziEffect(progress,effect,base){
  if(!effect.bases.includes(base)||!unlockedEffect(progress,effect))throw Error('请先收集这一组字卡');

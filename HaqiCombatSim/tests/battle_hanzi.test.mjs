@@ -58,6 +58,13 @@ test('Hanzi route defaults, invalid chapters and all content references',()=>{
 for(const char of data.characters)test(`writing ${char.glyph}: scale/translation and small pointer variation pass; reversal/scribble fail`,()=>{
  const points=template(char.id);assert.equal(compareHanziWriting(points,points).ok,true);
  const jitter=points.map(s=>s.map(([x,y],i)=>[x*.72+.12+Math.sin(i)*.004,y*.72+.1+Math.cos(i)*.004]));assert.equal(compareHanziWriting(jitter,points).ok,true);
+ const coarseTrend=points.map((s,si)=>{
+  const a=s[0],m=s[Math.floor(s.length/2)],b=s.at(-1);
+  const clamp01=v=>Math.max(0,Math.min(1,v));
+  const shift=(p,dx,dy)=>[clamp01(p[0]*.8+.1+dx),clamp01(p[1]*.8+.1+dy)];
+  return [shift(a,.03*(si%2?1:-1),-.025),shift(m,-.025,.03),shift(b,.02,.025)];
+ });
+ assert.equal(compareHanziWriting(coarseTrend,points).ok,true);
  assert.equal(compareHanziWriting(points.map(s=>[...s].reverse()),points).ok,false);
  assert.equal(compareHanziWriting(points.map(()=>[[.1,.1],[.9,.9],[.1,.9],[.9,.1]]),points).ok,false);
  assert.equal(compareHanziWriting(points.map(()=>[[.3,.3],[.3001,.3001]]),points).ok,false);

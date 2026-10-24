@@ -984,14 +984,14 @@ async function sceneWall(tk) {
   stage.classList.add('trace');
 
   const covered = new Set();
-  const NEED = 34;
+  const NEED = 22;
   const binIdx = (v, a, b) => clamp(Math.floor((v - a) / (b - a) * 12), 0, 11);
   const mark = (x, y) => {
-    const tol = 10, hits = [];
-    if (Math.abs(y - 8) < tol && x > 3 && x < 97) hits.push(binIdx(x, 8, 92));
-    if (Math.abs(x - 92) < tol && y > 3 && y < 99) hits.push(12 + binIdx(y, 8, 94));
-    if (Math.abs(y - 94) < tol && x > 3 && x < 97) hits.push(24 + binIdx(92 - x, 0, 84));
-    if (Math.abs(x - 8) < tol && y > 3 && y < 99) hits.push(36 + binIdx(94 - y, 0, 86));
+    const tol = 22, hits = [];
+    if (Math.abs(y - 8) < tol && x > -6 && x < 106) hits.push(binIdx(x, 8, 92));
+    if (Math.abs(x - 92) < tol && y > -6 && y < 106) hits.push(12 + binIdx(y, 8, 94));
+    if (Math.abs(y - 94) < tol && x > -6 && x < 106) hits.push(24 + binIdx(92 - x, 0, 84));
+    if (Math.abs(x - 8) < tol && y > -6 && y < 106) hits.push(36 + binIdx(94 - y, 0, 86));
     for (const i of hits) if (!covered.has(i)) { covered.add(i); bins[i].classList.add('hit'); }
   };
   const markSeg = (a, b) => {

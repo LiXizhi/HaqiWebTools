@@ -16,7 +16,7 @@ function fixture(name,standalone=false){
  const init={channel:'haqi-hanzi',version:1,type:'init',sessionId:'session',entryId:name,locale:'en'};
  return {context,messages,send,init};
 }
-for(const name of ['shui','huo','mu','shi','tu','ren','kou','shou','mu_eye']){
+for(const name of ['shui','huo','mu','shi','tu','ren','kou','shou','mu_eye','xi']){
  test(`${name} uses the host protocol, rejects foreign init and replays real completion on late init`,()=>{
   const f=fixture(name);
   assert.equal(f.messages.length,1);assert.equal(f.messages[0].message.type,'ready');

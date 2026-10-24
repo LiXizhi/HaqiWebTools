@@ -11,9 +11,11 @@ export function normalizeGameServerUrl(value) {
     }
     return url.origin;
 }
-export function createGameServerSession({getState, getCredentials, onStatus = () => {}, onReplaced = () => {},
+export function createGameServerSession({getState, getCredentials, project = 'haqi', onStatus = () => {}, onReplaced = () => {},
     gatewayUrl = GAME_SERVER_URL, fetchImpl = globalThis.fetch, WebSocketImpl = globalThis.WebSocket,
     now = Date.now, setTimer = setInterval, clearTimer = clearInterval} = {}) {
+    // Consumers (haqi, awc) share one gateway; rooms must stay inside their own project prefix.
+    if (typeof project !== 'string' || !/^[a-z][a-z0-9-]{0,15}$/.test(project)) throw Error('游戏服项目标识无效');
     let gateway = new URL(normalizeGameServerUrl(gatewayUrl));
     let lastReceived = 0, suspended = false;
     let socket = null, abort = null, generation = 0, identity = '', online = false;
@@ -53,7 +55,7 @@ export function createGameServerSession({getState, getCredentials, onStatus = ()
         try {
             const response = await fetchImpl(new URL('/api/join', gateway), {
                 method: 'POST', headers: {'content-type': 'application/json', Authorization: `Bearer ${credentials.token}`},
-                body: JSON.stringify({username: credentials.username, project: 'haqi', roleId: state.roleId,
+                body: JSON.stringify({username: credentials.username, project, roleId: state.roleId,
                     roomId: state.roomId, x: state.x, y: state.y, ...(requestedInstanceId ? {instanceId: requestedInstanceId} : {})}), signal: abort.signal, redirect: 'error',
             });
             if (!isCurrent()) return;
@@ -127,6 +129,10 @@ export function createGameServerSession({getState, getCredentials, onStatus = ()
         if (!state?.owner || !credentials?.token || credentials.username !== state.owner) {
             if (identity || socket || connecting) disconnect();
             identity = ''; status('游戏服未连接'); return;
+        }
+        if (typeof state.roomId !== 'string' || !state.roomId.startsWith(`${project}:`)) {
+            if (identity || socket || connecting) disconnect();
+            identity = ''; status('游戏服房间不属于当前项目'); return;
         }
         // Token participates in the in-memory lifecycle only; never report this key.
         const key = JSON.stringify([state.owner, state.roleId, credentials.token]);

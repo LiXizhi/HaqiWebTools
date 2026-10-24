@@ -2016,27 +2016,40 @@ if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'read
     // 计算当前触点在笔画折线上的最近投影比例
     let bestU = state.writeProgress;
     let minDist = Infinity;
+    let totalLen = 0;
     const totalSegs = worldPts.length - 1;
     for (let i = 0; i < totalSegs; i++) {
       const a = worldPts[i], b = worldPts[i + 1];
       const dx = b.x - a.x, dy = b.y - a.y;
+      totalLen += Math.hypot(dx, dy);
       const len2 = dx * dx + dy * dy || 1;
       const uSeg = clamp(((wp.x - a.x) * dx + (wp.y - a.y) * dy) / len2, 0, 1);
       const px = a.x + dx * uSeg, py = a.y + dy * uSeg;
       const d = Math.hypot(wp.x - px, wp.y - py);
       const uTotal = (i + uSeg) / totalSegs;
-      if (d < minDist && uTotal >= state.writeProgress - 0.15) {
+      if (uTotal >= state.writeProgress - 0.02 && d < minDist) {
         minDist = d;
         bestU = uTotal;
       }
     }
 
-    // 宽容度：95 世界单位内均可推进
-    if (minDist < 95 && bestU > state.writeProgress) {
-      state.writeProgress = Math.min(1, bestU + 0.08);
-      if (state.writeProgress >= 0.88) {
-        completeCurrentStroke();
+    // 宽容度：195 世界单位内或顺着笔画走势均可推进
+    if (minDist < 195 && bestU > state.writeProgress) {
+      state.writeProgress = Math.min(1, bestU + 0.10);
+    } else if (state.traceLastW && minDist < 260) {
+      const mvx = wp.x - state.traceLastW.x, mvy = wp.y - state.traceLastW.y;
+      const segIdx = clamp(Math.floor(state.writeProgress * totalSegs), 0, totalSegs - 1);
+      const a = worldPts[segIdx], b = worldPts[Math.min(totalSegs, segIdx + 1)];
+      const tx = b.x - a.x, ty = b.y - a.y;
+      const tLen = Math.hypot(tx, ty) || 1;
+      const forwardProj = (mvx * tx + mvy * ty) / tLen;
+      if (forwardProj > 1) {
+        state.writeProgress = Math.min(1, state.writeProgress + (forwardProj / Math.max(80, totalLen)) * 1.35);
       }
+    }
+    state.traceLastW = wp;
+    if (state.writeProgress >= 0.80) {
+      completeCurrentStroke();
     }
   }
 
@@ -2097,9 +2110,10 @@ if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'read
       }
     } else if (state.sceneIdx === 6 && state.writeStrokeIdx < STROKES.length) {
       state.isTracing = true;
+      state.traceLastW = wp;
       const cur = STROKES[state.writeStrokeIdx];
       const startPt = glyphToWorld(cur.pts[0][0], cur.pts[0][1]);
-      if (Math.hypot(wp.x - startPt.x, wp.y - startPt.y) < 110) {
+      if (Math.hypot(wp.x - startPt.x, wp.y - startPt.y) < 185) {
         state.writeProgress = Math.max(state.writeProgress, 0.18);
       }
       advanceTracingToPoint(wp);
@@ -2133,7 +2147,8 @@ if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'read
     state.draggingStream = false;
     if (state.sceneIdx === 6 && state.isTracing) {
       state.isTracing = false;
-      if (state.writeProgress >= 0.72) {
+      state.traceLastW = null;
+      if (state.writeProgress >= 0.48) {
         completeCurrentStroke();
       }
     }

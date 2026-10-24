@@ -27,7 +27,7 @@ test('animation paths admit disambiguated names but reject traversal, alternate 
 });
 test('authored replacements are standalone executable pages with writing and completion hooks',()=>{
  const mapped=read('js/hanzi_story_animations.js');
- for(const id of ['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','mu_eye']){
+ for(const id of ['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','mu_eye','xi']){
   const filename=`hanzi_${id}.html`,html=read('hanzi/'+filename);
   const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];
   assert.ok(scripts.length>=2,filename);for(const [,script]of scripts)new vm.Script(script,{filename});
@@ -73,6 +73,20 @@ test('mu_eye writing embeds strokes.json outlines and medians without retuning',
  assert.ok(intro);
  assert.doesNotMatch(intro[0],/haqiHanziWritten|haqiHanziComplete/);
 });
+test('xi writing embeds pinned makemeahanzi outlines and medians outside the dictionary',()=>{
+ const html=read('hanzi/hanzi_xi.html');
+ assert.match(html,/<title>西 xī /);
+ assert.ok(html.includes('bddc96d41bef78427ed0e034e9f7e31d71fd1b92'));
+ const xi=JSON.parse(html.match(/const XI = (\{.*\});/)[1]);
+ assert.equal(xi.strokes.length,6);assert.equal(xi.medians.length,6);
+ assert.equal(dictionary.entries.some(e=>e.text==='西'),false);
+ assert.match(html,/translate\(0,\s*900\);\s*ctx\.scale\(1,\s*-1\)/);
+ assert.match(html,/haqiHanziWritten\?\.\(\)/);
+ assert.match(html,/haqiHanziComplete\(\)/);
+ const intro=html.match(/async function introPlay[\s\S]*?\n\}/);
+ assert.ok(intro);
+ assert.doesNotMatch(intro[0],/haqiHanziWritten|haqiHanziComplete/);
+});
 test('kou writing embeds strokes.json outlines and medians without retuning',()=>{
  const kou=JSON.parse(read('data/adventure/hanzi/strokes.json')).characters['口'];
  const html=read('hanzi/hanzi_kou.html');
@@ -84,4 +98,14 @@ test('kou writing embeds strokes.json outlines and medians without retuning',()=
 });
 test('each painting supplies nonempty scene contours for a continuous glyph morph',()=>{
  const context={};vm.runInNewContext(read('hanzi/source/contours.js')+';globalThis.get=storyContours',context);for(const s of stories){const paths=context.get(s.theme);assert.ok(paths.length>=2);for(const points of paths){assert.ok(points.length>=2);assert.ok(points.flat().every(Number.isFinite));}}
+});
+test('all 21 hanzi_*.html scripts compile cleanly and use forgiving trend-based stroke tracing without permanent drag.bad locks',()=>{
+ const files=['guang','guo','huo','kou','men','ming','mu','mu_eye','ren','ri','sen','shan','shi','shou','shui','tu','wu','xi','xiu','yu','yue'];
+ for(const name of files){
+  const html=read(`hanzi/hanzi_${name}.html`);
+  const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
+  assert.ok(scripts.length>=1,`missing script in hanzi_${name}.html`);
+  for(const code of scripts)assert.doesNotThrow(()=>new vm.Script(code.replace(/^\s*import\s+[^\n]+/gm,'')),`syntax error in hanzi_${name}.html`);
+  assert.doesNotMatch(html,/drag\.bad\s*=\s*true|drag\.invalid\s*=\s*true/,`permanent poison flag remains in hanzi_${name}.html`);
+ }
 });

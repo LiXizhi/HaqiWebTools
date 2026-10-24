@@ -11262,3 +11262,61 @@ Word · 回忆拼写||Word · Recall Spelling
 龙在天上，看山，看水，也看着小墨。||In the sky, the dragon watches the mountains, the water, and Xiaomo too.
 眼睛睁开，世界就有了颜色。||When eyes open, the world fills with color.
 点一点天空，龙会飞过去看一看||Tap the sky, and the dragon will fly over to look.
+
+# 2026-10-24 西 · 小雀回家
+西 · 小雀回家||xi · The little sparrow flies home
+太阳落下的地方，就是西边||Where the sun goes down is the west.
+约三分钟 · 西飞、筑巢与描字 · 建议开启声音||About three minutes · fly west, mend the nest, and trace · sound is helpful
+古字形为艺术示意；故事为原创||Ancient glyph forms are artistic sketches. The story is original.
+黄昏时，小雀跟着落日向西飞，和雀妈妈一起补好被风吹散的鸟巢；落日前的鸟巢化作甲骨文、小篆与楷书的「西」||At dusk, a little sparrow follows the setting sun west and mends the wind-scattered nest with its mother; the nest before the sunset becomes the Oracle Bone, Small Seal, and Regular forms of xi.
+西飞||Flying west
+衔枝||Carrying twigs
+筑巢||Building the nest
+鸟巢||Nest
+西边||West side
+东南西北||East, south, west, north
+西瓜||Watermelon
+甲骨文||Oracle Bone
+小篆||Small Seal
+字||Hanzi
+看示范||Watch Demo
+声音 开||Sound On
+声音 关||Sound Off
+傍晚，太阳慢慢往下落。||In the evening, the sun slowly sinks.
+小雀在河边玩了一整天。||The little sparrow played by the river all day.
+该回家了。家在哪儿呢？||Time to go home. But where is home?
+妈妈说过：家在太阳落下的那一边。||Mom once said, "Home is on the side where the sun goes down."
+点一点，小雀就扇一下翅膀，向太阳飞||Tap, and the sparrow flaps its wings toward the sun.
+扇一扇翅膀||Flap the wings
+小雀朝着太阳飞。||The sparrow flies toward the sun.
+大雁也排着队，往家飞。||The wild geese fly home in a line, too.
+村子里，升起了炊烟。||In the village, cooking smoke rises.
+太阳快落山了，再快一点！||The sun is almost down. A little faster!
+看，西边的大树到了。||Look, here is the big tree in the west.
+雀妈妈在树上等它。||Mother sparrow is waiting in the tree.
+哎呀，风把鸟巢吹散了。||Oh no, the wind has scattered the nest.
+我们把细枝衔回来，补一补吧。||Let's carry the twigs back and mend it.
+点一根发光的细枝，小雀会把它衔回来||Tap a glowing twig, and the sparrow will carry it back.
+衔一根细枝||Carry a twig
+一根。||One.
+两根。||Two.
+三根。||Three.
+四根。||Four.
+五根，巢补好了！||Five. The nest is mended!
+小雀落在巢上，太阳落到了大树后面。||The sparrow lands on the nest, and the sun sinks behind the big tree.
+古人看见，太阳落山的时候，鸟儿就回巢。||People long ago saw that when the sun set, birds went back to their nests.
+他们照着鸟巢的样子，画出了一个字。||They drew a character in the shape of a nest.
+这是甲骨文的「西」，像一个编好的鸟巢。||This is xi in Oracle Bone script. It looks like a woven nest.
+小篆的「西」，上面像一只鸟，落在巢上。||In Small Seal script, the top of xi looks like a bird landing on its nest.
+《说文解字》：“西，鸟在巢上。象形。”||Shuowen Jiezi: "Xi is a bird on its nest. A pictograph."
+太阳落下、鸟儿回巢的那一边，就叫西。||The side where the sun sets and birds go home is called west.
+「西」一共六笔。跟着红点，写一写。||Xi has six strokes. Follow the red dot and write it.
+撇：从红点起笔，顺着虚线写||Left-falling stroke: start at the red dot and follow the dashed line.
+竖弯：从红点起笔，顺着虚线写||Vertical-bend stroke: start at the red dot and follow the dashed line.
+写好了！西，西边的西。||Well written! Xi, the xi of west.
+太阳落下的那一边，叫西边。||The side where the sun goes down is called the west.
+东、南、西、北，是四个方向。||East, south, west, and north are the four directions.
+夏天的西瓜，又大又甜。||Summer watermelons are big and sweet.
+太阳落到西边，鸟儿回到了家。||The sun set in the west, and the birds came home.
+明天早上，太阳又会从东边升起。||Tomorrow morning, the sun will rise again in the east.
+点一点天空，亮起一颗星星||Tap the sky to light up a star.

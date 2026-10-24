@@ -1174,7 +1174,7 @@ async function sceneJian(tk) {
   const guideRoot = local(L.front);
   const guide = el('g', { class: 'guide' }, guideRoot);
   const bins = MEN_GUIDE.flatMap(pts => guideBins(guide, pts));
-  const need = Math.ceil(bins.length * 0.72);
+  const need = Math.ceil(bins.length * 0.48);
   const trailG = el('g', { class: 'trail', filter: 'url(#brush)' }, L.front);
   hint('沿虚线描出「门」的三笔');
   stage.classList.add('trace');
@@ -1182,7 +1182,7 @@ async function sceneJian(tk) {
   const mark = (x, y) => {
     bins.forEach((bin, i) => {
       if (covered.has(i)) return;
-      if (segDist(x, y, bin.x1, bin.y1, bin.x2, bin.y2) < 8) {
+      if (segDist(x, y, bin.x1, bin.y1, bin.x2, bin.y2) < 18) {
         covered.add(i);
         bin.el.classList.add('hit');
       }

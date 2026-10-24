@@ -1857,8 +1857,8 @@ if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'read
   // ============================================================================
   function getPointerWorld(e) {
     const rect = canvas.getBoundingClientRect();
-    const sx = e.clientX - rect.left;
-    const sy = e.clientY - rect.top;
+    const sx = (e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX) - rect.left;
+    const sy = (e.touches && e.touches[0] ? e.touches[0].clientY : e.clientY) - rect.top;
     return cam.toWorld(sx, sy);
   }
 
@@ -1878,9 +1878,10 @@ if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'read
     }
 
     let bestDist = Infinity;
-    let bestProgress = 0;
+    let bestProgress = state.strokeProgress;
     let accum = 0;
-    for (let i = 0; i < worldPts.length - 1; i++) {
+    const totalSegs = worldPts.length - 1;
+    for (let i = 0; i < totalSegs; i++) {
       const [ax, ay] = worldPts[i];
       const [bx, by] = worldPts[i + 1];
       const vx = bx - ax, vy = by - ay;
@@ -1888,20 +1889,33 @@ if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'read
       const t = clamp(((pw.x - ax) * vx + (pw.y - ay) * vy) / len2, 0, 1);
       const px = ax + vx * t, py = ay + vy * t;
       const d = dist(pw.x, pw.y, px, py);
-      if (d < bestDist) {
+      const uTotal = (accum + segLens[i] * t) / (totalLen || 1);
+      if (uTotal >= state.strokeProgress - 0.02 && d < bestDist) {
         bestDist = d;
-        bestProgress = (accum + segLens[i] * t) / totalLen;
+        bestProgress = uTotal;
       }
       accum += segLens[i];
     }
 
-    // 宽容度：距离笔画 85 世界像素内均可推进进度
-    if (bestDist < 85 && bestProgress >= state.strokeProgress - 0.12) {
-      state.strokeProgress = Math.max(state.strokeProgress, bestProgress);
-      if (state.strokeProgress >= 0.82) {
-        autoCompleteNextStroke();
-        state.tracing = false;
+    // 宽容度：距离笔画 195 世界像素内或顺着走势均可推进进度
+    if (bestDist < 195 && bestProgress > state.strokeProgress) {
+      state.strokeProgress = Math.min(1, Math.max(state.strokeProgress, bestProgress + 0.08));
+    } else if (state.lastTraceW && bestDist < 260) {
+      const mvx = pw.x - state.lastTraceW.x, mvy = pw.y - state.lastTraceW.y;
+      const segIdx = clamp(Math.floor(state.strokeProgress * totalSegs), 0, totalSegs - 1);
+      const [ax, ay] = worldPts[segIdx];
+      const [bx, by] = worldPts[Math.min(totalSegs, segIdx + 1)];
+      const tx = bx - ax, ty = by - ay;
+      const tLen = Math.hypot(tx, ty) || 1;
+      const forwardProj = (mvx * tx + mvy * ty) / tLen;
+      if (forwardProj > 1) {
+        state.strokeProgress = Math.min(1, state.strokeProgress + (forwardProj / Math.max(80, totalLen)) * 1.35);
       }
+    }
+    state.lastTraceW = pw;
+    if (state.strokeProgress >= 0.78) {
+      autoCompleteNextStroke();
+      state.tracing = false;
     }
   }
 
@@ -1964,6 +1978,14 @@ if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'read
         return;
       }
       state.tracing = true;
+      state.lastTraceW = pw;
+      const curIdx = state.completedStrokes.findIndex(v => !v);
+      if (curIdx !== -1) {
+        const startPt = glyphPtToWorld(STROKES[curIdx].pts[0][0], STROKES[curIdx].pts[0][1], GLYPH_BOX);
+        if (dist(pw.x, pw.y, startPt[0], startPt[1]) < 185) {
+          state.strokeProgress = Math.max(state.strokeProgress, 0.18);
+        }
+      }
       evaluateStrokeTrace(pw);
       return;
     }
@@ -2025,7 +2047,16 @@ if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'read
   window.addEventListener('pointerup', () => {
     state.holding = false;
     state.draggingGrow = false;
-    state.tracing = false;
+    if (state.sceneIdx === 6 && state.tracing) {
+      state.tracing = false;
+      state.lastTraceW = null;
+      if (state.strokeProgress >= 0.48) {
+        autoCompleteNextStroke();
+      }
+    } else {
+      state.tracing = false;
+      state.lastTraceW = null;
+    }
   });
 
   // ============================================================================

@@ -4210,3 +4210,15 @@ Node默认250ms地址尝试窗口不足以覆盖美国到Keepwork的TCP握手，
 最终npm run test:battle为1367/1367、0失败、0跳过。旧地面加载测试改验证共享门的真实进度与关闭；汉字测试覆盖已完成独立手写页，不依赖旧STORY模板。撤下17个尚不存在的动画入口，30词条笔画保留；水/火/木修复标准宿主协议，木额外修复控件和音效引用导致的启动报错。新增协议安全、晚握手、独立运行与木书写/尾声事件测试。家园缓存的15ms时序依赖改为有超时的完成状态等待。
 
 真实浏览器验证水/火开始与字幕、木开始进入催芽场景；截图C:/Users/Administrator/AppData/Local/Temp/haqi-mu-regression-fixed.png，未进行全部分镜或完整多语言验收。locale:check仍有既有31项英文缺失和ja/ko各55项对齐缺失（errors=0），不宣称该审计通过。未发布、提交或推送。完整回归日志C:/Users/Administrator/AppData/Local/Temp/haqi-regression-complete.log。
+
+## 2026-10-24 游戏服会话 project 参数与 neural-city 琉璃瓦屋顶
+
+- `createGameServerSession` 新增 `project` 选项，默认仍为 `haqi`，并校验 `/^[a-z][a-z0-9-]{0,15}$/`。房间不以 `${project}:` 开头时不发起入场。供 AI Work Company（`awc:city`）复用同一套鉴权会话。`tests/game_server_session.test.mjs` 21/21 通过。
+- `buildingConnectionMask` 为屋顶返回 N/E/S/W 邻接掩码。neural-city 屋顶改为按世界坐标对齐的琉璃瓦，只在外缘画金色檐口和屋脊。只改表现，footprint、碰撞和剖切不变。`home_neural_theme`、`battle_home_building` 测试通过。
+- 全量 `npm test`：本次修改前 HEAD 已有 22 项失败（与本改动无关）；修改后为 20 项失败，失败集合中没有新增本改动相关项。
+
+## 2026-10-24 汉字动画与练习书写容错放宽验证
+
+- 覆盖范围：全部 21 个 `hanzi/hanzi_*.html`（`guang`、`guo`、`huo`、`kou`、`men`、`ming`、`mu`、`mu_eye`、`ren`、`ri`、`sen`、`shan`、`shi`、`shou`、`shui`、`tu`、`wu`、`xi`、`xiu`、`yu`、`yue`）、`hanzi/source/player.js` 及 `js/hanzi_core.js`（`compareHanziWriting`）。
+- 消除单点偏出即永久判废的 `drag.bad` / `drag.invalid` 锁死与折角前序段抢占卡死，加入基于基本走势的方向投影推进、插值前瞻窗口与宽容完成阈值，同时保留从终点倒写和半笔（`<50%`）抬起不误判完成的保护。
+- 战斗与汉字快速回归：`npm run test:battle` 1387/1387 通过（含 24 字粗略走势书写通过、逆笔与乱涂拒绝、以及全部 21 个 `hanzi_*.html` 脚本语法与无永久锁死校验）。未自动提交或推送 Git。

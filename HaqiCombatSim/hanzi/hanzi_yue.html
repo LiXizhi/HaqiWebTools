@@ -1450,38 +1450,78 @@ async function sWrite(tk) {
     completed++;
     if (W.trace.stroke < 4) { prepare(); showStroke(); }
   };
-  const tolLocal = () => Math.max(7.5, 23 / (CV.k * GL.s));
+  const tolLocal = () => Math.max(20, 48 / (CV.k * GL.s));
   S.handler = {
     down(p) {
       if (demoing) return;
       lastInput = clock;
-      const q = toLocal(p.x, p.y);
-      if (Math.hypot(q.x - samples[0][0], q.y - samples[0][1]) > tolLocal() * 1.35) { hint('从这一笔的橙色光点开始哦'); return; }
-      drag = { idx: 0, bad: false };
+      const q = toLocal(p.x, p.y), lastIdx = samples.length - 1, t = tolLocal();
+      const earlyMax = Math.max(1, Math.floor(lastIdx * 0.35));
+      let startIdx = 0, dStart = Infinity;
+      for (let j = 0; j <= earlyMax; j++) {
+        const d = Math.hypot(q.x - samples[j][0], q.y - samples[j][1]);
+        if (d < dStart) { dStart = d; startIdx = j; }
+      }
+      const dEnd = Math.hypot(q.x - samples[lastIdx][0], q.y - samples[lastIdx][1]);
+      if (dStart > t * 1.75 || dStart > dEnd * 1.15) { hint('从这一笔的橙色光点开始哦'); return; }
+      drag = { idx: startIdx, fIdx: startIdx, lastQ: q };
+      W.glyph.prog[W.trace.stroke] = drag.idx / N;
       Sound.breath(true);
     },
     move(p) {
       if (!drag) return;
       lastInput = clock;
-      const q = toLocal(p.x, p.y);
-      let best = drag.idx, bd = Infinity;
-      for (let j = Math.max(0, drag.idx - 3); j < Math.min(samples.length, drag.idx + 18); j++) {
-        const d = Math.hypot(q.x - samples[j][0], q.y - samples[j][1]);
-        if (d < bd) { bd = d; best = j; }
+      const q = toLocal(p.x, p.y), lastIdx = samples.length - 1, t = tolLocal();
+      const dx = q.x - drag.lastQ.x, dy = q.y - drag.lastQ.y, stepDist = Math.hypot(dx, dy);
+      if (stepDist < 0.001) return;
+      const subSteps = Math.max(1, Math.min(10, Math.ceil(stepDist / (t * 0.25))));
+      const win = Math.max(24, Math.ceil(lastIdx * 0.55));
+      for (let s = 1; s <= subSteps; s++) {
+        const pqx = drag.lastQ.x + (dx * s) / subSteps, pqy = drag.lastQ.y + (dy * s) / subSteps;
+        let best = drag.idx, bd = Infinity;
+        const hi = Math.min(lastIdx, drag.idx + win);
+        for (let j = Math.max(0, drag.idx - 2); j <= hi; j++) {
+          const d = Math.hypot(pqx - samples[j][0], pqy - samples[j][1]);
+          if (d < bd) { bd = d; best = j; }
+        }
+        if (bd <= t && best > drag.idx) {
+          const aIdx = Math.max(0, best - 3), bIdx = Math.min(lastIdx, Math.max(aIdx + 1, best + 4));
+          const tx = samples[bIdx][0] - samples[aIdx][0], ty = samples[bIdx][1] - samples[aIdx][1];
+          const tLen = Math.hypot(tx, ty) || 1;
+          if ((dx * tx + dy * ty) / (stepDist * tLen) >= -0.25) {
+            drag.idx = best;
+            drag.fIdx = Math.max(drag.fIdx, best);
+          }
+        }
       }
-      if (bd > tolLocal()) { drag.bad = true; return; }
-      if (drag.bad) return;
-      drag.idx = Math.max(drag.idx, best);
+      if (drag.idx < lastIdx) {
+        const segs = [
+          [drag.idx, Math.min(lastIdx, drag.idx + Math.max(8, Math.ceil(lastIdx * 0.25)))],
+          [Math.min(lastIdx - 1, drag.idx + Math.ceil(lastIdx * 0.2)), Math.min(lastIdx, drag.idx + Math.ceil(lastIdx * 0.55))],
+          [drag.idx, lastIdx]
+        ];
+        for (const [s0, s1] of segs) {
+          if (s1 <= s0 || Math.hypot(q.x - samples[s0][0], q.y - samples[s0][1]) > t * 2.6) continue;
+          const fx = samples[s1][0] - samples[s0][0], fy = samples[s1][1] - samples[s0][1], fLen = Math.hypot(fx, fy) || 1;
+          const proj = (dx * fx + dy * fy) / fLen;
+          if (proj > 0 && proj >= stepDist * 0.32) {
+            drag.fIdx = Math.min(lastIdx, Math.max(drag.fIdx, drag.idx) + (proj / fLen) * (s1 - s0));
+            drag.idx = Math.max(drag.idx, Math.min(lastIdx, Math.round(drag.fIdx)));
+            break;
+          }
+        }
+      }
+      drag.lastQ = q;
       W.glyph.prog[W.trace.stroke] = drag.idx / N;
     },
     up(p, cancel) {
       Sound.breath(false);
       if (!drag) return;
       const d = drag; drag = null;
-      if (!cancel && !d.bad && d.idx >= N - 4) { finishStroke(); return; }
+      if (!cancel && d.idx >= Math.ceil(N * 0.56)) { finishStroke(); return; }
       const i = W.trace.stroke, from = W.glyph.prog[i];
       bg(tween(260, t => { if (W.trace.stroke === i) W.glyph.prog[i] = from * (1 - t); }, tk));
-      if (clock - invalidHint > 400) { hint(d.bad ? '离虚线有点远了，从光点重新写这一笔' : '把这一笔写到箭头那里'); invalidHint = clock; }
+      if (clock - invalidHint > 400) { hint('顺着笔画走势写到箭头方向就可以啦'); invalidHint = clock; }
     },
   };
   const demo = async () => {

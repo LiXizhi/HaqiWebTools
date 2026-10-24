@@ -1275,13 +1275,13 @@ async function sceneTrace(tk) {
   const guideRoot = local(L.front);
   const guide = el('g', { class: 'guide' }, guideRoot);
   const bins = G.kai.strokes.flatMap(st => guideBins(guide, mmahPts(st.m)));
-  const need = Math.ceil(bins.length * 0.72);
+  const need = Math.ceil(bins.length * 0.48);
   const trailG = el('g', { class: 'trail', filter: 'url(#brush)' }, L.front);
   hint('沿虚线描出「武」的八笔');
   stage.classList.add('trace');
   const covered = new Set();
   const mark = (x, y) => bins.forEach((bin, i) => {
-    if (!covered.has(i) && segDist(x, y, bin.x1, bin.y1, bin.x2, bin.y2) < 8) { covered.add(i); bin.el.classList.add('hit'); }
+    if (!covered.has(i) && segDist(x, y, bin.x1, bin.y1, bin.x2, bin.y2) < 18) { covered.add(i); bin.el.classList.add('hit'); }
   });
   const markSeg = (a, b) => {
     const n = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 2));

@@ -250,16 +250,48 @@ async function finale(){
 function point(e){const ctm=svg.getScreenCTM();return ctm?new DOMPoint(e.clientX,e.clientY).matrixTransform(ctm.inverse()):{x:0,y:0};}
 function cancelPointer(){if(!drag)return;const old=drag;drag=null;tracing=false;if(svg.hasPointerCapture(old.id))svg.releasePointerCapture(old.id);if(old.kind==='trace')$('trace').setAttribute('d','');if(old.kind==='move'&&state==='move')personPosition(-200);}
 function tracePoint(p){
- if(!drag||drag.kind!=='trace')return;let best=drag.index,distance=Infinity;
- // Search a short forward window: crossings, reversed strokes and endpoint jumps cannot complete a stroke.
- for(let i=Math.max(0,drag.index-2);i<Math.min(samples.length,drag.index+9);i++){const d=Math.hypot(p.x-samples[i].x,p.y-samples[i].y);if(d<distance){distance=d;best=i;}}
- if(distance>24){drag.invalid=true;return;}drag.index=Math.max(drag.index,best);
+ if(!drag||drag.kind!=='trace')return;
+ const prev=drag.lastP||p;
+ const distMove=Math.hypot(p.x-prev.x,p.y-prev.y);
+ const steps=Math.max(1,Math.min(8,Math.ceil(distMove/12)));
+ const lastIdx=samples.length-1;
+ for(let s=1;s<=steps;s++){
+  const u=s/steps,sx=prev.x+(p.x-prev.x)*u,sy=prev.y+(p.y-prev.y)*u;
+  const win=Math.max(18,Math.ceil(lastIdx*0.55));
+  let best=drag.index,distance=Infinity;
+  for(let i=Math.max(0,drag.index-2);i<=Math.min(lastIdx,drag.index+win);i++){const d=Math.hypot(sx-samples[i].x,sy-samples[i].y);if(d<distance){distance=d;best=i;}}
+  if(distance<=68&&best>=drag.index){
+   const a=samples[drag.index],b=samples[best],mvx=p.x-prev.x,mvy=p.y-prev.y,svx=b.x-a.x,svy=b.y-a.y;
+   if(best===drag.index||distMove<1.5||(mvx*svx+mvy*svy)>=-0.25*distMove*Math.hypot(svx,svy)){drag.index=best;drag.fIdx=Math.max(drag.fIdx||0,best);}
+  }
+ }
+ if(distMove>1.2&&drag.index<lastIdx){
+  const curIdx=Math.min(lastIdx-1,drag.index),lookIdx=Math.min(lastIdx,curIdx+Math.max(5,Math.ceil(lastIdx*0.2)));
+  const tx=samples[lookIdx].x-samples[curIdx].x,ty=samples[lookIdx].y-samples[curIdx].y,tLen=Math.hypot(tx,ty)||1;
+  const forwardProj=((p.x-prev.x)*tx+(p.y-prev.y)*ty)/tLen;
+  const curD=Math.hypot(p.x-samples[curIdx].x,p.y-samples[curIdx].y);
+  if(forwardProj>0.5&&curD<=160){
+   let totalLen=0;for(let j=1;j<=lastIdx;j++)totalLen+=Math.hypot(samples[j].x-samples[j-1].x,samples[j].y-samples[j-1].y);
+   const avgSeg=Math.max(2,totalLen/lastIdx);
+   drag.fIdx=Math.min(lastIdx,Math.max(drag.fIdx||drag.index,drag.index)+(forwardProj/avgSeg)*1.25);
+   drag.index=Math.max(drag.index,Math.floor(drag.fIdx));
+  }
+ }
+ drag.lastP=p;
  const pts=samples.slice(0,drag.index+1);$('trace').setAttribute('d',pts.map((pt,i)=>`${i?'L':'M'}${pt.x} ${pt.y}`).join(' '));
 }
 svg.addEventListener('pointerdown',e=>{
  if(drag||!e.isPrimary||e.button!==0)return;const p=point(e);
  if(state==='move'&&e.target.closest('#personTarget')){e.preventDefault();drag={id:e.pointerId,kind:'move',start:p,origin:personX,moved:false};svg.setPointerCapture(e.pointerId);}
- else if(state==='write'&&!demoRunning){e.preventDefault();if(Math.hypot(p.x-samples[0].x,p.y-samples[0].y)>28){hint('从这一笔的红点开始哦。');return;}drag={id:e.pointerId,kind:'trace',index:0,invalid:false};tracing=true;svg.setPointerCapture(e.pointerId);tracePoint(p);}
+ else if(state==='write'&&!demoRunning){
+  e.preventDefault();
+  const last=samples[samples.length-1],dEnd=Math.hypot(p.x-last.x,p.y-last.y);
+  let startIdx=-1,bestD=Infinity;
+  const startLimit=Math.max(1,Math.floor(samples.length*0.35));
+  for(let j=0;j<startLimit;j++){const d=Math.hypot(p.x-samples[j].x,p.y-samples[j].y);if(d<bestD){bestD=d;startIdx=j;}}
+  if(bestD>75||(bestD>dEnd*1.15&&dEnd<55)){hint('从这一笔的红点开始哦。');return;}
+  drag={id:e.pointerId,kind:'trace',index:startIdx,fIdx:startIdx,lastP:p};tracing=true;svg.setPointerCapture(e.pointerId);tracePoint(p);
+ }
 });
 svg.addEventListener('pointermove',e=>{
  if(!drag||drag.id!==e.pointerId)return;const p=point(e);
@@ -274,8 +306,8 @@ svg.addEventListener('pointerup',e=>{
  if(!old.moved){personPosition(-200);selectPerson();}
  else if(p.x>=409&&p.x<=559&&p.y>=265&&p.y<=445){rest();}
  else{personPosition(-200);hint('还没到树荫里，再试一次吧。');}
- }else if(!old.invalid&&old.index>=samples.length-3){finishStroke();}
- else{$('trace').setAttribute('d','');hint('没关系，从红点开始，把这一笔写完整。');}
+ }else if(old.index>=Math.min(samples.length-2,Math.max(3,Math.ceil((samples.length-1)*0.56)))){finishStroke();}
+ else{$('trace').setAttribute('d','');hint('没关系，从红点开始，顺着方向把这一笔写完。');}
 });
 svg.addEventListener('pointercancel',cancelPointer);svg.addEventListener('lostpointercapture',cancelPointer);
 $('treeTarget').addEventListener('click',grow);$('shadeTarget').addEventListener('click',()=>{if(selected)rest();else if(state==='move')hint('先点一下小人，再带他走到树荫。');});

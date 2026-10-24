@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createGameServerSession} from '../js/adventure_game_server.js';
 
 const settle = () => new Promise(resolve => setImmediate(resolve));
-function fixture(fetchResponse) {
+function fixture(fetchResponse, options = {}) {
     const sockets = [], requests = [], statuses = [], replacements = [];
     let state = {owner: 'alice', roleId: 'role-1', roomId: 'haqi:camp', x: 10, y: 20};
     let credentials = {username: 'alice', token: 'private-test-token'}, at = 0;
@@ -20,6 +20,7 @@ function fixture(fetchResponse) {
         onReplaced: () => replacements.push(true), onStatus: value => statuses.push(value), now: () => at,
         setTimer: () => 1, clearTimer: () => {}, WebSocketImpl: Socket,
         fetchImpl: async (url, options) => { requests.push({url, options}); return fetchResponse ? fetchResponse() : Response.json(assignment); },
+        ...options,
     });
     return {client, sockets, requests, statuses, replacements, assignment, setState: value => state = {...state, ...value},
         setCredentials: value => credentials = value, advance: () => at += 31000};
@@ -277,4 +278,30 @@ test('session receives room avatars, advertises appearance, and clears them on t
         assert.equal(f.client.remoteActors('haqi:ice').length,1);
         socket.close();assert.deepEqual(f.client.remoteActors('haqi:ice'),[]);
     }finally{f.client.stop();}
+});
+
+test('project defaults to haqi and consumers may select their own project prefix', async () => {
+    const haqi = fixture();
+    try {
+        haqi.client.start(); await settle();
+        assert.equal(JSON.parse(haqi.requests[0].options.body).project, 'haqi');
+    } finally { haqi.client.stop(); }
+    const awc = fixture(undefined, {project: 'awc'});
+    try {
+        awc.setState({roomId: 'awc:city'}); awc.client.start(); await settle();
+        const body = JSON.parse(awc.requests[0].options.body);
+        assert.equal(body.project, 'awc'); assert.equal(body.roomId, 'awc:city');
+    } finally { awc.client.stop(); }
+});
+
+test('rooms outside the selected project are never joined and invalid projects are rejected', async () => {
+    const f = fixture(undefined, {project: 'awc'});
+    try {
+        f.client.start(); await settle();
+        assert.equal(f.requests.length, 0);
+        assert.equal(f.statuses.at(-1), '游戏服房间不属于当前项目');
+    } finally { f.client.stop(); }
+    for (const project of ['', 'AWC', 'a:b', 'x'.repeat(17), 7]) {
+        assert.throws(() => createGameServerSession({getState: () => null, getCredentials: () => null, project}));
+    }
 });

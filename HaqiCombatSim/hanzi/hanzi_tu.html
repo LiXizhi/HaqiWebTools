@@ -701,21 +701,35 @@ const PROF = {
   h: s => 0.78 + 0.46 * bump(s, 0.05, 0.07) + 0.28 * bump(s, 0.96, 0.05),
   v: s => 0.68 + 0.46 * bump(s, 0.12, 0.09) + 0.16 * bump(s, 0.55, 0.32),
 };
-// 三笔按儿童能一眼认出的「土」来排：上横短、竖从横上轻轻露头、下横长。
-// 走向与字典笔画顺序一致（横、竖、横）。楷书骨架上端过长，夜里会读成「十」，所以中线做了整理。
-// 原始轮廓属 Arphic Public License，本页只使用整理后的中线做描红。
-const MODERN = [
-  { d: 'M30 37.5 L36 36.4 L46 35.2 L56 34.6 L66 35.8', p: 'h', w: 5.4, name: '横' },
-  { d: 'M48.6 30.2 L50.2 36 L49.4 54 L48.2 72.8', p: 'v', w: 5.2, name: '竖' },
-  { d: 'M12 80.6 L22 78.6 L46 76.8 L70 77.6 L86 80.2', p: 'h', w: 5.8, name: '横' },
+// 写字中线与轮廓来自 data/adventure/hanzi/strokes.json 的「土」。
+// 字框 1024，y 轴向上，基线 900，与 hanzi_men / drawHanziGlyph 相同，再收到 0..100（y 向下）。
+// 看得见的一笔是轮廓；描红光点沿着中线走。只描中线会把竖的头部描成一根长茎，读成「十」。
+// 原始轮廓属 Arphic Public License。
+const RAW_MED = [
+  [[283, 438], [312, 430], [379, 430], [486, 445], [692, 487], [741, 485]],
+  [[461, 760], [517, 714], [518, 685], [498, 173], [476, 153]],
+  [[129, 99], [188, 87], [378, 115], [818, 156], [866, 149], [922, 129]],
 ];
-// 拍平的软土、探出的嫩芽、托住种子的地面。用来过渡到今天的规范笔画，不是古文字复原。
+const OUTLINE = [
+  'M 535 428 Q 602 441 673 451 Q 739 464 749 472 Q 759 481 755 490 Q 748 505 715 514 Q 681 523 647 511 Q 592 495 537 481 L 483 470 Q 395 454 293 449 Q 251 445 280 424 Q 320 397 409 409 Q 445 415 483 420 L 535 428 Z',
+  'M 521 151 Q 528 293 535 428 L 537 481 Q 538 595 566 720 Q 570 733 546 751 Q 504 773 475 779 Q 456 783 446 773 Q 436 763 447 746 Q 481 694 481 658 Q 484 567 483 470 L 483 420 Q 480 290 471 145 C 469 115 520 121 521 151 Z',
+  'M 471 145 Q 314 130 132 111 Q 107 110 125 87 Q 162 50 211 60 Q 452 121 842 114 Q 875 113 903 112 Q 928 111 935 122 Q 942 137 922 154 Q 847 212 795 192 Q 689 176 521 151 L 471 145 Z',
+];
+const toBox = ([x, y]) => [x / 10.24, (900 - y) / 10.24];
+const MODERN = RAW_MED.map((pts, i) => ({
+  d: 'M' + pts.map(p => { const q = toBox(p); return `${q[0].toFixed(2)} ${q[1].toFixed(2)}`; }).join(' L'),
+  p: i === 1 ? 'v' : 'h',
+  w: i === 2 ? 5.8 : i === 1 ? 5.2 : 5.4,
+  name: i === 1 ? '竖' : '横',
+}));
+// 拍平的软土、探出的嫩芽、托住种子的地面。用来过渡到字典里的「土」，不是古文字复原。
 const ORACLE = [
-  'M26 48 C40 40 56 38 74 44',
-  'M49 18 C47 36 46 58 50 88',
-  'M6 86 C28 78 64 76 96 84',
+  'M26 50 C40 42 58 40 76 46',
+  'M46 14 C48 32 49 52 48 74',
+  'M8 82 C28 76 64 74 96 80',
 ];
 const OPTS = ORACLE.map(resample), MPTS = MODERN.map(s => resample(s.d));
+const OUTLINE_PATH = OUTLINE.map(d => new Path2D(d));
 const GL = { cx: 980, cy: 210, s: 3.55 };
 function strokePts(i) {
   const m = W.glyph.morph, a = OPTS[i], b = MPTS[i];
@@ -750,6 +764,61 @@ function brush(c, i, upto) {
 function glyphCam(c) { setCam(c); c.translate(GL.cx - 50 * GL.s, GL.cy - 50 * GL.s); c.scale(GL.s, GL.s); }
 function toLocal(wx, wy) { return { x: (wx - (GL.cx - 50 * GL.s)) / GL.s, y: (wy - (GL.cy - 50 * GL.s)) / GL.s }; }
 function localToScreen(lx, ly) { return toScreen(GL.cx + (lx - 50) * GL.s, GL.cy + (ly - 50) * GL.s); }
+function outlineMix() { return smooth(clamp((W.glyph.morph - 0.68) / 0.32)); }
+function withRawBox(c, draw) {
+  c.save();
+  c.transform(1 / 10.24, 0, 0, -1 / 10.24, 0, 900 / 10.24);
+  draw();
+  c.restore();
+}
+function fillOutline(c, i) {
+  withRawBox(c, () => c.fill(OUTLINE_PATH[i]));
+}
+function drawOutlineStroke(c, i, upto) {
+  if (upto >= 0.999) { fillOutline(c, i); return; }
+  if (upto <= 0) return;
+  const pts = MPTS[i];
+  const n = pts.length - 1, m = upto * n, mi = Math.floor(m);
+  withRawBox(c, () => {
+    c.clip(OUTLINE_PATH[i]);
+    c.lineWidth = 170;
+    c.lineCap = 'round';
+    c.lineJoin = 'round';
+    c.strokeStyle = c.fillStyle;
+    c.beginPath();
+    const raw = p => [p[0] * 10.24, 900 - p[1] * 10.24];
+    const p0 = raw(pts[0]);
+    c.moveTo(p0[0], p0[1]);
+    for (let j = 1; j <= mi; j++) { const p = raw(pts[j]); c.lineTo(p[0], p[1]); }
+    if (mi < n && m > mi) {
+      const a = pts[mi], b = pts[mi + 1], f = m - mi;
+      const p = raw([lerp(a[0], b[0], f), lerp(a[1], b[1], f)]);
+      c.lineTo(p[0], p[1]);
+    }
+    c.stroke();
+  });
+}
+function paintStroke(c, i, upto) {
+  const o = outlineMix();
+  if (o < 0.999) {
+    c.save();
+    c.globalAlpha *= 1 - o;
+    brush(c, i, upto);
+    c.restore();
+  }
+  if (o > 0.001) {
+    c.save();
+    c.globalAlpha *= o;
+    c.save();
+    c.translate(0.45, 1.05);
+    c.fillStyle = 'rgba(32,16,10,.78)';
+    drawOutlineStroke(c, i, upto);
+    c.restore();
+    c.fillStyle = '#f0d4a4';
+    drawOutlineStroke(c, i, upto);
+    c.restore();
+  }
+}
 
 function drawGlyph() {
   const g = W.glyph;
@@ -758,31 +827,28 @@ function drawGlyph() {
   ctx.save();
   ctx.globalAlpha = g.alpha;
   if (g.ghost > 0) {
-    ctx.save(); ctx.globalAlpha = g.alpha * 0.26 * g.ghost; ctx.fillStyle = '#e6c084';
-    for (let i = 0; i < 3; i++) brush(ctx, i, 1);
+    ctx.save();
+    ctx.globalAlpha = g.alpha * 0.3 * g.ghost;
+    ctx.fillStyle = '#e6c084';
+    for (let i = 0; i < 3; i++) {
+      if (outlineMix() > 0.55) fillOutline(ctx, i);
+      else brush(ctx, i, 1);
+    }
     ctx.restore();
   }
   const m = ease.inOut(g.morph);
-  ctx.save();
-  ctx.translate(50, 50);
-  ctx.scale(1.05, 1.07);
-  ctx.translate(-50, -50);
-  ctx.translate(0.2, 0.85);
-  ctx.fillStyle = 'rgba(28,14,10,.8)';
-  for (let i = 0; i < 3; i++) if (g.prog[i] > 0) brush(ctx, i, g.prog[i]);
-  ctx.restore();
   ctx.fillStyle = `rgb(${lerp(186, 236, m) | 0},${lerp(118, 188, m) | 0},${lerp(52, 112, m) | 0})`;
-  ctx.shadowColor = 'rgba(42,22,12,.55)';
-  ctx.shadowBlur = g.glow * 7 * DPR;
-  for (let i = 0; i < 3; i++) if (g.prog[i] > 0) brush(ctx, i, g.prog[i]);
+  ctx.shadowColor = 'rgba(42,22,12,.4)';
+  ctx.shadowBlur = g.glow * 6 * DPR * (1 - outlineMix());
+  for (let i = 0; i < 3; i++) if (g.prog[i] > 0) paintStroke(ctx, i, g.prog[i]);
   ctx.shadowBlur = 0;
   if (g.labels > 0.02) {
     ctx.globalAlpha = g.alpha * g.labels;
     ctx.font = '7px "Kaiti SC","STKaiti","KaiTi",serif';
     ctx.fillStyle = '#fff1d4';
-    ctx.fillText('软土', 70, 31);
-    ctx.fillText('嫩芽', 56, 52);
-    ctx.fillText('地面', 74, 86);
+    ctx.fillText('软土', 76, 36);
+    ctx.fillText('嫩芽', 58, 20);
+    ctx.fillText('地面', 78, 84);
   }
   if (g.trace) drawTraceUI(ctx);
   ctx.restore();
@@ -1334,7 +1400,7 @@ async function begin() {
 }
 
 function placeIntro() {
-  const a = localToScreen(50, 18), b = localToScreen(50, 92);
+  const a = localToScreen(50, 4), b = localToScreen(50, 88);
   const box = $('#intro');
   box.style.setProperty('--gTop', `${a.y}px`);
   box.style.setProperty('--gBottom', `${b.y}px`);

@@ -11163,3 +11163,20 @@ Word · 回忆拼写||Word · Recall Spelling
 人||Person
 人们||People
 朋友||Friend
+
+# 2026-10-24 口 · 山谷有回声
+口 · 山谷里的一声你好||kou · a hello across the valley
+约三分钟 · 呼喊、回声与描字 · 建议开启声音||About three minutes · a call, an echo, and tracing · sound is helpful
+点一点喊的人，或按下面的按钮。||Tap the caller, or press the button below.
+对着山谷，轻轻喊一声||Call gently toward the valley.
+左边这一笔，是向下的一竖。||The left stroke is a vertical line going down.
+上边向右，再顺着右边向下，这是一笔横折。||Across the top, then down the right side: one turning stroke.
+下边这一笔，是托住方框的一横。||The bottom stroke is the line that holds the square.
+写好了。开口说声你好，方框里就有了回声。||Done. Say hello, and the square keeps the echo.
+张开的嘴巴，看起来像一个小方框。||An open mouth looks like a little square.
+开口说声你好，声音就出发了。||Open your mouth, say hello, and the sound sets off.
+门口也有一个口，是进出的地方。||A doorway has kou too. It is a place to go in and out.
+点一点山谷，再听一声轻轻的回声||Tap the valley and hear the echo again.
+口||Mouth
+开口||Start to speak
+门口||Doorway

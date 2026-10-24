@@ -1613,7 +1613,8 @@
       "coaching": {
         "tip": "“手”可以拿东西，也可以挥手、拍手。想一个熟悉的动作，把字和动作一起记。",
         "prompt": "你会用手做什么？试着说“我用手……”。"
-      }
+      },
+      "animation": "hanzi/hanzi_shou.html"
     },
     {
       "id": "mu-eye",

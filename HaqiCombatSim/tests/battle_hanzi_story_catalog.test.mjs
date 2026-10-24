@@ -8,7 +8,7 @@ import {parseLocaleFile} from '../js/locale_core.js';
 import {validateDictionary} from '../js/dictionary_core.js';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const dictionary=JSON.parse(read('data/adventure/dictionary/zh.json'));
-const completed = new Set(['ri','yue','shan','shui','huo','mu','shi','tu','ren','men','yu','xiu','sen','guang','guo','ming']);
+const completed = new Set(['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','men','yu','xiu','sen','guang','guo','ming']);
 test('all 30 words retain writing data; only completed authored stories expose an animation',()=>{
  assert.equal(dictionary.entries.length,30);assert.equal(validateDictionary(dictionary),dictionary);
  for(const entry of dictionary.entries){
@@ -27,7 +27,7 @@ test('animation paths admit disambiguated names but reject traversal, alternate 
 });
 test('authored replacements are standalone executable pages with writing and completion hooks',()=>{
  const mapped=read('js/hanzi_story_animations.js');
- for(const id of ['ri','yue','shan','shui','huo','mu','shi','tu','ren']){
+ for(const id of ['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou']){
   const filename=`hanzi_${id}.html`,html=read('hanzi/'+filename);
   const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];
   assert.ok(scripts.length>=2,filename);for(const [,script]of scripts)new vm.Script(script,{filename});
@@ -48,6 +48,15 @@ test('ren writing embeds strokes.json outlines and medians without retuning',()=
  assert.ok(html.includes(JSON.stringify({strokes:ren.strokes,medians:ren.medians})));
  assert.match(html,/translate\(0,\s*900\);\s*ctx\.scale\(1,\s*-1\)/);
  assert.equal(ren.medians.length,2);
+});
+test('kou writing embeds strokes.json outlines and medians without retuning',()=>{
+ const kou=JSON.parse(read('data/adventure/hanzi/strokes.json')).characters['口'];
+ const html=read('hanzi/hanzi_kou.html');
+ assert.ok(html.includes(JSON.stringify({strokes:kou.strokes,medians:kou.medians})));
+ assert.match(html,/translate\(0,\s*900\);\s*ctx\.scale\(1,\s*-1\)/);
+ assert.equal(kou.medians.length,3);
+ assert.match(html,/haqiHanziWritten\?\.\(\)/);
+ assert.match(html,/haqiHanziComplete\(\)/);
 });
 test('each painting supplies nonempty scene contours for a continuous glyph morph',()=>{
  const context={};vm.runInNewContext(read('hanzi/source/contours.js')+';globalThis.get=storyContours',context);for(const s of stories){const paths=context.get(s.theme);assert.ok(paths.length>=2);for(const points of paths){assert.ok(points.length>=2);assert.ok(points.flat().every(Number.isFinite));}}

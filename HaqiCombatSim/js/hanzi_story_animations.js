@@ -22,4 +22,6 @@ export const islandStoryAnimations = {
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_kou.html': new URL('../hanzi/hanzi_kou.html', import.meta.url).href,
     'hanzi/hanzi_shou.html': new URL('../hanzi/hanzi_shou.html', import.meta.url).href,
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_shou.html': new URL('../hanzi/hanzi_shou.html', import.meta.url).href,
+    'hanzi/hanzi_mu_eye.html': new URL('../hanzi/hanzi_mu_eye.html', import.meta.url).href,
+    'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_mu_eye.html': new URL('../hanzi/hanzi_mu_eye.html', import.meta.url).href,
 };

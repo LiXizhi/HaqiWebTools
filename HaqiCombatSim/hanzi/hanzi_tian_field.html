@@ -50,7 +50,7 @@ body.started #controls{opacity:1;pointer-events:auto}
 #caption{position:fixed;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translate(-50%,10px);
   width:min(880px,calc(100vw - 24px));box-sizing:border-box;text-align:center;opacity:0;
   transition:opacity .5s,transform .7s cubic-bezier(.2,.7,.2,1);pointer-events:none;z-index:6;padding:18px 20px 12px;
-  background:radial-gradient(ellipse at center,rgba(16,26,18,.9) 42%,rgba(16,26,18,0) 74%)}
+  background:linear-gradient(to top,rgba(12,20,14,.94) 42%,rgba(12,20,14,.72) 68%,rgba(12,20,14,0) 100%)}
 #caption.on{opacity:1;transform:translate(-50%,0)}
 #capTitle{margin:0 0 6px;font-weight:400;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.42em;margin-left:.42em;color:var(--accent)}
 #caption.on #capTitle{animation:sealIn .8s cubic-bezier(.2,.7,.2,1) both}
@@ -74,7 +74,7 @@ body.started #controls{opacity:1;pointer-events:auto}
 .introTop,.introBottom{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
 .introTop{top:max(18px,env(safe-area-inset-top))}
 .introBottom{bottom:max(12px,env(safe-area-inset-bottom));gap:8px;left:50%;right:auto;width:min(100%,640px);transform:translateX(-50%);box-sizing:border-box;
-  padding-top:28px;background:radial-gradient(ellipse 70% 80% at 50% 60%,rgba(16,26,18,.9) 30%,rgba(16,26,18,0) 74%)}
+  padding-top:36px;background:linear-gradient(to top,rgba(12,20,14,.94) 46%,rgba(12,20,14,.55) 72%,rgba(12,20,14,0) 100%)}
 .tag{display:flex;align-items:center;gap:10px;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.28em;color:var(--accent);text-shadow:0 1px 8px rgba(0,0,0,.65)}
 .tag i{display:block;width:clamp(22px,5vw,56px);height:1px;background:currentColor;opacity:.7}
 .pinyin{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:clamp(30px,5.2vh,46px);line-height:1;color:var(--cream);letter-spacing:.06em;text-shadow:0 0 18px rgba(0,0,0,.55)}
@@ -93,7 +93,11 @@ body.portrait #controls{top:max(8px,env(safe-area-inset-top))}
 body.portrait #controls button{padding:6px 8px;font-size:13px;letter-spacing:.08em}
 body.portrait #progress{top:max(8px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left));right:136px;width:auto;transform:none;justify-content:space-between;gap:0}
 body.portrait #hint{top:max(46px,calc(env(safe-area-inset-top) + 36px))}
-body.portrait #capText{font-size:clamp(17px,4.6vw,22px)}
+body.portrait #capText{font-size:clamp(16px,4.4vw,20px)}
+body.portrait #caption{padding:12px 12px 8px}
+body.portrait #action{font-size:16px;padding:8px 12px 8px 16px;letter-spacing:.16em}
+body.portrait .introBottom{gap:4px;padding-top:18px}
+body.portrait .btn-main{margin-top:4px;font-size:18px;letter-spacing:.28em;padding:8px 16px 8px 22px}
 body.portrait #progress li{font-size:10px;letter-spacing:0}
 @media (max-height:540px){.sub,.meta{display:none}#capText{font-size:16px}#caption{padding:8px 12px 6px}.actions{margin-top:4px}}
 @media (prefers-reduced-motion: reduce){
@@ -277,16 +281,16 @@ const cvs = $('#view'), ctx = cvs.getContext('2d');
 const grainC = document.createElement('canvas'), gctx = grainC.getContext('2d');
 let SW = 1, SH = 1, DPR = 1, portrait = false, vignette = null;
 const VIEW = {
-  wide:   { x: 1500, y: 840, w: 1680, h: 1000, pw: 620, pcy: 0.46 },
-  sluice: { x: 1180, y: 720, w: 860,  h: 620,  pw: 400, pcy: 0.42 },
-  plant:  { x: 1500, y: 860, w: 1120, h: 780,  pw: 500, pcy: 0.40 },
-  glyph:  { x: 1500, y: 860, w: 860,  h: 680,  pw: 420, pcy: 0.36 },
-  finale: { x: 1500, y: 880, w: 1520, h: 940,  pw: 580, pcy: 0.44 },
+  wide:   { x: 1500, y: 960, w: 1500, h: 980, pw: 560, pcy: 0.38 },
+  sluice: { x: 1260, y: 780, w: 820,  h: 600, pw: 390, pcy: 0.42 },
+  plant:  { x: 1500, y: 900, w: 1040, h: 720, pw: 470, pcy: 0.38 },
+  glyph:  { x: 1500, y: 860, w: 640,  h: 540, pw: 350, pcy: 0.40 },
+  finale: { x: 1500, y: 980, w: 1400, h: 880, pw: 530, pcy: 0.40 },
 };
 const cam = { ...VIEW.wide };
 const CV = { x: 0, y: 0, k: 1, cy: 0 };
 const FIELD = { l: 1080, r: 1920, t: 560, b: 1140, mx: 1500, my: 850 };
-const SUN = { x: 1760, y: 430 };
+const SUN = { x: 1780, y: 500 };
 const PLOTS = [
   { l: FIELD.l + 34, r: FIELD.mx - 26, t: FIELD.t + 30, b: FIELD.my - 24 },
   { l: FIELD.mx + 26, r: FIELD.r - 34, t: FIELD.t + 30, b: FIELD.my - 24 },
@@ -347,7 +351,7 @@ const SHOOTS = PLOTS.map((plot, pi) => {
       out.push({
         x: lerp(plot.l + 16, plot.r - 16, (col + 0.5) / cols) + (r() - 0.5) * 8,
         y: lerp(plot.t + 20, plot.b - 14, (row + 0.55) / rows),
-        h: 11 + r() * 9,
+        h: 14 + r() * 12,
         ph: r() * TAU,
       });
     }
@@ -523,9 +527,9 @@ function drawSky() {
 }
 function drawHills() {
   const bands = [
-    [430, '#2a4036', 46, 0.4],
-    [490, '#3d5644', 34, 1.2],
-    [545, '#5d7354', 22, 2.1],
+    [500, '#2a4036', 38, 0.4],
+    [555, '#3d5644', 28, 1.2],
+    [600, '#5d7354', 18, 2.1],
   ];
   for (const [y, color, amp, phase] of bands) {
     ctx.fillStyle = color;
@@ -706,35 +710,29 @@ function drawPlots() {
     }
   });
 }
-function drawRidgeBand(x0, y0, x1, y1, width) {
-  const dx = x1 - x0, dy = y1 - y0, len = Math.hypot(dx, dy) || 1;
-  const nx = -dy / len, ny = dx / len;
-  const w = width / 2;
-  const g = ctx.createLinearGradient(x0 + nx * w, y0 + ny * w, x0 - nx * w, y0 - ny * w);
-  g.addColorStop(0, '#8a6844');
-  g.addColorStop(0.45, '#e4c98a');
-  g.addColorStop(1, '#6e5034');
-  ctx.fillStyle = g;
-  ctx.beginPath();
-  ctx.moveTo(x0 + nx * w, y0 + ny * w);
-  ctx.lineTo(x1 + nx * w, y1 + ny * w);
-  ctx.lineTo(x1 - nx * w, y1 - ny * w);
-  ctx.lineTo(x0 - nx * w, y0 - ny * w);
-  ctx.closePath();
-  ctx.fill();
-}
 function drawRidges() {
-  const lift = 18 + W.ridge * 16;
+  const lift = 22 + W.ridge * 14;
   ctx.save();
-  ctx.shadowColor = 'rgba(30,24,12,.28)';
-  ctx.shadowBlur = 12;
-  ctx.shadowOffsetY = 6;
-  drawRidgeBand(FIELD.l, FIELD.t, FIELD.r, FIELD.t, lift);
-  drawRidgeBand(FIELD.l, FIELD.b, FIELD.r, FIELD.b, lift);
-  drawRidgeBand(FIELD.l, FIELD.t, FIELD.l, FIELD.b, lift * 0.9);
-  drawRidgeBand(FIELD.r, FIELD.t, FIELD.r, FIELD.b, lift * 0.9);
-  drawRidgeBand(FIELD.mx, FIELD.t, FIELD.mx, FIELD.b, lift * 0.82);
-  drawRidgeBand(FIELD.l, FIELD.my, FIELD.r, FIELD.my, lift * 0.82);
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.shadowColor = 'rgba(30,24,12,.35)';
+  ctx.shadowBlur = 14;
+  ctx.shadowOffsetY = 7;
+  ctx.strokeStyle = '#6a4c30';
+  ctx.lineWidth = lift;
+  ctx.strokeRect(FIELD.l, FIELD.t, FIELD.r - FIELD.l, FIELD.b - FIELD.t);
+  ctx.beginPath();
+  ctx.moveTo(FIELD.mx, FIELD.t); ctx.lineTo(FIELD.mx, FIELD.b);
+  ctx.moveTo(FIELD.l, FIELD.my); ctx.lineTo(FIELD.r, FIELD.my);
+  ctx.stroke();
+  ctx.shadowColor = 'transparent';
+  ctx.strokeStyle = '#e6cb90';
+  ctx.lineWidth = lift * 0.42;
+  ctx.strokeRect(FIELD.l, FIELD.t, FIELD.r - FIELD.l, FIELD.b - FIELD.t);
+  ctx.beginPath();
+  ctx.moveTo(FIELD.mx, FIELD.t); ctx.lineTo(FIELD.mx, FIELD.b);
+  ctx.moveTo(FIELD.l, FIELD.my); ctx.lineTo(FIELD.r, FIELD.my);
+  ctx.stroke();
   ctx.restore();
   const show = clamp((W.ridge - 0.2) / 0.6);
   if (show > 0.05) {
@@ -827,64 +825,70 @@ function drawSeeds() {
 }
 function drawPerson(x, y, sc, o) {
   const sway = reduceMotion ? 0 : Math.sin(clock * 0.0022 + (o.phase || 0)) * 1.1;
-  const step = Math.sin((o.walk || 0) * 7.5) * (o.moving ? 5 : 0);
+  const step = Math.sin((o.walk || 0) * 7.5) * (o.moving ? 6 : 0);
   ctx.save();
   ctx.translate(x, y);
   ctx.scale(sc, sc);
-  ctx.fillStyle = 'rgba(20,28,16,.28)';
-  ctx.beginPath(); ctx.ellipse(2, 4, 16, 5, 0, 0, TAU); ctx.fill();
-  ctx.strokeStyle = o.pants; ctx.lineWidth = 4.2; ctx.lineCap = 'round';
+  ctx.fillStyle = 'rgba(20,28,16,.32)';
+  ctx.beginPath(); ctx.ellipse(6, 4, 18, 5.5, 0.2, 0, TAU); ctx.fill();
+  ctx.strokeStyle = o.pants; ctx.lineWidth = 5; ctx.lineCap = 'round';
   ctx.beginPath();
-  ctx.moveTo(-4, -26); ctx.lineTo(-6 + step, -1);
-  ctx.moveTo(4, -26); ctx.lineTo(6 - step, -1);
+  ctx.moveTo(-5, -28); ctx.lineTo(-7 + step, 0);
+  ctx.moveTo(5, -28); ctx.lineTo(7 - step, 0);
   ctx.stroke();
+  ctx.fillStyle = '#2a241c';
+  ctx.beginPath(); ctx.ellipse(-7 + step, 1, 4, 2, 0, 0, TAU); ctx.ellipse(7 - step, 1, 4, 2, 0, 0, TAU); ctx.fill();
   ctx.fillStyle = o.jacket;
   ctx.beginPath();
-  ctx.moveTo(-13, -58); ctx.quadraticCurveTo(0, -62, 13, -58);
-  ctx.lineTo(15, -26); ctx.lineTo(-15, -26); ctx.closePath(); ctx.fill();
-  ctx.strokeStyle = 'rgba(255,255,255,.22)'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(0, -56); ctx.lineTo(0, -34); ctx.stroke();
+  ctx.moveTo(-16, -64); ctx.quadraticCurveTo(0, -70, 16, -64);
+  ctx.lineTo(18, -28); ctx.quadraticCurveTo(0, -22, -18, -28); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,.16)';
+  ctx.fillRect(-2, -62, 4, 32);
   const reach = o.reach || 0;
-  ctx.strokeStyle = o.jacket; ctx.lineWidth = 4;
+  ctx.strokeStyle = o.skin; ctx.lineWidth = 4.2;
   ctx.beginPath();
-  ctx.moveTo(-10, -50);
-  ctx.quadraticCurveTo(-20, -38, -8 - reach * 6, -22);
-  ctx.moveTo(10, -50);
-  ctx.quadraticCurveTo(24 + reach * 10, -42, 16 + reach * 26, -34 - reach * 10);
+  ctx.moveTo(-12, -54);
+  ctx.quadraticCurveTo(-24, -40, -10 - reach * 8, -24);
+  ctx.moveTo(12, -54);
+  ctx.quadraticCurveTo(28 + reach * 8, -46, 18 + reach * 30, -36 - reach * 12);
   ctx.stroke();
   ctx.fillStyle = o.skin;
-  ctx.beginPath(); ctx.arc(sway * 0.3, -70, 9, 0, TAU); ctx.fill();
+  ctx.beginPath(); ctx.arc(sway * 0.25, -76, 10, 0, TAU); ctx.fill();
   ctx.fillStyle = '#3a2a24';
-  ctx.beginPath(); ctx.arc(sway * 0.3, -73, 8.2, Math.PI, 0); ctx.fill();
+  ctx.beginPath(); ctx.arc(sway * 0.25 - 0.4, -80, 9.2, Math.PI * 1.05, Math.PI * 1.95); ctx.fill();
+  ctx.fillStyle = '#2a2420';
+  ctx.beginPath(); ctx.arc(sway * 0.25 - 3, -76, 0.9, 0, TAU); ctx.arc(sway * 0.25 + 3, -76, 0.9, 0, TAU); ctx.fill();
   ctx.fillStyle = o.hat;
-  ctx.beginPath(); ctx.ellipse(0, -76, 15, 4.2, 0, 0, TAU); ctx.fill();
-  ctx.beginPath(); ctx.ellipse(0, -80, 8, 5.5, 0, Math.PI, TAU); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(0, -84, 16, 4.6, 0, 0, TAU); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(0, -90, 8.5, 6.5, 0, Math.PI, TAU); ctx.fill();
+  ctx.strokeStyle = o.band || '#8c3a32'; ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.ellipse(0, -86, 8, 2.1, 0, 0, TAU); ctx.stroke();
   if (o.basket) {
-    ctx.strokeStyle = '#8a5a32'; ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.moveTo(12, -48); ctx.quadraticCurveTo(26, -36, 18, -24); ctx.stroke();
-    ctx.fillStyle = '#a87440';
-    ctx.beginPath(); ctx.ellipse(22, -22, 8, 5, 0.2, 0, TAU); ctx.fill();
-    ctx.fillStyle = '#d2dc6a';
-    ctx.beginPath(); ctx.arc(19, -25, 2, 0, TAU); ctx.arc(24, -26, 1.6, 0, TAU); ctx.fill();
+    ctx.fillStyle = '#8a5a32';
+    ctx.beginPath(); ctx.ellipse(24, -30, 9, 6, 0.15, 0, TAU); ctx.fill();
+    ctx.strokeStyle = '#6a4024'; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(16, -30); ctx.quadraticCurveTo(24, -42, 32, -30); ctx.stroke();
+    ctx.fillStyle = '#dce07a';
+    ctx.beginPath(); ctx.arc(20, -33, 2.1, 0, TAU); ctx.arc(25, -35, 1.7, 0, TAU); ctx.arc(28, -31, 1.8, 0, TAU); ctx.fill();
   }
   ctx.restore();
 }
 function drawPeople() {
   const walk = W.walk;
-  const gx = lerp(760, 1220, ease.out(clamp(walk)));
-  const gy = lerp(1280, 1210, ease.out(clamp(walk)));
+  const gx = lerp(980, 1340, ease.out(clamp(walk)));
+  const gy = FIELD.b + 78;
   const reach = clamp(W.sown.reduce((a, b) => a + b, 0) / 2);
-  drawPerson(gx, gy, 1.05, { jacket: '#243e62', pants: '#3a3228', hat: '#e6d2a0', skin: '#f0c2a0', basket: W.people < 0.4, walk, moving: walk > 0.05 && walk < 0.98, reach, phase: 0.4 });
-  drawPerson(gx - 78, gy + 8, 0.78, { jacket: '#a8483c', pants: '#4a3828', hat: '#f0d8a4', skin: '#f3c8aa', walk: Math.max(0, walk - 0.08), moving: walk > 0.1 && walk < 0.98, phase: 1.6 });
+  drawPerson(gx, gy, 1.22, { jacket: '#243e62', pants: '#3a3228', hat: '#e7d3a2', skin: '#f0c2a0', band: '#8c3a32', basket: W.people < 0.45, walk, moving: walk > 0.05 && walk < 0.98, reach, phase: 0.4 });
+  drawPerson(gx - 110, gy + 8, 0.9, { jacket: '#a8483c', pants: '#4a3828', hat: '#f0d8a4', skin: '#f3c8aa', band: '#f0ddb0', walk: Math.max(0, walk - 0.08), moving: walk > 0.1 && walk < 0.98, phase: 1.6 });
   if (W.people > 0.02) {
     const a = W.people;
     ctx.save(); ctx.globalAlpha = a;
-    drawPerson(1360, 820, 0.7, { jacket: '#6a5340', pants: '#3a342c', hat: '#ead8ae', skin: '#e8c0a0', phase: 2.2 });
-    drawPerson(1640, 820, 0.68, { jacket: '#2f4a3a', pants: '#3e342c', hat: '#e7d3a4', skin: '#efc6a6', phase: 0.2 });
-    drawPerson(1280, 1088, 0.66, { jacket: '#8a6238', pants: '#3a3028', hat: '#f2e0b4', skin: '#f0c4a4', phase: 3 });
+    drawPerson(FIELD.l + 8, FIELD.my, 0.74, { jacket: '#6a5340', pants: '#3a342c', hat: '#ead8ae', skin: '#e8c0a0', phase: 2.2 });
+    drawPerson(1680, FIELD.b + 70, 0.95, { jacket: '#2f4a3a', pants: '#3e342c', hat: '#e7d3a4', skin: '#efc6a6', phase: 0.2 });
+    drawPerson(FIELD.mx, FIELD.my + 28, 0.7, { jacket: '#8a6238', pants: '#3a3028', hat: '#f2e0b4', skin: '#f0c4a4', phase: 3 });
     ctx.restore();
     ctx.save(); ctx.globalAlpha = a;
-    ctx.translate(2060, 1040);
+    ctx.translate(2060, FIELD.b - 20);
     ctx.fillStyle = '#4a3428';
     ctx.beginPath(); ctx.ellipse(0, 0, 28, 14, 0, 0, TAU); ctx.fill();
     ctx.beginPath(); ctx.ellipse(24, -6, 12, 9, 0.4, 0, TAU); ctx.fill();
@@ -919,8 +923,8 @@ function drawEgret(x, y, fly) {
   ctx.restore();
 }
 function drawLife() {
-  const flyX = reduceMotion ? 1280 : 1100 + ((clock * 0.04) % 900);
-  const flyY = 360 + Math.sin(clock * 0.001) * 18;
+  const flyX = reduceMotion ? 1280 : 1100 + ((clock * 0.04) % 700);
+  const flyY = 520 + Math.sin(clock * 0.001) * 14;
   drawEgret(flyX, flyY, true);
   if (W.water[3] > 0.4 || W.people > 0.2) drawEgret(1788, FIELD.my - 8, false);
   if (W.water[0] > 0.45) {
@@ -1102,7 +1106,7 @@ function drawLabel(a) {
   ctx.textBaseline = 'middle';
   const label = window.haqiHanziUi ? window.haqiHanziUi('田埂') : '田埂';
   ctx.textAlign = 'center';
-  ctx.fillText(label, 50, portrait ? 4 : 100);
+  ctx.fillText(label, 50, 6);
   ctx.restore();
 }
 function drawTraceUI() {
@@ -1171,7 +1175,7 @@ function drawWords() {
 function drawVeil() {
   if (W.veil < 0.01) return;
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  ctx.fillStyle = `rgba(18,26,16,${(W.veil * 0.72).toFixed(3)})`;
+  ctx.fillStyle = `rgba(10,16,12,${(W.veil * 0.82).toFixed(3)})`;
   ctx.fillRect(0, 0, SW, SH);
 }
 function drawGrade() {
@@ -1452,13 +1456,13 @@ async function sGlyph(tk) {
   W.glyph.shell = 1;
   W.glyph.voice = 1;
   const from = { cx: GL.cx, cy: GL.cy, s: GL.s };
-  const to = { cx: 1500, cy: portrait ? 760 : 820, s: portrait ? 4.7 : 5.35 };
+  const to = { cx: 1500, cy: 860, s: portrait ? 5.5 : 7.15 };
   bg(camTo(VIEW.glyph, 1600 * M, tk));
   await tween(1500 * M, t => {
     GL.cx = lerp(from.cx, to.cx, t);
     GL.cy = lerp(from.cy, to.cy, t);
     GL.s = lerp(from.s, to.s, t);
-    W.veil = t * 0.78;
+    W.veil = t * 0.9;
     W.glow = 1 - t;
     W.glyph.plate = t;
   }, tk);
@@ -1632,7 +1636,7 @@ async function sFinale(tk) {
   W.wordOn = -1;
   bg(camTo(VIEW.finale, 2000 * M, tk));
   await tween(1500 * M, t => {
-    W.glyph.alpha = 1 - t; W.veil = 0.78 * (1 - t); W.people = t; W.mist = 1 - t * 0.45;
+    W.glyph.alpha = 1 - t; W.veil = 0.9 * (1 - t); W.people = t; W.mist = 1 - t * 0.45;
   }, tk);
   W.glyph.alpha = 0;
   W.gate = 1; W.gateVis = 1; syncWater();
@@ -1677,10 +1681,10 @@ async function introPlay(tk) {
 }
 
 function placeGlyph() {
-  Object.assign(GL, { cx: 1500, cy: portrait ? 760 : 820, s: portrait ? 4.7 : 5.35 });
+  Object.assign(GL, { cx: 1500, cy: 860, s: portrait ? 5.5 : 7.15 });
   Object.assign(cam, VIEW.glyph);
   W.glyph.alpha = 1; W.glyph.prog = [1, 1, 1, 1, 1]; W.goal = [1, 1, 1, 1, 1];
-  W.veil = 0.76; W.glyph.locked = true; W.glyph.plate = 1;
+  W.veil = 0.9; W.glyph.locked = true; W.glyph.plate = 1;
   W.gate = 1; W.gateVis = 1; syncWater();
   W.water = [1, 1, 1, 1]; W.sown = [1, 1, 1, 1]; W.green = [1, 1, 1, 1]; W.ridge = 1; W.walk = 1;
 }

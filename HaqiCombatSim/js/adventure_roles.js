@@ -68,6 +68,7 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
         petScope(roleId){return scope(key(),roleId);},
         loadPet(save,id,roleId=state.catalog.activeId){const next=JSON.parse(JSON.stringify(save));hydratePetFile(next,id,scope(key(),roleId),fileIO(scope(key(),roleId)).read,content);return restoreRuntime(durableSave(next),content,runtimeValues(next));},
         get owner() { return owner; },
+        get stale() { return storage.getItem(key()) !== raw; },
         // Entry preferences stay local and never mark the role catalog dirty.
         get duoSelection() {
             try {

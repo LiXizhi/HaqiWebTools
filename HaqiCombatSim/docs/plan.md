@@ -1,3 +1,9 @@
+## 2026-10-23：共享服务器独立仓库
+
+在场服务器、客户端模块、管理页、两组服务器测试和 VS Code 启动任务已迁至 [HaqiGameServerLite](https://github.com/LiXizhi/HaqiGameServerLite)。原项目移除 presence 启动和负载测试脚本；服务端统一在新仓库维护。三个项目的正式页面接入仍待实施，详见[架构](architecture.md)。
+
+用户要求 Haqi 用户真正登录 `us1.gameserver.keepwork.com`，并由服务器向Keepwork验证token及username。18:47（北京时间）已部署HTTPS/WSS、限定源CORS、Keepwork profile核验及一次性票据；真实账号双客户端入场/移动/离房/重连通过，缺凭据/无效token/用户名不一致均401。Haqi源码入口已接入会话生命周期，访客不连接；网页未发布，Git未提交。复测脚本 `scripts/check_game_server.mjs --auth-stdin` 仅从标准输入接收内存测试会话，不用命令行传token。详见 [QA记录](qa-report.md)。
+
 ## 2026-10-20：连接式家园建筑
 
 木屋／石堡十种构件、吸附与连续铺设、独立阻挡属性、开关门、屋顶、16块召唤包和WordTree有效练习已接入。静态构件按地面／同深度／连通屋顶烘焙，地形与建筑合计64MiB纹理预算；验收范围及性能结果见[家园](home.md)与[QA记录](qa-report.md)。本地工作区实现，未提交、推送或发布游戏。

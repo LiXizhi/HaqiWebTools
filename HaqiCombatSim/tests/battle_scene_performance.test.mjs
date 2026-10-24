@@ -12,7 +12,20 @@ test('frame meter counts rendered cadence, includes hitches and resets pauses',(
     assert.equal(meter.value.fps,30);meter.sample(10000);assert.equal(meter.value,null);
     meter.sample(10500);assert.equal(meter.value.fps,2);
 });
-test('frame pacer caps 120Hz active ticks at 60 FPS, throttles static scenes to 20 FPS and wakes immediately on input',()=>{
+test('default frame pacer caps active and idle scenes at 60 FPS',()=>{
+    for(const refreshRate of [60,120]){
+        const pacer=createFramePacer(),meter=createFrameMeter();
+        let rendered=0;
+        for(let i=0;i<=refreshRate*3;i++){
+            const t=i*1000/refreshRate;
+            if(pacer.shouldRender(t,t<1000)){rendered++;meter.sample(t);}
+        }
+        assert.equal(rendered,181);
+        assert.equal(meter.value.fps,60);
+        assert.equal(pacer.isActive(3000),false);
+    }
+});
+test('explicit 20 FPS idle setting throttles static scenes and wakes immediately on input',()=>{
     const pacer=createFramePacer({activeFps:60,idleFps:20,holdMs:300}),meter=createFrameMeter();
     let rendered=0;
     for(let i=0;i<=120;i++){

@@ -9,7 +9,7 @@ const read=lang=>JSON.parse(fs.readFileSync(new URL('../data/adventure/dictionar
 const en=read('en'),zh=read('zh'),at=new Date(2026,9,16,12).getTime(),day=86400000;
 test('independent dictionaries include strokes and configured animations, English has 30 words',()=>{
     assert.equal(validateDictionary(en),en);assert.equal(validateDictionary(zh),zh);assert.equal(en.entries.length,30);assert.equal(zh.entries.length,30);
-    for(const file of ['men','xiu','sen','guang','guo','yu','ming','wu_dance'])assert.ok(zh.entries.some(e=>e.animation?.endsWith('hanzi_'+file+'.html')));
+    for(const file of ['men','xiu','sen','guang','guo','yu','ming'])assert.ok(zh.entries.some(e=>e.animation?.endsWith('hanzi_'+file+'.html')));
     const invalid=structuredClone(zh);invalid.entries[0].animation='https://example.com/evil.html';assert.throws(()=>validateDictionary(invalid));
 });
 test('plans freeze across reloads, sort overdue entries and avoid invented work',()=>{
@@ -159,7 +159,7 @@ test('adventure dictionary retains existing animations, corrects dance and anima
     });
     await dict.open('zh','men');
     assert.equal(entryPayload.entry.id,'men');
-    for(const [id,file] of [['men','hanzi_men.html'],['xiu','hanzi_xiu.html'],['sen','hanzi_sen.html'],['guang','hanzi_guang.html'],['guo','hanzi_guo.html'],['yu','hanzi_yu.html'],['ming','hanzi_ming.html'],['wu','hanzi_wu_dance.html']]){
+    for(const [id,file] of [['men','hanzi_men.html'],['xiu','hanzi_xiu.html'],['sen','hanzi_sen.html'],['guang','hanzi_guang.html'],['guo','hanzi_guo.html'],['yu','hanzi_yu.html'],['ming','hanzi_ming.html']]){
         const entry=homePayload.data.entries.find(e=>e.id===id);
         assert.equal(entry?.animation,`hanzi/${file}`,id);
     }

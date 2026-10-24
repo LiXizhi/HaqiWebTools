@@ -1,13 +1,44 @@
-## 2026-10-22：在场网关与无状态世界服
+## 2026-10-24：地图服务器选择
 
-浏览器冒险仍不接入此链路。网关负责任务分配、实例增减和中文管理页，并在本进程的其他端口拉起世界服；游戏服只保存当前连接的房间、外观和坐标。房间名由客户端自定，只有第二个人进入才建立房间对象。每个实例最多 500 人，一台游戏服进程最多 8000 人。人少的房间每秒共用一帧；超过 64 名可见玩家时优先同步最近的人。散开的房间只查附近格子。慢连接丢移动帧，不拖住进程。岛屿和家园是房间，进出房间不重连。同一房间按距离以 1 Hz、0.25 Hz、0.125 Hz 转发移动，客户端自行插值。同一台机器上的实例在冷却 10 分钟后才会合并或按区域拆分，并提前 8 秒通知。详见 [server/presence/README.md](../server/presence/README.md)。
+哈奇及现实世界地图右上角复用 `view_map_servers.js`，通过控制器回调读取会话、查询分页和选择实例，关闭地图时取消列表请求并退订。编号仅取鉴权分配且经 `welcome.instanceId` 核对的连接，`migrate` 更新编号，断开清空。每页20项、支持跳页和刷新；绿色流畅、橙色拥挤、红色已满、灰色维护，附人数/容量。战斗中禁止手动切服。列表人数来自网关最近心跳，最终容量由世界服入场检查决定。
+
+```mermaid
+flowchart LR
+    Map[世界地图右上角 / 服务器列表] --> Controller[adventure_app 回调]
+    Controller --> Session[adventure_game_server]
+    Session -->|GET /api/instances 分页 / 无凭据| Gateway[独立 Game Server Lite 网关]
+    Session -->|POST /api/join 指定 instanceId / 原有鉴权| Gateway
+    Gateway -->|票据绑定目标实例| Session
+    Session -->|WSS hello / welcome 核对编号| World[目标世界服]
+    World -->|migrate 更新编号| Session
+```
+
+新增服务端接口尚未部署；上线须同时更新独立服务器，并在反向代理允许公开 GET/OPTIONS `/api/instances`，保留管理路由隔离。未完成公网真实账号切服与正式页面视觉验收。
+
+## 2026-10-23：共享在场服务器已迁出
+
+源码、服务器测试和 VS Code 启动任务已迁至独立仓库 [HaqiGameServerLite](https://github.com/LiXizhi/HaqiGameServerLite)，供 HaqiCombatSim、AI-work-company 和 AIChat 共用。默认内部网关端口8797、世界服端口8798。2026-10-23 Haqi 源码正式入口已接入 `adventure_game_server.js`，公网为 `https://us1.gameserver.keepwork.com`；其他两个项目待接入，本轮Haqi网页未发布。接入约定见新仓库 docs/integration.md。
+
+`adventure_cloud.gameServerCredentials()` 只在有效的现有SDK会话中提供内存凭据。适配器每秒采样账号/角色/区域与坐标；服务端验证token及username，签发60秒一次性票据，世界服核验后返回welcome才显示已连接。入场CORS允许任意页面来源；共享鉴权对象按账号维护最多10条同时连接，每次join使用独立playerId，同角色多开不互踢，断线/失败释放名额。退出/账号变化/pagehide立即关闭，角色变化重新入场、区域变化enterRoom、断线有限退避重试，旧异步回包不得恢复前一个身份。旅途设置提供服务器状态、手动重连、切换及恢复默认；网关地址仅作本机偏好保存。切换先取消旧请求和连接，重新向目标网关鉴权取票；只接受 Keepwork 游戏服 HTTPS 域名（本地开发另支持 localhost）。恢复网络/回到前台立即检查连接，20秒无服务端消息判为失联；兼容旧服replaced消息时暂停自动重连；新服同账号最多10条独立连接，同角色由最新成功入场连接接管，旧连接收到 replaced 后返回登录页。访客不请求游戏服，网络失败保留本地玩法。2026-10-24 已接入远端玩家名单、入离房、外观与移动消息；adventure_presence_core 保存仅内存的同房间玩家并做1秒位置插值，场景渲染器以独立 remote-player 对象绘制姓名、下一行主语言和原版头像/身体（真人略偏冷色）；主语言来自角色 languageLearning.native，通过现有 appearance 消息传递。移动插值期间朝向目标，停止后才采用网络最终朝向。同房间可定位的其他真人达到8名时，社交控制器隐藏生成路人及其交互入口，保留已接受的队伍伙伴，人数下降或断线后恢复。场景渲染器，不接入本地模拟伙伴AI、不写玩家存档。换房、迁移、断线、换账号清除旧名单；服务器roster包含现有玩家坐标与外观，晚入场也可立即看到静止玩家。尚未同步远端宠物、坐骑、自定义照片头像或战斗。
+
+网关负责任务分配、实例增减和中文管理页；游戏服只保存当前连接的房间、外观和坐标。房间名由客户端自定，第二个人进入才建立房间对象。每个实例最多500人，一台游戏服最多8000人。移动按距离分档转发，慢连接丢移动帧；同机实例冷却10分钟后可合并或按区域拆分，并提前8秒通知。
 
 ```mermaid
 flowchart LR
     Admin[管理页] --> Gateway[网关]
-    Clients[客户端] --> Gateway
-    Clients --> Game[无状态游戏服]
+    Haqi[Haqi正式源码入口] --> Session[adventure_game_server / 内存连接生命周期]
+    Cloud[adventure_cloud / SDK会话] --> Session
+    Session -->|HTTPS Bearer token与username| Gateway
+    Gateway -->|查询profile核对username| Keepwork[Keepwork API]
+    Gateway -->|独立连接ID与一次性签名票据| Session
+    Session -->|WSS hello与票据| Game[HaqiGameServerLite 无状态游戏服]
+    Clients[AI-work-company / AIChat] -. 待接入 .-> Gateway
     Gateway --> Game
+    Game -->|核验账号并限制10条连接| Slots[共享账号连接名额与角色归属]
+    Slots -->|同角色新入场| Kick[旧连接 replaced / 返回登录页]
+    Kick --> Session
+    Game -->|roster / joined / left / relay / appear| Peers[adventure_presence_core / 同房间内存角色与插值]
+    Peers --> Render[adventure_renderer / 远端角色与姓名]
     Game --> Instance[实例]
     Instance --> Room[岛屿或家园房间]
 ```

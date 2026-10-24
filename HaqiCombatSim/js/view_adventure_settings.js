@@ -1,3 +1,4 @@
+import {GAME_SERVER_URL} from './adventure_game_server.js';
 import { languageSettings } from './view_language_learning.js';
 import { createSettingsControls } from './view_settings_controls.js';
 import { tr } from './locale_runtime.js';
@@ -47,6 +48,23 @@ export function renderSettings(body, model, cb, { el, button }) {
         ui.section('离开', ui.cell({ icon: '🏠', label: '回到开始画面' }, cb.title)),
     );
 
+    const serverStatus=el('p','muted'),serverAddress=el('input','');
+    serverStatus.setAttribute('role','status');
+    serverAddress.type='url';serverAddress.value=model.gameServer?.gatewayUrl||GAME_SERVER_URL;
+    serverAddress.setAttribute('aria-label','游戏服务器地址');
+    const serverError=el('p','muted');serverError.setAttribute('role','alert');
+    const updateServer=()=>{const state=cb.gameServerStatus?.()||model.gameServer;
+        serverStatus.textContent=state?`${state.message} · ${state.gatewayUrl}`:tr('游戏服未连接');};
+    const switchServer=value=>{try{cb.switchGameServer?.(value);serverAddress.value=value;serverError.textContent='';updateServer();}
+        catch(error){serverError.textContent=error.message;}};
+    panes.journey.append(ui.section('游戏服务器',serverStatus,
+        ui.field('游戏服务器地址',serverAddress),
+        el('p','muted','默认连接美国一区。可填写其他已开通的 Keepwork 游戏服 HTTPS 地址；切换不改变角色存档。'),
+        button('切换服务器',()=>switchServer(serverAddress.value.trim()),'primary'),
+        button('重新连接',()=>{cb.reconnectGameServer?.();updateServer();},'secondary'),
+        button('恢复默认服务器',()=>switchServer(GAME_SERVER_URL),'secondary'),serverError));
+    updateServer();
+
     panes.game.append(el('p','muted settings-note','仅保存在此设备，不同步到云端。'));
     const devices=ui.section('每位玩家的控制器'),deviceMessage=el('p','muted');
     let assignments=normalizePlayerInputs(model.gameSettings?.playerInputs),deviceSignature='';
@@ -73,7 +91,7 @@ export function renderSettings(body, model, cb, { el, button }) {
     }
     devices.append(deviceMessage,el('p','muted','连接手柄后按一次按钮，再选择设备。Xbox标准布局：左摇杆／十字键移动或选择，A确认，B返回，X弃牌，Y宠物，LB卡包，RB跳过，RT跟随，View背包，Menu设置。断开时角色停止；重新连接后先松开按键。'),button('刷新已连接手柄',()=>refreshDevices(true),'secondary'));
     panes.game.append(devices);refreshDevices(true);
-    const deviceTimer=setInterval(()=>{if(!body.isConnected){clearInterval(deviceTimer);return;}refreshDevices();},1000);
+    const deviceTimer=setInterval(()=>{if(!body.isConnected){clearInterval(deviceTimer);return;}refreshDevices();updateServer();},1000);
     const graphics=ui.section('画面'),graphicUpdates=[];
     for(const [key,label] of [['particles','场景粒子'],['trails','角色足迹与拖尾']]){
         const choices=el('div','locale-choices'),status=el('small','muted');

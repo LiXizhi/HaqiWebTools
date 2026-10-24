@@ -1,5 +1,7 @@
 # AGENTS.md — `web/HaqiCombatSim/`
 
+服务器操作前先读 [SSH配置入口](docs/ssh-setup.md)，再读独立 HaqiGameServerLite 仓库的 `docs/ssh-setup.md`。每台新电脑先建立并验证统一 `haqi-us1` 别名及独立密钥；优先复用已有配置，不重复索要可用登录方式，不在仓库保存密码或私钥（用户约定，2026-10-24）。
+
 魔法哈奇 2D 网页战斗模拟器与 `Haqi.html` 单人冒险。父级规则见 [/AGENTS.md](../../AGENTS.md)；本目录是独立的纯前端 H5 子项目，**不适用** NPL 的 `NPL.load` / `commonlib.gettable` 规则。
 
 ## 先读什么
@@ -100,6 +102,13 @@ Three.js 两种版本二选一，插件必须匹配所选版本；当前 Canvas 
 - personal workspace入口只存小型当前状态和分文件引用；完整物品收藏、战斗背包和历史记录分开，未变化的文件复用。禁止恢复为每次同步全量收藏/流水。
 - 当前血量、宠物饥饿/血量、坐标、计时及未结束战斗只存本机IndexedDB，缺失时生命/饥饿默认满格。领取标记、物品数量、成长和阵容等核心数据仍持久化云端。仅核心变化才置dirty；详情见`docs/user-storage.md`。
 
+## Game Server Lite 实际登录（用户约定，2026-10-23）
+
+- Haqi 用户需要实际连接 `us1.gameserver.keepwork.com` 的 Game Server Lite，不能以 Keepwork 登录成功、健康检查或本地模拟代替游戏服入场。
+- 验收应区分账号鉴权、网关分配、WebSocket `welcome` 与正式 Haqi 页面接入，实际测试并记录结果；未完成项不得宣称已登录。当前阻塞与实测见 `docs/qa-report.md` 的 2026-10-23 记录。
+- 服务端继续在独立 HaqiGameServerLite 仓库维护；不将服务端代码迁回网页项目，不向未加密连接发送账号凭据。
+- 游戏服必须向Keepwork API验证用户token有效，并严格核对返回的username与提交用户名一致；不能只相信客户端登录标记或解码token。当前实现为HTTPS网关核验后签发一次性票据，WSS世界服验票才入场。
+
 
 ## 词语交互统一接入 WordTree（用户约定，2026-10-19）
 
@@ -136,3 +145,14 @@ Three.js 两种版本二选一，插件必须匹配所选版本；当前 Canvas 
 
 修改开场互动电影《失落的光》、双语剧本 `data/prologue/script.json`、插画清单 `data/prologue/art.json` 或序章四系大师／文字卡战斗前，先读 [docs/prologue.md](docs/prologue.md) 与 [docs/story/prologue-lost-light.md](docs/story/prologue-lost-light.md)。
 
+
+
+## 游戏服多客户端（用户约定，2026-10-23）
+- 游戏服允许任意网页来源/IP连接，包括127.0.0.1任意端口，仍须服务端验证Keepwork token有效且username一致；管理接口不随入场CORS开放。
+- 同一Keepwork账号最多同时10个游戏客户端，包括同角色多开；每条连接独立playerId，重连ID可变化，第11条明确拒绝。名额服务端核验并维护，客户端不伪造在线状态或绕过上限。
+
+## 同角色接管（用户更新，2026-10-24）
+- 覆盖此前同角色多开约定：Haqi 同一已核验账号、同一角色仅保留最新入场连接，由游戏服踢出旧连接并通知其返回登录页；不同角色仍共享每账号10条连接上限。大厅不参与角色互踢。
+
+## 游戏服验证分层（用户更新，2026-10-24）
+- 日常游戏服连接修改和部署不必每次跑8000人负载测试；本次接管部署以功能回归及真实双页面同角色验收为准。容量/广播性能修改或明确要求时再运行负载测试。

@@ -99,3 +99,19 @@
 .atlas-map-modal .earth-map-place strong{color:#68471f}
 .atlas-map-modal .earth-map-status{border:1px solid #c6a05c;background:#fff2d8f2;box-shadow:0 2px 6px #50361f22}
 @media(max-width:600px){.haqi-app .atlas-map-modal .modal-header{gap:8px;padding:10px 10px 7px}.haqi-app .atlas-map-modal .map-heading{gap:8px}.haqi-app .atlas-map-modal .modal-body{padding:11px 10px 13px}.atlas-map-modal .parallel-world-buttons{width:100%;flex-basis:auto}.atlas-map-modal :is(.earth-map-stage,.world-chart-viewport,.island-guide-chart){border-width:2px;border-radius:10px}}
+
+/* Server selector is scoped to map windows and its nested dialog. */
+.haqi-app .map-server-trigger{flex:none;min-height:40px;max-width:160px;color:var(--green);font-weight:700}
+.map-server-trigger::after{content:' ▾'}
+.map-server-dialog{width:min(620px,94vw);max-height:85dvh;box-sizing:border-box}
+.map-server-dialog .equipment-detail{overflow:auto;max-height:65dvh}
+.map-server-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.haqi-app .map-server-item{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;padding:10px 4px}
+.map-server-load::before{content:'';display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;background:#278747}
+[data-status=crowded] .map-server-load::before{background:#c77c13}
+[data-status=full] .map-server-load::before{background:#b23f30}
+[data-status=unavailable] .map-server-load::before{background:#777}
+.haqi-app .map-server-item[aria-pressed=true]{outline:2px solid var(--green);opacity:1}
+.map-server-pager{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:14px}
+.map-server-pager input{width:58px;min-height:36px}
+@media(max-width:600px){.haqi-app .atlas-map-modal .modal-header:has(.map-server-trigger){flex-wrap:wrap}.haqi-app .atlas-map-modal .modal-header:has(.map-server-trigger) .map-heading{flex-basis:calc(100% - 60px)}.map-server-trigger{order:2;margin-left:auto}.map-server-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}

@@ -248,7 +248,7 @@ const CV = { x: 0, y: 0, k: 1, cy: 0 };
 const VIEW = {
   intro:  { x: 820, y: 600, w: 1480, h: 900, pw: 820, pcy: 0.34 },
   wait:   { x: 800, y: 590, w: 1280, h: 840, pw: 760, pcy: 0.34 },
-  action: { x: 860, y: 560, w: 1080, h: 760, pw: 700, pcy: 0.36 },
+  action: { x: 900, y: 530, w: 980, h: 700, pw: 640, pcy: 0.40 },
   catch:  { x: 880, y: 540, w: 980, h: 720, pw: 660, pcy: 0.36 },
   glyph:  { x: 880, y: 560, w: 1240, h: 1080, pw: 820, pcy: 0.36 },
   finale: { x: 700, y: 640, w: 1360, h: 900, pw: 780, pcy: 0.38 },
@@ -325,10 +325,11 @@ const STROKE_LINES = [
   '长长的一横，是张开的手掌。',
   '最后一笔竖钩，向下托住，再弯向一边。',
 ];
+const LEAF_HOME = { x: 1004, y: 424 };
 const DRIFT = [
-  { x: 250, y: 430, s: 0.34, p: 0.4, tint: 0 },
-  { x: 1180, y: 390, s: 0.28, p: 1.7, tint: 1 },
-  { x: 700, y: 340, s: 0.22, p: 2.4, tint: 2 },
+  { x: 180, y: 360, s: 0.32, p: 0.4, tint: 0 },
+  { x: 1340, y: 300, s: 0.26, p: 1.7, tint: 1 },
+  { x: 620, y: 250, s: 0.2, p: 2.4, tint: 2 },
 ];
 
 const W = {};
@@ -385,17 +386,23 @@ function shoulderWorld(p) {
 function leafHover() {
   const ang = reduceMotion ? 0.6 : clock / 420 + 0.55;
   return {
-    x: 918 + Math.cos(ang * 2) * 42,
-    y: 508 + Math.sin(ang) * 18 + (1 - Math.cos(ang * 2)) * 26,
-    spin: ang * 2.4 + W.spinKick,
+    x: LEAF_HOME.x + Math.cos(ang * 2) * 36,
+    y: LEAF_HOME.y + Math.sin(ang) * 16 + (1 - Math.cos(ang * 2)) * 18,
+    spin: ang * 2.6 + W.spinKick,
   };
 }
 function leafWorld() {
   const h = leafHover();
-  const palm = palmWorld();
-  const land = { x: palm.x + 4, y: palm.y - 8, spin: 0.35 + Math.sin(clock / 700) * (W.finale ? 0.35 : 0.08) };
+  const f = handFrame();
+  const lx = 2, ly = 20;
+  const c = Math.cos(f.ang), s = Math.sin(f.ang);
+  const land = {
+    x: f.x + c * lx - s * ly,
+    y: f.y + s * lx + c * ly,
+    spin: 0.4 + Math.sin(clock / 700) * (W.finale ? 0.3 : 0.06),
+  };
   const u = ease.out(clamp(W.caught));
-  return { x: lerp(h.x, land.x, u), y: lerp(h.y, land.y, u) - (1 - u) * 0, spin: lerp(h.spin, land.spin, u) };
+  return { x: lerp(h.x, land.x, u), y: lerp(h.y, land.y, u), spin: lerp(h.spin, land.spin, u) };
 }
 function near(p, x, y, r = 90) { return Math.hypot(p.x - x, p.y - y) <= Math.max(r, 46 / CV.k); }
 
@@ -606,57 +613,61 @@ function drawShore() {
 function paintMaple(spin, face) {
   const tilt = Math.cos(spin);
   ctx.save();
-  ctx.rotate(Math.sin(spin) * 0.18);
-  ctx.scale(Math.max(0.18, Math.abs(tilt)), 1);
+  ctx.rotate(Math.sin(spin) * 0.22);
+  ctx.scale(Math.max(0.16, Math.abs(tilt)), 1);
   const front = tilt >= 0;
-  const g = ctx.createRadialGradient(-8, -16, 8, 0, 0, 90);
+  const g = ctx.createRadialGradient(-12, -24, 6, 4, 6, 88);
   if (front) {
-    g.addColorStop(0, '#f6c56a');
-    g.addColorStop(0.45, '#e36b2c');
-    g.addColorStop(1, '#b84324');
+    g.addColorStop(0, '#ffe08a');
+    g.addColorStop(0.38, '#ef6a28');
+    g.addColorStop(1, '#9c3018');
   } else {
-    g.addColorStop(0, '#c46a3a');
-    g.addColorStop(1, '#7c3420');
+    g.addColorStop(0, '#c45a32');
+    g.addColorStop(1, '#6e2818');
   }
   ctx.beginPath();
-  const lobes = 5;
-  for (let i = 0; i < lobes; i++) {
-    const a = -Math.PI / 2 + i * (Math.PI * 2 / lobes);
-    const tip = [Math.cos(a) * 78, Math.sin(a) * 84];
-    const left = a - 0.38, right = a + 0.38;
-    const notch = a + Math.PI / lobes;
-    if (i === 0) ctx.moveTo(Math.cos(left) * 34, Math.sin(left) * 36);
-    ctx.quadraticCurveTo(Math.cos(a - 0.18) * 70, Math.sin(a - 0.18) * 74, tip[0], tip[1]);
-    ctx.quadraticCurveTo(Math.cos(a + 0.18) * 70, Math.sin(a + 0.18) * 74, Math.cos(right) * 34, Math.sin(right) * 36);
-    ctx.quadraticCurveTo(Math.cos(notch) * 16, Math.sin(notch) * 18, Math.cos(notch + 0.28) * 32, Math.sin(notch + 0.28) * 34);
-  }
+  ctx.moveTo(-14, -22);
+  ctx.quadraticCurveTo(-26, -64, 0, -96);
+  ctx.quadraticCurveTo(26, -64, 16, -18);
+  ctx.quadraticCurveTo(40, -30, 76, -44);
+  ctx.quadraticCurveTo(54, -12, 22, -2);
+  ctx.quadraticCurveTo(46, 10, 82, 26);
+  ctx.quadraticCurveTo(44, 38, 12, 18);
+  ctx.quadraticCurveTo(4, 30, -12, 18);
+  ctx.quadraticCurveTo(-44, 38, -82, 26);
+  ctx.quadraticCurveTo(-46, 10, -22, -2);
+  ctx.quadraticCurveTo(-54, -12, -76, -44);
+  ctx.quadraticCurveTo(-40, -30, -14, -22);
   ctx.closePath();
   ctx.fillStyle = g;
   ctx.fill();
-  ctx.strokeStyle = front ? 'rgba(120,42,24,.55)' : 'rgba(70,24,16,.7)';
+  ctx.strokeStyle = front ? 'rgba(255,228,180,.8)' : 'rgba(60,20,12,.75)';
   ctx.lineWidth = 2.2;
   ctx.stroke();
+  ctx.strokeStyle = front ? 'rgba(92,28,16,.45)' : 'rgba(40,16,10,.55)';
+  ctx.lineWidth = 1.4;
+  ctx.stroke();
   if (face) {
-    ctx.strokeStyle = front ? 'rgba(255,236,200,.75)' : 'rgba(255,220,180,.35)';
-    ctx.lineWidth = 1.6;
-    ctx.beginPath();
-    ctx.moveTo(0, 8);
-    ctx.lineTo(0, -70);
-    ctx.moveTo(0, -8);
-    ctx.lineTo(-36, -36);
-    ctx.moveTo(0, -8);
-    ctx.lineTo(36, -36);
-    ctx.moveTo(0, 4);
-    ctx.lineTo(-48, 8);
-    ctx.moveTo(0, 4);
-    ctx.lineTo(48, 8);
-    ctx.stroke();
-    ctx.strokeStyle = '#6b3a22';
-    ctx.lineWidth = 3.2;
+    ctx.strokeStyle = front ? 'rgba(255,236,200,.8)' : 'rgba(255,220,180,.28)';
+    ctx.lineWidth = 1.5;
     ctx.lineCap = 'round';
     ctx.beginPath();
-    ctx.moveTo(0, 18);
-    ctx.quadraticCurveTo(6, 40, 2, 58);
+    ctx.moveTo(0, 14);
+    ctx.quadraticCurveTo(-2, -30, 0, -78);
+    ctx.moveTo(0, -6);
+    ctx.quadraticCurveTo(-20, -28, -52, -36);
+    ctx.moveTo(0, -6);
+    ctx.quadraticCurveTo(20, -28, 52, -36);
+    ctx.moveTo(0, 8);
+    ctx.quadraticCurveTo(-24, 16, -56, 20);
+    ctx.moveTo(0, 8);
+    ctx.quadraticCurveTo(24, 16, 56, 20);
+    ctx.stroke();
+    ctx.strokeStyle = '#5c3018';
+    ctx.lineWidth = 3.4;
+    ctx.beginPath();
+    ctx.moveTo(0, 16);
+    ctx.quadraticCurveTo(8, 40, 2, 62);
     ctx.stroke();
   }
   ctx.restore();
@@ -677,18 +688,23 @@ function drawLeaf() {
   const main = leafWorld();
   if (W.caught < 0.85) {
     const ang0 = reduceMotion ? 0.6 : clock / 420 + 0.55;
-    for (let i = 5; i >= 1; i--) {
-      const a = ang0 - i * 0.42;
-      drawLeafAt(918 + Math.cos(a * 2) * 42, 508 + Math.sin(a) * 18 + i * 14, a * 2.4, 0.55 - i * 0.06, 0.16);
+    for (let i = 4; i >= 1; i--) {
+      const a = ang0 - i * 0.55;
+      drawLeafAt(
+        LEAF_HOME.x + Math.cos(a * 2) * 36,
+        LEAF_HOME.y + Math.sin(a) * 16 + (1 - Math.cos(a * 2)) * 18,
+        a * 2.6, 0.48 - i * 0.06, 0.2 - i * 0.03,
+      );
     }
     if (W.reach < 0.92) {
+      const water = { x: POND.x - 30, y: POND.y - POND.ry + 36 };
       ctx.save();
-      ctx.strokeStyle = 'rgba(255,244,230,.45)';
-      ctx.setLineDash([5, 8]);
+      ctx.strokeStyle = 'rgba(255,244,230,.5)';
+      ctx.setLineDash([6, 8]);
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(main.x, main.y + 20);
-      ctx.quadraticCurveTo((main.x + POND.x) / 2 + 30, (main.y + POND.y) / 2, POND.x - 20, POND.y - 20);
+      ctx.moveTo(main.x, main.y + 28);
+      ctx.quadraticCurveTo(main.x + 20, (main.y + water.y) / 2, water.x, water.y);
       ctx.stroke();
       ctx.setLineDash([]);
       ctx.restore();
@@ -707,7 +723,8 @@ function drawLeaf() {
   ctx.ellipse(0, 0, 36 * lift, 12, 0.2, 0, 6.283);
   ctx.fill();
   ctx.restore();
-  drawLeafAt(main.x, main.y, main.spin, lerp(1.12, 0.92, clamp(W.caught)), 1);
+  const sceneLeaf = 1 - clamp((W.morph - 0.05) / 0.45);
+  drawLeafAt(main.x, main.y, main.spin, lerp(1.05, 0.58, clamp(W.caught)), sceneLeaf);
 }
 
 function drawRipples() {
@@ -841,12 +858,15 @@ function drawChubbyFinger(x0, y0, x1, y1, w) {
   ctx.quadraticCurveTo(x0 - nx * w + ux * len * 0.45, y0 - ny * w + uy * len * 0.45, x0 - nx * w, y0 - ny * w);
   ctx.closePath();
   ctx.fill();
+  ctx.strokeStyle = 'rgba(122,68,44,.55)';
+  ctx.lineWidth = 1.6;
+  ctx.stroke();
   ctx.save();
-  ctx.fillStyle = '#f8e6d4';
+  ctx.fillStyle = '#fff0e2';
   ctx.translate(x1 - ux * 2, y1 - uy * 2);
   ctx.rotate(Math.atan2(uy, ux));
   ctx.beginPath();
-  ctx.ellipse(0, 0, w * 0.52, w * 0.34, 0, 0, 6.283);
+  ctx.ellipse(0, 0, w * 0.48, w * 0.32, 0, 0, 6.283);
   ctx.fill();
   ctx.restore();
 }
@@ -864,8 +884,14 @@ function drawHandLocal(open) {
   ctx.beginPath();
   ctx.ellipse(0, 58, 28, 18, 0, 0, 6.283);
   ctx.fill();
+  if (o > 0.7) {
+    ctx.fillStyle = 'rgba(176,96,72,.18)';
+    ctx.beginPath();
+    ctx.ellipse(2, 16, 34, 22, 0, 0, 6.283);
+    ctx.fill();
+  }
   const order = [4, 3, 2, 1, 0];
-  const widths = [14, 15, 16, 15, 17];
+  const widths = [13, 12.5, 13.5, 12.5, 14];
   for (const i of order) {
     const b = fingerBase(o, i), t = fingerTip(o, i);
     ctx.fillStyle = i === 0 ? '#f3d0ae' : '#f6d7c0';
@@ -884,8 +910,8 @@ function drawHandLocal(open) {
     ctx.quadraticCurveTo(6, 18, 4, 40);
     ctx.stroke();
   }
-  ctx.strokeStyle = 'rgba(140,72,52,.35)';
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = 'rgba(122,68,44,.62)';
+  ctx.lineWidth = 2.4;
   ctx.beginPath();
   ctx.ellipse(0, 10, lerp(48, 76, o), lerp(56, 66, o), 0, 0, 6.283);
   ctx.stroke();
@@ -1003,23 +1029,72 @@ function drawSparks() {
   }
 }
 
+function drawEchoHand(c) {
+  c.save();
+  c.fillStyle = '#ebc6a0';
+  c.strokeStyle = 'rgba(122,68,44,.7)';
+  c.lineWidth = 8;
+  c.lineJoin = 'round';
+  c.lineCap = 'round';
+  c.beginPath();
+  c.moveTo(500, 300);
+  c.quadraticCurveTo(470, 180, 430, 90);
+  c.quadraticCurveTo(390, 40, 340, 70);
+  c.quadraticCurveTo(400, 80, 450, 150);
+  c.quadraticCurveTo(490, 240, 530, 310);
+  c.closePath();
+  c.fill();
+  c.stroke();
+  c.beginPath();
+  c.ellipse(518, 390, 370, 108, -0.03, 0, 6.283);
+  c.fill();
+  c.stroke();
+  const fingers = [[390, 760], [470, 800], [545, 810], [630, 760]];
+  fingers.forEach(([x, y], i) => {
+    const bx = 430 + i * 62;
+    c.beginPath();
+    c.moveTo(bx - 16, 430);
+    c.quadraticCurveTo(x - 18, (y + 430) / 2, x - 12, y - 16);
+    c.quadraticCurveTo(x, y + 18, x + 14, y - 12);
+    c.quadraticCurveTo(x + 16, (y + 400) / 2, bx + 18, 424);
+    c.closePath();
+    c.fill();
+    c.stroke();
+    c.fillStyle = '#fff0e2';
+    c.beginPath();
+    c.ellipse(x, y - 6, 14, 10, 0, 0, 6.283);
+    c.fill();
+    c.fillStyle = '#ebc6a0';
+  });
+  c.beginPath();
+  c.moveTo(690, 400);
+  c.quadraticCurveTo(760, 520, 700, 700);
+  c.quadraticCurveTo(660, 760, 620, 720);
+  c.quadraticCurveTo(700, 640, 680, 500);
+  c.quadraticCurveTo(660, 420, 640, 390);
+  c.closePath();
+  c.fill();
+  c.stroke();
+  c.strokeStyle = 'rgba(176,96,78,.55)';
+  c.lineWidth = 5;
+  c.beginPath();
+  c.moveTo(360, 400);
+  c.quadraticCurveTo(520, 430, 680, 388);
+  c.stroke();
+  c.restore();
+}
 function drawMorphHand() {
-  if (W.morphAlpha <= 0.02 || W.morph > 0.98) return;
-  const anchor = mmahToWorld(INK_CX, INK_CY);
-  const sc = GL.size / 1024 * 2.05;
+  if (W.morphAlpha <= 0.02 || W.morph > 0.94) return;
   setCam(ctx);
-  ctx.save();
-  ctx.globalAlpha = W.morphAlpha * (1 - W.morph);
-  ctx.translate(anchor.x, anchor.y);
-  ctx.scale(sc, sc);
-  drawHandLocal(1);
-  const leafSpin = 0.4;
-  ctx.save();
-  ctx.translate(4, -10);
-  ctx.scale(0.42, 0.42);
-  paintMaple(leafSpin, true);
-  ctx.restore();
-  ctx.restore();
+  withGlyph(c => {
+    c.globalAlpha = W.morphAlpha * (1 - W.morph) * 0.94;
+    drawEchoHand(c);
+    c.save();
+    c.translate(560, 470);
+    c.scale(0.42, -0.42);
+    paintMaple(0.45, true);
+    c.restore();
+  });
 }
 
 function withGlyph(fn) {
@@ -1706,8 +1781,8 @@ function pose(name) {
     publish('intro');
   } else if (name === 'action') {
     Object.assign(cam, VIEW.action);
-    W.reach = 0.82;
-    W.open = 0.28;
+    W.reach = 0.46;
+    W.open = 0.2;
     W.guide = true;
     progress(1);
     showCaption('初见', '一片叶子转着圈，快要落到水里。');
@@ -1737,7 +1812,7 @@ function pose(name) {
     W.glyph.prog = [0, 0, 0, 0];
     W.paper = 0.45;
     W.veil = 0.24;
-    W.handAlpha = 0.4;
+    W.handAlpha = 0;
     progress(3);
     showCaption('成字', '看着手掌和手指，慢慢认出“手”。');
     publish('morph');
@@ -1788,6 +1863,20 @@ function pose(name) {
       showCaption('写字', '写好了。手掌接住了叶子，笔画也留在纸上。');
     }
     publish(name);
+  } else if (name === 'finale') {
+    W.child.alpha = 1;
+    W.friend.alpha = 1;
+    W.handAlpha = 1;
+    W.friend.x = CHILD_HOME.x - 210;
+    W.reach = 0.35;
+    W.open = 1;
+    W.caught = 1;
+    W.hold = 1;
+    W.finale = true;
+    Object.assign(cam, VIEW.finale);
+    progress(5);
+    showCaption('余韵', '手可以接住叶子，也可以牵住朋友。');
+    publish('finale');
   }
   render();
 }

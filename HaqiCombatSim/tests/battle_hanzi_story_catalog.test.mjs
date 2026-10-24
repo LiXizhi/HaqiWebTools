@@ -8,7 +8,7 @@ import {parseLocaleFile} from '../js/locale_core.js';
 import {validateDictionary} from '../js/dictionary_core.js';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const dictionary=JSON.parse(read('data/adventure/dictionary/zh.json'));
-const completed = new Set(['ri','yue','shan','shui','huo','mu','shi','men','yu','xiu','sen','guang','guo','ming']);
+const completed = new Set(['ri','yue','shan','shui','huo','mu','shi','tu','men','yu','xiu','sen','guang','guo','ming']);
 test('all 30 words retain writing data; only completed authored stories expose an animation',()=>{
  assert.equal(dictionary.entries.length,30);assert.equal(validateDictionary(dictionary),dictionary);
  for(const entry of dictionary.entries){
@@ -27,7 +27,7 @@ test('animation paths admit disambiguated names but reject traversal, alternate 
 });
 test('authored replacements are standalone executable pages with writing and completion hooks',()=>{
  const mapped=read('js/hanzi_story_animations.js');
- for(const id of ['ri','yue','shan','shui','huo','mu','shi']){
+ for(const id of ['ri','yue','shan','shui','huo','mu','shi','tu']){
   const filename=`hanzi_${id}.html`,html=read('hanzi/'+filename);
   const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];
   assert.ok(scripts.length>=2,filename);for(const [,script]of scripts)new vm.Script(script,{filename});

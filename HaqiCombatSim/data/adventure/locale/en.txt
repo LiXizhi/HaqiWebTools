@@ -11103,3 +11103,28 @@ Word · 回忆拼写||Word · Recall Spelling
 游戏服登录超时，请重试||Game server sign-in timed out. Please try again.
 
 语言未设置||Language not set
+
+# 2026-10-23 石 · 溪边的落脚处
+古字形为依据通行字形的艺术示意||Ancient forms are an artistic reminder of the standard written shape.
+今天认识一个汉字||Today we meet one character.
+石 · 坚硬的石头||shi · hard stone
+溪水太宽的时候，一块石头也能变成路。||When the stream is too wide, one stone can still become a path.
+约三分钟 · 摆石、过溪与描字 · 建议开启声音||About three minutes · place stones, cross, and trace · sound is helpful
+石头||Stone
+硬硬的石头，可以垫在脚下。||A hard stone can support your step.
+石子||Pebble
+小小的石子，也能帮人迈出一步。||Even a little pebble can help someone take a step.
+山石||Mountain stone
+山崖脚下的石头，接住了过溪的路。||The stone at the foot of the cliff holds the path across the stream.
+点一点水里发光的位置||Tap the glowing spots in the water.
+再点下一块踏脚石||Tap the next stepping stone.
+先点近处这一块发亮的石头||Start with the nearest glowing stone.
+点踏脚石，一步一步走过去||Tap the stones and cross one step at a time.
+走过去||Walk across
+先走向近处发亮的踏脚石||Step toward the nearest glowing stone.
+上面一横一撇，像压在水边的崖壁。||The top line and the left-falling stroke look like a cliff beside the water.
+下面的小方口，像一块可以落脚的石头。||The little square below looks like a stone you can step on.
+看光点走过每一笔||Watch the light travel along each stroke.
+写不出来也没关系，点下面的示范。||If you get stuck, tap the demo below.
+写好了。石，是可以托住脚步的石头。||Done. Shi is a stone that can hold a step.
+点一点水面，看涟漪绕过石头||Tap the water and watch the ripples pass the stones.

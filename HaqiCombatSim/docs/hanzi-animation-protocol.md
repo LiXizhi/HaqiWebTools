@@ -105,3 +105,5 @@
 - 2026-10-24 「目」`hanzi/hanzi_mu_eye.html`（画龙点睛）按同一 `haqi-hanzi` v1 接入。五笔描红全部完成后才发送 `written`，只在余韵 `sFinale` 发送 `completed`。片头 `introPlay` 不发这两个事件。本地与 CDN 地址见 `js/hanzi_story_animations.js` 与 `js/adventure_dictionary.js`。
 
 - 2026-10-24 「西」`hanzi/hanzi_xi.html`（小雀回家）按同一 `haqi-hanzi` v1 接入。六笔描红全部完成后才发送 `written`，只在余韵 `sFinale` 发送 `completed`。片头 `introPlay` 不发这两个事件。「西」不在字源岛30字字典里，页面不挂到任何词条，只登记在 `hanzi/hanzi_index.html` 与 `js/hanzi_story_animations.js`（本地与 CDN 地址）。
+
+- 2026-10-24 「耳」`hanzi/hanzi_er.html`（听风送来的信）按同一 `haqi-hanzi` v1 接入。六笔描红全部完成后才发送 `written`，只在余韵 `sFinale` 发送 `completed`。片头 `introPlay` 不发这两个事件。本地与 CDN 地址见 `js/hanzi_story_animations.js` 与 `js/adventure_dictionary.js`。

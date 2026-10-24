@@ -2418,7 +2418,8 @@
       "coaching": {
         "tip": "“田”表示种庄稼的田地。可以把内部的线条联想成一块块田地，这是记忆方法；它和“日、目”的内部线条不同。",
         "prompt": "田里会种什么？试着说“田里种着……”。"
-      }
+      },
+      "animation": "hanzi/hanzi_tian_field.html"
     },
     {
       "id": "shang",

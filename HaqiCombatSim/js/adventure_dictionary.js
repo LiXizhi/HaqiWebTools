@@ -37,6 +37,7 @@ const localAnimations={
     'hanzi/hanzi_mu_eye.html':new URL('../hanzi/hanzi_mu_eye.html',import.meta.url).href,
     'hanzi/hanzi_er.html':new URL('../hanzi/hanzi_er.html',import.meta.url).href,
     'hanzi/hanzi_xin.html':new URL('../hanzi/hanzi_xin.html',import.meta.url).href,
+    'hanzi/hanzi_tian_field.html':new URL('../hanzi/hanzi_tian_field.html',import.meta.url).href,
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_men.html':new URL('../hanzi/hanzi_men.html',import.meta.url).href,
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_yu.html':new URL('../hanzi/hanzi_yu.html',import.meta.url).href,
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_xiu.html':new URL('../hanzi/hanzi_xiu.html',import.meta.url).href,
@@ -57,6 +58,7 @@ const localAnimations={
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_mu_eye.html':new URL('../hanzi/hanzi_mu_eye.html',import.meta.url).href,
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_er.html':new URL('../hanzi/hanzi_er.html',import.meta.url).href,
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_xin.html':new URL('../hanzi/hanzi_xin.html',import.meta.url).href,
+    'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_tian_field.html':new URL('../hanzi/hanzi_tian_field.html',import.meta.url).href,
 };
 export async function loadDictionary(language){
     if(!['zh','en'].includes(language))throw Error('暂未收录该语言');

@@ -8,7 +8,7 @@ import {parseLocaleFile} from '../js/locale_core.js';
 import {validateDictionary} from '../js/dictionary_core.js';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const dictionary=JSON.parse(read('data/adventure/dictionary/zh.json'));
-const completed = new Set(['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','men','yu','xiu','sen','guang','guo','ming','mu-eye','er','xin']);
+const completed = new Set(['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','men','yu','xiu','sen','guang','guo','ming','mu-eye','er','xin','tian-field']);
 test('all 30 words retain writing data; only completed authored stories expose an animation',()=>{
  assert.equal(dictionary.entries.length,30);assert.equal(validateDictionary(dictionary),dictionary);
  for(const entry of dictionary.entries){
@@ -27,7 +27,7 @@ test('animation paths admit disambiguated names but reject traversal, alternate 
 });
 test('authored replacements are standalone executable pages with writing and completion hooks',()=>{
  const mapped=read('js/hanzi_story_animations.js');
- for(const id of ['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','mu_eye','xi','er','xin']){
+ for(const id of ['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','mu_eye','xi','er','xin','tian_field']){
   const filename=`hanzi_${id}.html`,html=read('hanzi/'+filename);
   const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];
   assert.ok(scripts.length>=2,filename);for(const [,script]of scripts)new vm.Script(script,{filename});
@@ -108,6 +108,18 @@ test('er writing embeds strokes.json outlines and medians without retuning',()=>
  assert.ok(intro);
  assert.doesNotMatch(intro[0],/haqiHanziWritten|haqiHanziComplete/);
 });
+test('tian_field writing embeds strokes.json outlines and medians without retuning',()=>{
+ const tian=JSON.parse(read('data/adventure/hanzi/strokes.json')).characters['田'];
+ const html=read('hanzi/hanzi_tian_field.html');
+ assert.ok(html.includes(JSON.stringify({strokes:tian.strokes,medians:tian.medians})));
+ assert.match(html,/translate\(0,\s*900\);\s*ctx\.scale\(1,\s*-1\)/);
+ assert.equal(tian.medians.length,5);
+ assert.match(html,/haqiHanziWritten\?\.\(\)/);
+ assert.match(html,/haqiHanziComplete\(\)/);
+ const intro=html.match(/async function introPlay[\s\S]*?\n\}/);
+ assert.ok(intro);
+ assert.doesNotMatch(intro[0],/haqiHanziWritten|haqiHanziComplete/);
+});
 test('xin writing embeds strokes.json outlines and medians without retuning',()=>{
  const xin=JSON.parse(read('data/adventure/hanzi/strokes.json')).characters['心'];
  const html=read('hanzi/hanzi_xin.html');
@@ -123,8 +135,8 @@ test('xin writing embeds strokes.json outlines and medians without retuning',()=
 test('each painting supplies nonempty scene contours for a continuous glyph morph',()=>{
  const context={};vm.runInNewContext(read('hanzi/source/contours.js')+';globalThis.get=storyContours',context);for(const s of stories){const paths=context.get(s.theme);assert.ok(paths.length>=2);for(const points of paths){assert.ok(points.length>=2);assert.ok(points.flat().every(Number.isFinite));}}
 });
-test('all 23 hanzi_*.html scripts compile cleanly and use forgiving trend-based stroke tracing without permanent drag.bad locks',()=>{
- const files=['er','guang','guo','huo','kou','men','ming','mu','mu_eye','ren','ri','sen','shan','shi','shou','shui','tu','wu','xi','xin','xiu','yu','yue'];
+test('authored hanzi_*.html scripts compile cleanly and use forgiving trend-based stroke tracing without permanent drag.bad locks',()=>{
+ const files=['er','guang','guo','huo','kou','men','ming','mu','mu_eye','ren','ri','sen','shan','shi','shou','shui','tian_field','tu','wu','xi','xin','xiu','yu','yue'];
  for(const name of files){
   const html=read(`hanzi/hanzi_${name}.html`);
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]);

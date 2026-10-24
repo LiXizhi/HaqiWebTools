@@ -1,0 +1,1392 @@
+<!doctype html>
+<!-- Hand-authored island story, same family as hanzi_shi.html. Do not regenerate this file with build_hanzi_stories.mjs; that script would overwrite the hand-written pages. -->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#16121c">
+<title>土 tǔ · 种子的被子</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --night:#16121c;--cream:#f6efe2;--gold:#e6c084;--ember:#c4844a;--muted:#9a9084;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  --kai:"Kaiti SC","STKaiti","KaiTi","BiauKai","Kaiti TC",var(--serif);
+}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--night)}
+body{color:var(--cream);font-family:var(--serif);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+button{font:inherit;touch-action:manipulation}
+button:focus-visible,canvas:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+#sampler{position:absolute;width:0;height:0;overflow:hidden}
+#view{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+body.trace #view{cursor:crosshair}body.cover #view{cursor:grab}body.cover.holding #view{cursor:grabbing}
+
+#brand{position:fixed;left:max(16px,env(safe-area-inset-left));top:max(14px,env(safe-area-inset-top));display:flex;align-items:center;gap:10px;
+  font-family:var(--kai);font-size:14px;letter-spacing:.22em;color:#e6d7c0;z-index:8;pointer-events:none;opacity:.85}
+#brand .seal{background:#8d4e32;color:#fbecd0;border-radius:3px;padding:5px 5px 4px;font-size:15px;line-height:1;letter-spacing:0}
+
+#progress{position:fixed;top:max(16px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:flex;list-style:none;
+  margin:0;padding:0;gap:clamp(8px,1.8vw,22px);z-index:10;opacity:0;transition:opacity .8s;pointer-events:none}
+#progress::before{content:"";position:absolute;top:2.5px;left:12px;right:12px;height:1px;background:rgba(246,239,226,.16)}
+body.started #progress{opacity:1}
+#progress li{position:relative;font-family:var(--kai);font-size:13px;color:#8a8176;letter-spacing:.08em;padding-top:12px;transition:color .6s;white-space:nowrap}
+#progress li::before{content:"";position:absolute;top:0;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#4a4038;transition:background .6s,transform .6s,box-shadow .6s}
+#progress li.done{color:#d4c2a4}#progress li.done::before{background:#d4c2a4}
+#progress li.on{color:var(--cream)}#progress li.on::before{background:var(--gold);transform:scale(1.6);box-shadow:0 0 10px 2px rgba(230,192,132,.6)}
+
+#controls{position:fixed;right:max(14px,env(safe-area-inset-right));top:max(12px,env(safe-area-inset-top));display:flex;gap:8px;z-index:12;opacity:0;pointer-events:none;transition:opacity .6s}
+body.started #controls{opacity:1;pointer-events:auto}
+#controls button{font-family:var(--kai);font-size:14px;letter-spacing:.18em;color:#f3e7d2;background:rgba(28,20,16,.66);
+  border:1px solid rgba(230,192,132,.42);border-radius:4px;padding:6px 8px 6px 12px;cursor:pointer;backdrop-filter:blur(4px)}
+#controls button:hover{background:rgba(54,36,24,.88)}
+
+#hint{position:fixed;left:16px;right:16px;margin:0 auto;width:fit-content;max-width:calc(100vw - 32px);box-sizing:border-box;
+  top:max(60px,calc(env(safe-area-inset-top) + 46px));text-align:center;color:#ffe7c2;opacity:0;transition:opacity .45s;pointer-events:none;z-index:9;
+  padding:7px 20px 8px;border:1px solid rgba(230,192,132,.5);border-radius:22px;background:rgba(28,18,14,.76);backdrop-filter:blur(4px)}
+#hint span{font-family:var(--kai);font-size:clamp(16px,2.3vh,20px);letter-spacing:.12em}
+#hint.on{opacity:1;animation:breathe 1.8s ease-in-out infinite}
+@keyframes breathe{50%{box-shadow:0 0 0 6px rgba(230,192,132,.12),0 0 24px rgba(230,192,132,.22)}}
+
+#caption{position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translate(-50%,10px);
+  width:min(900px,calc(100vw - 24px));box-sizing:border-box;text-align:center;opacity:0;
+  transition:opacity .5s,transform .7s cubic-bezier(.2,.7,.2,1);pointer-events:none;z-index:6;padding:20px 22px 14px;
+  background:radial-gradient(ellipse at center,rgba(22,14,12,.84) 38%,rgba(22,14,12,0) 72%)}
+#caption.on{opacity:1;transform:translate(-50%,0)}
+#capTitle{margin:0 0 8px;font-weight:400;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.42em;margin-left:.42em;color:var(--gold)}
+#caption.on #capTitle{animation:sealIn .8s cubic-bezier(.2,.7,.2,1) both}
+#capText{margin:0;font-family:var(--kai);font-size:clamp(19px,calc(1vw + 1.6vh),28px);line-height:1.7;color:var(--cream);letter-spacing:.06em;min-height:1.7em;
+  text-shadow:0 1px 12px rgba(0,0,0,.68)}
+#capText .ch{animation:inkIn 1.2s ease-out both;animation-delay:calc(var(--i) * 70ms + 120ms)}
+.haqi-sub-trans{display:block;margin-top:4px;font-family:Georgia,"Times New Roman",system-ui,sans-serif;font-size:clamp(13px,1.8vh,17px);line-height:1.45;color:#e4d3bc;letter-spacing:.02em}
+@keyframes inkIn{from{opacity:0;color:transparent;text-shadow:0 0 14px rgba(230,192,132,.9)}50%{opacity:1}to{color:var(--cream);text-shadow:0 1px 12px rgba(0,0,0,.68)}}
+@keyframes sealIn{from{opacity:0;letter-spacing:.9em;filter:blur(4px)}to{opacity:1;letter-spacing:.42em;filter:none}}
+.actions{display:flex;justify-content:center;gap:10px;margin-top:12px;min-height:0}
+.actions button{pointer-events:auto;cursor:pointer;font-family:var(--kai);letter-spacing:.24em;border-radius:4px}
+#action{font-size:18px;padding:9px 20px 9px 26px;color:#fff6e4;border:1px solid #e6c084;background:linear-gradient(#c48948,#7a4528);
+  box-shadow:0 6px 20px rgba(120,70,30,.34),inset 0 1px 0 rgba(255,226,180,.28)}
+#action:hover{filter:brightness(1.08)}
+#demo{font-size:16px;padding:8px 14px 8px 20px;color:#f3e6d0;background:rgba(28,20,16,.58);border:1px solid rgba(230,192,132,.42)}
+[hidden]{display:none!important}
+
+#intro{position:fixed;inset:0;z-index:20;pointer-events:none;transition:opacity 1s,transform 1s}
+#intro.off{opacity:0;transform:scale(1.03)}
+#intro.off *{pointer-events:none!important}
+.introTop,.introBottom{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
+.introTop{bottom:calc(100% - var(--gTop,140px) + 18px)}
+.introBottom{top:calc(var(--gBottom,560px) + 18px);gap:8px}
+.tag{display:flex;align-items:center;gap:10px;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.3em;color:var(--gold)}
+.tag i{display:block;width:clamp(24px,5vw,60px);height:1px;background:currentColor;opacity:.6}
+.pinyin{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:clamp(30px,5.2vh,46px);line-height:1;color:var(--cream);letter-spacing:.06em}
+.mean{font-family:var(--kai);font-size:clamp(17px,2.5vh,22px);letter-spacing:.2em;color:#f0e2cc}
+.sub{font-family:var(--kai);font-size:clamp(15px,2.1vh,18px);color:#cbbba6;letter-spacing:.12em;margin:2px 0 0;line-height:1.7}
+.btn-main{pointer-events:auto;margin-top:8px;font-family:var(--kai);font-size:clamp(18px,2.6vh,22px);letter-spacing:.4em;padding:10px 24px 10px 32px;
+  color:#fff6e4;background:linear-gradient(#c48948,#8a4c2c);border:1px solid #e6c084;border-radius:4px;cursor:pointer;
+  box-shadow:0 6px 22px rgba(140,80,36,.38);transition:transform .2s;animation:btnGlow 2.6s ease-in-out infinite}
+.btn-main:hover{transform:translateY(-2px)}
+@keyframes btnGlow{50%{box-shadow:0 6px 22px rgba(140,80,36,.38),0 0 0 9px rgba(230,192,132,.12),0 0 44px rgba(230,192,132,.28)}}
+.meta{font-size:12px;color:#9a9084;letter-spacing:.12em;margin:0}
+.rise{opacity:0;transform:translateY(12px);animation:rise 1s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--d,0s)}
+@keyframes rise{to{opacity:1;transform:none}}
+@media (max-height:540px){.sub,.meta{display:none}.introBottom{gap:4px}}
+
+#note{position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom));font-size:11px;color:#8a8176;letter-spacing:.08em;z-index:4;pointer-events:none;max-width:46vw}
+body.portrait #brand{display:none}
+body.portrait #controls{top:max(44px,calc(env(safe-area-inset-top) + 34px))}
+body.portrait #hint{top:max(92px,calc(env(safe-area-inset-top) + 82px))}
+body.portrait #note{display:none}
+body.portrait #capText{font-size:clamp(18px,4.8vw,22px);line-height:1.62}
+body.portrait #progress li{font-size:11px}
+@media (max-height:540px){#capText{font-size:17px;line-height:1.5}#caption{padding:8px 14px 6px}.actions{margin-top:6px}}
+@media (prefers-reduced-motion: reduce){
+  #intro,#caption{transition-duration:.4s}
+  #hint.on,.btn-main{animation:none}
+  #capText .ch{animation-duration:.25s;animation-delay:0s}
+}
+</style>
+<script>
+// Haqi H5 protocol v1: independent pages remain usable without a parent.
+(()=>{let context=null,written=false,finished=false,serial=0;const callbacks=new Map(),subCache=new Map(),uiCache=new Map(),pending=new Set(),uiNodes=new Map();
+const isZh=loc=>!loc||/^zh\b/i.test(loc);
+const send=data=>{if(context)parent.postMessage({channel:'haqi-hanzi',version:1,entryId:context.entryId,sessionId:context.sessionId,...data},context.origin);};
+const refreshDom=()=>{for(const[el,zh]of uiNodes){if(!el?.isConnected){uiNodes.delete(el);continue;}const tr=!isZh(context?.locale)&&uiCache.get(zh);const next=(tr&&tr!==zh)?tr:zh;if(el.dataset.haqiKind==='seal'){const seal=el.querySelector('.seal');el.textContent=next;if(seal)el.prepend(seal);}else if(el.dataset.haqiKind==='tag'){const i1=document.createElement('i'),i2=document.createElement('i');el.replaceChildren(i1,document.createTextNode(next),i2);}else el.textContent=next;}document.querySelectorAll('[data-haqi-caption]').forEach(el=>renderCaption(el,el.dataset.haqiCaption));};
+const flushPending=()=>{if(!context||!pending.size)return;const texts=[...pending];pending.clear();window.haqiHanziTranslate(texts);};
+const ensureTexts=texts=>{const need=[];for(const t of texts){const s=typeof t==='string'?t.trim():'';if(s&&(!subCache.has(s)||!uiCache.has(s))&&!pending.has(s)){pending.add(s);need.push(s);}}if(need.length&&context)flushPending();};
+const renderCaption=(el,zh)=>{if(!el)return;el.dataset.haqiCaption=zh||'';let sub=el.querySelector('.haqi-sub-trans');if(!zh||isZh(context?.subtitleLocale||context?.locale)){sub?.remove();return;}const tr=subCache.get(zh);if(!tr||tr===zh){sub?.remove();ensureTexts([zh]);return;}if(!sub){sub=document.createElement('span');sub.className='haqi-sub-trans';const host=el.querySelector('#capText')||el;if(host!==el&&host.parentNode===el)host.insertAdjacentElement('afterend',sub);else el.appendChild(sub);}sub.textContent=tr;};
+const trackUi=(el,zh,kind='')=>{if(!el||!zh)return;if(kind)el.dataset.haqiKind=kind;uiNodes.set(el,zh);ensureTexts([zh]);};
+const scanStatic=()=>{if(!document.body)return;document.querySelectorAll('#start,#replay,#mute,#pause,#demo,#action,#progress li,#note,.introBottom .mean,.introBottom .sub,.introBottom .meta').forEach(el=>{const zh=(el.textContent||'').trim();if(zh&&!uiNodes.has(el))trackUi(el,zh);});document.querySelectorAll('#brand,.brand').forEach(el=>{if(uiNodes.has(el))return;const clone=el.cloneNode(true);clone.querySelector?.('.seal')?.remove();const zh=(clone.textContent||'').trim();if(zh)trackUi(el,zh,'seal');});document.querySelectorAll('.introTop .tag,.tag').forEach(el=>{if(uiNodes.has(el))return;const zh=(el.textContent||'').trim();if(zh)trackUi(el,zh,'tag');});refreshDom();};
+if(document.readyState==='loading')addEventListener('DOMContentLoaded',scanStatic,{once:true});else scanStatic();
+window.haqiHanziWritten=()=>{written=true;send({type:'written'});};
+window.haqiHanziComplete=()=>{if(!written){written=true;send({type:'written'});}finished=true;send({type:'completed'});};
+window.haqiHanziPrefetch=texts=>ensureTexts(Array.isArray(texts)?texts:[texts]);
+window.haqiHanziUi=(zh,el)=>{const s=typeof zh==='string'?zh.trim():'';if(!s)return zh;if(el)trackUi(el,s);else ensureTexts([s]);const tr=!isZh(context?.locale)&&uiCache.get(s);return(tr&&tr!==s)?tr:zh;};
+window.haqiHanziCaption=(el,zh)=>{const s=typeof zh==='string'?zh.trim():'';if(s)ensureTexts([s]);renderCaption(el,s);};
+window.haqiHanziTranslate=texts=>new Promise(resolve=>{const list=(Array.isArray(texts)?texts:[]).map(t=>typeof t==='string'?t.trim():'').filter(Boolean);if(!context||!list.length){resolve({});return;}const requestId=String(++serial);const timer=setTimeout(()=>{callbacks.delete(requestId);resolve({});},1500);callbacks.set(requestId,msg=>{clearTimeout(timer);const sub=msg?.translations||{},ui=msg?.uiTranslations||sub;for(const[k,v]of Object.entries(sub))if(typeof v==='string'&&v.trim())subCache.set(k,v.trim());for(const[k,v]of Object.entries(ui))if(typeof v==='string'&&v.trim())uiCache.set(k,v.trim());refreshDom();resolve(sub);});send({type:'translate',requestId,texts:list});});
+addEventListener('message',event=>{const m=event.data;if(event.source!==parent||parent===window||m?.channel!=='haqi-hanzi'||m.version!==1)return;
+if(m.type==='init'&&typeof m.sessionId==='string'&&typeof m.entryId==='string'){if(document.referrer&&event.origin!==new URL(document.referrer).origin)return;context={...m,origin:event.origin};scanStatic();flushPending();refreshDom();if(written)send({type:'written'});if(finished)send({type:'completed'});}
+else if(context&&event.origin===context.origin&&m.sessionId===context.sessionId&&m.type==='translations'){callbacks.get(m.requestId)?.(m);callbacks.delete(m.requestId);}});
+if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'ready'},'*');})();
+</script>
+</head>
+<body>
+<svg id="sampler" aria-hidden="true"></svg>
+<canvas id="view" tabindex="0" role="img" aria-label="夜里的田地。给种子盖上软软的土，看嫩芽探出头，再把地面和小芽收成「土」。"></canvas>
+
+<div id="brand"><span class="seal">字</span>一字一故事</div>
+<ol id="progress" aria-label="故事进度"><li>初见</li><li>寻找</li><li>变化</li><li>成字</li><li>写字</li><li>余韵</li></ol>
+<div id="controls"><button id="pause" type="button" aria-pressed="false">暂停</button><button id="mute" type="button" aria-pressed="false">静音</button><button id="replay" type="button">重播</button></div>
+<div id="hint" role="status"></div>
+<section id="caption" aria-live="polite" aria-atomic="true">
+  <h2 id="capTitle"></h2><p id="capText"></p>
+  <div class="actions"><button id="action" type="button" hidden></button><button id="demo" type="button" hidden>示范这一笔</button></div>
+</section>
+<div id="note">古字形为依据通行字形的艺术示意</div>
+
+<div id="intro">
+  <div class="introTop"><div class="tag rise" style="--d:.3s"><i></i>今天认识一个汉字<i></i></div></div>
+  <div class="introBottom">
+    <div class="pinyin rise" style="--d:2.6s">tǔ</div>
+    <div class="mean rise" style="--d:2.9s">土 · 泥土与土地</div>
+    <p class="sub rise" style="--d:3.2s">夜里有点冷。给种子盖上一层软软的土吧。</p>
+    <button id="start" class="btn-main rise" style="--d:3.5s" type="button">开始</button>
+    <p class="meta rise" style="--d:3.7s">约三分钟 · 盖土、看芽与描字 · 建议开启声音</p>
+  </div>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+const $ = s => document.querySelector(s);
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const rgb = (c, a = 1) => a >= 0.999 ? `rgb(${c[0] | 0},${c[1] | 0},${c[2] | 0})` : `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a.toFixed(3)})`;
+const mix = (a, b, t) => [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+const smooth = t => { t = clamp(t); return t * t * (3 - 2 * t); };
+const bump = (s, c, w) => Math.exp(-(((s - c) / w) ** 2));
+const ease = {
+  inOut: t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+  out: t => 1 - Math.pow(1 - t, 3),
+  sine: t => -(Math.cos(Math.PI * t) - 1) / 2,
+  lin: t => t,
+};
+function mulberry32(a) {
+  return () => {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const M = reduceMotion ? 0.55 : 1;
+
+class Cancelled extends Error {}
+let clock = 0, DT = 16, paused = false, visible = true;
+let waiters = [];
+let token = { dead: true };
+function frame(tk) { return new Promise((res, rej) => waiters.push({ tk, res, rej })); }
+async function wait(ms, tk) { const t0 = clock; while (clock - t0 < ms) await frame(tk); }
+async function tween(ms, fn, tk, ez = ease.inOut) {
+  if (ms <= 0) { fn(1); return; }
+  const t0 = clock;
+  for (;;) {
+    await frame(tk);
+    const t = clamp((clock - t0) / ms);
+    fn(ez(t));
+    if (t >= 1) return;
+  }
+}
+const bg = p => p.catch(e => { if (!(e instanceof Cancelled)) console.error(e); });
+
+const NOTE = { C4: 261.63, D4: 293.66, E4: 329.63, G4: 392, A4: 440, C5: 523.25, E5: 659.25 };
+const PENTA = [NOTE.C4, NOTE.D4, NOTE.E4, NOTE.G4, NOTE.A4, NOTE.C5, NOTE.E5];
+const Sound = {
+  ctx: null, master: null, muted: false,
+  init() {
+    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return;
+    try { this.ctx = new C(); } catch { return; }
+    this.master = this.ctx.createGain();
+    this.master.gain.value = this.muted ? 0 : 0.5;
+    this.master.connect(this.ctx.destination);
+    try {
+      const len = this.ctx.sampleRate * 2;
+      const buf = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      let n = 0;
+      for (let i = 0; i < len; i++) { n = (n + 0.000011 * (i % 19)) % 1; data[i] = n * 2 - 1; }
+      const src = this.ctx.createBufferSource(); src.buffer = buf; src.loop = true;
+      const f = this.ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 280;
+      const g = this.ctx.createGain(); g.gain.value = 0.018;
+      src.connect(f); f.connect(g); g.connect(this.master); src.start();
+    } catch { /* Night air is optional. */ }
+  },
+  setMuted(v) { this.muted = v; if (this.master) this.master.gain.value = v ? 0 : 0.5; },
+  tone(freq, dur = 0.28, type = 'sine', gain = 0.05) {
+    if (!this.ctx || this.muted) return;
+    try {
+      const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+      o.type = type; o.frequency.value = freq;
+      g.gain.setValueAtTime(0, this.ctx.currentTime);
+      g.gain.linearRampToValueAtTime(gain, this.ctx.currentTime + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + dur);
+      o.connect(g); g.connect(this.master); o.start(); o.stop(this.ctx.currentTime + dur + 0.02);
+    } catch { /* Sound is optional. */ }
+  },
+  pluck(freq, gain = 0.06) { this.tone(freq, 0.46, 'triangle', gain); },
+  thunk() { this.tone(98, 0.2, 'sine', 0.07); this.tone(164, 0.14, 'triangle', 0.03); },
+  bell(freq) { this.tone(freq, 0.8, 'sine', 0.04); },
+};
+
+const cvs = $('#view'), ctx = cvs.getContext('2d');
+let SW = 1, SH = 1, DPR = 1, portrait = false;
+const cam = { x: 980, y: 560, w: 1500, h: 900, pw: 860, pcy: 0.46 };
+const CV = { x: 0, y: 0, k: 1, cy: 0 };
+const VIEW = {
+  intro:  { x: 980, y: 500, w: 1480, h: 900, pw: 860, pcy: 0.4 },
+  cold:   { x: 980, y: 680, w: 1500, h: 900, pw: 820, pcy: 0.5 },
+  cover:  { x: 1060, y: 720, w: 1180, h: 760, pw: 740, pcy: 0.56 },
+  sprout: { x: 980, y: 640, w: 980,  h: 780, pw: 640, pcy: 0.48 },
+  glyph:  { x: 980, y: 500, w: 780,  h: 720, pw: 540, pcy: 0.42 },
+  finale: { x: 980, y: 780, w: 1320, h: 900, pw: 780, pcy: 0.5 },
+};
+const SEED = { x: 980, y: 748 };
+const GROUND = 790;
+const PILE = { x: 1320, y: 734 };
+function frameW(v) { return portrait ? (v.pw ?? v.w * 0.62) : v.w; }
+function updateView() {
+  const usableH = SH * (portrait ? 0.62 : 0.78);
+  CV.k = Math.min(SW / frameW(cam), usableH / cam.h);
+  CV.cy = SH * (portrait ? cam.pcy : 0.46);
+  CV.x = cam.x; CV.y = cam.y;
+}
+function setCam(c) {
+  const k = CV.k;
+  c.setTransform(DPR * k, 0, 0, DPR * k, DPR * (SW / 2 - CV.x * k), DPR * (CV.cy - CV.y * k));
+}
+function resetTf(c = ctx) { c.setTransform(DPR, 0, 0, DPR, 0, 0); }
+function toWorld(cx, cy) { return { x: (cx - SW / 2) / CV.k + CV.x, y: (cy - CV.cy) / CV.k + CV.y }; }
+function toScreen(x, y) { return { x: (x - CV.x) * CV.k + SW / 2, y: (y - CV.y) * CV.k + CV.cy }; }
+async function camTo(v, ms, tk, ez = ease.inOut) {
+  const from = { x: cam.x, y: cam.y, w: cam.w, h: cam.h, pw: cam.pw ?? cam.w * 0.62, pcy: cam.pcy };
+  const to = { x: v.x, y: v.y, w: v.w, h: v.h, pw: v.pw ?? v.w * 0.62, pcy: v.pcy ?? 0.5 };
+  await tween(ms, t => { for (const k in to) cam[k] = lerp(from[k], to[k], t); }, tk, ez);
+}
+function resize() {
+  DPR = Math.min(devicePixelRatio || 1, 2);
+  SW = innerWidth; SH = innerHeight;
+  portrait = SW / SH < 0.85;
+  document.body.classList.toggle('portrait', portrait);
+  cvs.width = Math.round(SW * DPR);
+  cvs.height = Math.round(SH * DPR);
+}
+
+const STARS = [], GRASS = [], SPECKS = [], FLIES = [];
+{
+  const rng = mulberry32(11);
+  for (let i = 0; i < 72; i++) STARS.push({ x: rng(), y: rng() * 0.52, r: 0.45 + rng() * 1.25, a: 0.28 + rng() * 0.65, tw: rng() * 6.2 });
+  const g = mulberry32(19);
+  for (let i = 0; i < 56; i++) GRASS.push({ x: 40 + g() * 1900, h: 16 + g() * 38, lean: (g() - 0.5) * 10, ph: g() * 6.2, back: g() > 0.45 });
+  const s = mulberry32(23);
+  for (let i = 0; i < 46; i++) SPECKS.push({ u: s() * 2 - 1, v: s(), r: 0.7 + s() * 1.7, deep: s() > 0.6 });
+  const f = mulberry32(31);
+  for (let i = 0; i < 7; i++) FLIES.push({ x: 280 + f() * 1400, y: 560 + f() * 160, ph: f() * 6, r: 1.2 + f() * 1.1 });
+}
+const ROOTS = [
+  [[0, 8], [-36, 42], [-96, 86]],
+  [[0, 10], [28, 48], [86, 102]],
+  [[0, 6], [-8, 58], [-18, 124]],
+  [[0, 12], [54, 36], [128, 64]],
+  [[0, 8], [-78, 28], [-148, 58]],
+];
+const SPRING = [];
+{
+  const rng = mulberry32(41);
+  for (let i = 0; i < 11; i++) SPRING.push({ x: 220 + i * 150 + rng() * 30, h: 18 + rng() * 22, bloom: rng() });
+}
+function warmth() { return clamp((W.dawn || 0) * 0.82 + (W.coverShow || 0) * 0.18); }
+function inBed(p) {
+  const dx = (p.x - SEED.x) / 280, dy = (p.y - (GROUND - 30)) / 130;
+  return dx * dx + dy * dy < 1;
+}
+function inPile(p) { return Math.hypot(p.x - PILE.x, p.y - PILE.y) < 110; }
+
+function drawSky() {
+  resetTf();
+  const w = warmth();
+  const top = mix([16, 14, 28], [126, 168, 196], w);
+  const mid = mix([42, 32, 48], [214, 142, 96], w);
+  const low = mix([78, 58, 52], [240, 196, 132], w);
+  const g = ctx.createLinearGradient(0, 0, 0, SH);
+  g.addColorStop(0, rgb(top));
+  g.addColorStop(0.46, rgb(mid));
+  g.addColorStop(0.78, rgb(low));
+  g.addColorStop(1, rgb(mix([48, 36, 32], [168, 122, 72], w)));
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, SW, SH);
+  const moon = toScreen(1480 - w * 180, 280 - w * 40);
+  const mg = ctx.createRadialGradient(moon.x, moon.y, 8, moon.x, moon.y, Math.max(SW, SH) * 0.42);
+  mg.addColorStop(0, `rgba(232,226,206,${(0.22 * (1 - w)).toFixed(3)})`);
+  mg.addColorStop(1, 'rgba(232,226,206,0)');
+  ctx.fillStyle = mg;
+  ctx.fillRect(0, 0, SW, SH);
+  const sun = toScreen(360 + w * 420, 620 - w * 280);
+  const sg = ctx.createRadialGradient(sun.x, sun.y, 10, sun.x, sun.y, Math.max(SW, SH) * (0.2 + w * 0.45));
+  sg.addColorStop(0, `rgba(255,214,150,${(0.08 + w * 0.42).toFixed(3)})`);
+  sg.addColorStop(0.45, `rgba(230,150,80,${(w * 0.16).toFixed(3)})`);
+  sg.addColorStop(1, 'rgba(230,150,80,0)');
+  ctx.fillStyle = sg;
+  ctx.fillRect(0, 0, SW, SH);
+}
+
+function drawStars() {
+  const w = warmth();
+  if (w > 0.92) return;
+  resetTf();
+  const t = reduceMotion ? 0 : clock / 1000;
+  for (const s of STARS) {
+    const tw = reduceMotion ? 0.7 : 0.45 + 0.55 * Math.sin(t * 1.4 + s.tw);
+    ctx.globalAlpha = s.a * tw * (1 - w);
+    ctx.fillStyle = '#f4efe4';
+    ctx.beginPath();
+    ctx.arc(s.x * SW, s.y * SH * 0.72, s.r, 0, 6.283);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  const moon = toScreen(1480, 280);
+  ctx.globalAlpha = 0.9 * (1 - w);
+  ctx.fillStyle = '#f3ecdc';
+  ctx.beginPath(); ctx.arc(moon.x, moon.y, 26 * CV.k, 0, 6.283); ctx.fill();
+  ctx.fillStyle = rgb(mix([16, 14, 28], [126, 168, 196], w));
+  ctx.beginPath(); ctx.arc(moon.x + 10 * CV.k, moon.y - 6 * CV.k, 22 * CV.k, 0, 6.283); ctx.fill();
+  ctx.globalAlpha = 1;
+}
+
+function drawHills() {
+  setCam(ctx);
+  const w = warmth();
+  const far = mix([28, 26, 40], [92, 118, 132], w);
+  const mid = mix([46, 38, 42], [122, 104, 72], w);
+  ctx.fillStyle = rgb(far);
+  ctx.beginPath();
+  ctx.moveTo(-200, 640);
+  for (let x = -200; x <= 2300; x += 24) {
+    const y = 390 + Math.sin(x * 0.004) * 36 + Math.abs(Math.sin(x * 0.01)) * 22;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(2300, 700); ctx.lineTo(-200, 700); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = rgb(mid);
+  ctx.beginPath();
+  ctx.moveTo(-200, 700);
+  ctx.lineTo(180, 520); ctx.lineTo(420, 560); ctx.lineTo(680, 470); ctx.lineTo(980, 540);
+  ctx.lineTo(1280, 490); ctx.lineTo(1620, 560); ctx.lineTo(2100, 500); ctx.lineTo(2300, 700);
+  ctx.closePath(); ctx.fill();
+}
+
+function drawGrass(back) {
+  setCam(ctx);
+  const w = warmth();
+  const t = reduceMotion ? 1.2 : clock / 1000;
+  const cold = mix([120, 140, 150], [90, 110, 70], 0);
+  const live = [126, 168, 96];
+  ctx.lineCap = 'round';
+  for (const blade of GRASS) {
+    if (blade.back !== back) continue;
+    const sway = reduceMotion ? 0 : Math.sin(t * 1.1 + blade.ph) * 4;
+    const col = mix(cold, live, clamp(w * 0.85 + (blade.back ? 0 : 0.15)));
+    const y0 = blade.back ? 700 : GROUND + 8;
+    ctx.strokeStyle = rgb(col, blade.back ? 0.45 : 0.8);
+    ctx.lineWidth = blade.back ? 1.4 : 2;
+    ctx.beginPath();
+    ctx.moveTo(blade.x, y0);
+    ctx.quadraticCurveTo(blade.x + blade.lean, y0 - blade.h * 0.55, blade.x + sway + blade.lean, y0 - blade.h);
+    ctx.stroke();
+  }
+}
+
+function drawGround() {
+  setCam(ctx);
+  const w = warmth();
+  const top = mix([92, 70, 58], [196, 140, 84], w);
+  const deep = mix([42, 30, 28], [92, 58, 36], w);
+  const g = ctx.createLinearGradient(0, 640, 0, 1100);
+  g.addColorStop(0, rgb(top));
+  g.addColorStop(0.18, rgb(mix(top, deep, 0.45)));
+  g.addColorStop(1, rgb(deep));
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.moveTo(-200, GROUND - 18);
+  for (let x = -200; x <= 2300; x += 20) {
+    const y = GROUND - 8 + Math.sin(x * 0.02) * 6 + Math.sin(x * 0.007) * 8;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(2300, 1200); ctx.lineTo(-200, 1200); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = `rgba(40,24,18,${(0.28 * (1 - w * 0.6)).toFixed(3)})`;
+  ctx.lineWidth = 1.2;
+  for (let i = 0; i < 9; i++) {
+    const x = 260 + i * 170;
+    ctx.beginPath();
+    ctx.moveTo(x, GROUND + 18);
+    ctx.quadraticCurveTo(x + 18, GROUND + 46, x - 8, GROUND + 74);
+    ctx.stroke();
+  }
+}
+
+function drawFlies() {
+  const w = warmth();
+  if (w > 0.8) return;
+  setCam(ctx);
+  const t = reduceMotion ? 0 : clock / 1000;
+  for (const f of FLIES) {
+    const x = f.x + Math.sin(t * 0.6 + f.ph) * 18;
+    const y = f.y + Math.cos(t * 0.8 + f.ph) * 10;
+    ctx.fillStyle = `rgba(230,220,180,${(0.35 * (1 - w)).toFixed(3)})`;
+    ctx.beginPath(); ctx.arc(x, y, 7, 0, 6.283); ctx.fill();
+    ctx.fillStyle = `rgba(255,244,220,${(0.85 * (1 - w)).toFixed(3)})`;
+    ctx.beginPath(); ctx.arc(x, y, f.r, 0, 6.283); ctx.fill();
+  }
+}
+
+function drawSeed() {
+  setCam(ctx);
+  const show = W.coverShow || 0;
+  const chill = W.chill == null ? 1 : W.chill;
+  const shiver = reduceMotion ? 0 : Math.sin(clock / 160) * 2.2 * chill * (1 - show);
+  const x = SEED.x + shiver, y = SEED.y + show * 26;
+  ctx.save();
+  ctx.globalAlpha = clamp(1 - show * 0.82);
+  ctx.fillStyle = 'rgba(20,12,10,.35)';
+  ctx.beginPath(); ctx.ellipse(x, GROUND - 4, 28, 8, 0, 0, 6.283); ctx.fill();
+  const g = ctx.createLinearGradient(x - 20, y - 24, x + 18, y + 16);
+  g.addColorStop(0, '#f0d2a4');
+  g.addColorStop(0.45, '#a86840');
+  g.addColorStop(1, '#5c3424');
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.ellipse(x, y, 22, 16, -0.3, 0, 6.283); ctx.fill();
+  ctx.strokeStyle = 'rgba(92,48,28,.55)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.ellipse(x, y - 1, 14, 9, -0.2, 0.4, 2.4); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,236,206,.55)';
+  ctx.beginPath(); ctx.ellipse(x - 7, y - 5, 5, 3, -0.6, 0, 6.283); ctx.fill();
+  if (chill > 0.2 && show < 0.5) {
+    ctx.strokeStyle = `rgba(220,232,240,${(0.55 * chill).toFixed(3)})`;
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 6; i++) {
+      const a = i / 6 * 6.28 + 0.4;
+      const px = x + Math.cos(a) * 34, py = y + Math.sin(a) * 22;
+      ctx.beginPath(); ctx.moveTo(px - 3, py); ctx.lineTo(px + 3, py); ctx.moveTo(px, py - 3); ctx.lineTo(px, py + 3); ctx.stroke();
+    }
+  }
+  ctx.restore();
+  if (show > 0.35) {
+    const glow = ctx.createRadialGradient(SEED.x, GROUND - 20, 4, SEED.x, GROUND - 10, 90);
+    glow.addColorStop(0, `rgba(255,196,120,${((show - 0.35) * 0.28).toFixed(3)})`);
+    glow.addColorStop(1, 'rgba(255,196,120,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath(); ctx.ellipse(SEED.x, GROUND - 6, 120, 36, 0, 0, 6.283); ctx.fill();
+  }
+}
+
+function drawPile() {
+  const left = clamp(1 - (W.coverShow || 0));
+  if (left < 0.04) return;
+  setCam(ctx);
+  ctx.save();
+  ctx.translate(PILE.x, PILE.y);
+  ctx.scale(0.72 + left * 0.38, 0.7 + left * 0.3);
+  const g = ctx.createLinearGradient(-40, -50, 30, 20);
+  g.addColorStop(0, '#f0d7a4');
+  g.addColorStop(0.5, '#b47a46');
+  g.addColorStop(1, '#6a4030');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.moveTo(-54, 16); ctx.quadraticCurveTo(-40, -46, 0, -52); ctx.quadraticCurveTo(48, -40, 58, 10); ctx.quadraticCurveTo(20, 28, -54, 16);
+  ctx.fill();
+  ctx.fillStyle = 'rgba(255,232,190,.35)';
+  ctx.beginPath(); ctx.ellipse(-8, -28, 22, 12, -0.4, 0, 6.283); ctx.fill();
+  ctx.restore();
+}
+
+function moundHeight(x) {
+  const u = (x - SEED.x) / 200;
+  return Math.exp(-u * u * 1.35) * (16 + (W.coverShow || 0) * 86);
+}
+function drawMound() {
+  const show = W.coverShow || 0;
+  if (show < 0.02) return;
+  setCam(ctx);
+  const x0 = SEED.x - 230, x1 = SEED.x + 240;
+  ctx.beginPath();
+  ctx.moveTo(x0, GROUND + 16);
+  for (let x = x0; x <= x1; x += 8) {
+    const wob = reduceMotion ? 0 : Math.sin(x * 0.05 + clock / 900) * 1.1 * (1 - show);
+    ctx.lineTo(x, GROUND - moundHeight(x) + wob);
+  }
+  ctx.lineTo(x1, GROUND + 36);
+  ctx.lineTo(x0, GROUND + 36);
+  ctx.closePath();
+  const g = ctx.createLinearGradient(SEED.x, GROUND - 110, SEED.x, GROUND + 24);
+  g.addColorStop(0, '#f2d7a2');
+  g.addColorStop(0.28, '#e6c084');
+  g.addColorStop(0.62, '#a86b40');
+  g.addColorStop(1, '#4e3226');
+  ctx.fillStyle = g;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,228,186,.38)';
+  ctx.lineWidth = 1.6;
+  for (let i = 0; i < 4; i++) {
+    const lift = 14 + i * 16 * show;
+    ctx.beginPath();
+    ctx.moveTo(SEED.x - 150 + i * 8, GROUND - lift);
+    ctx.quadraticCurveTo(SEED.x, GROUND - lift - 16 - i * 3, SEED.x + 160 - i * 6, GROUND - lift + 4);
+    ctx.stroke();
+  }
+  for (const sp of SPECKS) {
+    const x = SEED.x + sp.u * 180;
+    const h = moundHeight(x);
+    if (h < 8) continue;
+    const y = GROUND - sp.v * h * 0.85;
+    ctx.fillStyle = sp.deep ? 'rgba(74,42,28,.45)' : 'rgba(255,236,200,.4)';
+    ctx.beginPath(); ctx.ellipse(x, y, sp.r, sp.r * 0.7, 0, 0, 6.283); ctx.fill();
+  }
+}
+
+function drawSprout() {
+  const s = W.sprout || 0;
+  if (s <= 0.01) return;
+  setCam(ctx);
+  const x = SEED.x, y = GROUND - moundHeight(SEED.x) + 8;
+  const len = 18 + s * 132;
+  const sway = reduceMotion ? 0 : Math.sin(clock / 700) * 3 * s;
+  ctx.save();
+  ctx.strokeStyle = '#3f6a3a';
+  ctx.lineWidth = 3.2;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.quadraticCurveTo(x + sway, y - len * 0.55, x + sway * 0.4, y - len);
+  ctx.stroke();
+  const tipX = x + sway * 0.4, tipY = y - len;
+  if (s > 0.42) {
+    const open = smooth((s - 0.42) / 0.58);
+    const leaf = (dir) => {
+      ctx.beginPath();
+      ctx.moveTo(tipX, tipY + 8);
+      ctx.bezierCurveTo(tipX + dir * 10, tipY - 6, tipX + dir * 36 * open, tipY - 28 * open, tipX + dir * 46 * open, tipY - 8 * open);
+      ctx.bezierCurveTo(tipX + dir * 28 * open, tipY + 8, tipX + dir * 8, tipY + 10, tipX, tipY + 8);
+      const lg = ctx.createLinearGradient(tipX, tipY, tipX + dir * 40, tipY - 20);
+      lg.addColorStop(0, '#d4ecc0');
+      lg.addColorStop(0.5, '#8fce78');
+      lg.addColorStop(1, '#3e8a48');
+      ctx.fillStyle = lg;
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,240,.45)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(tipX, tipY + 6);
+      ctx.quadraticCurveTo(tipX + dir * 16 * open, tipY - 8 * open, tipX + dir * 34 * open, tipY - 10 * open);
+      ctx.stroke();
+    };
+    leaf(-1); leaf(1);
+  }
+  ctx.restore();
+}
+
+function drawRoots() {
+  const r = W.roots || 0;
+  if (r <= 0.01) return;
+  setCam(ctx);
+  ctx.save();
+  ctx.globalAlpha = 0.92 * r;
+  const y0 = GROUND + 6;
+  ctx.fillStyle = 'rgba(36,22,16,.55)';
+  ctx.fillRect(SEED.x - 280, y0, 560, 180);
+  ctx.strokeStyle = '#d7b07a';
+  ctx.lineCap = 'round';
+  for (const path of ROOTS) {
+    const [a, b, c] = path;
+    const grow = clamp(r * 1.15);
+    const x1 = SEED.x + lerp(a[0], b[0], grow), y1 = y0 + lerp(a[1], b[1], grow);
+    const x2 = SEED.x + lerp(a[0], c[0], grow), y2 = y0 + lerp(a[1], c[1], grow);
+    ctx.lineWidth = 2.4;
+    ctx.beginPath();
+    ctx.moveTo(SEED.x + a[0], y0 + a[1]);
+    ctx.quadraticCurveTo(x1, y1, x2, y2);
+    ctx.stroke();
+    if (grow > 0.7) {
+      ctx.fillStyle = '#e6c084';
+      ctx.beginPath(); ctx.arc(x2, y2, 2.2, 0, 6.283); ctx.fill();
+    }
+  }
+  ctx.restore();
+}
+
+function drawSpring() {
+  const s = W.spring || 0;
+  if (s <= 0.01) return;
+  setCam(ctx);
+  for (const row of SPRING) {
+    const h = row.h * s;
+    const x = row.x, y = GROUND - 6;
+    ctx.strokeStyle = `rgba(90,150,78,${s.toFixed(3)})`;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.quadraticCurveTo(x + 4, y - h * 0.6, x, y - h);
+    ctx.stroke();
+    if (s > 0.45) {
+      ctx.fillStyle = row.bloom > 0.5 ? `rgba(255,214,186,${((s - 0.45) * 1.4).toFixed(3)})` : `rgba(196,220,140,${s.toFixed(3)})`;
+      ctx.beginPath(); ctx.ellipse(x, y - h, 4.5, 3, 0.4, 0, 6.283); ctx.fill();
+    }
+  }
+}
+
+function drawParticles() {
+  if (!W.particles.length) return;
+  setCam(ctx);
+  for (const p of W.particles) {
+    const u = clamp((clock - p.t0) / p.life);
+    ctx.fillStyle = p.tone > 0.5 ? `rgba(230,192,132,${(1 - u).toFixed(3)})` : `rgba(140,82,48,${(1 - u).toFixed(3)})`;
+    ctx.beginPath(); ctx.ellipse(p.x, p.y, p.r, p.r * 0.75, 0, 0, 6.283); ctx.fill();
+  }
+}
+
+function drawHand() {
+  if (!W.hand) return;
+  setCam(ctx);
+  const x = W.hand.x, y = W.hand.y;
+  ctx.fillStyle = 'rgba(90,52,32,.25)';
+  ctx.beginPath(); ctx.ellipse(x, y + 16, 16, 6, 0, 0, 6.283); ctx.fill();
+  const g = ctx.createRadialGradient(x - 4, y - 4, 2, x, y, 18);
+  g.addColorStop(0, '#f3ddb0');
+  g.addColorStop(1, '#8d5a34');
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.ellipse(x, y, 16, 12, -0.4, 0, 6.283); ctx.fill();
+}
+
+function drawGuides() {
+  if (W.guide !== 'cover' && W.guide !== 'root') return;
+  setCam(ctx);
+  const t = reduceMotion ? 0.35 : (clock % 1400) / 1400;
+  const spots = [];
+  if (W.guide === 'cover') {
+    if ((W.cover || 0) < 1) {
+      spots.push({ x: SEED.x, y: GROUND - 36, hot: true });
+      spots.push({ x: PILE.x, y: PILE.y - 20, hot: (W.cover || 0) < 0.15 });
+    }
+  } else spots.push({ x: SEED.x, y: GROUND + 40, hot: true });
+  for (const s of spots) {
+    const base = Math.max(36, 28 / CV.k);
+    ctx.save();
+    ctx.strokeStyle = `rgba(255,214,150,${(s.hot ? 0.9 : 0.4) * (1 - t * 0.35)})`;
+    ctx.lineWidth = (s.hot ? 2.6 : 1.5) / CV.k;
+    ctx.beginPath(); ctx.arc(s.x, s.y, base + t * 24, 0, 6.283); ctx.stroke();
+    ctx.restore();
+  }
+}
+
+const NSVG = 'http://www.w3.org/2000/svg';
+const samplerPath = document.createElementNS(NSVG, 'path');
+$('#sampler').appendChild(samplerPath);
+const N = 72;
+function resample(d) {
+  samplerPath.setAttribute('d', d);
+  const len = samplerPath.getTotalLength();
+  const pts = [];
+  for (let i = 0; i <= N; i++) { const p = samplerPath.getPointAtLength(len * i / N); pts.push([p.x, p.y]); }
+  return pts;
+}
+const PROF = {
+  h: s => 0.78 + 0.46 * bump(s, 0.05, 0.07) + 0.28 * bump(s, 0.96, 0.05),
+  v: s => 0.68 + 0.46 * bump(s, 0.12, 0.09) + 0.16 * bump(s, 0.55, 0.32),
+};
+// 三笔按儿童能一眼认出的「土」来排：上横短、竖从横上轻轻露头、下横长。
+// 走向与字典笔画顺序一致（横、竖、横）。楷书骨架上端过长，夜里会读成「十」，所以中线做了整理。
+// 原始轮廓属 Arphic Public License，本页只使用整理后的中线做描红。
+const MODERN = [
+  { d: 'M30 37.5 L36 36.4 L46 35.2 L56 34.6 L66 35.8', p: 'h', w: 5.4, name: '横' },
+  { d: 'M48.6 30.2 L50.2 36 L49.4 54 L48.2 72.8', p: 'v', w: 5.2, name: '竖' },
+  { d: 'M12 80.6 L22 78.6 L46 76.8 L70 77.6 L86 80.2', p: 'h', w: 5.8, name: '横' },
+];
+// 拍平的软土、探出的嫩芽、托住种子的地面。用来过渡到今天的规范笔画，不是古文字复原。
+const ORACLE = [
+  'M26 48 C40 40 56 38 74 44',
+  'M49 18 C47 36 46 58 50 88',
+  'M6 86 C28 78 64 76 96 84',
+];
+const OPTS = ORACLE.map(resample), MPTS = MODERN.map(s => resample(s.d));
+const GL = { cx: 980, cy: 210, s: 3.55 };
+function strokePts(i) {
+  const m = W.glyph.morph, a = OPTS[i], b = MPTS[i];
+  if (m <= 0) return a;
+  if (m >= 1) return b;
+  const e = ease.inOut(m);
+  return a.map((p, j) => [lerp(p[0], b[j][0], e), lerp(p[1], b[j][1], e)]);
+}
+function strokeW(i, s) { return MODERN[i].w * PROF[MODERN[i].p](s) * (W.glyph.morph < 0.5 ? 0.86 : 1); }
+function brush(c, i, upto) {
+  if (upto <= 0) return;
+  const pts = strokePts(i);
+  const n = pts.length - 1, m = upto * n, mi = Math.floor(m);
+  const P = pts.slice(0, mi + 1);
+  if (mi < n && m > mi) { const a = pts[mi], b = pts[mi + 1], f = m - mi; P.push([lerp(a[0], b[0], f), lerp(a[1], b[1], f)]); }
+  if (P.length < 2) return;
+  const Lft = [], Rgt = [];
+  for (let j = 0; j < P.length; j++) {
+    const a = P[Math.max(0, j - 1)], b = P[Math.min(P.length - 1, j + 1)];
+    let tx = b[0] - a[0], ty = b[1] - a[1]; const l = Math.hypot(tx, ty) || 1; tx /= l; ty /= l;
+    const s = Math.min(1, (j / (P.length - 1)) * (m / n));
+    const w = strokeW(i, s) / 2;
+    Lft.push([P[j][0] - ty * w, P[j][1] + tx * w]); Rgt.push([P[j][0] + ty * w, P[j][1] - tx * w]);
+  }
+  c.beginPath(); c.moveTo(Lft[0][0], Lft[0][1]);
+  for (const p of Lft) c.lineTo(p[0], p[1]);
+  for (let j = Rgt.length - 1; j >= 0; j--) c.lineTo(Rgt[j][0], Rgt[j][1]);
+  c.closePath(); c.fill();
+  const e0 = P[0], e1 = P[P.length - 1];
+  c.beginPath(); c.arc(e0[0], e0[1], strokeW(i, 0) / 2, 0, 6.283); c.arc(e1[0], e1[1], strokeW(i, Math.min(1, m / n)) / 2, 0, 6.283); c.fill();
+}
+function glyphCam(c) { setCam(c); c.translate(GL.cx - 50 * GL.s, GL.cy - 50 * GL.s); c.scale(GL.s, GL.s); }
+function toLocal(wx, wy) { return { x: (wx - (GL.cx - 50 * GL.s)) / GL.s, y: (wy - (GL.cy - 50 * GL.s)) / GL.s }; }
+function localToScreen(lx, ly) { return toScreen(GL.cx + (lx - 50) * GL.s, GL.cy + (ly - 50) * GL.s); }
+
+function drawGlyph() {
+  const g = W.glyph;
+  if (!g || g.alpha <= 0.001) return;
+  glyphCam(ctx);
+  ctx.save();
+  ctx.globalAlpha = g.alpha;
+  if (g.ghost > 0) {
+    ctx.save(); ctx.globalAlpha = g.alpha * 0.26 * g.ghost; ctx.fillStyle = '#e6c084';
+    for (let i = 0; i < 3; i++) brush(ctx, i, 1);
+    ctx.restore();
+  }
+  const m = ease.inOut(g.morph);
+  ctx.save();
+  ctx.translate(50, 50);
+  ctx.scale(1.05, 1.07);
+  ctx.translate(-50, -50);
+  ctx.translate(0.2, 0.85);
+  ctx.fillStyle = 'rgba(28,14,10,.8)';
+  for (let i = 0; i < 3; i++) if (g.prog[i] > 0) brush(ctx, i, g.prog[i]);
+  ctx.restore();
+  ctx.fillStyle = `rgb(${lerp(186, 236, m) | 0},${lerp(118, 188, m) | 0},${lerp(52, 112, m) | 0})`;
+  ctx.shadowColor = 'rgba(42,22,12,.55)';
+  ctx.shadowBlur = g.glow * 7 * DPR;
+  for (let i = 0; i < 3; i++) if (g.prog[i] > 0) brush(ctx, i, g.prog[i]);
+  ctx.shadowBlur = 0;
+  if (g.labels > 0.02) {
+    ctx.globalAlpha = g.alpha * g.labels;
+    ctx.font = '7px "Kaiti SC","STKaiti","KaiTi",serif';
+    ctx.fillStyle = '#fff1d4';
+    ctx.fillText('软土', 70, 31);
+    ctx.fillText('嫩芽', 56, 52);
+    ctx.fillText('地面', 74, 86);
+  }
+  if (g.trace) drawTraceUI(ctx);
+  ctx.restore();
+  if (g.words > 0) drawWords();
+}
+
+function drawTraceUI(c) {
+  const T = W.trace;
+  if (!T || T.stroke >= 3) return;
+  const pts = MPTS[T.stroke];
+  c.globalAlpha = W.glyph.alpha;
+  c.strokeStyle = 'rgba(255,210,140,.9)'; c.lineWidth = 0.7; c.setLineDash([1.6, 1.8]);
+  c.beginPath(); c.moveTo(pts[0][0], pts[0][1]); for (const p of pts) c.lineTo(p[0], p[1]); c.stroke(); c.setLineDash([]);
+  const a = pts[N - 3], b = pts[N];
+  const ang = Math.atan2(b[1] - a[1], b[0] - a[0]);
+  c.fillStyle = 'rgba(255,210,140,.92)';
+  c.beginPath();
+  c.moveTo(b[0] + Math.cos(ang) * 2.6, b[1] + Math.sin(ang) * 2.6);
+  c.lineTo(b[0] + Math.cos(ang + 2.5) * 2.4, b[1] + Math.sin(ang + 2.5) * 2.4);
+  c.lineTo(b[0] + Math.cos(ang - 2.5) * 2.4, b[1] + Math.sin(ang - 2.5) * 2.4);
+  c.fill();
+  const [sx, sy] = pts[0];
+  const pulse = reduceMotion ? 0.7 : 0.5 + 0.5 * Math.sin(clock / 220);
+  c.fillStyle = `rgba(196,120,48,${(0.35 * pulse).toFixed(3)})`;
+  c.beginPath(); c.arc(sx, sy, 4 + pulse, 0, 6.283); c.fill();
+  c.fillStyle = '#e6a05a'; c.beginPath(); c.arc(sx, sy, 2.2, 0, 6.283); c.fill();
+  if (T.pen) { c.fillStyle = '#fff6e0'; c.beginPath(); c.arc(T.pen[0], T.pen[1], 2.2, 0, 6.283); c.fill(); }
+}
+
+const WORDS = [
+  ['泥土', '软软的泥土，是种子夜里的被子。'],
+  ['土地', '土地托住种子，也托住小小的芽。'],
+  ['春芽', '芽从土里探出头，春天就不远了。'],
+];
+function drawWords() {
+  setCam(ctx);
+  const g = W.glyph;
+  const y = GL.cy + GL.s * 58 + 28, gap = 168;
+  ctx.font = '42px "Kaiti SC","STKaiti","KaiTi",serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  WORDS.forEach(([w], i) => {
+    const a = clamp(g.words - i) * g.alpha;
+    if (a <= 0) return;
+    const on = W.wordOn === i;
+    ctx.globalAlpha = a * (on ? 1 : 0.45);
+    ctx.fillStyle = on ? '#ffe3b0' : '#f0e2cc';
+    ctx.fillText(w, GL.cx + (i - 1) * gap, y);
+  });
+  ctx.globalAlpha = 1; ctx.textAlign = 'start';
+}
+
+function drawConverge() {
+  if (!W.converge.length) return;
+  setCam(ctx);
+  for (const p of W.converge) {
+    const t = clamp((clock - p.t0 - p.delay) / p.dur);
+    if (t <= 0 || t >= 1) continue;
+    const e = ease.inOut(t);
+    const x = lerp(p.sx, p.tx, e) + Math.sin(e * Math.PI) * p.curl;
+    const y = lerp(p.sy, p.ty, e) - Math.sin(e * Math.PI) * 22;
+    ctx.fillStyle = `rgba(230,192,132,${(Math.sin(Math.PI * t) * 0.9).toFixed(3)})`;
+    ctx.beginPath(); ctx.arc(x, y, p.s, 0, 6.283); ctx.fill();
+  }
+}
+
+function drawVeil() {
+  if (W.veil <= 0.01) return;
+  resetTf();
+  ctx.fillStyle = `rgba(18,12,10,${W.veil})`;
+  ctx.fillRect(0, 0, SW, SH);
+}
+
+let vignette = null;
+function render() {
+  updateView();
+  drawSky();
+  drawStars();
+  drawHills();
+  drawGrass(true);
+  drawGround();
+  drawGrass(false);
+  drawFlies();
+  drawSpring();
+  drawPile();
+  drawSeed();
+  drawParticles();
+  drawMound();
+  drawSprout();
+  drawRoots();
+  drawHand();
+  drawGuides();
+  drawVeil();
+  drawConverge();
+  drawGlyph();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  const w = cvs.width, h = cvs.height;
+  if (!vignette || vignette.w !== w || vignette.h !== h) {
+    const g = ctx.createRadialGradient(w / 2, h * 0.46, Math.min(w, h) * 0.28, w / 2, h * 0.5, Math.hypot(w, h) * 0.62);
+    g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.4)');
+    vignette = { w, h, g };
+  }
+  ctx.fillStyle = vignette.g; ctx.fillRect(0, 0, w, h);
+  if (!document.body.classList.contains('started')) placeIntro();
+}
+
+let emitSerial = 0;
+function emit(x, y, n) {
+  const rng = mulberry32(20261024 + (++emitSerial) * 997);
+  for (let i = 0; i < n; i++) {
+    if (W.particles.length > 96) W.particles.shift();
+    W.particles.push({
+      x: x + (rng() - 0.5) * 18, y: y + (rng() - 0.5) * 8,
+      vx: (rng() - 0.5) * 90, vy: -30 - rng() * 110,
+      r: 1.5 + rng() * 2.3, t0: clock, life: 680 + rng() * 420, tone: rng(),
+    });
+  }
+}
+function updateMotion() {
+  const k = Math.min(1, DT / 220);
+  W.coverShow += ((W.cover || 0) - W.coverShow) * k;
+  for (const p of W.particles) {
+    p.x += p.vx * DT / 1000;
+    p.y += p.vy * DT / 1000;
+    p.vy += 460 * DT / 1000;
+  }
+  W.particles = W.particles.filter(p => clock - p.t0 < p.life && p.y < GROUND + 24);
+}
+
+let last = null;
+function loop(now) {
+  if (last == null) last = now;
+  const dt = Math.min(50, Math.max(0, now - last));
+  last = now;
+  if (!paused && visible) {
+    DT = dt;
+    clock += DT;
+    updateMotion();
+    const list = waiters; waiters = [];
+    for (const wt of list) { if (wt.tk.dead) wt.rej(new Cancelled()); else wt.res(clock); }
+  }
+  render();
+  requestAnimationFrame(loop);
+}
+
+const W = {};
+function resetWorld() {
+  Object.assign(W, {
+    dawn: 0, cover: 0, coverShow: 0, sprout: 0, roots: 0, spring: 0, chill: 1,
+    veil: 0, guide: null, hand: null, wordOn: -1, particles: [], converge: [],
+    glyph: { alpha: 0, morph: 1, prog: [0, 0, 0], glow: 1, ghost: 0, labels: 0, words: 0, trace: false },
+    trace: { stroke: 0, pen: null },
+  });
+  Object.assign(GL, { cx: 980, cy: 280, s: 3.3 });
+}
+function spawnConverge() {
+  const src = [[SEED.x - 80, GROUND - 20], [SEED.x, GROUND - 70], [SEED.x + 40, GROUND - 140], [PILE.x, PILE.y], [SEED.x, GROUND + 40]];
+  const list = [];
+  const rng = mulberry32(91);
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j <= N; j += 4) {
+      const [lx, ly] = MPTS[i][j];
+      const s = src[(i + (j / 4 | 0)) % src.length];
+      list.push({
+        sx: s[0] + (rng() - 0.5) * 30, sy: s[1] + (rng() - 0.5) * 20,
+        tx: GL.cx + (lx - 50) * GL.s, ty: GL.cy + (ly - 50) * GL.s,
+        delay: rng() * 320 + i * 80, dur: 980 + rng() * 420,
+        s: 1.4 + rng() * 2, curl: (rng() - 0.5) * 50, t0: clock,
+      });
+    }
+  }
+  W.converge = list;
+}
+
+const ui = {
+  cap: $('#caption'), capT: $('#capTitle'), capP: $('#capText'), hint: $('#hint'),
+  action: $('#action'), demo: $('#demo'), prog: [...document.querySelectorAll('#progress li')],
+  pause: $('#pause'), mute: $('#mute'),
+};
+const CHAR_MS = 70;
+let capMinEnd = 0;
+function span(cls, text) { const s = document.createElement('span'); if (cls) s.className = cls; s.textContent = text; return s; }
+function showCaption(title, text) {
+  ui.capT.textContent = window.haqiHanziUi ? window.haqiHanziUi(title, ui.capT) : title;
+  ui.capP.replaceChildren(...[...text].map((ch, i) => { const s = span('ch', ch); s.style.setProperty('--i', i); return s; }));
+  window.haqiHanziCaption?.(ui.cap, text);
+  ui.cap.classList.remove('on'); void ui.cap.offsetWidth; ui.cap.classList.add('on');
+}
+async function caption(title, text, tk, hold = 0) {
+  window.haqiHanziPrefetch?.([title, text]);
+  while (clock < capMinEnd) await frame(tk);
+  ui.cap.classList.remove('on');
+  await wait(reduceMotion ? 160 : 320, tk);
+  showCaption(title, text);
+  const n = [...text].length;
+  capMinEnd = clock + Math.max(reduceMotion ? 900 : n * CHAR_MS + 900, n * 120) + 420 + hold;
+}
+async function captionDone(tk) { while (clock < capMinEnd) await frame(tk); }
+function hint(text) {
+  if (text) {
+    const s = span('', '');
+    s.textContent = window.haqiHanziUi ? window.haqiHanziUi(text, s) : text;
+    ui.hint.replaceChildren(s); ui.hint.classList.add('on');
+  } else ui.hint.classList.remove('on');
+}
+function progress(i) {
+  ui.prog.forEach((li, j) => { li.classList.toggle('on', j === i); li.classList.toggle('done', j < i); });
+}
+function mode(m) {
+  document.body.classList.remove('trace', 'cover', 'holding');
+  if (m) document.body.classList.add(m);
+  S.mode = m;
+}
+let actionFn = null;
+function setAction(label, fn) {
+  actionFn = fn;
+  if (label) { ui.action.textContent = window.haqiHanziUi ? window.haqiHanziUi(label, ui.action) : label; ui.action.hidden = false; }
+  else ui.action.hidden = true;
+}
+function labelButton(el, zh) {
+  el.textContent = window.haqiHanziUi ? window.haqiHanziUi(zh, el) : zh;
+}
+
+const S = { handler: null, demo: null, mode: null, interactions: [] };
+let activePointer = null;
+cvs.addEventListener('pointerdown', e => {
+  if (paused || !e.isPrimary || activePointer != null) return;
+  const h = S.handler; if (!h || !h.down) return;
+  activePointer = e.pointerId;
+  try { cvs.setPointerCapture(e.pointerId); } catch { /* Pointer capture is optional. */ }
+  e.preventDefault();
+  h.down(toWorld(e.clientX, e.clientY), e);
+});
+cvs.addEventListener('pointermove', e => {
+  if (paused || e.pointerId !== activePointer) return;
+  const h = S.handler; if (!h || !h.move) return;
+  const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [];
+  for (const ev of evs.length ? evs : [e]) h.move(toWorld(ev.clientX, ev.clientY), ev);
+});
+function pointerEnd(e, cancel) {
+  if (e.pointerId !== activePointer) return;
+  activePointer = null;
+  document.body.classList.remove('holding');
+  const h = S.handler;
+  if (h && h.up) h.up(toWorld(e.clientX, e.clientY), cancel);
+}
+cvs.addEventListener('pointerup', e => pointerEnd(e, false));
+cvs.addEventListener('pointercancel', e => pointerEnd(e, true));
+cvs.addEventListener('lostpointercapture', e => pointerEnd(e, true));
+cvs.addEventListener('keydown', e => {
+  if (paused) return;
+  if (e.code !== 'Space' && e.code !== 'Enter') return;
+  if (e.repeat) return;
+  e.preventDefault();
+  if (S.mode === 'trace' && S.demo) S.demo();
+  else if (actionFn) actionFn();
+});
+ui.action.addEventListener('click', () => { if (!paused && actionFn) actionFn(); });
+ui.demo.addEventListener('click', () => { if (!paused && S.demo) S.demo(); });
+
+function publish(scene) {
+  window.__tu.scene = scene;
+  window.__tu.interactions = S.interactions;
+  window.__tu.state = W;
+  window.__tu.finished = false;
+}
+
+async function sCold(tk) {
+  publish('sCold');
+  progress(0);
+  bg(tween(800 * M, t => { W.glyph.alpha = 1 - t; }, tk));
+  bg(camTo(VIEW.cold, 2400 * M, tk));
+  await caption('初见', '种子睡在地上，夜里会不会冷？', tk);
+  await captionDone(tk);
+}
+
+async function sCover(tk) {
+  publish('sCover');
+  progress(1);
+  await camTo(VIEW.cover, 1200 * M, tk);
+  hint('按住土堆，拖到种子身上');
+  W.guide = 'cover';
+  mode('cover');
+  let auto = false, autoAt = 0, dragged = false;
+  const t0 = clock;
+  function scoop(how, amount = 0.24) {
+    if (W.cover >= 1) return;
+    W.cover = Math.min(1, W.cover + amount);
+    W.chill = clamp(1 - W.cover);
+    emit(SEED.x + (how === 'drag' ? 0 : 10), GROUND - 48, how === 'drag' ? 4 : 12);
+    if (how !== 'drag') Sound.thunk();
+    if (how !== 'drag') Sound.pluck(PENTA[Math.min(6, Math.round(W.cover * 4))], 0.05);
+    if (!S.interactions.includes(how)) S.interactions.push(how);
+    hint(W.cover > 0.92 ? '' : '再盖厚一点，让种子暖暖的');
+  }
+  setAction('盖上软软的土', () => scoop('user', 0.28));
+  S.handler = {
+    down(p) {
+      if (inBed(p) || inPile(p)) {
+        dragged = true;
+        document.body.classList.add('holding');
+        W.hand = { x: p.x, y: p.y, last: p, onBed: inBed(p) };
+        if (inBed(p)) scoop('user', 0.12);
+      } else hint('土要盖在发光的种子上');
+    },
+    move(p) {
+      if (!W.hand) return;
+      const dist = Math.hypot(p.x - W.hand.last.x, p.y - W.hand.last.y);
+      W.hand.x = p.x; W.hand.y = p.y;
+      if (inBed(p)) {
+        scoop('drag', dist / 340);
+        if (dist > 6) emit(p.x, p.y, 1);
+      }
+      W.hand.last = p;
+    },
+    up(p) {
+      if (W.hand && inBed(p)) scoop('user', 0.08);
+      W.hand = null;
+    },
+  };
+  while (W.cover < 0.995) {
+    await frame(tk);
+    if (!auto && clock - t0 > 12000) { auto = true; autoAt = clock; }
+    if (auto && clock >= autoAt && W.cover < 1) { scoop('auto', 0.28); autoAt = clock + 680; }
+  }
+  while (W.coverShow < 0.94) await frame(tk);
+  if (dragged && !S.interactions.includes('user') && !S.interactions.includes('auto')) S.interactions.push('user');
+  S.handler = null; W.guide = null; W.hand = null; mode(null); setAction(null); hint(null);
+  Sound.bell(NOTE.E4);
+}
+
+async function sSprout(tk) {
+  publish('sSprout');
+  progress(2);
+  await camTo(VIEW.sprout, 1400 * M, tk);
+  bg(tween(2200 * M, t => { W.dawn = t * 0.72; W.chill = 1 - t; }, tk));
+  bg(tween(2600 * M, t => { W.sprout = ease.out(t); }, tk, ease.lin));
+  await caption('变化', '泥土护住种子，嫩芽从里面探出头。', tk);
+  await wait(900 * M, tk);
+  Sound.bell(NOTE.A4);
+  await captionDone(tk);
+}
+
+async function sGlyph(tk) {
+  publish('sGlyph');
+  progress(3);
+  const from = { cx: GL.cx, cy: GL.cy, s: GL.s };
+  bg(camTo(VIEW.glyph, 1700 * M, tk));
+  await tween(1400 * M, t => {
+    GL.cx = lerp(from.cx, 980, t);
+    GL.cy = lerp(from.cy, 500, t);
+    GL.s = lerp(from.s, 3.6, t);
+    W.sprout = 1;
+  }, tk);
+  await caption('成字', '一横像地面，竖起的小芽帮我们记住“土”。', tk);
+  W.glyph.alpha = 1; W.glyph.morph = 0; W.glyph.prog = [0, 0, 0]; W.glyph.glow = 1;
+  spawnConverge();
+  Sound.bell(NOTE.G4);
+  await tween(2200 * M, t => {
+    W.veil = 0.78 * smooth(Math.min(1, t * 1.25));
+    for (let i = 0; i < 3; i++) W.glyph.prog[i] = smooth(clamp((t - 0.12 - i * 0.12) / 0.4));
+  }, tk, ease.lin);
+  W.glyph.prog = [1, 1, 1];
+  W.converge = [];
+  Sound.bell(NOTE.C5);
+  bg(tween(700, t => { W.glyph.labels = t; }, tk));
+  await caption('成字', '上边短短的一横，像轻轻拍平的一层土。', tk);
+  await caption('成字', '中间一竖，是探出头的嫩芽。', tk);
+  await caption('成字', '下边长长的一横，是托住种子的地面。', tk);
+  await caption('成字', '画面是联想，笔画是今天的规范字形。', tk);
+  await captionDone(tk);
+  await tween(1800 * M, t => { W.glyph.morph = t; }, tk);
+  Sound.pluck(NOTE.E4, 0.07);
+  await tween(500, t => { W.glyph.labels = 1 - t; }, tk);
+}
+
+async function sWrite(tk) {
+  publish('sWrite');
+  progress(4);
+  await caption('写字', '顺着亮起的笔画，慢慢写下这个字。', tk);
+  await tween(700, t => {
+    for (let i = 0; i < 3; i++) W.glyph.prog[i] = 1 - t;
+    W.glyph.ghost = t;
+  }, tk);
+  W.glyph.prog = [0, 0, 0];
+  W.glyph.trace = true;
+  W.trace = { stroke: 0, pen: null };
+  const showStroke = () => {
+    capMinEnd = 0;
+    const n = W.trace.stroke + 1;
+    showCaption('写字', `第 ${n} 笔，共 3 笔。`);
+    hint('从亮起的起点开始，慢慢跟着走。');
+  };
+  await captionDone(tk);
+  showStroke();
+  let samples = MPTS[0], drag = null, lastInput = clock, demoing = false, completed = 0, invalidHint = 0;
+  const prepare = () => { samples = MPTS[W.trace.stroke]; };
+  const finishStroke = () => {
+    const i = W.trace.stroke;
+    W.glyph.prog[i] = 1;
+    Sound.pluck(PENTA[i + 2], 0.07);
+    W.trace.stroke++;
+    completed++;
+    if (W.trace.stroke < 3) { prepare(); showStroke(); }
+  };
+  const tolLocal = () => Math.max(7.5, 24 / (CV.k * GL.s));
+  S.handler = {
+    down(p) {
+      if (demoing || W.trace.stroke >= 3) return;
+      lastInput = clock;
+      const q = toLocal(p.x, p.y);
+      if (Math.hypot(q.x - samples[0][0], q.y - samples[0][1]) > tolLocal() * 1.4) {
+        if (clock - invalidHint > 500) { hint('从亮起的起点开始，慢慢跟着走。'); invalidHint = clock; }
+        return;
+      }
+      drag = { idx: 0, bad: false };
+    },
+    move(p) {
+      if (!drag) return;
+      lastInput = clock;
+      const q = toLocal(p.x, p.y);
+      let best = drag.idx, bd = Infinity;
+      for (let j = Math.max(0, drag.idx - 2); j < Math.min(samples.length, drag.idx + 16); j++) {
+        const d = Math.hypot(q.x - samples[j][0], q.y - samples[j][1]);
+        if (d < bd) { bd = d; best = j; }
+      }
+      if (bd > tolLocal()) { drag.bad = true; return; }
+      if (drag.bad) return;
+      drag.idx = Math.max(drag.idx, best);
+      W.glyph.prog[W.trace.stroke] = drag.idx / N;
+    },
+    up() {
+      if (!drag) return;
+      const d = drag; drag = null;
+      if (!d.bad && d.idx >= N - 4) { finishStroke(); return; }
+      const i = W.trace.stroke, from = W.glyph.prog[i];
+      bg(tween(240, t => { if (W.trace.stroke === i) W.glyph.prog[i] = from * (1 - t); }, tk));
+      if (clock - invalidHint > 400) { hint('这一笔还没到终点，再试一次。'); invalidHint = clock; }
+    },
+  };
+  const demo = async () => {
+    if (demoing || W.trace.stroke >= 3) return;
+    demoing = true; ui.demo.disabled = true; drag = null;
+    hint('看光点走过每一笔');
+    while (W.trace.stroke < 3) {
+      const i = W.trace.stroke;
+      W.glyph.prog[i] = 0;
+      await tween(820 * M, t => { W.glyph.prog[i] = t; W.trace.pen = MPTS[i][Math.round(t * N)]; }, tk, ease.sine);
+      W.trace.pen = null;
+      finishStroke();
+      await wait(180, tk);
+    }
+  };
+  S.demo = () => { S.interactions.push('demo'); bg(demo()); };
+  mode('trace');
+  ui.demo.hidden = false;
+  let nudged = false;
+  while (W.trace.stroke < 3) {
+    await frame(tk);
+    if (!demoing && !nudged && clock - lastInput > 14000) { hint('写不出来也没关系，点下面的示范。'); nudged = true; }
+    if (!demoing && completed === 0 && clock - lastInput > 26000) { S.interactions.push('auto'); bg(demo()); }
+  }
+  S.handler = null; S.demo = null; mode(null); hint(null);
+  ui.demo.hidden = true; ui.demo.disabled = false;
+  W.glyph.trace = false;
+  if (!S.interactions.includes('demo') && !S.interactions.includes('auto')) S.interactions.push('user');
+  window.haqiHanziWritten?.();
+  await tween(500, t => { W.glyph.ghost = 1 - t; }, tk);
+  Sound.bell(NOTE.C5); Sound.bell(NOTE.E4);
+  await caption('写字', '写好了。土，盖住种子，也留住春天。', tk);
+  await captionDone(tk);
+}
+
+async function sWords(tk) {
+  publish('sWords');
+  progress(5);
+  const g0 = { cy: GL.cy, s: GL.s };
+  await tween(1000 * M, t => { GL.cy = lerp(g0.cy, g0.cy - 24, t); GL.s = lerp(g0.s, g0.s * 0.88, t); }, tk);
+  for (let i = 0; i < WORDS.length; i++) {
+    W.wordOn = i;
+    Sound.pluck(PENTA[i + 2], 0.055);
+    bg(tween(480, t => { W.glyph.words = Math.max(W.glyph.words, i + t); }, tk, ease.out));
+    await caption(WORDS[i][0], WORDS[i][1], tk);
+  }
+  await captionDone(tk);
+  W.wordOn = -1;
+}
+
+async function sFinale(tk) {
+  publish('sFinale');
+  progress(5);
+  bg(camTo(VIEW.finale, 2200 * M, tk));
+  await tween(1600 * M, t => {
+    W.glyph.alpha = 1 - t;
+    W.veil = 0.78 * (1 - t);
+    W.glyph.words = 1 - t;
+    W.dawn = lerp(0.72, 1, t);
+    W.roots = t;
+    W.spring = smooth(t);
+    W.sprout = 1;
+  }, tk);
+  W.glyph.alpha = 0; W.glyph.words = 0; W.veil = 0; W.roots = 1; W.spring = 1; W.dawn = 1;
+  Sound.bell(NOTE.G4);
+  await caption('余韵', '土里藏着根，也藏着下一个春天。', tk);
+  await caption('余韵', '故事完成，可以重播。', tk, 300);
+  await captionDone(tk);
+  hint('点一点土，看根悄悄伸开');
+  mode('cover');
+  setAction('再看一次', () => { Sound.init(); begin(); });
+  S.handler = {
+    down(p) {
+      if (!inBed(p) && p.y < GROUND - 80) return;
+      W.roots = 0.2;
+      bg(tween(700, t => { W.roots = 0.2 + 0.8 * t; }, tk, ease.out));
+      emit(p.x, Math.min(p.y, GROUND), 6);
+      Sound.pluck(PENTA[(Math.abs(Math.round(p.x / 40)) % PENTA.length)], 0.05);
+      hint(null);
+    },
+  };
+  window.__tu.finished = true;
+  window.haqiHanziComplete();
+  for (;;) await frame(tk);
+}
+
+const SCENES = [sCold, sCover, sSprout, sGlyph, sWrite, sWords, sFinale];
+
+function syncTransport() {
+  paused = false;
+  ui.pause.setAttribute('aria-pressed', 'false');
+  labelButton(ui.pause, '暂停');
+}
+async function begin() {
+  token.dead = true;
+  const tk = token = { dead: false };
+  capMinEnd = 0;
+  waiters.forEach(w => w.rej(new Cancelled())); waiters = [];
+  resetWorld();
+  Object.assign(cam, VIEW.cold);
+  S.handler = null; S.demo = null; mode(null); setAction(null); hint(null);
+  ui.demo.hidden = true; ui.demo.disabled = false;
+  ui.cap.classList.remove('on');
+  syncTransport();
+  S.interactions = [];
+  publish('sCold');
+  try {
+    for (const sc of SCENES) await sc(tk);
+  } catch (e) {
+    if (!(e instanceof Cancelled)) console.error(e);
+  }
+}
+
+function placeIntro() {
+  const a = localToScreen(50, 18), b = localToScreen(50, 92);
+  const box = $('#intro');
+  box.style.setProperty('--gTop', `${a.y}px`);
+  box.style.setProperty('--gBottom', `${b.y}px`);
+}
+async function introPlay(tk) {
+  W.glyph.alpha = 1; W.glyph.morph = 1; W.glyph.prog = [0, 0, 0];
+  await wait(480, tk);
+  for (let i = 0; i < 3; i++) {
+    await tween((420 + MODERN[i].d.length * 6) * M, t => { W.glyph.prog[i] = t; }, tk, ease.sine);
+    await wait(80, tk);
+  }
+  for (;;) {
+    await frame(tk);
+    W.glyph.glow = reduceMotion ? 1 : 1 + 0.16 * Math.sin(clock / 700);
+  }
+}
+
+resetWorld();
+Object.assign(cam, VIEW.intro);
+window.__tu = {
+  interactions: [], scene: 'intro', finished: false,
+  toScreen, localToScreen, strokes: MPTS, state: W, seed: SEED, pile: PILE,
+};
+resize();
+render();
+addEventListener('resize', () => { resize(); render(); placeIntro(); });
+requestAnimationFrame(loop);
+bg(introPlay(token = { dead: false }));
+
+$('#start').addEventListener('click', () => {
+  Sound.init();
+  token.dead = true;
+  $('#intro').classList.add('off');
+  document.body.classList.add('started');
+  begin();
+});
+$('#replay').addEventListener('click', () => { Sound.init(); begin(); });
+$('#mute').addEventListener('click', () => {
+  Sound.init();
+  Sound.setMuted(!Sound.muted);
+  ui.mute.setAttribute('aria-pressed', String(Sound.muted));
+  labelButton(ui.mute, Sound.muted ? '开启声音' : '静音');
+});
+$('#pause').addEventListener('click', () => {
+  paused = !paused;
+  ui.pause.setAttribute('aria-pressed', String(paused));
+  labelButton(ui.pause, paused ? '继续' : '暂停');
+  if (Sound.ctx) void (paused ? Sound.ctx.suspend() : Sound.ctx.resume()).catch(() => {});
+});
+document.addEventListener('visibilitychange', () => { visible = !document.hidden; last = null; });
+addEventListener('pagehide', () => { token.dead = true; void Sound.ctx?.close().catch(() => {}); }, { once: true });
+})();
+</script>
+</body>
+</html>

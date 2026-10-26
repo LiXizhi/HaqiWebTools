@@ -1,3 +1,4 @@
+import {validHomeDrawing,HOME_DRAWING_ITEMS} from './home_drawing_core.js';
 import {buildingTemplateObjects,validateTemplatePlacement} from './home_building_templates_core.js';
 import {isRoofDecoration,roofAt,buildingPlacement,buildingItem,replacementFor,obstruction,intersects,validBuildingProperties} from './home_building_core.js';
 import {validHomeLabel,requiresReading,homeObjectInteractive,canPlace,chunkKey} from './home_core.js';
@@ -36,6 +37,11 @@ export function applyHomeAction(parts,action,catalog){
   place(action.object);return true;
  }
  const obj=find(action.id);if(!obj)throw Error('物品已变化，请重新选择');
+ if(action.type==='drawing'){
+  if(!HOME_DRAWING_ITEMS.includes(obj.itemId)||!action.drawing||!validHomeDrawing(action.drawing))throw Error('这件物品不能保存这张画');
+  const drawing=action.drawing.strokes.length?action.drawing:undefined;if(JSON.stringify(obj.drawing)===JSON.stringify(drawing))return false;
+  const next={...obj};if(drawing)next.drawing=structuredClone(drawing);else delete next.drawing;put(next);return true;
+ }
  if(action.type==='label'){
   if(typeof action.text!=='string'||!validHomeLabel(action.text))throw Error('作品标签须为不超过60字的单行文字');
   const label=action.text.trim();if((obj.label||'')===label)return false;

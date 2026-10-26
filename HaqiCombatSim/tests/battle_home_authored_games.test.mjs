@@ -8,7 +8,7 @@ const read=p=>JSON.parse(fs.readFileSync(new URL('../'+p,import.meta.url),'utf8'
 const data=read('data/adventure/curriculum/english-home-practice.json');
 const index=buildWordIndex(parseWordLexicon(fs.readFileSync(new URL('../data/adventure/locale/word_en.txt',import.meta.url),'utf8'),'en'));
 const catalog=read('data/adventure/home/catalog.json').items;
-const objects=['chair','cup','bread-basket','bed'].map((itemId,i)=>({id:'object-'+i,itemId,x:i,y:0}));
+const objects=['chair','cup','bread-basket','bed','ball'].map((itemId,i)=>({id:'object-'+i,itemId,x:i,y:0}));
 const actions=homeGameActions('care',objects,[{id:'pet1'}],catalog);
 const known=words=>({words:Object.fromEntries(words.map((w,i)=>[canonicalWord(index,w),{lastPractice:{at:i+1}}]))});
 
@@ -16,7 +16,7 @@ test('authored home stories are executable using real catalog facilities and rot
     validateAuthoredHomeGames(data,index);
     const state=known([...new Set(data.games.flatMap(g=>g.words))]),played=[];
     const before=structuredClone(state);
-    const count=data.games.filter(g=>g.mode==='care').length;
+    const count=data.games.filter(g=>g.mode==='care'&&!g.arcOnly&&!g.action.petSpeciesIds&&!g.readNameLabel).length;
     for(let i=0;i<count;i++){
         const game=selectAuthoredHomeGame(data,{mode:'care',index,state,actions,objects,played});
         assert.ok(game);assert.ok(!played.includes(game.storyId));played.push(game.storyId);
@@ -68,10 +68,15 @@ test('all object introductions and arrangement scenes bind to real catalog items
     for(const story of data.games.filter(g=>g.mode!=='care')){
         for(const itemId of story.action.itemIds){
             const objects=[{id:'placed',itemId,x:0,y:0,...(story.action.colors?{color:story.action.colors[0]}:{})}];
+            if(story.requiresDrawing)objects[0].drawing={version:1,strokes:[{color:'#294734',points:[[100,100],[700,500]]}]};
+            if(story.comparison){objects[0].color='red';objects.push({id:'match',itemId,x:2,y:0,color:'red'},{id:'contrast',itemId,x:4,y:0,color:'blue'});}
+            if(['big','small','long','short'].includes(story.comparison?.kind)){objects[1].sizeScale=2;objects[2].sizeScale=.5;}
             if(['read','listen'].includes(story.mode))objects.push({id:'decoy',itemId:story.action.itemIds.includes('book')?'cup':'book',x:3,y:0});
+            if(story.mode==='place'){objects.push({id:'anchor-a',itemId:story.position.anchorItemIds[0],x:3,y:0});if(story.position.kind==='between')objects.push({id:'anchor-b',itemId:story.position.anchorItemIds[0],x:9,y:0});}
+            if(story.mode==='count')for(let n=1;n<story.count.amount;n++)objects.push({id:'placed-'+n,itemId,x:n*3,y:0});
             const actions=homeGameActions(story.mode,objects,pets,catalog);
             assert.ok(catalog.some(i=>i.id===itemId),itemId);
-            const game=selectAuthoredHomeGame({...data,games:[story]},{mode:story.mode,index,state,objects,pets,actions,turn:story.turn,continuation:story.turn===1?{pair:story.pair,objectId:"placed",petId:"pet1"}:null});
+            const game=selectAuthoredHomeGame({...data,games:[story]},{mode:story.mode,arcId:story.arcOnly,index,state,objects,pets,actions,catalog,countArea:{x:-1,y:-1,w:40,h:10},turn:story.turn,continuation:story.turn===1?{pair:story.pair,objectId:"placed",petId:"pet1"}:null});
             assert.equal(game?.storyId,story.id,`${story.id}/${itemId}`);
         }
     }
@@ -131,4 +136,24 @@ test('action words build on known object words without awarding prerequisite pra
     assert.equal(selectAuthoredHomeGame(data,{...args,state:recentlyReviewed,now:100,played:['en-l1-find-book']}).storyId,'en-l1-find-lamp');
     const broken=structuredClone(data);broken.games[0].requires=['unknown-entry-for-test'];
     assert.throws(()=>validateAuthoredHomeGames(broken,index),/前置词/);
+});
+
+
+test('meal invitations require prior eating vocabulary and a real eating action; labels require learned meal words',()=>{
+    const objects=[{id:'table1',itemId:'table',x:0,y:0}],pets=[{id:'pet1'}];
+    for(const word of ['breakfast','lunch','dinner']){
+        const subset={...data,games:data.games.filter(g=>g.id.startsWith(`en-l1-meal-${word}-`)||g.id===`en-l1-label-${word}-table`)};
+        const args={mode:'care',index,objects,pets,actions:homeGameActions('care',objects,pets,catalog),state:known(['eat']),newWordBudget:1,catalog};
+        const game=selectAuthoredHomeGame(subset,args);assert.ok(game);assert.deepEqual(game.words,[word]);assert.deepEqual(game.introducedWords,[word]);
+        assert.equal(selectAuthoredHomeGame(subset,{...args,state:known([])}),null);
+        assert.equal(selectAuthoredHomeGame(subset,{...args,newWordBudget:0}),null);
+        assert.equal(selectAuthoredHomeGame(subset,{...args,actions:[]}),null);
+        assert.ok(homeGameAnswer(game,`${word}, please.`));assert.ok(homeGameAnswer(game,`Let us eat ${word}.`));assert.equal(homeGameAnswer(game,'Food, please.'),false);
+        assert.ok(homeGameActionMatches(game,game.action));assert.equal(homeGameActionMatches(game,{...game.action,activity:'drink'}),false);
+        const writing={...args,mode:'write',actions:homeGameActions('write',objects,pets,catalog),state:known(['table'])};
+        assert.equal(selectAuthoredHomeGame(subset,writing),null);
+        const label=selectAuthoredHomeGame(subset,{...writing,state:known(['table',word])});assert.ok(label);
+        assert.ok(homeGameActionMatches(label,{...label.action,text:`My ${word} table.`}));
+        assert.equal(homeGameActionMatches(label,{...label.action,text:'My table.'}),false);
+    }
 });

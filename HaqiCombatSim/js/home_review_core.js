@@ -1,8 +1,13 @@
+import {recordHomeStory} from './home_story_core.js';
 // Scheduling evidence only: these intervals are product defaults, not mastery.
 export const HOME_REVIEW_SESSION_GAP=30*60*1000;
 export const HOME_REVIEW_INTERVALS=[5*60*1000,86400000,3*86400000,7*86400000,14*86400000];
-const modes=new Set(['care','find','arrange','turn','write']);
+const modes=new Set(['care','find','arrange','turn','write','count','place','draw','door','walk']);
 const count=n=>Number.isSafeInteger(n)&&n>=0?n:0;
+export function homeReviewSupport(event){
+ if(event.review?.evidenceVersion!==1||typeof event.assisted!=='boolean'||!Number.isSafeInteger(event.attempts)||event.attempts<1)return 'unknown';
+ return event.assisted?'assisted':event.attempts>1?'retried':'unassisted';
+}
 export function homeReviewSessionActive(state,now){
  const session=state.homeReviewSession;
  return !!session&&Number.isFinite(session.at)&&Number.isFinite(now)&&now-session.at<HOME_REVIEW_SESSION_GAP;
@@ -16,6 +21,7 @@ export function homeWordReviewDue(word,now){
 }
 export function recordHomeReview(state,event,ids){
  if(!modes.has(event.review?.mode)||!Number.isFinite(event.at)||event.at<0)return;
+ recordHomeStory(state,event);
  // A backwards clock must not manufacture a second visit or move review dates.
  if(Number.isFinite(state.homeReviewSession?.at)&&event.at<state.homeReviewSession.at){
   for(const id of ids)if(state.words[id]&&!Number.isFinite(state.words[id].lastPractice?.at))state.homeReviewSession.introduced=count(state.homeReviewSession.introduced)+1;
@@ -32,8 +38,11 @@ export function recordHomeReview(state,event,ids){
   const newVisit=review.sessionId!==session.id;
   if(newVisit)review.visits=count(review.visits)+1;
   review.stage=Math.min(HOME_REVIEW_INTERVALS.length-1,count(review.stage));
+  const support=homeReviewSupport(event);
   if(reset||!Number.isFinite(review.nextAt)){review.stage=0;review.nextAt=event.at+HOME_REVIEW_INTERVALS[0];}
-  else if(newVisit&&event.at>=review.nextAt){review.stage=Math.min(review.stage+1,HOME_REVIEW_INTERVALS.length-1);review.nextAt=event.at+HOME_REVIEW_INTERVALS[review.stage];}
+  else if(['assisted','retried'].includes(support)){review.stage=0;review.nextAt=review.nextAt>event.at?Math.min(review.nextAt,event.at+HOME_REVIEW_INTERVALS[0]):event.at+HOME_REVIEW_INTERVALS[0];}
+  else if(support==='unassisted'&&newVisit&&event.at>=review.nextAt){review.stage=Math.min(review.stage+1,HOME_REVIEW_INTERVALS.length-1);review.nextAt=event.at+HOME_REVIEW_INTERVALS[review.stage];}
+  else if(event.at>=review.nextAt&&support==='unknown')review.nextAt=event.at+HOME_REVIEW_INTERVALS[0];
   else if(!newVisit&&event.at>=review.nextAt)review.nextAt=event.at+HOME_REVIEW_INTERVALS[0];
   review.sessionId=session.id;review.lastAt=event.at;
   review.modes??={};review.inputs??={};
@@ -41,7 +50,10 @@ export function recordHomeReview(state,event,ids){
   review.inputs[event.input]=count(review.inputs[event.input])+1;
   const source=String(event.source||'home-game').slice(0,120);
   review.contexts=[source,...(Array.isArray(review.contexts)?review.contexts:[]).filter(s=>s!==source)].slice(0,12);
-  // Existing exercises expose examples and don't measure hint independence.
-  review.support='unknown';
+  review.support=support;
+  // These are observed UI conditions, not a mastery or level certificate.
+  review.supportCounts??={};review.supportCounts[support]=count(review.supportCounts[support])+1;
+  review.lastEvidence={id:event.id,at:event.at,input:event.input,support,attempts:support==='unknown'?null:event.attempts};
+  if(support==='unassisted'&&review.unassistedSessionId!==session.id){review.unassistedVisits=count(review.unassistedVisits)+1;review.unassistedSessionId=session.id;}
  }
 }

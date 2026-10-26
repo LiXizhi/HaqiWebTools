@@ -1351,10 +1351,10 @@
 钢笔||pen
 盒子||box
 玩具||toy
-香蕉||banana
-橙子||orange
-梨子||pear
-鸡蛋||egg
+香蕉||banana,bananas
+橙子||orange,oranges
+梨子||pear,pears
+鸡蛋||egg,eggs
 蛋糕||cake
 果汁||juice
 早餐||breakfast

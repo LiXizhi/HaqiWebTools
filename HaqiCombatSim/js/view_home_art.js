@@ -1,7 +1,8 @@
+import {paintHomeDrawing} from './view_home_drawing_art.js';
 import {paintNeuralHomeTerrain} from './view_home_neural.js';
 // Home furniture sprite renderer + baked static Haqi island terrain, river, road, plaza & bridge texture tile painter.
 import {createRng,hashSeed} from './rng_core.js';
-import {HOME_COLOR_HEX,homeBiomeAt,homeBridgeAt,homeInteractiveKind,homeRiverCenterX,homeRiverCenterY,homeRoadAt,homeWaterAt} from './home_core.js';
+import {HOME_COLOR_HEX,footprint,homeBiomeAt,homeBridgeAt,homeInteractiveKind,homeRiverCenterX,homeRiverCenterY,homeRoadAt,homeWaterAt} from './home_core.js';
 import {paintBridges} from './adventure_bridge.js';
 import {paintStaticShadows} from './adventure_shadows.js';
 
@@ -14,6 +15,32 @@ const INDOOR_CATEGORIES=new Set(['bedroom','kitchen','bathroom','living']);
 const OUTDOOR_EXCEPTIONS=new Set(['picnic-table','hot-spring']);
 
 const tintCache=new Map();
+const hitMasks=new WeakMap();
+
+// Use the same crop and mirror as the furniture painter. Transparent atlas
+// padding must not steal clicks from a visible object behind this sprite.
+export function homeObjectPixelHit(item,object,image,bounds,x,y){
+ if(item.id==='paper'&&object.drawing)return x>=bounds.x&&x<=bounds.x+bounds.w&&y>=bounds.y&&y<=bounds.y+bounds.h;
+ if(!bounds||item.layer==='ground'||!image?.complete||!image.naturalWidth)return true;
+ let u=(x-bounds.x)/bounds.w,v=(y-bounds.y)/bounds.h;
+ if(u<0||u>=1||v<0||v>=1)return false;
+ if([1,2].includes((object?.rotation||0)%4))u=1-u;
+ const crop=item.art?.crop||[0,0,image.naturalWidth,image.naturalHeight],key=crop.join(',');
+ let masks=hitMasks.get(image);if(!masks){masks=new Map();hitMasks.set(image,masks);}
+ if(!masks.has(key)){
+  try{
+   const [sx,sy,sw,sh]=crop,c=document.createElement('canvas');
+   c.width=sw;c.height=sh;
+   const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(image,sx,sy,sw,sh,0,0,sw,sh);
+   const rgba=g.getImageData(0,0,sw,sh).data,alpha=new Uint8Array(sw*sh);
+   for(let i=0;i<alpha.length;i++)alpha[i]=rgba[i*4+3];
+   masks.set(key,{alpha,w:sw,h:sh});
+  }catch{masks.set(key,null);}
+ }
+ // A loading or unreadable image keeps the existing rectangular fallback.
+ const mask=masks.get(key);if(!mask)return true;
+ return mask.alpha[Math.min(mask.h-1,Math.floor(v*mask.h))*mask.w+Math.min(mask.w-1,Math.floor(u*mask.w))]>=16;
+}
 
 function tintedSprite(image,crop,colorHex){
  if(!colorHex||!image?.complete||!image.naturalWidth)return null;
@@ -103,6 +130,17 @@ function drawInteractiveEffect(ctx,kind,w,h,now=0){
 }
 
 // Geometry-only hit bounds, also used when a sprite is already baked into a texture.
+// Return world units so cached sprites, live rendering and pointer bounds use
+// the same support elevation at every zoom. Old unsupported surfaces stay put.
+export function homeObjectSurfaceLift(object,objectsById,catalog){
+ const item=catalog.find(i=>i.id===object.itemId),parent=objectsById.get(object.parentId);
+ if(item?.layer!=='top'||!parent)return 0;
+ const support=catalog.find(i=>i.id===parent.itemId);
+ if(!support?.slots||!(support.surfaceLiftRatio>0))return 0;
+ const b=footprint(parent,catalog),bounds=homeObjectVisualBounds(support,parent,0,0,b.w,b.h);
+ return bounds.h*support.surfaceLiftRatio;
+}
+
 export function homeObjectVisualBounds(item,object,x,y,w,h,isThumb=false){
  if(item.layer==='ground'&&!isThumb){const grow=1.04*HOME_GROUND_SCALE;return {x:x+w*(1-grow)/2,y:y+h*(1-grow)/2,w:w*grow,h:h*grow};}
  const [,,sw,sh]=item.art?.crop||[0,0,item.art?.width||1,item.art?.height||1];
@@ -113,6 +151,7 @@ export function homeObjectVisualBounds(item,object,x,y,w,h,isThumb=false){
 }
 
 export function drawHomeObject(ctx,item,object,x,y,w,h,image,now=0,isThumb=false){
+ if(item.id==='paper'&&object.drawing){const b=homeObjectVisualBounds(item,object,x,y,w,h);paintHomeDrawing(ctx,object.drawing,b.x,b.y,b.w,b.h);return b;}
  const rot=(object?.rotation||0)%4;
  const colorHex=COLOR_HEX[object?.color]||null;
  const isGround=item.layer==='ground';

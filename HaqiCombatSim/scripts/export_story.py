@@ -430,7 +430,9 @@ class Exporter:
         file = 'data/adventure/curriculum/english-home-practice.json'
         for i, game in enumerate(self.load(file)['games']):
             scene = self.scene('home-language:' + game['id'], '家园伙伴 · ' + game['id'], 'current', 'home', classification='家园词语练习', language='en')
-            for field, speaker, phase in [('intro', '家园伙伴', '练习前对白'), ('prompt', '家园伙伴', '请求'), ('answer', '玩家', '表达'), ('reply', '家园伙伴', '回应')]:
+            for field, speaker, phase in [('intro', '家园伙伴', '练习前对白'), ('prompt', '家园伙伴', '请求'), ('answer', '玩家', '表达'), ('reply', '家园伙伴', '回应'), ('ending', '家园伙伴', '动作完成后')]:
+                if field not in game:
+                    continue
                 if field == 'answer' and game.get('mode') in ('read', 'listen'):
                     speaker, phase = '校验目标（不显示）', '听读选物'
                 ptr = f'/games/{i}/{field}'

@@ -1,3 +1,4 @@
+import {recordHomeStory} from './home_story_core.js';
 import {recordHomeReview} from './home_review_core.js';
 import {canonicalWord} from './word_lexicon_core.js';
 export const BASIC_PRACTICE_THRESHOLD=10;
@@ -9,6 +10,7 @@ export function recordComprehensionPractice(state,event,index){
  if(!ids.length||ids.some(id=>!state.words?.[id]?.lastPractice?.at))return false;
  state.practiceReceipts??={};if(Object.hasOwn(state.practiceReceipts,event.id))return false;
  state.practiceReceipts[event.id]=true;
+ if(['read','listen'].includes(event.review?.mode))recordHomeStory(state,event);
  for(const id of ids){
   const word=state.words[id];word.comprehension??={};
   const evidence=word.comprehension[event.input]??={count:0,unassistedFirstChoice:0};

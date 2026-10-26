@@ -1,0 +1,22 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {homeDoorChange,homeGameActions,homeGameActionMatches,homeGameObjectMatches} from '../js/home_language_game_core.js';
+import {selectAuthoredHomeGame,validateAuthoredHomeGames} from '../js/home_authored_game_core.js';
+import {applyHomeAction} from '../js/home_actions_core.js';
+import {buildWordIndex,parseWordLexicon} from '../js/word_lexicon_core.js';
+const read=p=>JSON.parse(fs.readFileSync(new URL('../'+p,import.meta.url),'utf8'));
+const catalog=read('data/adventure/home/catalog.json').items,data=read('data/adventure/curriculum/english-home-practice.json');
+const index=buildWordIndex(parseWordLexicon(fs.readFileSync(new URL('../data/adventure/locale/word_en.txt',import.meta.url),'utf8'),'en'));
+test('door lessons require the requested real building latch transition, not a decorative door or unchanged save',()=>{
+ const objects=[{id:'wood',itemId:'build-wood-door',x:2,y:1},{id:'decoration',itemId:'door',x:4,y:1}],pets=[{id:'pet'}];
+ const actions=homeGameActions('door',objects,pets,catalog);assert.equal(actions.length,2);assert.ok(actions.every(a=>a.objectId==='wood'));
+ const before=objects[0],parts={'chunk:0,0':{wood:before}};assert.equal(applyHomeAction(parts,{type:'door',id:'wood'},catalog),true);
+ const event=homeDoorChange([{id:'wood',before,after:parts['chunk:0,0'].wood}],'wood',catalog);assert.deepEqual(event,{kind:'door',objectId:'wood',open:true});
+ assert.equal(homeDoorChange([{id:'wood',before,after:{...before,x:3}}],'wood',catalog),null);
+ assert.equal(homeDoorChange([{id:'decoration',before:objects[1],after:{...objects[1],doorOpen:true}}],'decoration',catalog),null);
+ validateAuthoredHomeGames(data,index);
+ const story=data.games.find(g=>g.id==='en-l1-door-close-meet'),game=selectAuthoredHomeGame({...data,games:[story]},{index,mode:'door',objects,pets,catalog,actions,state:{words:{door:{lastPractice:{at:1}}}},newWordBudget:1});
+ assert.ok(game);assert.equal(game.action.open,false);assert.equal(homeGameActionMatches(game,event),false);assert.equal(homeGameActionMatches(game,{...event,open:false}),true);
+ game.doorSnapshot={open:false};assert.ok(homeGameObjectMatches(game,[before],catalog));assert.equal(homeGameObjectMatches(game,[{...before,doorOpen:true}],catalog),false);assert.equal(homeGameObjectMatches(game,[{...before,visibleDoorOpen:true}],catalog),false);assert.equal(homeGameObjectMatches(game,[],catalog),false);
+});

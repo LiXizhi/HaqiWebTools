@@ -1656,9 +1656,14 @@ flowchart LR
     Delta --> Check[物品 文字 回执 角色 语言校验]
     Check --> Tree[WordTree text 有效练习与去重]
     Save --> World[物品标签 场景绘制 撤销重做]
+    Save --> Nickname[home_name_label_core 昵称句型]
+    Nickname --> Followup[作者续章读取同一物品标签快照]
+    Followup --> Check
 ```
 
 自由标签不带活动学习回执，不经词语计数。编辑器不判掌握，作者变式校验不代表自由写作评估；模型不参与完成判定。地块与词树分别保存，后者失败保留本轮回执重试；旧会话／旧轮次的迟到结果不写学习记录。
+
+昵称任务允许孩子选择游戏昵称，以 `My name is …` 留在书、纸或书包上；只验证初级句型，不验证身份。后续阅读活动从选定书的真实标签生成回答，提交前后核对物品与原标签；修改、删除使旧轮失效。普通 AI 无可信标签不能生成该 name 练习完成证据。沿用原地块标签和 WordTree，不新增姓名档案或云端存储。
 
 
 ## 2026-10-26：家园复习调度与共享词树
@@ -1682,3 +1687,133 @@ home_review_core 为纯核心，无浏览器 IO；控制器传入当前时间、
 `english-home-practice.json` → `home_authored_game_core.js`（仅已学词）→ `home_comprehension_core.js`（目标／不同种干扰物快照）→ `home_language_game.js`（普通开场、读请求或等待语音）→ `home_app.js` / `view_home.js`（临时候选点击、真实 find 事件）→ 当前场景／角色／语言守卫 → `language_course.js` → `recordComprehensionPractice` → 同一 WordTree 的 comprehension。
 
 纯核心不访问 DOM、语音或存储；视图选择只上报意图。与朗读／输入共用回执去重，但保持证据类型分开，不增加 practiceCount/basic 或战斗候选 lastPractice。
+
+### 家园真实数量链路（2026-10-26）
+
+`home_app.js` 提供当前视野范围 → `homeCountingArea` 计算并冻结世界坐标区域 → `homeCountSnapshot` 选择区域内真实物品 → 作者选择器匹配准确数量／已学物品词 → 普通伙伴开场 → Canvas 点击逐件集合去重 → 英语数量回应 → `homeCountCurrent` 在保存前及异步回执守卫中复核 → 原有 WordTree 有效练习。
+
+绘图只消费 `languageCount.area/marked`；世界物品没有额外持久化标记。数量目标的语言计数由已有共享核心完成，`home_review_core.js` 将 count 作为家园复习模式。没有独立掌握状态或课程通行门槛。
+
+### 家园位置词的场景验证（2026-10-26）
+
+```mermaid
+flowchart LR
+  Author[位置作者稿与已学前置] --> Bind[homePositionBinding 参照物快照与可行空位]
+  Scene[实际物品与目录 footprint] --> Bind
+  Bind --> Talk[伙伴开场与玩家表达]
+  Talk --> Drag[原有家园拖动与保存]
+  Drag --> Event[已保存的 move 事件]
+  Event --> Check[homePositionCurrent 位置及参照物复核]
+  Scene --> Check
+  Check --> Store[同一 WordTree 回执与有效练习]
+  Store --> Ending[完成后对白与保留布局]
+```
+
+几何规则保持在纯核心 `home_position_core.js`；控制器不代替家园保存物品，也不由模型判定完成。新故事的 ending 与回应 reply 分开，避免动作前先宣布结果。
+
+
+### 家园颜色比较（2026-10-26）
+
+`home_comparison_core.js` 从实际物品及 find 动作构造参照物、有效目标和干扰项快照。作者选择器仅在可完成且有对比选择时提供情境；家园复用参照物边框与临时点击区域。共享动作匹配接受全部有效目标；持久化前后守卫核对物件身份与颜色，异步结果沿用角色、语言和回执保护。
+
+```mermaid
+flowchart LR
+  Props[实际物品与颜色] --> Bind[比较快照及可用选项]
+  Bind --> Intro[伙伴对话与绿框参照物]
+  Intro --> Answer[回应目标词并实际点选]
+  Answer --> Validate[关系与快照核对]
+  Validate --> Tree[既有 WordTree 回执]
+```
+
+
+家园比较快照现扩展 big / small：同物品同朝向比较真实 sizeScale，比例至少 1.5；快照保存尺寸与朝向，颜色比较仍仅依赖颜色。沿用同一选择、参照物显示和提交校验链路。
+
+
+### 家园连续故事与原子学习回执（2026-10-26）
+
+`english-home-practice.json.arcs` 按稳定故事 ID 引用步骤，`arcOnly` 阻止专用台词落入普通随机练习。`home_story_core.js` 保存下一步及已选物品身份；`recordHomeReview` 在既有 WordTree 有效练习事务内推进故事，重复回执先由共享核心去重。家园控制器恢复当前步骤，限制可选同类物品为历史选择，继续使用真实动作及角色／语言守卫。
+
+```mermaid
+flowchart LR
+  Menu[伙伴故事入口] --> Resume[读取同角色语言家园的下一步]
+  Resume --> Objects[绑定曾经选好的物品]
+  Objects --> Scene[普通对白与真实场景动作]
+  Scene --> Receipt[有效练习回执去重]
+  Receipt --> Transaction[WordTree 事务：练习与故事步骤]
+  Transaction --> Next[继续故事或下次返回]
+```
+
+进度在本地学习状态 `homeStories[JSON.stringify([homeId,arcId])]` 中保存，未增加云奖励或声称云同步。主动重新准备仅清除此故事的下一步与物品绑定，保留所有词条证据。
+
+
+家园连续故事的步骤可用 usePet 引用此前 pet-use 步骤；进度保存 pets[step]，选择器候选动作及提交守卫均核对同一在场伙伴。缺失伙伴与物品复用重新准备入口。普通 care 现支持已有 ball 活动，所有完成事件仍由实际安置保存触发，不由定时动画生成。
+
+
+清点配置支持 `count.target: object` 与显式 `count.word`，验证物品及数量前置，冻结真实数量后使用既有文本／语音回应校验；仅将物品规范词条传入有效练习记录。新一轮 `preparePractice` 仅清 UI 选择与预览，防止旧编辑控件遮挡后续对象，不修改家园数据。
+
+
+2026-10-26 家园承载显示：catalog 的 surfaceLiftRatio 与 parentId → view_home_art.homeObjectSurfaceLift → 实时绘制／预览／点击范围及 home_building_cache 烘焙。派生高度不写回存档坐标；缓存行签名包含高度，因此仅支撑家具缩放也会使孩子物品的旧纹理失效。当前校准普通 table，未知家具保持旧显示。
+
+
+2026-10-26 家园动物词：作者 action.petSpeciesIds／可选 petStages 与实际已安置 pets（包含显示 stage） → selectAuthoredHomeGame 筛选并冻结 petSpeciesId → homeGamePetMatches 在动作与异步回执前后核验。home_app 只提供现有宠物定义用于缺失说明，去背包操作仍通过 view_home 的原抽屉，不新增宠物存储或奖励路径。
+
+## 2026-10-26：家园复习的提示证据
+
+```mermaid
+flowchart LR
+    Text[作者开场 请求 已有物品标签] --> Exposure[homeGameExposesTarget]
+    Hint[提示按钮 示范播放 标签编辑器例子] --> Session[会话 assisted 与 attempts]
+    Exposure --> Session
+    Input[非空回应与已保存标签] --> Session
+    Session --> Receipt[表达与真实动作校验 回执去重]
+    Receipt --> Review[home_review_core 支持程度与间隔]
+    Review --> Tree[同一 WordTree homeReview]
+```
+
+提示 UI 只回传使用事实；核心按 evidenceVersion 区分新证据与旧 unknown。异步旧标签编辑器回调核对会话与本轮回执，不污染下一轮。初始物品标签参与保守提示判定；不会把本轮新写出的答案反向当成初始帮助。unassisted 只是可观察条件，不能直接授予课程毕业或云端掌握。
+
+动物种类与阶段匹配共用 homeStoryPetEligible；作者阶段只允许 0—3 的非空唯一集合。rabbit／mouse 当前仅允许 1—3，使用实际显示 stage 而非按等级另算；手动换回幼体、种类变化或移除使旧结果失效。在允许集合内成长仍有效。开场对缺伙伴与外观不适用分别说明，不改宠物获得／成长规则。
+
+## 2026-10-26：家园故事的只读准备投影
+
+```mermaid
+flowchart LR
+    State[现有 WordTree 真实道具与伙伴] --> Ready[home_story_readiness_core]
+    Author[作者故事与稳定步骤引用] --> Ready
+    Ready --> Select[复用 selectAuthoredHomeGame 校验条件]
+    Select --> Menu[既有故事列表 进度与准备说明]
+    Menu --> Play[可玩步骤 原故事控制器]
+    Menu --> Prepare[明确可执行的前置词作者介绍]
+    Prepare --> Receipt[原有效练习与去重事务]
+    Receipt --> Back[回到原故事 重新读取条件]
+    Back --> Ready
+```
+
+预览不写状态，准备练习不设置原故事 arc，不推进其步骤。回到故事每次重读学习记录并重查真实对象；选择器继续控制运行时校验。布置与宠物背包复用 view_home 原抽屉。未增加课程存储、自动生成物品、奖励或地图门槛。
+
+## 2026-10-26：有界笔画作品与学习回执
+
+```mermaid
+flowchart LR
+    Draw[view_home_drawing 鼠标与触屏笔画] --> Action[home_actions_core drawing 操作]
+    Action --> Schema[home_drawing_core 版本 点数 坐标 颜色验证]
+    Schema --> Chunk[原地块事务 paper.drawing]
+    Chunk --> Render[view_home_art 与缓存共用绘画渲染]
+    Chunk --> Delta[homeDrawingChange 非空实际变化]
+    Delta --> Guard[当前画纸 回执 表达与画作快照]
+    Guard --> Tree[原 WordTree 有效练习]
+```
+
+画作不设独立存储库。导入与地块验证拒绝非法数据和非画纸作品；绘画只存有界整数坐标与固定颜色。原编辑历史覆盖画作变化，撤销／重做不发学习事件。静态家园缓存的既有对象签名包括 drawing，修改作品会使纹理失效；实时与缓存复用 paintHomeDrawing，保持 3:2 内容比例。作品取代该画纸的展示，点击范围使用实际矩形；原无画作道具仍走原图集与像素点击。
+
+## 家门语言动作接线（2026-10-26）
+
+homeGameActions 的 door 模式仅列出 catalog 中 building.type=door 的双向操作。作者配置冻结期望方向和故事中的原门身份；home_app 原 commit 成功后用 homeDoorChange 核对前后保存状态，仅真实手动改变产生事件。语言控制器另核对当前显示状态（复用 homeDoorIsOpen 与连接方向，包含双人角色），防止人物自动开门被记为关门成功。完成事件冻结 doorSnapshot，WordTree 异步回执沿用 current 校验和去重；未新增存档字段、奖励或云接口。
+
+手动开关事务开始时捕获本轮 doorTicket；提交后事件携带该回执。旧事务完成不能跨轮次、角色或语言记入新练习，普通自由开关没有学习回执。
+
+## 听读故事进度与证据（2026-10-26）
+
+家园作者 arc 支持 read/listen。recordComprehensionPractice 完成合法、已学词和同回执去重检查后记录独立理解证据，并调用 recordHomeStory；不走表达复习计数，不授予 basic。控制器先固定实际点选的 objectId，回执 current 再验证该实例仍为合法目标，不能以其他同名物品续接消失的对象。readiness 检查目标与不同类干扰物均存在，缺少时显示布置入口。
+
+听力界面的“改为读线索”仅改变本轮 comprehensionInput=read，并标记 assisted；后续播放完成不会覆盖该选择。故事身份保留，input 为阅读，听力 evidence 不写入。家园故事进度和技能证据继续分开，语音不可用不迫使孩子卡在此步骤。

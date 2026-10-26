@@ -22,7 +22,7 @@ test('reading selects real home objects; listening requires completed playback a
   const canvas=await page.locator('.home-canvas').boundingBox();
   // Renderer projects the fixture's fixed world coordinates at the initial
   // 40px scale. Real pointer events go through canvas hit testing and home_app.
-  await page.mouse.click(canvas.x+canvas.width/2+20,canvas.y+canvas.height/2+50);
+  await page.mouse.click(canvas.x+canvas.width/2+28,canvas.y+canvas.height/2+34);
   await page.getByRole('status').filter({hasText:'还不是这件'}).waitFor();
   assert.equal((await page.evaluate(()=>worldLearning.learning())).words.book.comprehension,undefined);
   await page.mouse.click(canvas.x+canvas.width/2+100,canvas.y+canvas.height/2+50);

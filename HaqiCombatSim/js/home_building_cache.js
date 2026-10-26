@@ -2,7 +2,7 @@ import {buildingFloorAO} from './home_building_ao_core.js';
 import {isEdge,buildingWallFeet,isRoofDecoration,buildingConnections,buildingConnectionMask,buildingItem,buildingBounds,roofSections} from './home_building_core.js';
 import {buildingVisualBounds,drawBuilding} from './view_home_building.js';
 import {homeInteractiveKind} from './home_core.js';
-import {drawHomeObject,homeObjectVisualBounds} from './view_home_art.js';
+import {drawHomeObject,homeObjectVisualBounds,homeObjectSurfaceLift} from './view_home_art.js';
 const LIMIT=32*1024*1024;
 const overlap=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
 const close=bitmap=>{if(bitmap?.close)bitmap.close();else if(bitmap)bitmap.width=bitmap.height=0;};
@@ -17,22 +17,24 @@ export function createHomeBuildingCache({imageFor,enabled=true}={}){
  function index(objects,catalog,exclude){
   if(source===objects&&excluded===exclude)return;
   source=objects;excluded=exclude;cancel();connections=buildingConnections(objects,catalog);masks=new Map(objects.map(o=>[o.id,buildingConnectionMask(o,objects,catalog)]));sections=roofSections(objects,catalog);
+  const byId=new Map(objects.map(o=>[o.id,o]));
   const map=new Map(),ao=buildingFloorAO(objects,catalog,exclude);
   for(const o of objects){const item=buildingItem(o,catalog);if(!item)continue;
    const type=item.building?.type,decoration=isRoofDecoration(o),ground=item.layer==='ground'&&!decoration,roof=type==='roof'||decoration,b=buildingBounds(o,item);
-   const visual=item.building?buildingVisualBounds(o,item):homeObjectVisualBounds(item,o,o.x*40,(o.y-(decoration?1.4:0))*40,b.w*40,b.h*40);
+   const lift=homeObjectSurfaceLift(o,byId,catalog);
+   const visual=item.building?buildingVisualBounds(o,item):homeObjectVisualBounds(item,o,o.x*40,(o.y-(decoration?1.4:lift))*40,b.w*40,b.h*40);
    const left=Math.min(o.x*40,visual.x)-8,top=Math.min(o.y*40,visual.y)-8;
    const bounds=item.building?visual:{x:left,y:top,w:Math.max(visual.x+visual.w,(o.x+b.w)*40)-left+8,h:Math.max(visual.y+visual.h,(o.y+b.h)*40)-top+8};
    const dynamic=o.id===exclude||type==='door'||item.activity||o.interactionEnabled||homeInteractiveKind(item.id);
    const depth=(isEdge(item)?Math.max(...buildingWallFeet(o,masks.get(o.id)).map(f=>f.y+f.h)):o.y+b.h)+(o.parentId?2:0),section=roof?sections.get(decoration?o.parentId:o.id)?.[0]?.id:'',key=dynamic?`live:${o.id}`:decoration?`roof-decoration:${o.id}`:!item.building&&!ground?`furniture:${o.id}`:`${roof?'roof:'+section:ground?'ground':'depth:'+depth}:${Math.floor(o.x/8)},${Math.floor(o.y/8)}`;
    let group=map.get(key);if(!group){group={key,rows:[],ground,roof,decoration,section,depth,dynamic,bounds:{...bounds}};map.set(key,group);}
    const endX=Math.max(group.bounds.x+group.bounds.w,bounds.x+bounds.w),endY=Math.max(group.bounds.y+group.bounds.h,bounds.y+bounds.h);group.bounds.x=Math.min(group.bounds.x,bounds.x);group.bounds.y=Math.min(group.bounds.y,bounds.y);group.bounds.w=endX-group.bounds.x;group.bounds.h=endY-group.bounds.y;
-   group.rows.push({o,item,ao:ao.get(o.id)||[],connections:masks.get(o.id)??connections.get(o.id)??0});
+   group.rows.push({o,item,lift,ao:ao.get(o.id)||[],connections:masks.get(o.id)??connections.get(o.id)??0});
   }
-  groups=[...map.values()];for(const g of groups)g.signature=JSON.stringify(g.rows.map(r=>[r.o,r.connections,r.item.art,r.item.building?.theme,r.ao]));
+  groups=[...map.values()];for(const g of groups)g.signature=JSON.stringify(g.rows.map(r=>[r.o,r.lift,r.connections,r.item.art,r.item.building?.theme,r.ao]));
   const byKey=new Map(groups.map(g=>[g.key,g]));for(const [key,row]of entries)if(byKey.get(key)?.signature!==row.signature)release(key);
  }
- function paintRows(c,g){for(const row of g.rows){const {o,item}=row,image=imageFor(item.art);if(item.building)drawBuilding(c,item,o,image?.complete&&image.naturalWidth?image:null,row.connections,row.ao);else{const b=buildingBounds(o,item);drawHomeObject(c,item,o,o.x*40,(o.y-(isRoofDecoration(o)?1.4:0))*40,b.w*40,b.h*40,image,0);}}}
+ function paintRows(c,g){for(const row of g.rows){const {o,item}=row,image=imageFor(item.art);if(item.building)drawBuilding(c,item,o,image?.complete&&image.naturalWidth?image:null,row.connections,row.ao);else{const b=buildingBounds(o,item);drawHomeObject(c,item,o,o.x*40,(o.y-(isRoofDecoration(o)?1.4:row.lift||0))*40,b.w*40,b.h*40,image,0);}}}
  async function bake(job){
   if(active!==job)return;
   try{

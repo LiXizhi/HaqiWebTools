@@ -13,10 +13,11 @@ export function createLanguagePracticeView({title,close,submit,start,finish,canc
     const escape=e=>{const dialog=e.target?.closest?.('dialog[open]');if(dialog&&dialog!==root)return;if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();close();}};if(!host)document.addEventListener('keydown',escape,true);
     let mic=null,input=null,send=null;
     return {button,body,
+        storyChoice(title,description,choose){const row=el('div'),detail=el('p',description);row.style.marginBottom='12px';detail.style.cssText='margin:4px 0;color:var(--muted);font-size:12px';row.append(button(title,choose),detail);return row;},
         visible(value){root.style.display=value?'':'none';},
         list(rows){mic?.reset();mic=null;input=null;send=null;body.replaceChildren(...rows);},
-        exercise({prompt,words,example='',onHint,onSpeak}){
-            mic?.reset();body.replaceChildren(el('p',prompt),el('p','本轮词语：'+words.join('、')));
+        exercise({prompt,words,showWords=true,example='',onHint,onSpeak}){
+            mic?.reset();body.replaceChildren(el('p',prompt));if(showWords)body.append(el('p','本轮词语：'+words.join('、')));
             input=el('textarea');input.style.cssText='box-sizing:border-box;width:100%;max-width:100%';input.rows=2;input.maxLength=500;input.setAttribute('aria-label','输入回答');body.append(input);
             const tools=el('div');tools.style.cssText='display:flex;gap:8px;flex-wrap:wrap';
             send=button('回答',()=>submit(input.value,'text'));tools.append(send);

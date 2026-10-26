@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "id": "home-school-01",
+  "local": "assets/adventure/home/home-school-07a51a03a0ba.webp",
+  "width": 768,
+  "height": 384,
+  "bytes": 172742,
+  "sha256": "07a51a03a0baaecd644cccb784319873d5450ac3c59d390cbdea98c6697d064e",
+  "encoding": {
+    "lossless": true
+  },
+  "frames": {
+    "pencil": {
+      "cell": 0,
+      "sourceRect": [
+        53,
+        45,
+        467,
+        476
+      ],
+      "rect": [
+        11,
+        8,
+        169,
+        176
+      ]
+    },
+    "pen": {
+      "cell": 1,
+      "sourceRect": [
+        507,
+        42,
+        940,
+        467
+      ],
+      "rect": [
+        200,
+        9,
+        176,
+        173
+      ]
+    },
+    "paper": {
+      "cell": 2,
+      "sourceRect": [
+        1001,
+        33,
+        1473,
+        509
+      ],
+      "rect": [
+        392,
+        8,
+        175,
+        176
+      ]
+    },
+    "school-bag": {
+      "cell": 3,
+      "sourceRect": [
+        27,
+        476,
+        511,
+        987
+      ],
+      "rect": [
+        588,
+        8,
+        167,
+        176
+      ]
+    },
+    "telephone": {
+      "cell": 4,
+      "sourceRect": [
+        529,
+        573,
+        994,
+        954
+      ],
+      "rect": [
+        8,
+        216,
+        176,
+        144
+      ]
+    },
+    "computer": {
+      "cell": 5,
+      "sourceRect": [
+        1011,
+        531,
+        1509,
+        988
+      ],
+      "rect": [
+        200,
+        207,
+        176,
+        162
+      ]
+    }
+  },
+  "source": {
+    "generator": "image_gen",
+    "transparentBackground": true,
+    "sha256": "e6ecb67f4e88aece4c237ad18ff646136dc70bda83b6c528ff4833502f0d0188",
+    "width": 1536,
+    "height": 1024,
+    "alphaProcessing": "native alpha preserved; individually verified whole-object bounds; no color key"
+  },
+  "prompt": "Create a production game sprite atlas on native transparent RGBA background. SIX separate complete objects in 3 columns by 2 rows with generous transparent gaps. Top row: a single thick yellow graphite PENCIL with pink eraser and sharpened dark tip; a single chunky blue capped ballpoint PEN clearly different from the pencil; one blank white sheet of PAPER with slightly curled corner. Bottom row: one red child's school BAG backpack with straps; one vintage teal desk TELEPHONE with handset resting on base and clear round dial; one friendly small desktop COMPUTER with monitor, keyboard and small mouse together as a single object, pale blue blank screen. No words, letters, numbers, brands, captions, cell borders or ground backdrop. Warm hand-painted storybook fantasy RPG props, rich painterly shading, crisp readable silhouettes, three-quarter overhead view, soft outlines, substantial chunky proportions readable at 50px. All objects fully inside frame, no overlap between objects. Orient pencil and pen diagonally and make their width chunky enough for a child to tap. The paper is blank cream white clearly a sheet with thin folded edge, not a book. Each cell contains exactly its named object, computer components grouped only in last cell. No cast shadows outside silhouettes, retain all true transparency. Landscape atlas.\n",
+  "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-school-07a51a03a0ba.webp"
+}

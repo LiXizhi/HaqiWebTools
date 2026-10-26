@@ -1,3 +1,4 @@
+import {validHomeDrawing,HOME_DRAWING_ITEMS} from './home_drawing_core.js';
 import {compareDungeonSpeech} from './dungeon_speech_core.js';
 import {isRoofDecoration,roofAt,buildingBounds,buildingGridBounds,buildingConflict,replacementFor,validBuildingProperties,buildingItem,buildingSlotKind,isEdgeLike} from './home_building_core.js';
 // Home rules are independent of adventure progression and browser IO.
@@ -125,7 +126,7 @@ export function summonSentences(item,lang='en',color=''){
 }
 export const HOME_SPELL_PASS_ACCURACY=0.8;
 const SIMPLE_WORDS_EN=new Set(['a','an','the','some','one','please']);
-const SIMPLE_CHARS_ZH=new Set([...'请一的个张把朵盏本块棵只套座栋片条面架台盆盏']);
+const SIMPLE_CHARS_ZH=new Set([...'请一的个张把朵盏本块棵只套座栋片条面架台盆根碗盘杯瓶']);
 function isSimpleSpellDiff(diff,locale){
  return locale==='en'?SIMPLE_WORDS_EN.has(diff.expected):SIMPLE_CHARS_ZH.has(diff.expected);
 }
@@ -171,7 +172,7 @@ export function parseSummon(text,catalog,lang='en'){
  if(lang==='en')noun=value.match(/^(?:i (?:want|would like|need)|(?:please )?(?:create|make|summon)|can i have|give me)(?: please)? (.+?)(?: please)?$/)?.[1];
  else noun=value.match(/^(?:我(?:想要|需要|要)|请?创造|请?生成|请?给我|可以给我)(.+?)(?:吗)?$/)?.[1];
  if(!noun)return {error:'请说出完整句子，或点击物品查看示范。',candidates:[]};
- noun=noun.replace(lang==='en'?/^(?:a|an|the|one|some) /:/^(?:一[个张把朵盏本块棵只套]|[个张把朵盏本块棵只套])/,'');
+ noun=noun.replace(lang==='en'?/^(?:a|an|the|one|some) /:/^(?:一[个张把朵盏本块棵只套根碗盘杯瓶]|[个张把朵盏本块棵只套根碗盘杯瓶])/,'');
  let color='';for(const [en,zh]of Object.entries(COLORS)){const prefix=lang==='en'?`${en} `:zh;if(noun.startsWith(prefix)){color=en;noun=noun.slice(prefix.length);break;}if(lang!=='en'&&noun.startsWith(zh[0])&&!catalog.some(i=>i.zh===noun)){color=en;noun=noun.slice(1);break;}}
  const names=item=>[item[lang==='en'?'en':'zh'],...(item.aliases?.[lang]||[])].map(normalize);
  let candidates=catalog.filter(item=>names(item).some(name=>name===noun||(lang==='en'&&`${name}s`===noun)));
@@ -183,6 +184,7 @@ export const validHomeSize=value=>value===undefined||(Number.isFinite(value)&&va
 export function footprint(obj,catalog){const item=catalog.find(i=>i.id===obj.itemId);if(!item)throw Error('物品不存在');if(item.building)return {...buildingBounds(obj,item),item};let [w,h]=item.size; if((obj.rotation||0)%2)[w,h]=[h,w];const size=obj.sizeScale??1;return {x:obj.x,y:obj.y,w:w*size,h:h*size,item};}
 export const overlaps=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
 export function canPlace(obj,objects,catalog){
+ if(!validHomeDrawing(obj.drawing)||(obj.drawing!==undefined&&!HOME_DRAWING_ITEMS.includes(obj.itemId)))return {ok:false,reason:'画作数据无效或物品不是画纸'};
  if(!validHomeLabel(obj.label))return {ok:false,reason:'作品标签须为不超过60字的单行文字'};
  if(obj.interactionEnabled!==undefined&&typeof obj.interactionEnabled!=='boolean')return {ok:false,reason:'互动设置无效'};
  if(!validHomeSize(obj.sizeScale))return {ok:false,reason:'物品大小须在50%至200%之间'};
@@ -235,7 +237,7 @@ export function petWish(petId,round,catalog,lang='en'){const rng=createRng(hashS
 export function validHomeLabel(value){return value===undefined||typeof value==='string'&&value.length<=60&&!/[\p{Cc}\p{Cf}]/u.test(value);}
 export function validateHomePart(kind,value,catalog){
  if(!value||typeof value!=='object'||Array.isArray(value))throw Error('家园文件无效');
- if(kind==='chunk')for(const obj of Object.values(value)){if(!obj||!validHomeLabel(obj.label)||!validBuildingProperties(obj)||(obj.interactionEnabled!==undefined&&typeof obj.interactionEnabled!=='boolean')||!validHomeSize(obj.sizeScale)||typeof obj.id!=='string'||!catalog.some(i=>i.id===obj.itemId)||!Number.isFinite(obj.x)||!Number.isFinite(obj.y)||Math.abs(obj.x)>1e9||Math.abs(obj.y)>1e9)throw Error('家园物品无效');}
+ if(kind==='chunk')for(const obj of Object.values(value)){if(!obj||!validHomeDrawing(obj.drawing)||(obj.drawing!==undefined&&!HOME_DRAWING_ITEMS.includes(obj.itemId))||!validHomeLabel(obj.label)||!validBuildingProperties(obj)||(obj.interactionEnabled!==undefined&&typeof obj.interactionEnabled!=='boolean')||!validHomeSize(obj.sizeScale)||typeof obj.id!=='string'||!catalog.some(i=>i.id===obj.itemId)||!Number.isFinite(obj.x)||!Number.isFinite(obj.y)||Math.abs(obj.x)>1e9||Math.abs(obj.y)>1e9)throw Error('家园物品无效');}
  if(kind==='inventory')for(const [key,n]of Object.entries(value)){if(!catalog.some(i=>key.startsWith(`${i.id}:`))||!Number.isSafeInteger(n)||n<0)throw Error('家园库存无效');}
  if(kind==='residents')for(const [id,p] of Object.entries(value)){if(id==='$selection'){if(p?.version!==1)throw Error('宠物名单版本无效');continue;}if(!p||!Number.isFinite(p.x)||!Number.isFinite(p.y)||Math.abs(p.x)>1e9||Math.abs(p.y)>1e9)throw Error('宠物位置无效');}
  return value;

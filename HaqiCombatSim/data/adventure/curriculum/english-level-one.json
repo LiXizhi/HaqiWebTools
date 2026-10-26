@@ -291,9 +291,53 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-name-book-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-name-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-name-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-name-paper-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-name-paper-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-name-school-bag-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-name-school-bag-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-name-book-visit"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-my-name-in-my-corner-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-my-name-in-my-corner-introduce"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-picture-for-tomorrow-name"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -865,6 +909,14 @@
           {
             "file": "data/adventure/curriculum/english-home-practice.json",
             "storyId": "en-l1-listen-request-door"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-door-check-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-our-door-signal-door"
           }
         ],
         "status": "story-authored-home-partial"
@@ -1037,6 +1089,18 @@
           {
             "file": "data/adventure/curriculum/english-home-practice.json",
             "storyId": "en-l1-listen-request-table"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-reading-corner-2"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-picnic-corner-1"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-tomorrow-drawing-corner-table"
           }
         ],
         "status": "story-authored-home-partial"
@@ -1083,6 +1147,10 @@
           {
             "file": "data/adventure/curriculum/english-home-practice.json",
             "storyId": "en-l1-listen-request-chair"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-walk-to-the-resting-corner-chair"
           }
         ],
         "status": "story-authored-home-partial"
@@ -1296,9 +1364,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-search-there-book-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-search-there-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-search-there-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-search-there-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-search-there-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-search-there-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-search-there-cup-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -1346,9 +1442,57 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-place-on-book-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-on-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-on-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-on-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-on-cup-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-on-plate-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-on-plate-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-reading-corner-3"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-picnic-corner-3"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-picnic-corner-5"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-tomorrow-drawing-corner-on-paper"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-tomorrow-drawing-corner-on-pencil"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -1396,9 +1540,33 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-place-behind-ball-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-behind-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-behind-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-behind-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-behind-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-the-ball-behind-the-chair-behind"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -1421,9 +1589,33 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-place-next-to-ball-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-next-to-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-next-to-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-next-to-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-next-to-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-the-ball-behind-the-chair-return"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -1446,9 +1638,29 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-place-between-ball-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-between-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-between-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-between-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-between-book-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -1471,9 +1683,29 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-place-left-ball-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-left-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-left-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-left-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-left-book-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -1496,9 +1728,29 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-place-right-ball-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-right-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-right-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-right-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-right-book-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -1521,9 +1773,29 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-place-near-ball-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-near-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-near-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-near-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-place-near-book-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -1546,9 +1818,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-search-where-book-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-search-where-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-search-where-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-search-where-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-search-where-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-search-where-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-search-where-cup-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -1596,6 +1896,26 @@
           {
             "file": "data/adventure/curriculum/english-home-practice.json",
             "storyId": "en-l1-listen-request-book"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-reading-corner-1"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-reading-corner-4"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-read-label-book-listen"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-read-label-book-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-read-label-book-write"
           }
         ],
         "status": "story-authored-home-partial"
@@ -1621,9 +1941,45 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-school-pencil-find-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-pencil-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-pencil-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-pencil-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-pencil-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-pencil-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-pencil-listen"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-tomorrow-drawing-corner-pencil"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-two-writing-corners-pencil-label"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -1646,9 +2002,41 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-school-pen-find-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-pen-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-pen-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-pen-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-pen-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-pen-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-pen-listen"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-two-writing-corners-pen-label"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -1671,9 +2059,45 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-school-paper-find-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-paper-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-paper-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-paper-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-paper-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-paper-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-paper-listen"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-tomorrow-drawing-corner-paper"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-picture-for-tomorrow-paper"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -1696,9 +2120,45 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-school-bag-find-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-bag-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-bag-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-bag-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-bag-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-bag-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-bag-listen"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-tomorrow-drawing-corner-bag"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-tomorrow-drawing-corner-label"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -1842,6 +2302,26 @@
           {
             "file": "data/adventure/curriculum/english-home-practice.json",
             "storyId": "en-l1-listen-request-ball"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-play-again-1"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-the-ball-behind-the-chair-ball"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-read-label-ball-listen"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-read-label-ball-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-read-label-ball-write"
           }
         ],
         "status": "story-authored-home-partial"
@@ -1930,9 +2410,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-school-phone-find-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-phone-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-phone-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-phone-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-phone-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-phone-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-phone-listen"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -1955,9 +2463,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-school-computer-find-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-computer-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-computer-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-computer-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-computer-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-computer-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-school-computer-listen"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -2026,9 +2562,33 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-go-ball-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-go-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-go-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-go-bed-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-go-bed-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-play-again-2"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -2274,9 +2834,29 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-draw-paper-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-draw-paper-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-draw-paper-tomorrow"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-draw-paper-change"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-picture-for-tomorrow-draw"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -2299,9 +2879,29 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-door-open-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-door-open-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-door-open-again"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-door-open-check"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-our-door-signal-open"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -2324,9 +2924,29 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-door-close-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-door-close-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-door-close-again"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-door-close-check"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-our-door-signal-close"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -2374,9 +2994,41 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-walk-chair-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-walk-chair-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-walk-chair-again"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-walk-chair-visit"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-walk-table-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-walk-table-again"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-walk-table-visit"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-walk-to-the-resting-corner-walk"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -2437,6 +3089,10 @@
           {
             "file": "data/adventure/curriculum/english-home-practice.json",
             "storyId": "en-l1-turn-sit-2"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-walk-to-the-resting-corner-sit"
           }
         ],
         "status": "home-authored-partial"
@@ -2739,9 +3395,81 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-food-apple-find-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-apple-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-apple-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-apple-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-apple-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-apple-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-apple-listen"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-apple-one"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-apple-two"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-apple-three"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-apple-four"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-apple-five"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-apple-six"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-apple-seven"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-apple-eight"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-apple-nine"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-apple-ten"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-picnic-corner-2"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -2764,9 +3492,77 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-food-banana-find-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-banana-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-banana-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-banana-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-banana-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-banana-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-banana-listen"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-banana-one"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-banana-two"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-banana-three"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-banana-four"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-banana-five"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-banana-six"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-banana-seven"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-banana-eight"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-banana-nine"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-banana-ten"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -2789,9 +3585,77 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-food-orange-find-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-orange-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-orange-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-orange-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-orange-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-orange-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-orange-listen"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-orange-one"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-orange-two"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-orange-three"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-orange-four"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-orange-five"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-orange-six"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-orange-seven"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-orange-eight"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-orange-nine"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-orange-ten"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -2814,9 +3678,77 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-food-pear-find-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-pear-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-pear-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-pear-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-pear-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-pear-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-pear-listen"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-pear-one"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-pear-two"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-pear-three"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-pear-four"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-pear-five"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-pear-six"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-pear-seven"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-pear-eight"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-pear-nine"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-pear-ten"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -2856,6 +3788,30 @@
           {
             "file": "data/adventure/curriculum/english-home-practice.json",
             "storyId": "en-l1-picnic-plan"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-bread-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-bread-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-bread-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-bread-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-bread-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-bread-listen"
           }
         ],
         "status": "story-authored-home-partial"
@@ -2881,9 +3837,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-food-rice-find-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-rice-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-rice-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-rice-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-rice-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-rice-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-rice-listen"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -2906,9 +3890,77 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-food-egg-find-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-egg-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-egg-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-egg-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-egg-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-egg-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-egg-listen"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-egg-one"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-egg-two"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-egg-three"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-egg-four"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-egg-five"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-egg-six"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-egg-seven"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-egg-eight"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-egg-nine"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-count-egg-ten"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -2931,9 +3983,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-food-fish-find-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-fish-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-fish-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-fish-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-fish-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-fish-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-fish-listen"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -2956,9 +4036,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-food-meat-find-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-meat-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-meat-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-meat-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-meat-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-meat-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-meat-listen"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -2981,9 +4089,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-food-chicken-find-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-chicken-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-chicken-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-chicken-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-chicken-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-chicken-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-chicken-listen"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -3061,6 +4197,30 @@
           {
             "file": "data/adventure/curriculum/english-home-practice.json",
             "storyId": "en-l1-milk-choice"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-milk-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-milk-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-milk-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-milk-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-milk-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-milk-listen"
           }
         ],
         "status": "story-authored-home-partial"
@@ -3144,9 +4304,45 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-food-juice-find-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-juice-find-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-juice-find-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-juice-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-juice-label"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-juice-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-food-juice-listen"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-picnic-corner-4"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-picnic-corner-6"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -3169,9 +4365,25 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-meal-breakfast-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-meal-breakfast-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-meal-breakfast-return"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-label-breakfast-table"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -3194,9 +4406,25 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-meal-lunch-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-meal-lunch-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-meal-lunch-return"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-label-lunch-table"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -3219,9 +4447,25 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-meal-dinner-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-meal-dinner-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-meal-dinner-return"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-label-dinner-table"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -3281,6 +4525,18 @@
           {
             "file": "data/adventure/curriculum/english-home-practice.json",
             "storyId": "en-l1-listen-request-cup"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-read-label-cup-listen"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-read-label-cup-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-read-label-cup-write"
           }
         ],
         "status": "story-authored-home-partial"
@@ -3352,9 +4608,17 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-play-again-3"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-play-again-3"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -3980,6 +5244,10 @@
           {
             "file": "data/adventure/curriculum/english-home-practice.json",
             "storyId": "en-l1-write-pet-tired"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-play-again-4"
           }
         ],
         "status": "home-authored-story-pending"
@@ -4721,9 +5989,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-count-one-book-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-one-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-one-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-one-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-one-cup-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-one-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-one-ball-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -4746,9 +6042,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-count-two-book-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-two-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-two-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-two-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-two-cup-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-two-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-two-ball-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -4771,9 +6095,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-count-three-book-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-three-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-three-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-three-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-three-cup-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-three-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-three-ball-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -4809,6 +6161,30 @@
           {
             "file": "data/adventure/curriculum/english-home-practice.json",
             "storyId": "en-l1-four-cup-plan"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-four-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-four-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-four-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-four-cup-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-four-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-four-ball-review"
           }
         ],
         "status": "story-authored-home-partial"
@@ -4834,9 +6210,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-count-five-book-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-five-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-five-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-five-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-five-cup-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-five-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-five-ball-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -4859,9 +6263,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-count-six-book-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-six-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-six-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-six-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-six-cup-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-six-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-six-ball-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -4884,9 +6316,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-count-seven-book-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-seven-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-seven-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-seven-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-seven-cup-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-seven-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-seven-ball-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -4909,9 +6369,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-count-eight-book-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-eight-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-eight-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-eight-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-eight-cup-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-eight-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-eight-ball-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -4934,9 +6422,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-count-nine-book-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-nine-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-nine-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-nine-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-nine-cup-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-nine-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-nine-ball-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -4959,9 +6475,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-count-ten-book-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-ten-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-ten-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-ten-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-ten-cup-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-ten-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-ten-ball-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -4984,9 +6528,61 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-count-word-number-one-book-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-number-one-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-number-one-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-number-one-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-number-one-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-number-two-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-number-two-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-number-two-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-number-two-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-number-three-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-number-three-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-number-three-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-number-three-ball-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -5009,9 +6605,61 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-count-word-count-one-book-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-count-one-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-count-one-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-count-one-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-count-one-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-count-two-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-count-two-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-count-two-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-count-two-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-count-three-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-count-three-book-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-count-three-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-count-word-count-three-ball-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -5034,9 +6682,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-compare-big-ball-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-big-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-big-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-big-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-big-cup-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-big-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-big-book-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -5059,9 +6735,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-compare-small-ball-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-small-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-small-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-small-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-small-cup-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-small-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-small-book-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -5084,9 +6788,33 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-length-long-pencil-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-length-long-pencil-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-length-long-pencil-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-length-long-pen-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-length-long-pen-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-two-writing-corners-long-pencil"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -5109,9 +6837,33 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-length-short-pencil-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-length-short-pencil-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-length-short-pencil-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-length-short-pen-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-length-short-pen-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-two-writing-corners-short-pen"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -5310,9 +7062,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-compare-same-ball-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-same-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-same-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-same-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-same-cup-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-same-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-same-book-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -5335,9 +7115,37 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-compare-different-ball-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-different-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-different-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-different-cup-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-different-cup-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-different-book-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-compare-different-book-review"
+          }
+        ],
+        "status": "home-authored-story-pending"
       }
     },
     {
@@ -5360,9 +7168,49 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-animal-cat-ball-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-cat-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-cat-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-cat-drink-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-cat-drink-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-cat-sleep-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-cat-sleep-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-cat-play"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-cat-water"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-cat-rest"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -5385,9 +7233,49 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-animal-dog-ball-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-dog-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-dog-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-dog-drink-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-dog-drink-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-dog-sleep-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-dog-sleep-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-dog-play"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-dog-water"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-dog-rest"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -5410,9 +7298,49 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-animal-bird-sit-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-bird-sit-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-bird-sit-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-bird-sit"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-bird-read-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-bird-read-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-bird-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-bird-sleep-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-bird-sleep-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-bird-sleep"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -5473,9 +7401,49 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-animal-frog-ball-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-frog-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-frog-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-frog-ball"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-frog-drink-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-frog-drink-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-frog-drink"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-frog-sit-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-frog-sit-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-frog-sit"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -5498,9 +7466,49 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-animal-rabbit-ball-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-rabbit-ball-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-rabbit-ball-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-rabbit-ball"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-rabbit-drink-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-rabbit-drink-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-rabbit-drink"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-rabbit-sit-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-rabbit-sit-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-rabbit-sit"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -5523,9 +7531,49 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-animal-mouse-sit-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-mouse-sit-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-mouse-sit-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-mouse-sit"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-mouse-read-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-mouse-read-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-mouse-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-mouse-sleep-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-mouse-sleep-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-mouse-sleep"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -5586,9 +7634,49 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-animal-cow-sit-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-cow-sit-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-cow-sit-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-cow-sit"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-cow-drink-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-cow-drink-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-cow-drink"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-cow-sleep-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-cow-sleep-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-cow-sleep"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {
@@ -5611,9 +7699,49 @@
       },
       "existingSteps": [],
       "coverage": {
-        "authoredIntroduction": null,
-        "homeVariants": [],
-        "status": "pending-authoring"
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-animal-sheep-sit-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-sheep-sit-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-sheep-sit-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-sheep-sit"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-sheep-read-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-sheep-read-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-sheep-read"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-sheep-sleep-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-animal-sheep-sleep-review"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-a-day-with-sheep-sleep"
+          }
+        ],
+        "status": "story-authored-home-partial"
       }
     },
     {

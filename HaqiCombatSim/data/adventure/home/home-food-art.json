@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "id": "home-food-01",
+  "local": "assets/adventure/home/home-food-3c62d4ff0dde.webp",
+  "width": 768,
+  "height": 576,
+  "bytes": 141034,
+  "sha256": "3c62d4ff0ddeb2407a931ed6e9a8998f9bb5deb1c53fdc93240464344af44698",
+  "encoding": {
+    "lossless": false,
+    "quality": 94
+  },
+  "frames": {
+    "apple": {
+      "cell": 0,
+      "sourceRect": [
+        62,
+        30,
+        350,
+        356
+      ],
+      "rect": [
+        18,
+        8,
+        155,
+        176
+      ]
+    },
+    "banana": {
+      "cell": 1,
+      "sourceRect": [
+        398,
+        58,
+        755,
+        350
+      ],
+      "rect": [
+        200,
+        24,
+        176,
+        144
+      ]
+    },
+    "orange-fruit": {
+      "cell": 2,
+      "sourceRect": [
+        812,
+        46,
+        1124,
+        359
+      ],
+      "rect": [
+        392,
+        8,
+        175,
+        176
+      ]
+    },
+    "pear": {
+      "cell": 3,
+      "sourceRect": [
+        1220,
+        30,
+        1459,
+        361
+      ],
+      "rect": [
+        608,
+        8,
+        127,
+        176
+      ]
+    },
+    "rice-bowl": {
+      "cell": 4,
+      "sourceRect": [
+        47,
+        382,
+        370,
+        646
+      ],
+      "rect": [
+        8,
+        216,
+        176,
+        144
+      ]
+    },
+    "egg": {
+      "cell": 5,
+      "sourceRect": [
+        462,
+        389,
+        670,
+        644
+      ],
+      "rect": [
+        216,
+        200,
+        144,
+        176
+      ]
+    },
+    "cooked-fish": {
+      "cell": 6,
+      "sourceRect": [
+        730,
+        411,
+        1155,
+        639
+      ],
+      "rect": [
+        392,
+        241,
+        176,
+        94
+      ]
+    },
+    "cooked-meat": {
+      "cell": 7,
+      "sourceRect": [
+        1148,
+        413,
+        1521,
+        644
+      ],
+      "rect": [
+        584,
+        233,
+        176,
+        109
+      ]
+    },
+    "roast-chicken": {
+      "cell": 8,
+      "sourceRect": [
+        15,
+        674,
+        435,
+        967
+      ],
+      "rect": [
+        8,
+        418,
+        176,
+        123
+      ]
+    },
+    "juice-glass": {
+      "cell": 9,
+      "sourceRect": [
+        483,
+        669,
+        694,
+        980
+      ],
+      "rect": [
+        228,
+        392,
+        119,
+        176
+      ]
+    },
+    "milk-bottle": {
+      "cell": 10,
+      "sourceRect": [
+        844,
+        644,
+        1017,
+        982
+      ],
+      "rect": [
+        435,
+        392,
+        90,
+        176
+      ]
+    },
+    "bread-loaf": {
+      "cell": 11,
+      "sourceRect": [
+        1133,
+        698,
+        1522,
+        963
+      ],
+      "rect": [
+        584,
+        420,
+        176,
+        120
+      ]
+    }
+  },
+  "source": {
+    "generator": "image_gen",
+    "transparentBackground": true,
+    "sha256": "04cfb0f4a715aae8796033282b4861a4c7adb3b246c702564d6a060d178ce815",
+    "width": 1536,
+    "height": 1024,
+    "alphaProcessing": "native alpha preserved; individually verified whole-object bounds; no color key"
+  },
+  "prompt": "One 4-column by 3-row native-transparent food sprite atlas. Row1: single apple, banana, orange, pear. Row2: bowl of white rice, whole egg, cooked whole fish on plate, cooked steak on plate. Row3: roast chicken on plate, glass of orange juice, milk bottle, bread loaf. Warm hand-painted storybook RPG, three-quarter overhead, complete separate silhouettes, generous margins, no text, grid, borders or ground shadows.",
+  "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-food-3c62d4ff0dde.webp",
+  "generationPrompt": "Create ONE game prop sprite atlas for a warm illustrated children's fantasy home-building game. Twelve separate complete food props arranged in 4 columns by 3 rows, in this exact row-major order: row1 one red apple with leaf, one yellow banana, one round orange fruit with leaf, one green pear; row2 a small ceramic bowl of plain cooked white rice, one whole white egg, one whole cooked fish on a tiny plain oval plate (clearly a fish, intact head and tail), a single cooked steak on a small plain plate; row3 a whole roast chicken on a small plain plate, a clear glass of orange juice, a small glass milk bottle (white milk, no writing), one small golden bread loaf. Style hand-painted polished 2D storybook RPG props, warm outlines, detailed but readable at small size, three-quarter slightly overhead perspective, soft dimensional shading. All twelve silhouettes completely separate, generous transparent gaps and outer margins, no touching, no chopped objects. Actual transparent alpha background. No text, no labels, no borders, no grid, no decorative extras, no cast ground shadows. Consistent lighting from top left. The fruits must be single fruit, not bunches; the egg is one whole egg, not fried. Rice is a mound in a bowl. Strong recognizable silhouettes suitable for beginner English object identification."
+}

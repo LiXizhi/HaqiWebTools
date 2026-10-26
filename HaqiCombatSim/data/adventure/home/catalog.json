@@ -1655,7 +1655,8 @@
       "aliases": {
         "en": [],
         "zh": []
-      }
+      },
+      "surfaceLiftRatio": 0.45
     },
     {
       "id": "chair",
@@ -14756,6 +14757,1188 @@
         "zh": [
           "铜绿屋顶"
         ]
+      }
+    },
+    {
+      "id": "apple",
+      "interactionEnabled": false,
+      "category": "kitchen",
+      "zh": "苹果",
+      "en": "apple",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "food",
+        "id": "home-art:home-food-01:apple:3c62d4ff0dde",
+        "atlas": "home-food-01",
+        "local": "assets/adventure/home/home-food-3c62d4ff0dde.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-food-3c62d4ff0dde.webp",
+        "width": 155,
+        "height": 176,
+        "atlasWidth": 768,
+        "atlasHeight": 576,
+        "bytes": 141034,
+        "sha256": "3c62d4ff0ddeb2407a931ed6e9a8998f9bb5deb1c53fdc93240464344af44698",
+        "sourceSha256": "04cfb0f4a715aae8796033282b4861a4c7adb3b246c702564d6a060d178ce815",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete food silhouettes",
+        "encoding": {
+          "lossless": false,
+          "quality": 94
+        },
+        "crop": [
+          18,
+          8,
+          155,
+          176
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create an apple.",
+          "I want an apple.",
+          "Can I have an apple?"
+        ],
+        "zh": [
+          "创造一个苹果。",
+          "我想要一个苹果。",
+          "可以给我一个苹果吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "banana",
+      "interactionEnabled": false,
+      "category": "kitchen",
+      "zh": "香蕉",
+      "en": "banana",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "food",
+        "id": "home-art:home-food-01:banana:3c62d4ff0dde",
+        "atlas": "home-food-01",
+        "local": "assets/adventure/home/home-food-3c62d4ff0dde.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-food-3c62d4ff0dde.webp",
+        "width": 176,
+        "height": 144,
+        "atlasWidth": 768,
+        "atlasHeight": 576,
+        "bytes": 141034,
+        "sha256": "3c62d4ff0ddeb2407a931ed6e9a8998f9bb5deb1c53fdc93240464344af44698",
+        "sourceSha256": "04cfb0f4a715aae8796033282b4861a4c7adb3b246c702564d6a060d178ce815",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete food silhouettes",
+        "encoding": {
+          "lossless": false,
+          "quality": 94
+        },
+        "crop": [
+          200,
+          24,
+          176,
+          144
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create a banana.",
+          "I want a banana.",
+          "Can I have a banana?"
+        ],
+        "zh": [
+          "创造一根香蕉。",
+          "我想要一根香蕉。",
+          "可以给我一根香蕉吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "orange-fruit",
+      "interactionEnabled": false,
+      "category": "kitchen",
+      "zh": "橙子",
+      "en": "orange",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "food",
+        "id": "home-art:home-food-01:orange-fruit:3c62d4ff0dde",
+        "atlas": "home-food-01",
+        "local": "assets/adventure/home/home-food-3c62d4ff0dde.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-food-3c62d4ff0dde.webp",
+        "width": 175,
+        "height": 176,
+        "atlasWidth": 768,
+        "atlasHeight": 576,
+        "bytes": 141034,
+        "sha256": "3c62d4ff0ddeb2407a931ed6e9a8998f9bb5deb1c53fdc93240464344af44698",
+        "sourceSha256": "04cfb0f4a715aae8796033282b4861a4c7adb3b246c702564d6a060d178ce815",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete food silhouettes",
+        "encoding": {
+          "lossless": false,
+          "quality": 94
+        },
+        "crop": [
+          392,
+          8,
+          175,
+          176
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create an orange.",
+          "I want an orange.",
+          "Can I have an orange?"
+        ],
+        "zh": [
+          "创造一个橙子。",
+          "我想要一个橙子。",
+          "可以给我一个橙子吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "pear",
+      "interactionEnabled": false,
+      "category": "kitchen",
+      "zh": "梨",
+      "en": "pear",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "food",
+        "id": "home-art:home-food-01:pear:3c62d4ff0dde",
+        "atlas": "home-food-01",
+        "local": "assets/adventure/home/home-food-3c62d4ff0dde.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-food-3c62d4ff0dde.webp",
+        "width": 127,
+        "height": 176,
+        "atlasWidth": 768,
+        "atlasHeight": 576,
+        "bytes": 141034,
+        "sha256": "3c62d4ff0ddeb2407a931ed6e9a8998f9bb5deb1c53fdc93240464344af44698",
+        "sourceSha256": "04cfb0f4a715aae8796033282b4861a4c7adb3b246c702564d6a060d178ce815",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete food silhouettes",
+        "encoding": {
+          "lossless": false,
+          "quality": 94
+        },
+        "crop": [
+          608,
+          8,
+          127,
+          176
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create a pear.",
+          "I want a pear.",
+          "Can I have a pear?"
+        ],
+        "zh": [
+          "创造一个梨。",
+          "我想要一个梨。",
+          "可以给我一个梨吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "rice-bowl",
+      "interactionEnabled": false,
+      "category": "kitchen",
+      "zh": "米饭",
+      "en": "rice",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "food",
+        "id": "home-art:home-food-01:rice-bowl:3c62d4ff0dde",
+        "atlas": "home-food-01",
+        "local": "assets/adventure/home/home-food-3c62d4ff0dde.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-food-3c62d4ff0dde.webp",
+        "width": 176,
+        "height": 144,
+        "atlasWidth": 768,
+        "atlasHeight": 576,
+        "bytes": 141034,
+        "sha256": "3c62d4ff0ddeb2407a931ed6e9a8998f9bb5deb1c53fdc93240464344af44698",
+        "sourceSha256": "04cfb0f4a715aae8796033282b4861a4c7adb3b246c702564d6a060d178ce815",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete food silhouettes",
+        "encoding": {
+          "lossless": false,
+          "quality": 94
+        },
+        "crop": [
+          8,
+          216,
+          176,
+          144
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create some rice.",
+          "I want some rice.",
+          "Can I have some rice?"
+        ],
+        "zh": [
+          "创造一碗米饭。",
+          "我想要一碗米饭。",
+          "可以给我一碗米饭吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "egg",
+      "interactionEnabled": false,
+      "category": "kitchen",
+      "zh": "鸡蛋",
+      "en": "egg",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "food",
+        "id": "home-art:home-food-01:egg:3c62d4ff0dde",
+        "atlas": "home-food-01",
+        "local": "assets/adventure/home/home-food-3c62d4ff0dde.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-food-3c62d4ff0dde.webp",
+        "width": 144,
+        "height": 176,
+        "atlasWidth": 768,
+        "atlasHeight": 576,
+        "bytes": 141034,
+        "sha256": "3c62d4ff0ddeb2407a931ed6e9a8998f9bb5deb1c53fdc93240464344af44698",
+        "sourceSha256": "04cfb0f4a715aae8796033282b4861a4c7adb3b246c702564d6a060d178ce815",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete food silhouettes",
+        "encoding": {
+          "lossless": false,
+          "quality": 94
+        },
+        "crop": [
+          216,
+          200,
+          144,
+          176
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create an egg.",
+          "I want an egg.",
+          "Can I have an egg?"
+        ],
+        "zh": [
+          "创造一个鸡蛋。",
+          "我想要一个鸡蛋。",
+          "可以给我一个鸡蛋吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "cooked-fish",
+      "interactionEnabled": false,
+      "category": "kitchen",
+      "zh": "熟鱼",
+      "en": "fish",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "food",
+        "id": "home-art:home-food-01:cooked-fish:3c62d4ff0dde",
+        "atlas": "home-food-01",
+        "local": "assets/adventure/home/home-food-3c62d4ff0dde.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-food-3c62d4ff0dde.webp",
+        "width": 176,
+        "height": 94,
+        "atlasWidth": 768,
+        "atlasHeight": 576,
+        "bytes": 141034,
+        "sha256": "3c62d4ff0ddeb2407a931ed6e9a8998f9bb5deb1c53fdc93240464344af44698",
+        "sourceSha256": "04cfb0f4a715aae8796033282b4861a4c7adb3b246c702564d6a060d178ce815",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete food silhouettes",
+        "encoding": {
+          "lossless": false,
+          "quality": 94
+        },
+        "crop": [
+          392,
+          241,
+          176,
+          94
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create some fish.",
+          "I want some fish.",
+          "Can I have some fish?"
+        ],
+        "zh": [
+          "创造一盘熟鱼。",
+          "我想要一盘熟鱼。",
+          "可以给我一盘熟鱼吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "cooked-meat",
+      "interactionEnabled": false,
+      "category": "kitchen",
+      "zh": "熟肉",
+      "en": "meat",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "food",
+        "id": "home-art:home-food-01:cooked-meat:3c62d4ff0dde",
+        "atlas": "home-food-01",
+        "local": "assets/adventure/home/home-food-3c62d4ff0dde.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-food-3c62d4ff0dde.webp",
+        "width": 176,
+        "height": 109,
+        "atlasWidth": 768,
+        "atlasHeight": 576,
+        "bytes": 141034,
+        "sha256": "3c62d4ff0ddeb2407a931ed6e9a8998f9bb5deb1c53fdc93240464344af44698",
+        "sourceSha256": "04cfb0f4a715aae8796033282b4861a4c7adb3b246c702564d6a060d178ce815",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete food silhouettes",
+        "encoding": {
+          "lossless": false,
+          "quality": 94
+        },
+        "crop": [
+          584,
+          233,
+          176,
+          109
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create some meat.",
+          "I want some meat.",
+          "Can I have some meat?"
+        ],
+        "zh": [
+          "创造一盘熟肉。",
+          "我想要一盘熟肉。",
+          "可以给我一盘熟肉吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "roast-chicken",
+      "interactionEnabled": false,
+      "category": "kitchen",
+      "zh": "烤鸡",
+      "en": "chicken",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "food",
+        "id": "home-art:home-food-01:roast-chicken:3c62d4ff0dde",
+        "atlas": "home-food-01",
+        "local": "assets/adventure/home/home-food-3c62d4ff0dde.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-food-3c62d4ff0dde.webp",
+        "width": 176,
+        "height": 123,
+        "atlasWidth": 768,
+        "atlasHeight": 576,
+        "bytes": 141034,
+        "sha256": "3c62d4ff0ddeb2407a931ed6e9a8998f9bb5deb1c53fdc93240464344af44698",
+        "sourceSha256": "04cfb0f4a715aae8796033282b4861a4c7adb3b246c702564d6a060d178ce815",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete food silhouettes",
+        "encoding": {
+          "lossless": false,
+          "quality": 94
+        },
+        "crop": [
+          8,
+          418,
+          176,
+          123
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create some chicken.",
+          "I want some chicken.",
+          "Can I have some chicken?"
+        ],
+        "zh": [
+          "创造一盘烤鸡。",
+          "我想要一盘烤鸡。",
+          "可以给我一盘烤鸡吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "juice-glass",
+      "interactionEnabled": false,
+      "category": "kitchen",
+      "zh": "果汁",
+      "en": "juice",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "food",
+        "id": "home-art:home-food-01:juice-glass:3c62d4ff0dde",
+        "atlas": "home-food-01",
+        "local": "assets/adventure/home/home-food-3c62d4ff0dde.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-food-3c62d4ff0dde.webp",
+        "width": 119,
+        "height": 176,
+        "atlasWidth": 768,
+        "atlasHeight": 576,
+        "bytes": 141034,
+        "sha256": "3c62d4ff0ddeb2407a931ed6e9a8998f9bb5deb1c53fdc93240464344af44698",
+        "sourceSha256": "04cfb0f4a715aae8796033282b4861a4c7adb3b246c702564d6a060d178ce815",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete food silhouettes",
+        "encoding": {
+          "lossless": false,
+          "quality": 94
+        },
+        "crop": [
+          228,
+          392,
+          119,
+          176
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create some juice.",
+          "I want some juice.",
+          "Can I have some juice?"
+        ],
+        "zh": [
+          "创造一杯果汁。",
+          "我想要一杯果汁。",
+          "可以给我一杯果汁吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "milk-bottle",
+      "interactionEnabled": false,
+      "category": "kitchen",
+      "zh": "牛奶",
+      "en": "milk",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "food",
+        "id": "home-art:home-food-01:milk-bottle:3c62d4ff0dde",
+        "atlas": "home-food-01",
+        "local": "assets/adventure/home/home-food-3c62d4ff0dde.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-food-3c62d4ff0dde.webp",
+        "width": 90,
+        "height": 176,
+        "atlasWidth": 768,
+        "atlasHeight": 576,
+        "bytes": 141034,
+        "sha256": "3c62d4ff0ddeb2407a931ed6e9a8998f9bb5deb1c53fdc93240464344af44698",
+        "sourceSha256": "04cfb0f4a715aae8796033282b4861a4c7adb3b246c702564d6a060d178ce815",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete food silhouettes",
+        "encoding": {
+          "lossless": false,
+          "quality": 94
+        },
+        "crop": [
+          435,
+          392,
+          90,
+          176
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create some milk.",
+          "I want some milk.",
+          "Can I have some milk?"
+        ],
+        "zh": [
+          "创造一瓶牛奶。",
+          "我想要一瓶牛奶。",
+          "可以给我一瓶牛奶吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "bread-loaf",
+      "interactionEnabled": false,
+      "category": "kitchen",
+      "zh": "面包",
+      "en": "bread",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "food",
+        "id": "home-art:home-food-01:bread-loaf:3c62d4ff0dde",
+        "atlas": "home-food-01",
+        "local": "assets/adventure/home/home-food-3c62d4ff0dde.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-food-3c62d4ff0dde.webp",
+        "width": 176,
+        "height": 120,
+        "atlasWidth": 768,
+        "atlasHeight": 576,
+        "bytes": 141034,
+        "sha256": "3c62d4ff0ddeb2407a931ed6e9a8998f9bb5deb1c53fdc93240464344af44698",
+        "sourceSha256": "04cfb0f4a715aae8796033282b4861a4c7adb3b246c702564d6a060d178ce815",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete food silhouettes",
+        "encoding": {
+          "lossless": false,
+          "quality": 94
+        },
+        "crop": [
+          584,
+          420,
+          176,
+          120
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create some bread.",
+          "I want some bread.",
+          "Can I have some bread?"
+        ],
+        "zh": [
+          "创造一块面包。",
+          "我想要一块面包。",
+          "可以给我一块面包吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "pencil",
+      "interactionEnabled": false,
+      "category": "living",
+      "zh": "铅笔",
+      "en": "pencil",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "school",
+        "id": "home-art:home-school-01:pencil:07a51a03a0ba",
+        "atlas": "home-school-01",
+        "local": "assets/adventure/home/home-school-07a51a03a0ba.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-school-07a51a03a0ba.webp",
+        "width": 169,
+        "height": 176,
+        "atlasWidth": 768,
+        "atlasHeight": 384,
+        "bytes": 172742,
+        "sha256": "07a51a03a0baaecd644cccb784319873d5450ac3c59d390cbdea98c6697d064e",
+        "sourceSha256": "e6ecb67f4e88aece4c237ad18ff646136dc70bda83b6c528ff4833502f0d0188",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete school props",
+        "encoding": {
+          "lossless": true
+        },
+        "crop": [
+          11,
+          8,
+          169,
+          176
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create a pencil.",
+          "I want a pencil.",
+          "Can I have a pencil?"
+        ],
+        "zh": [
+          "创造一个铅笔。",
+          "我想要铅笔。",
+          "可以给我铅笔吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "pen",
+      "interactionEnabled": false,
+      "category": "living",
+      "zh": "圆珠笔",
+      "en": "pen",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "school",
+        "id": "home-art:home-school-01:pen:07a51a03a0ba",
+        "atlas": "home-school-01",
+        "local": "assets/adventure/home/home-school-07a51a03a0ba.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-school-07a51a03a0ba.webp",
+        "width": 176,
+        "height": 173,
+        "atlasWidth": 768,
+        "atlasHeight": 384,
+        "bytes": 172742,
+        "sha256": "07a51a03a0baaecd644cccb784319873d5450ac3c59d390cbdea98c6697d064e",
+        "sourceSha256": "e6ecb67f4e88aece4c237ad18ff646136dc70bda83b6c528ff4833502f0d0188",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete school props",
+        "encoding": {
+          "lossless": true
+        },
+        "crop": [
+          200,
+          9,
+          176,
+          173
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create a pen.",
+          "I want a pen.",
+          "Can I have a pen?"
+        ],
+        "zh": [
+          "创造一个圆珠笔。",
+          "我想要圆珠笔。",
+          "可以给我圆珠笔吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "paper",
+      "interactionEnabled": false,
+      "category": "living",
+      "zh": "纸",
+      "en": "paper",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "school",
+        "id": "home-art:home-school-01:paper:07a51a03a0ba",
+        "atlas": "home-school-01",
+        "local": "assets/adventure/home/home-school-07a51a03a0ba.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-school-07a51a03a0ba.webp",
+        "width": 175,
+        "height": 176,
+        "atlasWidth": 768,
+        "atlasHeight": 384,
+        "bytes": 172742,
+        "sha256": "07a51a03a0baaecd644cccb784319873d5450ac3c59d390cbdea98c6697d064e",
+        "sourceSha256": "e6ecb67f4e88aece4c237ad18ff646136dc70bda83b6c528ff4833502f0d0188",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete school props",
+        "encoding": {
+          "lossless": true
+        },
+        "crop": [
+          392,
+          8,
+          175,
+          176
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create some paper.",
+          "I want some paper.",
+          "Can I have some paper?"
+        ],
+        "zh": [
+          "创造一张纸。",
+          "我想要纸。",
+          "可以给我纸吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "school-bag",
+      "interactionEnabled": false,
+      "category": "living",
+      "zh": "书包",
+      "en": "bag",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "school",
+        "id": "home-art:home-school-01:school-bag:07a51a03a0ba",
+        "atlas": "home-school-01",
+        "local": "assets/adventure/home/home-school-07a51a03a0ba.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-school-07a51a03a0ba.webp",
+        "width": 167,
+        "height": 176,
+        "atlasWidth": 768,
+        "atlasHeight": 384,
+        "bytes": 172742,
+        "sha256": "07a51a03a0baaecd644cccb784319873d5450ac3c59d390cbdea98c6697d064e",
+        "sourceSha256": "e6ecb67f4e88aece4c237ad18ff646136dc70bda83b6c528ff4833502f0d0188",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete school props",
+        "encoding": {
+          "lossless": true
+        },
+        "crop": [
+          588,
+          8,
+          167,
+          176
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create a bag.",
+          "I want a bag.",
+          "Can I have a bag?"
+        ],
+        "zh": [
+          "创造一个书包。",
+          "我想要书包。",
+          "可以给我书包吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "telephone",
+      "interactionEnabled": false,
+      "category": "living",
+      "zh": "电话机",
+      "en": "phone",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "school",
+        "id": "home-art:home-school-01:telephone:07a51a03a0ba",
+        "atlas": "home-school-01",
+        "local": "assets/adventure/home/home-school-07a51a03a0ba.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-school-07a51a03a0ba.webp",
+        "width": 176,
+        "height": 144,
+        "atlasWidth": 768,
+        "atlasHeight": 384,
+        "bytes": 172742,
+        "sha256": "07a51a03a0baaecd644cccb784319873d5450ac3c59d390cbdea98c6697d064e",
+        "sourceSha256": "e6ecb67f4e88aece4c237ad18ff646136dc70bda83b6c528ff4833502f0d0188",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete school props",
+        "encoding": {
+          "lossless": true
+        },
+        "crop": [
+          8,
+          216,
+          176,
+          144
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create a phone.",
+          "I want a phone.",
+          "Can I have a phone?"
+        ],
+        "zh": [
+          "创造一个电话机。",
+          "我想要电话机。",
+          "可以给我电话机吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "id": "computer",
+      "interactionEnabled": false,
+      "category": "living",
+      "zh": "电脑",
+      "en": "computer",
+      "size": [
+        1,
+        1
+      ],
+      "layer": "top",
+      "slots": 0,
+      "art": {
+        "kind": "sprite",
+        "shape": "school",
+        "id": "home-art:home-school-01:computer:07a51a03a0ba",
+        "atlas": "home-school-01",
+        "local": "assets/adventure/home/home-school-07a51a03a0ba.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-school-07a51a03a0ba.webp",
+        "width": 176,
+        "height": 162,
+        "atlasWidth": 768,
+        "atlasHeight": 384,
+        "bytes": 172742,
+        "sha256": "07a51a03a0baaecd644cccb784319873d5450ac3c59d390cbdea98c6697d064e",
+        "sourceSha256": "e6ecb67f4e88aece4c237ad18ff646136dc70bda83b6c528ff4833502f0d0188",
+        "source": "Built-in image_gen native transparent RGBA; individually verified complete school props",
+        "encoding": {
+          "lossless": true
+        },
+        "crop": [
+          200,
+          207,
+          176,
+          162
+        ],
+        "anchor": [
+          0.5,
+          1
+        ]
+      },
+      "sentences": {
+        "en": [
+          "Create a computer.",
+          "I want a computer.",
+          "Can I have a computer?"
+        ],
+        "zh": [
+          "创造一个电脑。",
+          "我想要电脑。",
+          "可以给我电脑吗？"
+        ]
+      },
+      "rotations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [],
+        "zh": []
       }
     }
   ],

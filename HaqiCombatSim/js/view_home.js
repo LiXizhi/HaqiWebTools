@@ -1,3 +1,4 @@
+import {openHomeDrawing} from './view_home_drawing.js';
 import {openHomeLabel} from './view_home_label.js';
 import {renderSpeechWords} from './view_bilingual_dialogue.js';
 import {homeCapacity} from './home_capacity_core.js';
@@ -9,7 +10,7 @@ import {openBuildingProperties} from './view_home_building_properties.js';
 import {createHomeTerrainCache} from './home_terrain_cache.js';
 import {createCloseButton} from './view_adventure_controls.js';
 import {DetailDialog} from './view_detail_dialog.js';
-import {collectHomeWorldTrees,drawHomeObject,drawHomeWorldTree,homeObjectVisualBounds} from './view_home_art.js';
+import {collectHomeWorldTrees,drawHomeObject,drawHomeWorldTree,homeObjectVisualBounds,homeObjectPixelHit,homeObjectSurfaceLift} from './view_home_art.js';
 import {requiresReading,homeObjectInteractive,footprint,summonSentences,COLORS,HOME_COLOR_HEX,HOME_BIOMES,homeBiomeAt,homeInteractiveKind} from './home_core.js';
 import {createMotionTrail,drawMotionAccessory,drawMotionTrail,motionStyle} from './adventure_motion_effects.js';
 import {createHeroActor,updateHeroActor} from './hero_pose_core.js';
@@ -75,6 +76,7 @@ export function createHomeView(root,cb){
  const motionTrail=createMotionTrail(7319);
  const heroActor=createHeroActor(7419),secondActor=createHeroActor(7420);
  let prevSecondPos=null;
+ let showDrawer=()=>{};
  let prevHeroPos=null,fallbackHero=null,fallbackHeroLoading=false;
  let envArt=null,decorArt=null;
 
@@ -448,6 +450,7 @@ export function createHomeView(root,cb){
    render(model);
    if(!same&&kind==='summon')input?.focus();
   };
+  showDrawer=show;
   dock.append(
    button('建造',()=>show('build'),'home-dock-button'),
    button('语音召唤',()=>show('summon'),'home-dock-button'),
@@ -484,6 +487,7 @@ export function createHomeView(root,cb){
    iconAction('互动','M12 3v9 M6.3 5.6a8 8 0 1 0 11.4 0',()=>cb.toggleActive?.(),'home-interaction-toggle'),
    enlarge,shrink,
    iconAction('物品属性','M4 6h16 M4 12h16 M4 18h16 M8 3v6 M16 9v6 M10 15v6',()=>{if(!model.selection?.id)return;activeDialog?.destroy();activeDialog=openBuildingProperties(modal,{el,button,obj:model.selection,item:buildingItem(model.selection,model.catalog.items),save:cb.properties});}),
+   iconAction('画画','M5 19L8 12L16 4L20 8L12 16Z',()=>{if(model.selection?.itemId!=='paper')return;activeDialog?.destroy();activeDialog=openHomeDrawing(modal,{el,button,obj:model.selection,homeId:model.home.id,save:cb.saveDrawing});},'home-drawing-button'),
    iconAction('写标签','M4 4h16v16H4Z M7 8h10 M7 12h10 M7 16h6',()=>{if(!model.selection?.id)return;activeDialog?.destroy();activeDialog=openHomeLabel(modal,{el,button,obj:model.selection,homeId:model.home.id,save:cb.saveLabel});}),
    iconAction('收回','M3 9h18v12H3Z M3 9l3-5h3 M21 9l-3-5h-3 M12 2v12 M8 10l4 4 4-4',cb.recall,'danger'),
    iconAction('取消选择','m6 6 12 12 M18 6 6 18',cb.cancel)
@@ -602,7 +606,7 @@ export function createHomeView(root,cb){
   };
  }
 
- function hitAt(p){return [...hits].reverse().find(h=>p.sx>=h.sx&&p.sx<=h.sx+h.sw&&p.sy>=h.sy&&p.sy<=h.sy+h.sh);}
+ function hitAt(p){return [...hits].reverse().find(h=>p.sx>=h.sx&&p.sx<=h.sx+h.sw&&p.sy>=h.sy&&p.sy<=h.sy+h.sh&&(!h.pixelHit||h.pixelHit(p.sx,p.sy)));}
  function eraseAt(p){
   hoverPoint=p;const stroke=eraseStroke;if(!stroke)return;const from=stroke.last||p,steps=Math.max(1,Math.ceil(Math.hypot(p.sx-from.sx,p.sy-from.sy)/6));
   for(let i=0;i<=steps;i++){const hit=hitAt({sx:from.sx+(p.sx-from.sx)*i/steps,sy:from.sy+(p.sy-from.sy)*i/steps});if(hit?.kind!=='object'||stroke.seen.has(hit.id))continue;stroke.seen.add(hit.id);run(()=>cb.erase(hit.id,stroke.group));}stroke.last=p;
@@ -683,6 +687,7 @@ export function createHomeView(root,cb){
   const roofToggle=body.querySelector('.home-roof-toggle');if(roofToggle){roofToggle.setAttribute('aria-pressed',String(next.showRoofs));roofToggle.textContent=tr(next.showRoofs?'隐藏屋顶':'显示屋顶');}
   body.classList.toggle('has-selection',!!next.build&&!!next.selection?.id);
   if(edit){
+   edit.querySelector('.home-drawing-button').hidden=next.selection?.itemId!=='paper';
    const size=next.selection?.sizeScale??1;
    const toggle=edit.querySelector('.home-interaction-toggle'),enabled=homeObjectInteractive(next.selection,next.catalog.items);
    toggle.disabled=!next.selection?.id;
@@ -874,7 +879,8 @@ export function createHomeView(root,cb){
   const sec=now/1000;
   const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const objects=model.objects||[];
+  const objects=model.objects||[],objectsById=new Map(objects.map(o=>[o.id,o]));
+  const surfaceLift=o=>homeObjectSurfaceLift(o,objectsById,model.catalog.items);
   const worldRect={
    x:(model.camera.x-r.width/scale/2)*40-80,
    y:(model.camera.y-r.height/scale/2)*40-80,
@@ -890,6 +896,11 @@ export function createHomeView(root,cb){
   // only device pixel density controls raster resolution, never camera scale.
   terrainMissing=terrain.draw(ctx,model.home.seed,worldRect,envArt,decorArt,ratio,objects);
   ctx.restore();
+  if(model.languageCount){
+   const area=model.languageCount.area,p=project(area.x,area.y);
+   ctx.save();ctx.strokeStyle='#207457';ctx.lineWidth=3;ctx.setLineDash([8,5]);ctx.strokeRect(p.x,p.y,area.w*scale,area.h*scale);ctx.setLineDash([]);
+   ctx.font='14px sans-serif';ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillStyle='#fff8df';ctx.fillRect(p.x+6,p.y+5,126,23);ctx.fillStyle='#244f3b';ctx.fillText('本轮数数范围',p.x+12,p.y+22);ctx.restore();
+  }
 
   hits=[];
   const groups=buildings.prepare(objects,model.catalog.items,worldRect,ratio,model.selection?.id||gesture?.hit?.id||'');
@@ -909,7 +920,7 @@ export function createHomeView(root,cb){
   function drawObject(o,draw=true,buildingRow){
    const item=model.catalog.items.find(i=>i.id===o.itemId);
    if(!item)return;
-   const b=footprint(o,model.catalog.items),p=project(o.x,o.y-(isRoofDecoration(o)?1.4:0));
+   const b=footprint(o,model.catalog.items),p=project(o.x,o.y-(isRoofDecoration(o)?1.4:surfaceLift(o)));
    if(p.x>r.width+60||p.y>r.height+120||p.x+b.w*scale<-60||p.y+b.h*scale<-60)return;
    ctx.save();
    if(gesture?.moved&&gesture.hit?.id===o.id)ctx.globalAlpha=.25;
@@ -918,6 +929,13 @@ export function createHomeView(root,cb){
    else if(draw)bounds=drawHomeObject(ctx,item,o,p.x,p.y,b.w*scale,b.h*scale,imageFor(item.art),sec);
    else bounds=homeObjectVisualBounds(item,o,p.x,p.y,b.w*scale,b.h*scale);
    ctx.restore();
+   if(model.languageAnchors?.includes(o.id)){
+    ctx.save();ctx.strokeStyle='#207457';ctx.lineWidth=3;ctx.strokeRect(p.x-3,p.y-3,b.w*scale+6,b.h*scale+6);
+    ctx.font='13px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';const cx=p.x+b.w*scale/2;ctx.fillStyle='#fff8df';ctx.fillRect(cx-25,p.y-25,50,20);ctx.fillStyle='#244f3b';ctx.fillText('参照物',cx,p.y-15);ctx.restore();
+   }
+   if(model.languageCount?.marked.includes(o.id)){
+    ctx.save();ctx.beginPath();ctx.arc(p.x+b.w*scale/2,p.y-8,6,0,Math.PI*2);ctx.fillStyle='#207457';ctx.fill();ctx.strokeStyle='#fff8df';ctx.lineWidth=2;ctx.stroke();ctx.restore();
+   }
    if(COLOR_HEX[o.color]){
     ctx.save();ctx.beginPath();ctx.arc(p.x+b.w*scale/2,p.y+b.h*scale+10,7,0,Math.PI*2);ctx.fillStyle=COLOR_HEX[o.color];ctx.fill();ctx.strokeStyle='#fff8dd';ctx.lineWidth=2;ctx.stroke();ctx.restore();
    }
@@ -928,7 +946,7 @@ export function createHomeView(root,cb){
    }
    if(model.build||model.languageChoices?.includes(o.id)||item.building?.type==='door'||homeObjectInteractive(o,model.catalog.items)){
     if(isEdge(item)){const height=(item.building.type==='fence'?.7:1.25)*(o.sizeScale??1);for(const foot of buildingWallFeet(o,buildingRow?.connections)){const q=project(foot.x,foot.y-height);hits.push({kind:'object',id:o.id,sx:q.x-3,sy:q.y-2,sw:foot.w*scale+6,sh:(foot.h+height)*scale+4});}}
-    else hits.push({kind:'object',id:o.id,sx:bounds?.x??p.x,sy:bounds?.y??p.y-12,sw:bounds?.w??b.w*scale,sh:bounds?.h??b.h*scale+12});
+    else hits.push({kind:'object',id:o.id,sx:bounds?.x??p.x,sy:bounds?.y??p.y-12,sw:bounds?.w??b.w*scale,sh:bounds?.h??b.h*scale+12,pixelHit:item.building?null:(x,y)=>homeObjectPixelHit(item,o,imageFor(item.art),bounds,x,y)});
    }
    if(model.build&&model.selection?.id===o.id){
     ctx.save();
@@ -950,7 +968,7 @@ export function createHomeView(root,cb){
    if(model.selection?.id){
     const selObj=objects.find(o=>o.id===model.selection.id);
     if(selObj){
-     const b=footprint(selObj,model.catalog.items),sp=project(selObj.x+b.w/2,selObj.y);
+     const b=footprint(selObj,model.catalog.items),sp=project(selObj.x+b.w/2,selObj.y-surfaceLift(selObj));
      const half=edit.offsetWidth/2+12;
      edit.style.left=`${Math.max(half,Math.min(r.width-half,sp.x))}px`;
      edit.style.top=`${Math.max(edit.offsetHeight+12,Math.min(r.height-130,sp.y-22))}px`;
@@ -1019,6 +1037,9 @@ export function createHomeView(root,cb){
   hits.push({kind:'portal',sx:spawn.x-72*scale/40,sy:spawn.y-65*scale/40,sw:144*scale/40,sh:95*scale/40});
   portal.style.left=`${spawn.x}px`;
   portal.style.top=`${spawn.y-24*scale/40}px`;
+  // The invisible spawn shortcut must not cover furniture being edited or
+  // selected for a language request. The visible Back button stays available.
+  portal.style.pointerEvents=model.build||model.languageChoices?.length?'none':'auto';
   portal.hidden=spawn.x<-100||spawn.x>r.width+100||spawn.y<-100||spawn.y>r.height+100;
 
   // 5. Depth-sorted Natural Haqi Island Trees, 3D Furniture, Resident Pets, and Hero
@@ -1149,7 +1170,7 @@ export function createHomeView(root,cb){
   if(model.preview){
    const o=model.preview,item=model.catalog.items.find(i=>i.id===o.itemId);
    if(item){
-    const b=footprint(o,model.catalog.items),p=project(o.x,o.y-(isRoofDecoration(o)?1.4:0));
+    const b=footprint(o,model.catalog.items),p=project(o.x,o.y-(isRoofDecoration(o)?1.4:surfaceLift(o)));
     ctx.save();
     ctx.globalAlpha=.68;
     if(item.building){ctx.translate(p.x,p.y);ctx.scale(scale/40,scale/40);ctx.translate(-o.x*40,-o.y*40);drawBuilding(ctx,item,o,imageFor(item.art),buildingConnectionMask(o,[...objects,o],model.catalog.items));}else drawHomeObject(ctx,item,o,p.x,p.y,b.w*scale,b.h*scale,imageFor(item.art),sec);
@@ -1293,6 +1314,9 @@ export function createHomeView(root,cb){
    images.clear();
    terrain.dispose();buildings.dispose();
   },
+  openBuild(){if(body?.dataset.drawer!=='build')showDrawer('build');},
+  openPetBag(){if(body?.dataset.drawer!=='pets')showDrawer('pets');},
+  editDrawing(id){const obj=model?.objects.find(o=>o.id===id);if(obj?.itemId!=='paper')return;activeDialog?.destroy();activeDialog=openHomeDrawing(modal,{el,button,obj,homeId:model.home.id,save:cb.saveDrawing});},
   editLabel(id,practice){const obj=model?.objects.find(o=>o.id===id);if(!obj)return;activeDialog?.destroy();activeDialog=openHomeLabel(modal,{el,button,obj,homeId:model.home.id,save:cb.saveLabel,practice});},
   stats:()=>({terrain:terrain.stats(),buildings:buildings.stats()}),
   get size(){

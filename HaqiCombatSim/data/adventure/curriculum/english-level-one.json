@@ -1,0 +1,5682 @@
+{
+  "version": 1,
+  "id": "en-l1",
+  "language": "en",
+  "level": 1,
+  "title": "英语一级：朋友与家园",
+  "status": "vocabulary-mapped-content-incomplete",
+  "source": {
+    "id": "EN-YLE-2025",
+    "url": "https://www.cambridgeenglish.org/Images/506166-starters-movers-flyers-word-list-2025.pdf",
+    "sha256": "6f7a0ad1e277bd10ae8b3bcccfb76c058f611a607c6c9947601abbd7e16a99fa",
+    "checkedAt": "2026-10-26"
+  },
+  "words": [
+    {
+      "id": "EN-L1-W001",
+      "word": "hello",
+      "entryId": "hello",
+      "group": "greetings",
+      "meaning": "你好",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-hanzi-01",
+          "stepId": "conversation-1"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-hello-seat"
+          }
+        ],
+        "status": "home-authored-story-pending"
+      }
+    },
+    {
+      "id": "EN-L1-W002",
+      "word": "goodbye",
+      "entryId": "goodbye",
+      "group": "greetings",
+      "meaning": "再见",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-care-goodbye-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-goodbye-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-goodbye-return"
+          }
+        ],
+        "status": "home-authored-story-pending"
+      }
+    },
+    {
+      "id": "EN-L1-W003",
+      "word": "yes",
+      "entryId": "yes",
+      "group": "greetings",
+      "meaning": "是的",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-town-01",
+          "stepId": "conversation-3"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-town-01",
+          "stepId": "conversation-3"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-yes-seat"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W004",
+      "word": "no",
+      "entryId": "no",
+      "group": "greetings",
+      "meaning": "不行",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-care-no-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-no-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-no-return"
+          }
+        ],
+        "status": "home-authored-story-pending"
+      }
+    },
+    {
+      "id": "EN-L1-W005",
+      "word": "please",
+      "entryId": "please",
+      "group": "greetings",
+      "meaning": "请",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-town-01",
+          "stepId": "conversation-4"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-town-01",
+          "stepId": "conversation-4"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-polite-rest"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W006",
+      "word": "thank you",
+      "entryId": "thank you",
+      "group": "greetings",
+      "meaning": "谢谢",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-care-thank-you-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-thank-you-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-thank-you-return"
+          }
+        ],
+        "status": "home-authored-story-pending"
+      }
+    },
+    {
+      "id": "EN-L1-W007",
+      "word": "sorry",
+      "entryId": "sorry",
+      "group": "greetings",
+      "meaning": "对不起；抱歉",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-care-sorry-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-sorry-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-sorry-return"
+          }
+        ],
+        "status": "home-authored-story-pending"
+      }
+    },
+    {
+      "id": "EN-L1-W008",
+      "word": "name",
+      "entryId": "name",
+      "group": "greetings",
+      "meaning": "名字",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W009",
+      "word": "friend",
+      "entryId": "friend",
+      "group": "greetings",
+      "meaning": "朋友",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-hanzi-01",
+          "stepId": "conversation-3"
+        },
+        {
+          "courseId": "en-dark-01",
+          "stepId": "conversation-1"
+        },
+        {
+          "courseId": "en-dark-01",
+          "stepId": "conversation-4"
+        },
+        {
+          "courseId": "en-tide-01",
+          "stepId": "conversation-3"
+        },
+        {
+          "courseId": "en-float-01",
+          "stepId": "conversation-4"
+        },
+        {
+          "courseId": "en-sail-01",
+          "stepId": "conversation-3"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-friend-seat"
+          }
+        ],
+        "status": "home-authored-story-pending"
+      }
+    },
+    {
+      "id": "EN-L1-W010",
+      "word": "boy",
+      "entryId": "boy",
+      "group": "greetings",
+      "meaning": "男孩",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W011",
+      "word": "girl",
+      "entryId": "girl",
+      "group": "greetings",
+      "meaning": "女孩",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W012",
+      "word": "child",
+      "entryId": "child",
+      "group": "greetings",
+      "meaning": "孩子",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W013",
+      "word": "mother",
+      "entryId": "mother",
+      "group": "people",
+      "meaning": "母亲",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W014",
+      "word": "father",
+      "entryId": "father",
+      "group": "people",
+      "meaning": "父亲",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W015",
+      "word": "sister",
+      "entryId": "sister",
+      "group": "people",
+      "meaning": "姐姐；妹妹",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-town-01",
+          "stepId": "conversation-3"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-town-01",
+          "stepId": "conversation-3"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-sister-invitation"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W016",
+      "word": "brother",
+      "entryId": "brother",
+      "group": "people",
+      "meaning": "哥哥；弟弟",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W017",
+      "word": "baby",
+      "entryId": "baby",
+      "group": "people",
+      "meaning": "婴儿",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W018",
+      "word": "family",
+      "entryId": "family",
+      "group": "people",
+      "meaning": "家庭",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W019",
+      "word": "teacher",
+      "entryId": "teacher",
+      "group": "people",
+      "meaning": "老师",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W020",
+      "word": "man",
+      "entryId": "man",
+      "group": "people",
+      "meaning": "男人",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W021",
+      "word": "woman",
+      "entryId": "woman",
+      "group": "people",
+      "meaning": "女人",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W022",
+      "word": "grandmother",
+      "entryId": "grandmother",
+      "group": "people",
+      "meaning": "祖母",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W023",
+      "word": "grandfather",
+      "entryId": "grandfather",
+      "group": "people",
+      "meaning": "祖父",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W024",
+      "word": "person",
+      "entryId": "person",
+      "group": "people",
+      "meaning": "人",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W025",
+      "word": "house",
+      "entryId": "house",
+      "group": "home",
+      "meaning": "房子",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W026",
+      "word": "home",
+      "entryId": "home",
+      "group": "home",
+      "meaning": "家",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-hanzi-01",
+          "stepId": "conversation-5"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-home-rest"
+          }
+        ],
+        "status": "home-authored-story-pending"
+      }
+    },
+    {
+      "id": "EN-L1-W027",
+      "word": "room",
+      "entryId": "room",
+      "group": "home",
+      "meaning": "房间",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W028",
+      "word": "door",
+      "entryId": "door",
+      "group": "home",
+      "meaning": "门",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-door"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-door"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-door"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-read-request-door"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-request-door"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W029",
+      "word": "window",
+      "entryId": "window",
+      "group": "home",
+      "meaning": "窗户",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-window"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-window"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-window"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-read-request-window"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-request-window"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W030",
+      "word": "wall",
+      "entryId": "wall",
+      "group": "home",
+      "meaning": "墙",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-wall"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-wall"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-wall"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W031",
+      "word": "floor",
+      "entryId": "floor",
+      "group": "home",
+      "meaning": "地板",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-floor"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-floor"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-floor"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W032",
+      "word": "table",
+      "entryId": "table",
+      "group": "home",
+      "meaning": "桌子",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-table"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-table"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-table"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-label-table"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-read-request-table"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-request-table"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W033",
+      "word": "chair",
+      "entryId": "chair",
+      "group": "home",
+      "meaning": "椅子",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-chair"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-chair"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-chair"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-read-request-chair"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-request-chair"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W034",
+      "word": "bed",
+      "entryId": "bed",
+      "group": "home",
+      "meaning": "床",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-bed"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-bed"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-bed"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-label-bed"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-read-request-bed"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-request-bed"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W035",
+      "word": "lamp",
+      "entryId": "lamp",
+      "group": "home",
+      "meaning": "台灯",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-lamp"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-lamp"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-lamp"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-read-request-lamp"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-request-lamp"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W036",
+      "word": "clock",
+      "entryId": "clock",
+      "group": "home",
+      "meaning": "时钟",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-clock"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-clock"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-clock"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-read-request-clock"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-request-clock"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W037",
+      "word": "here",
+      "entryId": "here",
+      "group": "places",
+      "meaning": "这里",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-2"
+        },
+        {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-4"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-2"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-here-companion"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-safe-companion"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W038",
+      "word": "there",
+      "entryId": "there",
+      "group": "places",
+      "meaning": "那里",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W039",
+      "word": "in",
+      "entryId": "in",
+      "group": "places",
+      "meaning": "在里面",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W040",
+      "word": "on",
+      "entryId": "on",
+      "group": "places",
+      "meaning": "在上面",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W041",
+      "word": "under",
+      "entryId": "under",
+      "group": "places",
+      "meaning": "下面",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W042",
+      "word": "behind",
+      "entryId": "behind",
+      "group": "places",
+      "meaning": "在后面",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W043",
+      "word": "next to",
+      "entryId": "next to",
+      "group": "places",
+      "meaning": "旁边",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W044",
+      "word": "between",
+      "entryId": "between",
+      "group": "places",
+      "meaning": "之间",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W045",
+      "word": "left",
+      "entryId": "left",
+      "group": "places",
+      "meaning": "左边",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 14,
+        "level": "A2 Flyers",
+        "basis": "direction"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W046",
+      "word": "right",
+      "entryId": "right",
+      "group": "places",
+      "meaning": "右边",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 14,
+        "level": "A2 Flyers",
+        "basis": "direction"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W047",
+      "word": "near",
+      "entryId": "near",
+      "group": "places",
+      "meaning": "在附近",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 9,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W048",
+      "word": "where",
+      "entryId": "where",
+      "group": "places",
+      "meaning": "哪里",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W049",
+      "word": "book",
+      "entryId": "book",
+      "group": "things",
+      "meaning": "书",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-book"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-book"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-book"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-label-book"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-read-request-book"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-request-book"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W050",
+      "word": "pencil",
+      "entryId": "pencil",
+      "group": "things",
+      "meaning": "铅笔",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W051",
+      "word": "pen",
+      "entryId": "pen",
+      "group": "things",
+      "meaning": "钢笔",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W052",
+      "word": "paper",
+      "entryId": "paper",
+      "group": "things",
+      "meaning": "纸",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W053",
+      "word": "bag",
+      "entryId": "bag",
+      "group": "things",
+      "meaning": "包",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W054",
+      "word": "box",
+      "entryId": "box",
+      "group": "things",
+      "meaning": "盒子",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-box"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-box"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-box"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-read-request-box"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-request-box"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W055",
+      "word": "toy",
+      "entryId": "toy",
+      "group": "things",
+      "meaning": "玩具",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-toy"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-toy"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-toy"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-label-toy"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-read-request-toy"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-request-toy"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W056",
+      "word": "ball",
+      "entryId": "ball",
+      "group": "things",
+      "meaning": "球",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-ball"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-ball"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-ball"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-label-ball"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-read-request-ball"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-request-ball"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W057",
+      "word": "fire",
+      "entryId": "fire",
+      "group": "things",
+      "meaning": "火",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 13,
+        "level": "A2 Flyers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W058",
+      "word": "picture",
+      "entryId": "picture",
+      "group": "things",
+      "meaning": "图片；画",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-picture"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-picture"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-picture"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W059",
+      "word": "phone",
+      "entryId": "phone",
+      "group": "things",
+      "meaning": "电话",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W060",
+      "word": "computer",
+      "entryId": "computer",
+      "group": "things",
+      "meaning": "电脑",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W061",
+      "word": "come",
+      "entryId": "come",
+      "group": "actions",
+      "meaning": "来",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-dark-01",
+          "stepId": "conversation-3"
+        },
+        {
+          "courseId": "en-town-01",
+          "stepId": "conversation-3"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-town-01",
+          "stepId": "conversation-3"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-sister-invitation"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-yes-seat"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W062",
+      "word": "go",
+      "entryId": "go",
+      "group": "actions",
+      "meaning": "去",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W063",
+      "word": "look",
+      "entryId": "look",
+      "group": "actions",
+      "meaning": "看",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-action-look-picture"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-action-look-picture"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-action-look-toy"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W064",
+      "word": "see",
+      "entryId": "see",
+      "group": "actions",
+      "meaning": "看见",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-town-01",
+          "stepId": "conversation-2"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-town-01",
+          "stepId": "conversation-2"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-see-water"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W065",
+      "word": "listen",
+      "entryId": "listen",
+      "group": "actions",
+      "meaning": "听",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W066",
+      "word": "say",
+      "entryId": "say",
+      "group": "actions",
+      "meaning": "说",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W067",
+      "word": "speak",
+      "entryId": "speak",
+      "group": "actions",
+      "meaning": "说话",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 15,
+        "level": "A2 Flyers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W068",
+      "word": "read",
+      "entryId": "read",
+      "group": "actions",
+      "meaning": "读",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-turn-read-1",
+          "kind": "home"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-turn-read-1"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-turn-read-2"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W069",
+      "word": "write",
+      "entryId": "write",
+      "group": "actions",
+      "meaning": "写",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-label-write"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-label-write"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W070",
+      "word": "draw",
+      "entryId": "draw",
+      "group": "actions",
+      "meaning": "画",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W071",
+      "word": "open",
+      "entryId": "open",
+      "group": "actions",
+      "meaning": "打开",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W072",
+      "word": "close",
+      "entryId": "close",
+      "group": "actions",
+      "meaning": "关闭",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W073",
+      "word": "run",
+      "entryId": "run",
+      "group": "play",
+      "meaning": "跑",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W074",
+      "word": "walk",
+      "entryId": "walk",
+      "group": "play",
+      "meaning": "走路",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W075",
+      "word": "jump",
+      "entryId": "jump",
+      "group": "play",
+      "meaning": "跳",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W076",
+      "word": "sit",
+      "entryId": "sit",
+      "group": "play",
+      "meaning": "坐",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-turn-sit-1",
+          "kind": "home"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-turn-sit-1"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-turn-sit-2"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W077",
+      "word": "stand",
+      "entryId": "stand",
+      "group": "play",
+      "meaning": "站",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W078",
+      "word": "stop",
+      "entryId": "stop",
+      "group": "play",
+      "meaning": "停下",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-1"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-1"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-stop-companion"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W079",
+      "word": "wait",
+      "entryId": "wait",
+      "group": "play",
+      "meaning": "等待",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 11,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-hanzi-01",
+          "stepId": "conversation-4"
+        },
+        {
+          "courseId": "en-hanzi-01",
+          "stepId": "conversation-6"
+        },
+        {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-4"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-4"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-wait-seat"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W080",
+      "word": "find",
+      "entryId": "find",
+      "group": "play",
+      "meaning": "找到",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-action-find-book"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-action-find-book"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-action-find-ball"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W081",
+      "word": "give",
+      "entryId": "give",
+      "group": "play",
+      "meaning": "给",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W082",
+      "word": "take",
+      "entryId": "take",
+      "group": "play",
+      "meaning": "拿取",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W083",
+      "word": "help",
+      "entryId": "help",
+      "group": "play",
+      "meaning": "帮助",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 9,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-3"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-3"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-help-companion"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-need-companion"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W084",
+      "word": "play",
+      "entryId": "play",
+      "group": "play",
+      "meaning": "玩",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-turn-play-1",
+          "kind": "home"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-turn-play-1"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-turn-play-2"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W085",
+      "word": "apple",
+      "entryId": "apple",
+      "group": "food",
+      "meaning": "苹果",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W086",
+      "word": "banana",
+      "entryId": "banana",
+      "group": "food",
+      "meaning": "香蕉",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W087",
+      "word": "orange",
+      "entryId": "orange",
+      "group": "food",
+      "meaning": "橙子",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W088",
+      "word": "pear",
+      "entryId": "pear",
+      "group": "food",
+      "meaning": "梨子",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W089",
+      "word": "bread",
+      "entryId": "bread",
+      "group": "food",
+      "meaning": "面包",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-town-01",
+          "stepId": "conversation-1"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-town-01",
+          "stepId": "conversation-1"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-bread-snack"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-picnic-plan"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W090",
+      "word": "rice",
+      "entryId": "rice",
+      "group": "food",
+      "meaning": "米饭",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W091",
+      "word": "egg",
+      "entryId": "egg",
+      "group": "food",
+      "meaning": "鸡蛋",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W092",
+      "word": "fish",
+      "entryId": "fish",
+      "group": "food",
+      "meaning": "鱼",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W093",
+      "word": "meat",
+      "entryId": "meat",
+      "group": "food",
+      "meaning": "肉",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W094",
+      "word": "chicken",
+      "entryId": "chicken",
+      "group": "food",
+      "meaning": "鸡；鸡肉",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W095",
+      "word": "cake",
+      "entryId": "cake",
+      "group": "food",
+      "meaning": "蛋糕",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-cake"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-cake"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-cake"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W096",
+      "word": "milk",
+      "entryId": "milk",
+      "group": "food",
+      "meaning": "牛奶",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-town-01",
+          "stepId": "conversation-1"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-town-01",
+          "stepId": "conversation-1"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-picnic-plan"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-milk-choice"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W097",
+      "word": "water",
+      "entryId": "water",
+      "group": "meals",
+      "meaning": "水",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-hanzi-01",
+          "stepId": "conversation-2"
+        },
+        {
+          "courseId": "en-desert-01",
+          "stepId": "conversation-2"
+        },
+        {
+          "courseId": "en-desert-01",
+          "stepId": "conversation-3"
+        },
+        {
+          "courseId": "en-float-01",
+          "stepId": "conversation-2"
+        },
+        {
+          "courseId": "en-town-01",
+          "stepId": "conversation-2"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-town-01",
+          "stepId": "conversation-2"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-water-after-play"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-see-water"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W098",
+      "word": "juice",
+      "entryId": "juice",
+      "group": "meals",
+      "meaning": "果汁",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W099",
+      "word": "breakfast",
+      "entryId": "breakfast",
+      "group": "meals",
+      "meaning": "早餐",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W100",
+      "word": "lunch",
+      "entryId": "lunch",
+      "group": "meals",
+      "meaning": "午餐",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W101",
+      "word": "dinner",
+      "entryId": "dinner",
+      "group": "meals",
+      "meaning": "晚餐",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W102",
+      "word": "cup",
+      "entryId": "cup",
+      "group": "meals",
+      "meaning": "杯子",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 8,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-town-01",
+          "stepId": "conversation-4"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-town-01",
+          "stepId": "conversation-4"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-cup-not-bowl"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-four-cup-plan"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-cup"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-cup"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-label-cup"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-read-request-cup"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-request-cup"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W103",
+      "word": "plate",
+      "entryId": "plate",
+      "group": "meals",
+      "meaning": "盘子",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 10,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-plate"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-plate"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-plate"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-read-request-plate"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-listen-request-plate"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W104",
+      "word": "again",
+      "entryId": "again",
+      "group": "meals",
+      "meaning": "再来",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W105",
+      "word": "eat",
+      "entryId": "eat",
+      "group": "meals",
+      "meaning": "吃",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-turn-eat-1",
+          "kind": "home"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-turn-eat-1"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-turn-eat-2"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W106",
+      "word": "drink",
+      "entryId": "drink",
+      "group": "meals",
+      "meaning": "喝",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-turn-drink-1",
+          "kind": "home"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-turn-drink-1"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-turn-drink-2"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W107",
+      "word": "like",
+      "entryId": "like",
+      "group": "meals",
+      "meaning": "喜欢",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-town-01",
+          "stepId": "conversation-1"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-town-01",
+          "stepId": "conversation-1"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-picnic-plan"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W108",
+      "word": "want",
+      "entryId": "want",
+      "group": "meals",
+      "meaning": "想要",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-care-want-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-want-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-want-return"
+          }
+        ],
+        "status": "home-authored-story-pending"
+      }
+    },
+    {
+      "id": "EN-L1-W109",
+      "word": "head",
+      "entryId": "head",
+      "group": "body",
+      "meaning": "头",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W110",
+      "word": "hair",
+      "entryId": "hair",
+      "group": "body",
+      "meaning": "头发",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W111",
+      "word": "face",
+      "entryId": "face",
+      "group": "body",
+      "meaning": "脸",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W112",
+      "word": "eye",
+      "entryId": "eye",
+      "group": "body",
+      "meaning": "眼睛",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W113",
+      "word": "ear",
+      "entryId": "ear",
+      "group": "body",
+      "meaning": "耳朵",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W114",
+      "word": "nose",
+      "entryId": "nose",
+      "group": "body",
+      "meaning": "鼻子",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W115",
+      "word": "mouth",
+      "entryId": "mouth",
+      "group": "body",
+      "meaning": "嘴",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W116",
+      "word": "hand",
+      "entryId": "hand",
+      "group": "body",
+      "meaning": "手",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W117",
+      "word": "arm",
+      "entryId": "arm",
+      "group": "body",
+      "meaning": "手臂",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W118",
+      "word": "leg",
+      "entryId": "leg",
+      "group": "body",
+      "meaning": "腿",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W119",
+      "word": "foot",
+      "entryId": "foot",
+      "group": "body",
+      "meaning": "脚",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W120",
+      "word": "body",
+      "entryId": "body",
+      "group": "body",
+      "meaning": "身体",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W121",
+      "word": "happy",
+      "entryId": "happy",
+      "group": "feelings",
+      "meaning": "高兴",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-care-happy-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-happy-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-happy-return"
+          }
+        ],
+        "status": "home-authored-story-pending"
+      }
+    },
+    {
+      "id": "EN-L1-W122",
+      "word": "sad",
+      "entryId": "sad",
+      "group": "feelings",
+      "meaning": "难过",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-care-sad-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-sad-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-sad-return"
+          }
+        ],
+        "status": "home-authored-story-pending"
+      }
+    },
+    {
+      "id": "EN-L1-W123",
+      "word": "angry",
+      "entryId": "angry",
+      "group": "feelings",
+      "meaning": "生气",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W124",
+      "word": "afraid",
+      "entryId": "afraid",
+      "group": "feelings",
+      "meaning": "害怕",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 8,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-care-afraid-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-afraid-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-afraid-return"
+          }
+        ],
+        "status": "home-authored-story-pending"
+      }
+    },
+    {
+      "id": "EN-L1-W125",
+      "word": "tired",
+      "entryId": "tired",
+      "group": "feelings",
+      "meaning": "疲倦",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 10,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-care-tired-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-tired-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-tired-return"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-write-pet-tired"
+          }
+        ],
+        "status": "home-authored-story-pending"
+      }
+    },
+    {
+      "id": "EN-L1-W126",
+      "word": "hungry",
+      "entryId": "hungry",
+      "group": "feelings",
+      "meaning": "饥饿",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 9,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-care-hungry-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-hungry-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-hungry-return"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-write-pet-hungry"
+          }
+        ],
+        "status": "home-authored-story-pending"
+      }
+    },
+    {
+      "id": "EN-L1-W127",
+      "word": "thirsty",
+      "entryId": "thirsty",
+      "group": "feelings",
+      "meaning": "口渴",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 10,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-care-thirsty-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-thirsty-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-thirsty-return"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-write-pet-thirsty"
+          }
+        ],
+        "status": "home-authored-story-pending"
+      }
+    },
+    {
+      "id": "EN-L1-W128",
+      "word": "hot",
+      "entryId": "hot",
+      "group": "feelings",
+      "meaning": "热",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 9,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-2"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-2"
+        },
+        "homeVariants": [],
+        "status": "story-authored-home-pending"
+      }
+    },
+    {
+      "id": "EN-L1-W129",
+      "word": "cold",
+      "entryId": "cold",
+      "group": "feelings",
+      "meaning": "冷",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 8,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-ice-01",
+          "stepId": "conversation-1"
+        },
+        {
+          "courseId": "en-ice-01",
+          "stepId": "conversation-4"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W130",
+      "word": "good",
+      "entryId": "good",
+      "group": "feelings",
+      "meaning": "好的",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W131",
+      "word": "bad",
+      "entryId": "bad",
+      "group": "feelings",
+      "meaning": "坏的；不好的",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 8,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W132",
+      "word": "safe",
+      "entryId": "safe",
+      "group": "feelings",
+      "meaning": "安全的",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 10,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-4"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-4"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-safe-companion"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W133",
+      "word": "red",
+      "entryId": "red",
+      "group": "colours",
+      "meaning": "红色",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-color-red-find"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-red-find"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-red-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-red-write"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W134",
+      "word": "blue",
+      "entryId": "blue",
+      "group": "colours",
+      "meaning": "蓝色",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-color-blue-find"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-blue-find"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-blue-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-blue-write"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W135",
+      "word": "green",
+      "entryId": "green",
+      "group": "colours",
+      "meaning": "绿色",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-color-green-find"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-green-find"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-green-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-green-write"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W136",
+      "word": "yellow",
+      "entryId": "yellow",
+      "group": "colours",
+      "meaning": "黄色",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-color-yellow-find"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-yellow-find"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-yellow-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-yellow-write"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W137",
+      "word": "purple",
+      "entryId": "purple",
+      "group": "colours",
+      "meaning": "紫色",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-color-purple-find"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-purple-find"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-purple-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-purple-write"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W138",
+      "word": "pink",
+      "entryId": "pink",
+      "group": "colours",
+      "meaning": "粉色",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-color-pink-find"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-pink-find"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-pink-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-pink-write"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W139",
+      "word": "black",
+      "entryId": "black",
+      "group": "colours",
+      "meaning": "黑色",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-color-black-find"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-black-find"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-black-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-black-write"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W140",
+      "word": "white",
+      "entryId": "white",
+      "group": "colours",
+      "meaning": "白色",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-color-white-find"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-white-find"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-white-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-white-write"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W141",
+      "word": "brown",
+      "entryId": "brown",
+      "group": "colours",
+      "meaning": "棕色",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-color-brown-find"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-brown-find"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-brown-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-brown-write"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W142",
+      "word": "grey",
+      "entryId": "grey",
+      "group": "colours",
+      "meaning": "灰色",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-color-grey-find"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-grey-find"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-grey-arrange"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-grey-write"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W143",
+      "word": "colour",
+      "entryId": "color",
+      "group": "colours",
+      "meaning": "颜色",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-color-corner-label"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-color-corner-label"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W144",
+      "word": "hurt",
+      "entryId": "hurt",
+      "group": "colours",
+      "meaning": "受伤；疼",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 9,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W145",
+      "word": "one",
+      "entryId": "one",
+      "group": "numbers",
+      "meaning": "一",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W146",
+      "word": "two",
+      "entryId": "two",
+      "group": "numbers",
+      "meaning": "二",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "numbers-1-20"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W147",
+      "word": "three",
+      "entryId": "three",
+      "group": "numbers",
+      "meaning": "三",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "numbers-1-20"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W148",
+      "word": "four",
+      "entryId": "four",
+      "group": "numbers",
+      "meaning": "四",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "numbers-1-20"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-town-01",
+          "stepId": "conversation-4"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-town-01",
+          "stepId": "conversation-4"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-four-cup-plan"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W149",
+      "word": "five",
+      "entryId": "five",
+      "group": "numbers",
+      "meaning": "五",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "numbers-1-20"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W150",
+      "word": "six",
+      "entryId": "six",
+      "group": "numbers",
+      "meaning": "六",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "numbers-1-20"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W151",
+      "word": "seven",
+      "entryId": "seven",
+      "group": "numbers",
+      "meaning": "七",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "numbers-1-20"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W152",
+      "word": "eight",
+      "entryId": "eight",
+      "group": "numbers",
+      "meaning": "八",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "numbers-1-20"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W153",
+      "word": "nine",
+      "entryId": "nine",
+      "group": "numbers",
+      "meaning": "九",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "numbers-1-20"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W154",
+      "word": "ten",
+      "entryId": "ten",
+      "group": "numbers",
+      "meaning": "十",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 7,
+        "level": "Pre A1 Starters",
+        "basis": "numbers-1-20"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W155",
+      "word": "number",
+      "entryId": "number",
+      "group": "numbers",
+      "meaning": "数字；数目",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W156",
+      "word": "count",
+      "entryId": "count",
+      "group": "numbers",
+      "meaning": "数数",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W157",
+      "word": "big",
+      "entryId": "big",
+      "group": "qualities",
+      "meaning": "大",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W158",
+      "word": "small",
+      "entryId": "little",
+      "group": "qualities",
+      "meaning": "小的",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W159",
+      "word": "long",
+      "entryId": "long",
+      "group": "qualities",
+      "meaning": "长的",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W160",
+      "word": "short",
+      "entryId": "short",
+      "group": "qualities",
+      "meaning": "短的",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W161",
+      "word": "old",
+      "entryId": "old",
+      "group": "qualities",
+      "meaning": "旧的；年老的",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W162",
+      "word": "new",
+      "entryId": "new",
+      "group": "qualities",
+      "meaning": "新的",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W163",
+      "word": "clean",
+      "entryId": "clean",
+      "group": "qualities",
+      "meaning": "干净",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W164",
+      "word": "dirty",
+      "entryId": "dirty",
+      "group": "qualities",
+      "meaning": "脏的",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W165",
+      "word": "careful",
+      "entryId": "careful",
+      "group": "qualities",
+      "meaning": "小心",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 8,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-1"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-1"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-careful-companion"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W166",
+      "word": "need",
+      "entryId": "need",
+      "group": "qualities",
+      "meaning": "需要",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 9,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [
+        {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-3"
+        }
+      ],
+      "coverage": {
+        "authoredIntroduction": {
+          "courseId": "en-fire-01",
+          "stepId": "conversation-3"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-need-companion"
+          }
+        ],
+        "status": "story-authored-home-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W167",
+      "word": "same",
+      "entryId": "same",
+      "group": "qualities",
+      "meaning": "相同",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 14,
+        "level": "A2 Flyers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W168",
+      "word": "different",
+      "entryId": "different",
+      "group": "qualities",
+      "meaning": "不同的",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 8,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W169",
+      "word": "cat",
+      "entryId": "cat",
+      "group": "animals",
+      "meaning": "猫",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W170",
+      "word": "dog",
+      "entryId": "dog",
+      "group": "animals",
+      "meaning": "狗",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W171",
+      "word": "bird",
+      "entryId": "bird",
+      "group": "animals",
+      "meaning": "鸟",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W172",
+      "word": "duck",
+      "entryId": "duck",
+      "group": "animals",
+      "meaning": "鸭子",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-duck"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-duck"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-duck"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W173",
+      "word": "frog",
+      "entryId": "frog",
+      "group": "animals",
+      "meaning": "青蛙",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W174",
+      "word": "rabbit",
+      "entryId": "rabbit",
+      "group": "animals",
+      "meaning": "兔子",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 10,
+        "level": "A1 Movers",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W175",
+      "word": "mouse",
+      "entryId": "mouse",
+      "group": "animals",
+      "meaning": "老鼠",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W176",
+      "word": "horse",
+      "entryId": "horse",
+      "group": "animals",
+      "meaning": "马",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "kind": "home",
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-find-horse"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-find-horse"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-arrange-horse"
+          }
+        ],
+        "status": "home-authored-partial"
+      }
+    },
+    {
+      "id": "EN-L1-W177",
+      "word": "cow",
+      "entryId": "cow",
+      "group": "animals",
+      "meaning": "奶牛",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 4,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W178",
+      "word": "sheep",
+      "entryId": "sheep",
+      "group": "animals",
+      "meaning": "绵羊",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W179",
+      "word": "goat",
+      "entryId": "goat",
+      "group": "animals",
+      "meaning": "山羊",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 5,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": null,
+        "homeVariants": [],
+        "status": "pending-authoring"
+      }
+    },
+    {
+      "id": "EN-L1-W180",
+      "word": "pet",
+      "entryId": "pet",
+      "group": "animals",
+      "meaning": "宠物",
+      "source": {
+        "id": "EN-YLE-2025",
+        "page": 6,
+        "level": "Pre A1 Starters",
+        "basis": "headword"
+      },
+      "targets": {
+        "listening": true,
+        "speaking": true,
+        "reading": true,
+        "writing": true
+      },
+      "existingSteps": [],
+      "coverage": {
+        "authoredIntroduction": {
+          "file": "data/adventure/curriculum/english-home-practice.json",
+          "storyId": "en-l1-care-pet-meet"
+        },
+        "homeVariants": [
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-pet-meet"
+          },
+          {
+            "file": "data/adventure/curriculum/english-home-practice.json",
+            "storyId": "en-l1-care-pet-return"
+          }
+        ],
+        "status": "home-authored-story-pending"
+      }
+    }
+  ]
+}

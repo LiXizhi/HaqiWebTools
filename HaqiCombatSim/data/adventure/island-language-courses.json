@@ -1,0 +1,3432 @@
+{
+  "version": 1,
+  "route": [
+    {
+      "island": "hanzi",
+      "name": "字源岛",
+      "theme": "身边事物与位置"
+    },
+    {
+      "island": "town",
+      "name": "哈奇岛",
+      "theme": "家庭与日常交往"
+    },
+    {
+      "island": "fire",
+      "name": "火鸟岛",
+      "theme": "环境与求助"
+    },
+    {
+      "island": "ice",
+      "name": "寒冰岛",
+      "theme": "天气与照顾"
+    },
+    {
+      "island": "desert",
+      "name": "沙漠岛",
+      "theme": "资源与选择"
+    },
+    {
+      "island": "dark",
+      "name": "幽暗岛",
+      "theme": "情绪与记忆"
+    },
+    {
+      "island": "tide",
+      "name": "潮汐岛",
+      "theme": "消息与约定"
+    },
+    {
+      "island": "float",
+      "name": "浮岸岛",
+      "theme": "空间与不同理解"
+    },
+    {
+      "island": "sail",
+      "name": "风帆岛",
+      "theme": "计划与合作"
+    }
+  ],
+  "courses": [
+    {
+      "id": "zh-hanzi-01",
+      "language": "zh",
+      "island": "hanzi",
+      "title": "旧路牌上的字",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "prompt": "石伯指着空白的路牌：有人找不到回家的路。请先去找回祖先留下的字。",
+          "answer": "我想帮助朋友找到回家的路。",
+          "words": [
+            "朋友"
+          ],
+          "ending": "这是开始寻找的约定。原有六段汉字任务仍在居民处接取。"
+        }
+      ],
+      "legacyQuestIds": [
+        873100,
+        873101,
+        873102,
+        873103,
+        873104,
+        873105
+      ]
+    },
+    {
+      "id": "zh-town-01",
+      "language": "zh",
+      "island": "town",
+      "title": "少一把椅子",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "去找苏菲交谈",
+          "hint": "苏菲正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "朋友？",
+          "promptGloss": "朋友。",
+          "answer": "朋友。",
+          "answerGloss": "朋友。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "朋友"
+          ],
+          "intro": "朋友们还没到齐。你愿意帮我找找他们吗？我们先认一认“朋友”怎么说。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "lake",
+            "name": "南部湖畔"
+          },
+          "objective": "到南部湖畔观察并读出词语",
+          "hint": "你到了南部湖畔。看看周围，听示范，试着说出这个词。",
+          "prompt": "水？",
+          "promptGloss": "水。",
+          "answer": "水。",
+          "answerGloss": "水。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "水"
+          ],
+          "intro": "湖水就在眼前。先听听水声，再试着说出你看到的东西。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "渔夫汉特"
+          },
+          "objective": "去找渔夫汉特交谈",
+          "hint": "渔夫汉特正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "家？",
+          "promptGloss": "家。",
+          "answer": "家。",
+          "answerGloss": "家。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "家"
+          ],
+          "intro": "你是来找朋友的呀！说起做客，我们先认一认“家”这个词。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "去找苏菲交谈",
+          "hint": "苏菲正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "朋友？",
+          "promptGloss": "朋友。",
+          "answer": "朋友。",
+          "answerGloss": "朋友。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "朋友"
+          ],
+          "intro": "你回来了！下次再遇到他们，就可以用刚才的话介绍朋友了。要不要试一次？"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "苏菲想多请一位朋友。到湖边找汉特，再回来报信。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "zh-fire-01",
+      "language": "zh",
+      "island": "fire",
+      "title": "烫手的水壶",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30511,
+            "name": "火百灵"
+          },
+          "objective": "去找火百灵交谈",
+          "hint": "火百灵正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "热？",
+          "promptGloss": "热。",
+          "answer": "热。",
+          "answerGloss": "热。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "热"
+          ],
+          "intro": "靠近熔岩会很热。先别急着走，我们试试怎么提醒伙伴。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "lava",
+            "name": "熔岩边缘"
+          },
+          "objective": "到熔岩边缘观察并读出词语",
+          "hint": "你到了熔岩边缘。看看周围，听示范，试着说出这个词。",
+          "prompt": "火？",
+          "promptGloss": "火。",
+          "answer": "火。",
+          "answerGloss": "火。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "火"
+          ],
+          "intro": "熔岩边缘透着火光。站在安全的地方，试着说出眼前的火。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30517,
+            "name": "安格斯"
+          },
+          "objective": "去找安格斯交谈",
+          "hint": "安格斯正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "水？",
+          "promptGloss": "水。",
+          "answer": "水。",
+          "answerGloss": "水。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "水"
+          ],
+          "intro": "你是来问水的吗？别着急，先试着把需要的东西说出来。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30511,
+            "name": "火百灵"
+          },
+          "objective": "去找火百灵交谈",
+          "hint": "火百灵正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "热？",
+          "promptGloss": "热。",
+          "answer": "热。",
+          "answerGloss": "热。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "热"
+          ],
+          "intro": "现在你知道怎么提醒伙伴了。再说一次，让我听清楚。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "火百灵想知道哪边很热。看过熔岩边缘，再找安格斯问水。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "zh-ice-01",
+      "language": "zh",
+      "island": "ice",
+      "title": "门外的脚印",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30601,
+            "name": "虾米粒"
+          },
+          "objective": "去找虾米粒交谈",
+          "hint": "虾米粒正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "冷？",
+          "promptGloss": "冷。",
+          "answer": "冷。",
+          "answerGloss": "冷。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "冷"
+          ],
+          "intro": "今天有点冷。去看雪之前，我们先试试怎么说出这种感觉。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "pass",
+            "name": "北部雪岭"
+          },
+          "objective": "到北部雪岭观察并读出词语",
+          "hint": "你到了北部雪岭。看看周围，听示范，试着说出这个词。",
+          "prompt": "雪？",
+          "promptGloss": "雪。",
+          "answer": "雪。",
+          "answerGloss": "雪。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "雪"
+          ],
+          "intro": "雪铺在山岭上。你停下脚步，试着说出眼前的雪。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30602,
+            "name": "蒙克"
+          },
+          "objective": "去找蒙克交谈",
+          "hint": "蒙克正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "休息？",
+          "promptGloss": "休息。",
+          "answer": "休息。",
+          "answerGloss": "休息。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "休息"
+          ],
+          "intro": "走了一会儿，有点累了吧？我们试试怎么说“休息”。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30601,
+            "name": "虾米粒"
+          },
+          "objective": "去找虾米粒交谈",
+          "hint": "虾米粒正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "冷？",
+          "promptGloss": "冷。",
+          "answer": "冷。",
+          "answerGloss": "冷。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "冷"
+          ],
+          "intro": "回来啦！外面冷不冷？你可以用刚才听过的话告诉我。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "虾米粒想追着脚印看雪。到雪岭看看，再请蒙克休息。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "zh-desert-01",
+      "language": "zh",
+      "island": "desert",
+      "title": "旅途的两份准备",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30702,
+            "name": "青青"
+          },
+          "objective": "去找青青交谈",
+          "hint": "青青正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "地图？",
+          "promptGloss": "地图。",
+          "answer": "地图。",
+          "answerGloss": "地图。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "地图"
+          ],
+          "intro": "有地图，找路就容易一些。出发前，我们先认一认它。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "landing",
+            "name": "南部绿洲"
+          },
+          "objective": "到南部绿洲观察并读出词语",
+          "hint": "你到了南部绿洲。看看周围，听示范，试着说出这个词。",
+          "prompt": "水？",
+          "promptGloss": "水。",
+          "answer": "水。",
+          "answerGloss": "水。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "水"
+          ],
+          "intro": "绿洲里能看到水。你停在水边，试着说出自己的发现。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30705,
+            "name": "尤里"
+          },
+          "objective": "去找尤里交谈",
+          "hint": "尤里正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "水？",
+          "promptGloss": "水。",
+          "answer": "水。",
+          "answerGloss": "水。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "水"
+          ],
+          "intro": "找到水了吗？慢慢说，我在听。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30702,
+            "name": "青青"
+          },
+          "objective": "去找青青交谈",
+          "hint": "青青正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "地图？",
+          "promptGloss": "地图。",
+          "answer": "地图。",
+          "answerGloss": "地图。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "地图"
+          ],
+          "intro": "我们再看一眼地图。下次找路，也可以用这个词来问我。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "青青缺一张地图。去绿洲认出水，再找尤里问路。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "zh-dark-01",
+      "language": "zh",
+      "island": "dark",
+      "title": "门后的声音",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 35001,
+            "name": "古格"
+          },
+          "objective": "去找古格交谈",
+          "hint": "古格正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "朋友？",
+          "promptGloss": "朋友。",
+          "answer": "朋友。",
+          "answerGloss": "朋友。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "朋友"
+          ],
+          "intro": "我在等朋友。你愿意陪我去看看吗？先认一认“朋友”怎么说。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "north",
+            "name": "北部密林"
+          },
+          "objective": "到北部密林观察并读出词语",
+          "hint": "你到了北部密林。看看周围，听示范，试着说出这个词。",
+          "prompt": "树？",
+          "promptGloss": "树。",
+          "answer": "树。",
+          "answerGloss": "树。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "树"
+          ],
+          "intro": "树影轻轻晃动。先看清眼前的树，再试着说出它的名字。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 35003,
+            "name": "艾琳"
+          },
+          "objective": "去找艾琳交谈",
+          "hint": "艾琳正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "来？",
+          "promptGloss": "来。",
+          "answer": "来。",
+          "answerGloss": "来。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "来"
+          ],
+          "intro": "你想邀请朋友过来吗？我们一起试试怎么说“来”。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 35001,
+            "name": "古格"
+          },
+          "objective": "去找古格交谈",
+          "hint": "古格正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "朋友？",
+          "promptGloss": "朋友。",
+          "answer": "朋友。",
+          "answerGloss": "朋友。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "朋友"
+          ],
+          "intro": "谢谢你陪我找朋友。现在试着向我介绍一下你的朋友吧。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "古格听见树后有声音。去密林看看，再找艾琳确认朋友来了。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "zh-tide-01",
+      "language": "zh",
+      "island": "tide",
+      "title": "没有署名的信",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 860000,
+            "name": "阿澜"
+          },
+          "objective": "去找阿澜交谈",
+          "hint": "阿澜正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "信？",
+          "promptGloss": "信。",
+          "answer": "信。",
+          "answerGloss": "信。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "信"
+          ],
+          "intro": "这封信还没送出去。出发之前，先认一认“信”怎么说吧。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "tide-1",
+            "name": "月潮码头"
+          },
+          "objective": "到月潮码头观察并读出词语",
+          "hint": "你到了月潮码头。看看周围，听示范，试着说出这个词。",
+          "prompt": "船？",
+          "promptGloss": "船。",
+          "answer": "船。",
+          "answerGloss": "船。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "船"
+          ],
+          "intro": "码头边停着船。你看着船，试着说出它的名字。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 860001,
+            "name": "岑伯"
+          },
+          "objective": "去找岑伯交谈",
+          "hint": "岑伯正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "朋友？",
+          "promptGloss": "朋友。",
+          "answer": "朋友。",
+          "answerGloss": "朋友。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "朋友"
+          ],
+          "intro": "你在找送信的朋友吗？先试着说出“朋友”，我听听。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 860000,
+            "name": "阿澜"
+          },
+          "objective": "去找阿澜交谈",
+          "hint": "阿澜正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "信？",
+          "promptGloss": "信。",
+          "answer": "信。",
+          "answerGloss": "信。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "信"
+          ],
+          "intro": "我们再看一眼这封信。你还记得刚才怎么说吗？"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "阿澜拿着没有署名的信。去码头认船，再请岑伯帮忙。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "zh-float-01",
+      "language": "zh",
+      "island": "float",
+      "title": "桌上的两张图",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 860100,
+            "name": "芦笙"
+          },
+          "objective": "去找芦笙交谈",
+          "hint": "芦笙正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "地图？",
+          "promptGloss": "地图。",
+          "answer": "地图。",
+          "answerGloss": "地图。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "地图"
+          ],
+          "intro": "地图上的标记有点不一样。我们先认一认“地图”，再去看看。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "float-2",
+            "name": "双名井"
+          },
+          "objective": "到双名井观察并读出词语",
+          "hint": "你到了双名井。看看周围，听示范，试着说出这个词。",
+          "prompt": "水？",
+          "promptGloss": "水。",
+          "answer": "水。",
+          "answerGloss": "水。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "水"
+          ],
+          "intro": "井就在这里，里面有水。你朝井里看了看，试着说出自己的发现。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 860101,
+            "name": "米拉"
+          },
+          "objective": "去找米拉交谈",
+          "hint": "米拉正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "地图？",
+          "promptGloss": "地图。",
+          "answer": "地图。",
+          "answerGloss": "地图。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "地图"
+          ],
+          "intro": "你也来看地图吗？先告诉我你想看什么，我们再一起核对。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 860100,
+            "name": "芦笙"
+          },
+          "objective": "去找芦笙交谈",
+          "hint": "芦笙正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "朋友？",
+          "promptGloss": "朋友。",
+          "answer": "朋友。",
+          "answerGloss": "朋友。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "朋友"
+          ],
+          "intro": "谢谢你一起核对。认识了新朋友，就试着介绍一下吧。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "芦笙想把井画在地图上。去双名井看看，再找米拉核对。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "zh-sail-01",
+      "language": "zh",
+      "island": "sail",
+      "title": "庆典前的小计划",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 860200,
+            "name": "莉风"
+          },
+          "objective": "去找莉风交谈",
+          "hint": "莉风正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "计划？",
+          "promptGloss": "计划。",
+          "answer": "计划。",
+          "answerGloss": "计划。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "计划"
+          ],
+          "intro": "迎船前，还有些事要商量。我们先试着说出“计划”。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "sail-1",
+            "name": "归帆码头"
+          },
+          "objective": "到归帆码头观察并读出词语",
+          "hint": "你到了归帆码头。看看周围，听示范，试着说出这个词。",
+          "prompt": "船？",
+          "promptGloss": "船。",
+          "answer": "船。",
+          "answerGloss": "船。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "船"
+          ],
+          "intro": "船在码头边。你望向船，试着说出眼前的东西。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 860202,
+            "name": "小舟"
+          },
+          "objective": "去找小舟交谈",
+          "hint": "小舟正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "朋友？",
+          "promptGloss": "朋友。",
+          "answer": "朋友。",
+          "answerGloss": "朋友。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "朋友"
+          ],
+          "intro": "你也来迎接朋友吗？试着告诉我，你在等谁。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 860200,
+            "name": "莉风"
+          },
+          "objective": "去找莉风交谈",
+          "hint": "莉风正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "计划？",
+          "promptGloss": "计划。",
+          "answer": "计划。",
+          "answerGloss": "计划。",
+          "ending": "谢谢你。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "计划"
+          ],
+          "intro": "你回来啦！我们再确认一下计划。试着用刚才听到的词开个头吧。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "莉风想和小舟一起迎船。去码头看看，再回来商量计划。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "en-hanzi-01",
+      "language": "en",
+      "island": "hanzi",
+      "title": "让朋友找到你",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "在初生码头认识阿初，问清他在等谁",
+          "hint": "向阿初打招呼。接下来去溪边小村寻找小灯；遇到生词可以听示范或看释义。",
+          "prompt": "Hello! I'm Achu.",
+          "promptGloss": "你好！我是阿初。",
+          "answer": "Hello, Achu!",
+          "answerGloss": "你好，阿初！",
+          "ending": "Please find Xiaodeng.",
+          "endingGloss": "请帮我找找小灯。",
+          "words": [
+            "hello"
+          ],
+          "intro": "我约了小灯一起看船，还想请她喝杯水。可是等了好久，她一直没来。她是不是不想和我做朋友了？\n我只说了“在水边见”。等等……码头有水，溪边小村也有水！她会不会去了溪边？\n你愿意帮我找找吗？溪禾就在溪边小村，也许见过她。我叫阿初，先认识一下吧。",
+          "introReply": "和阿初打招呼"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "hanzi-2",
+            "name": "溪边小村"
+          },
+          "objective": "沿溪到小村寻找小灯，确认眼前的线索",
+          "hint": "你在溪边寻找小灯，还没有找到她。这一段是自己的观察；用 water 说出眼前的水，再去询问附近的溪禾。",
+          "prompt": "Xiaodeng? Are you here?",
+          "promptGloss": "小灯？你在这里吗？",
+          "answer": "Only water.",
+          "answerGloss": "只有水。",
+          "ending": "I'll ask Xihe.",
+          "endingGloss": "我去问问溪禾。",
+          "words": [
+            "water"
+          ],
+          "intro": "溪水流过小村，附近没有看见小灯。溪禾就在不远处。",
+          "speaker": "player"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "向溪禾打听小灯，说清自己在帮助阿初",
+          "hint": "溪禾想知道你为什么找小灯。告诉她：你在帮助朋友阿初。回应后先处理石头路附近的小鼠，再回码头。",
+          "prompt": "Are you helping Achu?",
+          "promptGloss": "你在帮助阿初吗？",
+          "answer": "Yes. He is my friend.",
+          "answerGloss": "是的。他是我的朋友。",
+          "ending": "She is looking for him, too.",
+          "endingGloss": "她也在找他。",
+          "words": [
+            "friend"
+          ],
+          "intro": "你也在找小灯？她刚才来过！她说阿初约她在水边见，可她沿着溪水找了半天。\n后来她去找石伯问路。石头路附近的小鼠一直追着人跑，把她吓得绕了路。\n原来阿初还在码头等！请先去赶开那群小鼠，再回码头报个平安，叫阿初别到处跑。石伯会告诉你小灯往哪边去了。",
+          "introReply": "告诉溪禾我在帮朋友"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "encounter",
+            "id": "pack:hanzi:field-3",
+            "name": "迷路的小鼠"
+          },
+          "objective": "击退石头路附近的迷路小鼠，再请阿初留在码头等候",
+          "hint": "你已经完成战斗，正在码头向阿初报平安。请他留在原地，避免两个人再次错过；然后去石头路找石伯。",
+          "prompt": "Should I wait here?",
+          "promptGloss": "我应该在这里等吗？",
+          "answer": "Please wait here.",
+          "answerGloss": "请在这里等。",
+          "ending": "I'll wait here.",
+          "endingGloss": "我会在这里等。",
+          "words": [
+            "wait"
+          ],
+          "intro": "你平安回来了！那群小鼠不再拦着你了？太好了。你刚才从溪禾那里听到了什么？\n小灯也在找我？原来她没有不理我……我刚才差点就跑去溪边了。\n可我一走，她要是又找到这里，我们不是又错过了吗？我该留在这里等吗？",
+          "introReply": "请阿初在这里等"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "向石伯确认小灯的去向，说明阿初没有回家",
+          "hint": "你刚见过阿初，他仍在初生码头。回答石伯后，去字源亭通往远行灯塔的路上找小灯。",
+          "prompt": "Is Achu at home?",
+          "promptGloss": "阿初在家吗？",
+          "answer": "No. Not at home.",
+          "answerGloss": "不。他不在家。",
+          "ending": "Good. Please tell Xiaodeng.",
+          "endingGloss": "好。请把消息告诉小灯。",
+          "words": [
+            "home"
+          ],
+          "intro": "小灯来问过路。她怕阿初等不到她，已经回家了。我说，阿初讲的水边，很可能是初生码头。\n她怕再走错，决定先等消息。沿着字源亭往远行灯塔的路走，你会找到她。\n出发前，我得确认一件事：阿初回家了吗？可别让小灯又白跑一趟。",
+          "introReply": "说明阿初没有回家"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "找到小灯，告诉她阿初仍在初生码头等她",
+          "hint": "把确认过的消息告诉小灯：阿初仍在初生码头等她。这次把人物和地点都说清，帮助两人解开误会。",
+          "prompt": "Is Achu still waiting?",
+          "promptGloss": "阿初还在等吗？",
+          "answer": "He is waiting.",
+          "answerGloss": "他还在等。",
+          "ending": "He's waiting! Thank you!",
+          "endingGloss": "他还在等我！谢谢你！",
+          "words": [
+            "wait"
+          ],
+          "intro": "你是来找我的？我在溪边等了好久，还以为阿初忘了我们的约定。\n石伯说，阿初讲的水边可能是初生码头。我却一直在溪边小村找他……原来我们等的不是同一个地方！\n你刚见过阿初吗？他真的还在码头等我？",
+          "introReply": "告诉小灯阿初还在等"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "阿初和小灯约好在“水边”见面，却等在不同的地方。阿初怕朋友不愿意来了。沿溪询问居民，找到小灯，把准确的等候地点告诉她。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义",
+      "completion": "你找到了小灯：她知道阿初仍在初生码头等她。原来朋友没有失约，只是把“水边”理解成了不同的地方。"
+    },
+    {
+      "id": "en-town-01",
+      "language": "en",
+      "island": "town",
+      "title": "多出来的杯子",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "找苏菲，听听三个杯子的秘密",
+          "hint": "苏菲想知道你的口味。本轮先学会说喜欢面包和牛奶；可以听示范，也可以打字。",
+          "prompt": "Do you like bread and milk?",
+          "promptGloss": "你喜欢面包和牛奶吗？",
+          "answer": "I like bread and milk.",
+          "answerGloss": "我喜欢面包和牛奶。",
+          "ending": "Good! Please find Hunt by the lake.",
+          "endingGloss": "好呀！请到湖边找汉特。",
+          "words": [
+            "like",
+            "bread",
+            "milk"
+          ],
+          "intro": "我想请汉特来吃点东西。三个杯子都准备好了：我一个，汉特一个，还有一个……先保密。\n我准备带上面包和牛奶。你喜欢吗？先告诉我，待会儿可别饿着肚子帮忙。\n汉特在南部湖畔。请你先到湖边，再找渔夫汉特。他想带家人来，也欢迎。",
+          "introReply": "告诉苏菲我喜欢什么",
+          "alternatives": [
+            {
+              "answer": "I like milk and bread.",
+              "answerGloss": "我喜欢牛奶和面包。",
+              "id": "milk-first"
+            }
+          ]
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "lake",
+            "name": "南部湖畔"
+          },
+          "objective": "到南部湖畔确认位置，再去找渔夫汉特",
+          "hint": "这是你的观察，不是湖水在说话。确认来到湖畔后，下一步去找真实的渔夫汉特。",
+          "prompt": "Is this the lake?",
+          "promptGloss": "这里就是湖边吗？",
+          "answer": "I see water.",
+          "answerGloss": "我看见水了。",
+          "ending": "Now I can look for Hunt.",
+          "endingGloss": "现在可以去找汉特了。",
+          "words": [
+            "see",
+            "water"
+          ],
+          "intro": "我先到南部湖畔，再去找渔夫汉特。看到湖水，就知道没有走错地方。",
+          "speaker": "player",
+          "alternatives": [
+            {
+              "answer": "I can see water.",
+              "answerGloss": "我能看见水。",
+              "id": "can-see"
+            }
+          ]
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "渔夫汉特"
+          },
+          "objective": "问渔夫汉特是否愿意来，确认妹妹也能参加",
+          "hint": "苏菲已经欢迎家人一起来。回答汉特后，回去告诉苏菲会多来一位妹妹。",
+          "prompt": "Can my sister come?",
+          "promptGloss": "我的妹妹可以来吗？",
+          "answer": "Yes. Your sister can come.",
+          "answerGloss": "可以，你的妹妹也能来。",
+          "ending": "Thank you! Please tell Sophie.",
+          "endingGloss": "谢谢你！请告诉苏菲。",
+          "words": [
+            "yes",
+            "sister",
+            "come"
+          ],
+          "intro": "苏菲请我去吃东西？太好了！我还以为她把我忘了。\n我妹妹今天也想来看看朋友。苏菲说过，家人也可以一起去。你能帮我确认一下吗？\n如果她也能来，我会告诉她：别急，我们一起去。",
+          "introReply": "告诉汉特妹妹也受欢迎",
+          "alternatives": [
+            {
+              "answer": "Yes, your sister can come too.",
+              "answerGloss": "可以，你的妹妹也可以来。",
+              "id": "sister-too"
+            }
+          ]
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "回到苏菲身边，确认四个人要用四个杯子",
+          "hint": "这次是确认邀请人数，不是实际摆放物品。说完以后，三个杯子的秘密就解开了。",
+          "prompt": "How many cups do we need?",
+          "promptGloss": "我们需要几个杯子？",
+          "answer": "Four cups, please.",
+          "answerGloss": "请准备四个杯子。",
+          "ending": "Four cups. One is for you!",
+          "endingGloss": "四个杯子，其中一个是给你的！",
+          "words": [
+            "four",
+            "cup",
+            "please"
+          ],
+          "intro": "汉特愿意来，还想带妹妹？当然欢迎！谢谢你特意去问清楚。\n你说，多出来的第三个杯子正好给妹妹？可是……那个杯子本来就是留给你的呀。你帮了这么多忙，我当然也想请你一起吃。\n我、汉特、他的妹妹，还有你，一共四个人。那我们需要几个杯子？请帮我确认一下。",
+          "introReply": "告诉苏菲准备四个杯子",
+          "alternatives": [
+            {
+              "answer": "Four cups, please, Sophie.",
+              "answerGloss": "苏菲，请准备四个杯子。",
+              "id": "address-sophie"
+            }
+          ]
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "苏菲准备了三个杯子，却只提到汉特一个客人。去南部湖畔送邀请，问清谁会来，再回来揭开第三个杯子的秘密。",
+      "beginnerLevel": "英语 L1 入门：每轮 2—3 个明确目标词，先听人物交代，再跟说或输入；本篇属于有示范的学习，不冒充独立交流验收。",
+      "completion": "第三个杯子原来是留给你的。汉特想带妹妹来，于是需要四个杯子。你已把邀请和人数问清楚；回到家园，还可以在宠物照顾和布置中练习今天用过的词。"
+    },
+    {
+      "id": "en-fire-01",
+      "language": "en",
+      "island": "fire",
+      "title": "看不见的热源",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30511,
+            "name": "火百灵"
+          },
+          "objective": "先找火百灵，提醒她停下",
+          "hint": "火百灵还没有确认前方情况。先提醒她停下、小心，再按任务追踪前往道路上的观察点。",
+          "prompt": "Can I go now?",
+          "promptGloss": "我现在可以过去吗？",
+          "answer": "Stop! Be careful.",
+          "answerGloss": "停下！小心。",
+          "ending": "All right. I will wait.",
+          "endingGloss": "好，我先等着。",
+          "words": [
+            "stop",
+            "careful"
+          ],
+          "intro": "我想走近一点，看看那边的地面还烫不烫。隔着石头看不到火苗，我还以为已经凉了。\n不过我不确定。你先提醒我停下来，好吗？我们不能用手去试。\n请沿着已有道路到熔岩边缘看看，再去找安格斯问清楚。我先留在这里。",
+          "alternatives": [
+            {
+              "id": "polite-or-full",
+              "answer": "Please stop. Be careful.",
+              "answerGloss": "请停下，小心。"
+            }
+          ],
+          "introReply": "先提醒火百灵停下"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "lava",
+            "name": "熔岩边缘"
+          },
+          "objective": "沿道路到熔岩边缘观察，不触碰熔岩",
+          "hint": "这是玩家自己的观察，不是熔岩在说话。只在现有道路观察；不需要触碰、进入或给熔岩浇水。",
+          "prompt": "Is it cold now?",
+          "promptGloss": "这里现在凉了吗？",
+          "answer": "It is hot here.",
+          "answerGloss": "这里很热。",
+          "ending": "I will ask Angus for help.",
+          "endingGloss": "我要去找安格斯帮忙。",
+          "words": [
+            "hot",
+            "here"
+          ],
+          "intro": "我已经沿道路来到熔岩边缘。这里仍然热，不能只看有没有火苗来判断。现在去问安格斯。",
+          "alternatives": [
+            {
+              "id": "polite-or-full",
+              "answer": "It is still hot here.",
+              "answerGloss": "这里仍然很热。"
+            }
+          ],
+          "speaker": "player"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30517,
+            "name": "安格斯"
+          },
+          "objective": "找安格斯报告情况并求助",
+          "hint": "向安格斯说明需要帮助，再回去告诉火百灵在哪儿等。这里只完成求助，不把一句话当作熔岩已经冷却。",
+          "prompt": "What do you need?",
+          "promptGloss": "你们需要什么？",
+          "answer": "We need help.",
+          "answerGloss": "我们需要帮助。",
+          "ending": "Please tell her to wait there.",
+          "endingGloss": "请告诉她留在那里等。",
+          "words": [
+            "need",
+            "help"
+          ],
+          "intro": "你从熔岩边缘过来？你看到的那片地面还没有凉下来。没有火苗，也可能很烫。\n谢谢你来问，而不是自己去试。你和火百灵需要我帮忙，对吗？\n你们先留在火百灵站的地方。那里我检查过，可以等候；我来处理接下来的事。请把这句话带给她。",
+          "alternatives": [
+            {
+              "id": "polite-or-full",
+              "answer": "I need help.",
+              "answerGloss": "我需要帮助。"
+            }
+          ],
+          "introReply": "请安格斯帮忙"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30511,
+            "name": "火百灵"
+          },
+          "objective": "回到火百灵身边，告诉她留在这里等待",
+          "hint": "把安格斯确认过的等待地点告诉火百灵；不用再走向熔岩。",
+          "prompt": "Where should I wait?",
+          "promptGloss": "我应该在哪里等？",
+          "answer": "Wait here. It is safe.",
+          "answerGloss": "在这里等，这里安全。",
+          "ending": "I will wait here. Thank you!",
+          "endingGloss": "我会在这里等，谢谢你！",
+          "words": [
+            "wait",
+            "here",
+            "safe"
+          ],
+          "intro": "你找到安格斯了吗？我刚才又想过去接他，却不知道该走哪边。\n我先听你说。他让我们在哪里等？我不想再因为着急走错地方。",
+          "alternatives": [
+            {
+              "id": "polite-or-full",
+              "answer": "Please wait here. It is safe.",
+              "answerGloss": "请在这里等，这里安全。"
+            }
+          ],
+          "introReply": "告诉火百灵等待地点"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "火百灵看不见火苗，以为地面已经不烫了。请她先停下，在熔岩边缘的道路上确认情况，向安格斯求助，再把等待地点告诉她。",
+      "beginnerLevel": "英语 L1 入门：通过提醒、观察、求助和传话使用短句；每轮 2—3 个明确目标，有示范支持，不作为独立能力验收。",
+      "completion": "没有看见火苗，不等于地面已经不烫。你把情况告诉了安格斯，也让火百灵知道可以留在哪里等待。求助和传话已完成；不需要自己去碰熔岩或尝试降温。"
+    },
+    {
+      "id": "en-ice-01",
+      "language": "en",
+      "island": "ice",
+      "title": "最后一张空床",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30601,
+            "name": "虾米粒"
+          },
+          "objective": "去找虾米粒交谈",
+          "hint": "虾米粒正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Cold?",
+          "promptGloss": "冷。",
+          "answer": "Cold!",
+          "answerGloss": "冷。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "cold"
+          ],
+          "intro": "今天有点冷。去看雪之前，我们先试试怎么说出这种感觉。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "pass",
+            "name": "北部雪岭"
+          },
+          "objective": "到北部雪岭观察并读出词语",
+          "hint": "你到了北部雪岭。看看周围，听示范，试着说出这个词。",
+          "prompt": "Snow?",
+          "promptGloss": "雪。",
+          "answer": "Snow!",
+          "answerGloss": "雪。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "snow"
+          ],
+          "intro": "雪铺在山岭上。你停下脚步，试着说出眼前的雪。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30602,
+            "name": "蒙克"
+          },
+          "objective": "去找蒙克交谈",
+          "hint": "蒙克正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Rest?",
+          "promptGloss": "休息。",
+          "answer": "Rest, please.",
+          "answerGloss": "休息。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "rest"
+          ],
+          "intro": "走了一会儿，有点累了吧？我们试试怎么说“休息”。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30601,
+            "name": "虾米粒"
+          },
+          "objective": "去找虾米粒交谈",
+          "hint": "虾米粒正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Cold?",
+          "promptGloss": "冷。",
+          "answer": "Cold!",
+          "answerGloss": "冷。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "cold"
+          ],
+          "intro": "回来啦！外面冷不冷？你可以用刚才听过的话告诉我。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "虾米粒想看雪，蒙克想先休息。去雪岭看看，再回来提醒她。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "en-desert-01",
+      "language": "en",
+      "island": "desert",
+      "title": "地图上的水",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30702,
+            "name": "青青"
+          },
+          "objective": "去找青青交谈",
+          "hint": "青青正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Map?",
+          "promptGloss": "地图。",
+          "answer": "My map.",
+          "answerGloss": "地图。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "map"
+          ],
+          "intro": "有地图，找路就容易一些。出发前，我们先认一认它。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "landing",
+            "name": "南部绿洲"
+          },
+          "objective": "到南部绿洲观察并读出词语",
+          "hint": "你到了南部绿洲。看看周围，听示范，试着说出这个词。",
+          "prompt": "Water?",
+          "promptGloss": "水。",
+          "answer": "Water.",
+          "answerGloss": "水。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "water"
+          ],
+          "intro": "绿洲里能看到水。你停在水边，试着说出自己的发现。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30705,
+            "name": "尤里"
+          },
+          "objective": "去找尤里交谈",
+          "hint": "尤里正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Water?",
+          "promptGloss": "水。",
+          "answer": "Water.",
+          "answerGloss": "水。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "water"
+          ],
+          "intro": "找到水了吗？慢慢说，我在听。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30702,
+            "name": "青青"
+          },
+          "objective": "去找青青交谈",
+          "hint": "青青正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Map?",
+          "promptGloss": "地图。",
+          "answer": "My map.",
+          "answerGloss": "地图。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "map"
+          ],
+          "intro": "我们再看一眼地图。下次找路，也可以用这个词来问我。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "青青带着地图找水。看看南部绿洲，再告诉尤里你找到了什么。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "en-dark-01",
+      "language": "en",
+      "island": "dark",
+      "title": "不敢敲的门",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 35001,
+            "name": "古格"
+          },
+          "objective": "去找古格交谈",
+          "hint": "古格正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Friend?",
+          "promptGloss": "朋友。",
+          "answer": "My friend.",
+          "answerGloss": "朋友。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "friend"
+          ],
+          "intro": "我在等朋友。你愿意陪我去看看吗？先认一认“朋友”怎么说。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "north",
+            "name": "北部密林"
+          },
+          "objective": "到北部密林观察并读出词语",
+          "hint": "你到了北部密林。看看周围，听示范，试着说出这个词。",
+          "prompt": "Tree?",
+          "promptGloss": "树。",
+          "answer": "A tree.",
+          "answerGloss": "树。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "tree"
+          ],
+          "intro": "树影轻轻晃动。先看清眼前的树，再试着说出它的名字。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 35003,
+            "name": "艾琳"
+          },
+          "objective": "去找艾琳交谈",
+          "hint": "艾琳正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Come?",
+          "promptGloss": "来。",
+          "answer": "Come here.",
+          "answerGloss": "来。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "come"
+          ],
+          "intro": "你想邀请朋友过来吗？我们一起试试怎么说“来”。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 35001,
+            "name": "古格"
+          },
+          "objective": "去找古格交谈",
+          "hint": "古格正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Friend?",
+          "promptGloss": "朋友。",
+          "answer": "My friend.",
+          "answerGloss": "朋友。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "friend"
+          ],
+          "intro": "谢谢你陪我找朋友。现在试着向我介绍一下你的朋友吧。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "古格以为朋友不来了。去北部密林看看，再找艾琳问一声。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "en-tide-01",
+      "language": "en",
+      "island": "tide",
+      "title": "晚到的回信",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 860000,
+            "name": "阿澜"
+          },
+          "objective": "去找阿澜交谈",
+          "hint": "阿澜正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Letter?",
+          "promptGloss": "信。",
+          "answer": "A letter.",
+          "answerGloss": "信。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "letter"
+          ],
+          "intro": "这封信还没送出去。出发之前，先认一认“信”怎么说吧。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "tide-1",
+            "name": "月潮码头"
+          },
+          "objective": "到月潮码头观察并读出词语",
+          "hint": "你到了月潮码头。看看周围，听示范，试着说出这个词。",
+          "prompt": "Boat?",
+          "promptGloss": "船。",
+          "answer": "A boat.",
+          "answerGloss": "船。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "boat"
+          ],
+          "intro": "码头边停着船。你看着船，试着说出它的名字。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 860001,
+            "name": "岑伯"
+          },
+          "objective": "去找岑伯交谈",
+          "hint": "岑伯正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Friend?",
+          "promptGloss": "朋友。",
+          "answer": "My friend.",
+          "answerGloss": "朋友。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "friend"
+          ],
+          "intro": "你在找送信的朋友吗？先试着说出“朋友”，我听听。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 860000,
+            "name": "阿澜"
+          },
+          "objective": "去找阿澜交谈",
+          "hint": "阿澜正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Letter?",
+          "promptGloss": "信。",
+          "answer": "A letter.",
+          "answerGloss": "信。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "letter"
+          ],
+          "intro": "我们再看一眼这封信。你还记得刚才怎么说吗？"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "阿澜想寄信。先去码头认船，再向岑伯确认朋友在哪里。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "en-float-01",
+      "language": "en",
+      "island": "float",
+      "title": "上下颠倒的地图",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 860100,
+            "name": "芦笙"
+          },
+          "objective": "去找芦笙交谈",
+          "hint": "芦笙正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Map?",
+          "promptGloss": "地图。",
+          "answer": "My map.",
+          "answerGloss": "地图。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "map"
+          ],
+          "intro": "地图上的标记有点不一样。我们先认一认“地图”，再去看看。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "float-2",
+            "name": "双名井"
+          },
+          "objective": "到双名井观察并读出词语",
+          "hint": "你到了双名井。看看周围，听示范，试着说出这个词。",
+          "prompt": "Water?",
+          "promptGloss": "水。",
+          "answer": "Water.",
+          "answerGloss": "水。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "water"
+          ],
+          "intro": "井就在这里，里面有水。你朝井里看了看，试着说出自己的发现。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 860101,
+            "name": "米拉"
+          },
+          "objective": "去找米拉交谈",
+          "hint": "米拉正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Map?",
+          "promptGloss": "地图。",
+          "answer": "My map.",
+          "answerGloss": "地图。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "map"
+          ],
+          "intro": "你也来看地图吗？先告诉我你想看什么，我们再一起核对。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 860100,
+            "name": "芦笙"
+          },
+          "objective": "去找芦笙交谈",
+          "hint": "芦笙正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Friend?",
+          "promptGloss": "朋友。",
+          "answer": "My friend.",
+          "answerGloss": "朋友。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "friend"
+          ],
+          "intro": "谢谢你一起核对。认识了新朋友，就试着介绍一下吧。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "芦笙的地图上少了井。到双名井看看，再告诉米拉。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "en-sail-01",
+      "language": "en",
+      "island": "sail",
+      "title": "谁来邀请客人",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 860200,
+            "name": "莉风"
+          },
+          "objective": "去找莉风交谈",
+          "hint": "莉风正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Plan?",
+          "promptGloss": "计划。",
+          "answer": "My plan.",
+          "answerGloss": "计划。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "plan"
+          ],
+          "intro": "迎船前，还有些事要商量。我们先试着说出“计划”。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "sail-1",
+            "name": "归帆码头"
+          },
+          "objective": "到归帆码头观察并读出词语",
+          "hint": "你到了归帆码头。看看周围，听示范，试着说出这个词。",
+          "prompt": "Boat?",
+          "promptGloss": "船。",
+          "answer": "A boat.",
+          "answerGloss": "船。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "boat"
+          ],
+          "intro": "船在码头边。你望向船，试着说出眼前的东西。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 860202,
+            "name": "小舟"
+          },
+          "objective": "去找小舟交谈",
+          "hint": "小舟正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Friend?",
+          "promptGloss": "朋友。",
+          "answer": "My friend.",
+          "answerGloss": "朋友。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "friend"
+          ],
+          "intro": "你也来迎接朋友吗？试着告诉我，你在等谁。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 860200,
+            "name": "莉风"
+          },
+          "objective": "去找莉风交谈",
+          "hint": "莉风正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "Plan?",
+          "promptGloss": "计划。",
+          "answer": "My plan.",
+          "answerGloss": "计划。",
+          "ending": "Thank you!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "plan"
+          ],
+          "intro": "你回来啦！我们再确认一下计划。试着用刚才听到的词开个头吧。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "莉风要迎接小舟。去码头看看船，再回来确认准备好了。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ja-hanzi-01",
+      "language": "ja",
+      "island": "hanzi",
+      "title": "忘れ物の本",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "去找溪禾交谈",
+          "hint": "溪禾正在和你说话。先听示范，再试着回应；也可以打字。 本读作「ほん」。",
+          "prompt": "本？",
+          "promptGloss": "书。",
+          "answer": "本です。",
+          "answerGloss": "书。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "本"
+          ],
+          "intro": "我捡到一本书，可不知道是谁的。你愿意陪我找找失主吗？先认一认这本书吧。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "hanzi-5",
+            "name": "字源亭"
+          },
+          "objective": "到字源亭观察并读出词语",
+          "hint": "你到了字源亭。看看周围，听示范，试着说出这个词。 本读作「ほん」。",
+          "prompt": "本？",
+          "promptGloss": "书。",
+          "answer": "本です。",
+          "answerGloss": "书。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "本"
+          ],
+          "intro": "字源亭里很安静。你想起溪禾捡到的书，试着说出它的名字。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "去找阿初交谈",
+          "hint": "阿初正在和你说话。先听示范，再试着回应；也可以打字。 友達读作「ともだち」。",
+          "prompt": "友達？",
+          "promptGloss": "朋友。",
+          "answer": "友達です。",
+          "answerGloss": "朋友。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "友達"
+          ],
+          "intro": "溪禾请你来的呀！我们是朋友。你也来试着介绍一下吧。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "encounter",
+            "id": "pack:hanzi:field-3",
+            "name": "迷路的小鼠"
+          },
+          "objective": "击退迷路的小鼠，再回到溪禾身边交谈",
+          "hint": "小鼠已经不再挡路。你回到居民身边，听示范并回应。",
+          "prompt": "友達？",
+          "promptGloss": "朋友。",
+          "answer": "友達です。",
+          "answerGloss": "朋友。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "友達"
+          ],
+          "intro": "你回来啦，平安就好。我们再试着说说“朋友”。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "去找溪禾交谈",
+          "hint": "溪禾正在和你说话。先听示范，再试着回应；也可以打字。 本读作「ほん」。",
+          "prompt": "本？",
+          "promptGloss": "书。",
+          "answer": "本です。",
+          "answerGloss": "书。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "本"
+          ],
+          "intro": "谢谢你惦记着这件事。我们再认一认书，下次问人时就用得上了。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "溪禾捡到一本书，不知道是谁的。去字源亭看看，再找阿初。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ja-town-01",
+      "language": "ja",
+      "island": "town",
+      "title": "静かな招待",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "渔夫汉特"
+          },
+          "objective": "去找渔夫汉特交谈",
+          "hint": "渔夫汉特正在和你说话。先听示范，再试着回应；也可以打字。 友達读作「ともだち」。",
+          "prompt": "友達？",
+          "promptGloss": "朋友。",
+          "answer": "友達です。",
+          "answerGloss": "朋友。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "友達"
+          ],
+          "intro": "朋友们还没到齐。你愿意帮我找找他们吗？我们先认一认“朋友”怎么说。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "lake",
+            "name": "南部湖畔"
+          },
+          "objective": "到南部湖畔观察并读出词语",
+          "hint": "你到了南部湖畔。看看周围，听示范，试着说出这个词。 水读作「みず」。",
+          "prompt": "水？",
+          "promptGloss": "水。",
+          "answer": "水です。",
+          "answerGloss": "水。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "水"
+          ],
+          "intro": "湖水就在眼前。先听听水声，再试着说出你看到的东西。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "去找苏菲交谈",
+          "hint": "苏菲正在和你说话。先听示范，再试着回应；也可以打字。 家读作「いえ」。",
+          "prompt": "家？",
+          "promptGloss": "家。",
+          "answer": "家です。",
+          "answerGloss": "家。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "家"
+          ],
+          "intro": "你是来找朋友的呀！说起做客，我们先认一认“家”这个词。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "渔夫汉特"
+          },
+          "objective": "去找渔夫汉特交谈",
+          "hint": "渔夫汉特正在和你说话。先听示范，再试着回应；也可以打字。 友達读作「ともだち」。",
+          "prompt": "友達？",
+          "promptGloss": "朋友。",
+          "answer": "友達です。",
+          "answerGloss": "朋友。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "友達"
+          ],
+          "intro": "你回来了！下次再遇到他们，就可以用刚才的话介绍朋友了。要不要试一次？"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "汉特想请苏菲喝水，却没找到她。去湖边看看，再回来找苏菲。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ja-fire-01",
+      "language": "ja",
+      "island": "fire",
+      "title": "水を待つ人",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30517,
+            "name": "安格斯"
+          },
+          "objective": "去找安格斯交谈",
+          "hint": "安格斯正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "熱い？",
+          "promptGloss": "热。",
+          "answer": "熱い。",
+          "answerGloss": "热。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "熱い"
+          ],
+          "intro": "靠近熔岩会很热。先别急着走，我们试试怎么提醒伙伴。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "lava",
+            "name": "熔岩边缘"
+          },
+          "objective": "到熔岩边缘观察并读出词语",
+          "hint": "你到了熔岩边缘。看看周围，听示范，试着说出这个词。 火读作「ひ」。",
+          "prompt": "火？",
+          "promptGloss": "火。",
+          "answer": "火です。",
+          "answerGloss": "火。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "火"
+          ],
+          "intro": "熔岩边缘透着火光。站在安全的地方，试着说出眼前的火。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30511,
+            "name": "火百灵"
+          },
+          "objective": "去找火百灵交谈",
+          "hint": "火百灵正在和你说话。先听示范，再试着回应；也可以打字。 水读作「みず」。",
+          "prompt": "水？",
+          "promptGloss": "水。",
+          "answer": "水です。",
+          "answerGloss": "水。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "水"
+          ],
+          "intro": "你是来问水的吗？别着急，先试着把需要的东西说出来。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30517,
+            "name": "安格斯"
+          },
+          "objective": "去找安格斯交谈",
+          "hint": "安格斯正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "熱い？",
+          "promptGloss": "热。",
+          "answer": "熱い。",
+          "answerGloss": "热。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "熱い"
+          ],
+          "intro": "现在你知道怎么提醒伙伴了。再说一次，让我听清楚。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "安格斯想知道火光来自哪里。到熔岩边缘看一眼，再回来提醒火百灵。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ja-ice-01",
+      "language": "ja",
+      "island": "ice",
+      "title": "雪の日の約束",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30602,
+            "name": "蒙克"
+          },
+          "objective": "去找蒙克交谈",
+          "hint": "蒙克正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "寒い？",
+          "promptGloss": "冷。",
+          "answer": "寒い。",
+          "answerGloss": "冷。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "寒い"
+          ],
+          "intro": "今天有点冷。去看雪之前，我们先试试怎么说出这种感觉。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "pass",
+            "name": "北部雪岭"
+          },
+          "objective": "到北部雪岭观察并读出词语",
+          "hint": "你到了北部雪岭。看看周围，听示范，试着说出这个词。 雪读作「ゆき」。",
+          "prompt": "雪？",
+          "promptGloss": "雪。",
+          "answer": "雪です。",
+          "answerGloss": "雪。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "雪"
+          ],
+          "intro": "雪铺在山岭上。你停下脚步，试着说出眼前的雪。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30601,
+            "name": "虾米粒"
+          },
+          "objective": "去找虾米粒交谈",
+          "hint": "虾米粒正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "休む？",
+          "promptGloss": "休息。",
+          "answer": "休むです。",
+          "answerGloss": "休息。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "休む"
+          ],
+          "intro": "走了一会儿，有点累了吧？我们试试怎么说“休息”。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30602,
+            "name": "蒙克"
+          },
+          "objective": "去找蒙克交谈",
+          "hint": "蒙克正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "寒い？",
+          "promptGloss": "冷。",
+          "answer": "寒い。",
+          "answerGloss": "冷。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "寒い"
+          ],
+          "intro": "回来啦！外面冷不冷？你可以用刚才听过的话告诉我。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "蒙克想带朋友看雪。先去雪岭看看，再找虾米粒确认休息的地方。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ja-desert-01",
+      "language": "ja",
+      "island": "desert",
+      "title": "地図より先に",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30705,
+            "name": "尤里"
+          },
+          "objective": "去找尤里交谈",
+          "hint": "尤里正在和你说话。先听示范，再试着回应；也可以打字。 地図读作「ちず」。",
+          "prompt": "地図？",
+          "promptGloss": "地图。",
+          "answer": "地図です。",
+          "answerGloss": "地图。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "地図"
+          ],
+          "intro": "有地图，找路就容易一些。出发前，我们先认一认它。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "landing",
+            "name": "南部绿洲"
+          },
+          "objective": "到南部绿洲观察并读出词语",
+          "hint": "你到了南部绿洲。看看周围，听示范，试着说出这个词。 水读作「みず」。",
+          "prompt": "水？",
+          "promptGloss": "水。",
+          "answer": "水です。",
+          "answerGloss": "水。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "水"
+          ],
+          "intro": "绿洲里能看到水。你停在水边，试着说出自己的发现。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30702,
+            "name": "青青"
+          },
+          "objective": "去找青青交谈",
+          "hint": "青青正在和你说话。先听示范，再试着回应；也可以打字。 水读作「みず」。",
+          "prompt": "水？",
+          "promptGloss": "水。",
+          "answer": "水です。",
+          "answerGloss": "水。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "水"
+          ],
+          "intro": "找到水了吗？慢慢说，我在听。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30705,
+            "name": "尤里"
+          },
+          "objective": "去找尤里交谈",
+          "hint": "尤里正在和你说话。先听示范，再试着回应；也可以打字。 地図读作「ちず」。",
+          "prompt": "地図？",
+          "promptGloss": "地图。",
+          "answer": "地図です。",
+          "answerGloss": "地图。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "地図"
+          ],
+          "intro": "我们再看一眼地图。下次找路，也可以用这个词来问我。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "尤里把地图拿反了。先认出绿洲里的水，再找青青核对。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ja-dark-01",
+      "language": "ja",
+      "island": "dark",
+      "title": "返したい本",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 35003,
+            "name": "艾琳"
+          },
+          "objective": "去找艾琳交谈",
+          "hint": "艾琳正在和你说话。先听示范，再试着回应；也可以打字。 友達读作「ともだち」。",
+          "prompt": "友達？",
+          "promptGloss": "朋友。",
+          "answer": "友達です。",
+          "answerGloss": "朋友。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "友達"
+          ],
+          "intro": "我在等朋友。你愿意陪我去看看吗？先认一认“朋友”怎么说。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "north",
+            "name": "北部密林"
+          },
+          "objective": "到北部密林观察并读出词语",
+          "hint": "你到了北部密林。看看周围，听示范，试着说出这个词。 木读作「き」。",
+          "prompt": "木？",
+          "promptGloss": "树。",
+          "answer": "木です。",
+          "answerGloss": "树。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "木"
+          ],
+          "intro": "树影轻轻晃动。先看清眼前的树，再试着说出它的名字。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 35001,
+            "name": "古格"
+          },
+          "objective": "去找古格交谈",
+          "hint": "古格正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "来る？",
+          "promptGloss": "来。",
+          "answer": "来る。",
+          "answerGloss": "来。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "来る"
+          ],
+          "intro": "你想邀请朋友过来吗？我们一起试试怎么说“来”。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 35003,
+            "name": "艾琳"
+          },
+          "objective": "去找艾琳交谈",
+          "hint": "艾琳正在和你说话。先听示范，再试着回应；也可以打字。 友達读作「ともだち」。",
+          "prompt": "友達？",
+          "promptGloss": "朋友。",
+          "answer": "友達です。",
+          "answerGloss": "朋友。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "友達"
+          ],
+          "intro": "谢谢你陪我找朋友。现在试着向我介绍一下你的朋友吧。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "艾琳想请古格看一棵树。到北部密林看看，再回来邀请他。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ja-tide-01",
+      "language": "ja",
+      "island": "tide",
+      "title": "船の名前",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 860001,
+            "name": "岑伯"
+          },
+          "objective": "去找岑伯交谈",
+          "hint": "岑伯正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "書？",
+          "promptGloss": "信。",
+          "answer": "書です。",
+          "answerGloss": "信。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "書"
+          ],
+          "intro": "这封信还没送出去。出发之前，先认一认“信”怎么说吧。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "tide-1",
+            "name": "月潮码头"
+          },
+          "objective": "到月潮码头观察并读出词语",
+          "hint": "你到了月潮码头。看看周围，听示范，试着说出这个词。 船读作「ふね」。",
+          "prompt": "船？",
+          "promptGloss": "船。",
+          "answer": "船です。",
+          "answerGloss": "船。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "船"
+          ],
+          "intro": "码头边停着船。你看着船，试着说出它的名字。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 860000,
+            "name": "阿澜"
+          },
+          "objective": "去找阿澜交谈",
+          "hint": "阿澜正在和你说话。先听示范，再试着回应；也可以打字。 友達读作「ともだち」。",
+          "prompt": "友達？",
+          "promptGloss": "朋友。",
+          "answer": "友達です。",
+          "answerGloss": "朋友。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "友達"
+          ],
+          "intro": "你在找送信的朋友吗？先试着说出“朋友”，我听听。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 860001,
+            "name": "岑伯"
+          },
+          "objective": "去找岑伯交谈",
+          "hint": "岑伯正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "書？",
+          "promptGloss": "信。",
+          "answer": "書です。",
+          "answerGloss": "信。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "書"
+          ],
+          "intro": "我们再看一眼这封信。你还记得刚才怎么说吗？"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "岑伯忘了信给谁。去码头看看船，再向阿澜确认。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ja-float-01",
+      "language": "ja",
+      "island": "float",
+      "title": "机の向こう側",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 860101,
+            "name": "米拉"
+          },
+          "objective": "去找米拉交谈",
+          "hint": "米拉正在和你说话。先听示范，再试着回应；也可以打字。 地図读作「ちず」。",
+          "prompt": "地図？",
+          "promptGloss": "地图。",
+          "answer": "地図です。",
+          "answerGloss": "地图。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "地図"
+          ],
+          "intro": "地图上的标记有点不一样。我们先认一认“地图”，再去看看。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "float-2",
+            "name": "双名井"
+          },
+          "objective": "到双名井观察并读出词语",
+          "hint": "你到了双名井。看看周围，听示范，试着说出这个词。 水读作「みず」。",
+          "prompt": "水？",
+          "promptGloss": "水。",
+          "answer": "水です。",
+          "answerGloss": "水。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "水"
+          ],
+          "intro": "井就在这里，里面有水。你朝井里看了看，试着说出自己的发现。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 860100,
+            "name": "芦笙"
+          },
+          "objective": "去找芦笙交谈",
+          "hint": "芦笙正在和你说话。先听示范，再试着回应；也可以打字。 地図读作「ちず」。",
+          "prompt": "地図？",
+          "promptGloss": "地图。",
+          "answer": "地図です。",
+          "answerGloss": "地图。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "地図"
+          ],
+          "intro": "你也来看地图吗？先告诉我你想看什么，我们再一起核对。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 860101,
+            "name": "米拉"
+          },
+          "objective": "去找米拉交谈",
+          "hint": "米拉正在和你说话。先听示范，再试着回应；也可以打字。 友達读作「ともだち」。",
+          "prompt": "友達？",
+          "promptGloss": "朋友。",
+          "answer": "友達です。",
+          "answerGloss": "朋友。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "友達"
+          ],
+          "intro": "谢谢你一起核对。认识了新朋友，就试着介绍一下吧。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "米拉把井画在地图另一边。亲自到井边看，再回来认一认。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ja-sail-01",
+      "language": "ja",
+      "island": "sail",
+      "title": "計画にない席",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 860202,
+            "name": "小舟"
+          },
+          "objective": "去找小舟交谈",
+          "hint": "小舟正在和你说话。先听示范，再试着回应；也可以打字。 計画读作「けいかく」。",
+          "prompt": "計画？",
+          "promptGloss": "计划。",
+          "answer": "計画です。",
+          "answerGloss": "计划。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "計画"
+          ],
+          "intro": "迎船前，还有些事要商量。我们先试着说出“计划”。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "sail-1",
+            "name": "归帆码头"
+          },
+          "objective": "到归帆码头观察并读出词语",
+          "hint": "你到了归帆码头。看看周围，听示范，试着说出这个词。 船读作「ふね」。",
+          "prompt": "船？",
+          "promptGloss": "船。",
+          "answer": "船です。",
+          "answerGloss": "船。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "船"
+          ],
+          "intro": "船在码头边。你望向船，试着说出眼前的东西。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 860200,
+            "name": "莉风"
+          },
+          "objective": "去找莉风交谈",
+          "hint": "莉风正在和你说话。先听示范，再试着回应；也可以打字。 友達读作「ともだち」。",
+          "prompt": "友達？",
+          "promptGloss": "朋友。",
+          "answer": "友達です。",
+          "answerGloss": "朋友。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "友達"
+          ],
+          "intro": "你也来迎接朋友吗？试着告诉我，你在等谁。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 860202,
+            "name": "小舟"
+          },
+          "objective": "去找小舟交谈",
+          "hint": "小舟正在和你说话。先听示范，再试着回应；也可以打字。 計画读作「けいかく」。",
+          "prompt": "計画？",
+          "promptGloss": "计划。",
+          "answer": "計画です。",
+          "answerGloss": "计划。",
+          "ending": "ありがとう。",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "計画"
+          ],
+          "intro": "你回来啦！我们再确认一下计划。试着用刚才听到的词开个头吧。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "小舟想参加迎船活动。先去码头看船，再找莉风说出计划。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ko-hanzi-01",
+      "language": "ko",
+      "island": "hanzi",
+      "title": "기다리는 의자",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "去找小灯交谈",
+          "hint": "小灯正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "친구?",
+          "promptGloss": "朋友。",
+          "answer": "친구!",
+          "answerGloss": "朋友。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "친구"
+          ],
+          "intro": "你好，我是小灯。我留了等候的纸条，可朋友还没有来。你愿意帮我看看吗？先认识一下吧。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "hanzi-1",
+            "name": "初生码头"
+          },
+          "objective": "到初生码头观察并读出词语",
+          "hint": "你到了初生码头。看看周围，听示范，试着说出这个词。",
+          "prompt": "배?",
+          "promptGloss": "船。",
+          "answer": "배!",
+          "answerGloss": "船。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "배"
+          ],
+          "intro": "码头边有船。你停下来看看，试着说出它的名字。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "去找阿初交谈",
+          "hint": "阿初正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "친구?",
+          "promptGloss": "朋友。",
+          "answer": "친구!",
+          "answerGloss": "朋友。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "친구"
+          ],
+          "intro": "你在帮小灯找朋友呀！试着说出“朋友”，让我听听。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "encounter",
+            "id": "pack:hanzi:field-3",
+            "name": "迷路的小鼠"
+          },
+          "objective": "击退迷路的小鼠，再回到小灯身边交谈",
+          "hint": "小鼠已经不再挡路。你回到居民身边，听示范并回应。",
+          "prompt": "친구?",
+          "promptGloss": "朋友。",
+          "answer": "친구!",
+          "answerGloss": "朋友。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "친구"
+          ],
+          "intro": "你平安回来了！别着急，我们一起想想朋友会在哪里。先试着说出你在找谁。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "去找小灯交谈",
+          "hint": "小灯正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "집?",
+          "promptGloss": "家。",
+          "answer": "집!",
+          "answerGloss": "家。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "집"
+          ],
+          "intro": "谢谢你回来找我。天色不早了，我们先认一认“家”怎么说吧。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "小灯留了一张等候纸条。先认识她，再去初生码头，最后告诉阿初你找到了朋友。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ko-town-01",
+      "language": "ko",
+      "island": "town",
+      "title": "문 앞의 손님",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "去找苏菲交谈",
+          "hint": "苏菲正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "친구?",
+          "promptGloss": "朋友。",
+          "answer": "친구!",
+          "answerGloss": "朋友。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "친구"
+          ],
+          "intro": "朋友们还没到齐。你愿意帮我找找他们吗？我们先认一认“朋友”怎么说。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "lake",
+            "name": "南部湖畔"
+          },
+          "objective": "到南部湖畔观察并读出词语",
+          "hint": "你到了南部湖畔。看看周围，听示范，试着说出这个词。",
+          "prompt": "물?",
+          "promptGloss": "水。",
+          "answer": "물!",
+          "answerGloss": "水。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "물"
+          ],
+          "intro": "湖水就在眼前。先听听水声，再试着说出你看到的东西。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "渔夫汉特"
+          },
+          "objective": "去找渔夫汉特交谈",
+          "hint": "渔夫汉特正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "집?",
+          "promptGloss": "家。",
+          "answer": "집!",
+          "answerGloss": "家。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "집"
+          ],
+          "intro": "你是来找朋友的呀！说起做客，我们先认一认“家”这个词。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "去找苏菲交谈",
+          "hint": "苏菲正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "친구?",
+          "promptGloss": "朋友。",
+          "answer": "친구!",
+          "answerGloss": "朋友。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "친구"
+          ],
+          "intro": "你回来了！下次再遇到他们，就可以用刚才的话介绍朋友了。要不要试一次？"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "苏菲等朋友一起喝水。到湖边看看，再去请汉特回来。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ko-fire-01",
+      "language": "ko",
+      "island": "fire",
+      "title": "불빛의 정체",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30511,
+            "name": "火百灵"
+          },
+          "objective": "去找火百灵交谈",
+          "hint": "火百灵正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "뜨거운?",
+          "promptGloss": "热。",
+          "answer": "뜨거운!",
+          "answerGloss": "热。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "뜨거운"
+          ],
+          "intro": "靠近熔岩会很热。先别急着走，我们试试怎么提醒伙伴。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "lava",
+            "name": "熔岩边缘"
+          },
+          "objective": "到熔岩边缘观察并读出词语",
+          "hint": "你到了熔岩边缘。看看周围，听示范，试着说出这个词。",
+          "prompt": "불?",
+          "promptGloss": "火。",
+          "answer": "불!",
+          "answerGloss": "火。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "불"
+          ],
+          "intro": "熔岩边缘透着火光。站在安全的地方，试着说出眼前的火。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30517,
+            "name": "安格斯"
+          },
+          "objective": "去找安格斯交谈",
+          "hint": "安格斯正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "물?",
+          "promptGloss": "水。",
+          "answer": "물!",
+          "answerGloss": "水。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "물"
+          ],
+          "intro": "你是来问水的吗？别着急，先试着把需要的东西说出来。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30511,
+            "name": "火百灵"
+          },
+          "objective": "去找火百灵交谈",
+          "hint": "火百灵正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "뜨거운?",
+          "promptGloss": "热。",
+          "answer": "뜨거운!",
+          "answerGloss": "热。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "뜨거운"
+          ],
+          "intro": "现在你知道怎么提醒伙伴了。再说一次，让我听清楚。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "火百灵听见有人喊热。到熔岩边缘看看，再找安格斯求水。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ko-ice-01",
+      "language": "ko",
+      "island": "ice",
+      "title": "눈을 보고 싶은 친구",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30601,
+            "name": "虾米粒"
+          },
+          "objective": "去找虾米粒交谈",
+          "hint": "虾米粒正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "찬?",
+          "promptGloss": "冷。",
+          "answer": "찬!",
+          "answerGloss": "冷。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "찬"
+          ],
+          "intro": "今天有点冷。去看雪之前，我们先试试怎么说出这种感觉。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "pass",
+            "name": "北部雪岭"
+          },
+          "objective": "到北部雪岭观察并读出词语",
+          "hint": "你到了北部雪岭。看看周围，听示范，试着说出这个词。",
+          "prompt": "눈?",
+          "promptGloss": "雪。",
+          "answer": "눈!",
+          "answerGloss": "雪。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "눈"
+          ],
+          "intro": "雪铺在山岭上。你停下脚步，试着说出眼前的雪。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30602,
+            "name": "蒙克"
+          },
+          "objective": "去找蒙克交谈",
+          "hint": "蒙克正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "쉬다?",
+          "promptGloss": "休息。",
+          "answer": "쉬다!",
+          "answerGloss": "休息。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "쉬다"
+          ],
+          "intro": "走了一会儿，有点累了吧？我们试试怎么说“休息”。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30601,
+            "name": "虾米粒"
+          },
+          "objective": "去找虾米粒交谈",
+          "hint": "虾米粒正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "찬?",
+          "promptGloss": "冷。",
+          "answer": "찬!",
+          "answerGloss": "冷。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "찬"
+          ],
+          "intro": "回来啦！外面冷不冷？你可以用刚才听过的话告诉我。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "蒙克怕冷，却想看看雪。到雪岭看一眼，再请虾米粒一起休息。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ko-desert-01",
+      "language": "ko",
+      "island": "desert",
+      "title": "두 사람의 가방",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30702,
+            "name": "青青"
+          },
+          "objective": "去找青青交谈",
+          "hint": "青青正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "지도?",
+          "promptGloss": "地图。",
+          "answer": "지도!",
+          "answerGloss": "地图。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "지도"
+          ],
+          "intro": "有地图，找路就容易一些。出发前，我们先认一认它。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "landing",
+            "name": "南部绿洲"
+          },
+          "objective": "到南部绿洲观察并读出词语",
+          "hint": "你到了南部绿洲。看看周围，听示范，试着说出这个词。",
+          "prompt": "물?",
+          "promptGloss": "水。",
+          "answer": "물!",
+          "answerGloss": "水。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "물"
+          ],
+          "intro": "绿洲里能看到水。你停在水边，试着说出自己的发现。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30705,
+            "name": "尤里"
+          },
+          "objective": "去找尤里交谈",
+          "hint": "尤里正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "물?",
+          "promptGloss": "水。",
+          "answer": "물!",
+          "answerGloss": "水。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "물"
+          ],
+          "intro": "找到水了吗？慢慢说，我在听。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30702,
+            "name": "青青"
+          },
+          "objective": "去找青青交谈",
+          "hint": "青青正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "지도?",
+          "promptGloss": "地图。",
+          "answer": "지도!",
+          "answerGloss": "地图。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "지도"
+          ],
+          "intro": "我们再看一眼地图。下次找路，也可以用这个词来问我。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "青青先找水，尤里先看地图。去绿洲认出水，再告诉两人。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ko-dark-01",
+      "language": "ko",
+      "island": "dark",
+      "title": "말하지 못한 인사",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 35001,
+            "name": "古格"
+          },
+          "objective": "去找古格交谈",
+          "hint": "古格正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "친구?",
+          "promptGloss": "朋友。",
+          "answer": "친구!",
+          "answerGloss": "朋友。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "친구"
+          ],
+          "intro": "我在等朋友。你愿意陪我去看看吗？先认一认“朋友”怎么说。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "north",
+            "name": "北部密林"
+          },
+          "objective": "到北部密林观察并读出词语",
+          "hint": "你到了北部密林。看看周围，听示范，试着说出这个词。",
+          "prompt": "나무?",
+          "promptGloss": "树。",
+          "answer": "나무!",
+          "answerGloss": "树。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "나무"
+          ],
+          "intro": "树影轻轻晃动。先看清眼前的树，再试着说出它的名字。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 35003,
+            "name": "艾琳"
+          },
+          "objective": "去找艾琳交谈",
+          "hint": "艾琳正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "오다?",
+          "promptGloss": "来。",
+          "answer": "오다!",
+          "answerGloss": "来。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "오다"
+          ],
+          "intro": "你想邀请朋友过来吗？我们一起试试怎么说“来”。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 35001,
+            "name": "古格"
+          },
+          "objective": "去找古格交谈",
+          "hint": "古格正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "친구?",
+          "promptGloss": "朋友。",
+          "answer": "친구!",
+          "answerGloss": "朋友。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "친구"
+          ],
+          "intro": "谢谢你陪我找朋友。现在试着向我介绍一下你的朋友吧。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "古格想邀请艾琳一起看树。去密林找对地方，再把话带回。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ko-tide-01",
+      "language": "ko",
+      "island": "tide",
+      "title": "편지의 목적지",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 860000,
+            "name": "阿澜"
+          },
+          "objective": "去找阿澜交谈",
+          "hint": "阿澜正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "편지?",
+          "promptGloss": "信。",
+          "answer": "편지!",
+          "answerGloss": "信。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "편지"
+          ],
+          "intro": "这封信还没送出去。出发之前，先认一认“信”怎么说吧。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "tide-1",
+            "name": "月潮码头"
+          },
+          "objective": "到月潮码头观察并读出词语",
+          "hint": "你到了月潮码头。看看周围，听示范，试着说出这个词。",
+          "prompt": "배?",
+          "promptGloss": "船。",
+          "answer": "배!",
+          "answerGloss": "船。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "배"
+          ],
+          "intro": "码头边停着船。你看着船，试着说出它的名字。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 860001,
+            "name": "岑伯"
+          },
+          "objective": "去找岑伯交谈",
+          "hint": "岑伯正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "친구?",
+          "promptGloss": "朋友。",
+          "answer": "친구!",
+          "answerGloss": "朋友。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "친구"
+          ],
+          "intro": "你在找送信的朋友吗？先试着说出“朋友”，我听听。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 860000,
+            "name": "阿澜"
+          },
+          "objective": "去找阿澜交谈",
+          "hint": "阿澜正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "편지?",
+          "promptGloss": "信。",
+          "answer": "편지!",
+          "answerGloss": "信。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "편지"
+          ],
+          "intro": "我们再看一眼这封信。你还记得刚才怎么说吗？"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "阿澜在找送信的朋友。去码头认船，再向岑伯打听。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ko-float-01",
+      "language": "ko",
+      "island": "float",
+      "title": "탁자 아래의 지도",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 860100,
+            "name": "芦笙"
+          },
+          "objective": "去找芦笙交谈",
+          "hint": "芦笙正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "지도?",
+          "promptGloss": "地图。",
+          "answer": "지도!",
+          "answerGloss": "地图。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "지도"
+          ],
+          "intro": "地图上的标记有点不一样。我们先认一认“地图”，再去看看。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "float-2",
+            "name": "双名井"
+          },
+          "objective": "到双名井观察并读出词语",
+          "hint": "你到了双名井。看看周围，听示范，试着说出这个词。",
+          "prompt": "물?",
+          "promptGloss": "水。",
+          "answer": "물!",
+          "answerGloss": "水。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "물"
+          ],
+          "intro": "井就在这里，里面有水。你朝井里看了看，试着说出自己的发现。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 860101,
+            "name": "米拉"
+          },
+          "objective": "去找米拉交谈",
+          "hint": "米拉正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "지도?",
+          "promptGloss": "地图。",
+          "answer": "지도!",
+          "answerGloss": "地图。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "지도"
+          ],
+          "intro": "你也来看地图吗？先告诉我你想看什么，我们再一起核对。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 860100,
+            "name": "芦笙"
+          },
+          "objective": "去找芦笙交谈",
+          "hint": "芦笙正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "친구?",
+          "promptGloss": "朋友。",
+          "answer": "친구!",
+          "answerGloss": "朋友。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "친구"
+          ],
+          "intro": "谢谢你一起核对。认识了新朋友，就试着介绍一下吧。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "芦笙和米拉给同一口井起了两个名字。去井边看看，再回来确认。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "ko-sail-01",
+      "language": "ko",
+      "island": "sail",
+      "title": "친구를 위한 계획",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 860200,
+            "name": "莉风"
+          },
+          "objective": "去找莉风交谈",
+          "hint": "莉风正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "계획?",
+          "promptGloss": "计划。",
+          "answer": "계획!",
+          "answerGloss": "计划。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "계획"
+          ],
+          "intro": "迎船前，还有些事要商量。我们先试着说出“计划”。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "landmark",
+            "id": "sail-1",
+            "name": "归帆码头"
+          },
+          "objective": "到归帆码头观察并读出词语",
+          "hint": "你到了归帆码头。看看周围，听示范，试着说出这个词。",
+          "prompt": "배?",
+          "promptGloss": "船。",
+          "answer": "배!",
+          "answerGloss": "船。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "배"
+          ],
+          "intro": "船在码头边。你望向船，试着说出眼前的东西。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 860202,
+            "name": "小舟"
+          },
+          "objective": "去找小舟交谈",
+          "hint": "小舟正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "친구?",
+          "promptGloss": "朋友。",
+          "answer": "친구!",
+          "answerGloss": "朋友。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "친구"
+          ],
+          "intro": "你也来迎接朋友吗？试着告诉我，你在等谁。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 860200,
+            "name": "莉风"
+          },
+          "objective": "去找莉风交谈",
+          "hint": "莉风正在和你说话。先听示范，再试着回应；也可以打字。",
+          "prompt": "계획?",
+          "promptGloss": "计划。",
+          "answer": "계획!",
+          "answerGloss": "计划。",
+          "ending": "고마워요!",
+          "endingGloss": "谢谢你。",
+          "words": [
+            "계획"
+          ],
+          "intro": "你回来啦！我们再确认一下计划。试着用刚才听到的词开个头吧。"
+        }
+      ],
+      "sceneVersion": 1,
+      "context": "小舟担心自己来晚了。到码头看看船，再向莉风确认计划。",
+      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    }
+  ],
+  "authorNotes": {
+    "audience": "三四年级外语入门儿童；先听、看示范，再说短词短句",
+    "interaction": "任务清单只导航。每段必须在对应NPC、地标或实际胜利后的战斗对话中完成。",
+    "progress": "sceneVersion独立记录场景进度，原文字练习next与词语记录保留，不假定之前已走过场景。"
+  }
+}

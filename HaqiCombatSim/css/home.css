@@ -284,3 +284,5 @@
 .home-build-tip{position:absolute;z-index:8;pointer-events:none;white-space:pre-line;max-width:min(260px,calc(100% - 24px));box-sizing:border-box;padding:8px 12px;border-radius:10px;background:rgba(28,48,35,.95);color:#fff8df;font:12px/1.5 sans-serif;box-shadow:0 3px 12px #142c3540;border:1px solid #a1c98a}
 .home-build-tip.is-invalid{border-color:#ff897c;background:#653a32}
 @media(max-width:650px){.home-build-tools{top:88px;right:8px;padding:4px;gap:4px}.home-world .home-build-tools button{min-width:48px;min-height:44px}}
+
+@media(max-width:600px){.home-world .home-edit-actions{width:188px;flex-wrap:wrap;white-space:normal}}

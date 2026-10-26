@@ -1,21 +1,23 @@
+import {learningQuestMatches} from './learning_quest_core.js';
+import {WORD_LANGUAGES,wordLanguage} from './word_lexicon_core.js';
 import {createRng,hashSeed} from './rng_core.js';
 
 export function validateWordCards(rows,cards){
-    if(!Array.isArray(rows)||rows.length>60)throw Error('文字卡配置无效');
+    if(!Array.isArray(rows))throw Error('文字卡配置无效');
     const ids=new Set();
     for(const row of rows){
-        if(!row||!['zh','en'].includes(row.language)||typeof row.entryId!=='string'||row.id!==`${row.language}:${row.entryId}`||ids.has(row.id)||!cards[row.baseCardKey]||['title','readText','description'].some(k=>typeof row[k]!=='string'||!row[k].trim()||row[k].length>160))throw Error('文字卡配置无效');
+        if(!row||!WORD_LANGUAGES.includes(row.language)||typeof row.entryId!=='string'||row.id!==`${row.language}:${row.entryId}`||ids.has(row.id)||!cards[row.baseCardKey]||['title','readText','description'].some(k=>typeof row[k]!=='string'||!row[k].trim()||row[k].length>160))throw Error('文字卡配置无效');
         ids.add(row.id);
     }
     return rows;
 }
-export function recentWordCards(state,rows,limit=10){
+export function recentWordCards(state,rows,limit=10,language=null){
     limit=Number.isInteger(limit)?Math.max(0,Math.min(10,limit)):10;
-    return rows.map(row=>({row,at:Math.max(state?.languages?.[row.language]?.entries?.[row.entryId]?.lastAttemptAt||0,state?.languages?.[row.language]?.entries?.[row.entryId]?.lastReviewAt||0)}))
+    return rows.filter(row=>!language||row.language===wordLanguage(language)).map(row=>({row,at:Math.max(state?.languages?.[row.language]?.entries?.[row.entryId]?.lastAttemptAt||0,state?.languages?.[row.language]?.entries?.[row.entryId]?.lastReviewAt||0)}))
         .filter(r=>Number.isFinite(r.at)&&r.at>0).sort((a,b)=>b.at-a.at||a.row.id.localeCompare(b.row.id)).slice(0,limit).map(r=>structuredClone(r.row));
 }
-export function makeWordCardSnapshot(state,rows,seed,limit=10){
-    return {version:2,cards:createRng(hashSeed(`${seed}:word-cards`)).shuffle(recentWordCards(state,rows,limit)),activated:[]};
+export function makeWordCardSnapshot(state,rows,seed,limit=10,language=null){
+    return {version:2,cards:createRng(hashSeed(`${seed}:word-cards`)).shuffle(recentWordCards(state,rows,limit,language)),activated:[]};
 }
 export function installWordCards(unit,snapshot,cards){
     if(!snapshot)return;
@@ -53,7 +55,7 @@ export function wordReadingMatches(actual,expected){
 export function syncDictionaryQuestProgress(save,content,state){
     let changed=false;
     for(const quest of content.questCatalog?.quests||content.catalogQuests?.quests||[]){
-        const record=save.quests?.[quest.id];if(!record?.accepted||record.claimed)continue;
+        const record=save.quests?.[quest.id];if(!learningQuestMatches(save,quest)||!record?.accepted||record.claimed)continue;
         for(const group of quest.groups||[])if(group.kind==='hanzi')for(const item of group.items){
             if(state?.languages?.zh?.entries?.[item.id]?.learned||Number.isFinite(state?.languages?.zh?.entries?.[item.id]?.lastPracticeSuccessAt)||save.hanzi?.entries?.[item.id]?.attempts?.some(a=>['write','speak'].includes(a.method))){if(record.wordPracticeVersion!==1){record.wordPracticeVersion=1;for(const g of quest.groups||[])if(g.kind==='hanzi')for(const i of g.items){record.progress||={};delete record.progress[`hanzi:${i.id}`];}changed=true;}record.progress||={};if(record.progress[`hanzi:${item.id}`]!==1){record.progress[`hanzi:${item.id}`]=1;changed=true;}}
         }

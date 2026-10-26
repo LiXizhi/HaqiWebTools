@@ -1,3 +1,4 @@
+import {openHomeLabel} from './view_home_label.js';
 import {renderSpeechWords} from './view_bilingual_dialogue.js';
 import {homeCapacity} from './home_capacity_core.js';
 import {BUILDING_TEMPLATES,buildingTemplateObjects} from './home_building_templates_core.js';
@@ -9,7 +10,7 @@ import {createHomeTerrainCache} from './home_terrain_cache.js';
 import {createCloseButton} from './view_adventure_controls.js';
 import {DetailDialog} from './view_detail_dialog.js';
 import {collectHomeWorldTrees,drawHomeObject,drawHomeWorldTree,homeObjectVisualBounds} from './view_home_art.js';
-import {requiresReading,homeObjectInteractive,footprint,summonSentences,COLORS,HOME_BIOMES,homeBiomeAt,homeInteractiveKind} from './home_core.js';
+import {requiresReading,homeObjectInteractive,footprint,summonSentences,COLORS,HOME_COLOR_HEX,HOME_BIOMES,homeBiomeAt,homeInteractiveKind} from './home_core.js';
 import {createMotionTrail,drawMotionAccessory,drawMotionTrail,motionStyle} from './adventure_motion_effects.js';
 import {createHeroActor,updateHeroActor} from './hero_pose_core.js';
 import {loadHeroLibrary} from './hero_renderer.js';
@@ -32,7 +33,7 @@ const el=(tag,cls='',...children)=>{
 };
 const button=(text,fn,cls='secondary')=>{const b=el('button',cls,text);b.type='button';b.onclick=fn;return b;};
 const activities={sleep:'睡觉',sit:'坐下休息',eat:'吃饭',drink:'喝水',bathe:'洗澡',swing:'荡秋千',slide:'玩滑梯',ball:'玩球',read:'读书',water:'浇花',dance:'跳舞',picnic:'野餐'};
-const COLOR_HEX={red:'#dc7065',blue:'#70a5ce',green:'#8eb679',yellow:'#eac773',pink:'#e4a2b3',purple:'#b19ac9',white:'#f5efdf',orange:'#e5a061',brown:'#b98b61'};
+const COLOR_HEX=HOME_COLOR_HEX;
 const INTERACTIVE_BADGES={light:'可点亮',music:'可演奏',water:'流水互动',cook:'烹饪互动',screen:'屏幕互动'};
 const CATEGORY_PRIORITY={blocks:-1,garden:0,play:1,building:2,party:3,living:4,bedroom:5,kitchen:6,bathroom:7};
 
@@ -285,6 +286,7 @@ export function createHomeView(root,cb){
   tools.append(
    button('同步当前家园',()=>run(cb.sync)),
    button('重试加载',()=>run(cb.reload)),
+   button('情境练习',cb.languageGame),
    button('听宠物愿望',()=>run(cb.speakWish)),
    button('帮它实现',cb.helpWish),
    button('重命名',e=>openNameDialog({trigger:e.currentTarget,home:model.home})),
@@ -482,6 +484,7 @@ export function createHomeView(root,cb){
    iconAction('互动','M12 3v9 M6.3 5.6a8 8 0 1 0 11.4 0',()=>cb.toggleActive?.(),'home-interaction-toggle'),
    enlarge,shrink,
    iconAction('物品属性','M4 6h16 M4 12h16 M4 18h16 M8 3v6 M16 9v6 M10 15v6',()=>{if(!model.selection?.id)return;activeDialog?.destroy();activeDialog=openBuildingProperties(modal,{el,button,obj:model.selection,item:buildingItem(model.selection,model.catalog.items),save:cb.properties});}),
+   iconAction('写标签','M4 4h16v16H4Z M7 8h10 M7 12h10 M7 16h6',()=>{if(!model.selection?.id)return;activeDialog?.destroy();activeDialog=openHomeLabel(modal,{el,button,obj:model.selection,homeId:model.home.id,save:cb.saveLabel});}),
    iconAction('收回','M3 9h18v12H3Z M3 9l3-5h3 M21 9l-3-5h-3 M12 2v12 M8 10l4 4 4-4',cb.recall,'danger'),
    iconAction('取消选择','m6 6 12 12 M18 6 6 18',cb.cancel)
   );
@@ -915,7 +918,15 @@ export function createHomeView(root,cb){
    else if(draw)bounds=drawHomeObject(ctx,item,o,p.x,p.y,b.w*scale,b.h*scale,imageFor(item.art),sec);
    else bounds=homeObjectVisualBounds(item,o,p.x,p.y,b.w*scale,b.h*scale);
    ctx.restore();
-   if(model.build||item.building?.type==='door'||homeObjectInteractive(o,model.catalog.items)){
+   if(COLOR_HEX[o.color]){
+    ctx.save();ctx.beginPath();ctx.arc(p.x+b.w*scale/2,p.y+b.h*scale+10,7,0,Math.PI*2);ctx.fillStyle=COLOR_HEX[o.color];ctx.fill();ctx.strokeStyle='#fff8dd';ctx.lineWidth=2;ctx.stroke();ctx.restore();
+   }
+   if(o.label){
+    ctx.save();ctx.font='14px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    const width=Math.min(220,ctx.measureText(o.label).width+16),cx=p.x+b.w*scale/2,cy=p.y+b.h*scale+(COLOR_HEX[o.color]?32:16);
+    ctx.fillStyle='rgba(255,248,220,.95)';ctx.fillRect(cx-width/2,cy-12,width,24);ctx.fillStyle='#294734';ctx.fillText(o.label,cx,cy,width-16);ctx.restore();
+   }
+   if(model.build||model.languageChoices?.includes(o.id)||item.building?.type==='door'||homeObjectInteractive(o,model.catalog.items)){
     if(isEdge(item)){const height=(item.building.type==='fence'?.7:1.25)*(o.sizeScale??1);for(const foot of buildingWallFeet(o,buildingRow?.connections)){const q=project(foot.x,foot.y-height);hits.push({kind:'object',id:o.id,sx:q.x-3,sy:q.y-2,sw:foot.w*scale+6,sh:(foot.h+height)*scale+4});}}
     else hits.push({kind:'object',id:o.id,sx:bounds?.x??p.x,sy:bounds?.y??p.y-12,sw:bounds?.w??b.w*scale,sh:bounds?.h??b.h*scale+12});
    }
@@ -940,8 +951,9 @@ export function createHomeView(root,cb){
     const selObj=objects.find(o=>o.id===model.selection.id);
     if(selObj){
      const b=footprint(selObj,model.catalog.items),sp=project(selObj.x+b.w/2,selObj.y);
-     edit.style.left=`${Math.max(154,Math.min(r.width-154,sp.x))}px`;
-     edit.style.top=`${Math.max(58,Math.min(r.height-130,sp.y-22))}px`;
+     const half=edit.offsetWidth/2+12;
+     edit.style.left=`${Math.max(half,Math.min(r.width-half,sp.x))}px`;
+     edit.style.top=`${Math.max(edit.offsetHeight+12,Math.min(r.height-130,sp.y-22))}px`;
     }
    }else{
     edit.style.left='50%';
@@ -1281,6 +1293,7 @@ export function createHomeView(root,cb){
    images.clear();
    terrain.dispose();buildings.dispose();
   },
+  editLabel(id,practice){const obj=model?.objects.find(o=>o.id===id);if(!obj)return;activeDialog?.destroy();activeDialog=openHomeLabel(modal,{el,button,obj,homeId:model.home.id,save:cb.saveLabel,practice});},
   stats:()=>({terrain:terrain.stats(),buildings:buildings.stats()}),
   get size(){
    const r=canvas?.getBoundingClientRect();

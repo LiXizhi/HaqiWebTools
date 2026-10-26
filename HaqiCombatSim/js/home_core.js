@@ -3,7 +3,8 @@ import {isRoofDecoration,roofAt,buildingBounds,buildingGridBounds,buildingConfli
 // Home rules are independent of adventure progression and browser IO.
 import {createRng,hashSeed} from './rng_core.js';
 export const CHUNK_SIZE=32;
-export const COLORS={red:'红色',blue:'蓝色',green:'绿色',yellow:'黄色',pink:'粉色',purple:'紫色',white:'白色',orange:'橙色',brown:'棕色'};
+export const COLORS={red:'红色',blue:'蓝色',green:'绿色',yellow:'黄色',pink:'粉色',purple:'紫色',white:'白色',orange:'橙色',brown:'棕色',black:'黑色',grey:'灰色'};
+export const HOME_COLOR_HEX={red:'#e35d52',blue:'#5393d9',green:'#58b368',yellow:'#ebbd3f',pink:'#ea8ab8',purple:'#9975d4',white:'#f5f4ef',orange:'#ed8b3b',brown:'#9a6b44',black:'#242424',grey:'#858585'};
 export const chunkKey=(x,y)=>`${Math.floor(x/CHUNK_SIZE)},${Math.floor(y/CHUNK_SIZE)}`;
 export const inventoryKey=(item,color='')=>`${item}:${color}`;
 export function homeScope(owner,role){if(!role)throw Error('请先选择角色');return JSON.stringify([owner?'account':'guest',owner||'',role]);}
@@ -116,6 +117,7 @@ const normalize=s=>String(s).normalize('NFKC').toLowerCase().replace(/[.,!?。�
 function oneEdit(a,b){if(Math.abs(a.length-b.length)>1)return false;let i=0,j=0,edits=0;while(i<a.length&&j<b.length){if(a[i]===b[j]){i++;j++;continue;}if(++edits>1)return false;if(a.length>=b.length)i++;if(b.length>=a.length)j++;}return edits+(a.length-i)+(b.length-j)<=1;}
 export const requiresReading=item=>item?.requiresReading!==false;
 export function summonSentences(item,lang='en',color=''){
+ if(!['en','zh'].includes(lang))return [];
  const noun=lang==='en'?[color,item.en].filter(Boolean).join(' '):`${COLORS[color]||''}${item.zh}`;
  const article=item.article==='some'?'some':/^[aeiou]/.test(noun)?'an':'a';
  const sentences=lang==='en'?[`Create ${article} ${noun}.`,`I want ${article} ${noun}.`,`Can I have ${article} ${noun}?`]:[`创造一个${noun}。`,`我想要一个${noun}。`,`可以给我一个${noun}吗？`];
@@ -181,6 +183,7 @@ export const validHomeSize=value=>value===undefined||(Number.isFinite(value)&&va
 export function footprint(obj,catalog){const item=catalog.find(i=>i.id===obj.itemId);if(!item)throw Error('物品不存在');if(item.building)return {...buildingBounds(obj,item),item};let [w,h]=item.size; if((obj.rotation||0)%2)[w,h]=[h,w];const size=obj.sizeScale??1;return {x:obj.x,y:obj.y,w:w*size,h:h*size,item};}
 export const overlaps=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
 export function canPlace(obj,objects,catalog){
+ if(!validHomeLabel(obj.label))return {ok:false,reason:'作品标签须为不超过60字的单行文字'};
  if(obj.interactionEnabled!==undefined&&typeof obj.interactionEnabled!=='boolean')return {ok:false,reason:'互动设置无效'};
  if(!validHomeSize(obj.sizeScale))return {ok:false,reason:'物品大小须在50%至200%之间'};
  if(!Number.isFinite(obj.x)||!Number.isFinite(obj.y)||Math.abs(obj.x)>1e9||Math.abs(obj.y)>1e9)return {ok:false,reason:'位置超出支持范围'};
@@ -229,9 +232,10 @@ export function initializeHomeResidents(saved,records,seed){
 }
 export function homeResidentPets(records,residents){return Object.values(records).filter(p=>Object.hasOwn(residents,p.id));}
 export function petWish(petId,round,catalog,lang='en'){const rng=createRng(hashSeed(`${petId}:${round}`)),item=rng.pick(catalog.filter(i=>i.activity));return {itemId:item.id,text:lang==='en'?`I want ${/^[aeiou]/.test(item.en)?'an':'a'} ${item.en}.`:`我想要一个${item.zh}。`,translation:lang==='en'?`我想要一个${item.zh}。`:`I want ${/^[aeiou]/.test(item.en)?'an':'a'} ${item.en}.`};}
+export function validHomeLabel(value){return value===undefined||typeof value==='string'&&value.length<=60&&!/[\p{Cc}\p{Cf}]/u.test(value);}
 export function validateHomePart(kind,value,catalog){
  if(!value||typeof value!=='object'||Array.isArray(value))throw Error('家园文件无效');
- if(kind==='chunk')for(const obj of Object.values(value)){if(!obj||!validBuildingProperties(obj)||(obj.interactionEnabled!==undefined&&typeof obj.interactionEnabled!=='boolean')||!validHomeSize(obj.sizeScale)||typeof obj.id!=='string'||!catalog.some(i=>i.id===obj.itemId)||!Number.isFinite(obj.x)||!Number.isFinite(obj.y)||Math.abs(obj.x)>1e9||Math.abs(obj.y)>1e9)throw Error('家园物品无效');}
+ if(kind==='chunk')for(const obj of Object.values(value)){if(!obj||!validHomeLabel(obj.label)||!validBuildingProperties(obj)||(obj.interactionEnabled!==undefined&&typeof obj.interactionEnabled!=='boolean')||!validHomeSize(obj.sizeScale)||typeof obj.id!=='string'||!catalog.some(i=>i.id===obj.itemId)||!Number.isFinite(obj.x)||!Number.isFinite(obj.y)||Math.abs(obj.x)>1e9||Math.abs(obj.y)>1e9)throw Error('家园物品无效');}
  if(kind==='inventory')for(const [key,n]of Object.entries(value)){if(!catalog.some(i=>key.startsWith(`${i.id}:`))||!Number.isSafeInteger(n)||n<0)throw Error('家园库存无效');}
  if(kind==='residents')for(const [id,p] of Object.entries(value)){if(id==='$selection'){if(p?.version!==1)throw Error('宠物名单版本无效');continue;}if(!p||!Number.isFinite(p.x)||!Number.isFinite(p.y)||Math.abs(p.x)>1e9||Math.abs(p.y)>1e9)throw Error('宠物位置无效');}
  return value;

@@ -1,3 +1,5 @@
+import {QUEST_REGIONS} from './adventure_quest_journal_core.js';
+import {recommendedLanguageQuest,withLanguageQuest} from './language_quest_core.js';
 import {createPetTraitBadges,traitUpgradeText} from './view_pet_traits.js';
 import {petTraitImprovements,mergePetTraits} from './adventure_pet_traits_core.js';
 import {ownedPetRecords} from './adventure_pet_files_core.js';
@@ -339,6 +341,12 @@ function catalogTrackLines(save,c,quest) {
     return goals.map(goal=>({text:translatedGoal(goal),done:goal.value>=goal.count}));
 }
 function appendTrackerQuest(tracker,entry,save,c,cb,teach) {
+    if(entry.languageQuest?.courseId){
+        const q=entry.languageQuest,open=()=>cb.panel('quests',{questId:q.id}),go=()=>cb.track(q.id,{pin:false});
+        const link=button([el('span','quest-state available','!'),el('span','quest-title','语言 · '+q.title)],open,'quest-track-title');
+        const text=q.status==='已完成'?'本岛语言任务已完成，可到家园复习。':q.region!==save.zone?'前往'+(QUEST_REGIONS[q.region]||q.region)+'，继续岛屿故事。':q.battleWon?'回到'+q.course.steps[0].interaction.name+'身边交谈':q.objective;
+        tracker.append(el('article','tracker-quest',el('h3','',link),el('div','tracker-line',button(text,go,'tracker-follow'),button('前往',go,'track-button'))));return;
+    }
     const chapter=c.quests.find(quest=>quest.id===entry.id),quest=chapter||c.catalogQuests.byId[entry.id];
     const ready=chapter?questReady(save,quest):catalogQuestReady(save,c,quest,catalogStatSnapshot(save,c));
     const state=questState(save,quest.id);
@@ -459,7 +467,7 @@ function renderHudContents(root,model,cb) {
         const cleared=dungeonProgress(save)?.[save.zone]?.cleared.length||0,remaining=dungeon.arenas.filter(a=>!a.blocked.length&&!dungeonProgress(save)?.[save.zone]?.cleared.includes(a.id)).length;
         tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，可以退出副本。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可以退出副本。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button('退出副本',()=>cb.leaveDungeon?.(),'track-button'));
     }else{
-        const entries=trackerEntries(save,c);
+        const entries=withLanguageQuest(trackerEntries(save,c),recommendedLanguageQuest(save,c,model.languageTasks?.rows||[],catalogStatSnapshot(save,c)));
         // 低于10级跨区域开启；其他等级保留营地任务链规则。
         // 指针挂在第一条符合条件的未交付追踪任务上，自动寻路期间不打扰。
         const teach={allow:!!teachingMode(save,c)};
@@ -632,7 +640,7 @@ export function renderDialogue(root,model,dialog,cb) {
     box.classList.toggle('dialogue-sequence',!!dialog.lines);
     const character=npcCharacter(npc,assets.hero?.manifest);
     const portrait=character?heroPortrait(assets,character,150,190):art(assets,npc.portrait,150,190,'dialogue-portrait');portrait.classList.add('dialogue-portrait');
-    const content=el('div','dialogue-content',el('p','eyebrow',islandName(npc.zone)),el('h2','',npc.name));
+    const content=el('div','dialogue-content',el('p','eyebrow',dialog.locationLabel||islandName(npc.zone)),el('h2','',npc.name));
     const close=createCloseButton(cb.close);
     if(cb.chat&&!npcHasActiveQuest(save,c,npc.id)){
         const chat=button('',()=>cb.chat(npc),'dialogue-chat');

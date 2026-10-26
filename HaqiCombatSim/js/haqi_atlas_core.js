@@ -75,3 +75,15 @@ export function atlasOverviewCamera(islands,portals,width,height,currentId){
     }
     return best;
 }
+
+// The atlas is a horizontal journey: keep the complete island height visible.
+export function atlasStripLimits(islands,width,height){
+    const w=Math.max(1,...islands.map(i=>i.w)),h=Math.max(1,...islands.map(i=>i.h));
+    // Mobile keeps 48px below the island for its two-line label, with less empty sea.
+    const sidePadding=width<600?24:48,verticalPadding=width<600?96:120;
+    const max=Math.max(.01,Math.min((width-sidePadding)/w,(height-verticalPadding)/h,768/w));
+    return {min:Math.min(max,Math.max(.01,Math.min(220,width-64)/w)),max};
+}
+export function constrainAtlasStrip(camera,bounds,width,height){
+    return {...constrainAtlas(camera,bounds,width,height),y:0};
+}

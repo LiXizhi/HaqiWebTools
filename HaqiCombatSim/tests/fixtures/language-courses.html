@@ -1,0 +1,84 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>多语言学习隔离验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_dialogue.css"><link rel="stylesheet" href="../../css/word-practice.css">
+<body class="haqi-app storybook-ui"><main>隔离学习记录，不使用真实账号。</main><div id="hud" class="hud"></div><div id="overlay" class="overlay"></div><script type="module">
+import {createWorld,findPath,distance} from '../../js/adventure_world_core.js';
+import {installNpcCatalog} from '../../js/adventure_npc_core.js';
+import {installNpcArt} from '../../js/adventure_npc_art_core.js';
+import {installIslandPackActors} from '../../js/adventure_island_packs_core.js';
+import {languageSceneTarget} from '../../js/language_quest_core.js';
+import {createAdventure} from '../../js/adventure_core.js';
+import {installCatalogQuests} from '../../js/adventure_catalog_quests_core.js';
+import {createQuestJournalLoader} from '../../js/adventure_quest_journal.js';
+import {renderHud,renderPanel} from '../../js/view_adventure.js';
+import {createLanguageQuestJournal} from '../../js/language_quest.js';
+import {configureLanguageTreeCapture,languageTreeStore} from '../../js/language_tree_capture.js';
+import {loadLanguageCourses,recordWordPractice,loadCourseCards,readPracticeCards} from '../../js/language_course.js';
+import {mergeCurriculumWordCards} from '../../js/language_curriculum_core.js';
+import {makeWordCardSnapshot} from '../../js/word_cards_core.js';
+import {wordTreeKey} from '../../js/word_lexicon_core.js';
+import {createLanguageSceneIntro} from '../../js/view_language_scene_intro.js';
+import {openIslandLanguageCourse} from '../../js/island_language_course.js';
+import {loadAuthoredHomeGames} from '../../js/home_authored_game.js';
+import {createHomeLanguageGame} from '../../js/home_language_game.js';
+import {createWordCardPractice} from '../../js/word_card_practice.js';
+let homeAuthored=false, speechFailure=false, speechGate=null, speechRelease=null;
+let role='course',save={zone:'town',languageLearning:{target:'en'}},active=true,course,accepted=0,gate=null,release=null,fail=false;
+const key=()=>JSON.stringify(['isolated-language-test',role]);configureLanguageTreeCapture(()=>({key:key()}));
+const loaded=await loadLanguageCourses();
+const read=async url=>(await fetch(new URL('../../'+url,location.href))).json(),content=await read('data/adventure/chapter.json');
+installCatalogQuests(content,await read('data/adventure/quest-runtime.json'));
+content.worldMaps=Object.fromEntries(await Promise.all(Object.entries(content.worldMapIndex.islands).map(async([id,m])=>[id,await read(m.file)])));
+installNpcCatalog(content,await read('data/adventure/npc-catalog.json'));installNpcArt(content,await read('data/adventure/npc-art.json'));
+const packs=await Promise.all(['hanzi','tide','float','sail'].map(z=>read('data/adventure/island-packs/'+z+'.json')));installIslandPackActors(content,packs);content.encounters.push(...packs.flatMap(p=>p.encounters));
+const assets={content,loadQuestJournal:createQuestJournalLoader(read),draw:()=>false,drawPet:()=>false};
+const hud=document.querySelector('#hud'),overlay=document.querySelector('#overlay');let selectedId=null,journalOpen=false;
+const tasks=createLanguageQuestJournal({getSave:()=>save,onChange(){if(role.startsWith('course-')){paintHud();if(journalOpen&&!course)paintJournal();}}});
+const model=()=>({assets,save,languageTasks:tasks.snapshot(),selectedQuestId:selectedId,pinJournalQuest:!!selectedId});
+function stop(){course?.dispose();course=null;sceneActive=false;}
+function closeJournal(){stop();journalOpen=false;overlay.replaceChildren();overlay.className="overlay";}
+function paintHud(){renderHud(hud,model(),cb);}
+function paintJournal(){renderPanel(overlay,'quests',model(),cb);}
+let world=null,sceneActive=false,currentRow=null,visits=[];
+function go(id){closeJournal();const row=tasks.snapshot().rows.find(r=>r.id===id);if(!row)return;
+ if(save.zone!==row.region){save.zone=row.region;world=createWorld(row.region,content,save);}world??=createWorld(save.zone,content,save);
+ const target=languageSceneTarget(row,world);if(!target)throw Error('missing scene');
+ const route=findPath(world,save.position,target);if(!route.length&&distance(save.position,target)>85)throw Error('no path');
+ save.position={x:target.x,y:target.y};currentRow=row;visits.push({kind:target.kind,id:target.id});
+ if(target.kind==='encounter'){paintHud();return;}
+ sceneActive=true;course=openIslandLanguageCourse({introFactory:options=>createLanguageSceneIntro(overlay,model(),options),getState:()=>({save,active:sceneActive}),courseId:row.courseId,interaction:{...row.interaction,zone:save.zone,distance:0,won:row.battleWon},actor:target,voiceFactory:()=>voice,onClose:()=>{sceneActive=false;course=null;},onComplete:()=>{sceneActive=false;course=null;paintHud();}});
+}
+const cb={close:closeJournal,stopLanguageTask:stop,retryLanguageTasks:()=>tasks.retry(),panel(kind,options={}){closeJournal();if(kind==='quests'){selectedId=options.questId;journalOpen=true;paintJournal();}},track:go,action(){},membership(){},cloud(){},interact(){}};
+
+const voice={async cancel(){},async start(){},async finish(){return 'Please use the chair.';},async speak(){if(speechFailure)throw Error('测试语音不可用');if(speechGate)await speechGate;},async judge(){if(homeAuthored)throw Error('作者故事不应请求模型');if(gate)await gate;return {prompt:'May I sit here?',answer:'Please use the chair.',reply:'Thank you for helping me.',words:['chair'],action:{kind:'pet-use',objectId:'chair1',petId:'pet1',activity:'sit'}};}};
+const home=createHomeLanguageGame({loadAuthored:async index=>{if(!homeAuthored)throw Error('测试作者文件不可用');return loadAuthoredHomeGames(index);},getState:()=>({active,homeId:'isolated',target:save.languageLearning.target,settings:save.languageLearning,objects:homeAuthored==='find'?[{id:'book1',itemId:'book',x:2,y:3},{id:'lamp1',itemId:'desk-lamp',x:4,y:3}]:homeAuthored?[{id:'cup1',itemId:'cup',x:2,y:3}]:[{id:'chair1',itemId:'chair',x:2,y:3}],pets:[{id:'pet1',name:'小伙伴'}],catalog:[{id:'chair',zh:'椅子',activity:'sit'},{id:'cup',zh:'杯子',activity:'drink'},{id:'book',zh:'书',activity:'read'},{id:'desk-lamp',zh:'台灯'}],introModel:model()}),voiceFactory:()=>voice,record:async(event,valid)=>{if(fail)throw Error('测试保存失败');return recordWordPractice(event,valid);}});
+const practice=createWordCardPractice({getState:()=>({save,owner:'isolated-language-test',role,content:{}}),onSaved(){},voice});
+window.languageTest={
+ async course(language='en'){closeJournal();home.close();practice.close();role='course-'+language;save=createAdventure(content,{name:'任务验收'});save.zone='town';world=createWorld('town',content,save);visits=[];save.languageLearning={...save.languageLearning,enabled:true,target:language};tasks.ensure();paintHud();},
+ toggle(enabled){save.languageLearning.enabled=enabled;paintHud();},
+ travel(zone){closeJournal();save.zone=zone;world=createWorld(zone,content,save);save.position={...world.layout.spawn};paintHud();},
+ answer(){return currentRow.course.steps[currentRow.next].answer;},
+ async win(){const ticket=tasks.battleTicket(currentRow.interaction.id);tasks.clear();await tasks.won(ticket);paintHud();},
+ get visits(){return visits;},
+ get current(){return currentRow;},
+ async state(language='en'){return (await languageTreeStore.read(wordTreeKey(key(),language))).state;},
+ async home(){homeAuthored=false;closeJournal();hud.replaceChildren();practice.close();role='home';save={zone:'town',languageLearning:{target:'en'}};await recordWordPractice({language:'en',words:['chair'],id:'seed',at:1});home.open();},
+ async authoredHome(){home.close();closeJournal();homeAuthored=true;role='home-authored';save={zone:'town',languageLearning:{target:'en'}};await recordWordPractice({language:'en',words:['water'],id:'seed-water',at:1});home.open();},
+ async authoredTurnHome(){home.close();closeJournal();homeAuthored='find';role='home-turn';save={zone:'town',languageLearning:{target:'en'}};home.open();},
+ async authoredObjectHome(){home.close();closeJournal();homeAuthored='find';role='home-objects';save={zone:'town',languageLearning:{target:'en'}};home.open();},
+ async authoredWritingHome(){home.close();closeJournal();homeAuthored='find';role='home-writing';save={zone:'town',languageLearning:{target:'en'}};await recordWordPractice({language:'en',words:['book'],id:'seed-write-book',at:1});home.open();},
+ speechFail(value){speechFailure=value;},
+ speechHold(){speechGate=new Promise(resolve=>{speechRelease=resolve;});},
+ speechRelease(){speechRelease?.();speechGate=null;},
+ labelTicket(id){return home.labelTicket(id);},
+ homeEvent(event){home.event(event);},
+ async cardPool(language='en'){const rows=mergeCurriculumWordCards((await read('data/adventure/dictionary/word-cards.json')).cards,await loadCourseCards('Life_SingleHeal_Level0',language)),state=await readPracticeCards(key(),language,{languages:{}},rows);return makeWordCardSnapshot(state,rows,71,10,language);},
+ async curriculumCard(id){home.close();const rows=mergeCurriculumWordCards((await read('data/adventure/dictionary/word-cards.json')).cards,await loadCourseCards('Life_SingleHeal_Level0','en')),row=rows.find(r=>r.entryId===id);await practice.open(row,()=>accepted++);return row.readText;},
+ event(){home.event(homeAuthored?{kind:'pet-use',objectId:'cup1',petId:'pet1',activity:'drink'}:{kind:'pet-use',objectId:'chair1',petId:'pet1',activity:'sit'});},
+ switch(language){save.languageLearning.target=language;if(role.startsWith('course-')){closeJournal();tasks.ensure();paintHud();}},
+ fail(value){fail=value;},
+ gate(){gate=new Promise(resolve=>release=resolve);},
+ release(){release?.();gate=null;},
+ async card(language){closeJournal();hud.replaceChildren();home.close();role='card-'+language;save={zone:'town',languageLearning:{target:language}};const c=loaded.data.courses.find(c=>c.language===language&&c.island==='town'),step=c.steps[0],entry=loaded.indexes[language].entries.get(step.words[0]);await practice.open({id:language+':'+entry.id,language,entryId:entry.id,treeEntryId:entry.id,title:entry.text,readText:step.answer,description:entry.meaning},()=>accepted++);return step.answer;},
+ get accepted(){return accepted;}
+};
+</script></body></html>

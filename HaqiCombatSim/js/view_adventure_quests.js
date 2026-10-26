@@ -51,13 +51,14 @@ export function renderQuestJournal(body,model,cb,ui) {
     },'secondary');
     const untrackButton=quest=>trackedQuestIds(save,c).includes(quest.id)?button('取消追踪',()=>cb.action({type:'track-catalog',questId:quest.id,remove:true}),'secondary'):null;
     const {save,assets}=model,c=assets.content,current=currentQuest(save,c);
-    const requestedId=model.pinJournalQuest?Number(model.selectedQuestId)||null:null;
+    const requestedId=model.pinJournalQuest?model.selectedQuestId??null:null;
     const inspector=new ItemDetails(body,model,ui);
     const box=body.closest('.modal');box.classList.add('quest-journal-modal');
     const stats=()=>catalogStatSnapshot(save,c);
     const rewardsForSafe=group=>{try{return rewardsFor(save,c,{rewards:[group]});}catch{return group.items;}};
     const label=q=>journalQuestStatus(save,c,q,stats());
-    let rows=c.quests.map(q=>({...q,region:'camp'})),selectedId=model.selectedQuestId||current?.id||rows[0]?.id,page=0;
+    const languageRows=model.languageTasks?.rows||[];
+    let rows=[...languageRows,...c.quests.map(q=>({...q,region:'camp'}))],selectedId=model.selectedQuestId||current?.id||rows[0]?.id,page=0;
     const pageSize=20,filters={region:defaultJournalRegion(save),status:''};
     let locate=true;
     const list=el('nav','journal-directory');list.setAttribute('aria-label',tr('全岛任务'));
@@ -83,9 +84,14 @@ export function renderQuestJournal(body,model,cb,ui) {
     header.insertBefore(toolbar,header.lastElementChild);
     const loading=el('div','journal-load-status','正在读取全岛任务…');loading.setAttribute('role','status');
     body.append(loading,el('div','journal-layout',sidebar,detail));
+    if(model.languageTasks?.loading)body.prepend(el('p','journal-language-status','正在读取语言任务…'));
+    if(model.languageTasks?.error)body.prepend(el('div','journal-language-status',el('span','',model.languageTasks.error),button('重试语言任务',()=>cb.retryLanguageTasks?.(),'secondary')));
     const entries=new Map();
     function select(row) {
         selectedId=row.id;
+        if(String(detail.dataset.questId)===String(row.id)&&detail.querySelector('.journal-language-practice')){highlight(row.id);return;}
+        cb.stopLanguageTask?.();
+        if(row.courseId){selectLanguage(row);return;}
         const q=c.quests.find(q=>q.id===row.id);
         if(!q){selectCatalog(row);return;}
         for(const [id,b] of entries){b.classList.toggle('selected',id===q.id);if(id===q.id)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');}
@@ -117,6 +123,16 @@ export function renderQuestJournal(body,model,cb,ui) {
         detail.append(footer);pinFooter();
     }
     function highlight(id){for(const [qid,b] of entries){b.classList.toggle('selected',qid===id);if(qid===id)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');}}
+    function selectLanguage(q){
+        highlight(q.id);detail.dataset.questId=q.id;
+        detail.replaceChildren(el('header','journal-detail-heading',el('span','journal-status',`${QUEST_REGIONS[q.region]} · 语言任务 · ${q.status}`),el('h3','',q.title)),el('p','journal-description',q.description));
+        const target=q.battleWon?'回到'+q.course.steps[0].interaction.name+'身边，继续交谈':q.objective;
+        detail.append(el('section','journal-section',el('h4','','当前目标'),el('p','',target||'这段岛屿故事已完成。'),el('p','muted',`故事进度 ${q.next} / ${q.total}`)));
+        const footer=el('footer','journal-footer');
+        if(q.status==='已完成')footer.append(button('到家园练习',()=>cb.panel('home'),'primary'));
+        else footer.append(button(save.zone!==q.region?'前往任务岛屿':q.interaction?.kind==='npc'||q.battleWon?'前往交谈':q.interaction?.kind==='encounter'?'前往战斗':'前往场景',()=>cb.track(q.id),'primary'));
+        detail.append(footer);pinFooter();
+    }
     function selectCatalog(q){
         highlight(q.id);detail.dataset.questId=q.id;
         const runtime=c.catalogQuests?.byId[q.id];
@@ -166,11 +182,11 @@ export function renderQuestJournal(body,model,cb,ui) {
         if(locate){
             if(requestedId){
                 const focus=focusJournalQuest(rows,filters,requestedId,pageSize,save,c,stats());
-                const found=filterJournalQuests(rows,focus.filters,save,c,stats()).some(quest=>Number(quest.id)===requestedId);
+                const found=filterJournalQuests(rows,focus.filters,save,c,stats()).some(quest=>String(quest.id)===String(requestedId));
                 if(found){filters.region=focus.filters.region;region.value=filters.region;page=focus.page;selectedId=requestedId;locate=false;}
             }else{
                 const here=filterJournalQuests(rows,filters,save,c,stats());
-                const index=here.findIndex(quest=>Number(quest.id)===Number(selectedId));
+                const index=here.findIndex(quest=>String(quest.id)===String(selectedId));
                 if(index>=0)page=Math.floor(index/pageSize);
                 if(index>=0||rows.length>c.quests.length)locate=false;
             }
@@ -179,14 +195,14 @@ export function renderQuestJournal(body,model,cb,ui) {
         page=Math.max(0,Math.min(page,pages-1));entries.clear();list.replaceChildren();pager.replaceChildren();
         setText(counter,'{shown} / {total} 项',{shown:filtered.length,total:rows.length});
         for(const [index,q] of filtered.slice(page*pageSize,(page+1)*pageSize).entries()){
-            const b=button([el('span','journal-index',String(page*pageSize+index+1).padStart(2,'0')),el('span','journal-entry-text',el('strong','',q.title),el('small','',label(q)))],()=>select(q),'journal-entry');
+            const b=button([el('span','journal-index',String(page*pageSize+index+1).padStart(2,'0')),el('span','journal-entry-text',el('strong','',q.title),el('small','',(q.courseId||c.catalogQuests?.byId[q.id]?.learningLanguage?'语言任务 · ':'')+label(q)))],()=>select(q),'journal-entry');
             b.dataset.questId=q.id;b.setAttribute('aria-controls',detail.id);entries.set(q.id,b);list.append(b);
         }
         const previous=button('上一页',()=>{page--;renderList();},'secondary'),next=button('下一页',()=>{page++;renderList();},'secondary');
         previous.disabled=page===0;next.disabled=page===pages-1;
         const pageCount=el('span','journal-page-count');setText(pageCount,'{page} / {pages}',{page:page+1,pages});pager.append(previous,pageCount,next);
         const visible=filtered.slice(page*pageSize,(page+1)*pageSize);
-        const initial=visible.find(q=>q.id===Number(selectedId))||visible[0];
+        const initial=visible.find(q=>String(q.id)===String(selectedId))||visible[0];
         if(initial)select(initial);else{list.append(el('p','muted','没有符合条件的任务'));detail.replaceChildren(el('p','muted','请调整岛屿或任务状态。'));delete detail.dataset.questId;}
         list.scrollTop=0;
     }
@@ -197,7 +213,7 @@ export function renderQuestJournal(body,model,cb,ui) {
             if(!assets.loadQuestJournal)throw Error('任务目录未配置');
             const data=await assets.loadQuestJournal();if(!body.isConnected)return;
             const playableIds=new Set(c.quests.map(q=>q.id));
-            rows=data.quests.filter(q=>!q.obsolete).sort((a,b)=>Number(playableIds.has(b.id))-Number(playableIds.has(a.id))||a.id-b.id);
+            rows=[...languageRows,...data.quests.filter(q=>!q.obsolete).sort((a,b)=>Number(playableIds.has(b.id))-Number(playableIds.has(a.id))||a.id-b.id)];
             locate=true;loading.hidden=true;renderList();
         }catch(error){if(!body.isConnected)return;loading.replaceChildren(el('span','','全岛任务读取失败，已保留教学任务。'),button('重试',load,'secondary'));}
     }

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
-import {atlasBounds,fitAtlas,atlasPoint,atlasInverse,zoomAtlas,constrainAtlas,atlasOceanTiles,atlasSeaDecorations,islandAtlasPoint,islandLocalPoint,islandDetailOpacity,atlasOverviewCamera,pickAtlasPortal,pickAtlasIsland,atlasCoastContains,atlasPortalSize} from '../js/haqi_atlas_core.js';
+import {atlasStripLimits,constrainAtlasStrip,atlasBounds,fitAtlas,atlasPoint,atlasInverse,zoomAtlas,constrainAtlas,atlasOceanTiles,atlasSeaDecorations,islandAtlasPoint,islandLocalPoint,islandDetailOpacity,atlasOverviewCamera,pickAtlasPortal,pickAtlasIsland,atlasCoastContains,atlasPortalSize} from '../js/haqi_atlas_core.js';
 import {renderHaqiAtlas} from '../js/view_haqi_atlas.js';
 import {ISLANDS} from '../js/adventure_world_map_core.js';
 
@@ -48,7 +48,7 @@ test('narrow overview keeps the current island visible and readable',()=>{
     for(const width of [320,390,900])for(const current of art.islands){const c=atlasOverviewCamera(art.islands,art.portals,width,600,current.id),a=atlasPoint(c,{x:current.x-current.w/2,y:current.y-current.h/2},width,600),b=atlasPoint(c,{x:current.x+current.w/2,y:current.y+current.h/2},width,600);assert.ok(a.x>=0&&a.y>=0&&b.x<=width&&b.y<=600,current.id);assert.ok(current.w*c.scale>=72,current.id);}
 });
 test('a seventh standalone island extends the calculated world bounds',()=>{
-    const old=atlasBounds(art.islands),next=atlasBounds([...art.islands,{id:'seventh',x:2200,y:0,w:300,h:240,resource:'seventh'}]);assert.ok(next.w>old.w);assert.equal(next.x,old.x);
+    const old=atlasBounds(art.islands),next=atlasBounds([...art.islands,{id:'seventh',x:old.x+old.w+300,y:0,w:300,h:240,resource:'seventh'}]);assert.ok(next.w>old.w);assert.equal(next.x,old.x);
 });
 test('runtime atlas resources match their archive hashes, budget and crop bounds',()=>{
     for(const row of Object.values(art.resources)){const bytes=fs.readFileSync(new URL('../'+row.local,import.meta.url));assert.equal(bytes.length,row.size);assert.ok(bytes.length<=200000);assert.equal(createHash('sha256').update(bytes).digest('hex'),row.sha256);assert.match(row.cdn,/^https:\/\/cdn\.keepwork\.com\//);}
@@ -67,7 +67,7 @@ test('every island retains its own registered illustration and full-canvas coord
     }
 });
 test('vortex picking uses screen pixels at any zoom',()=>{
-    for(const scale of [.1,1,5]){const c={...art.portals[0].haqi,scale},p={x:450,y:300};assert.equal(pickAtlasPortal(art.portals,p,c,900,600)?.id,art.portals[0].id);assert.equal(pickAtlasPortal(art.portals,{x:480,y:300},c,900,600),null);}
+    for(const scale of [.1,1,5]){const c={...art.portals[0].haqi,scale},p={x:450,y:300};assert.equal(pickAtlasPortal(art.portals,p,c,900,600)?.id,art.portals[0].id);assert.equal(pickAtlasPortal([art.portals[0]],{x:480,y:300},c,900,600),null);}
 });
 test('vortices grow with zoom, have a bounded size and a matching click radius',()=>{
     assert.equal(atlasPortalSize(1,1),44);assert.equal(atlasPortalSize(4,1),88);assert.equal(atlasPortalSize(100,1),96);
@@ -82,7 +82,7 @@ test('island picking respects a coastal silhouette and ignores empty sea inside 
     assert.equal(pickAtlasIsland([island],{x:50,y:50},(_,p)=>atlasCoastContains(coast,p)),island);
 });
 
-async function withMap(run,{initial='world',zone='town',earthReturn=null,pendingEncounter=null,loadFail=false,deferred=false,focusPortal=null,illustration=false,imageFailure=false,deferredImage=false}={}){
+async function withMap(run,{initial='world',zone='town',earthReturn=null,pendingEncounter=null,loadFail=false,deferred=false,focusPortal=null,illustration=false,imageFailure=false,deferredImage=false,atlasIslands=art.islands}={}){
     const previous={document:globalThis.document,Image:globalThis.Image,requestAnimationFrame:globalThis.requestAnimationFrame,cancelAnimationFrame:globalThis.cancelAnimationFrame};
     const paintings=[],pendingImages=[];
     class Element{
@@ -92,14 +92,15 @@ async function withMap(run,{initial='world',zone='town',earthReturn=null,pending
         addEventListener(name,fn){this.events[name]=fn;}getBoundingClientRect(){return {left:0,top:0,width:900,height:600};}
         getContext(){return new Proxy({},{get:(_,key)=>key==='drawImage'?(...args)=>paintings.push(args):()=>{}});}querySelector(selector){return this.children.find(c=>c.className.split(' ').includes(selector.slice(1)))||this.children.map(c=>c.querySelector?.(selector)).find(Boolean);}
     }
-    globalThis.document={createElement:tag=>new Element(tag),createElementNS:(_,tag)=>new Element(tag)};globalThis.requestAnimationFrame=fn=>{fn();return 1;};globalThis.cancelAnimationFrame=()=>{};
+    const frames=new Map();let frameId=0,frameTime=performance.now();const stepFrame=(ms=16)=>{frameTime=Math.max(frameTime,performance.now())+ms;const jobs=[...frames.values()];frames.clear();jobs.forEach(fn=>fn(frameTime));};const flushFrames=()=>{for(let i=0;frames.size&&i<50;i++)stepFrame();};
+    globalThis.document={createElement:tag=>new Element(tag),createElementNS:(_,tag)=>new Element(tag)};globalThis.requestAnimationFrame=fn=>{frames.set(++frameId,fn);return frameId;};globalThis.cancelAnimationFrame=id=>frames.delete(id);
     const root=new Element('div'),save={zone,earthReturn,level:1,position:{x:3500,y:3000},pendingEncounter},snapshot=structuredClone(save),travels=[],portals=[],positions=[],drawn=[];
-    let resolveMap;const data={...art,islands:art.islands.map(i=>({...i,detailStyle:illustration?'illustration':undefined})),resources:illustration?{[town.resource]:art.resources[town.resource]}:{}};
+    let resolveMap;const data={...art,islands:atlasIslands.map(i=>({...i,detailStyle:illustration?'illustration':undefined})),resources:illustration?{[town.resource]:art.resources[town.resource]}:{}};
     globalThis.Image=class {constructor(){this.naturalWidth=art.resources[town.resource].width;this.naturalHeight=art.resources[town.resource].height;}set src(value){this.url=value;if(deferredImage)pendingImages.push(this);else if(imageFailure)this.onerror();else this.onload();}};
     const view=renderHaqiAtlas(root,{zone,isEarth:zone==='earth'}, {save,focusPortal,assets:{mode:'local',content:{worldMaps:{town:layout}}},mapArt:deferred?new Promise(resolve=>resolveMap=()=>resolve(data)):loadFail?Promise.reject(Error('offline')):data},{close(){},switchWorld(){},travel:id=>travels.push(id),portal:(p,target)=>portals.push([p.id,target]),teleportToPosition:(x,y)=>positions.push({x,y}),drawIsland:(_,id,options)=>drawn.push({id,options})},initial);
     try{await new Promise(resolve=>setImmediate(resolve));const stage=root.querySelector('.haqi-atlas-stage'),canvas=root.querySelector('.haqi-atlas-canvas'),card=root.querySelector('.haqi-atlas-selection'),labels=root.querySelector('.haqi-atlas-labels');
         const pointer=(id,x,y,target=canvas)=>({pointerId:id,clientX:x,clientY:y,button:0,target});
-        await run({root,stage,canvas,card,labels,view,save,travels,portals,positions,drawn,paintings,pointer,resolveMap,loadImages:()=>pendingImages.forEach(image=>image.onload())});assert.deepEqual(save,snapshot,'map browsing must never mutate a save');
+        await run({stepFrame,flushFrames,root,stage,canvas,card,labels,view,save,travels,portals,positions,drawn,paintings,pointer,resolveMap,loadImages:()=>pendingImages.forEach(image=>image.onload())});assert.deepEqual(save,snapshot,'map browsing must never mutate a save');
     }finally{view.dispose();Object.assign(globalThis,previous);}
 }
 test('island selection does not travel until the button is pressed, and preserves island IDs',async()=>{
@@ -161,13 +162,13 @@ test('detailed dragging reuses the buffered scene and cached terrain, while zoom
         view.zoom(1.2);assert.ok(view.getState().renderStats.sceneBuilds>after.sceneBuilds);
     },{initial:'local'});
 });
-test('wheel events on island labels zoom at the pointer without selecting or traveling',async()=>{
-    await withMap(({stage,labels,view,travels})=>{const before=view.getState().camera.scale;stage.onwheel({clientX:450,clientY:300,deltaY:-20,target:labels.children[0],preventDefault(){}});assert.ok(view.getState().camera.scale>before);assert.equal(view.getState().selected,null);assert.equal(travels.length,0);});
+test('wheel events on island labels zoom without selecting or traveling',async()=>{
+    await withMap(({stage,labels,view,travels})=>{const before=view.getState().camera;stage.onwheel({clientX:450,clientY:300,deltaY:-20,target:labels.children[0],preventDefault(){}});assert.ok(view.getState().camera.scale>before.scale);assert.equal(view.getState().camera.x,before.x);assert.equal(view.getState().camera.y,0);assert.equal(view.getState().selected,null);assert.equal(travels.length,0);});
 });
 test('a fresh control click works after a drag or pinch instead of inheriting click suppression',async()=>{
     await withMap(({root,stage,pointer,view})=>{stage.onpointerdown(pointer(1,450,300));stage.onpointermove(pointer(1,500,350));stage.onpointerup(pointer(1,500,350));const control=root.querySelector('.earth-map-zoom').children[0],scale=view.getState().camera.scale;stage.onpointerdown(pointer(2,850,50,control));let prevented=false;stage.events.click({detail:1,preventDefault(){prevented=true;},stopImmediatePropagation(){}});assert.equal(prevented,false);control.onclick();assert.ok(view.getState().camera.scale>scale);});
 });
-test('vortex switches only the viewed world and does not invoke travel',async()=>{
+test('vortex delegates to the controller without invoking island travel',async()=>{
     await withMap(({labels,portals,travels})=>{labels.children.find(n=>n.className==='map-vortex').onclick();assert.deepEqual(portals,[[art.portals[0].id,'earth']]);assert.equal(travels.length,0);});
 });
 test('returning through a vortex focuses the current island',async()=>{
@@ -187,11 +188,77 @@ for(const previous of ['fire',null,'missing'])test(`earth to Haqi focuses and hi
     const expected=art.islands.find(i=>i.id===(previous==='fire'?'fire':'camp'));
     await withMap(({view,labels,travels})=>{
         const camera=view.getState().camera;
-        assert.equal(camera.x,expected.x);assert.equal(camera.y,expected.y);
+        assert.equal(camera.x,constrainAtlasStrip({...camera,x:expected.x},view.getState().bounds,900,600).x);assert.equal(camera.y,0);
         assert.ok(camera.scale>fitAtlas(atlasBounds(art.islands),900,600).scale);
         const highlighted=labels.children.filter(n=>n.className.split(' ').includes('current'));
         assert.deepEqual(highlighted.map(n=>n.textContent),[expected.name]);
         assert.equal(highlighted[0].attributes['aria-current'],undefined,'previous island is not the player location');
         assert.equal(travels.length,0);
     },{zone:'earth',earthReturn:previous?{zone:previous,position:{x:1,y:1}}:null});
+});
+
+ test('the journey is ordered horizontally and both vortices occupy the next sea gap',()=>{
+    assert.deepEqual(art.islands.filter(i=>i.id!=='camp').map(i=>i.id),['hanzi','town','fire','ice','desert','dark','tide','float','sail']);
+    for(let n=0;n<art.islands.length;n++){const i=art.islands[n];assert.equal(i.y,0);if(n)assert.ok(i.x-i.w/2>art.islands[n-1].x+art.islands[n-1].w/2);}
+    assert.equal(art.portals.length,2);
+    for(const [n,id]of ['fire','ice'].entries()){const i=art.islands.find(i=>i.id===id),next=art.islands[art.islands.indexOf(i)+1],p=art.portals[n];assert.ok(p.haqi.x>i.x+i.w/2&&p.haqi.x<next.x-next.w/2);assert.equal(p.travel,true);assert.ok(p.earth.name);}
+ });
+ test('strip camera keeps complete islands readable and vertical position fixed',()=>{
+    for(const width of [320,390,900])for(const height of [240,600]){const {min,max}=atlasStripLimits(art.islands,width,height);assert.ok(min>0&&max>=min);for(const i of art.islands)assert.ok(i.h*max<=height-(width<600?96:120)+.001);const c=constrainAtlasStrip({x:1e9,y:1e9,scale:max},atlasBounds(art.islands),width,height);assert.equal(c.y,0);}
+ });
+ test('diagonal dragging cannot move the map vertically and navigation buttons browse',async()=>{
+    await withMap(({stage,canvas,pointer,view,root,flushFrames})=>{const before=view.getState().camera;stage.onpointerdown(pointer(1,450,300));stage.onpointermove(pointer(1,510,400));stage.onpointerup(pointer(1,510,400));assert.equal(view.getState().camera.y,0);assert.ok(view.getState().camera.x<before.x);root.querySelector('.haqi-atlas-navigation').children[2].onclick();flushFrames();assert.ok(view.getState().camera.x>before.x);});
+ });
+
+test('configured Haqi vortices dispatch Earth travel while return portals only browse',()=>{
+    const source=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
+    const body=source.slice(source.indexOf('function browseWorldPortal('),source.indexOf('const earthPlaces='));
+    const events=[];
+    const route=new Function('travelEarth','close','openEarthMap','openPanel',`let atlasPortalFocus=null,panel=null;${body};return browseWorldPortal;`)(geo=>events.push(['travel',geo]),()=>events.push(['close']),geo=>events.push(['map',geo]),panel=>events.push(['panel',panel]));
+    route(art.portals[0],'earth');assert.deepEqual(events,[['travel',art.portals[0].earth]]);
+    events.length=0;route(art.portals[1],'haqi');assert.deepEqual(events,[['panel','worldmap']]);
+    events.length=0;route({...art.portals[0],travel:false},'earth');assert.deepEqual(events,[['close'],['map',{...art.portals[0].earth,portalFocus:true}]]);
+});
+
+test('arrow images animate movement and a new map gesture cancels the animation',async()=>{
+    await withMap(({root,view,stepFrame,flushFrames,stage,pointer})=>{
+        const right=root.querySelector('.haqi-atlas-navigation').children[2],start=view.getState().camera.x;
+        assert.equal(right.children[0].tag,'svg');right.onclick();assert.equal(view.getState().camera.x,start);
+        stepFrame(80);const middle=view.getState().camera.x;assert.ok(middle>start);flushFrames();assert.ok(view.getState().camera.x>middle);
+        right.onclick();stepFrame(30);stage.onpointerdown(pointer(1,450,300));const stopped=view.getState().camera.x;flushFrames();assert.equal(view.getState().camera.x,stopped);stage.onpointercancel(pointer(1,450,300));
+    });
+});
+test('progress lists every island, scrubs the map, and follows the viewed location without travel',async()=>{
+    await withMap(({root,view,travels,flushFrames})=>{
+        const progress=root.querySelector('.haqi-atlas-progress'),stops=root.querySelector('.haqi-atlas-stops');
+        assert.equal(root.querySelector('.haqi-atlas-jump'),undefined);assert.deepEqual(stops.children.map(n=>n.textContent),art.islands.map(i=>i.name));
+        progress.value='4';progress.oninput();assert.equal(view.getState().camera.x,art.islands[4].x);assert.equal(stops.children[4].attributes['aria-current'],'location');
+        stops.children[6].onclick();flushFrames();assert.equal(view.getState().camera.x,art.islands[6].x);assert.equal(stops.children[6].attributes['aria-current'],'location');assert.equal(stops.children[4].attributes['aria-current'],'false');assert.equal(Number(progress.value),6);assert.deepEqual(travels,[]);
+    });
+});
+test('keyboard arrows animate and disposal cancels outstanding movement',async()=>{
+    await withMap(({stage,view,stepFrame,flushFrames})=>{const x=view.getState().camera.x;stage.onkeydown({key:'ArrowRight',preventDefault(){}});assert.equal(view.getState().camera.x,x);stepFrame(50);assert.ok(view.getState().camera.x>x);view.dispose();const stopped=view.getState().camera.x;flushFrames();assert.equal(view.getState().camera.x,stopped);});
+});
+
+test('mobile island framing uses more of the viewport without clipping the island label',()=>{
+    for(const [width,height]of [[320,280],[390,360],[450,360]]){
+        const {max}=atlasStripLimits(art.islands,width,height),w=Math.max(...art.islands.map(i=>i.w)),h=Math.max(...art.islands.map(i=>i.h));
+        const previous=Math.min((width-48)/w,(height-120)/h,768/w)*.9;
+        assert.ok(max*.98>previous*1.1);
+        assert.ok(w*max<=width-24+.001);assert.ok(h*max/2+24+22<=height/2);
+    }
+});
+
+test('one hundred islands remain reachable by progress, names and keyboard with active-name scrolling',async()=>{
+    const many=Array.from({length:100},(_,n)=>({...town,id:n===0?'town':`future-${n}`,name:`岛屿${n+1}`,x:n*500}));
+    await withMap(({root,view,flushFrames,travels})=>{
+        const progress=root.querySelector('.haqi-atlas-progress'),stops=root.querySelector('.haqi-atlas-stops'),position=root.querySelector('.haqi-atlas-position');
+        assert.equal(stops.children.length,100);assert.equal(progress.max,'99');assert.equal(position.hidden,false);
+        stops.clientWidth=300;stops.scrollWidth=6400;stops.scrollLeft=0;stops.children.forEach((node,i)=>{node.offsetLeft=i*64;node.offsetWidth=64;});
+        progress.value='75';progress.oninput();assert.equal(view.getState().camera.x,many[75].x);assert.equal(stops.children[75].attributes['aria-current'],'location');assert.ok(stops.scrollLeft>4000);assert.match(position.textContent,/76 \/ 100/);
+        progress.onkeydown({key:'ArrowRight',preventDefault(){}});assert.equal(view.getState().camera.x,many[76].x);
+        stops.children[40].onclick();flushFrames();assert.equal(view.getState().camera.x,many[40].x);assert.equal(stops.children[40].attributes['aria-current'],'location');
+        progress.onkeydown({key:'End',preventDefault(){}});assert.equal(stops.children[99].attributes['aria-current'],'location');
+        progress.onkeydown({key:'Home',preventDefault(){}});assert.equal(stops.children[0].attributes['aria-current'],'location');assert.deepEqual(travels,[]);
+    },{atlasIslands:many});
 });

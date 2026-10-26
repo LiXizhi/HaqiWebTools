@@ -56,7 +56,7 @@ export function createLearningChatView(cb){
         headerMore.hidden=fit===items.length;
         if(headerMore.hidden)setHeaderMenu(false);
     }
-    if(typeof ResizeObserver==='function'&&typeof toolbar.getBoundingClientRect==='function')new ResizeObserver(()=>fitHeaderActions()).observe(toolbar);
+    const toolbarObserver=typeof ResizeObserver==='function'&&typeof toolbar.getBoundingClientRect==='function'?new ResizeObserver(()=>fitHeaderActions()):null;toolbarObserver?.observe(toolbar);
     headerMenu.addEventListener('click',e=>{if(e.target.closest('button'))setHeaderMenu(false,true);},true);
     const loginNotice=el('section','camp-chat-login');loginNotice.hidden=true;loginNotice.setAttribute('role','status');
     const loginTitle=el('h3','','登录 KeepWork，开启 AI 对话'),loginText=el('p','','离线角色暂时无法使用大模型。登录后会自动将当前本地角色转为云端角色，保留冒险进度。'),loginButton=button('登录并转为云端角色',()=>cb.login?.());
@@ -87,7 +87,8 @@ export function createLearningChatView(cb){
         if(!menu.hidden&&!menu.contains(e.target)&&!more.contains(e.target))setMore(false);
         if(!headerMenu.hidden&&!headerMenu.contains(e.target)&&!headerMore.contains(e.target))setHeaderMenu(false);
     });
-    actions.append(typing,micProgress,hints);
+    const sceneNext=button('继续冒险',()=>cb.sceneContinue?.(),'primary');sceneNext.hidden=true;
+    actions.append(typing,micProgress,hints,sceneNext);
     mic.title=tr('按住对话，松开发送 · 点击录制，再点结束');
     footer.append(form,actions,status);panel.append(header,loginNotice,log,footer);room.append(aside,panel);root.append(room);document.body.append(root);
     let portraitNode=null,state=null,trigger=null,key='',fingerprint='';
@@ -105,11 +106,11 @@ export function createLearningChatView(cb){
         const avatar=el('span','camp-chat-avatar',row.role==='user'?'我':s.profile.name.slice(0,1));
         const content=el('div','camp-chat-bubble'),text=typeof row.text==='string'?row.text:row.text?.[s.locale]||'';
         const original=el('p','camp-chat-original',text);content.append(original);
-        const raw=typeof row.text==='object'?row.text[s.locale==='en'?'zh-CN':'en']:row.translation;
+        const raw=typeof row.text==='object'?row.text[s.glossLocale||(s.locale==='en'?'zh-CN':'en')]:row.translation;
         const translation=s.mode==='free'?playerGloss(text,raw,s.native||'zh-CN'):(raw&&String(raw).replace(/\s+/g,'')===String(text).replace(/\s+/g,'')?'':raw);
         const gloss=translation&&s.showChinese?el('p','camp-chat-translation',translation):null;
         if(gloss){gloss.hidden=!!row.streaming;content.append(gloss);}
-        if(text){const line=bilingual.attach({container:content,original,gloss,text,translation,locale:s.locale,native:s.mode==='free'?s.native||'zh-CN':s.locale==='en'?'zh-CN':'en',onRead:()=>cb.speak(text,row.role)});lineViews.push(line);if(row===s.messages.at(-1)&&row.role!=='user')npcReveal={node:line.textNode,translation:gloss};}
+        if(text){const line=bilingual.attach({container:content,original,gloss,text,translation,locale:s.locale,native:s.glossLocale||(s.mode==='free'?s.native||'zh-CN':s.locale==='en'?'zh-CN':'en'),onRead:()=>cb.speak(text,row.role)});lineViews.push(line);if(row===s.messages.at(-1)&&row.role!=='user')npcReveal={node:line.textNode,translation:gloss};}
         if(row===s.messages[0]&&row.role!=='user'&&s.reward?.amount!==undefined)content.append(el('small','camp-chat-reward-preview',s.reward.amount===0?'已领取':fill('对话奖励：{amount} {currency}',{amount:s.reward.amount,currency:tr(s.reward.currency===100?'奇豆':'仙豆')}).text));
         if(row.feedback){
             const reward=row.learningReward;
@@ -121,6 +122,7 @@ export function createLearningChatView(cb){
     }
     return {
         root,
+        dispose(){this.close();toolbarObserver?.disconnect();root.remove();},
         close(){revealedMessages.clear();revealedTurn='';clearMappings();bilingual.close();setMore(false);setHeaderMenu(false);clearPress();root.hidden=true;portraitNode?.remove();portraitNode=null;state=null;key='';fingerprint='';form.hidden=true;if(trigger?.isConnected)trigger.focus();},
         render(s){
             state=s;const fresh=root.hidden;if(fresh){trigger=document.activeElement;root.hidden=false;}
@@ -137,6 +139,7 @@ export function createLearningChatView(cb){
             const print=JSON.stringify([s.messages,s.showChinese,s.locale,s.reward?.amount,s.reward?.currency,s.done,s.index,s.hintLevel,s.hintText,s.practice]);
             const logChanged=print!==fingerprint;
             if(print!==fingerprint){fingerprint=print;clearMappings();log.replaceChildren(...s.messages.map(row=>message(row,s)));
+                if(s.taskScene&&s.story.context)log.prepend(el('p','camp-chat-scene-context',s.story.context));
                 if(s.done&&!free&&!s.practiceOnly){
                     const invitation=message({role:'npc',text:{en:'Would you like to keep chatting?','zh-CN':'还想继续聊聊吗？'}},s);
                     const choices=el('div','camp-chat-continue');
@@ -153,7 +156,7 @@ export function createLearningChatView(cb){
             if(!hint.hidden&&free){hint.replaceChildren(el('p','',s.hintText||'正在生成提示…'));}
             if(!hint.hidden&&!free&&(logChanged||fresh)){const turn=s.story.turns[s.index];hint.replaceChildren();
                 if(s.hintLevel)hint.append(el('p','',turn.hint));
-                const pattern=s.locale==='en'?turn.pattern.replace(/\{\w+\}/g,'…'):turn.answer['zh-CN'],answer=turn.answer[s.locale];
+                const pattern=s.taskScene?turn.answer[s.locale]:s.locale==='en'?turn.pattern.replace(/\{\w+\}/g,'…'):turn.answer['zh-CN'],answer=turn.answer[s.locale];
                 const same=pattern.trim().replace(/\s+/g,' ')===answer.trim().replace(/\s+/g,' ');
                 if(s.hintLevel&&!same)hint.append(el('p','camp-chat-original',pattern));
                 {
@@ -166,7 +169,7 @@ export function createLearningChatView(cb){
                     sample.append(icon);const sampleRow=el('div','camp-chat-sample-row');sampleRow.append(sample,answerLine);hint.append(sampleRow);
                     if(s.practice?.id===turn.id&&s.practice?.feedback)hint.append(el('small','camp-chat-practice',fill(`命中 {v0}% · 累计 {v1}/{v2}`,{v0:String(Math.round(s.practice.feedback.accuracy*100)),v1:String(s.practice.qualified),v2:String(s.practice.params.speechPracticeCount)}).text));
                     if(s.hintLevel&&s.showChinese){
-                        const native=s.locale==='en'?'zh-CN':'en',translation=turn.answer[native],gloss=el('p','camp-chat-translation',translation);hint.append(gloss);answerReveal.translation=gloss;
+                        const native=s.glossLocale||(s.locale==='en'?'zh-CN':'en'),translation=turn.answer[native],gloss=el('p','camp-chat-translation',translation);hint.append(gloss);answerReveal.translation=gloss;
                         const line=bilingual.attach({container:hint,original:answerLine,gloss,text:answer,translation,locale:s.locale,native,showRead:false});
                         if(s.practice?.id===turn.id&&s.practice?.feedback?.parts)line.feedback(s.practice.feedback.parts);
                         line.setDisabled(s.busy||s.recording);lineViews.push(line);
@@ -196,6 +199,9 @@ export function createLearningChatView(cb){
             actions.hidden=!!s.loginRequired;hints.hidden=!!s.done;
             if(s.done){form.hidden=false;input.placeholder=tr('想聊些什么？');}
             if(s.practiceOnly){room.setAttribute('aria-label','时光旅人双语对话');settings.hidden=true;if(s.done){form.hidden=true;actions.hidden=true;}}else settings.hidden=false;
+            sceneNext.hidden=!s.taskScene||!s.done;
+            if(s.taskScene){room.setAttribute('aria-label',s.dialogueLabel||'岛屿任务对话');close.setAttribute('aria-label','关闭任务对话');settings.hidden=true;progress.textContent=s.done?'这一段已完成':s.sceneProgress;actions.hidden=false;typing.hidden=micProgress.hidden=hints.hidden=!!s.done;sceneNext.textContent=s.nextLabel||'继续冒险';}
+            else {typing.hidden=false;micProgress.hidden=false;}
             loginTitle.textContent=tr('登录 KeepWork，开启 AI 对话');loginText.textContent=tr('离线角色暂时无法使用大模型。登录后会自动将当前本地角色转为云端角色，保留冒险进度。');loginButton.textContent=tr('登录并转为云端角色');
             status.textContent=s.loginRequired?'':tr(s.status);
             const moreLabel=tr('更多聊天操作');headerMore.title=moreLabel;headerMore.setAttribute('aria-label',moreLabel);

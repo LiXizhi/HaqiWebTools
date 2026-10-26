@@ -39,7 +39,7 @@ test('reading requires the complete utterance; formatting alone is ignored',()=>
 });
 test('island tasks use one successful exercise, not legacy fragments; old claimed quests remain complete',()=>{
     const q=read('adventure/island-packs/hanzi.json').quests.find(q=>q.id===873100),content={catalogQuests:{quests:[q]}};
-    const save={hanzi:{memories:{fragments:Object.fromEntries(q.groups[0].items.map(i=>[i.id,3]))}},quests:{[q.id]:{accepted:true,claimed:false,progress:{'hanzi:shan':3}}}};
+    const save={languageLearning:{target:'zh-CN'},hanzi:{memories:{fragments:Object.fromEntries(q.groups[0].items.map(i=>[i.id,3]))}},quests:{[q.id]:{accepted:true,claimed:false,progress:{'hanzi:shan':3}}}};
     assert.equal(catalogQuestReady(save,content,q),false);
     syncDictionaryQuestProgress(save,content,{languages:{zh:{entries:Object.fromEntries(q.groups[0].items.map(i=>[i.id,{learned:true}]))}}});assert.ok(catalogQuestReady(save,content,q));assert.equal(save.quests[q.id].progress['hanzi:shan'],1);
     save.quests[q.id]={accepted:true,claimed:true,progress:{}};assert.ok(catalogGoalRows(save,content,q).every(g=>g.value===g.count));

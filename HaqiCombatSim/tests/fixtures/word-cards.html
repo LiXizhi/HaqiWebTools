@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>文字战斗卡验收</title>
-<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/word-practice.css">
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_dialogue.css"><link rel="stylesheet" href="../../css/word-practice.css">
 <body class="haqi-app storybook-ui"><div id="root"></div><output id="status" style="position:fixed;top:0;z-index:100;background:white"></output><script type="module">
 import {loadResources} from '../../js/adventure_assets.js';
 import {createAdventure,playerSpec} from '../../js/adventure_core.js';
@@ -8,6 +8,7 @@ import {renderBattle} from '../../js/view_adventure.js';
 import {activateWordCard} from '../../js/word_cards_core.js';
 import {openWordCardForCast} from '../../js/word_card_cast.js';
 import {validTargets} from '../../js/combat_arena_core.js';
+import {configureLanguageTreeCapture} from '../../js/language_tree_capture.js';
 import {createWordCardPractice} from '../../js/word_card_practice.js';
 import {createDictionaryStore} from '../../js/dictionary_store.js';
 const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
@@ -20,6 +21,7 @@ battle.sides.near[0].pips={normal:7,power:0};
 let spoken=0;
 let selected=null,discarded=[],accepted=0,paused=false,fail=false,transcript='',captured=null,finishGate=null,releaseFinish=null;
 const db=createDictionaryStore({name:'haqi-word-cards-browser'}),store={read:key=>db.read(key),update:async(key,fn)=>{if(fail)return {persisted:false,state:{},result:{}};return db.update(key,fn);}};
+configureLanguageTreeCapture(()=>({key:JSON.stringify(['test',key])}));
 const practice=createWordCardPractice({getState:()=>({save,assets,content:assets.content,owner:'test',role:key}),storage:store,onPause:v=>paused=v,onSaved:()=>{accepted++;},voice:{async cancel(){},async start(signal,options){captured=options.onAudio;},async finish(){if(finishGate)await finishGate;captured?.(new Blob(['test'],{type:'audio/wav'}));return transcript;},async speak(){spoken++;}}});
 const root=document.querySelector('#root'),status=document.querySelector('#status');
 function paint(){renderBattle(root,{assets,save,battle,selected,discarded,animating:false,soundEnabled:false},{sound(){},retreat(){},pass:()=>play({pass:true}),select:h=>{selected=h;paint();},reselect:()=>{selected=null;paint();},target:id=>play({...selected,targetId:id}),discard:seq=>{discarded.push(seq);selected=null;paint();},toggleRunes(){},togglePetCards(){},finish(){}});}

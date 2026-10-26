@@ -1,3 +1,6 @@
+import {createHomeLanguageGame} from './home_language_game.js';
+import {homeObjectWasMoved,homeLabelChange} from './home_language_game_core.js';
+import {wordLanguage} from './word_lexicon_core.js';
 import {createHomeEditHistory,homeEditDelta,applyHomeEditDelta} from './home_edit_history_core.js';
 import {compareDungeonSpeech} from './dungeon_speech_core.js';
 import {homeCapacity,assertHomeCapacity} from './home_capacity_core.js';
@@ -59,8 +62,9 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
  check();
  const loading=createIslandSceneLoadingView({title:'向家园出发',exitLabel:'返回家园列表',retry:()=>{if(retryEntry)void enter(retryEntry).catch(error);},exit:()=>{entryTicket++;entering=false;loading.hide();void back().catch(error);}});
  const showLoading=state=>loading.show(state,{assets:loadingAssets,save:getContext().save,scope,roleId:context.roleId});
- const lang=()=>getContext().save?.languageLearning?.target==='zh-CN'?'zh':'en';
+ const lang=()=>wordLanguage(getContext().save?.languageLearning?.target||'en');
  const voice=providedVoice||createLearningVoice({getSettings:()=>getContext().save?.languageLearning||{}});
+ const languageGame=createHomeLanguageGame({onChange:()=>emit(),getState:()=>({active:valid()&&!entering,homeId:home?.id,homeName:home?.name,target:getContext().save?.languageLearning?.target,settings:getContext().save?.languageLearning,objects:currentObjects(),pets,catalog:catalog.items,editLabel:(id,practice)=>{check();build=true;selection=currentObjects().find(o=>o.id===id);emit();view.editLabel(id,practice);},introModel:loadingAssets?{assets:loadingAssets,save:getContext().save}:null})});
  const remote=context.owner&&cloud?.owner===context.owner?createHomeCloud({store,roleId:context.roleId,catalog:catalog.items,valid,io:{read:async(path,options)=>{if(path.endsWith('/index.json')&&!options?.refresh&&directories.has(scope))return directories.get(scope);const value=await cloud.homeRead(path,options);if(path.endsWith('/index.json'))directories.set(scope,value||{version:1,entries:{}});return value;},write:async(path,value)=>{await cloud.homeWrite(path,value);if(path.endsWith('/index.json'))directories.set(scope,value);}}}):null;
 
  function at(itemId,position,extra={}){
@@ -99,6 +103,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
  }
 
  const view=createHomeView(root,{
+  languageGame:()=>languageGame.open(),
   initialCategory,
   drawHero,
   drawTree,
@@ -164,7 +169,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
     view.openSummon?.();
    }
   },
-  speakWish:()=>wish?voice.speak(wish.text,lang()==='en'?'en':'zh-CN',abort.signal):null,
+  speakWish:()=>wish?voice.speak(wish.text,lang()==='zh'?'zh-CN':lang(),abort.signal):null,
   openWish:()=>{if(wish){wish={...wish,expanded:true,until:Date.now()+22000};translation=false;emit();}},
   practiceTemplate:templateId=>{select('template-'+templateId);view.openSummon();},
   select,
@@ -174,6 +179,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
   hover,
   rotate,
   roofs:()=>{showRoofs=!showRoofs;emit();},
+  saveLabel:(id,text,homeId)=>{check();if(!build||home?.id!==homeId)throw Error('家园已变化，请重新选择物品');return commit({type:'label',id,text,languageReceipt:languageGame.labelTicket(id)});},
   properties:properties=>selection?.id?commit({type:'properties',id:selection.id,properties}):null,
   resizeFurniture:delta=>build&&selection?.id?commit({type:'resize',id:selection.id,delta}):null,
   recall,
@@ -187,7 +193,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
   quiet:()=>{quiet=!quiet;emit();},
   findPet:id=>{const p=pets.find(p=>p.id===id);if(p){navigate(p);emit();}},
   translate:()=>{translation=!translation;emit();},
-  speak:text=>voice.speak(text,lang()==='en'?'en':'zh-CN',abort.signal),
+  speak:text=>voice.speak(text,lang()==='zh'?'zh-CN':lang(),abort.signal),
   summon:text=>summon(text,'text'),
   choose,
   record,
@@ -201,7 +207,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
   if(owner){secondPath=route;secondDestination=route.at(-1)||null;secondHero={...secondHero,moving:route.length>0};}
   else{walkPath=route;destination=route.at(-1)||null;hero={...hero,moving:route.length>0};}
  }
- function emit(){if(valid())view.render({history:editHistory.state(),showRoofs,hero,secondHero:duo()?secondHero:null,secondSave:getContext().secondSave,pointerOwner:pointerOwner(),destination,heroSave:getContext().save,build,home,homes,guests,catalog,practiceItems:TEMPLATE_PRACTICE,objects:currentObjects(),pets,petBag,camera,scale,status,selection,preview,candidates,quiet,wish,translation,unsaved:!!pending,lang:lang(),assetMode});}
+ function emit(){if(valid())view.render({languageChoices:languageGame.choiceIds(),history:editHistory.state(),showRoofs,hero,secondHero:duo()?secondHero:null,secondSave:getContext().secondSave,pointerOwner:pointerOwner(),destination,heroSave:getContext().save,build,home,homes,guests,catalog,practiceItems:TEMPLATE_PRACTICE,objects:currentObjects(),pets,petBag,camera,scale,status,selection,preview,candidates,quiet,wish,translation,unsaved:!!pending,lang:lang(),assetMode});}
  function error(e){if(!valid())return;status=pending?'未保存：本机存储写入失败，请重试保存。':e.message||'操作未完成，请重试';emit();}
  async function refresh(){check();if(!remote)throw Error('请在冒险中登录 Keepwork 后再打开家园');status='正在读取云端目录…';emit();await remote.list(true);await list();}
  async function list(){check();const local=await store.list();check();let index=directories.get(scope);if(remote&&!index){try{index=await remote.list();}catch(e){status=`本地家园已加载；${e.message}`;}}
@@ -235,6 +241,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
   const item=catalog.items.find(i=>i.id===itemId);
   if(item)status=requiresReading(item)?'读出或输入上方任意句子即可建造':'点击或拖动摆放，可连续创建；按 R 旋转。';
   else if(itemId?.startsWith('template-'))status='读出或输入上方任意句子即可建造';
+  if(!['zh','en'].includes(lang()))status='目录咒语尚未收录此语言；可用情境练习与宠物对话，已有物品仍可摆放。';
   view.setInput('');view.setSpeechFeedback(null);
   emit();
  }
@@ -274,6 +281,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
  }
 
  async function tap(hit,p){
+  if(hit?.kind==='object'&&currentObjects().some(o=>o.id===hit.id)){const choosing=languageGame.choiceIds().includes(hit.id);languageGame.event({kind:'find',objectId:hit.id});if(choosing)return;}
   if(build&&selection&&!selection.id&&!requiresReading(buildingItem(selection,catalog.items))){return placeItemAt(selection.itemId,selection.color,p,{fromInventory:true});}
   if(!build&&hit?.kind==='object'){const o=currentObjects().find(o=>o.id===hit.id);if(buildingItem(o,catalog.items)?.building?.type==='door')return commit({type:'door',id:o.id});}
   if(selection?.petId)return movePet(selection.petId,p);
@@ -323,7 +331,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
    check();if(home?.id!==id)throw Error('家园已切换');
    action.actors=[hero,...(duo()?[secondHero]:[])];
    const keys=Object.keys(parts).filter(k=>k.startsWith('chunk:'));if(action.receipt)keys.push(`receipt:${action.receipt}`,'local:practice');
-   try{let changes=[];const result=await store.mutate(id,keys,(_,data)=>{const before=structuredClone(data);const changed=applyHomeAction(data,action,catalog.items);changes=homeEditDelta(before,data);return changed;});check();if(home?.id!==id)return;editHistory.record(changes,action.group);home=result.home;for(const [key,value]of Object.entries(result.data))if(!key.startsWith('receipt:'))parts[key]=value;selection=['resize','toggleInteraction','properties','door','move'].includes(action.type)&&selection?.id===action.id?{...currentObjects().find(o=>o.id===action.id)}:(catalog.items.find(i=>i.id===(action.object?.itemId||action.itemId))?.building||action.type==='create')?{itemId:action.object?.itemId||action.itemId,color:action.object?.color||action.color||'',fromInventory:true,rotation}:null;preview=null;candidates=[];status='已保存到本机';wishFeedback(action);if(walkPath.length&&destination)navigate(destination,0);if(secondPath.length&&secondDestination)navigate(secondDestination,1);emit();if(action.practice){try{await drainPractice(id);}catch(e){pending=()=>drainPractice(id);error(e);}}}
+   try{let changes=[];const result=await store.mutate(id,keys,(_,data)=>{const before=structuredClone(data);const changed=applyHomeAction(data,action,catalog.items);changes=homeEditDelta(before,data);return changed;});check();if(home?.id!==id)return;editHistory.record(changes,action.group);home=result.home;for(const [key,value]of Object.entries(result.data))if(!key.startsWith('receipt:'))parts[key]=value;selection=['resize','toggleInteraction','properties','door','move','label'].includes(action.type)&&selection?.id===action.id?{...currentObjects().find(o=>o.id===action.id)}:(catalog.items.find(i=>i.id===(action.object?.itemId||action.itemId))?.building||action.type==='create')?{itemId:action.object?.itemId||action.itemId,color:action.object?.color||action.color||'',fromInventory:true,rotation}:null;preview=null;candidates=[];status='已保存到本机';if(action.type==='move'&&homeObjectWasMoved(changes,action.id))languageGame.event({kind:'move',objectId:action.id});if(action.type==='label'){const text=homeLabelChange(changes,action.id);if(text)languageGame.event({kind:'label',objectId:action.id,text,receipt:action.languageReceipt});}wishFeedback(action);if(walkPath.length&&destination)navigate(destination,0);if(secondPath.length&&secondDestination)navigate(secondDestination,1);emit();if(action.practice){try{await drainPractice(id);}catch(e){pending=()=>drainPractice(id);error(e);}}}
    catch(e){if(/存储|保存|quota|abort|unknown|disk/i.test(`${e.name} ${e.message}`)){pending=()=>job();status='未保存：本机存储写入失败。点击下方重试保存。';showRetry();}else error(e);throw e;}
   };const next=mutation.catch(()=>{}).then(job);mutation=next;return next;
  }
@@ -353,6 +361,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
 
  let attempt=null;
  async function summon(text,input){
+  if(!['zh','en'].includes(lang()))throw Error('目录咒语尚未收录此语言，请使用家园情境练习；已有物品仍可摆放。');
   if(busy)throw Error('正在召唤，请稍候');
   check();
   const key=JSON.stringify([home?.id,spellEpoch,selection?.itemId,selection?.color,lang()]);
@@ -428,6 +437,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
    const pet=pets.find(p=>p.id===id);
    if(pet&&position)Object.assign(pet,{...position,activity:target?catalog.items.find(i=>i.id===target.itemId).activity:null,targetId:target?.id,until:Date.now()+20000});
    if(!position&&wish?.petId===id)wish=null;
+   if(target&&pet?.activity)languageGame.event({kind:'pet-use',objectId:target.id,petId:id,activity:pet.activity});
    if(target&&wish?.petId===id)wishFeedback({type:'use',itemId:target.itemId});
    selection=null;preview=null;status=position?'宠物已安置，位置已保存到本机':'宠物已收回家园宠物背包';emit();
   };
@@ -453,12 +463,12 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
    const available=near.filter(p=>!p.activity&&selection?.petId!==p.id),pet=available.length?available[petTurn++%available.length]:null;
    if(pet){const facility=currentObjects().find(o=>{const b=footprint(o,catalog.items);return b.item.activity&&pet.x>=b.x&&pet.x<b.x+b.w&&pet.y>=b.y&&pet.y<b.y+b.h&&!pets.some(other=>other.targetId===o.id&&other.until>now);});
     if(facility){pet.activity=catalog.items.find(i=>i.id===facility.itemId).activity;pet.targetId=facility.id;pet.until=now+10000;}
-    if(!quiet&&(!wish||now>wish.until)){wish={petId:pet.id,...petWish(pet.id,round++,catalog.items,lang()),until:now+15000};translation=false;}
+    if(['zh','en'].includes(lang())&&!quiet&&(!wish||now>wish.until)){wish={petId:pet.id,...petWish(pet.id,round++,catalog.items,lang()),until:now+15000};translation=false;}
    }
   }
   emit();
  },1000);
- function dispose(){if(dead)return;clearInput();window.removeEventListener('keydown',keyDown,true);window.removeEventListener('keyup',keyUp,true);window.removeEventListener('blur',clearInput);document.removeEventListener('visibilitychange',clearInput);const finalVisit=saveVisit(true);window.removeEventListener('pagehide',pageExit);document.removeEventListener('visibilitychange',visibility);dead=true;entryTicket++;loading.dispose();onScene(false);clearInterval(timer);abort.abort();loadTicket++;void voice.cancel();view.dispose();void Promise.allSettled([mutation,finalVisit]).then(()=>store.close()).catch(()=>{});}
+ function dispose(){if(dead)return;languageGame.close();clearInput();window.removeEventListener('keydown',keyDown,true);window.removeEventListener('keyup',keyUp,true);window.removeEventListener('blur',clearInput);document.removeEventListener('visibilitychange',clearInput);const finalVisit=saveVisit(true);window.removeEventListener('pagehide',pageExit);document.removeEventListener('visibilitychange',visibility);dead=true;entryTicket++;loading.dispose();onScene(false);clearInterval(timer);abort.abort();loadTicket++;void voice.cancel();view.dispose();void Promise.allSettled([mutation,finalVisit]).then(()=>store.close()).catch(()=>{});}
  try{status='家园自动保存到本机，云端同步由你手动开启。';await list();if(initialHomeId)await enter({id:initialHomeId});}catch(e){error(e);}
  return {dispose,renderStats:()=>view.stats(),canClose:()=>!pending||confirm('仍有未保存操作，离开会丢失这些操作。确定离开？')};
 }

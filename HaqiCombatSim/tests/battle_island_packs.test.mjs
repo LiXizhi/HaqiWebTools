@@ -38,7 +38,7 @@ function collectWord(save,content,pack,id){syncDictionaryQuestProgress(save,cont
 
 test('Camp newcomers can explore Hanzi independently: practice quests complete once, reach level 10 and allow return travel',()=>{
     const {content}=setup(),pack=packs.find(p=>p.island.id==='hanzi');
-    const save=A.createAdventure(content,{seed:72});
+    const save=A.createAdventure(content,{seed:72});save.languageLearning.target='zh-CN';
     assert.equal(save.zone,'camp');assert.deepEqual(save.position,content.worldMapIndex.islands.camp.initialSpawn);
     assert.ok(!(save.trackedQuestIds||[]).includes(pack.quests.find(q=>!q.retired).id));
     const campQuests=structuredClone(save.quests);
@@ -91,7 +91,7 @@ test('Hanzi redesign preserves a safe old position and rescues only stranded coo
 test('newcomer fights on Hanzi island in every school with a frozen replayable card snapshot',()=>{
     const {content,dataset}=setup(),pack=packs.find(p=>p.island.id==='hanzi');
     for(const school of ['fire','ice','storm','life','death']){
-        const save=A.createAdventure(content,{school,seed:73});
+        const save=A.createAdventure(content,{school,seed:73});save.languageLearning.target='zh-CN';
         A.applyAction(save,content,{type:'travel',zone:'hanzi'});
         for(const q of pack.quests.filter(q=>!q.retired).slice(0,4)){
             A.applyAction(save,content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});
@@ -112,7 +112,7 @@ test('newcomer fights on Hanzi island in every school with a frozen replayable c
 test('60/70/80 content plays through existing quest actions, persists and rewards only once',()=>{
     const {content,dataset}=setup();
     for(const pack of packs){
-        const save=A.createAdventure(content,{seed:91});save.xp=content.progression.xpThresholds[pack.island.recommendedLevel-1];A.syncProgression(save,content);
+        const save=A.createAdventure(content,{seed:91});save.languageLearning.target='zh-CN';save.xp=content.progression.xpThresholds[pack.island.recommendedLevel-1];A.syncProgression(save,content);
         A.applyAction(save,content,{type:'travel',zone:pack.island.id});
         for(const q of pack.quests.filter(q=>!q.retired)){
             assert.equal(catalogAcceptBlock(save,content,q),'');A.applyAction(save,content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});
@@ -132,7 +132,7 @@ test('60/70/80 content plays through existing quest actions, persists and reward
 });
 test('new levels are reachable; old 50-level progress survives and no island story requires another island',()=>{
     const {content}=setup();assert.equal(content.progression.levelCap,80);
-    const save=A.createAdventure(content);save.xp=content.progression.xpThresholds[49];A.syncProgression(save,content);assert.equal(save.level,50);
+    const save=A.createAdventure(content);save.languageLearning.target='zh-CN';save.xp=content.progression.xpThresholds[49];A.syncProgression(save,content);assert.equal(save.level,50);
     for(const pack of packs){const q=pack.quests.find(q=>!q.retired);assert.deepEqual(q.prerequisites,[]);if(pack.island.recommendedLevel>50)assert.match(catalogAcceptBlock(save,content,q),/需要等级/);else assert.equal(catalogAcceptBlock(save,content,q),'');}
     save.xp=content.progression.xpThresholds[79];A.syncProgression(save,content);assert.equal(save.level,80);assert.ok(Number.isFinite(content.progression.xpThresholds[80]));
 });
@@ -147,7 +147,7 @@ test('field battles replay deterministically and appearance uses verified kids t
     const {content,dataset}=setup(),art=read('data/adventure/monster-art.json');
     for(const pack of packs)for(const encounter of pack.encounters){
         const m=content.monsters[encounter.monsterId];assert.ok(monsterArtBinding(m,art),m.id);
-        const save=A.createAdventure(content,{seed:321});save.xp=content.progression.xpThresholds[pack.island.recommendedLevel-1];A.syncProgression(save,content);save.zone=pack.island.id;save.position={...content.worldMaps[save.zone].spawn};
+        const save=A.createAdventure(content,{seed:321});save.languageLearning.target='zh-CN';save.xp=content.progression.xpThresholds[pack.island.recommendedLevel-1];A.syncProgression(save,content);save.zone=pack.island.id;save.position={...content.worldMaps[save.zone].spawn};
         A.beginEncounter(save,content,encounter.id);const first=B.restorePveBattle(dataset,content,save.pendingEncounter),second=B.restorePveBattle(dataset,content,save.pendingEncounter);
         B.playPveRound(first,{pass:true});B.playPveRound(second,{pass:true});assert.deepEqual(first.events,second.events);
         A.recordDecision(save,{pass:true},first);assert.doesNotThrow(()=>B.restorePveBattle(dataset,content,save.pendingEncounter));
@@ -156,7 +156,7 @@ test('field battles replay deterministically and appearance uses verified kids t
 test('each island can complete a real field fight, restore its decisions and settle its kill goal',()=>{
     const {content,dataset}=setup();
     for(const pack of packs){
-        const save=A.createAdventure(content,{seed:731,school:'fire'});save.xp=content.progression.xpThresholds[pack.island.recommendedLevel-1];A.syncProgression(save,content);save.deck=A.recommendedDeck(save,content);save.zone=pack.island.id;save.position={...content.worldMaps[save.zone].spawn};
+        const save=A.createAdventure(content,{seed:731,school:'fire'});save.languageLearning.target='zh-CN';save.xp=content.progression.xpThresholds[pack.island.recommendedLevel-1];A.syncProgression(save,content);save.deck=A.recommendedDeck(save,content);save.zone=pack.island.id;save.position={...content.worldMaps[save.zone].spawn};
         // A returning high-level player uses obtainable, supported shop equipment.
         // Keep real item stats, level/school requirements and combat rules intact.
         const score=item=>(item.stats[101]||0)+Object.entries(item.stats).reduce((s,[id,n])=>s+([102,105,110,111,112,113,114,116,117,118,119,120].includes(Number(id))?Number(n)*10:0),0);
@@ -175,7 +175,7 @@ test('each island can complete a real field fight, restore its decisions and set
 test('all pack dungeons use high-level opponents and enter/leave through unchanged saves',()=>{
     const {content,dataset}=setup(),source=read('data/adventure/dungeon-journeys.json');content.dungeonJourneys={...source,entries:[...source.entries,...packs.flatMap(p=>p.journeys)]};installDungeons(content,dataset,read('data/adventure/dungeons.json'),cards,names);
     for(const pack of packs)for(const row of pack.journeys){const d=content.dungeons.find(d=>d.id===row.id);assert.ok(d.playable);assert.equal(d.arenas.length,row.kind==='tower'?row.floors:row.arenaCount);assert.ok(d.arenas.every(a=>a.monsterIds.every(id=>content.monsters[id].level>=pack.island.recommendedLevel)));
-        const save=A.createAdventure(content);save.zone=pack.island.id;save.position={...content.worldMaps[save.zone].spawn};enterDungeon(save,content,d.id);assert.ok(walkable(createWorld(d.id,content,save),save.position.x,save.position.y));leaveDungeon(save,content);assert.equal(save.zone,pack.island.id);
+        const save=A.createAdventure(content);save.languageLearning.target='zh-CN';save.zone=pack.island.id;save.position={...content.worldMaps[save.zone].spawn};enterDungeon(save,content,d.id);assert.ok(walkable(createWorld(d.id,content,save),save.position.x,save.position.y));leaveDungeon(save,content);assert.equal(save.zone,pack.island.id);
     }
 });
 test('pack projection retains dialogue, reward and map-observation configuration',()=>{
@@ -192,4 +192,14 @@ test('Hanzi has twenty reachable field encounters distributed away from resident
     const {content}=setup(),pack=packs.find(p=>p.island.id==='hanzi'),world=createWorld('hanzi',content);
     assert.equal(pack.encounters.length,20);assert.deepEqual(pack.memory.guardianEncounterIds,pack.encounters.map(e=>e.id));
     for(const e of world.encounters){assert.ok(distance(e,world.layout.spawn)>400);assert.ok(world.npcs.every(n=>distance(e,n)>180));}
+});
+
+test('all language scene targets exist in the real island worlds and have reachable approach paths',()=>{
+ const {content}=setup(),courses=read('data/adventure/island-language-courses.json').courses.filter(c=>c.sceneVersion),checked=new Set();
+ for(const zone of new Set(courses.map(c=>c.island))){const save=A.createAdventure(content,{seed:1});save.zone=zone;const world=createWorld(zone,content,save);
+  for(const step of courses.filter(c=>c.island===zone).flatMap(c=>c.steps)){const t=step.interaction,key=zone+':'+t.kind+':'+t.id;if(checked.has(key))continue;checked.add(key);
+   const list=t.kind==='npc'?world.npcs:t.kind==='landmark'?world.landmarks:world.encounters,target=list.find(n=>String(n.id)===String(t.id));assert.ok(target,key+' must exist');assert.ok(!target.hidden,key+' must be visible');
+   const path=findPath(world,world.layout.spawn,target);assert.ok(path.length||distance(world.layout.spawn,target)<90,key+' must be reachable');assert.ok(distance(path.at(-1)||world.layout.spawn,target)<85,key+' approach must reach interaction range');
+  }
+ }
 });

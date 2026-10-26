@@ -10,7 +10,7 @@ import {durableSave,runtimeValues} from '../js/adventure_storage_core.js';
 import {connectHanziAnimation} from '../js/hanzi_animation_bridge.js';
 const pack=JSON.parse(fs.readFileSync(new URL('../data/adventure/island-packs/hanzi.json',import.meta.url)));
 const cfg=pack.memory,params=memoryParams({}),quest=pack.quests.find(q=>q.id===cfg.stories[0].questId);
-const state=()=>({seed:77,zone:'hanzi',hanzi:createHanziProgress(),quests:{},inventory:{}});
+const state=()=>({languageLearning:{target:'zh-CN'},seed:77,zone:'hanzi',hanzi:createHanziProgress(),quests:{},inventory:{}});
 const collect=(save,word,key='hanzi:0')=>{const cycle=save.hanzi.memories?.receipts[key]||0;const result=completeMemory(save.hanzi,{key,cycle,word},cfg,params,'write');save.hanzi=result.progress;return result;};
 test('authored six stories cover exactly all 30 dictionary entries with per-character life feedback',()=>{
     const dictionary=JSON.parse(fs.readFileSync(new URL('../data/adventure/dictionary/zh.json',import.meta.url)));

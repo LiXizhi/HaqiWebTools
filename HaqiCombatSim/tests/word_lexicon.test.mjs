@@ -9,7 +9,7 @@ const texts=Object.fromEntries(['en','zh','ja','ko'].map(language=>[language,fs.
 const indexes=Object.fromEntries(Object.entries(texts).map(([language,text])=>[language,buildWordIndex(parseWordLexicon(text,language))]));
 
 test('all languages share exactly the Chinese key list and index explicit forms',()=>{
- assert.equal(indexes.zh.data.keys.length,2000);
+ assert.equal(indexes.zh.data.keys.length,2065); // Existing 2012 + 44 L1 support + 9 corrected basic-sense keys.
  assert.ok(texts.zh.trim().split(/\r?\n/).every(line=>/^\p{Script=Han}+(?:,\p{Script=Han}+)*$/u.test(line)));
  for(const index of Object.values(indexes)){assert.deepEqual(new Set(index.data.keys),new Set(indexes.zh.data.keys));for(const row of index.entries.values()){assert.ok(row.meaning.trim());assert.ok(row.senses.length);for(const sense of row.senses)assert.ok(index.senses.get(sense).has(row.id));}}
  const files=localePackageFiles(new URL('../data/adventure/locale/',import.meta.url).pathname.replace(/^\/([A-Za-z]:)/,'$1'));

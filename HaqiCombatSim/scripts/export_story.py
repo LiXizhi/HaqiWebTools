@@ -245,6 +245,8 @@ class Exporter:
         self.time_scroll()
         self.journeys()
         self.retire_courses()
+        self.island_language_courses()
+        self.home_language_stories()
         self.movies()
         self.residents()
         for file in ['js/language_story.js', 'js/language_encounter_core.js', 'js/adventure_core.js', 'js/adventure_catalog_quests_core.js', 'js/adventure_dungeon_story.js', 'js/combat_params_core.js', 'js/view_red_mushroom.js', 'js/view_adventure.js', 'js/adventure_npc_core.js', 'js/adventure_npc_art_core.js']:
@@ -403,6 +405,40 @@ class Exporter:
                     ptr=f'/npcs/{i}/worldObservation/prompt'
                     self.line(s,'worldObservation',n['worldObservation']['prompt'],n['name'],'可选现实地图观察',file,ptr,{'file':file,'pointer':ptr},force=True)
 
+    def island_language_courses(self):
+        file = 'data/adventure/island-language-courses.json'
+        for i, course in enumerate(self.load(file)['courses']):
+            if course.get('legacyQuestIds'):
+                continue
+            for j, step in enumerate(course['steps']):
+                scene = self.scene('island-language:' + course['id'] + ':' + step['id'], course['title'], 'current', course['island'], classification='目标语言学习支线', language=course['language'])
+                for field, speaker, phase in [('introReply', '玩家', '进入回应'), ('intro', step.get('interaction', {}).get('name', '故事'), '练习前对白'), ('objective', '任务', '场景目标'), ('hint', '引导', '初学者提示'), ('prompt', '玩家' if step.get('speaker') == 'player' else step.get('interaction', {}).get('name', '故事'), '场景对话'), ('promptGloss', '释义', 'NPC释义'), ('answer', '玩家', '表达'), ('answerGloss', '释义', '示范释义'), ('ending', '玩家' if step.get('speaker') == 'player' else step.get('interaction', {}).get('name', '故事'), '回应'), ('endingGloss', '释义', '回应释义')]:
+                    if field not in step:
+                        continue
+                    ptr = f'/courses/{i}/steps/{j}/{field}'
+                    self.line(scene, field, step[field], speaker, phase, file, ptr, {'file': file, 'pointer': ptr}, force=True)
+                for k, reply in enumerate(step.get('alternatives', [])):
+                    for field, speaker in [('answer', '玩家'), ('answerGloss', '释义')]:
+                        ptr = f'/courses/{i}/steps/{j}/alternatives/{k}/{field}'
+                        key = f"alternative-{reply['id']}-{field}"
+                        self.line(scene, key, reply[field], speaker, '可用替代表达', file, ptr, {'file': file, 'pointer': ptr}, force=True)
+                if j == len(course['steps']) - 1 and course.get('completion'):
+                    ptr = f'/courses/{i}/completion'
+                    self.line(scene, 'completion', course['completion'], '任务', '完成提示', file, ptr, {'file': file, 'pointer': ptr}, force=True)
+
+    def home_language_stories(self):
+        file = 'data/adventure/curriculum/english-home-practice.json'
+        for i, game in enumerate(self.load(file)['games']):
+            scene = self.scene('home-language:' + game['id'], '家园伙伴 · ' + game['id'], 'current', 'home', classification='家园词语练习', language='en')
+            for field, speaker, phase in [('intro', '家园伙伴', '练习前对白'), ('prompt', '家园伙伴', '请求'), ('answer', '玩家', '表达'), ('reply', '家园伙伴', '回应')]:
+                if field == 'answer' and game.get('mode') in ('read', 'listen'):
+                    speaker, phase = '校验目标（不显示）', '听读选物'
+                ptr = f'/games/{i}/{field}'
+                self.line(scene, field, game[field], speaker, phase, file, ptr, {'file': file, 'pointer': ptr}, force=True)
+            for j, reply in enumerate(game.get('alternatives', [])):
+                ptr = f'/games/{i}/alternatives/{j}/answer'
+                self.line(scene, 'alternative-' + reply['id'], reply['answer'], '玩家', '可用替代表达', file, ptr, {'file': file, 'pointer': ptr}, force=True)
+
     def retire_courses(self):
         # Legacy course configuration is retained for existing learning ledgers,
         # but is no longer a story entry. Never recycle its published IDs.
@@ -560,9 +596,13 @@ class Exporter:
         self.validate()
         ordered = current + original + self.ordered('obsolete') + self.ordered('inactive')
         chapters, side_ids, quest_documents, chapter_meta = self.chapter_plan(current)
-        documents = {name: [] for name in ['story-side-quests.md', 'story-npc-dialogues.md', 'story-dungeon-scripts.md', 'story-history.md', *quest_documents.values()]}
+        documents = {name: [] for name in ['story-home-language.md', 'story-language-courses.md', 'story-side-quests.md', 'story-npc-dialogues.md', 'story-dungeon-scripts.md', 'story-history.md', *quest_documents.values()]}
         for scene in ordered:
-            if scene['key'].startswith(('conversation:', 'resident:', 'gossip:')):
+            if scene['key'].startswith('island-language:'):
+                document = 'story-language-courses.md'
+            elif scene['key'].startswith('home-language:'):
+                document = 'story-home-language.md'
+            elif scene['key'].startswith(('conversation:', 'resident:', 'gossip:')):
                 document = 'story-npc-dialogues.md'
             elif scene['key'].startswith(('journey:', 'movie:')):
                 document = 'story-dungeon-scripts.md'
@@ -582,6 +622,8 @@ class Exporter:
         outputs = {
             'story-master.md': self.render_chapter_directory(chapters, side_ids),
             'story-side-quests.md': self.render_side_quests(side_ids, documents['story-side-quests.md'], chapter_meta),
+            'story-language-courses.md': self.render_external('多语言岛屿学习故事', documents['story-language-courses.md']),
+            'story-home-language.md': self.render_external('家园语言练习故事', documents['story-home-language.md']),
             'story-npc-dialogues.md': self.render_external('NPC双语交流与居民对白', documents['story-npc-dialogues.md']),
             'story-dungeon-scripts.md': self.render_external('副本、试炼塔与原版过场剧本', documents['story-dungeon-scripts.md']),
             'story-history.md': '\n'.join(['# 废除任务档案', '', '保留历史，不恢复开放。停用NPC交流见独立NPC文档。', ''] + self.render(documents['story-history.md'])) + '\n',

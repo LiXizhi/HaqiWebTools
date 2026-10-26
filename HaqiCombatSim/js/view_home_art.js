@@ -1,24 +1,14 @@
 import {paintNeuralHomeTerrain} from './view_home_neural.js';
 // Home furniture sprite renderer + baked static Haqi island terrain, river, road, plaza & bridge texture tile painter.
 import {createRng,hashSeed} from './rng_core.js';
-import {homeBiomeAt,homeBridgeAt,homeInteractiveKind,homeRiverCenterX,homeRiverCenterY,homeRoadAt,homeWaterAt} from './home_core.js';
+import {HOME_COLOR_HEX,homeBiomeAt,homeBridgeAt,homeInteractiveKind,homeRiverCenterX,homeRiverCenterY,homeRoadAt,homeWaterAt} from './home_core.js';
 import {paintBridges} from './adventure_bridge.js';
 import {paintStaticShadows} from './adventure_shadows.js';
 
 export const HOME_FURNITURE_SCALE=1.6;
 export const HOME_GROUND_SCALE=1.15;
 
-const COLOR_HEX={
- red:'#e35d52',
- blue:'#5393d9',
- green:'#58b368',
- yellow:'#ebbd3f',
- pink:'#ea8ab8',
- purple:'#9975d4',
- white:'#f5f4ef',
- orange:'#ed8b3b',
- brown:'#9a6b44'
-};
+const COLOR_HEX=HOME_COLOR_HEX;
 
 const INDOOR_CATEGORIES=new Set(['bedroom','kitchen','bathroom','living']);
 const OUTDOOR_EXCEPTIONS=new Set(['picnic-table','hot-spring']);

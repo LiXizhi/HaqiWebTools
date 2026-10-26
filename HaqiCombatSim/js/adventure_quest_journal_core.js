@@ -1,6 +1,7 @@
 // Journal rows stay a display projection. Progress lives in adventure_catalog_quests_core.js.
 import {islandFor,ISLANDS} from './adventure_world_map_core.js';
 import {currentQuest,questState,questReady} from './adventure_core.js';
+import {learningQuestMatches} from './learning_quest_core.js';
 import {catalogQuestStatus} from './adventure_catalog_quests_core.js';
 export const QUEST_REGIONS={...Object.fromEntries(ISLANDS.map(i=>[i.id,i.name])),'21':'魔法师之路','22':'试炼秘境'};
 export function defaultJournalRegion(save){
@@ -30,6 +31,7 @@ export function projectQuestJournal(catalog) {
     }))};
 }
 export function journalQuestStatus(save,content,row,stats) {
+    if(row.courseId)return row.status;
     const playable=content.quests.find(q=>q.id===row.id);
     if(playable){const state=questState(save,row.id);return state.claimed?'已完成':state.accepted?(questReady(save,playable)?'可交付':'进行中'):currentQuest(save,content)?.id===row.id?'可接取':'未开启';}
     const quest=content.catalogQuests?.byId[row.id];
@@ -37,9 +39,9 @@ export function journalQuestStatus(save,content,row,stats) {
     return row.obsolete?'原版已废除':'尚未开放';
 }
 export function focusJournalQuest(rows,filters,selectedId,pageSize,save,content,stats) {
-    const id=Number(selectedId),next={...filters};
-    if(!Number.isInteger(id))return {filters:next,page:0};
-    const match=quest=>Number(quest.id)===id;
+    const id=String(selectedId),next={...filters};
+    if(!id||id==='undefined')return {filters:next,page:0};
+    const match=quest=>String(quest.id)===id;
     let index=filterJournalQuests(rows,next,save,content,stats).findIndex(match);
     if(index<0){
         const quest=rows.find(match);
@@ -48,7 +50,7 @@ export function focusJournalQuest(rows,filters,selectedId,pageSize,save,content,
     }
     return {filters:next,page:index>=0?Math.floor(index/pageSize):0};
 }
-export function filterJournalQuests(rows,{region='',status='',query=''}={},save,content,stats) {
+export function filterJournalQuests(rows,{region='',status='',query=''}={},save={},content={},stats) {
     const needle=query.trim().toLocaleLowerCase();
-    return rows.filter(q=>!q.obsolete&&(!region||q.region===region)&&(!status||journalQuestStatus(save,content,q,stats)===status)&&(!needle||`${q.id} ${q.title}`.toLocaleLowerCase().includes(needle)));
+    return rows.filter(q=>(save.quests?.[q.id]?.claimed||learningQuestMatches(save,content.catalogQuests?.byId[q.id]||q))&&!q.obsolete&&(!region||q.region===region)&&(!status||journalQuestStatus(save,content,q,stats)===status)&&(!needle||`${q.id} ${q.title}`.toLocaleLowerCase().includes(needle)));
 }

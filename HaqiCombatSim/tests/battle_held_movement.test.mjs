@@ -24,7 +24,7 @@ function harness(terrain){
         keys:new Set(),joystick:{x:0,y:0},heldPointer:null,path:[],destination:null,talkApproach:null,
         stage:'world',panel:null,dialog:null,languageAdventure:{active:false,close(){}},
         nodes:{world:surface,hud:{}},touchIndicator:{hidden:true,style:{},firstElementChild:{style:{}}},
-        V:{renderHud(){renders++;}},model:()=>({}),openPanel(){},track(){},untrack(){},exitDungeon(){},interactNearest(){},
+        recommendedLanguageQuest:()=>null,languageTasks:{ensure(){},snapshot(){return {rows:[]};}},V:{renderHud(){renders++;}},model:()=>({}),openPanel(){},track(){},untrack(){},exitDungeon(){},interactNearest(){},
     });
     context.renderer={screenToWorld:(x,y)=>({x:context.save.position.x+x-400,y:context.save.position.y+y-300})};
     vm.runInContext([line('const touchMovement='),line('function resetMovementInput()'),line('function paintHud()')].join('\n'),context);

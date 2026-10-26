@@ -1,0 +1,13 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"></head><body><main id="root"></main><script type="module">
+import {openHomeLabel} from './js/view_home_label.js';
+import {createHomeStore} from './js/home_store.js';
+import {createHome} from './js/home_core.js';
+import {applyHomeAction} from './js/home_actions_core.js';
+const el=(tag,cls='',...children)=>{const n=document.createElement(tag);n.className=cls;n.append(...children);return n;};
+const button=(text,fn)=>{const b=el('button','',text);b.type='button';b.onclick=fn;return b;};
+const catalog=(await fetch('data/adventure/home/catalog.json').then(r=>r.json())).items;
+const store=createHomeStore('labels-test',{name:'labels-ui-test'}),home=createHome('labels','标签测试',1);
+if(!(await store.list()).length){await store.create(home);await store.mutate(home.id,['chunk:0,0'],(_,parts)=>{parts['chunk:0,0'].book={id:'book',itemId:'book',x:2,y:2};});}
+window.labelTest={fail:false,async object(){return (await store.read(home.id,'chunk:0,0')).book;},async open(practice=null){const obj=await this.object();openHomeLabel(document.getElementById('root'),{el,button,obj,homeId:home.id,practice,save:async(id,text)=>{if(this.fail)throw Error('测试保存失败');await store.mutate(home.id,['chunk:0,0'],(_,parts)=>applyHomeAction(parts,{type:'label',id,text},catalog));}});}};
+await labelTest.open();
+</script></body></html>

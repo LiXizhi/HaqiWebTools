@@ -4,7 +4,7 @@
 function markerInputs(save) {
     const pending=save.pendingEncounter;
     return JSON.stringify([
-        save.zone,save.dungeonReturn?.zone,save.quests,save.trackedQuestIds,save.trackedQuestId,
+        save.languageLearning?.target,save.zone,save.dungeonReturn?.zone,save.quests,save.trackedQuestIds,save.trackedQuestId,
         save.level,save.school,save.inventory,save.equipment,save.equipmentGuids,
         save.equipmentInstances,save.nextEquipmentGuid,save.upgrades,save.mountId,
         save.bagRulesVersion,!!pending,pending?.equipmentStatsVersion,

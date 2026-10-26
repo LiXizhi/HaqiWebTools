@@ -725,8 +725,8 @@
       "id": "camp",
       "name": "魔法营地",
       "resource": "camp",
-      "x": 0,
-      "y": 310,
+      "x": 110.0,
+      "y": 0,
       "w": 220,
       "h": 196,
       "rect": [
@@ -738,10 +738,27 @@
       "detailStyle": "illustration"
     },
     {
+      "id": "hanzi",
+      "name": "字源岛",
+      "resource": "hanzi",
+      "rect": [
+        0,
+        0,
+        768,
+        768
+      ],
+      "x": 540.0,
+      "y": 0,
+      "w": 340,
+      "h": 340,
+      "minLevel": 1,
+      "detailStyle": "illustration"
+    },
+    {
       "id": "town",
       "name": "哈奇岛",
       "resource": "town",
-      "x": 0,
+      "x": 1080.0,
       "y": 0,
       "w": 440,
       "h": 346,
@@ -757,8 +774,8 @@
       "id": "fire",
       "name": "火鸟岛",
       "resource": "fire",
-      "x": 390,
-      "y": 230,
+      "x": 1615.0,
+      "y": 0,
       "w": 330,
       "h": 279,
       "rect": [
@@ -773,8 +790,8 @@
       "id": "ice",
       "name": "寒冰岛",
       "resource": "ice",
-      "x": 390,
-      "y": -170,
+      "x": 2095.0,
+      "y": 0,
       "w": 330,
       "h": 292,
       "rect": [
@@ -789,8 +806,8 @@
       "id": "desert",
       "name": "沙漠岛",
       "resource": "desert",
-      "x": -390,
-      "y": 230,
+      "x": 2575.0,
+      "y": 0,
       "w": 330,
       "h": 262,
       "rect": [
@@ -805,8 +822,8 @@
       "id": "dark",
       "name": "幽暗岛",
       "resource": "dark",
-      "x": -390,
-      "y": -170,
+      "x": 3055.0,
+      "y": 0,
       "w": 330,
       "h": 292,
       "rect": [
@@ -827,8 +844,8 @@
         640,
         640
       ],
-      "x": 900,
-      "y": 50,
+      "x": 3540.0,
+      "y": 0,
       "w": 340,
       "h": 340,
       "minLevel": 60,
@@ -844,8 +861,8 @@
         640,
         640
       ],
-      "x": 930,
-      "y": -440,
+      "x": 4030.0,
+      "y": 0,
       "w": 340,
       "h": 340,
       "minLevel": 70,
@@ -861,28 +878,11 @@
         640,
         640
       ],
-      "x": 470,
-      "y": -810,
+      "x": 4520.0,
+      "y": 0,
       "w": 340,
       "h": 340,
       "minLevel": 80,
-      "detailStyle": "illustration"
-    },
-    {
-      "id": "hanzi",
-      "name": "字源岛",
-      "resource": "hanzi",
-      "rect": [
-        0,
-        0,
-        768,
-        768
-      ],
-      "x": -600,
-      "y": 550,
-      "w": 340,
-      "h": 340,
-      "minLevel": 1,
       "detailStyle": "illustration"
     }
   ],
@@ -890,24 +890,30 @@
     {
       "id": "pacific-north",
       "haqi": {
-        "x": -140,
-        "y": -210
+        "x": 1855.0,
+        "y": 0
       },
       "earth": {
-        "lon": -140,
-        "lat": 30
-      }
+        "id": "shenzhen",
+        "name": "深圳",
+        "lon": 114.0579,
+        "lat": 22.5431
+      },
+      "travel": true
     },
     {
       "id": "pacific-west",
       "haqi": {
-        "x": 270,
-        "y": 65
+        "x": 2335.0,
+        "y": 0
       },
       "earth": {
-        "lon": 170,
-        "lat": 32
-      }
+        "id": "shenzhen:bay",
+        "name": "深圳湾公园",
+        "lon": 113.97665,
+        "lat": 22.5217
+      },
+      "travel": true
     }
   ],
   "previousArtwork": {

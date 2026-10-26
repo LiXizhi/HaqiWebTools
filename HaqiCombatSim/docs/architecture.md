@@ -1,3 +1,63 @@
+## 2026-10-26：语言故事场景驱动
+
+任务目录是只读目标投影；不再挂载练习控制器。`languageSceneTarget` 从当前真实世界的NPC／地标／遭遇列表解析配置，`track` 调用已有寻路，`interact` 核对正确对象及既有语言交互距离（默认85）才创建 `island_language_course`。普通任务追踪的 `questDialogue` 保持原对话优先。对话复用 `createLearningChatView`，关闭后继续下一处，保持场景异步身份保护。
+
+```mermaid
+flowchart LR
+    Journal[任务清单及右上角追踪] --> Target[languageSceneTarget 真实对象]
+    Target --> Walk[walkTo 原寻路]
+    Walk --> Interact[interact 对象与距离]
+    Interact --> Chat[既有人物及场景对话]
+    Chat --> Check[courseInteractionMatches 与目标词校验]
+    Fight[实际战斗胜利结算] --> Win[本地 sceneWins 证据]
+    Win --> Back[回到原居民]
+    Back --> Chat
+    Check --> Tree[WordTree 有效练习及 courses.scene]
+    Tree --> Journal
+```
+
+战斗开始将语言／课程／当前步骤／遭遇身份冻结在可选 `pendingEncounter.languageTask`；结算前等待本地胜利证据保存，失败可重试结算。旧检查点无元数据时不推进语言场景。新场景进度保存在 `courses[id].scene`，原 `next` 保留为旧练习历史；新旧不混用，不追加奖励账本。正式故事源仍为 `island-language-courses.json`。
+
+以下任务详情内练习架构为历史，已由场景驱动替代。
+
+## 2026-10-26：语言任务接入原任务清单与 HUD
+
+`language_quest_core` 将既有课程进度投影为语言任务，选择当前岛屿优先的未完成项；HUD 在三格中为该项保留一格。`language_quest` 按账号／角色／语言／捕获 epoch 加载并订阅 WordTree，仅课程进度变化才通知刷新。异步返回须仍属于当前角色和语言。
+
+`view_adventure_quests` 在原任务详情中嵌入练习；`island_language_course` 负责本地接取、回答与语音生命周期。普通数字任务ID与 `course:` 展示ID共用目录筛选／定位，后者不写入原任务奖励账本。旧中文字源岛仍用原任务控制器。关闭任务详情、切换任务或身份即释放练习视图与语音。
+
+## 2026-10-26：多语言课程与家园练习数据流
+
+目标语言独立于界面语言及母语。新课程按需加载目标语词库和共享中文键，课程推进与有效练习写入角色隔离的本地 WordTree 事务；不扩展云存档。旧任务由 `learning_quest_core` 在接取、追踪、信号和交付处统一过滤。纯核心负责校验，浏览器适配器负责 AI、语音和 IndexedDB。
+
+```mermaid
+flowchart LR
+    Target[角色目标语言] --> Journal[language_quest / 全岛任务及追踪]
+    Journal --> Route[island_language_course / 到达真实场景后对话]
+    Source[island-language-courses.json] --> Route
+    Route --> Course[language_course_core]
+    Course --> IO[language_course 本地事务]
+    IO --> Tree[WordTree / courses / 有效练习回执]
+    Curriculum[english-level-one.json 核心词表] --> CardConfig[language_curriculum_core 规范卡片配置]
+    CardConfig --> Cards[当前语言近期词 / 最多10张]
+    Tree --> Cards
+    Cards --> Battle[冻结战斗快照 / 共用8格手牌]
+    Battle --> Practice[word_card_practice]
+    Practice --> IO
+    Tree --> Home[home_language_game]
+    Authored[english-home-practice.json] --> Loader[home_authored_game 按需加载]
+    Loader --> Select[home_authored_game_core 已练词或明确新词教学及真实设施筛选]
+    Home --> Select
+    Select --> Intro[普通伙伴对话 / 再进入练习]
+    Intro --> Check
+    Select -->|没有适用作者故事| AI[既有模型和语音适配器]
+    AI --> Check[home_language_game_core 白名单与回答校验]
+    Actions[home_app 已完成的真实物品与宠物动作] --> Check
+    Check --> IO
+```
+
+英语家园先从作者故事选择已练目标与匹配设施；明确标记 introduces 的作者故事可在会话新词预算内介绍新词，选择和开场不写学习证据，完成后仍走同一 WordTree 事务；本次会话优先未玩故事，然后依据最久未练词轮换。作者故事不请求生成模型，语音仍使用既有适配器。其他语言及无适用故事时保留原 AI 路径。家园对话与物理动作分别验证；重复保存沿用同一回执。角色、语言及会话变化使迟到模型和语音结果失效。英语 L1 的 180 个规范词条通过 language_course 的卡片加载入口接入；只有 WordTree 有有效练习记录或原卡片账本有合格候选时间才可进入新战斗。原卡片定义优先保留，缺失的核心词补用现有基础卡效果；旧检查点仍按快照恢复。完整实施边界见 [多语言岛屿](language-island-plan.md)。
+
 ## 2026-10-24：地图服务器选择
 
 哈奇及现实世界地图右上角复用 `view_map_servers.js`，通过控制器回调读取会话、查询分页和选择实例，关闭地图时取消列表请求并退订。编号仅取鉴权分配且经 `welcome.instanceId` 核对的连接，`migrate` 更新编号，断开清空。每页20项、支持跳页和刷新；绿色流畅、橙色拥挤、红色已满、灰色维护，附人数/容量。战斗中禁止手动切服。列表人数来自网关最近心跳，最终容量由世界服入场检查决定。
@@ -1565,3 +1625,60 @@ and collision catalogue. The map illustration is separate from navigable terrain
 `applyUiIcon` in `adventure_ui_art.js` applies the existing atlas cell directly to
 an element for strict-CSP consumers, without injecting a stylesheet. It does not
 change `loadUiArt` or the existing Haqi GUI.
+
+
+## 2026-10-26：横向群岛与现实漩涡
+
+```mermaid
+flowchart LR
+    Manifest[world-map-art 岛屿横向坐标及漩涡目的地] --> View[view_haqi_atlas 横向拖动与缩放]
+    Core[haqi_atlas_core 单轴约束及缩放范围] --> View
+    View -->|portal 回调| Controller[adventure_app browseWorldPortal]
+    Controller -->|哈奇侧 travel=true| Travel[既有 travelEarth 鉴别状态并准备场景]
+    Controller -->|现实返回侧或未配置 travel| Browse[仅切换世界图册]
+    Travel --> Save[原位置返回快照及现实场景入场]
+```
+
+浏览、缩放与岛屿定位不修改存档。实际传送只由控制器执行并复用现有战斗／副本限制、身份及异步取消检查。详见 [地图美术与交互](world-map-art.md#2026-10-26横向群岛长地图覆盖前述群岛布局与漩涡导航约定)。
+
+
+语言场景入口补充（2026-10-26）：`openIslandLanguageCourse` 校验当前步骤后，通过注入的 `createLanguageSceneIntro` 复用普通 `renderDialogue`；玩家明确回应才挂出学习聊天视图。引导和练习共享同一角色/语言/场景生命周期，关闭或上下文失效会同时销毁。引导文字读取课程步骤 `intro`，不生成练习回执。
+
+
+## 2026-10-26：家园作品标签的学习回执
+
+```mermaid
+flowchart LR
+    Author[作者标签任务与明确目标词] --> Session[家园练习会话与回执]
+    Session --> Editor[真实物品标签编辑器]
+    Editor --> Save[home_actions_core 与原地块事务]
+    Save --> Delta[非空标签变化与成功保存事件]
+    Delta --> Check[物品 文字 回执 角色 语言校验]
+    Check --> Tree[WordTree text 有效练习与去重]
+    Save --> World[物品标签 场景绘制 撤销重做]
+```
+
+自由标签不带活动学习回执，不经词语计数。编辑器不判掌握，作者变式校验不代表自由写作评估；模型不参与完成判定。地块与词树分别保存，后者失败保留本轮回执重试；旧会话／旧轮次的迟到结果不写学习记录。
+
+
+## 2026-10-26：家园复习调度与共享词树
+
+```mermaid
+flowchart LR
+    Event[已校验家园回执 含玩法] --> Dedupe[recordEffectivePractice 去重]
+    Dedupe --> Count[原有效次数与本地 basic]
+    Dedupe --> Review[home_review_core 会话与间隔]
+    Review --> Store[同一 WordTree IndexedDB 事务]
+    Store --> Select[到期 低次数 旧练习排序]
+    Store --> Budget[本会话新词预算与已玩故事]
+    Select --> Author[作者或受约束 AI 的可执行情境]
+    Budget --> Author
+```
+
+home_review_core 为纯核心，无浏览器 IO；控制器传入当前时间、读取同角色／目标语言词树并传入新词预算。调度元数据不进入云端掌握清单，不影响战斗快照和旧回执计数。没有新增独立存储库。
+
+### 家园听读选择链路（2026-10-26）
+
+`english-home-practice.json` → `home_authored_game_core.js`（仅已学词）→ `home_comprehension_core.js`（目标／不同种干扰物快照）→ `home_language_game.js`（普通开场、读请求或等待语音）→ `home_app.js` / `view_home.js`（临时候选点击、真实 find 事件）→ 当前场景／角色／语言守卫 → `language_course.js` → `recordComprehensionPractice` → 同一 WordTree 的 comprehension。
+
+纯核心不访问 DOM、语音或存储；视图选择只上报意图。与朗读／输入共用回执去重，但保持证据类型分开，不增加 practiceCount/basic 或战斗候选 lastPractice。

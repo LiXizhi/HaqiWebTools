@@ -65,7 +65,7 @@
     background-image:var(--ui-atlas); background-size:var(--ui-atlas-size,400% 400%); background-repeat:no-repeat;
     filter:none;
 }
-.storybook-ui .icon[data-ui-icon] svg { display:none; }
+.storybook-ui .icon[data-ui-icon] svg { display:var(--ui-icon-fallback,block); }
 .storybook-ui :is(.hero-status,.utility-nav,.quest-tracker,.game-nav,.dialogue-box,.modal) {
     isolation:isolate; border:0; background:none; box-shadow:none;
     color:var(--ink); border-radius:16px;
@@ -210,7 +210,7 @@
 .storybook-ui :is(.hero-status,.utility-nav,.game-nav)::before { content:none; }
 .storybook-ui :is(.quest-tracker,.dialogue-box,.modal)::before {
     border:1px solid #b69048; border-image:none; border-radius:inherit;
-    background:#f7e8bb var(--ui-parchment) center / cover;
+    background:#f7e8bb var(--ui-parchment,none) center / cover;
     box-shadow:inset 0 0 0 2px #fff0bd99,inset 0 0 14px #c3984c38,0 3px 10px #261b1140;
     filter:none;
 }
@@ -384,7 +384,7 @@
 .storybook-ui .modal-header { gap:10px; }
 .storybook-ui .hero-status::before {
  content:""; border:1px solid #b69048; border-image:none; border-radius:9px;
- background:#f7e8bb var(--ui-parchment) center / cover;
+ background:#f7e8bb var(--ui-parchment,none) center / cover;
  box-shadow:inset 0 0 0 2px #fff0bd99,inset 0 0 12px #c3984c25,0 3px 8px #261b1140; filter:none;
 }
 .storybook-ui .hero-text strong { color:#51391f; text-shadow:none; }

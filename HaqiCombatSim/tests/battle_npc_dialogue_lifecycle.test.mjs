@@ -21,7 +21,7 @@ test('real HUD refresh preserves NPC dialogue after every spoken reward and fina
     const state={stage:'world',role:'test',identity:'test',content:{},save:{zone:'camp',inventory:{},languageLearning:{enabled:true,target:'en',native:'zh-CN'},languageAdventure:{version:1,progress:{}}}};
     const context=vm.createContext({bindTouchMovement,nodes:{world:surface},touchIndicator:{hidden:true},stage:'world',panel:null,dialog:null,keys:new Set(),joystick:{x:0,y:0},heldPointer:null,path:['keep'],destination:'keep',talkApproach:null,
         languageAdventure:{get active(){return chat?.active;},close(){closed++;chat.close();}}});
-    Object.assign(context,{V:{renderHud(){}},model:()=>({}),openPanel(){},track(){},untrack(){},exitDungeon(){},interactNearest(){}});
+    Object.assign(context,{world:null,recommendedLanguageQuest:()=>null,languageTasks:{ensure(){},snapshot(){return {rows:[]};}},V:{renderHud(){}},model:()=>({}),openPanel(){},track(){},untrack(){},exitDungeon(){},interactNearest(){}});
     vm.runInContext(wiring+'\n'+reset+'\n'+hud,context);
     const refreshHud=()=>vm.runInContext('paintHud()',context);
     chat=createStoryChat({getState:()=>state,onSpeech:()=>{awards++;refreshHud();return {key:'attack',percent:awards,total:awards};},

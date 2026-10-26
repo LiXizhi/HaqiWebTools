@@ -21,8 +21,8 @@ test('real card faces and activation work at desktop/mobile sizes, including ret
         await page.getByRole('button',{name:'收起提示',exact:true}).click();assert.equal(await page.locator('.word-card-dialogue .camp-chat-hint').isVisible(),false);
         await page.getByRole('button',{name:'显示提示',exact:true}).click();await page.getByRole('button',{name:'输入',exact:true}).click();assert.equal(await page.getByRole('textbox',{name:'文字回答',exact:true}).isVisible(),true);await page.getByRole('button',{name:'输入',exact:true}).click();
         await page.getByRole('button',{name:'改用拼写',exact:true}).click();assert.equal(await page.evaluate(()=>wordTest.paused),true);assert.equal(await page.locator('.word-practice-showcase').isVisible(),false);
-        await page.getByRole('textbox',{name:'英文单词'}).fill('helo');await page.getByRole('button',{name:'检查拼写',exact:true}).click();await page.getByRole('status').filter({hasText:'再试一次'}).waitFor();assert.equal(await page.evaluate(()=>wordTest.accepted),0);
-        await page.evaluate(()=>wordTest.fail(true));await page.getByRole('textbox',{name:'英文单词'}).fill('hello');await page.getByRole('button',{name:'检查拼写',exact:true}).click();await page.getByRole('button',{name:'重试保存',exact:true}).waitFor();assert.equal(await page.evaluate(()=>wordTest.accepted),0);
+        await page.getByRole('textbox',{name:'目标语言词语'}).fill('helo');await page.getByRole('button',{name:'检查拼写',exact:true}).click();await page.getByRole('status').filter({hasText:'再试一次'}).waitFor();assert.equal(await page.evaluate(()=>wordTest.accepted),0);
+        await page.evaluate(()=>wordTest.fail(true));await page.getByRole('textbox',{name:'目标语言词语'}).fill('hello');await page.getByRole('button',{name:'检查拼写',exact:true}).click();await page.getByRole('button',{name:'重试保存',exact:true}).waitFor();assert.equal(await page.evaluate(()=>wordTest.accepted),0);
         await page.screenshot({path:path.join(root,`tmp/word-cards-${width}-practice.png`)});await page.evaluate(()=>wordTest.fail(false));await page.getByRole('button',{name:'重试保存',exact:true}).click();await page.locator('.word-practice').waitFor({state:'detached'});assert.equal(await page.evaluate(()=>wordTest.accepted),1);assert.equal(await page.evaluate(()=>wordTest.paused),false);
         assert.equal(await page.getByRole('button',{name:'已激活',exact:true}).count(),0);assert.equal(await page.evaluate(()=>wordTest.battle.sides.near[0].deckMap[Number(Object.keys(wordTest.battle.sides.near[0].wordCards)[0])]),-2);
         await page.goto(base+'?word=zh:huo');await page.waitForFunction(()=>window.wordTest);await page.evaluate(()=>wordTest.open());await page.getByRole('button',{name:'按住对话，松开发送；点击录制，再点结束；滑出取消',exact:true}).waitFor();
@@ -55,7 +55,7 @@ test('real card faces and activation work at desktop/mobile sizes, including ret
             await page.evaluate(()=>wordTest.practice.close());await page.evaluate(()=>wordTest.open());await mic().waitFor();
             await page.evaluate(()=>{wordTest.delayFinish();wordTest.setTranscript('大山挡在前面，保护伙伴。');});
             // Hold and release uses the same recorder; close before its late ASR result.
-            const rect=await mic().boundingBox();await page.mouse.move(rect.x+10,rect.y+10);await page.mouse.down();await page.waitForTimeout(400);await page.mouse.up();
+            await mic().scrollIntoViewIfNeeded();const rect=await mic().boundingBox();await page.mouse.move(rect.x+rect.width/2,rect.y+rect.height/2);await page.mouse.down();await page.waitForTimeout(400);await page.mouse.up();
             await page.getByRole('status').filter({hasText:'正在识别'}).waitFor();await page.getByRole('button',{name:'关闭文字卡练习'}).click();await page.evaluate(()=>wordTest.releaseFinish());
             await page.waitForTimeout(100);assert.equal(await page.evaluate(()=>wordTest.accepted),0);assert.equal(await page.evaluate(()=>wordTest.paused),false);
         }

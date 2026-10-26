@@ -1,3 +1,4 @@
+import {learningQuestMatches} from './learning_quest_core.js';
 import {memoryParams,memoryQuest,createMemoryNodes,advanceMemoryChant,releaseMemoryNodes} from './hanzi_memory_core.js';
 import {walkable,distance} from './adventure_world_core.js';
 import {inMonsterTerritory} from './adventure_monster_motion_core.js';
@@ -16,7 +17,7 @@ export function createHanziMemory({root,getState,persist,show,close,toast,practi
     }
     function persistRuntime(){try{persist(false);}catch(error){toast(error.message);}}
     function scene(){
-        const {save,world,content}=getState(),cfg=config();if(!cfg||!world)return null;
+        const {save,world,content}=getState(),cfg=config();if(!cfg||!world)return null;if(!learningQuestMatches(save,cfg)){world.memoryNodes=[];world.memorySigns=[];return null;}
         if(sceneWorld!==world||sceneBalance!==content.balanceParams){sceneParams=memoryParams(content);sceneBalance=content.balanceParams;}
         const params=sceneParams;
         if(sceneWorld!==world){

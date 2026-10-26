@@ -1,6 +1,6 @@
 import {buildingTemplateObjects,validateTemplatePlacement} from './home_building_templates_core.js';
 import {isRoofDecoration,roofAt,buildingPlacement,buildingItem,replacementFor,obstruction,intersects,validBuildingProperties} from './home_building_core.js';
-import {requiresReading,homeObjectInteractive,canPlace,chunkKey} from './home_core.js';
+import {validHomeLabel,requiresReading,homeObjectInteractive,canPlace,chunkKey} from './home_core.js';
 export function homeObjects(parts){return Object.entries(parts).filter(([k])=>k.startsWith('chunk:')).flatMap(([,v])=>Object.values(v));}
 export function applyHomeAction(parts,action,catalog){
  const objects=homeObjects(parts),find=id=>objects.find(o=>o.id===id);
@@ -36,6 +36,11 @@ export function applyHomeAction(parts,action,catalog){
   place(action.object);return true;
  }
  const obj=find(action.id);if(!obj)throw Error('物品已变化，请重新选择');
+ if(action.type==='label'){
+  if(typeof action.text!=='string'||!validHomeLabel(action.text))throw Error('作品标签须为不超过60字的单行文字');
+  const label=action.text.trim();if((obj.label||'')===label)return false;
+  const next={...obj};if(label)next.label=label;else delete next.label;put(next);return true;
+ }
  if(action.type==='properties'||action.type==='door'){
   const next=action.type==='door'?{...obj,doorOpen:!obj.doorOpen}:{...obj,properties:action.properties};
   if(action.type==='door'&&buildingItem(obj,catalog)?.building?.type!=='door')throw Error('这不是门');

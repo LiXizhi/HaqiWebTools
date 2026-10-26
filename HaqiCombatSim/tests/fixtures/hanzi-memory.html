@@ -16,7 +16,7 @@ import {createHanziMemory} from '../../js/adventure_hanzi_memory.js';
 import {renderHud} from '../../js/view_adventure.js';
 import {createDictionaryStore} from '../../js/dictionary_store.js';
 const assets=await loadResources(),save=A.createAdventure(assets.content,{seed:73,school:'fire'});
-A.applyAction(save,assets.content,{type:'travel',zone:'hanzi'});A.applyAction(save,assets.content,{type:'accept-catalog',questId:873100,npcId:863002});
+save.languageLearning.target='zh-CN';A.applyAction(save,assets.content,{type:'travel',zone:'hanzi'});A.applyAction(save,assets.content,{type:'accept-catalog',questId:873100,npcId:863002});
 const world=W.createWorld('hanzi',assets.content,save),canvas=document.querySelector('#scene'),root=document.querySelector('#overlay'),renderer=createRenderer(canvas,assets);
 await assets.warmScenery(world);await assets.warmNearby(world,save);renderer.prepareScene(world,save);
 let panel=null,stage='world',battle=null,last=performance.now(),fail=false,paused=false;

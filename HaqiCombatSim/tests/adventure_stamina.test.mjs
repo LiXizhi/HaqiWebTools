@@ -50,10 +50,10 @@ test('local calendar day refills shared stamina to max', () => {
     const save = A.createAdventure(content);
     save.stamina = 10;
     save.staminaRefillDay = '2020-01-01';
-    assert.equal(ensureDailyStamina(save, content, Date.parse('2026-09-27T12:00:00+08:00')), 100);
-    assert.equal(save.staminaRefillDay, localDayKey(Date.parse('2026-09-27T12:00:00+08:00')));
+    assert.equal(ensureDailyStamina(save, content, new Date(2026,8,27,12).getTime()), 100);
+    assert.equal(save.staminaRefillDay, localDayKey(new Date(2026,8,27,12).getTime()));
     save.stamina = 40;
-    assert.equal(ensureDailyStamina(save, content, Date.parse('2026-09-27T18:00:00+08:00')), 40);
+    assert.equal(ensureDailyStamina(save, content, new Date(2026,8,27,18).getTime()), 40);
 });
 
 test('zero-cost dungeon still grants xp/coins; costly arena denies loot when exhausted', () => {

@@ -12,7 +12,7 @@ const pack=JSON.parse(fs.readFileSync(new URL('../data/adventure/island-packs/ha
 const data=JSON.parse(fs.readFileSync(new URL('../data/adventure/dictionary/zh.json',import.meta.url)));
 function harness(){
     let cb,shown,notice='',retry,fail=false,success=0;
-    const save={seed:77,zone:'hanzi',position:{x:100,y:100},hanzi:createHanziProgress(),quests:{873100:{accepted:true,claimed:false,progress:{}}},trackedQuestIds:[873100]};
+    const save={languageLearning:{target:'zh-CN'},seed:77,zone:'hanzi',position:{x:100,y:100},hanzi:createHanziProgress(),quests:{873100:{accepted:true,claimed:false,progress:{}}},trackedQuestIds:[873100]};
     const world={zone:'hanzi',w:2000,h:1000,isCityDungeon:true,dungeon:{scene:{map:{obstacles:[]}}},layout:{spawn:{x:100,y:100}},paths:[{a:{x:100,y:100},b:{x:1800,y:100}}],npcs:[],encounters:[{id:pack.encounters[0].id,x:700,y:100}],monsterSceneParams:{territoryRadius:100}};
     const state={save,world,content:{islandPacks:[pack]},stage:'world',panel:null,owner:null,role:'a'},dictionary=emptyDictionary();let battles=0;
     const c=createHanziMemory({root:{},getState:()=>state,persist(){},commit:p=>{if(fail)throw Error('disk full');save.hanzi=p;},show:()=>{state.panel='hanzi-memory';},close:()=>{state.panel=null;c.close();},track(){},dictionary(){},legacy(){},onBuff(){},encounter(){battles++;},toast(){},load:async()=>data,

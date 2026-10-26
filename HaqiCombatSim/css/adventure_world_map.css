@@ -115,3 +115,30 @@
 .map-server-pager{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:14px}
 .map-server-pager input{width:58px;min-height:36px}
 @media(max-width:600px){.haqi-app .atlas-map-modal .modal-header:has(.map-server-trigger){flex-wrap:wrap}.haqi-app .atlas-map-modal .modal-header:has(.map-server-trigger) .map-heading{flex-basis:calc(100% - 60px)}.map-server-trigger{order:2;margin-left:auto}.map-server-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Horizontal island journey; names and level guidance sit below each island. */
+.haqi-app .haqi-atlas-island::after{content:attr(data-level);display:block;font-size:11px;color:#fff3ce;font-weight:normal;margin-top:2px}
+.haqi-atlas-navigation{display:flex;align-items:center;gap:8px;flex-shrink:0}
+
+
+.haqi-atlas-stage .map-vortex::after{content:attr(data-destination);position:absolute;top:100%;left:50%;transform:translateX(-50%);white-space:nowrap;background:#184555df;color:#fff3ce;border-radius:6px;padding:3px 6px;font-size:12px}
+
+.haqi-app .haqi-atlas-arrow{flex:0 0 44px;width:44px;height:44px;padding:6px;border:2px solid #bb934b;border-radius:50%;background:linear-gradient(#4e795c,#244f3b);box-shadow:inset 0 0 0 2px #fff1b52b;color:#ffe7a4}
+.haqi-atlas-arrow svg{display:block;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.haqi-atlas-arrow:disabled{opacity:.4}
+.haqi-atlas-journey{flex:1;min-width:0;--island-count:10;padding-top:4px}
+.haqi-atlas-progress{display:block;box-sizing:border-box;width:calc(100% - 100% / var(--island-count));margin:0 auto;height:26px;appearance:none;background:transparent;cursor:ew-resize;touch-action:pan-y}
+.haqi-atlas-progress::-webkit-slider-runnable-track{height:8px;border:1px solid #b49353;border-radius:8px;background:linear-gradient(to right,#3a7053 var(--journey-progress,0%),#d9c795 var(--journey-progress,0%))}
+.haqi-atlas-progress::-webkit-slider-thumb{appearance:none;width:20px;height:20px;margin-top:-7px;border:3px solid #f7d985;border-radius:50%;background:#24563d;box-shadow:0 1px 4px #49351e66}
+.haqi-atlas-progress::-moz-range-track{height:6px;border:1px solid #b49353;border-radius:8px;background:#d9c795}
+.haqi-atlas-progress::-moz-range-progress{height:6px;background:#3a7053}
+.haqi-atlas-progress::-moz-range-thumb{width:16px;height:16px;border:3px solid #f7d985;border-radius:50%;background:#24563d}
+.haqi-atlas-stops{display:grid;grid-template-columns:repeat(var(--island-count),minmax(64px,1fr));align-items:start;position:relative;overflow-x:auto;overscroll-behavior-x:contain;touch-action:pan-x;scrollbar-width:thin;scrollbar-color:#a88746 #ead9ad}
+.haqi-app .haqi-atlas-stop{min-width:0;min-height:40px;padding:3px 1px;border:0;border-radius:6px;background:transparent;box-shadow:none;color:#66512c;font-size:12px;line-height:1.35;overflow-wrap:anywhere}
+.haqi-app .haqi-atlas-stop[aria-current=location]{background:#28573f;color:#fff0b9;font-weight:bold;box-shadow:inset 0 -3px #d8ad52}
+.haqi-atlas-arrow:focus-visible,.haqi-atlas-progress:focus-visible,.haqi-atlas-stop:focus-visible{outline:2px solid #a57425;outline-offset:2px}
+@media(max-width:600px){.haqi-atlas-navigation{gap:3px}.haqi-app .haqi-atlas-arrow{flex-basis:36px;width:36px;height:44px;padding:5px}.haqi-app .haqi-atlas-stop{font-size:11px;writing-mode:vertical-rl;justify-self:center;min-height:64px;padding:4px 2px;letter-spacing:1px}}
+
+.haqi-atlas-position{font-size:12px;line-height:1.5;text-align:center;color:#496044;font-variant-numeric:tabular-nums}
+.haqi-atlas-position[hidden]{display:none}
+@media(max-width:600px){.haqi-atlas-stops{grid-template-columns:repeat(var(--island-count),minmax(28px,1fr))}}

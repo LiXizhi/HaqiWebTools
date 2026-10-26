@@ -45,7 +45,7 @@ export async function loadUiArt(mode,read=fetchJson) {
     // The atlas URI is manifest data, never user-authored markup.
     const absoluteUrl = new URL(url, document.baseURI).href;
     const columns = manifest.columns || 4, rows = manifest.rows || 4;
-    style.textContent = `.storybook-ui{--ui-atlas:url(${JSON.stringify(absoluteUrl)});--ui-atlas-size:${columns * 100}% ${rows * 100}%;${rules.join('')}}`;
+    style.textContent = `.storybook-ui{--ui-icon-fallback:none;--ui-atlas:url(${JSON.stringify(absoluteUrl)});--ui-atlas-size:${columns * 100}% ${rows * 100}%;${rules.join('')}}`;
     for (const [name, frame] of Object.entries(manifest.frames)) {
         if (frame.slice) continue;
         const [column, row] = frame.cell;

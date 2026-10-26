@@ -1,0 +1,4223 @@
+{
+  "version": 1,
+  "language": "en",
+  "games": [
+    {
+      "id": "en-l1-water-after-play",
+      "mode": "care",
+      "words": [
+        "water"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "drink",
+        "itemIds": [
+          "kettle",
+          "cup",
+          "water-barrel"
+        ]
+      },
+      "intro": "刚才玩得真开心！现在我想喝点水。你能告诉我喝什么，再带我去家里的水壶、水杯或水桶旁边吗？",
+      "prompt": "What can I drink?",
+      "answer": "Water, please.",
+      "reply": "Water sounds good. Thank you!"
+    },
+    {
+      "id": "en-l1-see-water",
+      "mode": "care",
+      "words": [
+        "see",
+        "water"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "drink",
+        "itemIds": [
+          "kettle",
+          "cup",
+          "water-barrel"
+        ]
+      },
+      "intro": "我在找喝水的地方。你能帮我看看家里的水壶、水杯或水桶吗？看到以后告诉我，再带我过去。",
+      "prompt": "Can you see water for me?",
+      "answer": "I see water.",
+      "reply": "Please show me where to drink."
+    },
+    {
+      "id": "en-l1-cup-not-bowl",
+      "mode": "care",
+      "words": [
+        "cup"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "drink",
+        "itemIds": [
+          "cup"
+        ]
+      },
+      "intro": "我想用杯子喝水，不是用饭碗。先告诉我该用什么，再把我带到家里的杯子旁边。",
+      "prompt": "A bowl or a cup?",
+      "answer": "A cup, please.",
+      "reply": "A cup. Thank you!"
+    },
+    {
+      "id": "en-l1-bread-snack",
+      "mode": "care",
+      "words": [
+        "bread"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "eat",
+        "itemIds": [
+          "bread-basket"
+        ]
+      },
+      "intro": "我闻到面包香啦！家里有面包篮。先告诉我点心是什么，再带我到面包篮边吃一点。",
+      "prompt": "What is our snack?",
+      "answer": "Bread.",
+      "reply": "Bread! Let us find the basket."
+    },
+    {
+      "id": "en-l1-picnic-plan",
+      "mode": "care",
+      "words": [
+        "like",
+        "bread",
+        "milk"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": []
+      },
+      "intro": "我想和你一起计划一次野餐。还没有出发，我们先聊聊喜欢吃什么。说完选个座位，让我坐下来和你慢慢商量。",
+      "prompt": "What do you like for our picnic?",
+      "answer": "I like bread and milk.",
+      "reply": "I will remember: bread and milk."
+    },
+    {
+      "id": "en-l1-milk-choice",
+      "mode": "care",
+      "words": [
+        "milk"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": []
+      },
+      "intro": "今天我来当小小记录员。我们先聊聊你想带什么饮品，不是真的把食物变出来。你说完后，让我坐下来记住这个选择。",
+      "prompt": "Milk or juice for our picnic?",
+      "answer": "Milk, please.",
+      "reply": "Milk is on our plan."
+    },
+    {
+      "id": "en-l1-four-cup-plan",
+      "mode": "care",
+      "words": [
+        "four",
+        "cup"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": []
+      },
+      "intro": "我们来计划一场四个人的茶会，还不用拿出杯子。每人用一个杯子，要计划几个呢？说完让我坐下来和你一起准备清单。",
+      "prompt": "Four friends. How many cups?",
+      "answer": "Four cups.",
+      "reply": "Four cups are on our plan."
+    },
+    {
+      "id": "en-l1-sister-invitation",
+      "mode": "care",
+      "words": [
+        "sister",
+        "come"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": []
+      },
+      "intro": "我们来演一小段邀请朋友的故事。我来演客人，你来演主人。客人想带妹妹来，你愿意欢迎她吗？邀请说好后，给我找个座位继续演。",
+      "prompt": "Can my sister come?",
+      "answer": "Your sister can come.",
+      "reply": "Thank you for inviting my sister!"
+    },
+    {
+      "id": "en-l1-yes-seat",
+      "mode": "care",
+      "words": [
+        "yes",
+        "come"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": []
+      },
+      "intro": "我想过来陪你坐一会儿。你可以先欢迎我，再给我选一个座位。",
+      "prompt": "Can I come and sit with you?",
+      "answer": "Yes. Come here.",
+      "reply": "Thank you. Let us find a seat."
+    },
+    {
+      "id": "en-l1-polite-rest",
+      "mode": "care",
+      "words": [
+        "please"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sleep",
+        "itemIds": []
+      },
+      "intro": "我有点累，想休息一下。你愿意温柔地请我去睡觉吗？说完带我到家里的床或其他能睡觉的地方。",
+      "prompt": "What can I do now?",
+      "answer": "Sleep, please.",
+      "reply": "A rest sounds good."
+    },
+    {
+      "id": "en-l1-friend-seat",
+      "mode": "care",
+      "words": [
+        "friend"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": []
+      },
+      "intro": "我想知道，在你心里我们是什么关系。告诉我以后，给我找个座位，我们一起歇一会儿。",
+      "prompt": "Am I your friend?",
+      "answer": "You are my friend.",
+      "reply": "You are my friend, too."
+    },
+    {
+      "id": "en-l1-hello-seat",
+      "mode": "care",
+      "words": [
+        "hello"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": []
+      },
+      "intro": "你好呀，我想和你一起坐一会儿。先打个招呼，再给我选个座位吧。",
+      "prompt": "Hello!",
+      "answer": "Hello!",
+      "reply": "It is good to see you."
+    },
+    {
+      "id": "en-l1-home-rest",
+      "mode": "care",
+      "words": [
+        "home"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sleep",
+        "itemIds": []
+      },
+      "intro": "出去玩过以后，回到熟悉的家真舒服。先告诉我到家了，再带我到可以睡觉的地方休息。",
+      "prompt": "Where are we now?",
+      "answer": "We are home.",
+      "reply": "Home feels good."
+    },
+    {
+      "id": "en-l1-wait-seat",
+      "mode": "care",
+      "words": [
+        "wait"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": []
+      },
+      "intro": "我想陪你玩，可你还在忙。你可以请我等一等，再带我到座位上等你。不用赶时间，我不会因为等待就生气。",
+      "prompt": "Can we play now?",
+      "answer": "Please wait.",
+      "reply": "All right. I can wait."
+    },
+    {
+      "id": "en-l1-find-book",
+      "mode": "find",
+      "words": [
+        "book"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "book"
+        ]
+      },
+      "intro": "我想听一个故事，却找不到书。书的英语是 book。先告诉我该找什么，再在家里点一下那本书。",
+      "prompt": "What do we need for a story?",
+      "answer": "A book.",
+      "reply": "A book! Please show me.",
+      "introduces": [
+        {
+          "word": "book",
+          "meaning": "书"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "article-the",
+          "answer": "The book."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-book",
+      "mode": "arrange",
+      "words": [
+        "book"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "book"
+        ]
+      },
+      "intro": "我想和你一起布置阅读角。把家里的一本书换个位置，让它成为阅读角的第一件物品吧。",
+      "prompt": "What shall we put in our reading corner?",
+      "answer": "A book.",
+      "reply": "You can choose a place for our book.",
+      "alternatives": [
+        {
+          "id": "article-the",
+          "answer": "The book."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-bed",
+      "mode": "find",
+      "words": [
+        "bed"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "bed",
+          "bunk-bed"
+        ]
+      },
+      "intro": "我想休息了，却把睡觉的地方忘了。床的英语是 bed。先告诉我，再带我认一认家里的床。",
+      "prompt": "What do I need for sleep?",
+      "answer": "A bed.",
+      "reply": "A bed. Let us find it.",
+      "introduces": [
+        {
+          "word": "bed",
+          "meaning": "床"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "article-the",
+          "answer": "The bed."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-bed",
+      "mode": "arrange",
+      "words": [
+        "bed"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "bed",
+          "bunk-bed"
+        ]
+      },
+      "intro": "我们来布置一个休息角。你来决定床放在哪里。说出要移动的物品，再去实际移动它。",
+      "prompt": "What shall we move for our rest corner?",
+      "answer": "The bed.",
+      "reply": "Choose a place where you would like to rest.",
+      "alternatives": [
+        {
+          "id": "article-a",
+          "answer": "A bed."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-clock",
+      "mode": "find",
+      "words": [
+        "clock"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "alarm-clock",
+          "wall-clock"
+        ]
+      },
+      "intro": "我想知道什么时候再出去玩，先得找到时钟。时钟的英语是 clock。你能告诉我该找什么，再指给我看吗？",
+      "prompt": "What can tell us the time?",
+      "answer": "A clock.",
+      "reply": "Please show me the clock.",
+      "introduces": [
+        {
+          "word": "clock",
+          "meaning": "时钟"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "article-the",
+          "answer": "The clock."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-clock",
+      "mode": "arrange",
+      "words": [
+        "clock"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "alarm-clock",
+          "wall-clock"
+        ]
+      },
+      "intro": "我们来给休息角选一个看得见时钟的位置。你决定时钟放在哪儿，先告诉我再移动它。",
+      "prompt": "What shall we move?",
+      "answer": "The clock.",
+      "reply": "You choose the place for the clock.",
+      "alternatives": [
+        {
+          "id": "article-a",
+          "answer": "A clock."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-lamp",
+      "mode": "find",
+      "words": [
+        "lamp"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "desk-lamp",
+          "bedside-lamp",
+          "floor-lamp"
+        ]
+      },
+      "intro": "我想找一盏读书用的灯。灯的英语是 lamp。先告诉我，再点一下家里的台灯、床头灯或落地灯。",
+      "prompt": "What do we need for light?",
+      "answer": "A lamp.",
+      "reply": "Please show me a lamp.",
+      "introduces": [
+        {
+          "word": "lamp",
+          "meaning": "灯"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "article-the",
+          "answer": "The lamp."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-lamp",
+      "mode": "arrange",
+      "words": [
+        "lamp"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "desk-lamp",
+          "bedside-lamp",
+          "floor-lamp"
+        ]
+      },
+      "intro": "我们继续布置读书的地方。先说要移动哪件东西，再给灯选一个你喜欢的位置。",
+      "prompt": "What shall we move for our reading corner?",
+      "answer": "The lamp.",
+      "reply": "Choose a place for the lamp.",
+      "alternatives": [
+        {
+          "id": "article-a",
+          "answer": "A lamp."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-box",
+      "mode": "find",
+      "words": [
+        "box"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "gift-box",
+          "toy-chest"
+        ]
+      },
+      "intro": "我想给礼物选一个盒子。盒子的英语是 box。先告诉我，再指给我看家里的礼物盒或玩具箱。",
+      "prompt": "What can hold a gift?",
+      "answer": "A box.",
+      "reply": "Let us find a box.",
+      "introduces": [
+        {
+          "word": "box",
+          "meaning": "盒子"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "article-the",
+          "answer": "The box."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-box",
+      "mode": "arrange",
+      "words": [
+        "box"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "gift-box",
+          "toy-chest"
+        ]
+      },
+      "intro": "我们布置一个收纳角吧。你选择盒子的新位置。先说出要移动的物品，再去动手。",
+      "prompt": "What shall we move for our tidy corner?",
+      "answer": "The box.",
+      "reply": "You choose a place for the box.",
+      "alternatives": [
+        {
+          "id": "article-a",
+          "answer": "A box."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-table",
+      "mode": "find",
+      "words": [
+        "table"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "table"
+        ]
+      },
+      "intro": "我想找个放点心的地方。桌子的英语是 table。先告诉我，再在家里点一下桌子。",
+      "prompt": "What do we need for our snack?",
+      "answer": "A table.",
+      "reply": "Let us find the table.",
+      "introduces": [
+        {
+          "word": "table",
+          "meaning": "桌子"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "article-the",
+          "answer": "The table."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-table",
+      "mode": "arrange",
+      "words": [
+        "table"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "table"
+        ]
+      },
+      "intro": "我们来准备一个吃点心的角落。你决定桌子的位置。先说出物品，再实际移动它；现在还没有摆食物。",
+      "prompt": "What shall we move for our snack corner?",
+      "answer": "The table.",
+      "reply": "Choose a place for the table.",
+      "alternatives": [
+        {
+          "id": "article-a",
+          "answer": "A table."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-chair",
+      "mode": "find",
+      "words": [
+        "chair"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "chair"
+        ]
+      },
+      "intro": "我想坐下来陪你聊天。椅子的英语是 chair。先告诉我该找什么，再点一下家里的椅子。",
+      "prompt": "What can I sit on?",
+      "answer": "A chair.",
+      "reply": "Please show me a chair.",
+      "introduces": [
+        {
+          "word": "chair",
+          "meaning": "椅子"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "article-the",
+          "answer": "The chair."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-chair",
+      "mode": "arrange",
+      "words": [
+        "chair"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "chair"
+        ]
+      },
+      "intro": "我们给聊天的地方换一种布置。你来决定椅子放哪里，先告诉我，再实际移动椅子。",
+      "prompt": "What shall we move?",
+      "answer": "The chair.",
+      "reply": "Choose a place where we can sit together.",
+      "alternatives": [
+        {
+          "id": "article-a",
+          "answer": "A chair."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-cup",
+      "mode": "find",
+      "words": [
+        "cup"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "cup"
+        ]
+      },
+      "intro": "我想用杯子喝水。杯子的英语是 cup。先告诉我，再从家里的物品中找到杯子。",
+      "prompt": "What can I drink from?",
+      "answer": "A cup.",
+      "reply": "Please show me the cup.",
+      "introduces": [
+        {
+          "word": "cup",
+          "meaning": "杯子"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "article-the",
+          "answer": "The cup."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-cup",
+      "mode": "arrange",
+      "words": [
+        "cup"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "cup"
+        ]
+      },
+      "intro": "我们准备一个喝水的小角落。先告诉我想移动什么，再给杯子选个新位置。",
+      "prompt": "What shall we move to our drink corner?",
+      "answer": "The cup.",
+      "reply": "You choose a place for the cup.",
+      "alternatives": [
+        {
+          "id": "article-a",
+          "answer": "A cup."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-plate",
+      "mode": "find",
+      "words": [
+        "plate"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "plate"
+        ]
+      },
+      "intro": "我想找个盛点心的盘子。盘子的英语是 plate。先告诉我，再在家里点一下盘子。",
+      "prompt": "What can hold our snack?",
+      "answer": "A plate.",
+      "reply": "Please show me a plate.",
+      "introduces": [
+        {
+          "word": "plate",
+          "meaning": "盘子"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "article-the",
+          "answer": "The plate."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-plate",
+      "mode": "arrange",
+      "words": [
+        "plate"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "plate"
+        ]
+      },
+      "intro": "我们来安排点心角的物品。你决定盘子放哪里。先说出物品，再移动盘子；不用假装已经有食物。",
+      "prompt": "What shall we move?",
+      "answer": "The plate.",
+      "reply": "Choose a place for the plate.",
+      "alternatives": [
+        {
+          "id": "article-a",
+          "answer": "A plate."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-ball",
+      "mode": "find",
+      "words": [
+        "ball"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "ball"
+        ]
+      },
+      "intro": "我想和你玩球，可是先得找到它。球的英语是 ball。先告诉我想玩什么，再点一下家里的球。",
+      "prompt": "What shall we play with?",
+      "answer": "A ball.",
+      "reply": "Let us find the ball.",
+      "introduces": [
+        {
+          "word": "ball",
+          "meaning": "球"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "article-the",
+          "answer": "The ball."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-ball",
+      "mode": "arrange",
+      "words": [
+        "ball"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "ball"
+        ]
+      },
+      "intro": "我们为下一次玩球准备一个角落。你来选球的位置。先告诉我，再把球移过去。",
+      "prompt": "What shall we move to our play corner?",
+      "answer": "The ball.",
+      "reply": "Choose a place for the ball.",
+      "alternatives": [
+        {
+          "id": "article-a",
+          "answer": "A ball."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-toy",
+      "mode": "find",
+      "words": [
+        "toy"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "toy-car",
+          "toy-train"
+        ]
+      },
+      "intro": "我想找一样玩具陪你玩。玩具的英语是 toy。先告诉我，再点一下家里的玩具汽车或玩具火车。",
+      "prompt": "What shall we find for our game?",
+      "answer": "A toy.",
+      "reply": "Please show me a toy.",
+      "introduces": [
+        {
+          "word": "toy",
+          "meaning": "玩具"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "article-the",
+          "answer": "The toy."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-toy",
+      "mode": "arrange",
+      "words": [
+        "toy"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "toy-car",
+          "toy-train"
+        ]
+      },
+      "intro": "我们来布置玩具角。你喜欢玩具放在哪儿？先说出要移动什么，再移动玩具汽车或玩具火车。",
+      "prompt": "What shall we move to our play corner?",
+      "answer": "The toy.",
+      "reply": "You choose where the toy goes.",
+      "alternatives": [
+        {
+          "id": "article-a",
+          "answer": "A toy."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-door",
+      "mode": "find",
+      "words": [
+        "door"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "door"
+        ]
+      },
+      "intro": "我想认识家里的出入口。门的英语是 door。先告诉我，再点一下家里的房门；这一步不是让你打开门。",
+      "prompt": "What shall we find at the entrance?",
+      "answer": "A door.",
+      "reply": "Please show me the door.",
+      "introduces": [
+        {
+          "word": "door",
+          "meaning": "门"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "article-the",
+          "answer": "The door."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-door",
+      "mode": "arrange",
+      "words": [
+        "door"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "door"
+        ]
+      },
+      "intro": "我们来改变房间的布置。先说要移动什么，再给房门选个新位置；游戏仍会检查位置能不能摆放。",
+      "prompt": "What shall we move?",
+      "answer": "The door.",
+      "reply": "Choose a place where the door can fit.",
+      "alternatives": [
+        {
+          "id": "article-a",
+          "answer": "A door."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-window",
+      "mode": "find",
+      "words": [
+        "window"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "window"
+        ]
+      },
+      "intro": "我想看看家里有没有窗户。窗户的英语是 window。先告诉我，再点一下家里的窗户。",
+      "prompt": "What shall we look for?",
+      "answer": "A window.",
+      "reply": "Please show me a window.",
+      "introduces": [
+        {
+          "word": "window",
+          "meaning": "窗户"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "article-the",
+          "answer": "The window."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-window",
+      "mode": "arrange",
+      "words": [
+        "window"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "window"
+        ]
+      },
+      "intro": "我们来给窗户换一个位置。你决定放在哪里。先说出物品，再实际移动它。",
+      "prompt": "What shall we move?",
+      "answer": "The window.",
+      "reply": "You choose where the window goes.",
+      "alternatives": [
+        {
+          "id": "article-a",
+          "answer": "A window."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-help-companion",
+      "mode": "care",
+      "words": [
+        "help"
+      ],
+      "introduces": [
+        {
+          "word": "help",
+          "meaning": "帮助"
+        }
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": []
+      },
+      "intro": "我想坐下来陪你聊天，但需要你带我找到座位。help 是帮助。你愿意告诉我“我能帮忙”，再带我过去吗？",
+      "prompt": "Can you help me find a seat?",
+      "answer": "I can help.",
+      "reply": "Thank you for helping me."
+    },
+    {
+      "id": "en-l1-need-companion",
+      "mode": "care",
+      "words": [
+        "need",
+        "help"
+      ],
+      "introduces": [
+        {
+          "word": "need",
+          "meaning": "需要"
+        }
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": []
+      },
+      "intro": "我们来练习主动求助。我来扮演愿意帮忙的伙伴，你告诉我需要帮助。need 是需要。说完后，给我一个座位，我们慢慢商量。",
+      "prompt": "What do you need?",
+      "answer": "I need help.",
+      "reply": "Let us sit and talk about it."
+    },
+    {
+      "id": "en-l1-stop-companion",
+      "mode": "care",
+      "words": [
+        "stop"
+      ],
+      "introduces": [
+        {
+          "word": "stop",
+          "meaning": "停下"
+        }
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": []
+      },
+      "intro": "我们玩一个先停下、再休息的小游戏。stop 是停下。先请我停一下，再把我带到座位上休息。",
+      "prompt": "What should I do before a rest?",
+      "answer": "Stop, please.",
+      "reply": "All right. Let us find a seat."
+    },
+    {
+      "id": "en-l1-careful-companion",
+      "mode": "care",
+      "words": [
+        "careful"
+      ],
+      "introduces": [
+        {
+          "word": "careful",
+          "meaning": "小心"
+        }
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": []
+      },
+      "intro": "我们来演一段互相提醒的小故事。我扮演急着去坐下的伙伴，你提醒我小心。careful 是小心。说完以后，再给我选一个座位。",
+      "prompt": "I am in a hurry. What can you tell me?",
+      "answer": "Be careful.",
+      "reply": "Thank you. I can take my time."
+    },
+    {
+      "id": "en-l1-here-companion",
+      "mode": "care",
+      "words": [
+        "here"
+      ],
+      "introduces": [
+        {
+          "word": "here",
+          "meaning": "这里"
+        }
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": []
+      },
+      "intro": "我想坐下来陪你。here 是这里。先用短句邀请我坐在这里，再按动作提示把我带到家里的座位上。",
+      "prompt": "Where can I sit?",
+      "answer": "Sit here.",
+      "reply": "Please show me the seat."
+    },
+    {
+      "id": "en-l1-safe-companion",
+      "mode": "care",
+      "words": [
+        "safe",
+        "here"
+      ],
+      "introduces": [
+        {
+          "word": "safe",
+          "meaning": "安全"
+        }
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": []
+      },
+      "intro": "我们来演火鸟岛故事里的等待片段。这里只是家里的角色扮演，没有熔岩。safe 是安全。先告诉我这里安全，再带我到座位上等一会儿。",
+      "prompt": "Is it safe here?",
+      "answer": "It is safe here.",
+      "reply": "Good. I can wait here."
+    },
+    {
+      "id": "en-l1-turn-read-1",
+      "mode": "turn",
+      "pair": "en-l1-turn-read",
+      "turn": 0,
+      "words": [
+        "read"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "read",
+        "itemIds": [
+          "book",
+          "bookshelf",
+          "desk"
+        ]
+      },
+      "intro": "我找到一个读书的好地方，可是还没开始呢。read 是“读书”。我们玩轮流指挥：我先说想做什么，你帮我去那里。下一轮换你来安排！",
+      "prompt": "Can I read?",
+      "answer": "Read, please.",
+      "reply": "好，我们去读书的地方。",
+      "introduces": [
+        {
+          "word": "read",
+          "meaning": "读书"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "request-order",
+          "answer": "Please read."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-turn-read-2",
+      "mode": "turn",
+      "pair": "en-l1-turn-read",
+      "turn": 1,
+      "words": [
+        "read"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "read",
+        "itemIds": [
+          "book",
+          "bookshelf",
+          "desk"
+        ]
+      },
+      "intro": "刚才是我提出想读书。这次你当小导演！告诉我“读书吧”，再带我回到刚才的地方。",
+      "prompt": "What shall I do?",
+      "answer": "Please read.",
+      "reply": "收到你的读书安排了。",
+      "alternatives": [
+        {
+          "id": "request-order",
+          "answer": "Read, please."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-turn-sit-1",
+      "mode": "turn",
+      "pair": "en-l1-turn-sit",
+      "turn": 0,
+      "words": [
+        "sit"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": [
+          "chair",
+          "sofa",
+          "armchair",
+          "cushion",
+          "garden-bench"
+        ]
+      },
+      "intro": "我们玩小导演游戏吧！第一幕，我要找地方坐。sit 是“坐下”。我先问你能不能坐，你用英语请我坐，再带我去座位。",
+      "prompt": "Can I sit?",
+      "answer": "Sit, please.",
+      "reply": "谢谢你给我安排座位。",
+      "introduces": [
+        {
+          "word": "sit",
+          "meaning": "坐下"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "request-order",
+          "answer": "Please sit."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-turn-sit-2",
+      "mode": "turn",
+      "pair": "en-l1-turn-sit",
+      "turn": 1,
+      "words": [
+        "sit"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": [
+          "chair",
+          "sofa",
+          "armchair",
+          "cushion",
+          "garden-bench"
+        ]
+      },
+      "intro": "现在换你当导演。我先等你的话，再去刚才的座位。你可以用 Please sit. 请我坐下。",
+      "prompt": "What shall I do?",
+      "answer": "Please sit.",
+      "reply": "我听见你的安排了，带我去坐吧。",
+      "alternatives": [
+        {
+          "id": "request-order",
+          "answer": "Sit, please."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-turn-eat-1",
+      "mode": "turn",
+      "pair": "en-l1-turn-eat",
+      "turn": 0,
+      "words": [
+        "eat"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "eat",
+        "itemIds": [
+          "bread-basket",
+          "plate",
+          "bowl",
+          "table"
+        ]
+      },
+      "intro": "我想排演一场小小的吃饭戏！eat 是“吃”。这只是表演，不会凭空多出食物。我先问能不能吃，你请我开始，再带我去用餐的地方。",
+      "prompt": "Can I eat?",
+      "answer": "Eat, please.",
+      "reply": "好，带我去用餐的地方排演吧。",
+      "introduces": [
+        {
+          "word": "eat",
+          "meaning": "吃"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "request-order",
+          "answer": "Please eat."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-turn-eat-2",
+      "mode": "turn",
+      "pair": "en-l1-turn-eat",
+      "turn": 1,
+      "words": [
+        "eat"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "eat",
+        "itemIds": [
+          "bread-basket",
+          "plate",
+          "bowl",
+          "table"
+        ]
+      },
+      "intro": "轮到你安排吃饭这一幕了。请你给我一句指令，再带我到刚才的用餐道具旁。这次我等你先开口。",
+      "prompt": "What shall I do?",
+      "answer": "Please eat.",
+      "reply": "收到，接下来演吃饭这一幕。",
+      "alternatives": [
+        {
+          "id": "request-order",
+          "answer": "Eat, please."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-turn-drink-1",
+      "mode": "turn",
+      "pair": "en-l1-turn-drink",
+      "turn": 0,
+      "words": [
+        "drink"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "drink",
+        "itemIds": [
+          "cup",
+          "kettle",
+          "teapot",
+          "water-barrel"
+        ]
+      },
+      "intro": "我们来排演招待朋友吧！drink 是“喝”。我当客人，先问能不能喝。你请我喝，再带我去水杯或水壶那里。",
+      "prompt": "Can I drink?",
+      "answer": "Drink, please.",
+      "reply": "谢谢招待，带我去喝水的地方吧。",
+      "introduces": [
+        {
+          "word": "drink",
+          "meaning": "喝"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "request-order",
+          "answer": "Please drink."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-turn-drink-2",
+      "mode": "turn",
+      "pair": "en-l1-turn-drink",
+      "turn": 1,
+      "words": [
+        "drink"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "drink",
+        "itemIds": [
+          "cup",
+          "kettle",
+          "teapot",
+          "water-barrel"
+        ]
+      },
+      "intro": "客人已经会问了，现在轮到小主人主动招待。我等你请我喝，再用刚才的道具演一遍。",
+      "prompt": "What shall I do?",
+      "answer": "Please drink.",
+      "reply": "谢谢你的邀请，我们继续排演。",
+      "alternatives": [
+        {
+          "id": "request-order",
+          "answer": "Drink, please."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-turn-play-1",
+      "mode": "turn",
+      "pair": "en-l1-turn-play",
+      "turn": 0,
+      "words": [
+        "play"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "ball",
+        "itemIds": [
+          "ball",
+          "basketball-hoop",
+          "goal"
+        ]
+      },
+      "intro": "我想玩球，但是先要问问你！play 是“玩”。我们轮流当游戏队长，我先问，你答应后带我去球或球场道具旁。",
+      "prompt": "Can I play?",
+      "answer": "Play, please.",
+      "reply": "好，我们去玩球的地方。",
+      "introduces": [
+        {
+          "word": "play",
+          "meaning": "玩"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "request-order",
+          "answer": "Please play."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-turn-play-2",
+      "mode": "turn",
+      "pair": "en-l1-turn-play",
+      "turn": 1,
+      "words": [
+        "play"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "ball",
+        "itemIds": [
+          "ball",
+          "basketball-hoop",
+          "goal"
+        ]
+      },
+      "intro": "换你当队长啦！这回由你发出开始玩的请求，我等你说完，再一起用刚才的玩球道具。",
+      "prompt": "What shall I do?",
+      "answer": "Please play.",
+      "reply": "收到队长的请求，带我去玩吧。",
+      "alternatives": [
+        {
+          "id": "request-order",
+          "answer": "Play, please."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-wall",
+      "mode": "find",
+      "words": [
+        "wall"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "wall"
+        ]
+      },
+      "intro": "我想布置一个安静的小角落，先找一面墙。墙的英语是 wall。告诉我我们要找什么，再点一下家里已经摆好的墙吧。",
+      "prompt": "What do we need?",
+      "answer": "A wall.",
+      "reply": "Please show me the wall.",
+      "alternatives": [
+        {
+          "id": "article-other",
+          "answer": "The wall."
+        }
+      ],
+      "introduces": [
+        {
+          "word": "wall",
+          "meaning": "墙"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-wall",
+      "mode": "arrange",
+      "words": [
+        "wall"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "wall"
+        ]
+      },
+      "intro": "我想给这个角落换个样子。你来选这面墙的新位置。先告诉我准备移动什么，再实际把它移开一点。",
+      "prompt": "What shall we move?",
+      "answer": "A wall.",
+      "reply": "You choose a place for the wall.",
+      "alternatives": [
+        {
+          "id": "article-other",
+          "answer": "The wall."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-floor",
+      "mode": "find",
+      "words": [
+        "floor"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "wood-floor"
+        ]
+      },
+      "intro": "我想布置一小块地方，可不想把地板忘了！地板的英语是 floor。先告诉我该找什么，再点一下家里的一块木地板。",
+      "prompt": "What do we need?",
+      "answer": "The floor.",
+      "reply": "Please show me the floor.",
+      "alternatives": [
+        {
+          "id": "article-other",
+          "answer": "A floor."
+        }
+      ],
+      "introduces": [
+        {
+          "word": "floor",
+          "meaning": "地板"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-floor",
+      "mode": "arrange",
+      "words": [
+        "floor"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "wood-floor"
+        ]
+      },
+      "intro": "我们换个位置布置吧。这次只移动一块木地板，你来决定放在哪里。告诉我准备移动什么，再去布置模式试一试。",
+      "prompt": "What shall we move?",
+      "answer": "The floor.",
+      "reply": "You choose a place for the floor.",
+      "alternatives": [
+        {
+          "id": "article-other",
+          "answer": "A floor."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-picture",
+      "mode": "find",
+      "words": [
+        "picture"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "painting"
+        ]
+      },
+      "intro": "我想请你带我看家里的图画。picture 是“图画”，不是画框本身的名字。告诉我你要给我看什么，再点一下装着图画的画框吧。",
+      "prompt": "What do we need?",
+      "answer": "A picture.",
+      "reply": "Please show me the picture.",
+      "alternatives": [
+        {
+          "id": "article-other",
+          "answer": "The picture."
+        }
+      ],
+      "introduces": [
+        {
+          "word": "picture",
+          "meaning": "图画"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-picture",
+      "mode": "arrange",
+      "words": [
+        "picture"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "painting"
+        ]
+      },
+      "intro": "我想换个地方看这幅图画。你觉得放在哪里好？先告诉我准备移动什么，再把画框移到你选的位置。",
+      "prompt": "What shall we move?",
+      "answer": "A picture.",
+      "reply": "You choose a place for the picture.",
+      "alternatives": [
+        {
+          "id": "article-other",
+          "answer": "The picture."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-cake",
+      "mode": "find",
+      "words": [
+        "cake"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "birthday-cake"
+        ]
+      },
+      "intro": "我想排演一个小小的庆祝会。先找到家里现有的蛋糕吧！cake 是“蛋糕”。你告诉我该找什么，再点一下它；现在先不吃。",
+      "prompt": "What do we need?",
+      "answer": "A cake.",
+      "reply": "Please show me the cake.",
+      "alternatives": [
+        {
+          "id": "article-other",
+          "answer": "The cake."
+        }
+      ],
+      "introduces": [
+        {
+          "word": "cake",
+          "meaning": "蛋糕"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-cake",
+      "mode": "arrange",
+      "words": [
+        "cake"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "birthday-cake"
+        ]
+      },
+      "intro": "庆祝会要把蛋糕摆在哪里呢？你来当布置师。先告诉我这次要移动什么，再把蛋糕放到你选的地方。",
+      "prompt": "What shall we move?",
+      "answer": "A cake.",
+      "reply": "You choose a place for the cake.",
+      "alternatives": [
+        {
+          "id": "article-other",
+          "answer": "The cake."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-duck",
+      "mode": "find",
+      "words": [
+        "duck"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "rubber-duck"
+        ]
+      },
+      "intro": "我想找一个像鸭子的玩具。duck 是“鸭子”。家里的小黄鸭是玩具，不是真的小动物。先说出它像什么，再点一下小黄鸭给我看。",
+      "prompt": "What is it?",
+      "answer": "A duck.",
+      "reply": "Please show me the toy duck.",
+      "alternatives": [
+        {
+          "id": "article-other",
+          "answer": "The duck."
+        }
+      ],
+      "introduces": [
+        {
+          "word": "duck",
+          "meaning": "鸭子"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-duck",
+      "mode": "arrange",
+      "words": [
+        "duck"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "rubber-duck"
+        ]
+      },
+      "intro": "我想给玩具小黄鸭换个位置。它不会自己走，得靠你来布置。先告诉我它像哪种动物，再把它挪到你选的地方。",
+      "prompt": "What is it?",
+      "answer": "A duck.",
+      "reply": "You choose a place for the toy duck.",
+      "alternatives": [
+        {
+          "id": "article-other",
+          "answer": "The duck."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-find-horse",
+      "mode": "find",
+      "words": [
+        "horse"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "rocking-horse"
+        ]
+      },
+      "intro": "我们找一个像马的玩具吧。horse 是“马”。家里有木马，它不是活马，也不会自己跑。先说出它像什么，再点一下木马。",
+      "prompt": "What is it?",
+      "answer": "A horse.",
+      "reply": "Please show me the toy horse.",
+      "alternatives": [
+        {
+          "id": "article-other",
+          "answer": "The horse."
+        }
+      ],
+      "introduces": [
+        {
+          "word": "horse",
+          "meaning": "马"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-arrange-horse",
+      "mode": "arrange",
+      "words": [
+        "horse"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "rocking-horse"
+        ]
+      },
+      "intro": "我想重新布置玩具角。请给木马选个新位置。先告诉我这个玩具像什么动物，再去布置模式移动它。",
+      "prompt": "What is it?",
+      "answer": "A horse.",
+      "reply": "You choose a place for the toy horse.",
+      "alternatives": [
+        {
+          "id": "article-other",
+          "answer": "The horse."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-action-look-picture",
+      "mode": "find",
+      "words": [
+        "look"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "painting"
+        ]
+      },
+      "intro": "我想和你一起看图画。look 是“看”。你可以说 Look! 请我看，再点一下家里的画框，让我知道你指的是哪一个。",
+      "prompt": "Show me!",
+      "answer": "Look!",
+      "reply": "Please show me.",
+      "introduces": [
+        {
+          "word": "look",
+          "meaning": "看"
+        }
+      ],
+      "requires": [
+        "picture"
+      ]
+    },
+    {
+      "id": "en-l1-action-look-toy",
+      "mode": "find",
+      "words": [
+        "look"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "rubber-duck",
+          "rocking-horse"
+        ]
+      },
+      "intro": "我们找一个好玩的玩具给对方看吧！你可以用 Look! 请我看，再点一下小黄鸭或木马。我想知道你选了哪一个。",
+      "prompt": "Show me!",
+      "answer": "Look!",
+      "reply": "Please show me."
+    },
+    {
+      "id": "en-l1-action-find-book",
+      "mode": "find",
+      "words": [
+        "find"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "book"
+        ]
+      },
+      "intro": "我想找家里的书，你愿意帮我吗？find 是“找到”。你可以用 I can find it. 说“我能找到它”。说完再点一下那本书，让我看见你找到了什么。",
+      "prompt": "Can you find it?",
+      "answer": "I can find it.",
+      "reply": "Please show me.",
+      "introduces": [
+        {
+          "word": "find",
+          "meaning": "找到"
+        }
+      ],
+      "requires": [
+        "book"
+      ]
+    },
+    {
+      "id": "en-l1-action-find-ball",
+      "mode": "find",
+      "words": [
+        "find"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "ball"
+        ]
+      },
+      "intro": "这次我们换成找球。我先等在这里，你告诉我能不能找到，再点一下家里的球。用刚才的 I can find it. 就能答应帮忙。",
+      "prompt": "Can you find it?",
+      "answer": "I can find it.",
+      "reply": "Please show me.",
+      "requires": [
+        "ball"
+      ]
+    },
+    {
+      "id": "en-l1-label-book",
+      "mode": "write",
+      "words": [
+        "book"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "book"
+        ]
+      },
+      "intro": "我想知道这是你自己读的书，还是我们一起读的书。给书写一个短标签吧。可以用 My book. 表示“我的”，或 Our book. 表示“我们的”。你来决定，再把标签保存到它身上。",
+      "prompt": "Write a label.",
+      "answer": "My book.",
+      "reply": "你的标签留下来了，下次回来还能看到。",
+      "alternatives": [
+        {
+          "id": "shared",
+          "answer": "Our book."
+        },
+        {
+          "id": "noun",
+          "answer": "book"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-label-cup",
+      "mode": "write",
+      "words": [
+        "cup"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "cup"
+        ]
+      },
+      "intro": "我们来给杯子做个小标记，下次就知道是谁用的了。给杯子写一个短标签吧。可以用 My cup. 表示“我的”，或 Our cup. 表示“我们的”。你来决定，再把标签保存到它身上。",
+      "prompt": "Write a label.",
+      "answer": "My cup.",
+      "reply": "你的标签留下来了，下次回来还能看到。",
+      "alternatives": [
+        {
+          "id": "shared",
+          "answer": "Our cup."
+        },
+        {
+          "id": "noun",
+          "answer": "cup"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-label-bed",
+      "mode": "write",
+      "words": [
+        "bed"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "bed"
+        ]
+      },
+      "intro": "我想请你介绍家里的休息角。给床写一个短标签吧。可以用 My bed. 表示“我的”，或 Our bed. 表示“我们的”。你来决定，再把标签保存到它身上。",
+      "prompt": "Write a label.",
+      "answer": "My bed.",
+      "reply": "你的标签留下来了，下次回来还能看到。",
+      "alternatives": [
+        {
+          "id": "shared",
+          "answer": "Our bed."
+        },
+        {
+          "id": "noun",
+          "answer": "bed"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-label-ball",
+      "mode": "write",
+      "words": [
+        "ball"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "ball"
+        ]
+      },
+      "intro": "我们下次玩球时，也想认出这只球。给球写一个短标签吧。可以用 My ball. 表示“我的”，或 Our ball. 表示“我们的”。你来决定，再把标签保存到它身上。",
+      "prompt": "Write a label.",
+      "answer": "My ball.",
+      "reply": "你的标签留下来了，下次回来还能看到。",
+      "alternatives": [
+        {
+          "id": "shared",
+          "answer": "Our ball."
+        },
+        {
+          "id": "noun",
+          "answer": "ball"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-label-table",
+      "mode": "write",
+      "words": [
+        "table"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "table"
+        ]
+      },
+      "intro": "你愿意把这张桌子介绍给来家里玩的朋友吗？给桌子写一个短标签吧。可以用 My table. 表示“我的”，或 Our table. 表示“我们的”。你来决定，再把标签保存到它身上。",
+      "prompt": "Write a label.",
+      "answer": "My table.",
+      "reply": "你的标签留下来了，下次回来还能看到。",
+      "alternatives": [
+        {
+          "id": "shared",
+          "answer": "Our table."
+        },
+        {
+          "id": "noun",
+          "answer": "table"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-label-toy",
+      "mode": "write",
+      "words": [
+        "toy"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "teddy-bear"
+        ]
+      },
+      "intro": "这个玩具要有自己的小标签啦。给玩具熊写一个短标签吧。可以用 My toy. 表示“我的”，或 Our toy. 表示“我们的”。你来决定，再把标签保存到它身上。",
+      "prompt": "Write a label.",
+      "answer": "My toy.",
+      "reply": "你的标签留下来了，下次回来还能看到。",
+      "alternatives": [
+        {
+          "id": "shared",
+          "answer": "Our toy."
+        },
+        {
+          "id": "noun",
+          "answer": "toy"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-label-write",
+      "mode": "write",
+      "words": [
+        "write"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "desk"
+        ]
+      },
+      "intro": "我想给书桌留一个写字角的标记。write 是“写”。你可以写 Write. 或 Please write.，请来到这里的人写字。这次直接写在书桌的标签里，不用先回答我一遍。",
+      "prompt": "Write a label for this desk.",
+      "answer": "Please write.",
+      "reply": "写字角有自己的标记了。",
+      "introduces": [
+        {
+          "word": "write",
+          "meaning": "写"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "short",
+          "answer": "Write."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-red-find",
+      "mode": "find",
+      "words": [
+        "red"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "red"
+        ]
+      },
+      "intro": "我想给小聚会找一点热闹的颜色。red 是“红色”。请看看家里物品下方的小圆点，告诉我这个颜色，再点一下带红色圆点的物品。",
+      "prompt": "What colour?",
+      "answer": "It is red.",
+      "reply": "就是这个颜色！谢谢你给我看。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "Red."
+        }
+      ],
+      "introduces": [
+        {
+          "word": "red",
+          "meaning": "红色"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-red-arrange",
+      "mode": "arrange",
+      "words": [
+        "red"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "red"
+        ]
+      },
+      "intro": "我们用刚才认识的红色来布置吧。请说出这个颜色，再把带红色圆点的物品移到你选的位置。你来决定这个角落的样子。",
+      "prompt": "What colour shall we use?",
+      "answer": "Red.",
+      "reply": "这个颜色就放在你选的位置吧。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is red."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-red-write",
+      "mode": "write",
+      "words": [
+        "red"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "red"
+        ]
+      },
+      "intro": "我想记住这件物品的红色标记。请给它写一个颜色标签，可以只写 red，也可以写 It is red.。写完保存，我们下次回来还能认出来。",
+      "prompt": "Write the colour.",
+      "answer": "Red.",
+      "reply": "颜色写在你的作品上了。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is red."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-blue-find",
+      "mode": "find",
+      "words": [
+        "blue"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "blue"
+        ]
+      },
+      "intro": "我想做一个让我想到天空的小角落。blue 是“蓝色”。请看看家里物品下方的小圆点，告诉我这个颜色，再点一下带蓝色圆点的物品。",
+      "prompt": "What colour?",
+      "answer": "It is blue.",
+      "reply": "就是这个颜色！谢谢你给我看。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "Blue."
+        }
+      ],
+      "introduces": [
+        {
+          "word": "blue",
+          "meaning": "蓝色"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-blue-arrange",
+      "mode": "arrange",
+      "words": [
+        "blue"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "blue"
+        ]
+      },
+      "intro": "我们用刚才认识的蓝色来布置吧。请说出这个颜色，再把带蓝色圆点的物品移到你选的位置。你来决定这个角落的样子。",
+      "prompt": "What colour shall we use?",
+      "answer": "Blue.",
+      "reply": "这个颜色就放在你选的位置吧。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is blue."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-blue-write",
+      "mode": "write",
+      "words": [
+        "blue"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "blue"
+        ]
+      },
+      "intro": "我想记住这件物品的蓝色标记。请给它写一个颜色标签，可以只写 blue，也可以写 It is blue.。写完保存，我们下次回来还能认出来。",
+      "prompt": "Write the colour.",
+      "answer": "Blue.",
+      "reply": "颜色写在你的作品上了。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is blue."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-green-find",
+      "mode": "find",
+      "words": [
+        "green"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "green"
+        ]
+      },
+      "intro": "我想让家里的一个角落有花园的感觉。green 是“绿色”。请看看家里物品下方的小圆点，告诉我这个颜色，再点一下带绿色圆点的物品。",
+      "prompt": "What colour?",
+      "answer": "It is green.",
+      "reply": "就是这个颜色！谢谢你给我看。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "Green."
+        }
+      ],
+      "introduces": [
+        {
+          "word": "green",
+          "meaning": "绿色"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-green-arrange",
+      "mode": "arrange",
+      "words": [
+        "green"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "green"
+        ]
+      },
+      "intro": "我们用刚才认识的绿色来布置吧。请说出这个颜色，再把带绿色圆点的物品移到你选的位置。你来决定这个角落的样子。",
+      "prompt": "What colour shall we use?",
+      "answer": "Green.",
+      "reply": "这个颜色就放在你选的位置吧。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is green."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-green-write",
+      "mode": "write",
+      "words": [
+        "green"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "green"
+        ]
+      },
+      "intro": "我想记住这件物品的绿色标记。请给它写一个颜色标签，可以只写 green，也可以写 It is green.。写完保存，我们下次回来还能认出来。",
+      "prompt": "Write the colour.",
+      "answer": "Green.",
+      "reply": "颜色写在你的作品上了。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is green."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-yellow-find",
+      "mode": "find",
+      "words": [
+        "yellow"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "yellow"
+        ]
+      },
+      "intro": "我想找一个看起来像阳光的颜色。yellow 是“黄色”。请看看家里物品下方的小圆点，告诉我这个颜色，再点一下带黄色圆点的物品。",
+      "prompt": "What colour?",
+      "answer": "It is yellow.",
+      "reply": "就是这个颜色！谢谢你给我看。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "Yellow."
+        }
+      ],
+      "introduces": [
+        {
+          "word": "yellow",
+          "meaning": "黄色"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-yellow-arrange",
+      "mode": "arrange",
+      "words": [
+        "yellow"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "yellow"
+        ]
+      },
+      "intro": "我们用刚才认识的黄色来布置吧。请说出这个颜色，再把带黄色圆点的物品移到你选的位置。你来决定这个角落的样子。",
+      "prompt": "What colour shall we use?",
+      "answer": "Yellow.",
+      "reply": "这个颜色就放在你选的位置吧。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is yellow."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-yellow-write",
+      "mode": "write",
+      "words": [
+        "yellow"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "yellow"
+        ]
+      },
+      "intro": "我想记住这件物品的黄色标记。请给它写一个颜色标签，可以只写 yellow，也可以写 It is yellow.。写完保存，我们下次回来还能认出来。",
+      "prompt": "Write the colour.",
+      "answer": "Yellow.",
+      "reply": "颜色写在你的作品上了。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is yellow."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-pink-find",
+      "mode": "find",
+      "words": [
+        "pink"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "pink"
+        ]
+      },
+      "intro": "我想给玩具角找一个柔和的颜色。pink 是“粉色”。请看看家里物品下方的小圆点，告诉我这个颜色，再点一下带粉色圆点的物品。",
+      "prompt": "What colour?",
+      "answer": "It is pink.",
+      "reply": "就是这个颜色！谢谢你给我看。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "Pink."
+        }
+      ],
+      "introduces": [
+        {
+          "word": "pink",
+          "meaning": "粉色"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-pink-arrange",
+      "mode": "arrange",
+      "words": [
+        "pink"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "pink"
+        ]
+      },
+      "intro": "我们用刚才认识的粉色来布置吧。请说出这个颜色，再把带粉色圆点的物品移到你选的位置。你来决定这个角落的样子。",
+      "prompt": "What colour shall we use?",
+      "answer": "Pink.",
+      "reply": "这个颜色就放在你选的位置吧。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is pink."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-pink-write",
+      "mode": "write",
+      "words": [
+        "pink"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "pink"
+        ]
+      },
+      "intro": "我想记住这件物品的粉色标记。请给它写一个颜色标签，可以只写 pink，也可以写 It is pink.。写完保存，我们下次回来还能认出来。",
+      "prompt": "Write the colour.",
+      "answer": "Pink.",
+      "reply": "颜色写在你的作品上了。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is pink."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-purple-find",
+      "mode": "find",
+      "words": [
+        "purple"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "purple"
+        ]
+      },
+      "intro": "我想选一个让我想到魔法的颜色。purple 是“紫色”。请看看家里物品下方的小圆点，告诉我这个颜色，再点一下带紫色圆点的物品。",
+      "prompt": "What colour?",
+      "answer": "It is purple.",
+      "reply": "就是这个颜色！谢谢你给我看。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "Purple."
+        }
+      ],
+      "introduces": [
+        {
+          "word": "purple",
+          "meaning": "紫色"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-purple-arrange",
+      "mode": "arrange",
+      "words": [
+        "purple"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "purple"
+        ]
+      },
+      "intro": "我们用刚才认识的紫色来布置吧。请说出这个颜色，再把带紫色圆点的物品移到你选的位置。你来决定这个角落的样子。",
+      "prompt": "What colour shall we use?",
+      "answer": "Purple.",
+      "reply": "这个颜色就放在你选的位置吧。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is purple."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-purple-write",
+      "mode": "write",
+      "words": [
+        "purple"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "purple"
+        ]
+      },
+      "intro": "我想记住这件物品的紫色标记。请给它写一个颜色标签，可以只写 purple，也可以写 It is purple.。写完保存，我们下次回来还能认出来。",
+      "prompt": "Write the colour.",
+      "answer": "Purple.",
+      "reply": "颜色写在你的作品上了。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is purple."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-white-find",
+      "mode": "find",
+      "words": [
+        "white"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "white"
+        ]
+      },
+      "intro": "我想找一个亮亮的颜色，给小角落留一点空白。white 是“白色”。请看看家里物品下方的小圆点，告诉我这个颜色，再点一下带白色圆点的物品。",
+      "prompt": "What colour?",
+      "answer": "It is white.",
+      "reply": "就是这个颜色！谢谢你给我看。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "White."
+        }
+      ],
+      "introduces": [
+        {
+          "word": "white",
+          "meaning": "白色"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-white-arrange",
+      "mode": "arrange",
+      "words": [
+        "white"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "white"
+        ]
+      },
+      "intro": "我们用刚才认识的白色来布置吧。请说出这个颜色，再把带白色圆点的物品移到你选的位置。你来决定这个角落的样子。",
+      "prompt": "What colour shall we use?",
+      "answer": "White.",
+      "reply": "这个颜色就放在你选的位置吧。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is white."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-white-write",
+      "mode": "write",
+      "words": [
+        "white"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "white"
+        ]
+      },
+      "intro": "我想记住这件物品的白色标记。请给它写一个颜色标签，可以只写 white，也可以写 It is white.。写完保存，我们下次回来还能认出来。",
+      "prompt": "Write the colour.",
+      "answer": "White.",
+      "reply": "颜色写在你的作品上了。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is white."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-brown-find",
+      "mode": "find",
+      "words": [
+        "brown"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "brown"
+        ]
+      },
+      "intro": "我想找一个让我想到树干的颜色。brown 是“棕色”。请看看家里物品下方的小圆点，告诉我这个颜色，再点一下带棕色圆点的物品。",
+      "prompt": "What colour?",
+      "answer": "It is brown.",
+      "reply": "就是这个颜色！谢谢你给我看。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "Brown."
+        }
+      ],
+      "introduces": [
+        {
+          "word": "brown",
+          "meaning": "棕色"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-brown-arrange",
+      "mode": "arrange",
+      "words": [
+        "brown"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "brown"
+        ]
+      },
+      "intro": "我们用刚才认识的棕色来布置吧。请说出这个颜色，再把带棕色圆点的物品移到你选的位置。你来决定这个角落的样子。",
+      "prompt": "What colour shall we use?",
+      "answer": "Brown.",
+      "reply": "这个颜色就放在你选的位置吧。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is brown."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-brown-write",
+      "mode": "write",
+      "words": [
+        "brown"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "brown"
+        ]
+      },
+      "intro": "我想记住这件物品的棕色标记。请给它写一个颜色标签，可以只写 brown，也可以写 It is brown.。写完保存，我们下次回来还能认出来。",
+      "prompt": "Write the colour.",
+      "answer": "Brown.",
+      "reply": "颜色写在你的作品上了。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is brown."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-black-find",
+      "mode": "find",
+      "words": [
+        "black"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "black"
+        ]
+      },
+      "intro": "我想找一个深深的颜色，像夜里的影子。black 是“黑色”。请看看家里物品下方的小圆点，告诉我这个颜色，再点一下带黑色圆点的物品。",
+      "prompt": "What colour?",
+      "answer": "It is black.",
+      "reply": "就是这个颜色！谢谢你给我看。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "Black."
+        }
+      ],
+      "introduces": [
+        {
+          "word": "black",
+          "meaning": "黑色"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-black-arrange",
+      "mode": "arrange",
+      "words": [
+        "black"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "black"
+        ]
+      },
+      "intro": "我们用刚才认识的黑色来布置吧。请说出这个颜色，再把带黑色圆点的物品移到你选的位置。你来决定这个角落的样子。",
+      "prompt": "What colour shall we use?",
+      "answer": "Black.",
+      "reply": "这个颜色就放在你选的位置吧。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is black."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-black-write",
+      "mode": "write",
+      "words": [
+        "black"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "black"
+        ]
+      },
+      "intro": "我想记住这件物品的黑色标记。请给它写一个颜色标签，可以只写 black，也可以写 It is black.。写完保存，我们下次回来还能认出来。",
+      "prompt": "Write the colour.",
+      "answer": "Black.",
+      "reply": "颜色写在你的作品上了。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is black."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-grey-find",
+      "mode": "find",
+      "words": [
+        "grey"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "grey"
+        ]
+      },
+      "intro": "我想找一个不太亮也不太暗的颜色，像阴天的云。grey 是“灰色”。请看看家里物品下方的小圆点，告诉我这个颜色，再点一下带灰色圆点的物品。",
+      "prompt": "What colour?",
+      "answer": "It is grey.",
+      "reply": "就是这个颜色！谢谢你给我看。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "Grey."
+        }
+      ],
+      "introduces": [
+        {
+          "word": "grey",
+          "meaning": "灰色"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-grey-arrange",
+      "mode": "arrange",
+      "words": [
+        "grey"
+      ],
+      "action": {
+        "kind": "move",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "grey"
+        ]
+      },
+      "intro": "我们用刚才认识的灰色来布置吧。请说出这个颜色，再把带灰色圆点的物品移到你选的位置。你来决定这个角落的样子。",
+      "prompt": "What colour shall we use?",
+      "answer": "Grey.",
+      "reply": "这个颜色就放在你选的位置吧。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is grey."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-grey-write",
+      "mode": "write",
+      "words": [
+        "grey"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "grey"
+        ]
+      },
+      "intro": "我想记住这件物品的灰色标记。请给它写一个颜色标签，可以只写 grey，也可以写 It is grey.。写完保存，我们下次回来还能认出来。",
+      "prompt": "Write the colour.",
+      "answer": "Grey.",
+      "reply": "颜色写在你的作品上了。",
+      "alternatives": [
+        {
+          "id": "other-form",
+          "answer": "It is grey."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-color-corner-label",
+      "mode": "write",
+      "words": [
+        "colour"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "ball",
+          "cup",
+          "chair",
+          "book",
+          "bed",
+          "table",
+          "toy-chest",
+          "flower"
+        ],
+        "colors": [
+          "red",
+          "blue",
+          "green",
+          "yellow",
+          "pink",
+          "purple",
+          "white",
+          "brown",
+          "black",
+          "grey"
+        ]
+      },
+      "intro": "我想把这里当作我们收集颜色的小角落。colour 是“颜色”。你可以给一个带颜色圆点的物品写 Colour. 作为小标题，也可以写 My colour. 表示你选的颜色。请你来写，再保存到物品上。",
+      "prompt": "Name our colour corner.",
+      "answer": "Colour.",
+      "reply": "颜色角有你写的小标题了。",
+      "introduces": [
+        {
+          "word": "colour",
+          "meaning": "颜色"
+        }
+      ],
+      "alternatives": [
+        {
+          "id": "my-colour",
+          "answer": "My colour."
+        }
+      ]
+    },
+    {
+      "id": "en-l1-read-request-book",
+      "mode": "read",
+      "words": [
+        "book"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "book"
+        ]
+      },
+      "intro": "我想给家里画一张阅读地图，可是总记不清东西在哪儿。陪我玩一次指路游戏吧。这次我把请求写下来。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the book.",
+      "answer": "book.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-listen-request-book",
+      "mode": "listen",
+      "words": [
+        "book"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "book"
+        ]
+      },
+      "intro": "我想给家里画一张阅读地图，可是总记不清东西在哪儿。陪我玩一次指路游戏吧。这次先听我说，不用急着回答。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the book.",
+      "answer": "book.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-read-request-bed",
+      "mode": "read",
+      "words": [
+        "bed"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "bed",
+          "bunk-bed"
+        ]
+      },
+      "intro": "玩累了，我想找个地方休息。你听懂或读懂我的请求后，指给我看就好。这次我把请求写下来。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the bed.",
+      "answer": "bed.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-listen-request-bed",
+      "mode": "listen",
+      "words": [
+        "bed"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "bed",
+          "bunk-bed"
+        ]
+      },
+      "intro": "玩累了，我想找个地方休息。你听懂或读懂我的请求后，指给我看就好。这次先听我说，不用急着回答。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the bed.",
+      "answer": "bed.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-read-request-clock",
+      "mode": "read",
+      "words": [
+        "clock"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "alarm-clock",
+          "wall-clock"
+        ]
+      },
+      "intro": "我想学着自己安排游戏时间。先陪我认一认家里的东西吧。这次我把请求写下来。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the clock.",
+      "answer": "clock.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-listen-request-clock",
+      "mode": "listen",
+      "words": [
+        "clock"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "alarm-clock",
+          "wall-clock"
+        ]
+      },
+      "intro": "我想学着自己安排游戏时间。先陪我认一认家里的东西吧。这次先听我说，不用急着回答。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the clock.",
+      "answer": "clock.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-read-request-lamp",
+      "mode": "read",
+      "words": [
+        "lamp"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "desk-lamp",
+          "bedside-lamp",
+          "floor-lamp"
+        ]
+      },
+      "intro": "我想布置一个明亮的故事角。你能帮我认出要用的东西吗？这次我把请求写下来。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the lamp.",
+      "answer": "lamp.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-listen-request-lamp",
+      "mode": "listen",
+      "words": [
+        "lamp"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "desk-lamp",
+          "bedside-lamp",
+          "floor-lamp"
+        ]
+      },
+      "intro": "我想布置一个明亮的故事角。你能帮我认出要用的东西吗？这次先听我说，不用急着回答。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the lamp.",
+      "answer": "lamp.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-read-request-box",
+      "mode": "read",
+      "words": [
+        "box"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "gift-box",
+          "toy-chest"
+        ]
+      },
+      "intro": "我打算把小收藏收好。先帮我找找可以用的东西吧。这次我把请求写下来。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the box.",
+      "answer": "box.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-listen-request-box",
+      "mode": "listen",
+      "words": [
+        "box"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "gift-box",
+          "toy-chest"
+        ]
+      },
+      "intro": "我打算把小收藏收好。先帮我找找可以用的东西吧。这次先听我说，不用急着回答。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the box.",
+      "answer": "box.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-read-request-table",
+      "mode": "read",
+      "words": [
+        "table"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "table"
+        ]
+      },
+      "intro": "我想准备一个和你一起玩的角落。你能按我的请求指给我看吗？这次我把请求写下来。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the table.",
+      "answer": "table.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-listen-request-table",
+      "mode": "listen",
+      "words": [
+        "table"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "table"
+        ]
+      },
+      "intro": "我想准备一个和你一起玩的角落。你能按我的请求指给我看吗？这次先听我说，不用急着回答。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the table.",
+      "answer": "table.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-read-request-chair",
+      "mode": "read",
+      "words": [
+        "chair"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "chair"
+        ]
+      },
+      "intro": "我想邀请朋友坐一会儿。先帮我看看家里有哪些合适的东西。这次我把请求写下来。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the chair.",
+      "answer": "chair.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-listen-request-chair",
+      "mode": "listen",
+      "words": [
+        "chair"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "chair"
+        ]
+      },
+      "intro": "我想邀请朋友坐一会儿。先帮我看看家里有哪些合适的东西。这次先听我说，不用急着回答。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the chair.",
+      "answer": "chair.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-read-request-cup",
+      "mode": "read",
+      "words": [
+        "cup"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "cup"
+        ]
+      },
+      "intro": "我想准备一个喝水的小角落。我们先来认一认东西吧。这次我把请求写下来。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the cup.",
+      "answer": "cup.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-listen-request-cup",
+      "mode": "listen",
+      "words": [
+        "cup"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "cup"
+        ]
+      },
+      "intro": "我想准备一个喝水的小角落。我们先来认一认东西吧。这次先听我说，不用急着回答。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the cup.",
+      "answer": "cup.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-read-request-plate",
+      "mode": "read",
+      "words": [
+        "plate"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "plate"
+        ]
+      },
+      "intro": "我想练习招待朋友。先帮我认出摆桌子会用到的东西。这次我把请求写下来。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the plate.",
+      "answer": "plate.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-listen-request-plate",
+      "mode": "listen",
+      "words": [
+        "plate"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "plate"
+        ]
+      },
+      "intro": "我想练习招待朋友。先帮我认出摆桌子会用到的东西。这次先听我说，不用急着回答。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the plate.",
+      "answer": "plate.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-read-request-ball",
+      "mode": "read",
+      "words": [
+        "ball"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "ball"
+        ]
+      },
+      "intro": "我想和你玩寻宝。今天我出一个小请求，你来找。这次我把请求写下来。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the ball.",
+      "answer": "ball.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-listen-request-ball",
+      "mode": "listen",
+      "words": [
+        "ball"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "ball"
+        ]
+      },
+      "intro": "我想和你玩寻宝。今天我出一个小请求，你来找。这次先听我说，不用急着回答。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the ball.",
+      "answer": "ball.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-read-request-toy",
+      "mode": "read",
+      "words": [
+        "toy"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "toy-car",
+          "toy-train"
+        ]
+      },
+      "intro": "我想给朋友介绍家里的玩具。先陪我找一样东西吧。这次我把请求写下来。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the toy.",
+      "answer": "toy.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-listen-request-toy",
+      "mode": "listen",
+      "words": [
+        "toy"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "toy-car",
+          "toy-train"
+        ]
+      },
+      "intro": "我想给朋友介绍家里的玩具。先陪我找一样东西吧。这次先听我说，不用急着回答。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the toy.",
+      "answer": "toy.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-read-request-door",
+      "mode": "read",
+      "words": [
+        "door"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "door"
+        ]
+      },
+      "intro": "我想记住家里的路线。陪我认一认东西，以后我就能给朋友指路了。这次我把请求写下来。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the door.",
+      "answer": "door.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-listen-request-door",
+      "mode": "listen",
+      "words": [
+        "door"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "door"
+        ]
+      },
+      "intro": "我想记住家里的路线。陪我认一认东西，以后我就能给朋友指路了。这次先听我说，不用急着回答。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the door.",
+      "answer": "door.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-read-request-window",
+      "mode": "read",
+      "words": [
+        "window"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "window"
+        ]
+      },
+      "intro": "我想找个可以看风景的角落。先帮我辨认一样东西吧。这次我把请求写下来。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the window.",
+      "answer": "window.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-listen-request-window",
+      "mode": "listen",
+      "words": [
+        "window"
+      ],
+      "action": {
+        "kind": "find",
+        "itemIds": [
+          "window"
+        ]
+      },
+      "intro": "我想找个可以看风景的角落。先帮我辨认一样东西吧。这次先听我说，不用急着回答。Find the… 就是“找一找……”。最后那个词告诉你要找什么。选好了，就在家园点一下它。",
+      "prompt": "Find the window.",
+      "answer": "window.",
+      "reply": "Thank you!"
+    },
+    {
+      "id": "en-l1-care-thirsty-meet",
+      "mode": "care",
+      "words": [
+        "thirsty"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "drink",
+        "itemIds": [
+          "cup",
+          "kettle",
+          "water-barrel"
+        ]
+      },
+      "intro": "我想喝点水，可是还没找到喝水的地方。thirsty 就是口渴。你可以问 Are you thirsty?，意思是“你渴了吗？”问过我，再带我去喝水吧。",
+      "prompt": "Water, please.",
+      "answer": "Are you thirsty?",
+      "reply": "Yes. Water, please.",
+      "introduces": [
+        {
+          "word": "thirsty",
+          "meaning": "口渴"
+        }
+      ],
+      "requires": [
+        "water"
+      ]
+    },
+    {
+      "id": "en-l1-care-thirsty-return",
+      "mode": "care",
+      "words": [
+        "thirsty"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "drink",
+        "itemIds": [
+          "cup",
+          "kettle",
+          "water-barrel"
+        ]
+      },
+      "intro": "我舔了舔嘴巴，又望向了喝水的地方。你还记得怎么问我是不是渴了吗？",
+      "prompt": "Water, please.",
+      "answer": "Are you thirsty?",
+      "reply": "Yes, please. Water.",
+      "requires": [
+        "water"
+      ]
+    },
+    {
+      "id": "en-l1-care-hungry-meet",
+      "mode": "care",
+      "words": [
+        "hungry"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "eat",
+        "itemIds": [
+          "table",
+          "plate",
+          "bread-basket"
+        ]
+      },
+      "intro": "咕噜噜……你听，我的肚子在叫！hungry 就是饿。你可以问 Are you hungry?，意思是“你饿了吗？”我想请你陪我找个吃饭的地方。",
+      "prompt": "Can we eat?",
+      "answer": "Are you hungry?",
+      "reply": "Yes. Let us eat.",
+      "introduces": [
+        {
+          "word": "hungry",
+          "meaning": "饿"
+        }
+      ],
+      "requires": [
+        "eat"
+      ]
+    },
+    {
+      "id": "en-l1-care-hungry-return",
+      "mode": "care",
+      "words": [
+        "hungry"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "eat",
+        "itemIds": [
+          "table",
+          "plate",
+          "bread-basket"
+        ]
+      },
+      "intro": "我一边看着餐桌，一边摸摸肚子。你能用英语问问我是不是饿了吗？然后陪我去吃饭，好吗？",
+      "prompt": "Can we eat?",
+      "answer": "Are you hungry?",
+      "reply": "Yes. Let us eat.",
+      "requires": [
+        "eat"
+      ]
+    },
+    {
+      "id": "en-l1-care-tired-meet",
+      "mode": "care",
+      "words": [
+        "tired"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sleep",
+        "itemIds": [
+          "bed",
+          "bunk-bed",
+          "cradle",
+          "hammock",
+          "sleeping-bag"
+        ]
+      },
+      "intro": "我还想和你玩，可眼睛快闭上了。tired 就是累。你可以问 Are you tired?，意思是“你累了吗？”问完以后，陪我找个地方休息吧。",
+      "prompt": "Can we stop?",
+      "answer": "Are you tired?",
+      "reply": "Yes. I am tired.",
+      "introduces": [
+        {
+          "word": "tired",
+          "meaning": "累"
+        }
+      ],
+      "requires": [
+        "stop"
+      ]
+    },
+    {
+      "id": "en-l1-care-tired-return",
+      "mode": "care",
+      "words": [
+        "tired"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sleep",
+        "itemIds": [
+          "bed",
+          "bunk-bed",
+          "cradle",
+          "hammock",
+          "sleeping-bag"
+        ]
+      },
+      "intro": "我刚想接着讲故事，又打了一个大哈欠。你还记得怎么问我是不是累了吗？我想歇一会儿，醒来再陪你。",
+      "prompt": "Can we stop?",
+      "answer": "Are you tired?",
+      "reply": "Yes. Let us rest.",
+      "requires": [
+        "stop"
+      ]
+    },
+    {
+      "id": "en-l1-care-want-meet",
+      "mode": "care",
+      "words": [
+        "want"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "drink",
+        "itemIds": [
+          "cup",
+          "kettle",
+          "water-barrel"
+        ]
+      },
+      "intro": "我有一个小愿望：喝点水。want 就是想要。你可以问 Do you want water?，意思是“你想喝水吗？”先问问我，再带我去喝水吧。",
+      "prompt": "Water?",
+      "answer": "Do you want water?",
+      "reply": "Yes, please.",
+      "requires": [
+        "water"
+      ],
+      "introduces": [
+        {
+          "word": "want",
+          "meaning": "想要"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-care-want-return",
+      "mode": "care",
+      "words": [
+        "want"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "drink",
+        "itemIds": [
+          "cup",
+          "kettle",
+          "water-barrel"
+        ]
+      },
+      "intro": "我有点不好意思开口，只好看看你，又看看喝水的地方。你能问问我想不想喝水吗？",
+      "prompt": "Water?",
+      "answer": "Do you want water?",
+      "reply": "Yes, please.",
+      "requires": [
+        "water"
+      ]
+    },
+    {
+      "id": "en-l1-care-thank-you-meet",
+      "mode": "care",
+      "words": [
+        "thank you"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": [
+          "chair",
+          "sofa",
+          "cushion"
+        ]
+      },
+      "intro": "如果你想找个伙伴，我愿意留下来陪你。收到别人的好意，可以说 thank you，就是谢谢。你愿意的话，也给我安排一个座位吧。",
+      "prompt": "I can stay with you.",
+      "answer": "Thank you.",
+      "reply": "You are welcome.",
+      "introduces": [
+        {
+          "word": "thank you",
+          "meaning": "谢谢"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-care-thank-you-return",
+      "mode": "care",
+      "words": [
+        "thank you"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": [
+          "chair",
+          "sofa",
+          "cushion"
+        ]
+      },
+      "intro": "你想安静一会儿，我就陪你安静地坐着；你想说话，我就听。你可以对我的好意说声谢谢，再带我去坐下。",
+      "prompt": "I can stay with you.",
+      "answer": "Thank you.",
+      "reply": "You are welcome."
+    },
+    {
+      "id": "en-l1-care-no-meet",
+      "mode": "care",
+      "words": [
+        "no"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": [
+          "chair",
+          "sofa",
+          "cushion"
+        ]
+      },
+      "intro": "我还想玩，不过你可以选择休息。no 就是不。想礼貌地拒绝，可以说 No, thank you.，意思是“不用了，谢谢”。如果这次想歇一歇，就这样告诉我，再给我安排个座位。",
+      "prompt": "More games?",
+      "answer": "No, thank you.",
+      "reply": "OK. Let us sit.",
+      "requires": [
+        "thank you"
+      ],
+      "introduces": [
+        {
+          "word": "no",
+          "meaning": "不"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-care-no-return",
+      "mode": "care",
+      "words": [
+        "no"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": [
+          "chair",
+          "sofa",
+          "cushion"
+        ]
+      },
+      "intro": "我想接着玩找东西，你这次想坐一会儿。告诉我“不用了，谢谢”就好。我会尊重你的选择，陪你休息。",
+      "prompt": "More games?",
+      "answer": "No, thank you.",
+      "reply": "OK. Let us sit.",
+      "requires": [
+        "thank you"
+      ]
+    },
+    {
+      "id": "en-l1-care-sorry-meet",
+      "mode": "care",
+      "words": [
+        "sorry"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sleep",
+        "itemIds": [
+          "bed",
+          "bunk-bed",
+          "hammock"
+        ]
+      },
+      "intro": "我一讲故事就停不下来。你想休息的时候，可以礼貌地打断我。sorry 在这里是不好意思。试着说 Sorry. I am tired.，我就知道该陪你歇一会儿了。",
+      "prompt": "My story…",
+      "answer": "Sorry. I am tired.",
+      "reply": "OK. Let us rest.",
+      "requires": [
+        "tired"
+      ],
+      "introduces": [
+        {
+          "word": "sorry",
+          "meaning": "不好意思"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-care-sorry-return",
+      "mode": "care",
+      "words": [
+        "sorry"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sleep",
+        "itemIds": [
+          "bed",
+          "bunk-bed",
+          "hammock"
+        ]
+      },
+      "intro": "我又准备讲一个长长的故事，可你这次想休息了。你可以先说一句“不好意思”，再告诉我你累了。我们都可以停下来休息。",
+      "prompt": "My story…",
+      "answer": "Sorry. I am tired.",
+      "reply": "OK. Let us rest.",
+      "requires": [
+        "tired"
+      ]
+    },
+    {
+      "id": "en-l1-care-goodbye-meet",
+      "mode": "care",
+      "words": [
+        "goodbye"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sleep",
+        "itemIds": [
+          "bed",
+          "bunk-bed",
+          "hammock"
+        ]
+      },
+      "intro": "我想睡一小会儿，醒了再找你玩。暂时分别时可以说 goodbye，就是再见。和我道别以后，陪我去休息的地方，好吗？",
+      "prompt": "See you soon.",
+      "answer": "Goodbye.",
+      "reply": "Goodbye.",
+      "introduces": [
+        {
+          "word": "goodbye",
+          "meaning": "再见"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-care-goodbye-return",
+      "mode": "care",
+      "words": [
+        "goodbye"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sleep",
+        "itemIds": [
+          "bed",
+          "bunk-bed",
+          "hammock"
+        ]
+      },
+      "intro": "故事讲到这里，我的眼睛快闭上了。我们先道别，等我休息好了再玩。你还记得那句英语吗？",
+      "prompt": "See you soon.",
+      "answer": "Goodbye.",
+      "reply": "Goodbye."
+    },
+    {
+      "id": "en-l1-care-happy-meet",
+      "mode": "care",
+      "words": [
+        "happy"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": [
+          "chair",
+          "sofa",
+          "cushion"
+        ]
+      },
+      "intro": "有人愿意听我说话，我很高兴！happy 就是高兴。你可以问 Are you happy?，意思是“你高兴吗？”我想和你坐在一起多待一会儿。",
+      "prompt": "I like our home.",
+      "answer": "Are you happy?",
+      "reply": "Yes. I am happy.",
+      "introduces": [
+        {
+          "word": "happy",
+          "meaning": "高兴"
+        }
+      ],
+      "requires": [
+        "like",
+        "home"
+      ]
+    },
+    {
+      "id": "en-l1-care-happy-return",
+      "mode": "care",
+      "words": [
+        "happy"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": [
+          "chair",
+          "sofa",
+          "cushion"
+        ]
+      },
+      "intro": "想到可以和你一起玩，我就想笑。你还记得怎么问我高不高兴吗？问完后，给我安排一个座位，我们慢慢聊。",
+      "prompt": "I like our home.",
+      "answer": "Are you happy?",
+      "reply": "Yes. I am happy.",
+      "requires": [
+        "like",
+        "home"
+      ]
+    },
+    {
+      "id": "en-l1-care-sad-meet",
+      "mode": "care",
+      "words": [
+        "sad"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": [
+          "chair",
+          "sofa",
+          "cushion"
+        ]
+      },
+      "intro": "我有点想念岛上的朋友，心里闷闷的。sad 就是难过。你可以问 Are you sad?，意思是“你难过吗？”你不用替我解决所有事情，陪我坐一会儿就好。",
+      "prompt": "My friend…",
+      "answer": "Are you sad?",
+      "reply": "Yes. Please stay.",
+      "introduces": [
+        {
+          "word": "sad",
+          "meaning": "难过"
+        }
+      ],
+      "requires": [
+        "friend"
+      ]
+    },
+    {
+      "id": "en-l1-care-sad-return",
+      "mode": "care",
+      "words": [
+        "sad"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": [
+          "chair",
+          "sofa",
+          "cushion"
+        ]
+      },
+      "intro": "我又想起远处的朋友，今天的话少了一点。你可以问问我是不是难过，再陪我坐一会儿。想念别人是可以说出来的。",
+      "prompt": "My friend…",
+      "answer": "Are you sad?",
+      "reply": "Yes. Please stay.",
+      "requires": [
+        "friend"
+      ]
+    },
+    {
+      "id": "en-l1-care-afraid-meet",
+      "mode": "care",
+      "words": [
+        "afraid"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": [
+          "chair",
+          "sofa",
+          "cushion"
+        ]
+      },
+      "intro": "一想到黑黑的山洞，我就有点害怕。afraid 就是害怕。你可以问 Are you afraid?，意思是“你害怕吗？”我们现在不去山洞，先在家里坐一会儿吧。",
+      "prompt": "Help, please.",
+      "answer": "Are you afraid?",
+      "reply": "Yes. Please stay.",
+      "introduces": [
+        {
+          "word": "afraid",
+          "meaning": "害怕"
+        }
+      ],
+      "requires": [
+        "help"
+      ]
+    },
+    {
+      "id": "en-l1-care-afraid-return",
+      "mode": "care",
+      "words": [
+        "afraid"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": [
+          "chair",
+          "sofa",
+          "cushion"
+        ]
+      },
+      "intro": "我想去探险，又担心黑黑的山洞。你能问问我是不是害怕吗？今天可以先坐下聊聊，不用急着出发。",
+      "prompt": "Help, please.",
+      "answer": "Are you afraid?",
+      "reply": "Yes. Please stay.",
+      "requires": [
+        "help"
+      ]
+    },
+    {
+      "id": "en-l1-care-pet-meet",
+      "mode": "care",
+      "words": [
+        "pet"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": [
+          "chair",
+          "sofa",
+          "cushion"
+        ]
+      },
+      "intro": "我是住在你家园里的伙伴，也是你的宠物。pet 就是宠物。你可以指着我说 My pet.，意思是“我的宠物”。然后给我选个座位，我们一起待一会儿。",
+      "prompt": "Who am I?",
+      "answer": "My pet.",
+      "reply": "Let us sit.",
+      "introduces": [
+        {
+          "word": "pet",
+          "meaning": "宠物"
+        }
+      ]
+    },
+    {
+      "id": "en-l1-care-pet-return",
+      "mode": "care",
+      "words": [
+        "pet"
+      ],
+      "action": {
+        "kind": "pet-use",
+        "activity": "sit",
+        "itemIds": [
+          "chair",
+          "sofa",
+          "cushion"
+        ]
+      },
+      "intro": "如果你想向朋友介绍我，可以说“我的宠物”。你还记得怎么说吗？介绍完，就给我安排一个座位吧。",
+      "prompt": "Who am I?",
+      "answer": "My pet.",
+      "reply": "Let us sit."
+    },
+    {
+      "id": "en-l1-write-pet-hungry",
+      "mode": "write",
+      "words": [
+        "hungry"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "table",
+          "plate",
+          "bread-basket"
+        ]
+      },
+      "intro": "你已经会说我饿的时候是什么样了。我想把这个愿望留在相应设施的标签上。帮我写一句 I am hungry. 吧，以后看到标签，就能想起怎么表达。",
+      "prompt": "Please write: I am hungry.",
+      "answer": "I am hungry.",
+      "alternatives": [
+        {
+          "id": "short-label",
+          "answer": "hungry."
+        }
+      ],
+      "reply": "Thank you."
+    },
+    {
+      "id": "en-l1-write-pet-thirsty",
+      "mode": "write",
+      "words": [
+        "thirsty"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "cup",
+          "kettle",
+          "water-barrel"
+        ]
+      },
+      "intro": "你已经会说我渴的时候是什么样了。我想把这个愿望留在相应设施的标签上。帮我写一句 I am thirsty. 吧，以后看到标签，就能想起怎么表达。",
+      "prompt": "Please write: I am thirsty.",
+      "answer": "I am thirsty.",
+      "alternatives": [
+        {
+          "id": "short-label",
+          "answer": "thirsty."
+        }
+      ],
+      "reply": "Thank you."
+    },
+    {
+      "id": "en-l1-write-pet-tired",
+      "mode": "write",
+      "words": [
+        "tired"
+      ],
+      "action": {
+        "kind": "label",
+        "itemIds": [
+          "bed",
+          "bunk-bed",
+          "hammock"
+        ]
+      },
+      "intro": "你已经会说我累的时候是什么样了。我想把这个愿望留在相应设施的标签上。帮我写一句 I am tired. 吧，以后看到标签，就能想起怎么表达。",
+      "prompt": "Please write: I am tired.",
+      "answer": "I am tired.",
+      "alternatives": [
+        {
+          "id": "short-label",
+          "answer": "tired."
+        }
+      ],
+      "reply": "Thank you."
+    }
+  ],
+  "policy": {
+    "maxNewWordsPerVisit": 3
+  }
+}

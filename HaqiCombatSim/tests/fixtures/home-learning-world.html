@@ -1,0 +1,28 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><title>家园学习完整链路验收</title><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_world_map.css"><link rel="stylesheet" href="css/adventure_dialogue.css"><link rel="stylesheet" href="css/home.css"></head><body class="haqi-app storybook-ui"><div id="overlay"></div><script type="module">
+import {openHomeSystem} from './js/home_app.js';
+import {createHomeStore} from './js/home_store.js';
+import {createHome,homeScope} from './js/home_core.js';
+import {configureLanguageTreeCapture,languageTreeStore} from './js/language_tree_capture.js';
+import {wordTreeKey} from './js/word_lexicon_core.js';
+import {recordWordPractice} from './js/language_course.js';
+if(!['localhost','127.0.0.1'].includes(location.hostname))throw Error('隔离验收仅限本机');
+const catalog=await fetch('data/adventure/home/catalog.json').then(r=>r.json()),definitions=await fetch('data/adventure/pets.json').then(r=>r.json());
+const practiceWord=new URLSearchParams(location.search).get('color')==='grey'?'grey':'book';
+const roleId='home-learning-world',scope=homeScope(null,roleId),treeKey=JSON.stringify(['isolated-world-test',roleId]);
+const definition=Object.values(definitions.pets)[0];
+const context={owner:null,roleId,active:true,save:{pets:{companion:{id:'companion',speciesId:definition.id,level:1}},languageLearning:{enabled:true,target:'en'}},content:{pets:definitions.pets}};
+configureLanguageTreeCapture(()=>({key:treeKey}));
+const store=createHomeStore(scope,{name:'home-learning-world-only'}),id='learning-world';
+if(!(await store.list()).length){
+ await store.create(createHome(id,'我的故事角',18));
+ await store.mutate(id,['chunk:0,0','residents'],(_,parts)=>{
+  parts['chunk:0,0'].book={id:'book',itemId:'book',x:2,y:1,...(practiceWord==='grey'?{color:'grey'}:{})};
+  if(new URLSearchParams(location.search).has('comprehension'))parts['chunk:0,0'].lamp={id:'lamp',itemId:'desk-lamp',x:0,y:1};
+  parts.residents={$selection:{version:1},companion:{x:-2,y:1}};
+ });
+}
+await recordWordPractice({language:'en',words:[practiceWord],id:'world-seed-word',at:1});
+window.worldLearning={ready:false,context,async label(){return (await store.read(id,'chunk:0,0')).book.label;},async learning(){return (await languageTreeStore.read(wordTreeKey(treeKey,'en'))).state;}};
+window.worldLearning.app=await openHomeSystem({root:document.getElementById('overlay'),getContext:()=>context,close:()=>{},catalog,store,initialHomeId:id,assetMode:'local',voice:{start:async()=>{},finish:async()=>'',speak:async()=>{},cancel:async()=>{}}});
+window.worldLearning.ready=true;
+</script></body></html>

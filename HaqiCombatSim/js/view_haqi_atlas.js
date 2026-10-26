@@ -3,7 +3,7 @@ import {assetUrl} from './adventure_media_core.js';
 import {ISLANDS,travelStatus} from './adventure_world_map_core.js';
 import {createCloseButton,createWorldMapSwitch} from './view_adventure_controls.js';
 import {setText,tr,fill} from './locale_runtime.js';
-import {atlasBounds,fitAtlas,atlasPoint,atlasInverse,zoomAtlas,constrainAtlas,islandAtlasPoint,islandLocalPoint,islandDetailOpacity,pickAtlasIsland,pickAtlasPortal,atlasOverviewCamera,atlasCoastContains,atlasOceanTiles,atlasSeaDecorations,atlasPortalSize} from './haqi_atlas_core.js';
+import {atlasStripLimits,constrainAtlasStrip,atlasBounds,fitAtlas,atlasPoint,atlasInverse,zoomAtlas,islandAtlasPoint,islandLocalPoint,islandDetailOpacity,pickAtlasIsland,pickAtlasPortal,atlasCoastContains,atlasOceanTiles,atlasSeaDecorations,atlasPortalSize} from './haqi_atlas_core.js';
 
 const el=(tag,className='',text)=>{const node=document.createElement(tag);node.className=className;if(text)setText(node,text);return node;};
 const button=(text,callback,className='secondary')=>{const node=el('button',className,text);node.type='button';node.onclick=callback;return node;};
@@ -14,7 +14,7 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
     const locate=button(world.isEarth?'返回当前城市地图':'返回当前岛屿地图',()=>world.isEarth?cb.switchMap('local'):locateCurrent(),'secondary map-view-toggle');
     heading.append(locate);if(cb.switchWorld)heading.append(createWorldMapSwitch('haqi',cb.switchWorld));header.append(heading,createCloseButton(cb.close));
     const stage=el('div','haqi-atlas-stage'),canvas=el('canvas','haqi-atlas-canvas'),labels=el('div','haqi-atlas-labels'),controls=el('div','earth-map-zoom'),status=el('p','earth-map-status'),card=el('div','haqi-atlas-selection');
-    canvas.width=900;canvas.height=600;canvas.tabIndex=0;canvas.setAttribute('aria-label',tr('哈奇地图，可拖动和缩放，放大查看岛屿地形'));
+    canvas.width=900;canvas.height=600;canvas.tabIndex=0;canvas.setAttribute('aria-label',tr('哈奇地图，左右拖动浏览岛屿，滚轮、双指或加减按钮缩放'));
     const enter=button('传送过去',()=>performTravel(),'primary');card.hidden=true;card.append(enter);status.setAttribute('role','status');
     stage.append(canvas,labels,controls,status,card);body.append(stage);modal.append(header,body);root.append(modal);canvas.focus?.({preventScroll:true});
     let art=null,islands=[],portals=[],decorations=[],bounds=atlasBounds([]),camera=null,selected=null,disposed=false,pendingFrame=null,gesture=null,initialized=false,width=900,height=600,suppressClick=false,scene=null,dpr=1,gestureRect=null;
@@ -22,18 +22,52 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
     const pointers=new Map(),images=new Map(),masks=new Map(),previews=new Map(),labelNodes=new Map(),portalNodes=new Map(),failed=new Set(),context=canvas.getContext('2d');
     const point=p=>atlasPoint(camera,p,width,height),screen=e=>{const r=gestureRect||canvas.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top};};
     const showStatus=text=>{setText(status,text);status.hidden=!text;};
-    function limit(){camera=constrainAtlas(camera,bounds,width,height);}
-    function scaleLimits(){
-        const min=fitAtlas(bounds,width,height).scale,distance=i=>Math.hypot(i.x-(camera?.x||0),i.y-(camera?.y||0));
-        const island=islands.reduce((best,i)=>!best||distance(i)<distance(best)?i:best,null);
-        // Keep the nearby island close to its fitted size and never enlarge its 768px preview.
-        const max=island?Math.min(Math.min((width-48)/island.w,(height-48)/island.h)*1.15,768/island.w):min;
-        return {min,max:Math.max(min,max)};
+    function limit(){camera=constrainAtlasStrip(camera,bounds,width,height);}
+    function scaleLimits(){return atlasStripLimits(islands,width,height);}
+    let motionFrame=null,motionTarget=null;
+    function stopMotion(){if(motionFrame!==null)cancelAnimationFrame(motionFrame);motionFrame=null;motionTarget=null;}
+    function setCamera(next){stopMotion();camera=next;limit();draw();}
+    function animateTo(x){
+        if(!camera||disposed)return;
+        const target=constrainAtlasStrip({...camera,x},bounds,width,height).x;
+        stopMotion();selected=null;card.hidden=true;
+        if(globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches){setCamera({...camera,x:target});return;}
+        const start=camera.x,started=performance.now();motionTarget=target;
+        const tick=now=>{if(disposed)return;const t=Math.min(1,Math.max(0,(now-started)/320)),ease=1-(1-t)**3;
+            camera={...camera,x:start+(target-start)*ease};limit();draw();
+            if(t<1)motionFrame=requestAnimationFrame(tick);else{motionFrame=null;motionTarget=null;}
+        };motionFrame=requestAnimationFrame(tick);
     }
-    function setCamera(next){camera=next;limit();draw();}
-    function showAll(){if(!art)return;selected=null;card.hidden=true;setCamera(atlasOverviewCamera(islands,portals,width,height,save.zone));}
+    function showAll(){if(!art)return;selected=null;card.hidden=true;setCamera({x:camera?.x??islands[0].x,y:0,scale:scaleLimits().min});}
     function focusIslandId(){return [save.zone,world.isDungeon?save.dungeonReturn?.zone:save.earthReturn?.zone,'camp'].find(id=>islands.some(i=>i.id===id));}
-    function locateCurrent(){const island=islands.find(i=>i.id===focusIslandId())||islands.find(i=>i.id==='camp')||islands[0];if(!island)return;selected=null;card.hidden=true;const next=fitAtlas({x:island.x-island.w/2,y:island.y-island.h/2,w:island.w,h:island.h},width,height,width<600?32:64);next.scale=Math.min(next.scale,768/island.w);setCamera(next);}
+    function focusIsland(island){if(!island)return;selected=null;card.hidden=true;setCamera({x:island.x,y:0,scale:Math.max(scaleLimits().min,scaleLimits().max*(width<600?.98:.9))});}
+    function locateCurrent(){focusIsland(islands.find(i=>i.id===focusIslandId())||islands[0]);}
+    function panBy(pixels){if(camera)animateTo((motionTarget??camera.x)+pixels/camera.scale);}
+    function arrow(direction){
+        const node=button('',()=>panBy(direction*width*.7),'haqi-atlas-arrow');
+        const name=direction<0?'向左浏览':'向右浏览';node.title=tr(name);node.setAttribute('aria-label',tr(name));
+        const icon=document.createElementNS('http://www.w3.org/2000/svg','svg'),path=document.createElementNS('http://www.w3.org/2000/svg','path');
+        icon.setAttribute('viewBox','0 0 32 32');icon.setAttribute('aria-hidden','true');
+        path.setAttribute('d',direction<0?'M20 6 10 16 20 26':'M12 6 22 16 12 26');icon.append(path);node.append(icon);return node;
+    }
+    const navigation=el('div','haqi-atlas-navigation'),previous=arrow(-1),next=arrow(1),journey=el('div','haqi-atlas-journey'),progress=el('input','haqi-atlas-progress'),stops=el('div','haqi-atlas-stops');
+    const stopNodes=[];let activeStop=null;
+    const journeyPosition=el('div','haqi-atlas-position');journeyPosition.hidden=true;
+    function revealStop(node){
+        if(!node||!stops.clientWidth)return;
+        const left=node.offsetLeft,right=left+node.offsetWidth;
+        if(left<stops.scrollLeft||right>stops.scrollLeft+stops.clientWidth)stops.scrollLeft=Math.max(0,left-(stops.clientWidth-node.offsetWidth)/2);
+    }
+    stops.setAttribute('aria-label',tr('全部岛屿，可横向滚动'));
+    stops.onwheel=e=>{if(stops.scrollWidth<=stops.clientWidth)return;const delta=Math.abs(e.deltaX||0)>Math.abs(e.deltaY||0)?e.deltaX:e.deltaY;if(!delta)return;e.preventDefault();stops.scrollLeft+=delta*(e.deltaMode===1?16:e.deltaMode===2?stops.clientWidth:1);};
+    progress.type='range';progress.min='0';progress.step='0.001';progress.value='0';progress.disabled=true;progress.setAttribute('aria-label',tr('拖动浏览全部岛屿'));
+    progress.oninput=()=>{if(!camera||!islands.length)return;const value=Number(progress.value),index=Math.min(islands.length-1,Math.floor(value)),a=islands[index],b=islands[index+1]||a;selected=null;card.hidden=true;setCamera({...camera,x:a.x+(b.x-a.x)*(value-index)});};
+    progress.onpointerdown=()=>stopMotion();
+    progress.onkeydown=e=>{const direction={ArrowLeft:-1,ArrowDown:-1,ArrowRight:1,ArrowUp:1,PageDown:-10,PageUp:10}[e.key];
+        if(direction===undefined&&e.key!=='Home'&&e.key!=='End')return;e.preventDefault();
+        progress.value=String(e.key==='Home'?0:e.key==='End'?islands.length-1:Math.max(0,Math.min(islands.length-1,Math.round(Number(progress.value))+direction)));progress.oninput();
+    };
+    journey.append(journeyPosition,progress,stops);navigation.append(previous,journey,next);body.append(navigation);
     function zoom(factor,anchor={x:width/2,y:height/2}){if(!camera)return;const {min,max}=scaleLimits();setCamera(zoomAtlas(camera,factor,anchor,width,height,min,max));}
     controls.append(button('+',()=>zoom(1.4),'earth-map-zoom-button'),button('−',()=>zoom(1/1.4),'earth-map-zoom-button'));
     controls.children[0].setAttribute('aria-label',tr('放大'));controls.children[1].setAttribute('aria-label',tr('缩小'));
@@ -94,6 +128,17 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
     }
     function draw(){
         if(disposed||!camera)return;
+        previous.disabled=camera.x-width/camera.scale/2<=bounds.x;next.disabled=camera.x+width/camera.scale/2>=bounds.x+bounds.w;
+        const nearest=islands.reduce((best,i)=>!best||Math.abs(i.x-camera.x)<Math.abs(best.x-camera.x)?i:best,null);
+        let index=islands.findIndex(i=>i.x>=camera.x);if(index<0)index=islands.length-1;
+        const left=islands[Math.max(0,index-1)],right=islands[index],value=right&&left&&right.x!==left.x?Math.max(0,index-1+(camera.x-left.x)/(right.x-left.x)):index;
+        progress.value=String(value);progress.style.setProperty('--journey-progress',`${value/Math.max(1,islands.length-1)*100}%`);
+        if(nearest)progress.setAttribute('aria-valuetext',tr(nearest.name));
+        const active=stopNodes.find(row=>row.island===nearest)?.node;
+        if(active!==activeStop){
+            activeStop?.setAttribute('aria-current','false');activeStop=active;activeStop?.setAttribute('aria-current','location');revealStop(activeStop);
+            if(nearest)setText(journeyPosition,`${tr(nearest.name)} · ${islands.indexOf(nearest)+1} / ${islands.length}`);
+        }
         const padding=256,dx=scene?(scene.camera.x-camera.x)*camera.scale:0,dy=scene?(scene.camera.y-camera.y)*camera.scale:0;
         if(!scene||scene.camera.scale!==camera.scale||Math.abs(dx)>padding-8||Math.abs(dy)>padding-8){
             const sw=width+padding*2,sh=height+padding*2,target=scene?.canvas||el('canvas');
@@ -109,7 +154,7 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
             const tags=localLabels.get(island.id)||[];
             if(p.x+w<0||p.y+h<0||p.x>width||p.y>height){node.hidden=true;for(const tag of tags)if(!tag.hidden)tag.hidden=true;continue;}
             const layout=assets.content.worldMaps?.[island.id],opacity=layout?islandDetailOpacity(island,camera.scale,width,height):0;
-            positionLabel(node,point({x:island.x,y:island.y+(opacity>.5?-island.h*.38:island.h*.15)}));
+            positionLabel(node,point({x:island.x,y:island.y+island.h/2+24/camera.scale}));
             if(opacity>.5&&layout){
                 for(const mark of layout.landmarks||[]){const tag=labelNodes.get(`${island.id}:${mark.id}`);if(tag)positionLabel(tag,point(islandAtlasPoint(island,layout,mark)));}
             }else for(const tag of tags)if(!tag.hidden)tag.hidden=true;
@@ -140,19 +185,19 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
         const a=entries[0],b=entries[1];gesture={camera:{...camera},start:b?{x:(a.x+b.x)/2,y:(a.y+b.y)/2}:{...a},distance:b?Math.hypot(a.x-b.x,a.y-b.y):0,moved:b!=null||gesture?.moved||false,pinch:!!b};
     }
     stage.addEventListener('click',e=>{if(suppressClick&&e.detail!==0){e.preventDefault();e.stopImmediatePropagation();}},true);
-    stage.onpointerdown=e=>{if(disposed||!camera||(e.button!=null&&e.button!==0))return;if(!pointers.size)suppressClick=false;if(controls.contains(e.target)||card.contains(e.target)||e.target===status)return;if(!pointers.size)gestureRect=canvas.getBoundingClientRect();e.target.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{...screen(e),target:e.target});rebase();};
+    stage.onpointerdown=e=>{if(disposed||!camera||(e.button!=null&&e.button!==0))return;if(!pointers.size){suppressClick=false;stopMotion();}if(controls.contains(e.target)||card.contains(e.target)||e.target===status)return;if(!pointers.size)gestureRect=canvas.getBoundingClientRect();e.target.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{...screen(e),target:e.target});rebase();};
     stage.onpointermove=e=>{
         if(!pointers.has(e.pointerId)||!gesture)return;pointers.set(e.pointerId,{...screen(e),target:pointers.get(e.pointerId).target});const values=[...pointers.values()],a=values[0],b=values[1],at=b?{x:(a.x+b.x)/2,y:(a.y+b.y)/2}:a;
         const dx=at.x-gesture.start.x,dy=at.y-gesture.start.y;if(!gesture.moved&&Math.hypot(dx,dy)<8)return;gesture.moved=true;suppressClick=true;
         const {min,max}=scaleLimits(),factor=b&&gesture.distance>0?Math.hypot(a.x-b.x,a.y-b.y)/gesture.distance:1,next=zoomAtlas(gesture.camera,factor,gesture.start,width,height,min,max);
-        camera={...next,x:next.x-dx/next.scale,y:next.y-dy/next.scale};limit();canvas.style.cursor='grabbing';schedule();
+        camera={...next,x:next.x-dx/next.scale,y:0};limit();canvas.style.cursor='grabbing';schedule();
     };
     const end=(e,cancel=false)=>{if(!pointers.has(e.pointerId))return;const moved=gesture?.moved,target=pointers.get(e.pointerId).target;pointers.delete(e.pointerId);if(cancel||moved)suppressClick=true;if(!pointers.size){gesture=null;canvas.style.cursor='grab';if(!cancel&&!moved&&(target===canvas||target===stage))activate(screen(e));gestureRect=null;}else rebase();};
     stage.onpointerup=e=>end(e);stage.onpointercancel=e=>end(e,true);stage.onlostpointercapture=e=>end(e,true);
-    stage.onwheel=e=>{e.preventDefault();zoom(e.deltaY<0?1.2:1/1.2,screen(e));};
-    stage.onkeydown=e=>{if(['+','=','-'].includes(e.key)){e.preventDefault();zoom(e.key==='-'?1/1.4:1.4);}else if(camera&&e.key.startsWith('Arrow')){e.preventDefault();setCamera({...camera,x:camera.x+(e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0)*width/camera.scale/8,y:camera.y+(e.key==='ArrowDown'?1:e.key==='ArrowUp'?-1:0)*height/camera.scale/8});}};
+    stage.onwheel=e=>{e.preventDefault();if(e.deltaY)zoom(e.deltaY<0?1.2:1/1.2,screen(e));};
+    stage.onkeydown=e=>{if(['+','=','-'].includes(e.key)){e.preventDefault();zoom(e.key==='-'?1/1.4:1.4);}else if(camera&&['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();panBy((e.key==='ArrowRight'?1:-1)*width/8);}};
     function resize(){
-        if(disposed)return;
+        if(disposed)return;stopMotion();revealStop(activeStop);
         const rect=canvas.getBoundingClientRect(),oldWidth=width,oldHeight=height;width=Math.max(1,rect.width||900);height=Math.max(1,rect.height||600);
         dpr=Math.min(2,globalThis.devicePixelRatio||1);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);context.setTransform(dpr,0,0,dpr,0,0);scene=null;gestureRect=null;
         if(camera&&oldWidth&&oldHeight)camera.scale*=Math.min(width/oldWidth,height/oldHeight);
@@ -162,14 +207,15 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
     const observer=typeof ResizeObserver==='function'?new ResizeObserver(resize):null;observer?.observe(canvas);
     showStatus('地图载入中…');
     Promise.resolve(mapArt||loadHaqiAtlas()).then(data=>{
-        if(disposed)return;art=data;islands=data.islands||[];portals=data.portals||[];bounds=atlasBounds(islands);
+        if(disposed)return;art=data;islands=data.islands||[];portals=data.portals||[];bounds=atlasBounds(islands,portals);
         decorations=atlasSeaDecorations(islands,portals,data.seaDecor);
         if(!islands.length)throw Error('Missing atlas islands');
         for(const island of islands){
-            const node=button(island.name,()=>choose(island),'haqi-atlas-island');node.classList.toggle('current',island.id===focusIslandId());if(island.id===save.zone)node.setAttribute('aria-current','location');labels.append(node);labelNodes.set(island.id,node);
+            const node=button(island.name,()=>choose(island),'haqi-atlas-island');node.classList.toggle('current',island.id===focusIslandId());if(island.id===save.zone)node.setAttribute('aria-current','location');const level=travelStatus(save,assets.content,island.id).minLevel||island.minLevel||1;node.dataset.level=fill('建议 {level} 级',{level}).text;node.setAttribute('aria-label',`${tr(island.name)}，${node.dataset.level}`);labels.append(node);labelNodes.set(island.id,node);const stop=button(island.name,()=>animateTo(island.x),'haqi-atlas-stop');stop.setAttribute('aria-label',`${tr('定位岛屿')}：${tr(island.name)}`);stop.setAttribute('aria-current','false');stops.append(stop);stopNodes.push({island,node:stop});
             const tags=[];localLabels.set(island.id,tags);const layout=assets.content.worldMaps?.[island.id];for(const mark of layout?.landmarks||[]){const tag=button(mark.name,()=>choose(island,{x:mark.x,y:mark.y},mark.name),'island-map-label haqi-atlas-landmark');tag.hidden=true;labels.append(tag);labelNodes.set(`${island.id}:${mark.id}`,tag);tags.push(tag);}
         }
-        for(const portal of portals){const node=button('',()=>{if(!disposed)cb.portal?.(portal,'earth');},'map-vortex');node.setAttribute('aria-label',tr('神秘漩涡，查看现实世界地图'));node.title=tr('神秘漩涡，查看现实世界地图');labels.append(node);portalNodes.set(portal.id,node);}
+        for(const portal of portals){const node=button('',()=>{if(!disposed)cb.portal?.(portal,'earth');},'map-vortex');const title=portal.travel?`传送到${portal.earth.name}`:tr('神秘漩涡，查看现实世界地图');node.setAttribute('aria-label',title);node.title=title;node.dataset.destination=portal.earth.name||tr('现实世界');labels.append(node);portalNodes.set(portal.id,node);}
+        journeyPosition.hidden=islands.length<=12;progress.max=String(islands.length-1);progress.disabled=islands.length<2;journey.style.setProperty('--island-count',String(islands.length));
         showStatus('');resize();
         for(const [id,resource]of Object.entries(data.resources||{})){
             const image=new Image();image.crossOrigin='anonymous';image.onload=()=>{if(disposed)return;if(image.naturalWidth!==resource.width||image.naturalHeight!==resource.height){failed.add(id);showStatus('部分地图图片暂不可用，仍可选择目的地。');return;}images.set(id,image);
@@ -179,5 +225,5 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
                 if(id==='vortex')for(const node of portalNodes.values()){node.style.setProperty('--vortex-image',`url("${image.src}")`);node.classList.add('has-vortex-art');}scene=null;draw();};image.onerror=()=>{if(disposed)return;failed.add(id);showStatus('部分地图图片暂不可用，仍可选择目的地。');};image.src=assetUrl(resource,assets.mode);
         }
     }).catch(()=>{if(disposed)return;showStatus('地图暂不可用，请从列表选择目的地。');const list=el('div','haqi-atlas-fallback');for(const island of ISLANDS){const node=button(island.name,()=>choose(island));list.append(node);}body.append(list);});
-    return {dispose(){disposed=true;observer?.disconnect();if(pendingFrame!==null)cancelAnimationFrame(pendingFrame);pointers.clear();previews.clear();images.clear();masks.clear();if(scene)scene.canvas.width=scene.canvas.height=0;scene=null;},locate:locateCurrent,overview:showAll,zoom,draw,getState:()=>({camera:camera&&{...camera},bounds:{...bounds},decorationCount:decorations.length,renderStats:{...renderStats},selected,previewIds:[...previews.keys()],illustrationIds:islands.filter(i=>i.detailStyle==='illustration'&&images.has(i.resource)).map(i=>i.id),loadedResources:[...images.keys()],failed:[...failed],width,height})};
+    return {dispose(){disposed=true;stopMotion();observer?.disconnect();if(pendingFrame!==null)cancelAnimationFrame(pendingFrame);pointers.clear();previews.clear();images.clear();masks.clear();if(scene)scene.canvas.width=scene.canvas.height=0;scene=null;},locate:locateCurrent,overview:showAll,zoom,draw,getState:()=>({camera:camera&&{...camera},bounds:{...bounds},decorationCount:decorations.length,renderStats:{...renderStats},selected,previewIds:[...previews.keys()],illustrationIds:islands.filter(i=>i.detailStyle==='illustration'&&images.has(i.resource)).map(i=>i.id),loadedResources:[...images.keys()],failed:[...failed],width,height})};
 }

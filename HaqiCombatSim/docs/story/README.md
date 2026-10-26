@@ -1,5 +1,9 @@
 # 故事工作台
 
+新增语言故事前先查[四语教学大纲](../curriculum/README.md)与[单元作者模板](../curriculum/unit-template.md)，确定本次交流目标、候选词来源、复现和读写落点；当前课程缺口见[RSI 队列](../curriculum/backlog.md)。这些是教学设计，不改变下述作者源与稳定编号约定。
+
+四语言岛屿课程作者稿见 [多语言课程故事](story-language-courses.md)，源为 `data/adventure/island-language-courses.json`。每个语言独立故事使用 `island-language:` 场景键和稳定 S/L 编号，通过 `scripts/export_story.py` 导出。旧中文字源岛任务仍保留原任务及场景身份。
+
 先读 [按等级排列的主线章节目录](story-master.md)，再读 [重编与续篇设计](story-design.md)、[中文简明样章](story-samples.md)。总稿是现有资料的事实整理，不是新编小说。样章与设计是未应用的创作稿。
 
 `story-master.md` 只列章节目录，不再堆放正文。连续前置路径至少4个任务构成主线，正文与奖励放入 `chapters/C<首任务ID>.md`。孤立任务、短链和不属于任何4步路径的短分支放入 [NPC孤立任务与短支线](story-side-quests.md)，按接取NPC分组。
@@ -7,6 +11,8 @@
 同一前置网络的长分支与汇合保留在同章；仅仅同时开放许多独立任务不算长链。首任务等级决定目录排序，未配置等级者置后；保留上限及后续条件，不修改实际解锁逻辑。
 
 NPC双语交流、居民日常对白和招呼见 [NPC独立文档](story-npc-dialogues.md)；副本入场、试炼塔及原版过场见 [剧本独立文档](story-dungeon-scripts.md)。任务本身的NPC对白仍随任务留在章节或支线文件，不把人物发言一概移走。索引的 `document` 字段可按原编号找到当前文档。
+
+家园作者情境见[家园语言练习故事](story-home-language.md)，源为 `data/adventure/curriculum/english-home-practice.json`，使用独立 `home-language:` 场景键；不要把家园规划对白当作已经发放物品或移动 NPC。
 
 ## 按编号修改
 

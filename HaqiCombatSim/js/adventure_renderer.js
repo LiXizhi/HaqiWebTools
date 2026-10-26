@@ -457,6 +457,7 @@ export function createRenderer(canvas,assets) {
                 ctx.restore();
             }
             if(o.kind==='landmark'){
+                if(world.languageQuestTarget?.kind==='landmark'&&world.languageQuestTarget.id===o.id)plate(ctx,'语言任务 · '+o.name,o.x,o.y-35,{...PLATE.place,text:'#fff1a3'});
                 if(o.dungeonId&&!o.cityDungeon)drawDungeonEntrance(ctx,o,t,reducedMotion.matches,assets.entranceArt);else if(o.cityHotspot&&!o.streetArt)drawCityHotspot(ctx,o);else if(!world.isEarth&&!o.cityDungeon&&!o.streetArt)drawSignpost(ctx,o.name,o.x,o.y);
                 if(o.cityDungeon&&!world.isEarth){const art=cityEntranceAppearance(o.cityLevel,o.cityNodeEntrance);plate(ctx,o.name,o.x,o.y-art.h/2-17,{...PLATE.place,text:art.color});}
                 else if(!world.isEarth&&o.cityHotspot)plate(ctx,o.name,o.x,o.y+32);
@@ -469,7 +470,7 @@ export function createRenderer(canvas,assets) {
                     ellipse(ctx,o.x,o.y-27,19,28,'#668b76');ellipse(ctx,o.x,o.y-65,14,16,'#efd6ad');
                 }
                 plate(ctx,o.name,o.x,o.y+19,PLATE.npc);
-                const marker=o.earthNpc?earthCityNpcMarker(save,world.city,o.id):markerFor(o.id);
+                const marker=world.languageQuestTarget?.kind==='npc'&&world.languageQuestTarget.id===o.id?'!':o.earthNpc?earthCityNpcMarker(save,world.city,o.id):markerFor(o.id);
                 if(marker){text(ctx,marker,o.x,o.y-sh-8+Math.sin(t*3)*3,29,'#fff1a3');}
             }
             if(o.kind==='mob') {

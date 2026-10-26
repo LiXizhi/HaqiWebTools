@@ -1,3 +1,4 @@
+import {learningQuestMatches} from './learning_quest_core.js';
 import {memoryCount,memoryParams,memoryBatch} from './hanzi_memory_core.js';
 // Kids quest_list progress for every non-obsolete quest outside the 14 chapter lessons.
 // QuestProvider.lua TryAccept/CanFinished and QuestHelp.lua Table_Add / Table_Add_Item.
@@ -121,7 +122,7 @@ function groupDone(group, rows) {
 }
 export function catalogQuestReady(save, content, quest, stats = {}) {
     const state = questRecord(save, quest.id);
-    if (!state.accepted || state.claimed) return false;
+    if (!learningQuestMatches(save,quest) || !state.accepted || state.claimed) return false;
     const rows = catalogGoalRows(save, content, quest, stats);
     return quest.groups.every(group => groupDone(group, rows));
 }
@@ -133,6 +134,7 @@ export function requirementValue(save, content, id, stats = {}) {
 }
 export function catalogAcceptBlock(save, content, quest, stats = {}) {
     const state = questRecord(save, quest.id);
+    if (!learningQuestMatches(save,quest)) return '请切换到此任务的学习语言';
     if (quest.retired) return '请寻找新的祖先记忆任务';
     if (state.accepted && !state.claimed) return '已经接取';
     if (state.claimed && !quest.repeat) return '已经完成';
@@ -151,6 +153,7 @@ export function catalogAcceptBlock(save, content, quest, stats = {}) {
 export function catalogQuestStatus(save, content, quest, stats = {}) {
     const state = questRecord(save, quest.id);
     if (state.claimed && !quest.repeat) return '已完成';
+    if (!learningQuestMatches(save,quest)) return '学习语言不符';
     if (state.claimed && quest.repeat) return catalogAcceptBlock(save, content, quest, stats) ? '未开启' : '可接取';
     if (state.accepted && catalogQuestReady(save, content, quest, stats)) return '可交付';
     if (state.accepted) {
@@ -176,7 +179,7 @@ export function catalogQuestsForNpc(save, content, npcId, stats = {}) {
 export function catalogTalksForNpc(save, content, npcId, stats = {}) {
     return (content.catalogQuests?.quests || []).flatMap(quest => {
         const state = questRecord(save, quest.id);
-        if (!state.accepted || state.claimed) return [];
+        if (!learningQuestMatches(save,quest) || !state.accepted || state.claimed) return [];
         if (!catalogGoalRows(save, content, quest, stats).some(g => g.kind === 'talk' && g.id === npcId && g.value < g.count)) return [];
         return (quest.talks || []).filter(t => t.npcId === npcId).map(talk => ({quest, talk}));
     });
@@ -191,9 +194,9 @@ export function trackedQuestIds(save, content) {
     const zone = islandFor(save.zone)?.id || islandFor(save.dungeonReturn?.zone)?.id;
     const local = id => {
         const quest = knownQuest(content, id);
-        return quest && (quest.region || content.npcs?.[quest.startNpc]?.zone) === zone;
+        return quest && learningQuestMatches(save,quest) && (quest.region || content.npcs?.[quest.startNpc]?.zone) === zone;
     };
-    const active = Object.entries(save.quests || {}).filter(([id, state]) => state.accepted && !state.claimed && knownQuest(content, Number(id)));
+    const active = Object.entries(save.quests || {}).filter(([id, state]) => state.accepted && !state.claimed && knownQuest(content, Number(id)) && learningQuestMatches(save,knownQuest(content,Number(id))));
     // Old saves have no acceptance order; use their most recently pinned active quest as a fallback.
     active.sort(([a, x], [b, y]) => (y.acceptedOrder || 0) - (x.acceptedOrder || 0) || pinned.indexOf(Number(b)) - pinned.indexOf(Number(a)) || Number(b) - Number(a));
     const latest = active.length ? Number(active[0][0]) : null;
@@ -230,6 +233,7 @@ function knownQuest(content, id) {
 export function pinTrackedQuest(save, content, questId) {
     const id = Number(questId);
     assert(knownQuest(content, id), '找不到这个任务');
+    assert(learningQuestMatches(save,knownQuest(content,id)), '请切换到此任务的学习语言');
     const current = trackedQuestIds(save, content);
     if (current.includes(id)) return { already: true };
     if (current.length >= MAX_TRACKED_QUESTS) return { full: true };
@@ -276,7 +280,7 @@ export function showCurrentChapter(save, content) {
     delete save.trackedQuestId;
 }
 function catalogMark(save, content, quest, npcId, stats) {
-    if (!quest || questRecord(save, quest.id).claimed) return null;
+    if (!quest || !learningQuestMatches(save,quest) || questRecord(save, quest.id).claimed) return null;
     const state = questRecord(save, quest.id);
     if (!state.accepted && quest.startNpc === npcId && !catalogAcceptBlock(save, content, quest, stats)) return '!';
     if (state.accepted && catalogQuestReady(save, content, quest, stats) && quest.endNpc === npcId) return '?';
@@ -297,7 +301,7 @@ export function catalogTracksMonster(save, content, monster) {
     return trackedQuestIds(save, content).some(id => {
         const quest = content.catalogQuests?.byId[id];
         const state = quest && questRecord(save, quest.id);
-        if (!state?.accepted || state.claimed) return false;
+        if (!learningQuestMatches(save,quest) || !state?.accepted || state.claimed) return false;
         return catalogGoalRows(save, content, quest).some(goal => goal.value < goal.count && (goal.kind === 'kill' && goal.id === goalId || goal.kind === 'loot' && goal.producers?.includes(goalId)));
     });
 }
@@ -318,7 +322,7 @@ export function noteCatalogSignal(save, content, kind, id, count = 1) {
     const target = Number(id);
     for (const quest of index.quests) {
         const state = save.quests[quest.id];
-        if (!state?.accepted || state.claimed) continue;
+        if (!learningQuestMatches(save,quest) || !state?.accepted || state.claimed) continue;
         for (const group of quest.groups) if (group.kind === kind) group.items.forEach((item, itemIndex) => {
             if (item.id !== target || !orderedOpen(group, itemIndex, state, kind)) return;
             if (kind === 'custom' && customLive(save, content, item.id).support !== 'event') return;
@@ -339,7 +343,7 @@ export function noteCatalogKills(save, content, monsters, rng = createRng(1)) {
     const sourceMode = 2;
     for (const quest of index.quests) {
         const state = save.quests[quest.id];
-        if (!state?.accepted || state.claimed) continue;
+        if (!learningQuestMatches(save,quest) || !state?.accepted || state.claimed) continue;
         for (const group of quest.groups) {
             if (sourceMode < group.mode) continue;
             if (group.kind === 'kill') group.items.forEach((item, itemIndex) => {

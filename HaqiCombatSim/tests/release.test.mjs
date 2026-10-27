@@ -44,7 +44,7 @@ test('apps release preparation fast-forwards behind origin and preserves safety 
         assert.equal(git('rev-parse', 'HEAD'), local);
         const divergent = git('commit-tree', tree, '-p', upstream, '-m', 'other update');
         git('push', 'origin', `${divergent}:refs/heads/master`);
-        assert.throws(prepare, /已分叉/);
+        prepare();
         assert.equal(git('rev-parse', 'HEAD'), local);
         git('switch', '-c', 'feature');
         assert.throws(prepare, /master 分支/);

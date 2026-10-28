@@ -10,8 +10,8 @@ export function homeDuoScale(heroes,scale,{width,height}){
 }
 
 // Keep both actors inside the shared viewport, without teleporting through obstacles.
-export function homeDuoStep(heroes,targets,dt,objects,catalog,seed,{width,height,scale}){
- const next=heroes.map((h,i)=>targets[i]?stepHomeWalk(h,targets[i],dt,objects,catalog,seed):{...h,moving:false});
+export function homeDuoStep(heroes,targets,dt,objects,catalog,seed,{width,height,scale,running=false}){
+ const next=heroes.map((h,i)=>targets[i]?stepHomeWalk(h,targets[i],dt,objects,catalog,seed,i===0&&running?'run':'walk'):{...h,moving:false});
  const limitX=Math.max(2,(width-160)/scale),limitY=Math.max(2,(height-300)/scale);
  const fits=(a,b)=>Math.abs(a.x-b.x)<=limitX&&Math.abs(a.y-b.y)<=limitY;
  if(fits(...next))return next;

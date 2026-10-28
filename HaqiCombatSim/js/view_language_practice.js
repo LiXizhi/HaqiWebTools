@@ -14,8 +14,22 @@ export function createLanguagePracticeView({title,close,submit,start,finish,canc
     let mic=null,input=null,send=null;
     return {button,body,
         storyChoice(title,description,choose){const row=el('div'),detail=el('p',description);row.style.marginBottom='12px';detail.style.cssText='margin:4px 0;color:var(--muted);font-size:12px';row.append(button(title,choose),detail);return row;},
+        storyContext(text){const details=el('details'),summary=el('summary','故事与玩法提示');details.open=true;details.append(summary,el('p',text));body.prepend(details);},
         visible(value){root.style.display=value?'':'none';},
         list(rows){mic?.reset();mic=null;input=null;send=null;body.replaceChildren(...rows);},
+        storyMenu(stories,modes){
+            mic?.reset();mic=null;input=null;send=null;
+            const search=el('input'),list=el('div'),empty=el('p','没有找到这个故事。试试别的名字，或清空搜索。');
+            search.type='search';search.placeholder='找故事';search.setAttribute('aria-label','搜索家园故事');
+            search.style.cssText='box-sizing:border-box;width:100%;margin:8px 0';
+            list.className='home-story-choices';list.setAttribute('aria-label','家园故事');
+            list.style.cssText='max-height:240px;overflow:auto;overscroll-behavior:contain';
+            const entries=stories.map(story=>({title:story.title.toLocaleLowerCase(),node:this.storyChoice(story.title,story.description,story.choose)}));
+            empty.hidden=true;empty.setAttribute('role','status');
+            list.append(...entries.map(row=>row.node),empty);
+            search.addEventListener('input',()=>{const query=search.value.trim().toLocaleLowerCase();let found=0;for(const row of entries){row.node.hidden=!row.title.includes(query);if(!row.node.hidden)found++;}empty.hidden=found>0;list.scrollTop=0;});
+            body.replaceChildren(el('h3','和伙伴玩故事'),search,list,el('h3','自由选择玩法'),...modes);
+        },
         exercise({prompt,words,showWords=true,example='',onHint,onSpeak}){
             mic?.reset();body.replaceChildren(el('p',prompt));if(showWords)body.append(el('p','本轮词语：'+words.join('、')));
             input=el('textarea');input.style.cssText='box-sizing:border-box;width:100%;max-width:100%';input.rows=2;input.maxLength=500;input.setAttribute('aria-label','输入回答');body.append(input);

@@ -940,6 +940,292 @@
       "completion": "你找到了小灯：她知道阿初仍在初生码头等她。原来朋友没有失约，只是把“水边”理解成了不同的地方。"
     },
     {
+      "id": "en-hanzi-02",
+      "language": "en",
+      "island": "hanzi",
+      "sceneVersion": 1,
+      "title": "石伯的故事课",
+      "context": "石伯准备开一堂故事课，阿初却发现故事书没有结尾。问问大家准备怎么参与，找到这个空白背后的原因。",
+      "beginnerLevel": "英语L1：普通NPC开场解释词义和缘由，每轮一到两个明确目标，短句回应。",
+      "completion": "原来石伯把结尾留给每个人。你已经问清故事课的准备方法。回家园可以带伙伴看书、在纸上画自己的结尾或给作品写标签；这些实际创作还需要你亲手完成。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "找石伯，答应帮忙准备故事课",
+          "intro": "我想开一堂小小的故事课。今天我来当老师，但我也想听听你的想法。\nteacher 是老师。Yes, teacher. 就是“好的，老师”。你愿意帮我问问大家准备了什么吗？\n阿初说他找到了故事书，却有点担心。先去听听他怎么说吧。",
+          "introReply": "我来试试",
+          "prompt": "Can you help me?",
+          "promptGloss": "你能帮帮我吗？",
+          "answer": "Yes, teacher.",
+          "answerGloss": "好的，老师。",
+          "words": [
+            "teacher"
+          ],
+          "ending": "Thank you! Please find Achu.",
+          "endingGloss": "谢谢！请去找阿初。",
+          "hint": "好的，老师。可以先听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "找阿初，确认他准备的是故事书",
+          "intro": "我准备了一本故事书。可是最后一页没有结尾！石伯会不会以为我带错了？\nbook 是书。先帮我确认：故事课需要的就是 A book.，一本书，对吧？\n再回去问石伯，让他读读开头。也许他知道空白那页是怎么回事。",
+          "introReply": "我来试试",
+          "prompt": "What do we need?",
+          "promptGloss": "我们需要什么？",
+          "answer": "A book.",
+          "answerGloss": "一本书。",
+          "words": [
+            "book"
+          ],
+          "ending": "Please ask our teacher to read.",
+          "endingGloss": "请让我们的老师读一读。",
+          "hint": "一本书。可以先听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "回石伯身边，请他读故事开头",
+          "intro": "阿初发现了空白页？他看得真仔细。先听听开头，也许你就有主意了。\nread 是阅读、读书。Read, please. 就是“请读一读”。你这样邀请我，我就把开头告诉你。\n这段故事只说有一座小屋。谁会住进去？溪禾想用画来回答，去问问她需要什么吧。",
+          "introReply": "我来试试",
+          "prompt": "Shall I read?",
+          "promptGloss": "要我读一读吗？",
+          "answer": "Read, please.",
+          "answerGloss": "请读一读。",
+          "words": [
+            "read",
+            "please"
+          ],
+          "ending": "Here is a little house.",
+          "endingGloss": "这里有一座小房子。",
+          "hint": "请读一读。可以先听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "找溪禾，确认画结尾需要纸和铅笔",
+          "intro": "我想让一个新朋友住进小屋。至于是什么朋友，我想先画出来，再给大家看。\npaper 是纸，pencil 是铅笔。Paper and a pencil. 是“纸和一支铅笔”。\n帮我把这两样说清楚吧。小灯想在画旁边写一句话，你也去听听他的主意。",
+          "introReply": "我来试试",
+          "prompt": "What do we need to draw?",
+          "promptGloss": "画画需要什么？",
+          "answer": "Paper and a pencil.",
+          "answerGloss": "纸和一支铅笔。",
+          "words": [
+            "paper",
+            "pencil"
+          ],
+          "ending": "You can draw your ending at home.",
+          "endingGloss": "你可以在家园画出自己的结尾。",
+          "hint": "纸和一支铅笔。可以先听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "找小灯，了解给画写一句话的方法",
+          "intro": "我想给溪禾的画配一句话：My friend.，我的朋友。这样大家就知道她想请谁住进小屋了。\npen 是笔，这里说用墨水的笔；pencil 是铅笔。write 是写字。A pen, please. I can write. 是“请给我一支笔。我会写字”。\n先试试这句短话，再回去告诉石伯：有人想画，有人想写。真正的画和文字，可以回家园慢慢做。",
+          "introReply": "我来试试",
+          "prompt": "Would you like to write?",
+          "promptGloss": "你想试着写字吗？",
+          "answer": "A pen, please. I can write.",
+          "answerGloss": "请给我一支笔。我会写字。",
+          "words": [
+            "pen",
+            "write"
+          ],
+          "ending": "You can write your own ending.",
+          "endingGloss": "你可以写自己的结尾。",
+          "hint": "请给我一支笔。我会写字。可以先听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "回石伯身边，说说这堂课的发现",
+          "intro": "有人想画，有人想写？这正是我留着空白页的原因。最想听的，就是你们自己的结尾。\n你们帮我想到了新的故事。我是今天的老师，也很愿意做你们的朋友。\nthank you 是谢谢你，friend 是朋友。Thank you, my friend. 是“谢谢你，我的朋友”。把这句话送给一起准备故事的人吧。",
+          "introReply": "我来试试",
+          "prompt": "We can make a story together.",
+          "promptGloss": "我们可以一起编一个故事。",
+          "answer": "Thank you, my friend.",
+          "answerGloss": "谢谢你，我的朋友。",
+          "words": [
+            "thank you",
+            "friend"
+          ],
+          "ending": "I want to hear your story too.",
+          "endingGloss": "我也想听你的故事。",
+          "hint": "谢谢你，我的朋友。可以先听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-hanzi-03",
+      "language": "en",
+      "island": "hanzi",
+      "sceneVersion": 1,
+      "title": "小灯的纸上朋友",
+      "context": "小灯想编一个新朋友来做客的故事，却担心自己想出来的人物太奇怪。和居民一起想想它的样子，以及大家可以一起做什么。",
+      "beginnerLevel": "英语L1：每幕NPC先解释词义与缘由，再用一至两条短语回应。讨论虚构角色，不评判真人外貌。",
+      "completion": "小灯不再要求新朋友和大家长得一样。你们一起想好了故事角色的样子和能做的事情。回家园可以玩帽子店的新客人、不想吓人的小怪兽或纸上朋友去旅行，亲手画出自己的版本；这里的讨论没有替你完成画作。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "找小灯，听听他为新朋友想的样子",
+          "intro": "我想编一个新朋友来做客的故事。它有圆圆的头，头发总是竖着。可是，这样会不会太奇怪？\nhead 是头，hair 是头发。A head. Some hair. 是“一个头，一些头发”。hair 在这里不按一根一根来数。\n先帮我把这两个想法说给溪禾听吧。她总有很多画画的点子。",
+          "introReply": "一起想想",
+          "prompt": "What shall we draw first?",
+          "promptGloss": "我们先想画什么？",
+          "answer": "A head. Some hair.",
+          "answerGloss": "一个头，一些头发。",
+          "words": [
+            "head",
+            "hair"
+          ],
+          "ending": "Please ask Xihe.",
+          "endingGloss": "请去问问溪禾。",
+          "hint": "一个头，一些头发。先听示范，再说或输入你的设计请求。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "找溪禾，帮纸上朋友想看与听的办法",
+          "intro": "小灯觉得竖起来的头发很奇怪？我倒想知道，风一吹，它的头发会不会摇一摇。故事角色可以有自己的样子。\neye 是眼睛，ear 是耳朵。眼睛可以看花，耳朵可以听故事。我们先试着说一只：An eye. An ear.。角色有几只，由故事来决定。\n阿初说要请新朋友吃东西。去问问他，还想到了什么。",
+          "introReply": "一起想想",
+          "prompt": "What helps our friend see and hear?",
+          "promptGloss": "什么能帮助朋友看和听？",
+          "answer": "An eye. An ear.",
+          "answerGloss": "一只眼睛，一只耳朵。",
+          "words": [
+            "eye",
+            "ear"
+          ],
+          "ending": "I like that idea.",
+          "endingGloss": "我喜欢这个想法。",
+          "hint": "一只眼睛，一只耳朵。先听示范，再说或输入你的设计请求。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "找阿初，为新朋友想闻香味和打招呼的办法",
+          "intro": "我想请这个新朋友闻闻面包的香味，再听它说一声你好。小灯却说：嘴巴太大会不会吓到我？可它也可以大声说你好呀。\nnose 是鼻子，mouth 是嘴巴。A nose. A mouth. 是“一个鼻子，一张嘴巴”。我们先把这两样说清楚。\n溪禾说还可以画一个打招呼的动作。请你再去听听她的主意。",
+          "introReply": "一起想想",
+          "prompt": "What does our friend need?",
+          "promptGloss": "我们的朋友需要什么？",
+          "answer": "A nose. A mouth.",
+          "answerGloss": "一个鼻子，一张嘴巴。",
+          "words": [
+            "nose",
+            "mouth"
+          ],
+          "ending": "Our friend can say hello in the story.",
+          "endingGloss": "在故事里，我们的朋友可以说你好。",
+          "hint": "一个鼻子，一张嘴巴。先听示范，再说或输入你的设计请求。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "回溪禾身边，想一个友好的挥手动作",
+          "intro": "大嘴巴不一定吓人呀。我想到一个动作：新朋友抬起胳膊，用手向大家挥一挥。\narm 是胳膊，hand 是手。手在胳膊的末端。An arm. A hand. 是“一条胳膊，一只手”。\n我想把这个挥手的动作放进故事。阿初还想带新朋友散步，去听听他的下一步安排吧。",
+          "introReply": "一起想想",
+          "prompt": "What can we draw for a wave?",
+          "promptGloss": "为了画挥手的动作，我们可以画什么？",
+          "answer": "An arm. A hand.",
+          "answerGloss": "一条胳膊，一只手。",
+          "words": [
+            "arm",
+            "hand"
+          ],
+          "ending": "Hello, my friend!",
+          "endingGloss": "你好，我的朋友！",
+          "hint": "一条胳膊，一只手。先听示范，再说或输入你的设计请求。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "回阿初身边，为散步故事想走路的动作",
+          "intro": "新朋友向我挥手，我就邀请它一起去看溪边的花。小灯问它该怎么走路。我们先想一条腿和一只脚，再决定整个动作。\nleg 是腿，foot 是脚。A leg. A foot. 是“一条腿，一只脚”。\n这些都是故事里的设计，还没有真的画出来。石伯在等我们说说新朋友的样子，去找他吧。",
+          "introReply": "一起想想",
+          "prompt": "What can we draw for a walk?",
+          "promptGloss": "为了画走路的动作，我们可以画什么？",
+          "answer": "A leg. A foot.",
+          "answerGloss": "一条腿，一只脚。",
+          "words": [
+            "leg",
+            "foot"
+          ],
+          "ending": "Let us walk together in the story.",
+          "endingGloss": "让我们在故事里一起散步。",
+          "hint": "一条腿，一只脚。先听示范，再说或输入你的设计请求。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "找石伯，完成纸上朋友的设计讨论",
+          "intro": "小灯问我，新朋友到底要画成什么样才对。我告诉他：能一起打招呼、看花、听故事的朋友，不必长得一模一样。\nface 是脸，是头前面有眼睛、鼻子、嘴巴的部分。body 是身体，包括头、胳膊、腿等部分，不只是中间的躯干。A face. A body. 是“一张脸，一个身体”。\n小灯想请你回家园画自己的版本。你可以自由决定它的表情和姿势。先把最后这两个名字说清楚吧。",
+          "introReply": "一起想想",
+          "prompt": "What will you design?",
+          "promptGloss": "你会设计什么？",
+          "answer": "A face. A body.",
+          "answerGloss": "一张脸，一个身体。",
+          "words": [
+            "face",
+            "body"
+          ],
+          "ending": "Your friend can have a different face.",
+          "endingGloss": "你的朋友可以有不一样的脸。",
+          "hint": "一张脸，一个身体。先听示范，再说或输入你的设计请求。"
+        }
+      ]
+    },
+    {
       "id": "en-town-01",
       "language": "en",
       "island": "town",
@@ -1069,6 +1355,171 @@
       "context": "苏菲准备了三个杯子，却只提到汉特一个客人。去南部湖畔送邀请，问清谁会来，再回来揭开第三个杯子的秘密。",
       "beginnerLevel": "英语 L1 入门：每轮 2—3 个明确目标词，先听人物交代，再跟说或输入；本篇属于有示范的学习，不冒充独立交流验收。",
       "completion": "第三个杯子原来是留给你的。汉特想带妹妹来，于是需要四个杯子。你已把邀请和人数问清楚；回到家园，还可以在宠物照顾和布置中练习今天用过的词。"
+    },
+    {
+      "id": "en-town-02",
+      "language": "en",
+      "island": "town",
+      "title": "一张变长的邀请",
+      "sceneVersion": 1,
+      "context": "苏菲想邀请汉特全家，却不知道要准备多少个杯子。向汉特逐一确认家人，再回来数人数。邀请上会不会漏掉谁？",
+      "beginnerLevel": "英语 L1 入门：每轮 1—3 个目标词，先由 NPC 交代缘由，再听示范、跟说或输入。家庭成员是本篇创作设定。",
+      "completion": "汉特一家七个人，加上苏菲和你，一共九个人。邀请确认好了！以后在家园用真实物品练习数数和布置。本篇没有实际搬来杯子，也没有让家人移动到聚会场地。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "找苏菲，问清邀请的是谁",
+          "intro": "这次我想请汉特全家一起来喝点东西。可我只写了汉特的名字，差点把“全家”忘了！\n你也来，好吗？你不用带东西。我只想请你帮忙问清有谁来，这样就不会少准备杯子了。\nfamily 是家人、家庭。His family 就是“他的家人”。先确认这次邀请谁，再去找汉特。",
+          "introReply": "我来确认一下",
+          "prompt": "Who can Hunt bring?",
+          "promptGloss": "汉特可以带谁来？",
+          "answer": "His family.",
+          "answerGloss": "他的家人。",
+          "words": [
+            "family"
+          ],
+          "ending": "Yes! Please ask Hunt.",
+          "endingGloss": "对！请去问问汉特。",
+          "hint": "他的家人。先听短句示范，再说或打字回应。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "渔夫汉特"
+          },
+          "objective": "找汉特，确认爸爸妈妈也来",
+          "intro": "苏菲请我们全家？真好！我妈妈还担心自己没有被邀请。\n我妈妈和爸爸都想来。mother 是妈妈，father 是爸爸。你说 Your mother and father，就是“你的妈妈和爸爸”。\n先把他们两位确认下来吧。还有几位家人，我慢慢告诉你。",
+          "introReply": "我来确认一下",
+          "prompt": "My mother and father?",
+          "promptGloss": "我的妈妈和爸爸也能来吗？",
+          "answer": "Your mother and father.",
+          "answerGloss": "你的妈妈和爸爸。",
+          "words": [
+            "mother",
+            "father"
+          ],
+          "ending": "Good! My mother and father.",
+          "endingGloss": "太好了！我的妈妈和爸爸。",
+          "hint": "你的妈妈和爸爸。先听短句示范，再说或打字回应。",
+          "alternatives": [
+            {
+              "id": "reverse-order",
+              "answer": "Your father and mother.",
+              "answerGloss": "你的妈妈和爸爸。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "渔夫汉特"
+          },
+          "objective": "继续和汉特交谈，记下兄弟姐妹",
+          "intro": "我弟弟听说有聚会，已经问了我三遍！我妹妹也想来认识新朋友。\nbrother 可以是哥哥或弟弟，sister 可以是姐姐或妹妹。在我家，这里说的是弟弟和妹妹。\n这两位也算上，好吗？别让他们在门口等着。",
+          "introReply": "我来确认一下",
+          "prompt": "My brother and sister too?",
+          "promptGloss": "我的弟弟和妹妹也能来吗？",
+          "answer": "Your brother and sister.",
+          "answerGloss": "你的弟弟和妹妹。",
+          "words": [
+            "brother",
+            "sister"
+          ],
+          "ending": "They will be happy!",
+          "endingGloss": "他们会很高兴的！",
+          "hint": "你的弟弟和妹妹。先听短句示范，再说或打字回应。",
+          "alternatives": [
+            {
+              "id": "reverse-order",
+              "answer": "Your sister and brother.",
+              "answerGloss": "你的弟弟和妹妹。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "渔夫汉特"
+          },
+          "objective": "问清最后两位家人，再回苏菲那里",
+          "intro": "等等，还有奶奶和爷爷！奶奶总是先照顾别人，最后才问有没有她的位置。\ngrandmother 是祖母或外祖母，grandfather 是祖父或外祖父。这里说的是我的奶奶和爷爷。\n请把这两位也算上。我、爸爸妈妈、弟弟妹妹、奶奶爷爷，一共七个人。你能替我告诉苏菲吗？",
+          "introReply": "我来确认一下",
+          "prompt": "My grandmother and grandfather?",
+          "promptGloss": "我的奶奶和爷爷呢？",
+          "answer": "Your grandmother and grandfather.",
+          "answerGloss": "你的奶奶和爷爷。",
+          "words": [
+            "grandmother",
+            "grandfather"
+          ],
+          "ending": "Thank you! Please tell Sophie.",
+          "endingGloss": "谢谢你！请告诉苏菲。",
+          "hint": "你的奶奶和爷爷。先听短句示范，再说或打字回应。",
+          "alternatives": [
+            {
+              "id": "reverse-order",
+              "answer": "Your grandfather and grandmother.",
+              "answerGloss": "你的奶奶和爷爷。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "回苏菲身边，确认汉特一家七个人",
+          "intro": "你回来了！我们一起数，免得漏人：汉特一位，爸爸妈妈两位，弟弟妹妹两位，奶奶爷爷两位。\n一加二加二加二，是七个人。person 是一个人，说好几个人时用 people。Seven people 就是“七个人”。\n这是汉特一家的人数。先告诉我他们一共几个人。",
+          "introReply": "我来确认一下",
+          "prompt": "How many people in Hunt’s family?",
+          "promptGloss": "汉特一家一共几个人？",
+          "answer": "Seven people.",
+          "answerGloss": "七个人。",
+          "words": [
+            "seven",
+            "person"
+          ],
+          "ending": "Seven people. Nobody is missing!",
+          "endingGloss": "七个人。没有漏掉谁！",
+          "hint": "七个人。先听短句示范，再说或打字回应。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "把苏菲和自己也算上，确认九个杯子",
+          "intro": "汉特一家七个人，我再给自己准备一个杯子，那就是八个……等等，你怎么指着自己笑？\n哎呀，我刚才还说不能漏人，结果差点漏了你！你是客人，可不只是来帮忙的。\n七位家人，加上我和你，一共九个人。Nine cups, please，就是“请准备九个杯子”。帮我把最后的数确认好吧。",
+          "introReply": "我来确认一下",
+          "prompt": "How many cups do we need?",
+          "promptGloss": "我们需要几个杯子？",
+          "answer": "Nine cups, please.",
+          "answerGloss": "请准备九个杯子。",
+          "words": [
+            "nine",
+            "cup",
+            "please"
+          ],
+          "ending": "Nine cups. You are invited too!",
+          "endingGloss": "九个杯子。你也在邀请里！",
+          "hint": "请准备九个杯子。先听短句示范，再说或打字回应。"
+        }
+      ]
     },
     {
       "id": "en-fire-01",
@@ -1576,18 +2027,19 @@
             "id": 860100,
             "name": "芦笙"
           },
-          "objective": "去找芦笙交谈",
-          "hint": "芦笙正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Map?",
-          "promptGloss": "地图。",
+          "objective": "先听芦笙说清地图哪里对不上",
+          "hint": "我的地图。 可以听示范，再说或输入。",
+          "prompt": "What are we looking at?",
+          "promptGloss": "我们在看什么？",
           "answer": "My map.",
-          "answerGloss": "地图。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "answerGloss": "我的地图。",
+          "ending": "Let us check the well first.",
+          "endingGloss": "我们先去确认那口井。",
           "words": [
             "map"
           ],
-          "intro": "地图上的标记有点不一样。我们先认一认“地图”，再去看看。"
+          "intro": "我想去双名井，可地图上的井总在我以为的另一边。我越看越糊涂，已经绕了一圈。你愿意先看看我手里的地图吗？\nmap 是地图。My map. 是“我的地图”。我们先练习介绍手里的东西，再沿任务追踪到井边确认。",
+          "introReply": "我来听听"
         },
         {
           "id": "conversation-2",
@@ -1596,18 +2048,20 @@
             "id": "float-2",
             "name": "双名井"
           },
-          "objective": "到双名井观察并读出词语",
-          "hint": "你到了双名井。看看周围，听示范，试着说出这个词。",
-          "prompt": "Water?",
-          "promptGloss": "水。",
+          "objective": "到双名井确认实际地点",
+          "hint": "在双名井确认井里的水。井没有消失；说出看到的水，再去请米拉核对地图。可以听示范，再说或输入。",
+          "prompt": "What can I see in the well?",
+          "promptGloss": "我能在井里看见什么？",
           "answer": "Water.",
           "answerGloss": "水。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "ending": "The well is here. I will ask Mira.",
+          "endingGloss": "井在这里。我要去问米拉。",
           "words": [
             "water"
           ],
-          "intro": "井就在这里，里面有水。你朝井里看了看，试着说出自己的发现。"
+          "intro": "我沿着路到了双名井。井就在眼前，里面有水。实际地点没有消失，是地图的读法可能出了问题。我可以去问熟悉这里的米拉。\nwater 是水。Water. 是“水”。先说出我在井里看到的东西，再去请米拉帮忙。",
+          "introReply": "我来听听",
+          "speaker": "player"
         },
         {
           "id": "conversation-3",
@@ -1616,18 +2070,19 @@
             "id": 860101,
             "name": "米拉"
           },
-          "objective": "去找米拉交谈",
-          "hint": "米拉正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Map?",
-          "promptGloss": "地图。",
+          "objective": "请米拉解释地图为什么对不上",
+          "hint": "我的地图。 可以听示范，再说或输入。",
+          "prompt": "What shall we check together?",
+          "promptGloss": "我们一起核对什么？",
           "answer": "My map.",
-          "answerGloss": "地图。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "answerGloss": "我的地图。",
+          "ending": "Let us help Lusheng turn it around.",
+          "endingGloss": "我们帮芦笙把图转过来看。",
           "words": [
             "map"
           ],
-          "intro": "你也来看地图吗？先告诉我你想看什么，我们再一起核对。"
+          "intro": "你找到井了，地图却还是对不上？我记得芦笙刚才把图举起来时，上下拿反了。拿反的图不会让井消失，只是看起来跑到了另一边。我们带着图一起核对吧。\nMy map. 是“我的地图”。如果你也需要朋友帮忙看图，可以先这样把要看的东西说清楚。",
+          "introReply": "我来听听"
         },
         {
           "id": "conversation-4",
@@ -1636,23 +2091,25 @@
             "id": 860100,
             "name": "芦笙"
           },
-          "objective": "去找芦笙交谈",
-          "hint": "芦笙正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Friend?",
-          "promptGloss": "朋友。",
+          "objective": "回到芦笙身边，说明朋友如何帮忙",
+          "hint": "我的朋友。 可以听示范，再说或输入。",
+          "prompt": "Who helped us?",
+          "promptGloss": "谁帮了我们？",
           "answer": "My friend.",
-          "answerGloss": "朋友。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "answerGloss": "我的朋友。",
+          "ending": "Thank you, my friend.",
+          "endingGloss": "谢谢你，我的朋友。",
           "words": [
             "friend"
           ],
-          "intro": "谢谢你一起核对。认识了新朋友，就试着介绍一下吧。"
+          "intro": "原来我把地图拿反了！米拉刚才帮我转过来看，标记就对上了。谢谢你真的去井边确认，又请朋友来帮忙。以后不确定，我会先问，不再只盯着图着急。\nfriend 是朋友。My friend. 是“我的朋友”。你也可以这样介绍愿意一起帮忙的人。",
+          "introReply": "我来听听"
         }
       ],
       "sceneVersion": 1,
-      "context": "芦笙的地图上少了井。到双名井看看，再告诉米拉。",
-      "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+      "context": "芦笙拿着地图找井，却把图拿反了。先到双名井确认，再请米拉一起核对，找出标记对不上的原因。",
+      "beginnerLevel": "英语L1：保留map/water/friend原目标，先交代寻找与核对的原因，再用短句回应。",
+      "completion": "你沿追踪到了双名井，又请米拉帮助芦笙核对地图。地图拿反时，标记会看起来不对；不确定就找实际地点、问朋友。"
     },
     {
       "id": "en-sail-01",
@@ -3422,6 +3879,3245 @@
       "sceneVersion": 1,
       "context": "小舟担心自己来晚了。到码头看看船，再向莉风确认计划。",
       "beginnerLevel": "外语刚入门；一轮一个新词，默认展示示范和中文释义"
+    },
+    {
+      "id": "en-town-03",
+      "language": "en",
+      "island": "town",
+      "sceneVersion": 1,
+      "title": "不能漏掉的小客人",
+      "context": "苏菲只数了会自己走进门的四位客人。汉特提醒还有一个被抱着来的宝宝。帮他们确认名单，让最小的客人也被邀请。",
+      "beginnerLevel": "英语L1：先NPC对白说明词义和来访缘由，每轮一到两个明确词，短句回应。",
+      "completion": "你帮苏菲和汉特确认了五位来客，宝宝也在邀请名单里。客人尚未到场；回家园可以自己布置迎客角，或画出一位想邀请的人物，再写一个英文标签。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "听苏菲说邀请，确认两位大人",
+          "intro": "我想请新邻居一家来听故事！汉特说有两位大人，还有两个会自己走路的小孩。这样应该是四个人吧？\nman 是成年男子，woman 是成年女子。先帮我记住两位大人：A man. A woman.。\n汉特更熟悉这一家，去问问他那两个小孩吧。我怕自己记漏了。",
+          "introReply": "我来确认一下",
+          "prompt": "Who is coming?",
+          "promptGloss": "谁要来？",
+          "answer": "A man. A woman.",
+          "answerGloss": "一位成年男子。一位成年女子。",
+          "words": [
+            "man",
+            "woman"
+          ],
+          "ending": "Please ask Hunt.",
+          "endingGloss": "请去问问汉特。",
+          "hint": "一位成年男子。一位成年女子。可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "A woman. A man.",
+              "answerGloss": "一位成年女子。一位成年男子。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "渔夫汉特"
+          },
+          "objective": "问汉特两个较大的孩子，再带回宝宝的消息",
+          "intro": "那两个小孩是一个男孩和一个女孩。他们想一起来听故事。boy 是男孩，girl 是女孩。你可以说 A boy. A girl.。\n不过，苏菲是不是只数了会自己走路的人？这一家还有个小宝宝，会被大人抱着来。\n请回去提醒她：不会自己走路，也是一位客人呀。",
+          "introReply": "我来确认一下",
+          "prompt": "Who else is coming?",
+          "promptGloss": "还有谁要来？",
+          "answer": "A boy. A girl.",
+          "answerGloss": "一个男孩。一个女孩。",
+          "words": [
+            "boy",
+            "girl"
+          ],
+          "ending": "There is a baby too.",
+          "endingGloss": "还有一个宝宝。",
+          "hint": "一个男孩。一个女孩。可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "A girl. A boy.",
+              "answerGloss": "一个女孩。一个男孩。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "提醒苏菲不要漏掉被抱着来的宝宝",
+          "intro": "还有小宝宝？哎呀，我只想着走进门的脚步，差点漏了他！\nbaby 是宝宝。A baby too. 是“还有一个宝宝”。too 在这里表示“也、还”。\n谢谢你回来提醒我。再问问汉特：连宝宝一起，一共有几个孩子？",
+          "introReply": "我来确认一下",
+          "prompt": "A baby too?",
+          "promptGloss": "还有一个宝宝？",
+          "answer": "A baby too.",
+          "answerGloss": "还有一个宝宝。",
+          "words": [
+            "baby"
+          ],
+          "ending": "Please count the children.",
+          "endingGloss": "请确认孩子的人数。",
+          "hint": "还有一个宝宝。可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "A baby.",
+              "answerGloss": "一个宝宝。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "渔夫汉特"
+          },
+          "objective": "确认宝宝也是孩子，三个孩子都要算上",
+          "intro": "一个男孩，一个女孩，再加一个宝宝，一共三个孩子。\nchild 是孩子，说好几个孩子时用 children。宝宝也是孩子。Three children. 就是“三个孩子”。\n请告诉苏菲：两位大人和三个孩子，不是只有四个人。",
+          "introReply": "我来确认一下",
+          "prompt": "How many children?",
+          "promptGloss": "几个孩子？",
+          "answer": "Three children.",
+          "answerGloss": "三个孩子。",
+          "words": [
+            "child"
+          ],
+          "ending": "Three children. Thank you!",
+          "endingGloss": "三个孩子。谢谢你！",
+          "hint": "三个孩子。可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "There are three children.",
+              "answerGloss": "有三个孩子。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "确认两位大人和三位孩子共五个人",
+          "intro": "两位大人，加上三个孩子，我这次慢慢数：一、二、三、四、五。\nfive 是五，person 是一个人，说好几个人时用 people。Five people. 就是“五个人”。\n这次不看谁会走路，只看谁要来。宝宝当然也有自己的位置。请把五个人这个数告诉我吧。",
+          "introReply": "我来确认一下",
+          "prompt": "How many people?",
+          "promptGloss": "几个人？",
+          "answer": "Five people.",
+          "answerGloss": "五个人。",
+          "words": [
+            "five",
+            "person"
+          ],
+          "ending": "Five people. Nobody is missing.",
+          "endingGloss": "五个人。没有漏掉谁。",
+          "hint": "五个人。可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "There are five people.",
+              "answerGloss": "有五个人。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "渔夫汉特"
+          },
+          "objective": "告诉汉特宝宝也在邀请名单里",
+          "intro": "五个人，都算上了？那我就放心了。苏菲邀请的是这一家人，最小的宝宝也不能漏掉。\nThe baby too, please. 是“请把宝宝也算上”。baby 是宝宝，please 是请。\n你愿意帮我这样确认一次吗？名单说清楚了，真正的迎客布置可以回到你的家园慢慢做。",
+          "introReply": "我来确认一下",
+          "prompt": "And the baby?",
+          "promptGloss": "那宝宝呢？",
+          "answer": "The baby too, please.",
+          "answerGloss": "请把宝宝也算上。",
+          "words": [
+            "baby",
+            "please"
+          ],
+          "ending": "Yes! The baby too.",
+          "endingGloss": "对！宝宝也在。",
+          "hint": "请把宝宝也算上。可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "The baby, please.",
+              "answerGloss": "请把宝宝算上。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-town-04",
+      "language": "en",
+      "island": "town",
+      "sceneVersion": 1,
+      "title": "没有蛋糕的野餐",
+      "context": "苏菲担心蛋糕来不了，汉特却只想和朋友一起吃点东西。帮他们说清想吃什么、想喝什么，完成一个简单的野餐邀请。",
+      "beginnerLevel": "英语L1：先NPC对白说明需要和词义，再短句回应；每幕一到两个目标。",
+      "completion": "你帮苏菲和汉特确认了水果、饮料和邀请。没有蛋糕，也可以期待和朋友相聚。回家园可实际摆放食物、给伙伴吃喝；这里没有自动搬运或消耗食物。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "听苏菲说野餐难题，练习表达饿了",
+          "intro": "我想请汉特一起野餐，可我订的蛋糕今天来不了。我怕没有蛋糕就不像一次邀请了。\n汉特说他走了一上午，现在饿了。hungry 是饿。I am hungry. 就是“我饿了”。如果你也饿了，可以这样告诉别人。先试着说一说，再去问汉特：没有蛋糕，他还愿意来吗？",
+          "introReply": "我来帮忙",
+          "prompt": "How do you feel?",
+          "promptGloss": "你感觉怎么样？",
+          "answer": "I am hungry.",
+          "answerGloss": "我饿了。",
+          "words": [
+            "hungry"
+          ],
+          "ending": "Please ask Hunt.",
+          "endingGloss": "请去问汉特。",
+          "hint": "我饿了。可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "I'm hungry.",
+              "answerGloss": "我饿了。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "渔夫汉特"
+          },
+          "objective": "问汉特，不吃蛋糕也想吃什么",
+          "intro": "没有蛋糕也没关系，我是来见朋友的！我愿意带水果。苏菲是不是以为一定要有蛋糕才行？\napple 是苹果，banana 是香蕉。An apple and a banana. 是“一个苹果和一根香蕉”。请把这两样告诉她，让她知道我们已经有个简单的主意。",
+          "introReply": "我来帮忙",
+          "prompt": "What can we bring?",
+          "promptGloss": "我们可以带什么？",
+          "answer": "An apple and a banana.",
+          "answerGloss": "一个苹果和一根香蕉。",
+          "words": [
+            "apple",
+            "banana"
+          ],
+          "ending": "Please tell Sophie.",
+          "endingGloss": "请告诉苏菲。",
+          "hint": "一个苹果和一根香蕉。可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "A banana and an apple.",
+              "answerGloss": "一个苹果和一根香蕉。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "告诉苏菲汉特的主意，再确认她想带的水果",
+          "intro": "原来他是来见朋友，不是来等蛋糕的！我刚才只顾着担心了。那我也想带一种水果。\norange 在这里是橙子，不是说颜色。An orange, please. 是“请来一个橙子”。帮我说清楚这个选择吧。还有一件事我忘了问：汉特走了那么久，会不会口渴？",
+          "introReply": "我来帮忙",
+          "prompt": "What would you like?",
+          "promptGloss": "你想要什么？",
+          "answer": "An orange, please.",
+          "answerGloss": "请来一个橙子。",
+          "words": [
+            "orange"
+          ],
+          "ending": "Is Hunt thirsty?",
+          "endingGloss": "汉特口渴吗？",
+          "hint": "请来一个橙子。可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "An orange.",
+              "answerGloss": "请来一个橙子。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "渔夫汉特"
+          },
+          "objective": "问汉特口渴的事，学会清楚表达需要",
+          "intro": "谢谢你还记得问我！我刚才一直说水果，却忘记说自己想喝点东西。\nthirsty 是口渴。I am thirsty. 是“我口渴了”。它和hungry不一样：一个是想喝，一个是想吃。试着说清口渴，再告诉苏菲，我们还要商量饮料。",
+          "introReply": "我来帮忙",
+          "prompt": "How do you feel?",
+          "promptGloss": "你感觉怎么样？",
+          "answer": "I am thirsty.",
+          "answerGloss": "我口渴了。",
+          "words": [
+            "thirsty"
+          ],
+          "ending": "A drink, please.",
+          "endingGloss": "请来点喝的。",
+          "hint": "我口渴了。可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "I'm thirsty.",
+              "answerGloss": "我口渴了。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "和苏菲确认饮料，让邀请更周到",
+          "intro": "你提醒得对，只有水果还不够。我会问每位朋友想喝什么，不替大家做决定。汉特说这次想喝果汁。\njuice 是果汁。Juice, please. 是“请来点果汁”。先帮我确认他的选择，再请他来一起吃喝。你自己也可以喜欢不同的饮料。",
+          "introReply": "我来帮忙",
+          "prompt": "What would Hunt like?",
+          "promptGloss": "汉特想喝什么？",
+          "answer": "Juice, please.",
+          "answerGloss": "请来点果汁。",
+          "words": [
+            "juice"
+          ],
+          "ending": "Please invite Hunt.",
+          "endingGloss": "请邀请汉特。",
+          "hint": "请来点果汁。可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "Some juice, please.",
+              "answerGloss": "请来点果汁。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "渔夫汉特"
+          },
+          "objective": "邀请汉特，确认没有蛋糕也能一起野餐",
+          "intro": "苏菲还担心蛋糕吗？请告诉她，我已经很期待了。我们商量好了水果和饮料，也记得先问朋友的需要。\neat 是吃，drink 是喝。Let us eat and drink. 是“我们一起吃点、喝点吧”。用这句邀请我吧！我们今天确认的是野餐计划，食物还需要各自准备。",
+          "introReply": "我来帮忙",
+          "prompt": "Can I come?",
+          "promptGloss": "我可以来吗？",
+          "answer": "Let us eat and drink.",
+          "answerGloss": "我们一起吃点、喝点吧。",
+          "words": [
+            "eat",
+            "drink"
+          ],
+          "ending": "Yes! A picnic with friends.",
+          "endingGloss": "好呀！和朋友一起野餐。",
+          "hint": "我们一起吃点、喝点吧。可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "Let's eat and drink.",
+              "answerGloss": "我们一起吃点、喝点吧。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-hanzi-04",
+      "language": "en",
+      "island": "hanzi",
+      "sceneVersion": 1,
+      "title": "让我把故事说完",
+      "context": "阿初的故事被打断，溪禾却以为轮到自己。先问两人的感受，再帮他们约好说话与倾听的顺序。",
+      "beginnerLevel": "英语L1：先NPC解释事情和词义，再短句询问或回应。",
+      "completion": "两位朋友说清了误会，也知道先问、再说、认真听。回家园可以问伙伴的感受，陪它休息、看书或重新玩球；这些照顾动作仍需亲手完成。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "听阿初说被打断的事，问问他的感受",
+          "intro": "我刚想讲故事，溪禾就接着说她的主意。我还没说完呢！我有点生气，但不知道怎么告诉她。\nangry 是生气。Are you angry? 是“你生气了吗？”先这样问问我吧。不要替我猜，你愿意问，我就愿意说。",
+          "introReply": "我来听听",
+          "prompt": "Can you ask how I feel?",
+          "promptGloss": "你能问问我的感受吗？",
+          "answer": "Are you angry?",
+          "answerGloss": "你生气了吗？",
+          "words": [
+            "angry"
+          ],
+          "ending": "Yes. I want to finish my story.",
+          "endingGloss": "是的。我想讲完我的故事。",
+          "hint": "你生气了吗？可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "Do you feel angry?",
+              "answerGloss": "你生气了吗？"
+            }
+          ]
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "找溪禾，听听她为什么接话",
+          "intro": "我以为阿初在邀请我一起编，就把主意说出来了。现在他不想和我说话，我有点难过。我不知道他还没讲完。\nsad 是难过。Are you sad? 是“你难过吗？”先问问我吧。你能帮我们把没说清楚的事告诉石伯吗？",
+          "introReply": "我来听听",
+          "prompt": "Can you ask how I feel?",
+          "promptGloss": "你能问问我的感受吗？",
+          "answer": "Are you sad?",
+          "answerGloss": "你难过吗？",
+          "words": [
+            "sad"
+          ],
+          "ending": "Yes. I did not understand.",
+          "endingGloss": "是的。我没有弄明白。",
+          "hint": "你难过吗？可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "Do you feel sad?",
+              "answerGloss": "你难过吗？"
+            }
+          ]
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "找石伯，商量先听谁说完",
+          "intro": "阿初想讲完，溪禾以为轮到自己了。两个人的感受都值得听，不用急着让谁马上开心。我们先听阿初把话说完。\nlisten 是听。I can listen. 是“我会听”。愿意的话，先这样回应，再去问阿初是否想继续说。",
+          "introReply": "我来听听",
+          "prompt": "Can you listen?",
+          "promptGloss": "你愿意听吗？",
+          "answer": "I can listen.",
+          "answerGloss": "我会听。",
+          "words": [
+            "listen"
+          ],
+          "ending": "Please listen to Achu.",
+          "endingGloss": "请听阿初说。",
+          "hint": "我会听。可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "Let me listen.",
+              "answerGloss": "我会听。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "回阿初身边，练习请求发言",
+          "intro": "谢谢你回来问我。我想继续讲，但也想先确认别人准备好听了。\nspeak 是说话、发言。Can I speak? 是“我可以说话吗？”你也可以用这句请求一个说完的机会。我们先练习这一句。\n我故事里的小船终于找到了岸边。我刚才正要说这个结尾！",
+          "introReply": "我来听听",
+          "prompt": "How can you ask for a turn?",
+          "promptGloss": "你可以怎样请求发言？",
+          "answer": "Can I speak?",
+          "answerGloss": "我可以说话吗？",
+          "words": [
+            "speak"
+          ],
+          "ending": "Yes. I am listening.",
+          "endingGloss": "可以。我在听。",
+          "hint": "我可以说话吗？可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "May I speak?",
+              "answerGloss": "我可以说话吗？"
+            }
+          ]
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "告诉溪禾阿初想说完，练习表达歉意",
+          "intro": "原来他正要讲结尾！我没有想让他难过，但确实打断了他。我想为打断道歉，再问问他愿不愿意听我的主意。\nsay 是说出，sorry 是对不起。I can say sorry. 是“我可以说对不起”。我们练习的是替故事人物想一句话，不是说这件事是你做错了。",
+          "introReply": "我来听听",
+          "prompt": "What can I say?",
+          "promptGloss": "我可以说什么？",
+          "answer": "I can say sorry.",
+          "answerGloss": "我可以说对不起。",
+          "words": [
+            "say",
+            "sorry"
+          ],
+          "ending": "I will ask before I speak.",
+          "endingGloss": "我会先问再发言。",
+          "hint": "我可以说对不起。可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "Let me say sorry.",
+              "answerGloss": "我可以说对不起。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "回石伯身边，询问故事后的感受",
+          "intro": "他们把误会说清楚了。阿初愿意听溪禾的主意，溪禾也知道先问有没有讲完。\nhappy 是开心。Are you happy? 是“你开心吗？”可以这样关心朋友；朋友还想安静一会儿也没关系。先用这句话问问我吧。",
+          "introReply": "我来听听",
+          "prompt": "Can you ask how I feel?",
+          "promptGloss": "你能问问我的感受吗？",
+          "answer": "Are you happy?",
+          "answerGloss": "你开心吗？",
+          "words": [
+            "happy"
+          ],
+          "ending": "Yes. We listened to each other.",
+          "endingGloss": "是的。我们听了彼此的话。",
+          "hint": "你开心吗？可以先听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "natural-variant",
+              "answer": "Do you feel happy?",
+              "answerGloss": "你开心吗？"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-hanzi-05",
+      "language": "en",
+      "island": "hanzi",
+      "sceneVersion": 1,
+      "title": "旧书里的新故事",
+      "context": "阿初担心旧书不好看，溪禾想换一本新的。先听听旧书里有什么，再一起决定留下什么、创造什么。",
+      "beginnerLevel": "英语L1：先听NPC讲清事情及词义，再用短句请求或回应。",
+      "completion": "旧书留下了共同的回忆，新本子也有了用途。回家园和伙伴编一个新开头，亲手画图并写标题。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "看看阿初为什么犹豫带旧书去故事会",
+          "intro": "我想带这本书去故事会。可是封面已经旧了，大家会不会不想看？里面有我很喜欢的画，我又舍不得换掉。\nold 是旧的。An old book, please. 是“请给我看看旧书”。先这样问问我吧。",
+          "introReply": "我来听听",
+          "prompt": "Would you like to see it?",
+          "promptGloss": "想看看它吗？",
+          "answer": "An old book, please.",
+          "answerGloss": "请给我看看旧书。",
+          "words": [
+            "old"
+          ],
+          "ending": "Here it is. I like this book.",
+          "endingGloss": "给你看。我喜欢这本书。",
+          "hint": "请给我看看旧书。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "找溪禾，看看她的新本子",
+          "intro": "阿初担心旧书不好看，我这里正好有一本新本子。换成新的，是不是就好了？\nnew 是新的。A new book, please. 是“请给我看看新本子”。你可以先这样问我。",
+          "introReply": "我来听听",
+          "prompt": "Would you like to see it?",
+          "promptGloss": "想看看它吗？",
+          "answer": "A new book, please.",
+          "answerGloss": "请给我看看新本子。",
+          "words": [
+            "new"
+          ],
+          "ending": "It is new. But it has no story.",
+          "endingGloss": "它是新的。不过里面还没有故事。",
+          "hint": "请给我看看新本子。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "问石伯怎样保留旧书里的画",
+          "intro": "溪禾问我，能不能撕下旧页，换一个漂亮的新封面。可是旧页上有阿初和奶奶一起画的小船。撕掉了，画也就没了。\nbad 是不好的。A bad idea. 是“不是个好主意”。你可以不同意这个主意，不用说谁是坏孩子。",
+          "introReply": "我来听听",
+          "prompt": "What do you think?",
+          "promptGloss": "你觉得怎么样？",
+          "answer": "A bad idea.",
+          "answerGloss": "不是个好主意。",
+          "words": [
+            "bad"
+          ],
+          "ending": "Yes. Let us keep the pages.",
+          "endingGloss": "是的。我们把这些书页留下吧。",
+          "hint": "不是个好主意。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "回阿初身边，听旧书里的小船故事",
+          "intro": "你愿意听听里面的故事吗？read 是读。Let's read. 是“我们一起读吧”。先邀请我读给你听。\n我和奶奶画的小船一直找不到岸，最后跟着朋友举起的小灯回家了。这是我们一起编的结尾。",
+          "introReply": "我来听听",
+          "prompt": "Shall we read?",
+          "promptGloss": "我们一起读好吗？",
+          "answer": "Let's read.",
+          "answerGloss": "我们一起读吧。",
+          "words": [
+            "read"
+          ],
+          "ending": "A little boat. A little light. Home!",
+          "endingGloss": "一只小船，一盏小灯，到家了！",
+          "hint": "我们一起读吧。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "和溪禾商量旧书与新本子的用途",
+          "intro": "原来阿初喜欢的是他和奶奶一起编的故事，不只是一本书。我想到一个办法：旧书留下，新本子用来写我们自己的故事。两本都可以带去！\ngood 是好的。A good idea. 是“好主意”。你觉得这个办法好吗？",
+          "introReply": "我来听听",
+          "prompt": "What do you think?",
+          "promptGloss": "你觉得怎么样？",
+          "answer": "A good idea.",
+          "answerGloss": "好主意。",
+          "words": [
+            "good"
+          ],
+          "ending": "An old book and a new book!",
+          "endingGloss": "一本旧书，还有一本新本子！",
+          "hint": "好主意。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "告诉石伯愿意写自己的新故事",
+          "intro": "阿初会带旧书来，溪禾也愿意带新本子。轮到你的故事了！write 是写。I can write. 是“我可以写”。你可以先告诉我愿意试试。\n回家园找伙伴听一个小故事，再画出你的新开头，为画写个标题。纸上的画和字，要等你亲手完成才会留下。",
+          "introReply": "我来听听",
+          "prompt": "Would you like to write?",
+          "promptGloss": "你愿意写吗？",
+          "answer": "I can write.",
+          "answerGloss": "我可以写。",
+          "words": [
+            "write"
+          ],
+          "ending": "Your story can start here.",
+          "endingGloss": "你的故事可以从这里开始。",
+          "hint": "我可以写。 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-ice-02",
+      "language": "en",
+      "island": "ice",
+      "sceneVersion": 1,
+      "title": "雪会等我们",
+      "context": "虾米粒急着看雪，蒙克却停下来。问清原因，帮朋友把想休息的话说出来。",
+      "beginnerLevel": "英语L1：先NPC解释，再用短句询问或回应。",
+      "completion": "大家决定先陪蒙克休息，之后再商量看雪。回家园也可以先问伙伴的感受，再完成它请求的照顾。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30601,
+            "name": "虾米粒"
+          },
+          "objective": "问虾米粒冷不冷",
+          "intro": "我想去看雪，可风吹得我有点冷。蒙克还没准备好，我担心晚了就看不到最好看的雪了。\ncold 是冷的。Are you cold? 是“你冷吗？”先这样问我吧。",
+          "introReply": "我来听听",
+          "prompt": "Can you ask me?",
+          "promptGloss": "你能问问我吗？",
+          "answer": "Are you cold?",
+          "answerGloss": "你冷吗？",
+          "words": [
+            "cold"
+          ],
+          "ending": "Yes. But I want to see the snow.",
+          "endingGloss": "冷。不过我想去看雪。",
+          "hint": "你冷吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 30602,
+            "name": "蒙克"
+          },
+          "objective": "听蒙克提醒，不急着拿热茶",
+          "intro": "虾米粒想带这杯茶上路，我刚倒好，它现在太热了。我想先等一会儿。\nhot 是热的。Is it hot? 是“它热吗？”你可以这样确认，先不用碰杯子。",
+          "introReply": "我来听听",
+          "prompt": "Can you ask about the tea?",
+          "promptGloss": "你能问问茶热不热吗？",
+          "answer": "Is it hot?",
+          "answerGloss": "它热吗？",
+          "words": [
+            "hot"
+          ],
+          "ending": "Yes. Please wait.",
+          "endingGloss": "热。请等一会儿。",
+          "hint": "它热吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30601,
+            "name": "虾米粒"
+          },
+          "objective": "告诉虾米粒先问问蒙克的脚",
+          "intro": "我以为蒙克只是等茶，可他走了两步，又指了指脚。我刚才太着急，没有问清楚。\nfoot 是脚。Your foot? 是“你的脚吗？”可以先这样确认，再听他说明。",
+          "introReply": "我来听听",
+          "prompt": "What should we ask about?",
+          "promptGloss": "我们应该问问什么？",
+          "answer": "Your foot?",
+          "answerGloss": "你的脚吗？",
+          "words": [
+            "foot"
+          ],
+          "ending": "Let us ask him.",
+          "endingGloss": "我们去问问他吧。",
+          "hint": "你的脚吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30602,
+            "name": "蒙克"
+          },
+          "objective": "问蒙克脚疼不疼",
+          "intro": "鞋里有一颗小石子，走路时脚疼。我想停下来，不是故意让大家等。\nhurt 是疼。Does it hurt? 是“疼吗？”先问我，我会告诉你。",
+          "introReply": "我来听听",
+          "prompt": "Can you ask me?",
+          "promptGloss": "你能问问我吗？",
+          "answer": "Does it hurt?",
+          "answerGloss": "疼吗？",
+          "words": [
+            "hurt"
+          ],
+          "ending": "Yes. I want to stop.",
+          "endingGloss": "疼。我想停下来。",
+          "hint": "疼吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 30601,
+            "name": "虾米粒"
+          },
+          "objective": "和虾米粒商量先陪朋友",
+          "intro": "原来是这样。我只想着雪，却没听见蒙克说想停下来。我愿意陪他，不再催他赶路。\nhelp 是帮助。I can help. 是“我可以帮忙”。你也愿意先陪他吗？",
+          "introReply": "我来听听",
+          "prompt": "Can you help?",
+          "promptGloss": "你愿意帮忙吗？",
+          "answer": "I can help.",
+          "answerGloss": "我可以帮忙。",
+          "words": [
+            "help"
+          ],
+          "ending": "Thank you. We can wait.",
+          "endingGloss": "谢谢。我们可以等。",
+          "hint": "我可以帮忙。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 30602,
+            "name": "蒙克"
+          },
+          "objective": "回应蒙克，约好先坐一会儿",
+          "intro": "谢谢你们没有催我。这次先坐一会儿吧，等我愿意走了，我们再商量去哪儿。雪景很美，和朋友一起慢慢看也很好。\nsit 是坐。Let's sit. 是“我们坐下吧”。你可以这样回应我的邀请。",
+          "introReply": "我来听听",
+          "prompt": "Shall we sit?",
+          "promptGloss": "我们坐下好吗？",
+          "answer": "Let's sit.",
+          "answerGloss": "我们坐下吧。",
+          "words": [
+            "sit"
+          ],
+          "ending": "Yes. We have time.",
+          "endingGloss": "好。我们有时间。",
+          "hint": "我们坐下吧。 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-hanzi-06",
+      "language": "en",
+      "island": "hanzi",
+      "sceneVersion": 1,
+      "title": "可以不站上台",
+      "context": "小灯想参加故事会，却不想站起来讲。问清他的想法，帮朋友找到另一种分享办法。",
+      "beginnerLevel": "英语L1：先NPC解释事情及词义，再用短句回应。",
+      "completion": "小灯可以先听，也可以用图画分享。回家园亲手画画、给作品写标题，是否讲故事由你决定。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "认识小灯，听听他想参加什么",
+          "intro": "你也是来参加故事会的吗？我想认识你，也有一件事想请你帮忙。\nname 是名字。What is your name? 是“你叫什么名字？”你可以先这样问我。",
+          "introReply": "我来听听",
+          "prompt": "What can you ask me?",
+          "promptGloss": "你可以问我什么？",
+          "answer": "What is your name?",
+          "answerGloss": "你叫什么名字？",
+          "words": [
+            "name"
+          ],
+          "ending": "My name is Xiaodeng.",
+          "endingGloss": "我叫小灯。",
+          "hint": "你叫什么名字？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "听小灯说明不想站起来讲故事",
+          "intro": "我想听大家的故事，但不想站起来讲。阿初说每个人都要讲一句，我不知道怎么告诉他。\nno 是不。No, thank you. 是“不，谢谢”。我们替我想一句礼貌的回应吧。拒绝讲故事，也可以继续做朋友。",
+          "introReply": "我来听听",
+          "prompt": "What can I say?",
+          "promptGloss": "我可以怎么说？",
+          "answer": "No, thank you.",
+          "answerGloss": "不，谢谢。",
+          "words": [
+            "no"
+          ],
+          "ending": "I want to stay and listen.",
+          "endingGloss": "我想留下来听。",
+          "hint": "不，谢谢。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "找溪禾，商量安静参与的办法",
+          "intro": "小灯喜欢画画呀！他可以画一个小故事，放在旁边给愿意看的朋友看，不用站起来讲。\ndraw 是画。I can draw. 是“我可以画”。你也可以这样告诉朋友你想做的事。",
+          "introReply": "我来听听",
+          "prompt": "What can you do?",
+          "promptGloss": "你会做什么？",
+          "answer": "I can draw.",
+          "answerGloss": "我可以画。",
+          "words": [
+            "draw"
+          ],
+          "ending": "Yes. A story can be a picture.",
+          "endingGloss": "是呀。一个故事也可以是一幅画。",
+          "hint": "我可以画。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "把用画分享故事的主意告诉阿初",
+          "intro": "原来小灯只是想换一种参加的办法。我以为大家都喜欢站起来讲，忘了先问。那我给他的画留一个地方。\npicture 是图画。A picture, please. 是“请给我看一幅画”。下次我可以先这样问，等他愿意再看。",
+          "introReply": "我来听听",
+          "prompt": "What can I ask to see?",
+          "promptGloss": "我可以请求看什么？",
+          "answer": "A picture, please.",
+          "answerGloss": "请给我看一幅画。",
+          "words": [
+            "picture"
+          ],
+          "ending": "He can show it when he is ready.",
+          "endingGloss": "等他准备好了，就可以给我们看。",
+          "hint": "请给我看一幅画。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "告诉小灯新办法，约好再见",
+          "intro": "谢谢你帮我说清楚。我可以先听，想画的时候再画，不用马上给大家看。我还想来下一次故事会。\nagain 是再一次。Let's meet again. 是“我们再见面吧”。你愿意和我这样约定吗？",
+          "introReply": "我来听听",
+          "prompt": "Shall we meet again?",
+          "promptGloss": "我们下次再见好吗？",
+          "answer": "Let's meet again.",
+          "answerGloss": "我们再见面吧。",
+          "words": [
+            "again"
+          ],
+          "ending": "Yes. See you again!",
+          "endingGloss": "好，下次见！",
+          "hint": "我们再见面吧。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "与石伯道别，把小画展的主意带回家园",
+          "intro": "阿初愿意先问，溪禾想出了画画的办法，小灯也愿意下次再来。每个人都可以慢慢找到自己喜欢的参与方式。\ngoodbye 是再见。离开时可以说Goodbye!。回家园后，你也可以先画一张小画，再决定要不要讲它的故事。",
+          "introReply": "我来听听",
+          "prompt": "What can we say?",
+          "promptGloss": "我们可以怎么道别？",
+          "answer": "Goodbye!",
+          "answerGloss": "再见！",
+          "words": [
+            "goodbye"
+          ],
+          "ending": "Goodbye. Come back when you like.",
+          "endingGloss": "再见。想来的时候再来吧。",
+          "hint": "再见！ 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-town-05",
+      "language": "en",
+      "island": "town",
+      "sceneVersion": 1,
+      "title": "晚饭还没开始",
+      "context": "汉特担心错过苏菲的邀请。问清早饭、午饭还是晚饭，再一起商量食物和座位。",
+      "beginnerLevel": "英语L1：先NPC解释因果与词义，一轮1—2个目标。",
+      "completion": "你们说清了晚餐邀请，也商量了食物。回家园给实际晚餐桌写留言，再邀请伙伴吃饭。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "汉特"
+          },
+          "objective": "听汉特为什么担心错过邀请",
+          "intro": "苏菲留了便条，说想一起吃饭，却没写是哪顿。我早上忙着收渔网，刚刚才看到。我是不是错过早饭了？\nbreakfast 是早餐。Is it breakfast? 是“是早餐吗？”你可以先这样确认我的猜测，再帮我去问苏菲。",
+          "introReply": "我来听听",
+          "prompt": "What can we ask?",
+          "promptGloss": "我们可以怎么问？",
+          "answer": "Is it breakfast?",
+          "answerGloss": "是早餐吗？",
+          "words": [
+            "breakfast"
+          ],
+          "ending": "I do not know. Please ask Sophie.",
+          "endingGloss": "我也不知道。请问问苏菲。",
+          "hint": "是早餐吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "找苏菲，问清是不是午餐",
+          "intro": "我忘记把时间写清楚了！不是早饭。午饭我们也已经各自吃过，我想约的是今天晚上的一顿。\nlunch 是午餐。Is it lunch? 是“是午餐吗？”你可以这样问清楚，不用猜。",
+          "introReply": "我来听听",
+          "prompt": "What can you ask?",
+          "promptGloss": "你可以怎么问？",
+          "answer": "Is it lunch?",
+          "answerGloss": "是午餐吗？",
+          "words": [
+            "lunch"
+          ],
+          "ending": "No. Dinner tonight.",
+          "endingGloss": "不是。是今晚的晚餐。",
+          "hint": "是午餐吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "汉特"
+          },
+          "objective": "告诉汉特晚饭还没开始",
+          "intro": "原来是今晚！我还以为大家已经吃完了，不好意思再去问。谢谢你帮我确认。\ndinner 在这里是晚餐。Let's have dinner. 是“我们一起吃晚餐吧”。你可以把这个邀请带给我。",
+          "introReply": "我来听听",
+          "prompt": "Can you invite me?",
+          "promptGloss": "你可以邀请我吗？",
+          "answer": "Let's have dinner.",
+          "answerGloss": "我们一起吃晚餐吧。",
+          "words": [
+            "dinner"
+          ],
+          "ending": "Yes! I can come tonight.",
+          "endingGloss": "好！我今晚能来。",
+          "hint": "我们一起吃晚餐吧。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "和苏菲商量准备什么食物",
+          "intro": "汉特能来，太好了！我想准备米饭和鸡蛋，再问问他想带什么。\nrice 是米饭，egg 是鸡蛋，eggs 是不止一个鸡蛋。Rice and eggs, please. 是“请准备米饭和鸡蛋”。我们先这样确认，不用一下子记一长串食物。",
+          "introReply": "我来听听",
+          "prompt": "What shall we have?",
+          "promptGloss": "我们准备吃什么？",
+          "answer": "Rice and eggs, please.",
+          "answerGloss": "请准备米饭和鸡蛋。",
+          "words": [
+            "rice",
+            "egg"
+          ],
+          "ending": "Rice and eggs. What would Hunt like?",
+          "endingGloss": "米饭和鸡蛋。汉特想要什么呢？",
+          "hint": "请准备米饭和鸡蛋。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "汉特"
+          },
+          "objective": "问汉特想分享什么",
+          "intro": "米饭和鸡蛋听起来不错。我还想带一道鱼，大家可以选自己喜欢的。\nfish 在这里指作为食物的鱼。Some fish, please. 是“请来一些鱼”。你可以这样告诉我，你也想要一些。",
+          "introReply": "我来听听",
+          "prompt": "What would you like?",
+          "promptGloss": "你想要什么？",
+          "answer": "Some fish, please.",
+          "answerGloss": "请来一些鱼。",
+          "words": [
+            "fish"
+          ],
+          "ending": "I will bring some fish.",
+          "endingGloss": "我会带一些鱼来。",
+          "hint": "请来一些鱼。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "向苏菲提出准备盘子的请求",
+          "intro": "晚饭还没开始，我们有时间慢慢准备。给你和汉特都留一个吃饭的位置，你愿意帮我找盘子吗？\nwant 是想要，plate 是盘子。I want a plate. 是“我想要一个盘子”。可以先这样提出请求。回家园后，再亲手为伙伴选好食物、写桌牌并邀请它吃饭。",
+          "introReply": "我来听听",
+          "prompt": "What do you want?",
+          "promptGloss": "你想要什么？",
+          "answer": "I want a plate.",
+          "answerGloss": "我想要一个盘子。",
+          "words": [
+            "want",
+            "plate"
+          ],
+          "ending": "Yes. A place for you, too.",
+          "endingGloss": "好。也给你留一个位置。",
+          "hint": "我想要一个盘子。 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-town-06",
+      "language": "en",
+      "island": "town",
+      "sceneVersion": 1,
+      "title": "只有一个球，也能一起玩",
+      "context": "汉特只有一个玩具，担心朋友们没得玩。帮他和苏菲商量，发现一个球也能轮流玩。",
+      "beginnerLevel": "英语L1：NPC先说明愿望、因果和词义，每轮一个新目标。",
+      "completion": "你们商量好了一起玩球。回家园找到自己的球，写个球牌，再邀请伙伴真正开始玩。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "汉特"
+          },
+          "objective": "听汉特说出不敢参加的原因",
+          "intro": "苏菲约大家一起玩。我只有一个旧玩具，可大家都要来。我怕有人没有玩具，只能站在旁边看。你能帮我去问问她吗？\ntoy 是玩具。I have a toy. 是“我有一个玩具”。你可以先和我练习这句，再帮我把话带过去。",
+          "introReply": "我来听听",
+          "prompt": "What do you have?",
+          "promptGloss": "你有什么？",
+          "answer": "I have a toy.",
+          "answerGloss": "我有一个玩具。",
+          "words": [
+            "toy"
+          ],
+          "ending": "Let us ask Sophie.",
+          "endingGloss": "我们去问问苏菲。",
+          "hint": "我有一个玩具。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "告诉苏菲汉特能带什么",
+          "intro": "汉特担心有人没得玩？他不用给每个人准备礼物呀。他说过，家里有一个球。球可以传来传去，好几个人都能玩。\nball 是球。A ball. 是“一个球”。先告诉我他能带什么，我再和你商量。",
+          "introReply": "我来听听",
+          "prompt": "What can Hunt bring?",
+          "promptGloss": "汉特能带什么？",
+          "answer": "A ball.",
+          "answerGloss": "一个球。",
+          "words": [
+            "ball"
+          ],
+          "ending": "A ball! We can share it.",
+          "endingGloss": "一个球！我们可以一起玩。",
+          "hint": "一个球。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "汉特"
+          },
+          "objective": "帮汉特说清带球的办法",
+          "intro": "原来不用每个人带一个！那我愿意来。我有一个包，带球过去时可以用。你能帮我问苏菲，还要准备什么吗？\nbag 是包。My bag. 是“我的包”。这是我想用的东西，我们先练习怎么说。",
+          "introReply": "我来听听",
+          "prompt": "What can you use?",
+          "promptGloss": "你可以用什么？",
+          "answer": "My bag.",
+          "answerGloss": "我的包。",
+          "words": [
+            "bag"
+          ],
+          "ending": "My bag is ready. Please ask Sophie.",
+          "endingGloss": "我的包准备好了。请问问苏菲。",
+          "hint": "我的包。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "问苏菲还需要什么",
+          "intro": "带球来就好。我想准备一个盒子，休息时给球留个固定地方，下次大家就知道到哪里找。\nbox 是盒子。A box, please. 是“请给我一个盒子”。我们先这样提出准备盒子的请求。",
+          "introReply": "我来听听",
+          "prompt": "What do we need?",
+          "promptGloss": "我们需要什么？",
+          "answer": "A box, please.",
+          "answerGloss": "请给我一个盒子。",
+          "words": [
+            "box"
+          ],
+          "ending": "Yes. A box for our ball.",
+          "endingGloss": "好。给我们的球准备一个盒子。",
+          "hint": "请给我一个盒子。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "汉特"
+          },
+          "objective": "把找球变成一起做的事",
+          "intro": "有固定地方真好！我总怕把球忘在什么地方。出发前，我想先找到球。你愿意和我一起找吗？\nfind 是找到、寻找。Let us find the ball. 是“我们一起找球吧”。先邀请我；回到家园，还可以真的点出自己的球。",
+          "introReply": "我来听听",
+          "prompt": "Can you help me?",
+          "promptGloss": "你能帮我吗？",
+          "answer": "Let us find the ball.",
+          "answerGloss": "我们一起找球吧。",
+          "words": [
+            "find"
+          ],
+          "ending": "Yes. Let us look together.",
+          "endingGloss": "好。我们一起找。",
+          "hint": "我们一起找球吧。 可以听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "short-form",
+              "answer": "Let's find the ball.",
+              "answerGloss": "我们一起找球吧。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "邀请大家一起玩",
+          "intro": "汉特愿意来了？太好了！我们可以轮流传球。谁想休息，就在旁边看看，也可以再加入。一个球就能让大家一起玩。\nplay 是玩。Let us play. 是“我们一起玩吧”。你可以这样邀请我。回家园后，也试着邀请自己的伙伴吧。",
+          "introReply": "我来听听",
+          "prompt": "Can I join you?",
+          "promptGloss": "我可以加入吗？",
+          "answer": "Let us play.",
+          "answerGloss": "我们一起玩吧。",
+          "words": [
+            "play"
+          ],
+          "ending": "Yes! A game for all of us.",
+          "endingGloss": "好！这是大家一起玩的游戏。",
+          "hint": "我们一起玩吧。 可以听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "short-form",
+              "answer": "Let's play.",
+              "answerGloss": "我们一起玩吧。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-hanzi-07",
+      "language": "en",
+      "island": "hanzi",
+      "sceneVersion": 1,
+      "title": "门关着，朋友还在",
+      "context": "小灯看见关着的门，以为不能参加故事会。问问阿初和溪禾，找到门关上的真正原因。",
+      "beginnerLevel": "英语L1：一个明确目标、短句确认与请求，NPC先交代事件。",
+      "completion": "你问清了关门的原因，也帮朋友约好了回应办法。家园的“我们约好的开门信号”可练习真实开关门；“这是我的房间”可以继续布置、画图和写标题。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "听小灯说出为什么没有去故事会",
+          "intro": "阿初请我到他家听故事。我到了附近，却看见门关着，就回来了。他是不是不想让我进去？我又不敢问。\nhouse 是房子。His house? 是“他的房子吗？”你可以先和我确认，我说的是阿初的家。",
+          "introReply": "我来听听",
+          "prompt": "Where was the story?",
+          "promptGloss": "故事会原本在哪儿？",
+          "answer": "His house?",
+          "answerGloss": "他的房子吗？",
+          "words": [
+            "house"
+          ],
+          "ending": "Yes. Achu invited me.",
+          "endingGloss": "是的。阿初邀请了我。",
+          "hint": "他的房子吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "向阿初确认故事会还有没有位置",
+          "intro": "小灯没有来，我还以为他不想听了！我给大家准备了一个安静的房间，也给他留了地方。你帮我告诉他，我还在等他。\nroom 是房间。A room for us? 是“给我们的房间吗？”你可以这样确认，房间是不是给大家一起用的。",
+          "introReply": "我来听听",
+          "prompt": "I have a room for the story.",
+          "promptGloss": "我准备了一个讲故事的房间。",
+          "answer": "A room for us?",
+          "answerGloss": "给我们的房间吗？",
+          "words": [
+            "room"
+          ],
+          "ending": "Yes. Xiaodeng can come, too.",
+          "endingGloss": "是的。小灯也可以来。",
+          "hint": "给我们的房间吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "问溪禾为什么大家关上门窗",
+          "intro": "我帮阿初摆故事画时，风一直吹，画纸都卷起来了。我就请他关好门窗。小灯是不是刚好那时候来过？\nwindow 是窗户。The window? 是“窗户吗？”你可以先确认我说的是哪一处。",
+          "introReply": "我来听听",
+          "prompt": "The wind came through the window.",
+          "promptGloss": "风从窗户吹进来了。",
+          "answer": "The window?",
+          "answerGloss": "窗户吗？",
+          "words": [
+            "window"
+          ],
+          "ending": "Yes. The paper would not stay still.",
+          "endingGloss": "是的。纸一直被吹动。",
+          "hint": "窗户吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "告诉小灯关门的原因，确认他的担心",
+          "intro": "原来他们是在挡风，不是在躲着我。我看到门关着就走了，什么也没问。下次我可以先敲门，再等回应。\ndoor 是门。The door? 是“这扇门吗？”先和我确认我们说的是门，再一起想想下次怎么办。",
+          "introReply": "我来听听",
+          "prompt": "I stopped at the door.",
+          "promptGloss": "我停在了门口。",
+          "answer": "The door?",
+          "answerGloss": "这扇门吗？",
+          "words": [
+            "door"
+          ],
+          "ending": "Yes. Next time, I can ask.",
+          "endingGloss": "是的。下次我可以问一问。",
+          "hint": "这扇门吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "和溪禾商量既挡风又欢迎朋友的办法",
+          "intro": "我们不能一直开着门，不然画纸又会飞起来。朋友进来后可以关门；听到敲门声，再问是谁。关门不等于不想见朋友。\nclose 是关上。Please close the door. 是“请关上门”。如果风吹进来，你就可以这样请我帮忙。",
+          "introReply": "我来听听",
+          "prompt": "The wind is coming in.",
+          "promptGloss": "风吹进来了。",
+          "answer": "Please close the door.",
+          "answerGloss": "请关上门。",
+          "words": [
+            "close"
+          ],
+          "ending": "All right. We can still listen for our friends.",
+          "endingGloss": "好。我们仍然可以留意朋友来了没有。",
+          "hint": "请关上门。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "和阿初约好回应朋友的请求",
+          "intro": "谢谢你帮我们问清楚。我会告诉小灯：到门口先叫我，我听见了就回应。请他别只看一扇关着的门，就以为我们不欢迎他。\nopen 是打开。Please open the door. 是“请开门”。你可以先这样向我提出请求，等我回应。回家园后，也和伙伴约一个开门信号吧。",
+          "introReply": "我来听听",
+          "prompt": "You can ask me to open it.",
+          "promptGloss": "你可以请我开门。",
+          "answer": "Please open the door.",
+          "answerGloss": "请开门。",
+          "words": [
+            "open"
+          ],
+          "ending": "Of course. You are welcome here.",
+          "endingGloss": "当然。这里欢迎你。",
+          "hint": "请开门。 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-fire-02",
+      "language": "en",
+      "island": "fire",
+      "sceneVersion": 1,
+      "title": "大影子也会打哈欠",
+      "context": "火百灵被昨晚的影子吓了一跳。和安格斯一起听她说清楚，弄明白灯光与影子，再尊重她想休息的愿望。",
+      "beginnerLevel": "英语L1：每轮一个明确目标，先听NPC说明，再用简短问句或请求回应。",
+      "completion": "你听见了火百灵的担心，也问清她想休息。回家园玩“先陪我坐一会儿”：找灯、陪伙伴坐下、带它休息，并写自己的床牌。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30511,
+            "name": "火百灵"
+          },
+          "objective": "听火百灵说出昨晚害怕的事",
+          "intro": "昨天晚上，我在灯旁讲故事，一转身，看见墙上一个大影子。我马上停住了，连故事讲到哪里都忘了。你先陪我说说，好吗？\nafraid 是害怕。Are you afraid? 是“你害怕吗？”你可以先问问我的感受，不用笑我。",
+          "introReply": "我来听听",
+          "prompt": "I saw a big shadow.",
+          "promptGloss": "我看见了一个大影子。",
+          "answer": "Are you afraid?",
+          "answerGloss": "你害怕吗？",
+          "words": [
+            "afraid"
+          ],
+          "ending": "Yes. Please stay with me.",
+          "endingGloss": "是的。请陪着我。",
+          "hint": "你害怕吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 30517,
+            "name": "安格斯"
+          },
+          "objective": "向安格斯确认当时的光源",
+          "intro": "她昨晚用的是一盏灯，不是火堆。我也在场，看见她站在灯前，墙上就出现了大大的影子。我想先问清她记得什么。\nlamp 是灯。A lamp? 是“一盏灯吗？”你可以这样确认我们说的是哪件东西。",
+          "introReply": "我来听听",
+          "prompt": "There was a lamp beside her.",
+          "promptGloss": "她旁边有一盏灯。",
+          "answer": "A lamp?",
+          "answerGloss": "一盏灯吗？",
+          "words": [
+            "lamp"
+          ],
+          "ending": "Yes. The light made her shadow.",
+          "endingGloss": "是的。灯光照出了她的影子。",
+          "hint": "一盏灯吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30511,
+            "name": "火百灵"
+          },
+          "objective": "邀请火百灵一起观察，不急着下结论",
+          "intro": "安格斯说那可能是我的影子？我昨晚只顾着害怕，没有仔细看。我愿意和他一起看看，也可以请他先陪着我。\nlook 是看。Let us look. 是“我们一起看看”。你可以用这句话邀请我一起观察，而不是催我一个人过去。",
+          "introReply": "我来听听",
+          "prompt": "Will you look with me?",
+          "promptGloss": "你愿意陪我一起看吗？",
+          "answer": "Let us look.",
+          "answerGloss": "我们一起看看。",
+          "words": [
+            "look"
+          ],
+          "ending": "Yes. Together, please.",
+          "endingGloss": "好。请和我一起。",
+          "hint": "我们一起看看。 可以听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "short-form",
+              "answer": "Let's look.",
+              "answerGloss": "我们一起看看。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30517,
+            "name": "安格斯"
+          },
+          "objective": "为火百灵提出坐下说话的办法",
+          "intro": "不用急着重讲整个故事。我们可以先坐下。我会告诉她，影子为什么会跟着人移动，再听她想不想继续。\nchair 是椅子。A chair, please. 是“请给我一把椅子”。你可以这样提出准备椅子的请求。",
+          "introReply": "我来听听",
+          "prompt": "What do we need to sit on?",
+          "promptGloss": "我们需要坐在什么上面？",
+          "answer": "A chair, please.",
+          "answerGloss": "请给我一把椅子。",
+          "words": [
+            "chair"
+          ],
+          "ending": "Yes. We can sit and talk.",
+          "endingGloss": "好。我们可以坐下聊。",
+          "hint": "请给我一把椅子。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 30511,
+            "name": "火百灵"
+          },
+          "objective": "问火百灵现在是否需要休息",
+          "intro": "原来大影子不一定是大怪物。听你们说清楚，我放心一些了。但昨晚没睡好，今天总打哈欠。我想把故事留到休息以后再讲。\ntired 是累。Are you tired? 是“你累了吗？”你可以这样问，不用为了讲完故事一直撑着。",
+          "introReply": "我来听听",
+          "prompt": "I keep yawning.",
+          "promptGloss": "我一直打哈欠。",
+          "answer": "Are you tired?",
+          "answerGloss": "你累了吗？",
+          "words": [
+            "tired"
+          ],
+          "ending": "Yes. I want to rest.",
+          "endingGloss": "是的。我想休息。",
+          "hint": "你累了吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 30517,
+            "name": "安格斯"
+          },
+          "objective": "帮火百灵说出想要休息的地方",
+          "intro": "那就让她先休息，故事不会跑掉。等她精神好了，我们再听她讲。你也可以学着说出自己需要什么。\nbed 是床。A bed, please. 是“请给我一张床”。如果你需要休息，也可以这样告诉朋友。回家园后，亲手带伙伴去休息吧。",
+          "introReply": "我来听听",
+          "prompt": "Where can she rest?",
+          "promptGloss": "她可以在哪里休息？",
+          "answer": "A bed, please.",
+          "answerGloss": "请给我一张床。",
+          "words": [
+            "bed"
+          ],
+          "ending": "All right. The story can wait.",
+          "endingGloss": "好。故事可以等一等。",
+          "hint": "请给我一张床。 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-hanzi-08",
+      "language": "en",
+      "island": "hanzi",
+      "sceneVersion": 1,
+      "title": "封面不同，故事相同",
+      "context": "阿初记得红色封面，溪禾却带来蓝色的书。问清两人记得的故事，发现封面不同也能一起读。",
+      "beginnerLevel": "英语L1：每轮一个明确目标，先听NPC讲清误会，再用简短确认句回应。",
+      "completion": "你们问清了封面和故事的区别。回家园玩“两本书的颜色记号”，听线索找红色标记、读线索找蓝色标记，再为原来的书写颜色标签。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "问清阿初找的是哪本书",
+          "intro": "我想再读昨天的小船故事，可溪禾带来的书封面和我的不一样。我记得我那本是红色的。会不会拿错了？你帮我问问她好吗？\nred 是红色。A red book? 是“一本红色的书吗？”你可以先这样和我确认。",
+          "introReply": "我来听听",
+          "prompt": "I am looking for my book.",
+          "promptGloss": "我在找我的书。",
+          "answer": "A red book?",
+          "answerGloss": "一本红色的书吗？",
+          "words": [
+            "red"
+          ],
+          "ending": "Yes. My book has a red cover.",
+          "endingGloss": "是的。我的书有红色的封面。",
+          "hint": "一本红色的书吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "向溪禾确认她带来的书",
+          "intro": "我带的是自己的书，封面是蓝色。我没拿阿初那本呀！不过，我也记得小船故事：小船找不到回家的路，最后看见了一盏灯。\nblue 是蓝色。A blue book? 是“一本蓝色的书吗？”先和我确认，再去问石伯为什么两本书都会讲小船。",
+          "introReply": "我来听听",
+          "prompt": "My book has a blue cover.",
+          "promptGloss": "我的书有蓝色的封面。",
+          "answer": "A blue book?",
+          "answerGloss": "一本蓝色的书吗？",
+          "words": [
+            "blue"
+          ],
+          "ending": "Yes. It has the little boat story.",
+          "endingGloss": "是的。里面有那个小船故事。",
+          "hint": "一本蓝色的书吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "请石伯确认两人记得的故事",
+          "intro": "这两本书我都读过，里面是同一个小船故事。阿初和溪禾记得的小船，都跟着灯光找到了家。书可以印成不同的封面呀。\nsame 是相同。The same story? 是“同一个故事吗？”你可以这样问清楚，不必只凭颜色来猜。",
+          "introReply": "我来听听",
+          "prompt": "Both books tell the little boat story.",
+          "promptGloss": "两本书都讲那个小船故事。",
+          "answer": "The same story?",
+          "answerGloss": "同一个故事吗？",
+          "words": [
+            "same"
+          ],
+          "ending": "Yes. The same story in two books.",
+          "endingGloss": "是的。两本书里是同一个故事。",
+          "hint": "同一个故事吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "告诉阿初封面不同也可以一起读",
+          "intro": "原来溪禾没有拿错！我只看了封面，就以为她带了另一个故事。下次我会先问问书里讲什么。今天可以一起读，各拿各的书。\ndifferent 是不同。Different colours. 是“不同的颜色”。你可以这样说出两本书封面有什么不一样。",
+          "introReply": "我来听听",
+          "prompt": "What is different about the covers?",
+          "promptGloss": "封面有什么不同？",
+          "answer": "Different colours.",
+          "answerGloss": "不同的颜色。",
+          "words": [
+            "different"
+          ],
+          "ending": "Different colours, the same story. Let us read!",
+          "endingGloss": "颜色不同，故事相同。我们一起读吧！",
+          "hint": "不同的颜色。 可以听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "us-spelling",
+              "answer": "Different colors.",
+              "answerGloss": "不同的颜色。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-town-07",
+      "language": "en",
+      "island": "town",
+      "sceneVersion": 1,
+      "title": "三本书，不是三个故事",
+      "context": "苏菲和汉特凑了三本书，却发现有重复的故事。先数清本数，再问内容，最后决定一起编一个自己的故事。",
+      "beginnerLevel": "英语L1：one/two/three逐步引入，一幕一个明确目标，先NPC叙事再回应。",
+      "completion": "你们分清了书的本数和故事的种数，也决定一起编故事。回家园按实际物品清点；“两本书的故事角”需要两本书和一张桌子，可以数书并留下自己的数量便条。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "问清苏菲已经准备了多少书",
+          "intro": "我想和你、汉特开一个小读书会，每个人选一个故事。我这里先准备了一本小船故事书。你能帮我问问汉特愿意带什么吗？\none 是一。One book. 是“一本书”。先和我确认已经有多少，再去找汉特。",
+          "introReply": "我来听听",
+          "prompt": "How many books do I have?",
+          "promptGloss": "我有几本书？",
+          "answer": "One book.",
+          "answerGloss": "一本书。",
+          "words": [
+            "one"
+          ],
+          "ending": "One book. Please ask Hunt.",
+          "endingGloss": "一本书。请去问问汉特。",
+          "hint": "一本书。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "汉特"
+          },
+          "objective": "问汉特打算带几本书",
+          "intro": "我愿意来！我准备了两本书，一本讲小船，一本讲小兔。我还不知道苏菲已经选了什么。你先帮我把数量带给她吧。\ntwo 是二。Two books. 是“两本书”。注意不止一本时，book后面多一个s。",
+          "introReply": "我来听听",
+          "prompt": "How many books will I bring?",
+          "promptGloss": "我会带几本书？",
+          "answer": "Two books.",
+          "answerGloss": "两本书。",
+          "words": [
+            "two"
+          ],
+          "ending": "Two books. I will bring both.",
+          "endingGloss": "两本书。我都会带来。",
+          "hint": "两本书。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "和苏菲算清一共有几本",
+          "intro": "我有一本，汉特会带两本。一、二、三，一共有三本！是不是刚好能给三个人各选一个不同的故事？等一下，还是问问他书里讲什么吧。\nthree 是三。Three books. 是“三本书”。先说清本数，再去问故事内容，别把两件事混在一起。",
+          "introReply": "我来听听",
+          "prompt": "How many books altogether?",
+          "promptGloss": "一共有几本书？",
+          "answer": "Three books.",
+          "answerGloss": "三本书。",
+          "words": [
+            "three"
+          ],
+          "ending": "Three books. Are the stories different?",
+          "endingGloss": "三本书。故事各不相同吗？",
+          "hint": "三本书。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "汉特"
+          },
+          "objective": "和汉特分清数书与数故事",
+          "intro": "原来苏菲也选了小船！那三本书里，有两本讲同一个故事。书的本数没数错，不过故事不能只看本数。我们慢慢核对，不用重新买书。\ncount 是数数。I can count. 是“我会数数”。你可以先告诉我，愿意一起核对。",
+          "introReply": "我来听听",
+          "prompt": "Can you help me count?",
+          "promptGloss": "你能帮我数一数吗？",
+          "answer": "I can count.",
+          "answerGloss": "我会数数。",
+          "words": [
+            "count"
+          ],
+          "ending": "Thank you. We have three books, but two stories.",
+          "endingGloss": "谢谢。我们有三本书，但只有两个故事。",
+          "hint": "我会数数。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "告诉苏菲便条上的数字指什么",
+          "intro": "谢谢你问清楚。我想留一张便条，写“书：三本”，再另写小船和小兔的故事名。下次看见便条，就不会把书的本数当成故事的种数了。\nnumber 是数目。The number is three. 是“数目是三”。这里说的是书有几本。",
+          "introReply": "我来听听",
+          "prompt": "What is the number of books?",
+          "promptGloss": "书的数目是多少？",
+          "answer": "The number is three.",
+          "answerGloss": "数目是三。",
+          "words": [
+            "number"
+          ],
+          "ending": "Three books. I will name the stories, too.",
+          "endingGloss": "三本书。我也会写上故事名。",
+          "hint": "数目是三。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "汉特"
+          },
+          "objective": "和汉特安排一起读书的地方",
+          "intro": "两个故事也够我们一起听。第三个故事可以由我们自己编！先找一张桌子，把书放在一起，谁想先讲就先讲。\ntable 是桌子。A table, please. 是“请给我一张桌子”。你可以这样提出准备桌子的请求，回家园后再亲手挑选。",
+          "introReply": "我来听听",
+          "prompt": "What do we need for our books?",
+          "promptGloss": "我们需要什么来放书？",
+          "answer": "A table, please.",
+          "answerGloss": "请给我一张桌子。",
+          "words": [
+            "table"
+          ],
+          "ending": "Yes. And a new story from us!",
+          "endingGloss": "好。还有一个由我们自己编的新故事！",
+          "hint": "请给我一张桌子。 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-hanzi-09",
+      "language": "en",
+      "island": "hanzi",
+      "sceneVersion": 1,
+      "title": "球没有长出脚",
+      "context": "阿初的球不见了。沿着朋友们知道的线索询问桌上、桌下和椅后，再约好容易看见的收球位置。",
+      "beginnerLevel": "英语L1：每幕一个位置或询问目标，先NPC叙事再短句确认。",
+      "completion": "你把小灯找到球的消息带给了阿初，也说清了收球的主意。回家园玩“椅子后面的球”，亲手摆到后方与旁边；桌上、桌下的位置也要用真实摆放来练习。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "先问阿初要找什么、在哪里找",
+          "intro": "我想邀请大家玩球，可刚才放好的球不见了。我只记得搬椅子之前，它还在。你能帮我问问溪禾有没有看见吗？\nwhere 是哪里。Where is the ball? 是“球在哪里？”先把问题说清楚，我们就不用每个人各猜各的。",
+          "introReply": "我来听听",
+          "prompt": "Can you help me ask?",
+          "promptGloss": "你能帮我问一问吗？",
+          "answer": "Where is the ball?",
+          "answerGloss": "球在哪里？",
+          "words": [
+            "where"
+          ],
+          "ending": "Please ask Xihe. She was nearby.",
+          "endingGloss": "请问问溪禾。她刚才在附近。",
+          "hint": "球在哪里？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "问溪禾球原来在哪里",
+          "intro": "我刚才看见阿初把球放在桌面上。后来大家搬椅子，我去拿水，就没再看着它了。圆圆的球可能滚动，我们先问清原来的位置。\non 在这里是“在上面”。On the table? 是“在桌子上面吗？”你可以这样和我确认。",
+          "introReply": "我来听听",
+          "prompt": "I saw it on the table.",
+          "promptGloss": "我看见它在桌子上。",
+          "answer": "On the table?",
+          "answerGloss": "在桌子上面吗？",
+          "words": [
+            "on"
+          ],
+          "ending": "Yes. That was before I went for water.",
+          "endingGloss": "是的。那是我去拿水之前。",
+          "hint": "在桌子上面吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "问石伯有没有检查桌下",
+          "intro": "球可能滚下来了，所以我已经看过桌子下面，那里没有。小灯刚才在椅子附近，你再问问他。我们一处一处问，就不会反复找同一个地方。\nunder 是在下面。Under the table? 是“在桌子下面吗？”先确认我检查过的地方。",
+          "introReply": "我来听听",
+          "prompt": "I looked under the table.",
+          "promptGloss": "我看过桌子下面。",
+          "answer": "Under the table?",
+          "answerGloss": "在桌子下面吗？",
+          "words": [
+            "under"
+          ],
+          "ending": "It is not there. Please ask Xiaodeng.",
+          "endingGloss": "它不在那里。请问问小灯。",
+          "hint": "在桌子下面吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "听小灯说明找到球的位置",
+          "intro": "我刚才捡起地上的叶子，一转身就看见球了！它在椅子后面，椅背把它挡住，从前面不容易看见。我没有拿走它。\nbehind 是在后面。Behind the chair? 是“在椅子后面吗？”你可以这样确认，回去就能说清楚。",
+          "introReply": "我来听听",
+          "prompt": "I found it behind the chair.",
+          "promptGloss": "我发现它在椅子后面。",
+          "answer": "Behind the chair?",
+          "answerGloss": "在椅子后面吗？",
+          "words": [
+            "behind"
+          ],
+          "ending": "Yes. Please tell Achu.",
+          "endingGloss": "是的。请告诉阿初。",
+          "hint": "在椅子后面吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "和阿初约定玩完后的收球位置",
+          "intro": "原来球滚到椅子后面了，谢谢你把线索问清楚！下次玩完，我想给它选个容易看到的位置，不再放到桌子上。\nnext to 是紧挨着、在旁边。Next to the chair. 是“在椅子旁边”。你可以用这句话建议一个位置。回家园后再亲手试试。",
+          "introReply": "我来听听",
+          "prompt": "Where can we keep it?",
+          "promptGloss": "我们可以把它放在哪里？",
+          "answer": "Next to the chair.",
+          "answerGloss": "在椅子旁边。",
+          "words": [
+            "next to"
+          ],
+          "ending": "Good idea. Then we can see it.",
+          "endingGloss": "好主意。这样我们就能看见它。",
+          "hint": "在椅子旁边。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "告诉石伯新的收球办法",
+          "intro": "你们已经说清楚下次把球放哪儿了？很好。记住椅子这个参照，别人来找也容易明白。也可以先说一个大概位置，再补充更准确的位置。\nnear 是在附近。Near the chair. 是“在椅子附近”。它不像next to那样要求紧挨着。你愿意先用这句告诉我大概在哪里吗？",
+          "introReply": "我来听听",
+          "prompt": "Which place will it be near?",
+          "promptGloss": "它会在什么附近？",
+          "answer": "Near the chair.",
+          "answerGloss": "在椅子附近。",
+          "words": [
+            "near"
+          ],
+          "ending": "Near the chair, and right next to it. I understand.",
+          "endingGloss": "在椅子附近，而且就紧挨着椅子。我明白了。",
+          "hint": "在椅子附近。 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-float-02",
+      "language": "en",
+      "island": "float",
+      "sceneVersion": 1,
+      "title": "先朝同一个方向看",
+      "context": "芦笙与米拉面对面看地图，把各自的左右混在一起。先问清是谁的方向，再商量用两个参照物说明位置。",
+      "beginnerLevel": "英语L1：一幕一个明确目标，解释参照与方向，不要求长句导航。",
+      "completion": "你们问清了各自的左右，也想出了用两把椅子作参照的办法。回家园的位置游戏里，可以亲手把球摆到左、右或两把椅子之间。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 860100,
+            "name": "芦笙"
+          },
+          "objective": "问清芦笙说的是谁的左边",
+          "intro": "地图已经拿正了，可我和米拉又指了不同的方向。我们隔着图面对面站着，我说左边，她却指向另一边。你能先问清我的意思吗？\nleft 是左边。On your left? 是“在你的左边吗？”加上your，就能问清楚说的是谁。",
+          "introReply": "我来听听",
+          "prompt": "I mean the left side.",
+          "promptGloss": "我说的是左边。",
+          "answer": "On your left?",
+          "answerGloss": "在你的左边吗？",
+          "words": [
+            "left"
+          ],
+          "ending": "Yes. My left, not yours.",
+          "endingGloss": "是的。我的左边，不是你的左边。",
+          "hint": "在你的左边吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 860101,
+            "name": "米拉"
+          },
+          "objective": "向米拉确认面对面时的方向",
+          "intro": "我和芦笙面对面站。他的左边，对着的是我的右边。我们说的是各自的方向，难怪指不到一起！先站到同一边、朝同一方向看会容易些。\nright 是右边。On your right? 是“在你的右边吗？”你可以先确认我说的方向。",
+          "introReply": "我来听听",
+          "prompt": "His left is on my right.",
+          "promptGloss": "他的左边在我的右边。",
+          "answer": "On your right?",
+          "answerGloss": "在你的右边吗？",
+          "words": [
+            "right"
+          ],
+          "ending": "Yes. Let us face the same way.",
+          "endingGloss": "是的。我们朝同一个方向看吧。",
+          "hint": "在你的右边吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 860100,
+            "name": "芦笙"
+          },
+          "objective": "商量不容易混淆的位置说法",
+          "intro": "除了左和右，也可以说东西在两个参照物中间。我想回家园试试：摆两把分开的椅子，把球放在它们之间。这样不用先猜是谁的左边。\nbetween 是在两者之间。Between the chairs. 是“在两把椅子之间”。先用这句话说说准备怎样摆。",
+          "introReply": "我来听听",
+          "prompt": "Where could we put the ball?",
+          "promptGloss": "我们可以把球放在哪里？",
+          "answer": "Between the chairs.",
+          "answerGloss": "在两把椅子之间。",
+          "words": [
+            "between"
+          ],
+          "ending": "Two chairs, with the ball between them.",
+          "endingGloss": "两把椅子，球在它们之间。",
+          "hint": "在两把椅子之间。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 860101,
+            "name": "米拉"
+          },
+          "objective": "确认地点时继续说清参照",
+          "intro": "还有一个常用词there，意思是“那里”。不过只说那里，朋友不一定知道是哪儿。你可以先说There.，再补上Between the chairs.，把地方说明白。回家园摆好以后，你也试着给伙伴指出来吧。",
+          "introReply": "我来听听",
+          "prompt": "Where will the ball be?",
+          "promptGloss": "球会在哪里？",
+          "answer": "There.",
+          "answerGloss": "那里。",
+          "words": [
+            "there"
+          ],
+          "ending": "There, between the chairs. Now I understand.",
+          "endingGloss": "那里，在两把椅子之间。现在我明白了。",
+          "hint": "那里。 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-hanzi-10",
+      "language": "en",
+      "island": "hanzi",
+      "sceneVersion": 1,
+      "title": "不用跑第一",
+      "context": "小灯听说阿初准备了钟，以为动作游戏是竞速。问清活动的安排，再和朋友选择走、跑、跳或停下来站好。",
+      "beginnerLevel": "英语L1：每幕一个动作或物品目标，先解释人物愿望与误会，再说短句。",
+      "completion": "你帮小灯问清了活动，也听见每个人喜欢的参与办法。回家园可玩“走到伙伴的休息角”“终点的小小啦啦队”“小演员跳着打招呼”，用真实走动、跑动、起跳落地和站位继续练习。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "听小灯为什么担心活动要计时",
+          "intro": "阿初约我们玩动作游戏，还说准备了一个钟。我一听就紧张了，是不是要计时，看谁最快？我跑得不快，怕拖大家后腿。你能帮我问清楚吗？\nclock 是钟。A clock? 是“一个钟吗？”先确认他说的是这个东西，再问它用来做什么。",
+          "introReply": "我来听听",
+          "prompt": "Achu said he has a clock.",
+          "promptGloss": "阿初说他准备了一个钟。",
+          "answer": "A clock?",
+          "answerGloss": "一个钟吗？",
+          "words": [
+            "clock"
+          ],
+          "ending": "Yes. Is this a race?",
+          "endingGloss": "是的。这是比赛吗？",
+          "hint": "一个钟吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "问阿初是否一定要跑得快",
+          "intro": "不是比赛呀！钟是提醒我别玩太久，好给大家留出喝水和休息的时间。只要愿意，都可以来；想离开也可以告诉我。请把这句话带给小灯。\ngo 是去。Let us go. 是“我们一起去吧”。你可以这样邀请朋友，不用催他。",
+          "introReply": "我来听听",
+          "prompt": "Would you like to come?",
+          "promptGloss": "你愿意来吗？",
+          "answer": "Let us go.",
+          "answerGloss": "我们一起去吧。",
+          "words": [
+            "go"
+          ],
+          "ending": "Yes. We can go together.",
+          "endingGloss": "好。我们可以一起去。",
+          "hint": "我们一起去吧。 可以听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "short-form",
+              "answer": "Let's go.",
+              "answerGloss": "我们一起去吧。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "和小灯选择舒服的参与办法",
+          "intro": "原来不用抢第一！那我愿意参加。我想先慢慢走到游戏的地方，看看大家在玩什么，再决定自己想做哪个动作。\nwalk 是走路。Let us walk. 是“我们一起走吧”。你愿意陪我这样说吗？",
+          "introReply": "我来听听",
+          "prompt": "Can we take our time?",
+          "promptGloss": "我们可以慢慢来吗？",
+          "answer": "Let us walk.",
+          "answerGloss": "我们一起走吧。",
+          "words": [
+            "walk"
+          ],
+          "ending": "Thank you. I like walking with you.",
+          "endingGloss": "谢谢。我喜欢和你一起走。",
+          "hint": "我们一起走吧。 可以听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "short-form",
+              "answer": "Let's walk.",
+              "answerGloss": "我们一起走吧。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "听溪禾说明自己喜欢的动作",
+          "intro": "小灯喜欢慢慢走，我喜欢跑一小段。两种都可以，不用互相比较。想跑时先找空地，别朝着朋友和家具冲过去，跑完也可以停下喝水。\nrun 是跑。I can run. 是“我会跑”。你也可以用这句介绍自己会做的动作。",
+          "introReply": "我来听听",
+          "prompt": "What can you do?",
+          "promptGloss": "你会做什么？",
+          "answer": "I can run.",
+          "answerGloss": "我会跑。",
+          "words": [
+            "run"
+          ],
+          "ending": "You can run, or you can walk.",
+          "endingGloss": "你可以跑，也可以走。",
+          "hint": "我会跑。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "和阿初商量小演员的打招呼动作",
+          "intro": "我们还可以当小演员，用一个小动作打招呼。有人挥手，有人轻轻跳一下。想跳就找平坦的空地，落地站稳；不想跳也可以选别的办法。\njump 是跳。I can jump. 是“我会跳”。先说说你想演什么，回家园还可以真的试一小跳。",
+          "introReply": "我来听听",
+          "prompt": "What can your little actor do?",
+          "promptGloss": "你的小演员会做什么？",
+          "answer": "I can jump.",
+          "answerGloss": "我会跳。",
+          "words": [
+            "jump"
+          ],
+          "ending": "A little jump can say hello, too.",
+          "endingGloss": "轻轻一跳也能打招呼。",
+          "hint": "我会跳。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "给活动一个可以停下的结尾",
+          "intro": "听说你们把比赛误会说清楚了。走、跑、跳都可以，停下来也可以。我想请大家在想讲故事的位置站好，轮到谁就听谁说，不着急开始下一轮。\nstand 是站。I can stand here. 是“我可以站在这里”。你可以这样选好自己的位置。",
+          "introReply": "我来听听",
+          "prompt": "Where would you like to stand?",
+          "promptGloss": "你想站在哪里？",
+          "answer": "I can stand here.",
+          "answerGloss": "我可以站在这里。",
+          "words": [
+            "stand"
+          ],
+          "ending": "Good. Take your time.",
+          "endingGloss": "好。慢慢来。",
+          "hint": "我可以站在这里。 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-town-08",
+      "language": "en",
+      "island": "town",
+      "sceneVersion": 1,
+      "title": "小口袋里的故事",
+      "context": "苏菲想送大书，汉特却提醒朋友只有小口袋。问清大小，选合适的铅笔，再练习提出赠送和接受邀请。",
+      "beginnerLevel": "英语L1：每幕一个明确目标，先讲清人物愿望，再用简短英语确认、选择与请求。",
+      "completion": "你帮苏菲和汉特把送礼的想法商量清楚了。回家园可玩“给你一支，给我一支”，比较真实铅笔的长短并布置角落；也可玩“第一次来做客的伙伴”，和宠物练习给与拿的互动。再试着为自己的故事写一句话。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "听苏菲想给新朋友准备什么",
+          "intro": "明天有个新朋友来玩。我想送他一本大故事书，可汉特说，朋友只带了一个小口袋。我还没问清楚呢，不能只按自己的想法准备。你帮我找汉特问问好吗？\nbig 是大的。A big book? 是“一本大书吗？”先确认我说的是哪一种书。",
+          "introReply": "我来试试",
+          "prompt": "I have a big book.",
+          "promptGloss": "我有一本大书。",
+          "answer": "A big book?",
+          "answerGloss": "一本大书吗？",
+          "words": [
+            "big"
+          ],
+          "ending": "Yes. Please ask Hunt about the bag.",
+          "endingGloss": "是的。请问问汉特口袋的事。",
+          "hint": "一本大书吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "汉特"
+          },
+          "objective": "问汉特小口袋适合什么书",
+          "intro": "朋友的小口袋确实装不下大书。不过我有个主意：可以准备一本小册子，留几页空白，让朋友写自己的故事。小册子也能有好故事呀。请把这个主意告诉苏菲。\nlittle 在这里是小的。A little book, please. 是“请给我一本小书”。",
+          "introReply": "我来试试",
+          "prompt": "A big book or a little book?",
+          "promptGloss": "一本大书，还是一本小书？",
+          "answer": "A little book, please.",
+          "answerGloss": "请给我一本小书。",
+          "words": [
+            "little"
+          ],
+          "ending": "A little book can hold your story.",
+          "endingGloss": "一本小书也能装下你的故事。",
+          "hint": "请给我一本小书。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "和苏菲核对准备哪支铅笔",
+          "intro": "小册子的主意真好！我还想配一支铅笔，让朋友随时画画写字。我想到的那支很长，会不会又装不下？还是先问问汉特，免得我们再猜一次。\nlong 是长的。A long pencil? 是“一支长铅笔吗？”",
+          "introReply": "我来试试",
+          "prompt": "I have a long pencil.",
+          "promptGloss": "我有一支长铅笔。",
+          "answer": "A long pencil?",
+          "answerGloss": "一支长铅笔吗？",
+          "words": [
+            "long"
+          ],
+          "ending": "Yes. Will it fit in the bag?",
+          "endingGloss": "是的。它能放进口袋吗？",
+          "hint": "一支长铅笔吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "汉特"
+          },
+          "objective": "向汉特提出短铅笔的选择",
+          "intro": "那支长铅笔会伸出口袋。我这里还有一支用短了的铅笔，能写，也能画。我们可以选它，不用弄断长铅笔。铅笔长短不决定谁的故事好看。\nshort 是短的。A short pencil, please. 是“请给我一支短铅笔”。",
+          "introReply": "我来试试",
+          "prompt": "A long pencil or a short pencil?",
+          "promptGloss": "一支长铅笔，还是一支短铅笔？",
+          "answer": "A short pencil, please.",
+          "answerGloss": "请给我一支短铅笔。",
+          "words": [
+            "short"
+          ],
+          "ending": "Good. Please tell Sophie our idea.",
+          "endingGloss": "好。请把我们的主意告诉苏菲。",
+          "hint": "请给我一支短铅笔。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "和苏菲练习怎样提出赠送",
+          "intro": "小书和短铅笔都选好了。谢谢你们先问清楚！不过朋友也许只想和我们玩，不想带东西。我想先问他愿不愿意收下，而不是直接塞给他。你能陪我练习这句话吗？\ngive 是给。Can I give you this book? 是“我可以把这本书送给你吗？”",
+          "introReply": "我来试试",
+          "prompt": "Let us ask first.",
+          "promptGloss": "我们先问一问吧。",
+          "answer": "Can I give you this book?",
+          "answerGloss": "我可以把这本书送给你吗？",
+          "words": [
+            "give"
+          ],
+          "ending": "Yes, please. Thank you!",
+          "endingGloss": "好的，谢谢你！",
+          "hint": "我可以把这本书送给你吗？ 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "汉特"
+          },
+          "objective": "和汉特演练接受邀请并收束计划",
+          "intro": "苏菲说你们练习了怎样送礼。我们也练习一下收到邀请时怎么回应吧：先问可以拿吗，听见同意再拿。要是不想收，也能说不用了，谢谢。我们把问清楚这件事也一起准备好了。\ntake 是拿。Can I take it? 是“我可以拿它吗？”这次我们先演练对话，见到朋友再问他的想法。",
+          "introReply": "我来试试",
+          "prompt": "This little book is for you.",
+          "promptGloss": "这本小书是给你的。",
+          "answer": "Can I take it?",
+          "answerGloss": "我可以拿它吗？",
+          "words": [
+            "take"
+          ],
+          "ending": "Yes. You can make your own story.",
+          "endingGloss": "可以。你可以创作自己的故事。",
+          "hint": "我可以拿它吗？ 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-hanzi-11",
+      "language": "en",
+      "island": "hanzi",
+      "sceneVersion": 1,
+      "title": "门口的小泥脚",
+      "context": "小灯鞋上有泥，不敢参加故事会。问清需要清理什么，区别泥印与脚印画，再告诉小灯大家仍欢迎他。",
+      "beginnerLevel": "英语L1：每幕一个目标，具体位置与照顾请求；最后复习room。",
+      "completion": "你帮小灯听懂了大家的邀请，也商量了先处理泥、再读故事的办法。回家园可玩“泥脚印和泡泡”，实际照顾宠物；也可玩“这是我的房间”，把书放进自己布置的房间，画画并留下标题。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "听小灯为什么不敢参加故事会",
+          "intro": "我想去阿初的故事会，可早上踩了泥，鞋子弄脏了。我怕进去留下脚印，让大家觉得我是个坏朋友。溪禾知道早上的事，你能帮我问问她吗？",
+          "introReply": "我来听听",
+          "prompt": "My shoes are dirty.",
+          "promptGloss": "我的鞋子脏了。",
+          "answer": "My shoes are dirty.",
+          "answerGloss": "我的鞋子脏了。",
+          "words": [
+            "dirty"
+          ],
+          "ending": "Can you ask Xihe for me?",
+          "endingGloss": "你能帮我问问溪禾吗？",
+          "hint": "dirty 是脏的，shoes 是鞋子。先陪小灯说清担心的事，再去问溪禾。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "问溪禾脚印留在什么地方",
+          "intro": "小灯早上从门口经过，泥脚印留在地板上。需要处理的是泥，不是赶走小灯。我也会踩到泥呀。阿初还说他画了一张脚印画，你可以去听听他的主意。",
+          "introReply": "我来听听",
+          "prompt": "Where are the muddy marks?",
+          "promptGloss": "泥印在哪里？",
+          "answer": "On the floor.",
+          "answerGloss": "在地板上。",
+          "words": [
+            "floor"
+          ],
+          "ending": "Yes, on the floor. We can help.",
+          "endingGloss": "是的，在地板上。我们可以帮忙。",
+          "hint": "floor 是地板。用 On the floor. 确认泥印的位置；这句话还没有清理地板。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "听阿初解释脚印画和泥印的区别",
+          "intro": "我的脚印画和地板上的泥可不一样！我在纸上画了小动物的脚印，想把画挂到墙上，让朋友猜是谁来过。小灯也可以画自己的故事。石伯有个照顾泥鞋的主意，你去听听好吗？",
+          "introReply": "我来听听",
+          "prompt": "Where can we put the picture?",
+          "promptGloss": "我们可以把画放在哪里？",
+          "answer": "On the wall.",
+          "answerGloss": "在墙上。",
+          "words": [
+            "wall"
+          ],
+          "ending": "Yes. A picture can tell a story.",
+          "endingGloss": "对。一幅画也能讲故事。",
+          "hint": "wall 是墙。用 On the wall. 说出准备放画的位置；回家园可以自己布置。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "和石伯商量怎样照顾泥鞋",
+          "intro": "小灯只是鞋子沾了泥，不是变成坏朋友了。可以先在门口处理鞋上的泥，再照顾地板，慢慢来。鞋子干净些，大家坐下来读故事也更舒服。请告诉小灯，大家想帮他。",
+          "introReply": "我来听听",
+          "prompt": "What would help?",
+          "promptGloss": "怎样会好一些？",
+          "answer": "Clean shoes, please.",
+          "answerGloss": "请帮忙把鞋子弄干净。",
+          "words": [
+            "clean"
+          ],
+          "ending": "We can help with the shoes.",
+          "endingGloss": "我们可以帮忙处理鞋子。",
+          "hint": "clean 是干净的。这里提出清洁请求，还没有执行洗鞋动作。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "告诉小灯大家仍愿意邀请他",
+          "intro": "原来大家想帮我，并没有不许我来！我可以先处理泥鞋，再进房间。我还想画一张小脚印，给大家讲今天的事。你是说，我仍然可以在房间里和你们一起读书吗？",
+          "introReply": "我来听听",
+          "prompt": "Can I read with you?",
+          "promptGloss": "我可以和你们一起读书吗？",
+          "answer": "In the room?",
+          "answerGloss": "在房间里吗？",
+          "words": [
+            "in"
+          ],
+          "ending": "Yes, in the room. Together!",
+          "endingGloss": "是的，在房间里。一起读！",
+          "hint": "in 是在……里面。用 In the room? 和小灯确认一起读书的地点。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "为共同准备的故事角起个名字",
+          "intro": "小灯愿意来了！我们的安排是先照顾泥鞋和地板，再一起读书。墙上可以挂自己的画，书也可以换着读。这里不只是我的故事角，也留着你和小灯的位置。你想怎么称呼这个房间？",
+          "introReply": "我来听听",
+          "prompt": "My room, or our room?",
+          "promptGloss": "我的房间，还是我们的房间？",
+          "answer": "Our room.",
+          "answerGloss": "我们的房间。",
+          "words": [
+            "room"
+          ],
+          "ending": "Our room. There is a place for you.",
+          "endingGloss": "我们的房间。这里有你的位置。",
+          "hint": "复习 room，房间。用 Our room. 表达共同参与；回家园可以亲手布置自己的房间。 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-town-09",
+      "language": "en",
+      "island": "town",
+      "sceneVersion": 1,
+      "title": "不只有蛋糕的庆祝会",
+      "context": "苏菲以为大家都想要蛋糕。问清朋友对梨、肉和鸡肉的选择，再演练礼貌请求与感谢。",
+      "beginnerLevel": "英语L1：四个具体食物词和两种礼貌回应，每幕一个目标。",
+      "completion": "你帮苏菲把猜测变成了询问。回家园可玩“给朋友留个选择”，找梨、摆放蛋糕，再给原来的梨写标签。肉和鸡肉也有找物、摆放与标签练习，可以慢慢继续。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "听苏菲准备怎样招待朋友",
+          "intro": "我想办个小小庆祝会，已经在想蛋糕的样子了。我差点给每个人都安排一份，可汉特说有人想要别的。原来我还没问大家喜欢什么！你能帮我问问吗？",
+          "introReply": "我来试试",
+          "prompt": "Would everyone like cake?",
+          "promptGloss": "每个人都想要蛋糕吗？",
+          "answer": "Cake? Let us ask.",
+          "answerGloss": "蛋糕？我们问问吧。",
+          "words": [
+            "cake"
+          ],
+          "ending": "Yes. Please ask Hunt.",
+          "endingGloss": "好。请问问汉特。",
+          "hint": "cake 是蛋糕。先确认苏菲的想法，再去问汉特。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "汉特"
+          },
+          "objective": "听汉特为水果留出的选择",
+          "intro": "我很想参加，不过今天想选梨，不想选蛋糕。这样不会让苏菲失望吧？我还是很喜欢和她一起庆祝。请帮我告诉她，我想要什么。",
+          "introReply": "我来试试",
+          "prompt": "What would you like?",
+          "promptGloss": "你想要什么？",
+          "answer": "A pear, please.",
+          "answerGloss": "请给我一个梨。",
+          "words": [
+            "pear"
+          ],
+          "ending": "A pear for me, too. Thank you.",
+          "endingGloss": "我也要梨。谢谢。",
+          "hint": "pear 是梨。用短句练习表达自己的选择。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "和苏菲商量先问清肉的种类",
+          "intro": "汉特愿意来，我就很高兴！梨可以是一种选择。还有朋友说想吃些肉，但我还不知道他具体想要什么。我不能又自己猜了，你能去问问汉特吗？",
+          "introReply": "我来试试",
+          "prompt": "Some meat?",
+          "promptGloss": "一些肉吗？",
+          "answer": "What meat?",
+          "answerGloss": "什么肉？",
+          "words": [
+            "meat"
+          ],
+          "ending": "Good question. Please ask Hunt.",
+          "endingGloss": "问得好。请问问汉特。",
+          "hint": "meat 是肉。What meat? 用来问清具体是哪一种。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "汉特"
+          },
+          "objective": "确认朋友说的是鸡肉",
+          "intro": "朋友说的是鸡肉，不是桌边跑来一只小鸡！我们可以把意思说明白，再把鸡肉列成一种选择。不是每位朋友都要选它，想选梨也一样欢迎。",
+          "introReply": "我来试试",
+          "prompt": "What meat would your friend like?",
+          "promptGloss": "你的朋友想要什么肉？",
+          "answer": "Chicken, please.",
+          "answerGloss": "请给我一些鸡肉。",
+          "words": [
+            "chicken"
+          ],
+          "ending": "Chicken. I will tell Sophie.",
+          "endingGloss": "鸡肉。我会告诉苏菲。",
+          "hint": "chicken 在这一幕是鸡肉。回家园可用烤鸡道具继续练习这个意思。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 30081,
+            "name": "苏菲"
+          },
+          "objective": "和苏菲演练邀请朋友自己选择",
+          "intro": "现在我明白了，庆祝不是让大家吃同一种东西。我想把选择说清楚，再听朋友怎么回答。你先当客人，我来问；可以选你喜欢的，也可以说不用了。",
+          "introReply": "我来试试",
+          "prompt": "Would you like a pear?",
+          "promptGloss": "你想要一个梨吗？",
+          "answer": "Yes, please.",
+          "answerGloss": "好的，谢谢。",
+          "words": [
+            "please"
+          ],
+          "ending": "Here you are.",
+          "endingGloss": "给你。",
+          "hint": "复习 please。Yes, please. 是礼貌地接受邀请。这里只演练对话，不发放食物。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 30389,
+            "name": "汉特"
+          },
+          "objective": "感谢苏菲愿意听每个人的想法",
+          "intro": "苏菲没有因为我想要梨就失望，还认真问清了大家的想法。我想对她说谢谢。庆祝会上能选不同的东西，还能坐在一起讲故事，这样我更想去了。",
+          "introReply": "我来试试",
+          "prompt": "What can we say to Sophie?",
+          "promptGloss": "我们可以对苏菲说什么？",
+          "answer": "Thank you.",
+          "answerGloss": "谢谢你。",
+          "words": [
+            "thank you"
+          ],
+          "ending": "Thank you for listening.",
+          "endingGloss": "谢谢你愿意听。",
+          "hint": "用 Thank you. 感谢对方倾听。家园里也可以给朋友留出不同选择。 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-hanzi-12",
+      "language": "en",
+      "island": "hanzi",
+      "sceneVersion": 1,
+      "title": "不用等晴天的画",
+      "context": "小灯等晴天才肯画画。听伙伴提出颜色，尝试想象中的紫太阳和粉云，再给收到画的朋友留一片空处。",
+      "beginnerLevel": "英语L1：每幕一个颜色词或颜色提问；允许想象和不同选择。",
+      "completion": "你们商量好了各自的颜色主意，还为朋友留了一片空处。回家园可玩“留给明天的小画”或“不用上台的小画展”，亲手选择颜色、画画并保存标题。你的画可以和小灯的完全不同。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "听小灯为什么迟迟没有开始画画",
+          "intro": "我想给朋友画一张晴天，可今天一直阴着。我等了好久，还没开始。阿初说，纸上的天不必等真的太阳出来。那我先想想颜色吧，你愿意陪我问问大家吗？",
+          "introReply": "我来听听",
+          "prompt": "Let us choose a color.",
+          "promptGloss": "我们选一种颜色吧。",
+          "answer": "What color?",
+          "answerGloss": "什么颜色？",
+          "words": [
+            "color"
+          ],
+          "ending": "Let us ask Achu.",
+          "endingGloss": "我们问问阿初吧。",
+          "hint": "color 是颜色，colour 是另一种常见拼写。先问颜色，再去听阿初的想法。 可以听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "british-spelling",
+              "answer": "What colour?",
+              "answerGloss": "什么颜色？"
+            }
+          ]
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "听阿初为草地提出的颜色",
+          "intro": "小灯想画晴天呀。我想在画里留一片绿草地，朋友可以想象在上面坐着读书。溪禾每天照顾花草，也许还有好主意。你帮我问问她，好吗？",
+          "introReply": "我来听听",
+          "prompt": "What color for the grass?",
+          "promptGloss": "草地用什么颜色？",
+          "answer": "Green, please.",
+          "answerGloss": "请用绿色。",
+          "words": [
+            "green"
+          ],
+          "ending": "Green grass. A place to read.",
+          "endingGloss": "绿色的草地。一个读书的地方。",
+          "hint": "green 是绿色。grass 是草地，这一轮明确练习green。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "听溪禾怎样想象画里的太阳",
+          "intro": "有了草地，我想再画一个黄太阳，好像给大家的小画开一盏灯。不过这只是我的主意，画是小灯想送给朋友的，我们也应该听听他喜欢什么。",
+          "introReply": "我来听听",
+          "prompt": "What color for the sun?",
+          "promptGloss": "太阳用什么颜色？",
+          "answer": "Yellow, please.",
+          "answerGloss": "请用黄色。",
+          "words": [
+            "yellow"
+          ],
+          "ending": "Yellow is my idea. What does Xiaodeng think?",
+          "endingGloss": "黄色是我的想法。小灯怎么想？",
+          "hint": "yellow 是黄色。说出溪禾的建议，再去问小灯自己的想法。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "听小灯提出想象中的紫太阳",
+          "intro": "黄太阳很温暖。不过我忽然想到一个梦：梦里的太阳是紫色的，照着一座小小的书屋。我想把梦也放进画里。这样画会不会不对呀？阿初说可以再商量，我想听听他的想法。",
+          "introReply": "我来听听",
+          "prompt": "What color is the sun in my dream?",
+          "promptGloss": "我梦里的太阳是什么颜色？",
+          "answer": "Purple, please.",
+          "answerGloss": "请用紫色。",
+          "words": [
+            "purple"
+          ],
+          "ending": "A purple sun! It is our dream picture.",
+          "endingGloss": "一个紫太阳！这是我们想象中的画。",
+          "hint": "purple 是紫色。这是小灯的梦，不是说真实太阳一定是紫色。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "和阿初给想象中的天空加上云",
+          "intro": "紫太阳的梦很有趣呀！如果是一起想象的画，我还想加一朵粉色的云。我们可以先把主意说出来，再决定自己的画怎样画，不必每个人都画得一样。石伯想给这幅画留一点空处，你去问问为什么吧。",
+          "introReply": "我来听听",
+          "prompt": "What color for my cloud?",
+          "promptGloss": "我的云用什么颜色？",
+          "answer": "Pink, please.",
+          "answerGloss": "请用粉色。",
+          "words": [
+            "pink"
+          ],
+          "ending": "A pink cloud can join the purple sun.",
+          "endingGloss": "一朵粉云可以和紫太阳在一起。",
+          "hint": "pink 是粉色。cloud 是云，这一轮明确练习pink。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "听石伯为什么想留下一片白色",
+          "intro": "大家贡献了好多主意，我想保留一片白色的纸。不是忘了画，是留给收到画的朋友：他也许想加一只鸟，或者写一句话。小灯不用再等晴天了，先画自己的想法，也给朋友留个位置。",
+          "introReply": "我来听听",
+          "prompt": "What color can we leave here?",
+          "promptGloss": "这里可以留下什么颜色？",
+          "answer": "White, please.",
+          "answerGloss": "请留下白色。",
+          "words": [
+            "white"
+          ],
+          "ending": "A white space for your friend.",
+          "endingGloss": "给朋友留一片白色的空间。",
+          "hint": "white 是白色。现在商量好了画的主意；回家园可以亲手画并保存。 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-hanzi-13",
+      "language": "en",
+      "island": "hanzi",
+      "sceneVersion": 1,
+      "title": "给不同的伙伴留位置",
+      "context": "小灯担心宠物不在故事会邀请中。问清不同伙伴的愿望，也为鸭子玩具的故事留个位置。",
+      "beginnerLevel": "英语L1：每幕一个宠物或动物目标；短句介绍，明确活宠物与玩具区别。",
+      "completion": "你们商量了怎样让不同的伙伴参加。回家园可玩“和猫伙伴的一天”“和狗伙伴的一天”“小鸟的安静书角”“青蛙的慢慢玩约定”；鸭子玩具可以参加“玩具游行，谁来排队”。准备好对应伙伴或物品，再选择你想一起做的事。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "听小灯为什么担心伙伴没有位置",
+          "intro": "阿初邀请我们去故事会，可我只听到朋友的名字，没有听到宠物。我想带自己的伙伴，又怕到了门口才知道不可以。你能帮我先问问阿初吗？",
+          "introReply": "我来听听",
+          "prompt": "Can my pet come?",
+          "promptGloss": "我的宠物可以来吗？",
+          "answer": "Can my pet come?",
+          "answerGloss": "我的宠物可以来吗？",
+          "words": [
+            "pet"
+          ],
+          "ending": "Please ask Achu for me.",
+          "endingGloss": "请帮我问问阿初。",
+          "hint": "pet 是宠物。先练习询问能否带伙伴来，再去找阿初。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "问阿初怎样介绍一起参加的伙伴",
+          "intro": "当然欢迎先来问我！我们可以说清带什么伙伴，再想它需要什么。比如我的猫今天只想安静地待一会儿，不想玩球。你陪我练习介绍它，再去问问溪禾想带谁，好吗？",
+          "introReply": "我来听听",
+          "prompt": "What pet is coming with me?",
+          "promptGloss": "什么宠物和我一起来？",
+          "answer": "A cat.",
+          "answerGloss": "一只猫。",
+          "words": [
+            "cat"
+          ],
+          "ending": "A cat. It can have a quiet place.",
+          "endingGloss": "一只猫。可以给它一个安静的地方。",
+          "hint": "cat 是猫。这里是阿初的猫今天想安静，并不是每只猫都一样。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "听溪禾怎样安排想玩球的伙伴",
+          "intro": "我想带狗伙伴来。它今天很想玩球，可阿初的猫想安静。那我们可以给玩球留另一块地方，不让球滚到正在休息的朋友身边。石伯也有伙伴要来，你去听听他怎么想吧。",
+          "introReply": "我来听听",
+          "prompt": "Who wants to play ball today?",
+          "promptGloss": "今天谁想玩球？",
+          "answer": "My dog.",
+          "answerGloss": "我的狗。",
+          "words": [
+            "dog"
+          ],
+          "ending": "Your dog can play in another corner.",
+          "endingGloss": "你的狗可以在另一个角落玩。",
+          "hint": "dog 是狗。用 My dog. 介绍这位伙伴，不需要假装它已经在岛屿场景里玩球。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "听石伯为什么给小鸟留安静角落",
+          "intro": "我想带小鸟来听故事。它今天不想表演，我们也不必催它。能安静听就是参加呀。请告诉小灯：不用每位客人都做同一个动作；先说清带谁，再准备合适的位置。",
+          "introReply": "我来听听",
+          "prompt": "Who will listen to the story?",
+          "promptGloss": "谁会来听故事？",
+          "answer": "A bird.",
+          "answerGloss": "一只鸟。",
+          "words": [
+            "bird"
+          ],
+          "ending": "A bird can listen, too.",
+          "endingGloss": "小鸟也可以听。",
+          "hint": "bird 是鸟。先介绍客人，再回去把安排告诉小灯。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "听小灯补问鸭子玩具能否加入",
+          "intro": "原来可以先问，也可以有不同的玩法。我还想带一个鸭子玩具。它不会自己走，更不会真的吃东西，可我想让它当故事里的演员。这样也能参加吗？你帮我再问阿初好吗？",
+          "introReply": "我来听听",
+          "prompt": "What toy would you like to bring?",
+          "promptGloss": "你想带什么玩具？",
+          "answer": "A duck.",
+          "answerGloss": "一只鸭子。",
+          "words": [
+            "duck"
+          ],
+          "ending": "My toy duck can be in a story.",
+          "endingGloss": "我的鸭子玩具可以演故事。",
+          "hint": "duck 是鸭子；这里指鸭子造型的玩具。回家园有真实鸭子玩具可摆放，不是活鸭宠物。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "和阿初确认不同伙伴可以怎样参与",
+          "intro": "鸭子玩具当然可以演你编的故事！我刚想到青蛙伙伴今天想慢慢玩，不想一直跳。我们也先问它的想法。现在有安静听故事、玩球、编玩具故事几种主意，不必大家做同一件事。",
+          "introReply": "我来听听",
+          "prompt": "Who wants to take it slowly today?",
+          "promptGloss": "今天谁想慢慢来？",
+          "answer": "A frog.",
+          "answerGloss": "一只青蛙。",
+          "words": [
+            "frog"
+          ],
+          "ending": "A frog. We can take our time together.",
+          "endingGloss": "一只青蛙。我们可以一起慢慢来。",
+          "hint": "frog 是青蛙。家园里的青蛙伙伴有实际互动；这里先商量安排，不自动获得宠物。 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-hanzi-14",
+      "language": "en",
+      "island": "hanzi",
+      "sceneVersion": 1,
+      "title": "小舞台少了一位演员",
+      "context": "阿初记得六位故事演员，却只写下五个名字。逐个询问伙伴，找出被合并的绵羊和山羊。",
+      "beginnerLevel": "英语L1：每幕一个动物词；故事职责只是角色创意，明确区分sheep/goat。",
+      "completion": "你帮阿初找回了两个不同的名字。回家园可继续“兔子的再玩一会儿”“小鼠也有大故事”“奶牛的小小休息站”“小羊的安静约定”；马用“玩具游行，谁来排队”里的玩具，山羊用“不会自己走的小山羊”里的摆件。选自己的伙伴或道具，继续编一段故事。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "听阿初为什么觉得少了一位演员",
+          "intro": "我们在编一出给朋友送邀请的小戏。我记得有六位演员，可名单上只有五个名字。我是不是把谁漏掉了？先从开门迎客的兔子查起，再去问溪禾。",
+          "introReply": "我来听听",
+          "prompt": "Who opens the door in our story?",
+          "promptGloss": "我们的故事里谁来开门？",
+          "answer": "A rabbit.",
+          "answerGloss": "一只兔子。",
+          "words": [
+            "rabbit"
+          ],
+          "ending": "The rabbit is on my list. Who is next?",
+          "endingGloss": "兔子在我的名单上。下一位是谁？",
+          "hint": "rabbit 是兔子。小戏里的开门角色已经记下，接着去问溪禾。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "和溪禾确认念邀请的角色",
+          "intro": "阿初没有忘记兔子。接下来，是我想的小鼠角色：它站在一张小凳子上，把邀请念给大家听。小演员也可以说出大消息呀。石伯负责接着送信的角色，你去问问他。",
+          "introReply": "我来听听",
+          "prompt": "Who reads the invitation?",
+          "promptGloss": "谁来念邀请？",
+          "answer": "A mouse.",
+          "answerGloss": "一只小鼠。",
+          "words": [
+            "mouse"
+          ],
+          "ending": "The mouse has something to say.",
+          "endingGloss": "小鼠有话要说。",
+          "hint": "mouse 在这里是小鼠，不是电脑鼠标。确认这个角色后去找石伯。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 863002,
+            "name": "石伯"
+          },
+          "objective": "和石伯确认送信的角色",
+          "intro": "我想让马来送这封信。不是比谁跑得快，而是边走边确认朋友住在哪里，别把邀请送错了。送到后需要一个地方休息，小灯有这个角色的主意。",
+          "introReply": "我来听听",
+          "prompt": "Who takes the letter?",
+          "promptGloss": "谁来送信？",
+          "answer": "A horse.",
+          "answerGloss": "一匹马。",
+          "words": [
+            "horse"
+          ],
+          "ending": "The horse asks where to go.",
+          "endingGloss": "马会问清楚该去哪里。",
+          "hint": "horse 是马。这里讨论小戏，回家园可以用摇摇马玩具来演，不会自动获得活马。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 863003,
+            "name": "小灯"
+          },
+          "objective": "听小灯为休息角落安排的角色",
+          "intro": "我想让奶牛拿出一把椅子，请送信的朋友坐一会儿。它不必每次都给别人牛奶，也可以讲一个笑话。溪禾还想了一个准备围巾的角色，阿初会不会漏掉它了？",
+          "introReply": "我来听听",
+          "prompt": "Who has a place to rest?",
+          "promptGloss": "谁有一个可以休息的地方？",
+          "answer": "A cow.",
+          "answerGloss": "一头奶牛。",
+          "words": [
+            "cow"
+          ],
+          "ending": "The cow can welcome a friend.",
+          "endingGloss": "奶牛可以欢迎一位朋友。",
+          "hint": "cow 是奶牛。先确认这个角色，再问溪禾关于围巾的主意。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
+          },
+          "objective": "听清溪禾说的是哪一种羊",
+          "intro": "我说的是绵羊！它想给来访的朋友准备一条围巾。阿初把名字只写成了“羊”，我有点担心：最后来访的朋友是山羊，这可是另一个角色。请帮我把绵羊的名字说清楚。",
+          "introReply": "我来听听",
+          "prompt": "Who has the scarf in our story?",
+          "promptGloss": "我们的故事里谁准备了围巾？",
+          "answer": "A sheep.",
+          "answerGloss": "一只绵羊。",
+          "words": [
+            "sheep"
+          ],
+          "ending": "A sheep. The other guest needs a name, too.",
+          "endingGloss": "一只绵羊。另一位客人也需要自己的名字。",
+          "hint": "sheep 是绵羊。它与山羊是不同的动物；把线索告诉阿初。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 863000,
+            "name": "阿初"
+          },
+          "objective": "帮阿初找回被合并的演员名字",
+          "intro": "我明白了！不是谁不愿意来，是我把绵羊和山羊都记成同一个“羊”了。绵羊准备围巾，山羊来做客，两个角色都需要位置。谢谢你听清每个人的主意，把名字找回来了。",
+          "introReply": "我来听听",
+          "prompt": "Who is the last guest?",
+          "promptGloss": "最后一位客人是谁？",
+          "answer": "A goat.",
+          "answerGloss": "一只山羊。",
+          "words": [
+            "goat"
+          ],
+          "ending": "A sheep and a goat. Two different guests!",
+          "endingGloss": "一只绵羊和一只山羊。两位不同的客人！",
+          "hint": "goat 是山羊。家园山羊摆件有独立外观，不能用绵羊替代；可以用它继续编故事。 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-desert-02",
+      "language": "en",
+      "island": "desert",
+      "sceneVersion": 1,
+      "title": "别忘了帮忙的人",
+      "context": "青青只为六位客人数杯子。把主人和送书的朋友都算进去，再约定逐个清点的办法。",
+      "beginnerLevel": "英语L1：six/eight/ten数量表达，复习count；不用算术成绩推进任务。",
+      "completion": "你们把帮忙的人也留在了读书会里，约定逐个清点。回家园选择“和伙伴数一数”，把书、杯子或球摆在可见范围，逐个点数，再说出六、八或十。物品实际有多少，就按实际数量回答。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30702,
+            "name": "青青"
+          },
+          "objective": "听青青准备邀请多少客人",
+          "intro": "我想请六位朋友来绿洲读书，准备六个杯子。我刚想把数量记下来，尤里说还有人没算进去。难道我漏了谁的邀请？你先帮我确认现在的数量，再问问尤里好吗？",
+          "introReply": "我来听听",
+          "prompt": "How many cups for the guests?",
+          "promptGloss": "给客人准备多少个杯子？",
+          "answer": "Six cups.",
+          "answerGloss": "六个杯子。",
+          "words": [
+            "six"
+          ],
+          "ending": "Six cups. Please ask Yuri.",
+          "endingGloss": "六个杯子。请问问尤里。",
+          "hint": "six 是六。客人目前有六位，先确认这个数量。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 30705,
+            "name": "尤里"
+          },
+          "objective": "听尤里为什么说还需要两个杯子",
+          "intro": "青青没漏写客人，可她把自己和我忘了！我们也会一起读书，也需要杯子。给六位客人的杯子，再加我们两位，就是八个。请把这个提醒带给青青，不用让主人一直忙到最后。",
+          "introReply": "我来听听",
+          "prompt": "How many cups now?",
+          "promptGloss": "现在需要多少个杯子？",
+          "answer": "Eight cups.",
+          "answerGloss": "八个杯子。",
+          "words": [
+            "eight"
+          ],
+          "ending": "Eight cups, with two for us.",
+          "endingGloss": "八个杯子，其中两个是我们的。",
+          "hint": "eight 是八。不用急着心算，可以想象给每个人各放一个杯子。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30702,
+            "name": "青青"
+          },
+          "objective": "和青青把送书的朋友也算进来",
+          "intro": "对呀，我也想坐下来听故事。八个杯子里有我们两个的位置了。另外，两位送书的朋友刚答应留下来读一会儿，我们再为他们各留一个，现在需要十个。要请尤里帮忙再核对一次。",
+          "introReply": "我来听听",
+          "prompt": "How many cups for everyone?",
+          "promptGloss": "给所有人准备多少个杯子？",
+          "answer": "Ten cups.",
+          "answerGloss": "十个杯子。",
+          "words": [
+            "ten"
+          ],
+          "ending": "Ten cups. There is a place for everyone.",
+          "endingGloss": "十个杯子。每个人都有位置。",
+          "hint": "ten 是十。这次两位送书人新加入，所以数量又变了。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30705,
+            "name": "尤里"
+          },
+          "objective": "和尤里约定怎样检查最终数量",
+          "intro": "我记住了：客人、我们两位、送书的两位都算进去。接下来把杯子摆好，一个一个点数，每个只数一次，就不怕把刚加进来的人再算一遍。你愿意和我一起检查吗？",
+          "introReply": "我来听听",
+          "prompt": "How can we check?",
+          "promptGloss": "我们怎样检查？",
+          "answer": "Let us count.",
+          "answerGloss": "我们一起数一数吧。",
+          "words": [
+            "count"
+          ],
+          "ending": "One at a time. We can check together.",
+          "endingGloss": "一次一个。我们可以一起检查。",
+          "hint": "count 是数一数。回家园需要实际逐个点击物品，再说出数量；这里先约定办法。 可以听示范，再说或输入。"
+        }
+      ]
+    },
+    {
+      "id": "en-fire-03",
+      "language": "en",
+      "island": "fire",
+      "sceneVersion": 1,
+      "title": "给远方朋友留个位置",
+      "context": "朋友这次不能来，火百灵担心邀请白费了。商量先问候、记下故事，再为以后来访留一个位置。",
+      "beginnerLevel": "英语L1：三个具体物品词和三个颜色词，每幕一个目标；短回应与明确释义。",
+      "completion": "你帮火百灵想好了问候和准备故事的办法。回家园可找电话与电脑道具、亲手摆放并写标签，也可玩“火光里的故事时间”。画纸有黑、灰、棕画笔，可以画自己的暖屋，留下你想说的一句话。",
+      "steps": [
+        {
+          "id": "conversation-1",
+          "interaction": {
+            "kind": "npc",
+            "id": 30511,
+            "name": "火百灵"
+          },
+          "objective": "听火百灵为什么想借电话",
+          "intro": "我邀请了远方的朋友来听故事，可他这次来不了。我有点失望，还没问他想不想用别的办法听。安格斯有一部黑色电话，我想先借来问候他。你帮我向安格斯说清楚，好吗？",
+          "introReply": "我来听听",
+          "prompt": "What color is the phone I need?",
+          "promptGloss": "我想借的电话是什么颜色？",
+          "answer": "Black, please.",
+          "answerGloss": "请给我黑色的。",
+          "words": [
+            "black"
+          ],
+          "ending": "The black phone. Please ask Angus.",
+          "endingGloss": "那部黑色电话。请问问安格斯。",
+          "hint": "black 是黑色。phone 是电话，下一幕会继续练习；这里只帮忙传话。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-2",
+          "interaction": {
+            "kind": "npc",
+            "id": 30517,
+            "name": "安格斯"
+          },
+          "objective": "听安格斯建议先问什么",
+          "intro": "火百灵可以借我的电话。先问朋友今天过得怎样，再问他想不想听故事，不必催他赶过来。朋友住得远，也可以记挂彼此。你帮我告诉火百灵，先听听对方的想法吧。",
+          "introReply": "我来听听",
+          "prompt": "What can we use to talk?",
+          "promptGloss": "我们可以用什么交谈？",
+          "answer": "A phone.",
+          "answerGloss": "一部电话。",
+          "words": [
+            "phone"
+          ],
+          "ending": "A phone. First, we can ask.",
+          "endingGloss": "一部电话。我们可以先问问。",
+          "hint": "phone 是电话。本轮讨论联络计划，没有替玩家拨打电话。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-3",
+          "interaction": {
+            "kind": "npc",
+            "id": 30511,
+            "name": "火百灵"
+          },
+          "objective": "和火百灵选择整理故事的工具",
+          "intro": "先问他想听什么，这个主意好。我可以把故事整理成短短一段，等他愿意时再分享。安格斯还有一台灰色电脑，我想用它把故事记下来，免得讲着讲着忘了。",
+          "introReply": "我来听听",
+          "prompt": "What color computer would I like?",
+          "promptGloss": "我想用什么颜色的电脑？",
+          "answer": "Grey, please.",
+          "answerGloss": "请给我灰色的。",
+          "words": [
+            "grey"
+          ],
+          "ending": "The grey computer can help with our story.",
+          "endingGloss": "那台灰色电脑可以帮我们整理故事。",
+          "hint": "grey 是灰色，gray 是另一种常见拼写。computer 是电脑。 可以听示范，再说或输入。",
+          "alternatives": [
+            {
+              "id": "us-spelling",
+              "answer": "Gray, please.",
+              "answerGloss": "请给我灰色的。"
+            }
+          ]
+        },
+        {
+          "id": "conversation-4",
+          "interaction": {
+            "kind": "npc",
+            "id": 30517,
+            "name": "安格斯"
+          },
+          "objective": "听安格斯怎样帮忙保存故事",
+          "intro": "那台电脑可以用来记下故事。先写一句开头就好，比如“这里给你留了一个位置”。我们先准备自己的话，再问朋友什么时候方便听，不把他的时间替他安排好。",
+          "introReply": "我来听听",
+          "prompt": "What can we use to write the story?",
+          "promptGloss": "我们可以用什么写下故事？",
+          "answer": "A computer.",
+          "answerGloss": "一台电脑。",
+          "words": [
+            "computer"
+          ],
+          "ending": "A computer. One sentence can be a start.",
+          "endingGloss": "一台电脑。一句话就能开个头。",
+          "hint": "computer 是电脑。家园电脑道具支持找物、摆放和标签，不假装已经有发送故事的功能。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-5",
+          "interaction": {
+            "kind": "npc",
+            "id": 30511,
+            "name": "火百灵"
+          },
+          "objective": "听火百灵为以后来访准备的主意",
+          "intro": "朋友这次来不了，不代表以后都不能来。我想在故事里留一把棕色椅子，告诉他：什么时候方便，我们再一起坐着聊。我也可以画一张暖屋的画，让他知道我在想着他。",
+          "introReply": "我来听听",
+          "prompt": "What color chair is in my story?",
+          "promptGloss": "我的故事里的椅子是什么颜色？",
+          "answer": "Brown, please.",
+          "answerGloss": "请用棕色。",
+          "words": [
+            "brown"
+          ],
+          "ending": "A brown chair, ready for another day.",
+          "endingGloss": "一把棕色椅子，留给以后的某一天。",
+          "hint": "brown 是棕色。这里为故事选颜色；回家园可以自己画或给物品加颜色标记。 可以听示范，再说或输入。"
+        },
+        {
+          "id": "conversation-6",
+          "interaction": {
+            "kind": "npc",
+            "id": 30517,
+            "name": "安格斯"
+          },
+          "objective": "和安格斯给故事安排温暖的结尾",
+          "intro": "椅子旁边可以写上壁炉的火光。不过画里的火不会真的把远方的屋子暖起来，也不用把火寄给朋友。我们能分享的是问候和故事：你不必马上来，这里仍然惦记着你。",
+          "introReply": "我来听听",
+          "prompt": "What gives light in our warm-room story?",
+          "promptGloss": "暖屋故事里什么发着光？",
+          "answer": "A fire.",
+          "answerGloss": "一团火。",
+          "words": [
+            "fire"
+          ],
+          "ending": "A fire in the story, and a place for our friend.",
+          "endingGloss": "故事里有火光，也有朋友的位置。",
+          "hint": "fire 是火。家园可以找真实壁炉道具继续练习；不把图片或对话当成真实点火。 可以听示范，再说或输入。"
+        }
+      ]
     }
   ],
   "authorNotes": {

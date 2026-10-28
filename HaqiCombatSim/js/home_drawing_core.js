@@ -1,5 +1,5 @@
 export const HOME_DRAWING_ITEMS=['paper'];
-export const HOME_DRAWING_COLORS=['#294734','#d94b46','#387ac2','#efb735','#8b54aa'];
+export const HOME_DRAWING_COLORS=['#294734','#d94b46','#387ac2','#efb735','#8b54aa','#e879aa','#ffffff','#222222','#7d7d7d','#8b5e3c'];
 export function validHomeDrawing(value){
  if(value===undefined)return true;
  if(!value||value.version!==1||!Array.isArray(value.strokes)||value.strokes.length>32)return false;

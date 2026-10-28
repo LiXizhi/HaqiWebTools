@@ -60,7 +60,7 @@ export function renderQuestJournal(body,model,cb,ui) {
     const languageRows=model.languageTasks?.rows||[];
     let rows=[...languageRows,...c.quests.map(q=>({...q,region:'camp'}))],selectedId=model.selectedQuestId||current?.id||rows[0]?.id,page=0;
     const pageSize=20,filters={region:defaultJournalRegion(save),status:''};
-    let locate=true;
+    let locate=true,userSelected=false;
     const list=el('nav','journal-directory');list.setAttribute('aria-label',tr('全岛任务'));
     const detail=el('article','journal-detail');detail.id='journal-detail';
     function pinFooter(){
@@ -195,7 +195,7 @@ export function renderQuestJournal(body,model,cb,ui) {
         page=Math.max(0,Math.min(page,pages-1));entries.clear();list.replaceChildren();pager.replaceChildren();
         setText(counter,'{shown} / {total} 项',{shown:filtered.length,total:rows.length});
         for(const [index,q] of filtered.slice(page*pageSize,(page+1)*pageSize).entries()){
-            const b=button([el('span','journal-index',String(page*pageSize+index+1).padStart(2,'0')),el('span','journal-entry-text',el('strong','',q.title),el('small','',(q.courseId||c.catalogQuests?.byId[q.id]?.learningLanguage?'语言任务 · ':'')+label(q)))],()=>select(q),'journal-entry');
+            const b=button([el('span','journal-index',String(page*pageSize+index+1).padStart(2,'0')),el('span','journal-entry-text',el('strong','',q.title),el('small','',(q.courseId||c.catalogQuests?.byId[q.id]?.learningLanguage?'语言任务 · ':'')+label(q)))],()=>{userSelected=true;select(q);},'journal-entry');
             b.dataset.questId=q.id;b.setAttribute('aria-controls',detail.id);entries.set(q.id,b);list.append(b);
         }
         const previous=button('上一页',()=>{page--;renderList();},'secondary'),next=button('下一页',()=>{page++;renderList();},'secondary');
@@ -214,7 +214,7 @@ export function renderQuestJournal(body,model,cb,ui) {
             const data=await assets.loadQuestJournal();if(!body.isConnected)return;
             const playableIds=new Set(c.quests.map(q=>q.id));
             rows=[...languageRows,...data.quests.filter(q=>!q.obsolete).sort((a,b)=>Number(playableIds.has(b.id))-Number(playableIds.has(a.id))||a.id-b.id)];
-            locate=true;loading.hidden=true;renderList();
+            locate=!userSelected;loading.hidden=true;renderList();
         }catch(error){if(!body.isConnected)return;loading.replaceChildren(el('span','','全岛任务读取失败，已保留教学任务。'),button('重试',load,'secondary'));}
     }
     load();

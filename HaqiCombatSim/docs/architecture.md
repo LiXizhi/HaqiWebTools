@@ -45,14 +45,29 @@ flowchart LR
     Battle --> Practice[word_card_practice]
     Practice --> IO
     Tree --> Home[home_language_game]
+    Tree --> HomeRank[home_story_recommendation_core 近期岛屿词与到期复习]
+    Ready[home_story_readiness_core 当前设施与存档进度] --> HomeRank
+    ReplayReady[完成故事的只读重玩准备检查 / 不修改完成存档] --> HomeRank
+    HomeRank --> HomeMenu[原家园情境菜单 续玩与相关故事排序]
+    HomeMenu --> Home
     Authored[english-home-practice.json] --> Loader[home_authored_game 按需加载]
     Loader --> Select[home_authored_game_core 已练词或明确新词教学及真实设施筛选]
     Home --> Select
-    Select --> Intro[普通伙伴对话 / 再进入练习]
+    Select --> Intro[opening 角色台词 / 缺失时简短邀请]
+    Select --> Context[intro 玩法说明 / 练习面板可折叠提示]
+    Context --> Check
+    Select --> Preference[已学且在场的物品 / 偏好写作句型与身份快照]
+    Preference --> Check
     Intro --> Check
     Select -->|没有适用作者故事| AI[既有模型和语音适配器]
     AI --> Check[home_language_game_core 白名单与回答校验]
     Actions[home_app 已完成的真实物品与宠物动作] --> Check
+    Home --> BodyView[view_home_body_parts 角色画放大和编号点选]
+    BodyArt[home/body-parts.json 已核验美术与锚点] --> BodyView
+    BodyView --> BodyCheck[home_comprehension_core 对象和部位校验]
+    BodyView --> BodyRecall[确认看图后主动命名 目标词与原对象校验]
+    BodyRecall --> IO
+    BodyCheck --> IO
     Check --> IO
 ```
 
@@ -1814,6 +1829,224 @@ homeGameActions 的 door 模式仅列出 catalog 中 building.type=door 的双�
 
 ## 听读故事进度与证据（2026-10-26）
 
-家园作者 arc 支持 read/listen。recordComprehensionPractice 完成合法、已学词和同回执去重检查后记录独立理解证据，并调用 recordHomeStory；不走表达复习计数，不授予 basic。控制器先固定实际点选的 objectId，回执 current 再验证该实例仍为合法目标，不能以其他同名物品续接消失的对象。readiness 检查目标与不同类干扰物均存在，缺少时显示布置入口。
+家园作者 arc 支持 read/listen。recordComprehensionPractice 完成合法、已学词和同回执去重检查后记录独立理解证据，并调用 recordHomeStory；不走表达复习计数，不授予 basic。控制器先固定实际点选的 objectId，回执 current 再验证该实例仍为合法目标，不能以其他同名物品续接消失的对象。readiness 检查目标与有效干扰物均存在，缺少时显示布置入口。物品词需要不同类干扰物；颜色词由 action.colors 传入 homeComprehensionChoices，要求同类物品不同颜色，快照另存 color，点击与回执落盘时均重新核对。
+
+```mermaid
+flowchart LR
+    Author[作者 read/listen 与可选 colors] --> Choices[homeComprehensionChoices]
+    Scene[真实物品类型与颜色标记] --> Choices
+    Choices --> Snapshot[目标及干扰物身份快照]
+    Snapshot --> Click[点击与当前颜色复核]
+    Click --> Receipt[原理解回执去重与技能记录]
+```
 
 听力界面的“改为读线索”仅改变本轮 comprehensionInput=read，并标记 assisted；后续播放完成不会覆盖该选择。故事身份保留，input 为阅读，听力 evidence 不写入。家园故事进度和技能证据继续分开，语音不可用不迫使孩子卡在此步骤。
+
+
+## 家园实际走路证据（2026-10-26）
+
+```mermaid
+flowchart LR
+    Author[作者 walk 故事] --> Bind[homeWalkBinding 冻结家具身份及几何]
+    App[home_app 原寻路和碰撞后的主角位置] --> Trace[home_walking_practice_core 连续位移与到达]
+    Bind --> Trace
+    Trace --> Guard[home_language_game 已答对且本轮开始散步]
+    Guard --> Receipt[原 WordTree 回执与故事进度]
+```
+
+开始散步清除旧路线和输入；仅主角每帧前后位置进入临时轨迹。位移上限与既有 stepHomeWalk 一致，累计至少 1.5 格并在目的地外侧 1.25 格以内才可完成。重复帧不累积，跳跃或不连续轨迹重新起算。家具移动、缩放、挂载或移除使本轮失效；异步写入前继续验证原家具及主角距离。普通世界点击事件不能代替走路证据，轨迹不写入存档，不更改移动速度和碰撞。
+
+
+## 家园听读独立调度（2026-10-26）
+
+```mermaid
+flowchart LR
+    Receipt[已校验去重的理解回执] --> Skill[recordHomeComprehensionReview]
+    Skill --> Session[共享 homeReviewSession 连续性与故事轮换]
+    Skill --> Evidence[comprehension read 或 listen 的独立 review]
+    Evidence --> Select[selectAuthoredHomeGame 本技能到期与最近练习排序]
+    Session --> Select
+```
+
+home_review_core 的会话维护由表达与理解复用。理解路径在 language_practice_core 原计数和故事写入后运行，不调用表达 recordHomeReview，不增加 introduced 或 basic。排序只作用所选 read/listen 模式；普通表达原排序保留。连续故事传入唯一当前步骤，仍以故事顺序优先。无独立调度旧字段的存档正常读取，视为待复习；没有新云存储或额外模型调用。
+
+
+## 桌下空间与语言位置校验（2026-10-26）
+
+```mermaid
+flowchart LR
+    Intent[布置选择 underTable 意图] --> Placement[home_app resolvePlacement 绑定桌子]
+    Placement --> Core[canPlace 完整包含与地面碰撞]
+    Core --> Store[既有地块事务 parentId 与 underTable]
+    Store --> Render[零桌面抬升 深度先于桌子]
+    Store --> Position[homePositionCurrent 冻结参照桌 校验under]
+    Position --> Word[原WordTree回执]
+```
+
+underTable为可选布尔字段，只允许book/ball绑定桌子。顶面与桌下共享parentId以复用移动、收回、缩放及撤销关系，但桌下不占桌面slots。homeObjectSurfaceLift返回0，实时与缓存采用同一深度顺序；几何覆盖和标签仍用已有渲染与像素命中。under绑定保存桌子几何，桌子移动／缩放后本轮语言位置证据失效。homeObjectWasMoved新增父层次或under状态变化判定，同坐标上下转换为实际位移；单纯旋转仍排除。未新增独立存档、云接口或模型判定。
+
+## 2026-10-26：stand角色站位证据
+
+```mermaid
+flowchart LR
+    Frame[home_app真实逐帧before/after] --> Tick[home_language_game.walkStep]
+    Tick --> Walk[advanceHomeWalk连续移动轨迹]
+    Walk --> Stand[advanceHomeStand检查停止和附近位置]
+    Stand --> Guard[回执再次核对站定/非布置/原家具]
+    Guard --> WordTree[既有有效表达与stand复习记录]
+```
+
+stand新增纯核心home_standing_practice_core.js，复用walk移动距离与防跳变条件；不是计时等待，也不接受普通点击事件伪造站位。到达时仍在moving不能完成，随后同坐标且moving=false才成立。再次移动使stood失效。站位只在本场会话内维护；保存的是既有WordTree有效练习和故事步骤，不持久化轨迹。目的地绑定和颜色/比较等已有逻辑保持独立。模式加入故事允许列表、作者验证与本地复习调度，不修改战斗数值。
+
+## 2026-10-26：run临时移动速度与证据
+
+```mermaid
+flowchart LR
+    Story[作者run故事 原家具终点] --> Start[回应正确并开始跑步]
+    Start --> Gait[home_language_game.isRunning 临时状态]
+    Gait --> Tick[home_app 移动帧与双人主角色]
+    Tick --> Step[stepHomeWalk 跑步6格每秒 分两次碰撞检测]
+    Step --> Trace[advanceHomeRun 只认run步态连续位移]
+    Trace --> Guard[1.5格且抵达原终点 nearby]
+    Guard --> Record[WordTree run表达与故事回执]
+```
+
+普通走路仍为4格/秒；6格跑步只由已开始且有效的当前run练习开启，结束/取消/语言身份变化立即不再请求跑步步态，下一移动帧回到走路。轨迹不保存；未开启、普通走路、重复帧、传送和仅点击家具不计。双人家园仅第一主角可用练习速度，另一人及视野距离约束保留。快走每帧两次碰撞采样避免新增穿越薄障碍。walk/stand继续使用原4格上限，其会话不会开启run速度。
+
+## 2026-10-26：jump原地动画与有效练习
+
+```mermaid
+flowchart LR
+    Author[jump作者故事 原家具绑定] --> Ready[回应正确 走近并按跳一下]
+    Ready --> Begin[beginHomeJump 固定地面坐标]
+    Begin --> Tick[home_app 每帧锁定练习者原地]
+    Tick --> Core[advanceHomeJump 起跳到落地]
+    Core --> View[view_home 角色抬升 地面影子保留]
+    Core --> Guard[仍在原点 原家具有效 会话有效且已落地]
+    Guard --> Tree[WordTree jump表达及故事回执]
+```
+
+跳跃高度仅是本轮画面状态，不写云端或本地进度；实际地面坐标保持不变，不突破地形或家具碰撞。移动帧以0.05秒为上限推进0.65秒动画，关闭/切换或位置失效取消旧结果；保存前再次验证落地和原点。减少动态效果时抬升幅度缩小并保留文字反馈。跳跃中只清除练习主角的移动输入，第二位玩家沿用原输入。三幕来源与未完成教学项见[作者稿](story/drafts/english-home-jumping.md)。
+
+## 2026-10-26：原画人物介绍
+
+```mermaid
+flowchart LR
+    Author[readCharacterLabel 人物复习] --> Select[已学词 非空笔画 匹配人物标签]
+    Select --> Snapshot[原纸drawingSnapshot与characterLabel]
+    Snapshot --> Reply[正确说出或输入人物短句]
+    Reply --> Point[实际点选原作品]
+    Point --> Guard[原纸 笔画 标签仍一致]
+    Guard --> Record[WordTree本轮明确目标一次]
+```
+
+原画标签可见，沿用homeGameExposesTarget记录有帮助，不作为独立视觉识别；绘画内容由孩子设定，程序不猜人物身份。readCharacterLabel仅允许英语七个人物词、find模式、已有画作，不允许introduces。原作或标签变化使旧回执失效。新增三个人物故事第四幕复习原目标；既有四个故事保持原长度与完成身份，另加独立复习变式。
+
+## 2026-10-26：动作口令听读证据
+
+```mermaid
+flowchart LR
+    Author[listenAction 已学动作与中性故事入口] --> Hear[播放英语口令]
+    Hear --> Choice[四个中文动作意图 记录首次与重试]
+    Choice --> Move[复用真实walk run stand jump操作]
+    Move --> Guard[原目标位置与当前会话仍有效]
+    Guard --> Evidence[recordComprehensionPractice]
+    Read[显式改读文字口令] --> Choice
+    Evidence --> Separate[listen/read独立计数与复习 不加practiceCount]
+```
+
+选择正确才展示该动作的执行控件，不用内部示范句伪造玩家发言。听前选择无效；失败语音不设置heard，改读文字只记录read。身体位移/站立/落地规则与原表达玩法共用；原回答路径抽出actionControls，普通表达行为保持。首轮及回访标题均不泄露动作；可见物件标签泄露词语时记assisted。作者配置必须arcOnly且不能introduces，避免从带动作名称的普通菜单进入后冒称独立听懂。
+
+### 家园听请求找物（2026-10-26）
+
+作者核心将listenRequest绑定已学物品与requestChoices快照；准备检查要求目标与干扰物都存在。控制器依次验证自己的表达、请求播放完成或明确文字回退、真实find事件，并在保存时再次校验当前物品。播放后的旧会话结果受角色、语言、会话和回执约束；继续共用WordTree表达记录，不另造听力掌握状态。
+
+## 2026-10-26：岛屿词汇衔接家园推荐
+
+已接入原家园情境菜单：只读当前角色/目标语言的WordTree，依据故事剩余步骤中的明确目标排序。未完成故事优先于已完成故事；当前步骤可玩优先，再优先续玩、后续道具已齐、最近岛屿练过的词和到期复习目标。并列保留作者顺序，不随机、不改变任务通行或存档。标注“接着上次的故事玩”“用岛上学过的词”或“和伙伴再用一用”，准备条件仍由原readiness校验展示。
+
+近期岛屿窗口为7天产品默认值，不是记忆或掌握认证；只采用lastPractice.source为island-course且时间不在未来的记录。孩子已在其他场景再次使用该词后，转由通用复习推荐承接。只匹配剩余步骤明确目标，不匹配介绍中的顺带词，不因浏览、推荐或NPC开场增加次数。没有学习记录时保持可玩性和原作者顺序。当前实现不是课程结束自动传送或专属家园任务派发，长期不漏词与四技能准备度仍需进一步实现。
+
+### 家园场景指针命中（2026-10-26）
+
+view_home将画布坐标与绘制时的命中矩形交给纯home_pointer_core。伙伴/物件保持绘制顺序和透明像素过滤；传送点只作为未命中实体时的后备。不可见传送点DOM按钮不拦截指针，仍可键盘激活，顶部返回按钮不变。没有改动学习完成条件或宠物活动规则。
+
+```mermaid
+flowchart LR
+    Pointer[画布指针坐标] --> Hit[home_pointer_core]
+    Bounds[view_home 绘制命中区域] --> Hit
+    Hit --> Entity[伙伴或家具 原事件处理]
+    Hit -->|没有实体命中| Portal[空白传送点返回]
+```
+
+
+### 房间内部语言摆放（2026-10-26）
+
+```mermaid
+flowchart LR
+    Objects[真实地板与墙门窗] --> Room[home_room_core 矩形房间识别]
+    Room --> Position[home_position_core 结构快照与内部几何]
+    Position --> Ready[故事准备与可放置检查]
+    Move[home_app 已保存家具移动] --> Check[保存前校验实际位置及原结构]
+    Position --> Check
+    Check --> WordTree[原WordTree回执及明确目标练习]
+```
+
+房间范围复用原场景区域提示，room标志与数数文案区分，不增加学习记录。拖动中的编辑工具隐藏，放手或取消后恢复，避免DOM遮挡画布落点。仅in支持新房间结构绑定，旧位置规则和旧存档保持。
+
+### 家园伙伴交流（2026-10-26）
+
+```mermaid
+flowchart LR
+    Author[作者 talk 情境与回应译文] --> Bind[真实书本或椅子及伙伴绑定]
+    Bind --> Answer[校验本轮明确表达]
+    Answer --> Tap[点击绑定伙伴或回应按钮]
+    Tap --> Reply[普通NPC回应框]
+    Reply --> Continue[继续并重新校验身份和原物品]
+    Continue --> Tree[WordTree 原有效练习事务及故事进度]
+```
+
+home_app 的伙伴点击优先交给当前 talk 会话；其他互动继续原行为。显示回应本身不计数，关闭、角色/语言切换、原物品或伙伴消失均不能保存。talk与pet-use可在连续故事中引用同一伙伴；最终read等场景动作仍独立验证。回应是作者文本，不是模型自由对话判定，也不构成独立听力证据。
+
+### 山羊教学摆件与听读提示证据（2026-10-26）
+
+home_language_game_core仅允许单目标goat在已核验goat-figure上使用find/move/label动作；冻结animalProp物品身份，保存前拒绝删除或替换。其他动物仍按真实宠物及外观约束校验。家园目录提供正常召唤、摆放、标签和永久CDN资源；不新增宠物或喂食行为。
+
+```mermaid
+flowchart LR
+    Catalog[goat-figure 清单与CDN图] --> Object[真实家园物品]
+    Object --> Binding[animalProp冻结物品ID和类型]
+    Action[找物 移动 已保存标签] --> Check[原动作验证与物品当前身份]
+    Binding --> Check
+    Check --> Tree[WordTree 明确目标记录]
+    Labels[已有物品标签和介绍] --> Assisted[听读及动作听力有提示标记]
+    Assisted --> Evidence[独立的理解证据]
+```
+
+所有move练习提供“开始摆放”入口，沿用editMove，不改变实际位置验证。听读选择也检查已有标签/介绍是否泄露目标词；题目请求本身不作为提示，语音失败改读仍只记阅读。
+
+## 2026-10-26：家园连续故事主动重玩
+
+完成页增加“再玩一次这个故事”。打开完成页只读；用户点击后，由角色／语言作用域的 WordTree 事务调用 `replayHomeStory`，仅当当前进度等于正式步骤数时重置该家园的该故事步骤及物品／宠物绑定。保存 `replayCount` 与 `lastCompletedAt`，后续步骤继续保留这些完成证据。另一页面已开始重玩时不重置其进行中的步骤。
+
+物品、作品标签、词条、练习回执、间隔复习与其他故事均不清除。重玩不产生练习事件；每一轮仍经原始语言和实际动作校验，使用新的提交身份，旧回执继续去重。同一会话反复玩不伪造多个复习会话。物品移除、语言切换、存储失败仍走原准备／取消／重试流程，不自动创建家园物品或领取奖励。
+
+完成故事的推荐投影会检查整篇明确目标，未完成故事仍只检查剩余步骤。普通表达、阅读、听力（含听后行动）分别读取自己的到期记录，不能用表达间隔代替听读间隔。已完成组内有到期目标的故事优先，显示“可以再玩，复习……”，保留“故事已完成”状态；未自动宣称道具齐备或重置故事。未来时间的练习和无效时钟不产生到期提示。查看推荐只读，用户仍需主动点击重玩，再走实时准备条件和动作校验。
+
+## 2026-10-26：计数步骤进入连续故事
+
+`home_story_core` 允许 count 步骤，计数仍由 `home_counting_core` 冻结世界范围与完整物品集合，并由原交互控制器逐件去重点选、验证英语数量。故事记录与词语记录沿用同一事务。作者校验拒绝 count 的单件 useObjects 依赖及其他步骤对 count 的单件引用，避免把集合的代表物品误当作整个集合。`home_story_readiness_core` 复用实际数量选择器，数量或可见范围不符时返回所需数量／物品提示；不自动补足物品。
+
+## 2026-10-26：到期旧故事重新进入推荐
+
+`homeStoryReadiness` 为已完成故事附加 replay 准备结果：仅在浅拷贝的故事记录上移除该故事进度，再沿用真实物品、宠物、词条及布局的检查。原完成记录、作品和学习回执不变。推荐将准备好的到期重玩与新故事一起排序，仍先保留可继续故事、已准备的场景及近期岛屿词；不再把所有已完成故事硬性放在末尾。未到期的已完成故事在同条件下靠后。
+
+菜单显示再次开始的准备情况。点击已完成故事仍先显示结尾，只有明确选择“再玩一次这个故事”才通过原事务开始重玩；推荐和预览不能增加练习、重置完成记录或改变技能复习间隔。
+
+## 2026-10-26：家园对话的回答分支
+
+`homeGameReply` 用现有规范文本匹配从本轮主答案或 alternatives 选择 reply/replyGloss。作者校验仅允许 talk 设置分支回应，并拒绝与其他答案相同的歧义分支。`home_language_game` 在回应通过后把选择保留到本轮 session.response，展示伙伴回应时使用；新一轮清空，原回执、对象和异步身份校验不变。只改变说话内容，不隐式改变动作、目标词或故事进度路径。
+
+## 2026-10-26：区分理解任务与表达任务的提示
+
+`homeComprehensionExposesTarget` 复用英文显式提示检查，再核对目标规范词条的中文键是否出现在 opening/intro/已加载标签。控制器只在 choices/listenAction 使用该检查；一般表达沿用原检查。静态课程audit复用同一函数（不传场景标签）提供 uncuedListening/uncuedReading 候选列表及覆盖数，明确静态文本检查的范围。

@@ -1,3 +1,4 @@
+import {roomFixture} from './home_room_fixture.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -8,9 +9,19 @@ const read=p=>JSON.parse(fs.readFileSync(new URL('../'+p,import.meta.url),'utf8'
 const data=read('data/adventure/curriculum/english-home-practice.json');
 const index=buildWordIndex(parseWordLexicon(fs.readFileSync(new URL('../data/adventure/locale/word_en.txt',import.meta.url),'utf8'),'en'));
 const catalog=read('data/adventure/home/catalog.json').items;
-const objects=['chair','cup','bread-basket','bed','ball'].map((itemId,i)=>({id:'object-'+i,itemId,x:i,y:0}));
+const objects=['chair','cup','bread-basket','bed','ball','bathtub','shower','book'].map((itemId,i)=>({id:'object-'+i,itemId,x:i,y:0}));
 const actions=homeGameActions('care',objects,[{id:'pet1'}],catalog);
 const known=words=>({words:Object.fromEntries(words.map((w,i)=>[canonicalWord(index,w),{lastPractice:{at:i+1}}]))});
+
+test('room teaching uses a real room and explicit room target rather than counting supporting in',()=>{
+ const story=data.games.find(g=>g.id==='en-l1-room-book-first'),subset={...data,games:[story],arcs:[]};
+ const objects=[{id:'book',itemId:'book',x:3,y:1},...roomFixture()],pets=[{id:'friend'}];
+ const args={mode:'place',index,state:known(['book','in']),objects,pets,catalog,actions:homeGameActions('place',objects,pets,catalog),newWordBudget:1};
+ const game=selectAuthoredHomeGame(subset,args);assert.deepEqual(game.words,['room']);assert.deepEqual(game.introducedWords,['room']);assert.equal(game.position.kind,'in');
+ assert.equal(selectAuthoredHomeGame(subset,{...args,objects:objects.filter(o=>o.id==='book')}),null);
+ assert.equal(selectAuthoredHomeGame(subset,{...args,newWordBudget:0}),null);
+ const bad=structuredClone(subset);bad.games[0].position.kind='near';assert.throws(()=>validateAuthoredHomeGames(bad,index),/房间教学/);
+});
 
 test('authored home stories are executable using real catalog facilities and rotate without model calls',()=>{
     validateAuthoredHomeGames(data,index);
@@ -69,9 +80,11 @@ test('all object introductions and arrangement scenes bind to real catalog items
         for(const itemId of story.action.itemIds){
             const objects=[{id:'placed',itemId,x:0,y:0,...(story.action.colors?{color:story.action.colors[0]}:{})}];
             if(story.requiresDrawing)objects[0].drawing={version:1,strokes:[{color:'#294734',points:[[100,100],[700,500]]}]};
+            if(story.readCharacterLabel)objects[0].label=story.answer;
             if(story.comparison){objects[0].color='red';objects.push({id:'match',itemId,x:2,y:0,color:'red'},{id:'contrast',itemId,x:4,y:0,color:'blue'});}
             if(['big','small','long','short'].includes(story.comparison?.kind)){objects[1].sizeScale=2;objects[2].sizeScale=.5;}
-            if(['read','listen'].includes(story.mode))objects.push({id:'decoy',itemId:story.action.itemIds.includes('book')?'cup':'book',x:3,y:0});
+            if(['read','listen'].includes(story.mode)||story.listenRequest)objects.push(story.action.colors?{id:'decoy',itemId,color:story.action.colors[0]==='blue'?'red':'blue',x:3,y:0}:{id:'decoy',itemId:story.action.itemIds.includes('book')?'cup':'book',x:3,y:0});
+            if(story.position?.kind==='in')objects.push(...roomFixture());
             if(story.mode==='place'){objects.push({id:'anchor-a',itemId:story.position.anchorItemIds[0],x:3,y:0});if(story.position.kind==='between')objects.push({id:'anchor-b',itemId:story.position.anchorItemIds[0],x:9,y:0});}
             if(story.mode==='count')for(let n=1;n<story.count.amount;n++)objects.push({id:'placed-'+n,itemId,x:n*3,y:0});
             const actions=homeGameActions(story.mode,objects,pets,catalog);

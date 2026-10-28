@@ -1,0 +1,8 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>纸上朋友部位美术验收</title><link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css">
+<body class="haqi-app storybook-ui"><div id="root"></div><script type="module">
+import {openHomeBodyParts} from '../../js/view_home_body_parts.js';
+const diagram=await (await fetch('../../data/adventure/home/body-parts.json')).json();
+window.bodyPartsReview={chosen:[],valid:true};
+bodyPartsReview.dialog=openHomeBodyParts(document.querySelector('#root'),{diagram,assetMode:new URLSearchParams(location.search).has('cdn')?'cdn':'local',onChoose:id=>bodyPartsReview.chosen.push(id),valid:()=>bodyPartsReview.valid});
+</script></body></html>

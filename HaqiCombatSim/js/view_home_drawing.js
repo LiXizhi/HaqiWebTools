@@ -12,7 +12,7 @@ export function openHomeDrawing(parent,{el,button,obj,homeId,save}){
  canvas.onpointerup=e=>{if(active?.id===e.pointerId){active=null;canvas.releasePointerCapture(e.pointerId);}};
  canvas.onpointercancel=()=>{if(active){drawing.strokes.pop();active=null;paint();}};
  canvas.onlostpointercapture=canvas.onpointercancel;
- for(const [i,c] of HOME_DRAWING_COLORS.entries())tools.append(button(['深绿','红色','蓝色','黄色','紫色'][i],()=>{color=c;}));
+ for(const [i,c] of HOME_DRAWING_COLORS.entries())tools.append(button(['深绿','红色','蓝色','黄色','紫色','粉色','白色','黑色','灰色','棕色'][i],()=>{color=c;}));
  tools.append(button('撤回一笔',()=>{if(busy||active)return;drawing.strokes.pop();paint();}),button('清空画纸',()=>{if(busy||active)return;drawing={version:1,strokes:[]};paint();}));
  const submit=button('保存小画',async()=>{if(busy||active)return;busy=true;submit.disabled=true;try{await save(obj.id,structuredClone(drawing),homeId);dialog.destroy();}catch(e){message.textContent=e.message;busy=false;submit.disabled=false;}});
  dialog.body.append(el('p','','画你想画的东西，没有标准图案。按住画纸画线，保存后小画会留在家园；关闭窗口不会保存。'),tools,canvas,message,submit);dialog.open();paint();return dialog;

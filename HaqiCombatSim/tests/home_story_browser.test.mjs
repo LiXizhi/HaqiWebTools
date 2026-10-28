@@ -15,15 +15,15 @@ test('reading corner story resumes and completes through real finding placement 
   const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce'}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   const urlPath=url+'/tests/fixtures/home-learning-world.html?table';
   await page.goto(urlPath);await page.waitForFunction(()=>window.worldLearning?.ready);
-  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();};
+  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.locator('.rpg-dialogue .dialogue-default').click();};
   const openStory=async()=>{await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();await page.getByRole('button',{name:'我们的小小阅读角',exact:true}).click();};
   const answer=async(text)=>{await page.getByRole('textbox',{name:'输入回答'}).fill(text);await page.getByRole('button',{name:'回答',exact:true}).click();};
   const progress=async()=>Object.values((await page.evaluate(()=>worldLearning.learning())).homeStories||{})[0]?.next||0;
-  await openStory();await intro();await answer('A book.');
+  await openStory();await page.locator('.rpg-dialogue').waitFor();await page.waitForTimeout(3000);assert.ok((await page.locator('.rpg-dialogue').textContent()).includes('我们给家里留个小小阅读角'));assert.ok(!(await page.locator('.rpg-dialogue').textContent()).includes('book 就是'));await page.screenshot({path:path.join(root,`tmp/home-reading-corner-opening-${width}.png`)});await intro();await answer('A book.');
   let canvas=await page.locator('.home-canvas').boundingBox();const point=(x,y)=>({x:canvas.x+canvas.width/2+x*40+20,y:canvas.y+canvas.height/2+y*40+10});
   const tap=async(x,y)=>{const p=point(x,y);await page.mouse.click(p.x,p.y);};
   await tap(3,0);await page.getByRole('button',{name:'继续故事',exact:true}).waitFor();assert.equal(await progress(),1);
-  await page.reload();await page.waitForFunction(()=>window.worldLearning?.ready);canvas=await page.locator('.home-canvas').boundingBox();await openStory();await intro();await answer('A table.');await tap(1,1.5);
+  await page.reload();await page.waitForFunction(()=>window.worldLearning?.ready);canvas=await page.locator('.home-canvas').boundingBox();await openStory();await intro();await page.getByText('What can hold our book?',{exact:true}).waitFor();await answer('A table.');await tap(1,1.5);
   await page.getByRole('button',{name:'继续故事',exact:true}).waitFor();assert.equal(await progress(),2);await page.getByRole('button',{name:'继续故事',exact:true}).click();await intro();await answer('On the table.');await page.getByRole('button',{name:'开始摆放',exact:true}).click();
   const a=point(3,0),b=point(1,1.5);await page.mouse.move(a.x,a.y);await page.mouse.down();await page.mouse.move(b.x,b.y,{steps:12});await page.mouse.up();
   await page.getByRole('button',{name:'继续故事',exact:true}).waitFor();assert.equal(await progress(),3);assert.equal((await page.evaluate(()=>worldLearning.placedBook())).parentId,'table');
@@ -32,6 +32,19 @@ test('reading corner story resumes and completes through real finding placement 
   await page.getByRole('button',{name:'继续故事',exact:true}).click();await page.getByRole('status').filter({hasText:'这个角落是你和伙伴一起准备的'}).waitFor();
   await page.screenshot({path:path.join(root,`tmp/home-reading-corner-${width}.png`)});
   await page.reload();await page.waitForFunction(()=>window.worldLearning?.ready);await openStory();await page.getByRole('status').filter({hasText:'这个角落是你和伙伴一起准备的'}).waitFor();assert.equal(await progress(),4);
+  const completed=await page.evaluate(()=>worldLearning.learning());
+  await page.clock.setFixedTime(new Date(Date.now()+6*60*1000));
+  await page.getByRole('button',{name:'选择其他游戏',exact:true}).click();
+  const replayRow=page.locator('.home-story-choices > div').filter({has:page.getByRole('button',{name:'我们的小小阅读角',exact:true})});
+  await replayRow.getByText(/可以再玩，复习/).waitFor();assert.match(await replayRow.textContent(),/再次开始：/);
+  const titles=await page.locator('.home-story-choices > div > button').allTextContents();
+  assert.ok(titles.indexOf('我们的小小阅读角')<titles.indexOf('再玩一次，然后休息'),'due available replay precedes an unavailable new story');
+  assert.deepEqual(await page.evaluate(()=>worldLearning.learning()),completed,'menu never resets completion or grants practice');
+  await replayRow.getByRole('button').click();assert.deepEqual(await page.evaluate(()=>worldLearning.learning()),completed);
+  await page.getByRole('button',{name:'再玩一次这个故事',exact:true}).click();await intro();
+  const replayed=await page.evaluate(()=>worldLearning.learning());
+  assert.equal(Object.values(replayed.homeStories)[0].next,0);assert.equal(Object.values(replayed.homeStories)[0].replayCount,1);
+  assert.deepEqual(replayed.words,completed.words);assert.equal(await page.evaluate(()=>worldLearning.label()),'Our book.');
   assert.deepEqual(errors,[]);await context.close();
  }}finally{await browser.close();await new Promise(r=>server.close(r));}
 });

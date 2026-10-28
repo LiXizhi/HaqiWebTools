@@ -66,7 +66,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
  const showLoading=state=>loading.show(state,{assets:loadingAssets,save:getContext().save,scope,roleId:context.roleId});
  const lang=()=>wordLanguage(getContext().save?.languageLearning?.target||'en');
  const voice=providedVoice||createLearningVoice({getSettings:()=>getContext().save?.languageLearning||{}});
- const languageGame=createHomeLanguageGame({voiceFactory:practiceVoiceFactory,onChange:()=>emit(),getState:()=>({active:valid()&&!entering,homeId:home?.id,homeName:home?.name,hero,build,prepareWalk:()=>{check();clearInput();stopInput(0);build=false;selection=null;preview=null;emit();},target:getContext().save?.languageLearning?.target,settings:getContext().save?.languageLearning,objects:currentObjects().map(o=>buildingItem(o,catalog.items)?.building?.type==='door'?{...o,visibleDoorOpen:homeDoorIsOpen(o,[hero,...(duo()?[secondHero]:[])],buildingConnectionMask(o,currentObjects(),catalog.items))}:o),pets,petDefinitions:getContext().content.pets,openPetBag:()=>{check();view.openPetBag();},openBuild:()=>{check();view.openBuild();},catalog:catalog.items,countArea:homeCountingArea({camera,scale,size:view.size}),preparePractice:()=>{check();selection=null;preview=null;emit();},editMove:id=>{check();build=true;selection=currentObjects().find(o=>o.id===id);emit();},editDoor:id=>{check();build=true;selection=currentObjects().find(o=>o.id===id);emit();},editDrawing:id=>{check();build=true;selection=currentObjects().find(o=>o.id===id);emit();view.editDrawing(id);},editLabel:(id,practice)=>{check();build=true;selection=currentObjects().find(o=>o.id===id);emit();view.editLabel(id,practice);},introModel:loadingAssets?{assets:loadingAssets,save:getContext().save}:null})});
+ const languageGame=createHomeLanguageGame({voiceFactory:practiceVoiceFactory,onChange:()=>emit(),getState:()=>({active:valid()&&!entering,homeId:home?.id,homeName:home?.name,assetMode,hero,build,prepareJump:()=>{check();held[0].clear();stopInput(0);build=false;selection=null;preview=null;emit();},prepareWalk:()=>{check();clearInput();stopInput(0);build=false;selection=null;preview=null;emit();},target:getContext().save?.languageLearning?.target,settings:getContext().save?.languageLearning,objects:currentObjects().map(o=>buildingItem(o,catalog.items)?.building?.type==='door'?{...o,visibleDoorOpen:homeDoorIsOpen(o,[hero,...(duo()?[secondHero]:[])],buildingConnectionMask(o,currentObjects(),catalog.items))}:o),pets,petDefinitions:getContext().content.pets,openPetBag:()=>{check();view.openPetBag();},openBuild:()=>{check();view.openBuild();},catalog:catalog.items,countArea:homeCountingArea({camera,scale,size:view.size}),preparePractice:()=>{check();selection=null;preview=null;emit();},editMove:(id,underTable=false)=>{check();build=true;const obj=currentObjects().find(o=>o.id===id);selection=obj?{...obj,underTable}:null;emit();},editDoor:id=>{check();build=true;selection=currentObjects().find(o=>o.id===id);emit();},editDrawing:id=>{check();build=true;selection=currentObjects().find(o=>o.id===id);emit();view.editDrawing(id);},editLabel:(id,practice)=>{check();build=true;selection=currentObjects().find(o=>o.id===id);emit();view.editLabel(id,practice);},introModel:loadingAssets?{assets:loadingAssets,save:getContext().save}:null})});
  const remote=context.owner&&cloud?.owner===context.owner?createHomeCloud({store,roleId:context.roleId,catalog:catalog.items,valid,io:{read:async(path,options)=>{if(path.endsWith('/index.json')&&!options?.refresh&&directories.has(scope))return directories.get(scope);const value=await cloud.homeRead(path,options);if(path.endsWith('/index.json'))directories.set(scope,value||{version:1,entries:{}});return value;},write:async(path,value)=>{await cloud.homeWrite(path,value);if(path.endsWith('/index.json'))directories.set(scope,value);}}}):null;
 
  function at(itemId,position,extra={}){
@@ -77,7 +77,11 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
    const parent=currentObjects().filter(o=>{const b=footprint(o,catalog.items);return b.item.slots&&px>=b.x&&py>=b.y&&px<b.x+b.w&&py<b.y+b.h;}).at(-1);
    obj.parentId=parent?.id;
   }
-  if(item&&!item.building){
+  if(obj.underTable){
+   const parent=currentObjects().find(o=>o.itemId==='table'&&!o.parentId&&(()=>{const b=footprint(o,catalog.items);return px>=b.x&&py>=b.y&&px<b.x+b.w&&py<b.y+b.h;})());
+   obj.parentId=parent?.id;
+  }else if(item?.layer!=='top'&&extra.underTable)delete obj.parentId;
+  if(item&&!item.building&&!obj.underTable){
    const objects=currentObjects(),candidate={...obj,y:py+1.4},roof=showRoofs?roofAt(candidate,objects,catalog.items):null;
    const sections=roof?roofSections(objects,catalog.items):null;
    const indoors=roof&&[hero,...(duo()?[secondHero]:[])].some(h=>{const above=roofAt(h,objects,catalog.items);return above&&sections.get(above.id)===sections.get(roof.id);});
@@ -126,10 +130,11 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
     if(Math.hypot(hero.x-secondHero.x,hero.y-secondHero.y)>2&&!secondPath.length)navigate(hero,1);
     if(Math.hypot(hero.x-secondHero.x,hero.y-secondHero.y)<=2){secondPath=[];secondDestination=null;}
    }
+   if(languageGame.isJumping()){held[0].clear();stopInput(0);walkPath=[];destination=null;hero={...hero,moving:false};}
    const targets=[walkPath[0]||destination,secondPath[0]||secondDestination];
    if(duo()){
-    [hero,secondHero]=homeDuoStep([hero,secondHero],targets,dt,objects,catalog.items,home.seed,{...view.size,scale});
-   }else if(destination)hero=stepHomeWalk(hero,targets[0],dt,objects,catalog.items,home.seed);
+    [hero,secondHero]=homeDuoStep([hero,secondHero],targets,dt,objects,catalog.items,home.seed,{...view.size,scale,running:languageGame.isRunning()});
+   }else if(destination)hero=stepHomeWalk(hero,targets[0],dt,objects,catalog.items,home.seed,languageGame.isRunning()?'run':'walk');
    for(const [owner,h] of [hero,secondHero].entries()){
     if(owner&&!duo())continue;
     const route=owner?secondPath:walkPath,target=targets[owner];
@@ -138,6 +143,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
    }
    if(!duo()&&walkPath.length&&Math.hypot(hero.x-before.x,hero.y-before.y)<.0001&&dt>0)walkPath=[];
    languageGame.walkStep(before,hero,dt);
+   hero={...hero,jumpHeight:languageGame.jumpStep(dt)};
    camera=duo()?homeDuoCamera([hero,secondHero]):{x:hero.x,y:hero.y};
    emit();
    if(chunkKey(camera.x,camera.y)!==walkChunk){
@@ -181,6 +187,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
   drop,
   hover,
   rotate,
+  toggleUnder:()=>{if(build&&selection?.id&&['ball','book'].includes(selection.itemId)){selection={...selection,underTable:!selection.underTable};preview=null;status=selection.underTable?'请把物品拖进桌下空间':'请把物品拖到地面或桌面';emit();}},
   roofs:()=>{showRoofs=!showRoofs;emit();},
   saveDrawing:(id,drawing,homeId)=>{check();if(!build||home?.id!==homeId)throw Error('家园已变化，请重新选择画纸');return commit({type:'drawing',id,drawing,languageReceipt:languageGame.drawingTicket(id)});},
   saveLabel:(id,text,homeId)=>{check();if(!build||home?.id!==homeId)throw Error('家园已变化，请重新选择物品');return commit({type:'label',id,text,languageReceipt:languageGame.labelTicket(id)});},
@@ -256,7 +263,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
   const selected=hit?.kind==='object'?currentObjects().find(o=>o.id===hit.id):selection;
   if(selected?.itemId?.startsWith('template-'))return;
   if(!selected?.itemId||(!build&&(!hit||!homeObjectInteractive(selected,catalog.items))))return;
-  const obj=at(selected.itemId,position,selected);
+  const obj=at(selected.itemId,position,{...selected,...(selection?.id===selected.id?{underTable:selection.underTable}:{}),...(selected.underTable&&selection?.id===selected.id&&!selection.underTable?{parentId:undefined}:{})});
   const test=canPlace(obj,currentObjects(),catalog.items);
   const capacity=homeCapacity(home),hasRoom=capacity.used===null||capacity.used<capacity.limit||!!selected.id||!!replacementFor(obj,currentObjects(),catalog.items);
   const block=obstruction(obj,buildingItem(obj,catalog.items));
@@ -295,6 +302,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
    if(found){selection={...found,fromInventory:false};preview=null;emit();return;}
   }
   if(hit?.kind==='pet'){
+   if(languageGame.talkToPet(hit.id))return;
    wish=wish?.petId===hit.id
     ?{...wish,expanded:true,until:Date.now()+22000}
     :{petId:hit.id,...petWish(hit.id,round++,catalog.items,lang()),expanded:true,until:Date.now()+22000};
@@ -317,7 +325,7 @@ export async function openHomeSystem({root,getContext,close,cloud,assetMode='cdn
  async function drop(hit,p){
   if(hit.kind==='pet')return movePet(hit.id,p);
   const obj=currentObjects().find(o=>o.id===hit.id);
-  if(obj&&(build||homeObjectInteractive(obj,catalog.items)))return commit({type:'move',id:obj.id,position:resolvePlacement(obj.itemId,p,obj)});
+  if(obj&&(build||homeObjectInteractive(obj,catalog.items)))return commit({type:'move',id:obj.id,position:resolvePlacement(obj.itemId,p,{...obj,...(selection?.id===obj.id?{underTable:selection.underTable}:{}),...(obj.underTable&&selection?.id===obj.id&&!selection.underTable?{parentId:undefined}:{})})});
  }
 
  async function rotate(){if(!build)return;rotation=((selection?.rotation??rotation)+1)%4;if(selection?.id)await commit({type:'move',id:selection.id,position:{rotation}});else if(selection){selection.rotation=rotation;if(preview){preview.rotation=rotation;preview.valid=canPlace(preview,currentObjects(),catalog.items).ok;}emit();}}

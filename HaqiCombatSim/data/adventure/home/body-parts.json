@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "id": "paper-friend-v1",
+  "status": "connected-local",
+  "image": {
+    "local": "assets/adventure/home/home-body-friend-9df7767bab47.webp",
+    "width": 768,
+    "height": 1152,
+    "bytes": 121158,
+    "sha256": "9df7767bab47f61919d90a58080ee876b36837dd492cf2e428d1810e79810e66",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaZeroPixels": 641289,
+    "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-body-friend-9df7767bab47.webp",
+    "kind": "sprite",
+    "atlas": "home-body-friend",
+    "atlasWidth": 768,
+    "atlasHeight": 1152,
+    "crop": [
+      0,
+      0,
+      768,
+      1152
+    ],
+    "source": {
+      "tool": "image_gen",
+      "transparentBackground": true,
+      "sourceSha256": "2e475d4c93d6faaae1bb75b057a422faf78e98443e6f65a6627486b3b279d70b",
+      "date": "2026-10-26",
+      "prompt": "Single friendly fully clothed cartoon child, about 8 years old, front-facing relaxed symmetric A pose. Arms slightly away from torso, open hands and separated fingers, legs apart, bare feet visible. Short tidy brown hair leaving both ears visible, brown eyes, defined nose and gentle closed-mouth smile. Green short-sleeved T-shirt, ochre knee-length shorts. Warm hand-painted storybook fantasy art, clean dark-green/brown outlines, soft shading. Body parts distinct and unobscured. Orthographic full body centered with transparent padding. No accessories, ground shadow, text, labels, arrows, borders, insets or duplicate characters. Genuine transparent background."
+    }
+  },
+  "groups": {
+    "face": {
+      "viewBox": [
+        0.3,
+        0.015,
+        0.4,
+        0.275
+      ]
+    },
+    "body": {
+      "viewBox": [
+        0,
+        0,
+        1,
+        1
+      ]
+    }
+  },
+  "parts": [
+    {
+      "id": "hair",
+      "zh": "头发",
+      "group": "face",
+      "anchor": [
+        0.5,
+        0.09
+      ]
+    },
+    {
+      "id": "eye",
+      "zh": "眼睛",
+      "group": "face",
+      "anchor": [
+        0.446,
+        0.184
+      ]
+    },
+    {
+      "id": "ear",
+      "zh": "耳朵",
+      "group": "face",
+      "anchor": [
+        0.374,
+        0.207
+      ]
+    },
+    {
+      "id": "nose",
+      "zh": "鼻子",
+      "group": "face",
+      "anchor": [
+        0.503,
+        0.208
+      ]
+    },
+    {
+      "id": "mouth",
+      "zh": "嘴巴",
+      "group": "face",
+      "anchor": [
+        0.505,
+        0.228
+      ]
+    },
+    {
+      "id": "arm",
+      "zh": "胳膊",
+      "group": "body",
+      "anchor": [
+        0.269,
+        0.465
+      ]
+    },
+    {
+      "id": "hand",
+      "zh": "手",
+      "group": "body",
+      "anchor": [
+        0.186,
+        0.563
+      ]
+    },
+    {
+      "id": "leg",
+      "zh": "腿",
+      "group": "body",
+      "anchor": [
+        0.389,
+        0.785
+      ]
+    },
+    {
+      "id": "foot",
+      "zh": "脚",
+      "group": "body",
+      "anchor": [
+        0.332,
+        0.927
+      ]
+    }
+  ],
+  "verification": {
+    "cdnStatus": 200,
+    "cors": "*",
+    "sha256Matches": true,
+    "lightDarkGardenAlphaReviewed": true,
+    "notVerified": [
+      "real speech",
+      "physical touch device",
+      "children experience",
+      "cross-image transfer"
+    ]
+  }
+}

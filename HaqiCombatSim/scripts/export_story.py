@@ -430,7 +430,7 @@ class Exporter:
         file = 'data/adventure/curriculum/english-home-practice.json'
         for i, game in enumerate(self.load(file)['games']):
             scene = self.scene('home-language:' + game['id'], '家园伙伴 · ' + game['id'], 'current', 'home', classification='家园词语练习', language='en')
-            for field, speaker, phase in [('intro', '家园伙伴', '练习前对白'), ('prompt', '家园伙伴', '请求'), ('answer', '玩家', '表达'), ('reply', '家园伙伴', '回应'), ('ending', '家园伙伴', '动作完成后')]:
+            for field, speaker, phase in [('opening', '家园伙伴', '练习前对白'), ('intro', '玩法说明', '故事与玩法提示'), ('prompt', '家园伙伴', '请求'), ('answer', '玩家', '表达'), ('reply', '家园伙伴', '回应'), ('ending', '家园伙伴', '动作完成后')]:
                 if field not in game:
                     continue
                 if field == 'answer' and game.get('mode') in ('read', 'listen'):
@@ -440,6 +440,10 @@ class Exporter:
             for j, reply in enumerate(game.get('alternatives', [])):
                 ptr = f'/games/{i}/alternatives/{j}/answer'
                 self.line(scene, 'alternative-' + reply['id'], reply['answer'], '玩家', '可用替代表达', file, ptr, {'file': file, 'pointer': ptr}, force=True)
+                for field, phase in [('reply', '分支回应'), ('replyGloss', '分支回应译文')]:
+                    if field in reply:
+                        branch_ptr = f'/games/{i}/alternatives/{j}/{field}'
+                        self.line(scene, 'alternative-' + reply['id'] + '-' + field, reply[field], '家园伙伴', phase, file, branch_ptr, {'file': file, 'pointer': branch_ptr}, force=True)
 
     def retire_courses(self):
         # Legacy course configuration is retained for existing learning ledgers,

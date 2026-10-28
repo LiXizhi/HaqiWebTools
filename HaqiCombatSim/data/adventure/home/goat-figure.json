@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "id": "goat-figure-v1",
+  "art": {
+    "local": "assets/adventure/home/home-goat-figure-6284264883fd.webp",
+    "width": 640,
+    "height": 585,
+    "bytes": 64406,
+    "sha256": "6284264883fd2877537236776ad30d3eff9e33dae310628661bd7891c7ff9048",
+    "sourceSha256": "7cd902990f98db6f9d3d737b8213aea0a8ec4de828e74846fce7c627365e1d88",
+    "encoding": {
+      "lossless": false,
+      "quality": 90
+    },
+    "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-goat-figure-6284264883fd.webp",
+    "kind": "sprite",
+    "shape": "goat",
+    "id": "home-art:goat-figure:6284264883fd",
+    "atlas": "home-goat-figure",
+    "atlasWidth": 640,
+    "atlasHeight": 585,
+    "crop": [
+      0,
+      0,
+      640,
+      585
+    ],
+    "anchor": [
+      0.5,
+      1
+    ],
+    "source": "Native transparent image_gen; complete goat figurine, no wool fleece"
+  },
+  "generation": {
+    "tool": "image_gen",
+    "transparentBackground": true,
+    "date": "2026-10-26",
+    "prompt": "Create one production-ready transparent-background game prop sprite for a gentle children's storybook 2D isometric village game. A small charming GOAT FIGURINE, recognizable as a goat for beginner English teaching. Single complete standing four-legged goat facing three-quarter front-left, slight elevated game camera. Short smooth cream and warm tan coat, slim goat muzzle, a small distinct chin beard, two simple narrow horns swept gently backward (not curled ram horns), ears projecting sideways, short raised tail, dark cloven hooves. Friendly natural animal proportions with a mildly larger head and soft expressive eyes. Subtle carved wooden toy finish, warm hand-painted painterly shading, clean silhouette, high legibility at 80px. Keep all four legs, both horns, beard and tail complete and uncropped. No woolly fleece, no sheep features, no clothing, no accessories, no base pedestal, no ground shadow, no text or border. Center the single figurine with generous transparent padding. Actual transparent alpha background. This is a new educational game prop, not an animated pet."
+  },
+  "verification": {
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      32,
+      15,
+      579,
+      573
+    ],
+    "alphaZeroPixels": 243637
+  },
+  "teaching": "山羊摆件；不是绵羊或可喂养的活体宠物。只允许真实物品找物、摆放与标签等交互。"
+}

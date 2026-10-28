@@ -19,7 +19,8 @@ export function recommendedLanguageQuest(save,content,rows,stats={}){
     const legacy=(content.catalogQuests?.quests||[]).filter(q=>q.learningLanguage===language).map(q=>({...q,status:catalogQuestStatus(save,content,q,stats)}));
     const candidates=[...legacy,...rows.filter(q=>q.learningLanguage===language)];
     const available=candidates.filter(q=>['可接取','进行中','可交付'].includes(q.status));
-    return available.find(q=>q.region===zone)||available[0]||candidates.find(q=>q.region===zone&&q.status==='已完成')||null;
+    const active=q=>q.status==='进行中'||q.status==='可交付';
+    return available.find(q=>q.region===zone&&active(q))||available.find(q=>q.region===zone)||available.find(active)||available[0]||candidates.find(q=>q.region===zone&&q.status==='已完成')||null;
 }
 export function withLanguageQuest(entries,quest){
     if(!quest)return entries;

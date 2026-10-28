@@ -1,5 +1,5 @@
 import {homeComprehensionChoices} from './home_comprehension_core.js';
-import {homeStoryProgress} from './home_story_core.js';
+import {homeStoryProgress,resetHomeStory} from './home_story_core.js';
 import {selectAuthoredHomeGame} from './home_authored_game_core.js';
 import {homeGameActions,homeStoryPetEligible} from './home_language_game_core.js';
 import {homeNewWordBudget} from './home_review_core.js';
@@ -11,7 +11,11 @@ export function homeStoryReadiness(data,arc,args){
  const {state,homeId,index,objects,pets,catalog,now}=args;
  const progress=homeStoryProgress(state,homeId,arc.id),step=arc.steps[progress.next];
  const result={next:progress.next,total:arc.steps.length,futureItems:[]};
- if(!step)return {...result,status:'complete'};
+ if(!step){
+  const replayState={...state,homeStories:{...state.homeStories}};
+  resetHomeStory(replayState,homeId,arc.id);
+  return {...result,status:'complete',replay:homeStoryReadiness(data,arc,{...args,state:replayState})};
+ }
  for(const remaining of arc.steps.slice(progress.next)){
   const g=data.games.find(g=>g.id===remaining.storyId);
   for(const ids of [g.action.itemIds,g.position?.anchorItemIds].filter(ids=>ids?.length)){
@@ -33,9 +37,9 @@ export function homeStoryReadiness(data,arc,args){
  const selectedObjects=objects.filter(o=>!savedIds.some(id=>objects.find(a=>a.id===id)?.itemId===o.itemId)||savedIds.includes(o.id));
  if(lesson.action.itemIds.length&&!selectedObjects.some(o=>lesson.action.itemIds.includes(o.itemId)))return {...result,status:'items',items:lesson.action.itemIds};
  const actions=homeGameActions(lesson.mode,selectedObjects,availablePets,catalog);
- if(['read','listen'].includes(lesson.mode)&&!homeComprehensionChoices(lesson.action.itemIds,selectedObjects,actions))return {...result,status:'choices'};
+ if((['read','listen'].includes(lesson.mode)||lesson.listenRequest)&&!homeComprehensionChoices(lesson.action.itemIds,selectedObjects,actions,lesson.action.colors,lesson.action.bodyPart))return {...result,status:'choices'};
  const game=selectAuthoredHomeGame({...data,games:[lesson]},{...args,mode:lesson.mode,arcId:arc.id,objects:selectedObjects,pets:availablePets,actions,newWordBudget:budget});
- return {...result,status:game?'ready':'layout',needsDrawing:!!lesson.requiresDrawing,drawingObjectId:lesson.requiresDrawing?selectedObjects.find(o=>lesson.action.itemIds.includes(o.itemId))?.id:undefined};
+ return {...result,status:game?'ready':'layout',...(lesson.mode==='count'?{needsCount:{amount:lesson.count.amount,itemIds:lesson.action.itemIds}}:{}),needsRoom:lesson.position?.kind==='in',needsCharacterLabel:!!lesson.readCharacterLabel,needsDrawing:!!lesson.requiresDrawing,drawingObjectId:lesson.requiresDrawing?selectedObjects.find(o=>lesson.action.itemIds.includes(o.itemId))?.id:undefined};
 }
 
 export function homePrerequisiteLesson(data,word,args){

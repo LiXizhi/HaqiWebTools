@@ -1,4 +1,5 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><title>家园学习完整链路验收</title><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_world_map.css"><link rel="stylesheet" href="css/adventure_dialogue.css"><link rel="stylesheet" href="css/home.css"></head><body class="haqi-app storybook-ui"><div id="overlay"></div><script type="module">
+import {roomFixture} from './tests/home_room_fixture.js';
 import {openHomeSystem} from './js/home_app.js';
 import {createHomeStore} from './js/home_store.js';
 import {createHome,homeScope} from './js/home_core.js';
@@ -25,11 +26,30 @@ configureLanguageTreeCapture(()=>({key:treeKey}));
 const store=createHomeStore(scope,{name:'home-learning-world-only'}),id='learning-world';
 if(!(await store.list()).length){
  await store.create(createHome(id,'我的故事角',18));
- await store.mutate(id,['chunk:0,0','residents'],(_,parts)=>{
+ await store.mutate(id,['chunk:0,0','chunk:0,-1','residents'],(_,parts)=>{
   parts['chunk:0,0'].book={id:'book',itemId:'book',x:2,y:1,...(practiceWord==='grey'?{color:'grey'}:{})};
+  if(new URLSearchParams(location.search).has('in-room')){for(const o of roomFixture())parts['chunk:0,0'][o.id]=o;parts['chunk:0,0'].ball={id:'ball',itemId:'ball',x:0,y:1};}
+  if(new URLSearchParams(location.search).has('my-room'))parts['chunk:0,0'].paper={id:'paper',itemId:'paper',x:3,y:1};
+  const countMany=Number(new URLSearchParams(location.search).get('count-many'));if([6,8,10].includes(countMany)){delete parts['chunk:0,0'].book;for(let n=0;n<countMany;n++){const id='book'+n;parts['chunk:0,0'][id]={id,itemId:'book',x:-3+(n%4)*2,y:-7+Math.floor(n/4)*2};}}
+  if(new URLSearchParams(location.search).has('count-story'))parts['chunk:0,0'].table={id:'table',itemId:'table',x:0,y:3};
   if(new URLSearchParams(location.search).has('count'))parts['chunk:0,0'].book2={id:'book2',itemId:'book',x:0,y:1};
   if(new URLSearchParams(location.search).has('comprehension'))parts['chunk:0,0'].lamp={id:'lamp',itemId:'desk-lamp',x:0,y:1};
+  if(new URLSearchParams(location.search).has('listen-request')){parts['chunk:0,0'].ball={id:'ball',itemId:'ball',x:0,y:1};parts['chunk:0,0'].cup={id:'cup',itemId:'cup',x:3,y:0};}
   if(rehearsal){parts['chunk:0,0'].book.itemId=rehearsal;parts['chunk:0,0'].book2={id:'book2',itemId:rehearsal,x:3,y:0};parts['chunk:0,0'].lamp={id:'lamp',itemId:'desk-lamp',x:0,y:1};}
+  const cueWord=new URLSearchParams(location.search).get('cue-word');if(['toy','fire'].includes(cueWord)){delete parts['chunk:0,0'].book;parts['chunk:0,0'].target={id:'target',itemId:cueWord==='toy'?'toy-car':'fireplace',x:0,y:1};parts['chunk:0,0'].lamp={id:'lamp',itemId:'desk-lamp',x:3,y:0};}
+  if(new URLSearchParams(location.search).has('fire-story')){parts['chunk:0,0'].fireplace={id:'fireplace',itemId:'fireplace',x:0,y:1};parts['chunk:0,0'].lamp={id:'lamp',itemId:'desk-lamp',x:3,y:0};}
+  if(new URLSearchParams(location.search).has('bubbles-story')){delete parts['chunk:0,0'].book;for(const [id,itemId,x,y] of [['ball','ball',2,1],['bath','bathtub',0,1],['bed','bed',2,-1]])parts['chunk:0,0'][id]={id,itemId,x,y};}
+  if(new URLSearchParams(location.search).has('taking-turns')){delete parts['chunk:0,0'].book;for(const [id,itemId,x,y] of [['chair','chair',2,1],['book','book',0,2],['ball','ball',3,3]])parts['chunk:0,0'][id]={id,itemId,x,y};}
+  if(new URLSearchParams(location.search).has('feelings-story')){for(const [id,itemId,x,y] of [['chair','chair',2,1],['book','book',0,2],['cup','cup',3,3],['bed','bed',-3,1]])parts['chunk:0,0'][id]={id,itemId,x,y};}
+  if(new URLSearchParams(location.search).has('dinner-story')){delete parts['chunk:0,0'].book;for(const [id,itemId,x,y] of [['rice','rice-bowl',2,0],['egg','egg',3,2],['fish','cooked-fish',-2,2],['table','table',0,3]])parts['chunk:0,0'][id]={id,itemId,x,y};}
+  if(new URLSearchParams(location.search).has('party-choices')){delete parts['chunk:0,0'].book;parts['chunk:0,0'].pear={id:'pear',itemId:'pear',x:2,y:1};parts['chunk:0,0'].cake={id:'cake',itemId:'birthday-cake',x:0,y:1};}
+  if(new URLSearchParams(location.search).has('hello-play')){delete parts['chunk:0,0'].book;parts['chunk:0,0'].chair={id:'chair',itemId:'chair',x:0,y:1};parts['chunk:0,0'].ball={id:'ball',itemId:'ball',x:2,y:1};}
+  if(new URLSearchParams(location.search).has('wait-picture')){delete parts['chunk:0,0'].book;parts['chunk:0,0'].chair={id:'chair',itemId:'chair',x:0,y:1};parts['chunk:0,0'].paper={id:'paper',itemId:'paper',x:2,y:1};}
+  if(new URLSearchParams(location.search).has('shared-ball')){delete parts['chunk:0,0'].book;parts['chunk:0,0'].ball={id:'ball',itemId:'ball',x:2,y:1};}
+  if(new URLSearchParams(location.search).has('shadow-story')){delete parts['chunk:0,0'].book;for(const [id,itemId,x,y] of [['lamp','desk-lamp',2,0],['chair','chair',0,1],['bed','bed',2,2]])parts['chunk:0,0'][id]={id,itemId,x,y};}
+  if(new URLSearchParams(location.search).has('goat-story')){delete parts['chunk:0,0'].book;parts['chunk:0,0'].goat={id:'goat',itemId:'goat-figure',x:2,y:1};parts['chunk:0,0'].ball={id:'ball',itemId:'ball',x:0,y:2};}
+  if(new URLSearchParams(location.search).has('spawn-overlap'))parts['chunk:0,0'].book={id:'book',itemId:'book',x:0,y:0};
+  if(new URLSearchParams(location.search).has('muddy-story')){delete parts['chunk:0,0'].book;for(const [id,itemId,x,y] of [['bath','bathtub',2,1],['bed','bed',0,0],['ball','ball',3,3]])parts['chunk:0,0'][id]={id,itemId,x,y};}
   if(new URLSearchParams(location.search).has('walking-story')){delete parts['chunk:0,0'].book;parts['chunk:0,0'].chair={id:'chair',itemId:'chair',x:3,y:1};}
   if(spatial){delete parts['chunk:0,0'].book;parts['chunk:0,0'].ball={id:'ball',itemId:'ball',x:2,y:1};parts['chunk:0,0'].chair={id:'chair',itemId:'chair',x:0,y:1};}
   if(tabletop){parts['chunk:0,0'].book={id:'book',itemId:'book',x:3,y:0};parts['chunk:0,0'].table={id:'table',itemId:'table',x:0,y:1};}
@@ -37,9 +57,17 @@ if(!(await store.list()).length){
   if(['big','small'].includes(compare)){parts['chunk:0,0'].book2.sizeScale=2;parts['chunk:0,0'].book3.sizeScale=.5;}
   if(lengthCompare){for(const o of Object.values(parts['chunk:0,0'])){o.itemId=lengthItem;delete o.color;}parts['chunk:0,0'].book2.sizeScale=2;parts['chunk:0,0'].book3.sizeScale=.5;}
   if(animal){delete parts['chunk:0,0'].book;for(const [id,itemId,x,y] of [['ball',['bird','cow','sheep','mouse'].includes(animal)?'chair':'ball',2,1],['cup',['bird','sheep','mouse'].includes(animal)?'book':'cup',3,3],['bed',['frog','rabbit'].includes(animal)?'chair':'bed',0,0]])parts['chunk:0,0'][id]={id,itemId,x,y};}
+  if(new URLSearchParams(location.search).has('listen-make')){delete parts['chunk:0,0'].book;parts['chunk:0,0'].paper={id:'paper',itemId:'paper',x:2,y:1};parts['chunk:0,0'].pencil={id:'pencil',itemId:'pencil',x:2,y:-1};}
+  if(new URLSearchParams(location.search).has('home-story')){parts['chunk:0,0'].book={id:'book',itemId:'book',x:2,y:1};parts['chunk:0,0'].chair={id:'chair',itemId:'chair',x:0,y:1};}
+  if(new URLSearchParams(location.search).has('corner-labels')){delete parts['chunk:0,0'].book;for(const [id,itemId,x,y] of [['clock','alarm-clock',2,1],['lamp','desk-lamp',2,-1],['chair','chair',0,1]]){const chunk=y<0?'chunk:0,-1':'chunk:0,0';parts[chunk]??={};parts[chunk][id]={id,itemId,x,y};}}
   if(new URLSearchParams(location.search).has('drawing-story')){delete parts['chunk:0,0'].book;parts['chunk:0,0'].paper={id:'paper',itemId:'paper',x:2,y:1};}
+  if(new URLSearchParams(location.search).has('house-story')){parts['chunk:0,0'].book={id:'book',itemId:'book',x:3,y:0};parts['chunk:0,0'].house={id:'house',itemId:'dollhouse',x:0,y:1};}
+  if(new URLSearchParams(location.search).has('toy-parade')){delete parts['chunk:0,0'].book;parts['chunk:0,0'].duck={id:'duck',itemId:'rubber-duck',x:0,y:1};parts['chunk:0,0'].horse={id:'horse',itemId:'rocking-horse',x:2,y:0};}
+  if(new URLSearchParams(location.search).has('color-comprehension')){parts['chunk:0,0'].book={id:'book',itemId:'book',x:2,y:1,color:'red'};parts['chunk:0,0'].book2={id:'book2',itemId:'book',x:0,y:1,color:'blue'};parts['chunk:0,0'].book3={id:'book3',itemId:'book',x:3,y:0,color:'red'};}
   if(new URLSearchParams(location.search).has('door-story')){delete parts['chunk:0,0'].book;parts['chunk:0,0'].door={id:'door',itemId:'build-wood-door',x:2,y:1};}
   if(playStory){delete parts['chunk:0,0'].book;parts['chunk:0,0'].ball={id:'ball',itemId:'ball',x:2,y:1};parts['chunk:0,0'].bed={id:'bed',itemId:'bed',x:0,y:0};}
+  if(new URLSearchParams(location.search).has('body-parts'))parts['chunk:0,0'].book={id:'book',itemId:'body-friend-picture',x:2,y:1};
+  if(new URLSearchParams(location.search).has('first-snack')){delete parts['chunk:0,0'].book;parts['chunk:0,0'].bread={id:'bread',itemId:'bread-basket',x:2,y:1};parts['chunk:0,0'].cup={id:'cup',itemId:'cup',x:3,y:3};}
   if(foodId){delete parts['chunk:0,0'].book;parts['chunk:0,0'].food={id:'food',itemId:foodId,x:2,y:1};parts['chunk:0,0'].lamp={id:'lamp',itemId:'desk-lamp',x:0,y:1};}
   if(foodGallery){delete parts['chunk:0,0'].book;catalog.items.filter(i=>i.art.atlas==='home-food-01').forEach((item,n)=>{parts['chunk:0,0']['food-'+n]={id:'food-'+n,itemId:item.id,x:n%4*3,y:Math.floor(n/4)*2,label:item.en};});}
   if(foodCount){delete parts['chunk:0,0'].book;parts['chunk:0,0'].apple={id:'apple',itemId:'apple',x:0,y:1};parts['chunk:0,0'].apple2={id:'apple2',itemId:'apple',x:2,y:1};}
@@ -49,12 +77,36 @@ if(!(await store.list()).length){
   parts.residents={$selection:{version:1},companion:{x:-2,y:1}};
  });
 }
+if(new URLSearchParams(location.search).has('taking-turns'))await recordWordPractice({language:'en',words:['listen','play'],id:'world-seed-turns',at:1});
+if(new URLSearchParams(location.search).has('feelings-story'))await recordWordPractice({language:'en',words:['book','water','sit','bed','help','read'],id:'world-seed-feelings',at:1});
+if(new URLSearchParams(location.search).has('shared-ball'))await recordWordPractice({language:'en',words:['find','ball','play'],id:'world-seed-shared-ball',at:1});
+if(new URLSearchParams(location.search).has('shadow-story'))await recordWordPractice({language:'en',words:['help','stop','bed'],id:'world-seed-shadow',at:1});
+if(new URLSearchParams(location.search).has('book-colors'))await recordWordPractice({language:'en',words:['red','blue'],id:'world-seed-book-colors',at:1});
+if(new URLSearchParams(location.search).has('hello-play'))await recordWordPractice({language:'en',words:['hello','chair','play','sit'],id:'world-seed-hello-play',at:1});
+if(new URLSearchParams(location.search).has('wait-picture'))await recordWordPractice({language:'en',words:['chair','paper','draw','book'],id:'world-seed-wait-picture',at:1});
+if(new URLSearchParams(location.search).has('dinner-story'))await recordWordPractice({language:'en',words:['rice','egg','fish','dinner','table','eat'],id:'world-seed-dinner',at:1});
+if(new URLSearchParams(location.search).has('muddy-story'))await recordWordPractice({language:'en',words:['sleep','play'],id:'world-seed-muddy',at:1});
+if(new URLSearchParams(location.search).has('in-room'))await recordWordPractice({language:'en',words:['book','ball'],id:'world-seed-in-room',at:1});
+if(new URLSearchParams(location.search).has('my-room'))await recordWordPractice({language:'en',words:['paper','draw','in'],id:'world-seed-my-room',at:1});
+if(new URLSearchParams(location.search).has('quiet-picture'))await recordWordPractice({language:'en',words:['picture'],id:'world-seed-quiet-picture',at:1});
+if(new URLSearchParams(location.search).has('talk-story'))await recordWordPractice({language:'en',words:['book','hello'],id:'world-seed-talk',at:1});
+if(new URLSearchParams(location.search).has('action-listening'))await recordWordPractice({language:'en',words:['chair','walk','run','stand','jump'],id:'world-seed-actions',at:1});
+if(new URLSearchParams(location.search).has('listen-request'))await recordWordPractice({language:'en',words:['book','ball','cup'],id:'world-seed-requests',at:1});
+if(new URLSearchParams(location.search).has('body-parts'))await recordWordPractice({language:'en',words:['hair','eye','ear','nose','mouth','arm','hand','leg','foot'],id:'world-seed-body',at:1});
+if(new URLSearchParams(location.search).has('first-snack'))await recordWordPractice({language:'en',words:['bread','water'],id:'world-seed-snack',at:1});
 if(new URLSearchParams(location.search).has('name-story'))await recordWordPractice({language:'en',words:['read'],id:'world-seed-read',at:1});
+if(new URLSearchParams(location.search).has('color-comprehension'))await recordWordPractice({language:'en',words:['red'],id:'world-seed-red',at:1});
 if(new URLSearchParams(location.search).has('support-practice'))await recordWordPractice({language:'en',words:['where'],id:'world-seed-where',at:1});
 if(foodCount)await recordWordPractice({language:'en',words:['two'],id:'world-seed-number',at:2});
 if(compare)await recordWordPractice({language:'en',words:[compare],id:'world-seed-compare',at:1});
 if(!new URLSearchParams(location.search).has('unlearned'))await recordWordPractice({language:'en',words:animal?['hello','ball','water','sleep','sit','read','book']:lengthStory?['pencil','pen']:schoolStory?['table','on']:foodCount?['apple']:picnic?['table']:foodId?[catalog.items.find(i=>i.id===foodId).en]:playStory?['ball']:lengthCompare?[lengthItem]:compare?['book','colour']:tabletop?['on','book','table']:spatial?['ball','chair']:[practiceWord],id:'world-seed-word',at:compare?2:1});
-window.worldLearning={ready:false,context,async schoolObjects(){return await store.read(id,'chunk:0,0');},async picnicObjects(){return await store.read(id,'chunk:0,0');},async foodLabel(){return (await store.read(id,'chunk:0,0')).food?.label;},async petPosition(){return (await store.read(id,'residents')).companion;},async placedBook(){return (await store.read(id,'chunk:0,0')).book;},async placedBall(){return (await store.read(id,'chunk:0,0')).ball||(await store.read(id,'chunk:-1,0')).ball||(await store.read(id,'chunk:0,-1')).ball;},async label(){return (await store.read(id,'chunk:0,0')).book.label;},async learning(){return (await languageTreeStore.read(wordTreeKey(treeKey,'en'))).state;}};
-window.worldLearning.app=await openHomeSystem({root:document.getElementById('overlay'),getContext:()=>context,close:()=>{},catalog,store,initialHomeId:id,assetMode:'local',practiceVoiceFactory:()=>({start:async()=>{},finish:async()=>'',speak:async()=>{if(window.worldLearning?.failSpeech)throw Error('测试语音不可用');if(window.worldLearning?.speechGate)await worldLearning.speechGate;},cancel:async()=>{}}),voice:{start:async()=>{},finish:async()=>'',speak:async()=>{if(window.worldLearning?.failSpeech)throw Error('测试语音不可用');},cancel:async()=>{}}});
+if(new URLSearchParams(location.search).has('island-review'))await recordWordPractice({language:'en',words:['book'],source:'island-course',id:'world-island-book',at:Date.now()});
+if(new URLSearchParams(location.search).has('listen-make'))await recordWordPractice({language:'en',words:['paper','pencil','draw','name'],id:'world-seed-listen-make',at:1});
+if(new URLSearchParams(location.search).has('home-story'))await recordWordPractice({language:'en',words:['chair','book','sit','read','thank you'],id:'world-seed-home-story',at:1});
+if(new URLSearchParams(location.search).has('reading-choice'))await recordWordPractice({language:'en',words:['want','read','book'],id:'world-seed-reading-choice',at:1});
+if(['toy','fire'].includes(new URLSearchParams(location.search).get('cue-word')))await recordWordPractice({language:'en',words:[new URLSearchParams(location.search).get('cue-word')],id:'world-seed-cue-word',at:1});
+if(new URLSearchParams(location.search).has('corner-labels'))await recordWordPractice({language:'en',words:['clock','lamp','chair'],id:'world-seed-corner-labels',at:1});
+window.worldLearning={ready:false,context,async cornerObjectCopies(objectId){return [await store.read(id,'chunk:0,0'),await store.read(id,'chunk:0,-1')].filter(chunk=>chunk?.[objectId]).length;},async cornerObjects(){return {...await store.read(id,'chunk:0,0'),...await store.read(id,'chunk:0,-1')};},async schoolObjects(){return await store.read(id,'chunk:0,0');},async picnicObjects(){return await store.read(id,'chunk:0,0');},async foodLabel(){return (await store.read(id,'chunk:0,0')).food?.label;},async petPosition(){return (await store.read(id,'residents')).companion;},async placedBook(){return (await store.read(id,'chunk:0,0')).book;},async placedBall(){return (await store.read(id,'chunk:0,0')).ball||(await store.read(id,'chunk:-1,0')).ball||(await store.read(id,'chunk:0,-1')).ball;},async label(){return (await store.read(id,'chunk:0,0')).book.label;},async learning(){return (await languageTreeStore.read(wordTreeKey(treeKey,'en'))).state;}};
+window.worldLearning.app=await openHomeSystem({root:document.getElementById('overlay'),getContext:()=>context,close:()=>{},catalog,store,initialHomeId:id,assetMode:'local',practiceVoiceFactory:()=>({start:async()=>{},finish:async()=>window.worldLearning?.voiceText||'',speak:async()=>{if(window.worldLearning?.failSpeech)throw Error('测试语音不可用');if(window.worldLearning?.speechGate)await worldLearning.speechGate;},cancel:async()=>{}}),voice:{start:async()=>{},finish:async()=>window.worldLearning?.voiceText||'',speak:async()=>{if(window.worldLearning?.failSpeech)throw Error('测试语音不可用');},cancel:async()=>{}}});
 window.worldLearning.ready=true;
 </script></body></html>

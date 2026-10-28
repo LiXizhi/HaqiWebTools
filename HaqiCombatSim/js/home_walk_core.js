@@ -127,21 +127,32 @@ export function homeHeldPointerTarget(hero,pointer,viewport,scale){
  return {x:hero.x+(distance?dx/distance*travel:0),y:hero.y+(distance?dy/distance*travel:0)};
 }
 
-export function stepHomeWalk(hero,target,dt,objects,catalog,seed=null){
- const dx=target.x-hero.x,dy=target.y-hero.y,distance=Math.hypot(dx,dy),step=Math.min(distance,Math.max(0,Math.min(dt,.05))*4);
- if(distance<.08)return {...hero,moving:false};
+export const HOME_WALK_SPEED=4,HOME_RUN_SPEED=6;
+export function stepHomeWalk(hero,target,dt,objects,catalog,seed=null,gait='walk'){
+ if(gait!=='run')return stepHomeMotion(hero,target,dt,objects,catalog,seed,'walk');
+ // Keep each collision probe smaller than the existing walking step, including
+ // doors and river banks. A faster gait must not skip a thin obstacle.
+ const half=Math.max(0,Math.min(dt,.05))/2;
+ let result=hero;
+ for(let i=0;i<2;i++)result=stepHomeMotion(result,target,half,objects,catalog,seed,'run');
+ return result;
+}
+function stepHomeMotion(hero,target,dt,objects,catalog,seed,gait){
+ const running=gait==='run';
+ const dx=target.x-hero.x,dy=target.y-hero.y,distance=Math.hypot(dx,dy),step=Math.min(distance,Math.max(0,Math.min(dt,.05))*(running?HOME_RUN_SPEED:HOME_WALK_SPEED));
+ if(distance<.08)return {...hero,gait:running?'run':'walk',moving:false};
  const nx=hero.x+dx/distance*step,ny=hero.y+dy/distance*step;
  const facing=facingToward(dx,dy);
  if(isHomePassable(nx,ny,objects,catalog,seed)){
-  return {...hero,x:nx,y:ny,facing,moving:distance>step,surface:surfaceAtHome(seed,nx,ny,objects,catalog)};
+  return {...hero,gait:running?'run':'walk',x:nx,y:ny,facing,moving:distance>step,surface:surfaceAtHome(seed,nx,ny,objects,catalog)};
  }
  // Try sliding along X or Y axis if diagonal is blocked by river bank or furniture corner
  if(Math.abs(dx)>.02&&isHomePassable(nx,hero.y,objects,catalog,seed)){
-  return {...hero,x:nx,y:hero.y,facing,moving:true,surface:surfaceAtHome(seed,nx,hero.y,objects,catalog)};
+  return {...hero,gait:running?'run':'walk',x:nx,y:hero.y,facing,moving:true,surface:surfaceAtHome(seed,nx,hero.y,objects,catalog)};
  }
  if(Math.abs(dy)>.02&&isHomePassable(hero.x,ny,objects,catalog,seed)){
-  return {...hero,x:hero.x,y:ny,facing,moving:true,surface:surfaceAtHome(seed,hero.x,ny,objects,catalog)};
+  return {...hero,gait:running?'run':'walk',x:hero.x,y:ny,facing,moving:true,surface:surfaceAtHome(seed,hero.x,ny,objects,catalog)};
  }
- return {...hero,x:hero.x,y:hero.y,facing,moving:false,surface:surfaceAtHome(seed,hero.x,hero.y,objects,catalog)};
+ return {...hero,gait:running?'run':'walk',x:hero.x,y:hero.y,facing,moving:false,surface:surfaceAtHome(seed,hero.x,hero.y,objects,catalog)};
 }
 

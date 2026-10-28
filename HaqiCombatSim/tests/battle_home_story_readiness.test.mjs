@@ -8,6 +8,19 @@ const data=read('data/adventure/curriculum/english-home-practice.json'),catalog=
 const index=buildWordIndex(parseWordLexicon(fs.readFileSync(new URL('../data/adventure/locale/word_en.txt',import.meta.url),'utf8'),'en'));
 const arc=data.arcs.find(a=>a.id==='en-l1-my-name-in-my-corner');
 const args=()=>({homeId:'home',index,catalog,state:{words:{}},objects:[{id:'book',itemId:'book',x:2,y:1}],pets:[{id:'pet'}],now:1000});
+
+test('count story preparation requires the actual complete set and keeps the original table for the note',()=>{
+ const a=args(),story=data.arcs.find(a=>a.id==='en-l1-two-books-for-story-time');
+ a.state.words.book={lastPractice:{at:1}};a.objects.push({id:'table',itemId:'table',x:0,y:3});
+ a.state.homeStories={[JSON.stringify(['home',story.id])]:{next:1,objects:{0:'table'}}};
+ a.countArea={x:-2,y:-2,w:6,h:5};
+ const missing=homeStoryReadiness(data,story,a);assert.equal(missing.status,'layout');assert.deepEqual(missing.needsCount,{amount:2,itemIds:['book']});
+ a.objects.push({id:'book2',itemId:'book',x:0,y:1});assert.equal(homeStoryReadiness(data,story,a).status,'ready');
+ a.objects.push({id:'book3',itemId:'book',x:1,y:1});assert.equal(homeStoryReadiness(data,story,a).status,'layout');
+ a.objects.pop();a.state.homeStories[JSON.stringify(['home',story.id])].next=2;a.state.words.two={lastPractice:{at:1}};
+ assert.equal(homeStoryReadiness(data,story,a).status,'ready');a.objects=a.objects.filter(o=>o.id!=='table');
+ assert.equal(homeStoryReadiness(data,story,a).status,'saved-object');
+});
 test('story previews distinguish prerequisites and offer only executable introductions without changing state',()=>{
  const a=args(),before=structuredClone(a.state);
  const r=homeStoryReadiness(data,arc,a);assert.equal(r.status,'words');assert.deepEqual(r.words,['book']);
@@ -47,4 +60,17 @@ test('listening stories require an actual different object and never recommend f
  assert.equal(homeStoryReadiness(data,arc,a).status,'choices');
  a.objects.push({id:'book2',itemId:'book',x:4,y:1});assert.equal(homeStoryReadiness(data,arc,a).status,'choices');
  a.objects.push({id:'lamp',itemId:'desk-lamp',x:0,y:1});assert.equal(homeStoryReadiness(data,arc,a).status,'ready');
+});
+
+
+test('completed story replay preparation uses current objects without changing saved completion',()=>{
+ const a=args();a.state.words.book={lastPractice:{at:1}};
+ const saved={next:arc.steps.length,objects:{0:'old-book'},pets:{0:'old-pet'},at:99,replayCount:2};
+ a.state.homeStories={[JSON.stringify(['home',arc.id])]:saved};
+ const before=structuredClone(a.state);
+ const ready=homeStoryReadiness(data,arc,a);
+ assert.equal(ready.status,'complete');assert.equal(ready.next,arc.steps.length);assert.equal(ready.replay.status,'ready');assert.equal(ready.replay.next,0);
+ assert.equal(homeStoryReadiness(data,arc,{...a,objects:[]}).replay.status,'items');
+ assert.equal(homeStoryReadiness(data,arc,{...a,pets:[]}).replay.status,'pet');
+ assert.deepEqual(a.state,before);
 });

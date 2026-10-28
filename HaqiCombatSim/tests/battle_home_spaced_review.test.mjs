@@ -81,6 +81,7 @@ test('visible targets and introductions count as support even before a hint is c
  const game={words:['book'],prompt:'What do we need?',intro:'一起找书吧。'};
  assert.equal(homeGameExposesTarget(game,index),false);
  assert.equal(homeGameExposesTarget({...game,intro:'书是 book。'},index),true);
+ assert.equal(homeGameExposesTarget({...game,opening:'I want my book.'},index),true);
  assert.equal(homeGameExposesTarget({...game,prompt:'Find the book.'},index),true);
  assert.equal(homeGameExposesTarget({...game,introducedWords:['book']},index),true);
  assert.equal(homeGameExposesTarget(game,index,[{label:'My book.'}]),true);

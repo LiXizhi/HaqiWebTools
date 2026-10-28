@@ -20,6 +20,7 @@ import {fetchJson} from './runtime_data.js';
 import {tr} from './locale_runtime.js';
 import {petIdleLift} from './view_adventure_pet_mood.js';
 import {homeHeldPointerTarget} from './home_walk_core.js';
+import {homeSceneHit} from './home_pointer_core.js';
 import {homeFurnitureDragPosition,homeStrokeCells} from './home_edit_core.js';
 import {createFrameMeter,createFramePacer} from './frame_meter_core.js';
 
@@ -488,6 +489,7 @@ export function createHomeView(root,cb){
    enlarge,shrink,
    iconAction('物品属性','M4 6h16 M4 12h16 M4 18h16 M8 3v6 M16 9v6 M10 15v6',()=>{if(!model.selection?.id)return;activeDialog?.destroy();activeDialog=openBuildingProperties(modal,{el,button,obj:model.selection,item:buildingItem(model.selection,model.catalog.items),save:cb.properties});}),
    iconAction('画画','M5 19L8 12L16 4L20 8L12 16Z',()=>{if(model.selection?.itemId!=='paper')return;activeDialog?.destroy();activeDialog=openHomeDrawing(modal,{el,button,obj:model.selection,homeId:model.home.id,save:cb.saveDrawing});},'home-drawing-button'),
+   iconAction('桌下放置','M3 5h18 M5 5v15 M19 5v15 M9 15h6',()=>cb.toggleUnder?.(),'home-under-toggle'),
    iconAction('写标签','M4 4h16v16H4Z M7 8h10 M7 12h10 M7 16h6',()=>{if(!model.selection?.id)return;activeDialog?.destroy();activeDialog=openHomeLabel(modal,{el,button,obj:model.selection,homeId:model.home.id,save:cb.saveLabel});}),
    iconAction('收回','M3 9h18v12H3Z M3 9l3-5h3 M21 9l-3-5h-3 M12 2v12 M8 10l4 4 4-4',cb.recall,'danger'),
    iconAction('取消选择','m6 6 12 12 M18 6 6 18',cb.cancel)
@@ -549,6 +551,7 @@ export function createHomeView(root,cb){
    const p=position(e);
    if(!gesture)return;
    if(Math.hypot(p.sx-gesture.start.sx,p.sy-gesture.start.sy)>6)gesture.moved=true;
+   if(gesture.moved&&edit)edit.style.visibility='hidden';
    if(gesture.moved&&gesture.pendingPaint){paintStroke={seen:new Set(),row:gesture.pendingPaint,id:e.pointerId,group:crypto.randomUUID()};const start=gesture.start;gesture=null;paintAt(start);paintAt(p);return;}
    if(gesture.moved&&gesture.hit&&(gesture.hit.kind==='pet'||gesture.hit.kind==='object')){
     cb.hover(gesture.origin&&!(gesture.origin.properties?.snap??buildingItem(gesture.origin,model.catalog.items)?.building?.snap??false)?homeFurnitureDragPosition(gesture.origin,gesture.start,p,model.scale):gesture.origin?{x:p.x+Math.floor(gesture.origin.x)-Math.floor(gesture.start.x),y:p.y+Math.floor(gesture.origin.y)-Math.floor(gesture.start.y)}:p,gesture.hit);
@@ -606,7 +609,7 @@ export function createHomeView(root,cb){
   };
  }
 
- function hitAt(p){return [...hits].reverse().find(h=>p.sx>=h.sx&&p.sx<=h.sx+h.sw&&p.sy>=h.sy&&p.sy<=h.sy+h.sh&&(!h.pixelHit||h.pixelHit(p.sx,p.sy)));}
+ function hitAt(p){return homeSceneHit(hits,p);}
  function eraseAt(p){
   hoverPoint=p;const stroke=eraseStroke;if(!stroke)return;const from=stroke.last||p,steps=Math.max(1,Math.ceil(Math.hypot(p.sx-from.sx,p.sy-from.sy)/6));
   for(let i=0;i<=steps;i++){const hit=hitAt({sx:from.sx+(p.sx-from.sx)*i/steps,sy:from.sy+(p.sy-from.sy)*i/steps});if(hit?.kind!=='object'||stroke.seen.has(hit.id))continue;stroke.seen.add(hit.id);run(()=>cb.erase(hit.id,stroke.group));}stroke.last=p;
@@ -688,6 +691,7 @@ export function createHomeView(root,cb){
   body.classList.toggle('has-selection',!!next.build&&!!next.selection?.id);
   if(edit){
    edit.querySelector('.home-drawing-button').hidden=next.selection?.itemId!=='paper';
+   const under=edit.querySelector('.home-under-toggle');under.hidden=!['ball','book'].includes(next.selection?.itemId);under.setAttribute('aria-pressed',String(!!next.selection?.underTable));under.setAttribute('aria-label',next.selection?.underTable?'退出桌下放置':'桌下放置');under.title=next.selection?.underTable?'退出桌下放置':'桌下放置';
    const size=next.selection?.sizeScale??1;
    const toggle=edit.querySelector('.home-interaction-toggle'),enabled=homeObjectInteractive(next.selection,next.catalog.items);
    toggle.disabled=!next.selection?.id;
@@ -896,10 +900,10 @@ export function createHomeView(root,cb){
   // only device pixel density controls raster resolution, never camera scale.
   terrainMissing=terrain.draw(ctx,model.home.seed,worldRect,envArt,decorArt,ratio,objects);
   ctx.restore();
-  if(model.languageCount){
+  if(model.languageCount&&!model.languageCount.room){
    const area=model.languageCount.area,p=project(area.x,area.y);
    ctx.save();ctx.strokeStyle='#207457';ctx.lineWidth=3;ctx.setLineDash([8,5]);ctx.strokeRect(p.x,p.y,area.w*scale,area.h*scale);ctx.setLineDash([]);
-   ctx.font='14px sans-serif';ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillStyle='#fff8df';ctx.fillRect(p.x+6,p.y+5,126,23);ctx.fillStyle='#244f3b';ctx.fillText('本轮数数范围',p.x+12,p.y+22);ctx.restore();
+   ctx.font='14px sans-serif';ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillStyle='#fff8df';ctx.fillRect(p.x+6,p.y+5,126,23);ctx.fillStyle='#244f3b';ctx.fillText(model.languageCount.room?'放进房间里面':'本轮数数范围',p.x+12,p.y+22);ctx.restore();
   }
 
   hits=[];
@@ -965,6 +969,7 @@ export function createHomeView(root,cb){
 
   // Position contextual floating action wheel directly above the selected object
   if(edit){
+   edit.style.visibility=gesture?.moved?'hidden':'';
    if(model.selection?.id){
     const selObj=objects.find(o=>o.id===model.selection.id);
     if(selObj){
@@ -1037,9 +1042,9 @@ export function createHomeView(root,cb){
   hits.push({kind:'portal',sx:spawn.x-72*scale/40,sy:spawn.y-65*scale/40,sw:144*scale/40,sh:95*scale/40});
   portal.style.left=`${spawn.x}px`;
   portal.style.top=`${spawn.y-24*scale/40}px`;
-  // The invisible spawn shortcut must not cover furniture being edited or
-  // selected for a language request. The visible Back button stays available.
-  portal.style.pointerEvents=model.build||model.languageChoices?.length?'none':'auto';
+  // Let the canvas resolve overlapping pets/props before the spawn shortcut.
+  // Keyboard activation of this button and the visible Back button remain.
+  portal.style.pointerEvents='none';
   portal.hidden=spawn.x<-100||spawn.x>r.width+100||spawn.y<-100||spawn.y>r.height+100;
 
   // 5. Depth-sorted Natural Haqi Island Trees, 3D Furniture, Resident Pets, and Hero
@@ -1082,6 +1087,9 @@ export function createHomeView(root,cb){
     ctx.beginPath();
     ctx.ellipse(p.x,p.y+2,scale*.45,scale*.16,0,0,Math.PI*2);
     ctx.fill();
+    // Ground shadow stays put while the character rises. Reduced-motion mode
+    // keeps a small lift plus the same textual takeoff/landing feedback.
+    p.y-=Math.max(0,h.jumpHeight||0)*scale*(reducedMotion?.15:1);
     if(!row.owner)drawMotionAccessory(ctx,p.x,p.y,now,motionTrail.state);
     const heroDrawOpts={mounted:false,head:pose.head,breath:pose.breath,walkTime:pose.walkTime,reducedMotion};
     if(cb.drawHero){
@@ -1165,6 +1173,12 @@ export function createHomeView(root,cb){
   }
 
   if(model.showRoofs)groups.filter(g=>g.roof).sort((a,b)=>Number(a.decoration)-Number(b.decoration)||a.depth-b.depth).forEach(drawGroup);
+
+  if(model.languageCount?.room){
+   const area=model.languageCount.area,p=project(area.x,area.y);
+   ctx.save();ctx.strokeStyle='#207457';ctx.lineWidth=3;ctx.setLineDash([8,5]);ctx.strokeRect(p.x,p.y,area.w*scale,area.h*scale);ctx.setLineDash([]);
+   ctx.font='14px sans-serif';ctx.textAlign='left';ctx.fillStyle='#fff8df';ctx.fillRect(p.x+6,p.y+5,126,23);ctx.fillStyle='#244f3b';ctx.fillText('放进房间里面',p.x+12,p.y+22);ctx.restore();
+  }
 
   // 7. Placement Preview Ghost
   if(model.preview){

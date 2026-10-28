@@ -125,8 +125,8 @@ test('normal-mode drag commits only enabled objects, while editing can move disa
  const source=appSource.slice(appSource.indexOf(' async function drop('),appSource.indexOf(' async function rotate('));
  for(const [build,enabled,expected] of [[false,false,0],[false,true,1],[true,false,1]]){
   const obj={id:'a',itemId:'cup',x:0,y:0,interactionEnabled:enabled},writes=[];
-  const drop=new Function('build','currentObjects','parts','homeObjectInteractive','catalog','commit','resolvePlacement',source+';return drop;')(
-   build,()=>[obj],{},homeObjectInteractive,{items:realCatalog},action=>writes.push(action),(_,p)=>p);
+  const drop=new Function('build','currentObjects','parts','homeObjectInteractive','catalog','commit','resolvePlacement','selection',source+';return drop;')(
+   build,()=>[obj],{},homeObjectInteractive,{items:realCatalog},action=>writes.push(action),(_,p)=>p,null);
   await drop({kind:'object',id:'a'},{x:5,y:3});
   assert.equal(writes.length,expected);
   if(expected)assert.deepEqual(writes[0],{type:'move',id:'a',position:{x:5,y:3}});

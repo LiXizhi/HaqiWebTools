@@ -1,5 +1,5 @@
 import {recordHomeStory} from './home_story_core.js';
-import {recordHomeReview} from './home_review_core.js';
+import {recordHomeReview,recordHomeComprehensionReview} from './home_review_core.js';
 import {canonicalWord} from './word_lexicon_core.js';
 export const BASIC_PRACTICE_THRESHOLD=10;
 // Listening/reading selection is separate evidence, never speaking/writing or
@@ -17,6 +17,7 @@ export function recordComprehensionPractice(state,event,index){
   evidence.count++;if(!event.assisted&&event.attempts===1)evidence.unassistedFirstChoice++;
   evidence.last={id:event.id,at:event.at,source:event.source,assisted:event.assisted,attempts:event.attempts};
  }
+ recordHomeComprehensionReview(state,event,ids);
  return true;
 }
 // Validated target words only. Encounter counts and verified mastery remain independent.

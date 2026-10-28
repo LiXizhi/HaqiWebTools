@@ -26,7 +26,7 @@ export function createHomeBuildingCache({imageFor,enabled=true}={}){
    const left=Math.min(o.x*40,visual.x)-8,top=Math.min(o.y*40,visual.y)-8;
    const bounds=item.building?visual:{x:left,y:top,w:Math.max(visual.x+visual.w,(o.x+b.w)*40)-left+8,h:Math.max(visual.y+visual.h,(o.y+b.h)*40)-top+8};
    const dynamic=o.id===exclude||type==='door'||item.activity||o.interactionEnabled||homeInteractiveKind(item.id);
-   const depth=(isEdge(item)?Math.max(...buildingWallFeet(o,masks.get(o.id)).map(f=>f.y+f.h)):o.y+b.h)+(o.parentId?2:0),section=roof?sections.get(decoration?o.parentId:o.id)?.[0]?.id:'',key=dynamic?`live:${o.id}`:decoration?`roof-decoration:${o.id}`:!item.building&&!ground?`furniture:${o.id}`:`${roof?'roof:'+section:ground?'ground':'depth:'+depth}:${Math.floor(o.x/8)},${Math.floor(o.y/8)}`;
+   const depth=(isEdge(item)?Math.max(...buildingWallFeet(o,masks.get(o.id)).map(f=>f.y+f.h)):o.y+b.h)+(o.underTable?-2:o.parentId?2:0),section=roof?sections.get(decoration?o.parentId:o.id)?.[0]?.id:'',key=dynamic?`live:${o.id}`:decoration?`roof-decoration:${o.id}`:!item.building&&!ground?`furniture:${o.id}`:`${roof?'roof:'+section:ground?'ground':'depth:'+depth}:${Math.floor(o.x/8)},${Math.floor(o.y/8)}`;
    let group=map.get(key);if(!group){group={key,rows:[],ground,roof,decoration,section,depth,dynamic,bounds:{...bounds}};map.set(key,group);}
    const endX=Math.max(group.bounds.x+group.bounds.w,bounds.x+bounds.w),endY=Math.max(group.bounds.y+group.bounds.h,bounds.y+bounds.h);group.bounds.x=Math.min(group.bounds.x,bounds.x);group.bounds.y=Math.min(group.bounds.y,bounds.y);group.bounds.w=endX-group.bounds.x;group.bounds.h=endY-group.bounds.y;
    group.rows.push({o,item,lift,ao:ao.get(o.id)||[],connections:masks.get(o.id)??connections.get(o.id)??0});

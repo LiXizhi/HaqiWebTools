@@ -15940,6 +15940,134 @@
         "en": [],
         "zh": []
       }
+    },
+    {
+      "id": "body-friend-picture",
+      "interactionEnabled": false,
+      "category": "living",
+      "zh": "纸上朋友角色画",
+      "en": "picture",
+      "size": [
+        2,
+        3
+      ],
+      "layer": "solid",
+      "slots": 0,
+      "art": {
+        "local": "assets/adventure/home/home-body-friend-9df7767bab47.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-body-friend-9df7767bab47.webp",
+        "width": 768,
+        "height": 1152,
+        "atlasWidth": 768,
+        "atlasHeight": 1152,
+        "atlas": "home-body-friend",
+        "crop": [
+          0,
+          0,
+          768,
+          1152
+        ],
+        "bytes": 121158,
+        "sha256": "9df7767bab47f61919d90a58080ee876b36837dd492cf2e428d1810e79810e66",
+        "kind": "sprite",
+        "shape": "picture",
+        "id": "home-art:body-friend:9df7767bab47",
+        "anchor": [
+          0.5,
+          1
+        ],
+        "sourceSha256": "2e475d4c93d6faaae1bb75b057a422faf78e98443e6f65a6627486b3b279d70b",
+        "source": "Native transparent image_gen; full intact educational character"
+      },
+      "sentences": {
+        "en": [
+          "I want a picture."
+        ],
+        "zh": [
+          "我想要一张角色画。"
+        ]
+      },
+      "rotations": [
+        0
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [
+          "body picture"
+        ],
+        "zh": [
+          "角色画",
+          "纸上朋友"
+        ]
+      }
+    },
+    {
+      "id": "goat-figure",
+      "interactionEnabled": false,
+      "category": "play",
+      "zh": "山羊摆件",
+      "en": "toy goat",
+      "size": [
+        2,
+        2
+      ],
+      "layer": "solid",
+      "slots": 0,
+      "activity": null,
+      "art": {
+        "local": "assets/adventure/home/home-goat-figure-6284264883fd.webp",
+        "width": 640,
+        "height": 585,
+        "bytes": 64406,
+        "sha256": "6284264883fd2877537236776ad30d3eff9e33dae310628661bd7891c7ff9048",
+        "sourceSha256": "7cd902990f98db6f9d3d737b8213aea0a8ec4de828e74846fce7c627365e1d88",
+        "encoding": {
+          "lossless": false,
+          "quality": 90
+        },
+        "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/home/home-goat-figure-6284264883fd.webp",
+        "kind": "sprite",
+        "shape": "goat",
+        "id": "home-art:goat-figure:6284264883fd",
+        "atlas": "home-goat-figure",
+        "atlasWidth": 640,
+        "atlasHeight": 585,
+        "crop": [
+          0,
+          0,
+          640,
+          585
+        ],
+        "anchor": [
+          0.5,
+          1
+        ],
+        "source": "Native transparent image_gen; complete goat figurine, no wool fleece"
+      },
+      "sentences": {
+        "en": [
+          "Create a toy goat.",
+          "I want a toy goat."
+        ],
+        "zh": [
+          "创造一个山羊摆件。",
+          "我想要一个山羊摆件。"
+        ]
+      },
+      "rotations": [
+        0
+      ],
+      "colors": [],
+      "aliases": {
+        "en": [
+          "goat",
+          "goat figure"
+        ],
+        "zh": [
+          "山羊",
+          "木山羊"
+        ]
+      }
     }
   ],
   "colors": {

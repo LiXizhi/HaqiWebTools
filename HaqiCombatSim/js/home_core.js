@@ -183,7 +183,9 @@ export function homeObjectInteractive(obj,catalog){return typeof obj?.interactio
 export const validHomeSize=value=>value===undefined||(Number.isFinite(value)&&value>=.5&&value<=2);
 export function footprint(obj,catalog){const item=catalog.find(i=>i.id===obj.itemId);if(!item)throw Error('物品不存在');if(item.building)return {...buildingBounds(obj,item),item};let [w,h]=item.size; if((obj.rotation||0)%2)[w,h]=[h,w];const size=obj.sizeScale??1;return {x:obj.x,y:obj.y,w:w*size,h:h*size,item};}
 export const overlaps=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
+export function validHomeUnderTable(obj){return obj.underTable===undefined||obj.underTable===false||obj.underTable===true&&obj.properties?.surface!=='roof'&&['ball','book'].includes(obj.itemId)&&typeof obj.parentId==='string'&&!!obj.parentId;}
 export function canPlace(obj,objects,catalog){
+ if(!validHomeUnderTable(obj))return {ok:false,reason:'桌下放置状态无效'};
  if(!validHomeDrawing(obj.drawing)||(obj.drawing!==undefined&&!HOME_DRAWING_ITEMS.includes(obj.itemId)))return {ok:false,reason:'画作数据无效或物品不是画纸'};
  if(!validHomeLabel(obj.label))return {ok:false,reason:'作品标签须为不超过60字的单行文字'};
  if(obj.interactionEnabled!==undefined&&typeof obj.interactionEnabled!=='boolean')return {ok:false,reason:'互动设置无效'};
@@ -206,11 +208,17 @@ export function canPlace(obj,objects,catalog){
   const floor=others.find(o=>buildingItem(o,catalog)?.building?.type==='floor'&&buildingSlotKind(buildingItem(o,catalog))==='floor'&&buildingGridBounds(o,buildingItem(o,catalog)).x===Math.floor(obj.x)&&buildingGridBounds(o,buildingItem(o,catalog)).y===Math.floor(obj.y));
   if(!floor)return {ok:false,reason:'屋顶必须放在地板上'};
  }
+ if(obj.underTable){
+  const parent=others.find(o=>o.id===obj.parentId&&o.itemId==='table'&&!o.parentId);if(!parent)return {ok:false,reason:'请放到桌子下面'};
+  const b=footprint(parent,catalog);if(box.x<b.x+.1||box.y<b.y+.1||box.x+box.w>b.x+b.w-.1||box.y+box.h>b.y+b.h-.1)return {ok:false,reason:'物品须完全放进桌下空间，可以先缩小物品'};
+  if(others.some(o=>o.id!==parent.id&&catalog.find(i=>i.id===o.itemId)?.layer!=='ground'&&!catalog.find(i=>i.id===o.itemId)?.building&&(!o.parentId||o.underTable)&&overlaps(box,footprint(o,catalog))))return {ok:false,reason:'桌下这里已有物品'};
+  return {ok:true};
+ }
  if(box.item.layer==='top'){
   if(obj.parentId){
    const parent=others.find(o=>o.id===obj.parentId);if(!parent)return {ok:false,reason:'请放在桌面槽位上'};
    const target=footprint(parent,catalog);if(!target.item.slots||!overlaps(box,target))return {ok:false,reason:'这里没有桌面槽位'};
-   if(others.filter(o=>o.parentId===parent.id).length>=target.item.slots)return {ok:false,reason:'桌面已经放满'};
+   if(others.filter(o=>o.parentId===parent.id&&!o.underTable).length>=target.item.slots)return {ok:false,reason:'桌面已经放满'};
    return {ok:true};
   }
   for(const other of others){
@@ -220,7 +228,7 @@ export function canPlace(obj,objects,catalog){
   }
   return {ok:true};
  }
- for(const other of others){const conflict=buildingConflict(obj,other,catalog);if(conflict!==null){if(conflict)return {ok:false,reason:'这里已有建筑构件'};continue;}const otherItem=buildingItem(other,catalog);const supportLayer=otherItem?.building?.type==='floor'||isEdgeLike(otherItem);if(supportLayer&&structuralType===undefined)continue;const b=footprint(other,catalog);if(box.item.layer!==b.item.layer||box.item.layer==='top')continue;if(overlaps(box,b))return {ok:false,reason:'这里已有物品'};}
+ for(const other of others){if(other.parentId===obj.id&&other.underTable)continue;const conflict=buildingConflict(obj,other,catalog);if(conflict!==null){if(conflict)return {ok:false,reason:'这里已有建筑构件'};continue;}const otherItem=buildingItem(other,catalog);const supportLayer=otherItem?.building?.type==='floor'||isEdgeLike(otherItem);if(supportLayer&&structuralType===undefined)continue;const b=footprint(other,catalog);if(box.item.layer!==b.item.layer||box.item.layer==='top')continue;if(overlaps(box,b))return {ok:false,reason:'这里已有物品'};}
  return {ok:true};
 }
 export function visibleChunkKeys(camera,width,height,scale=40){const left=Math.floor((camera.x-width/scale/2)/32)-1,right=Math.floor((camera.x+width/scale/2)/32)+1,top=Math.floor((camera.y-height/scale/2)/32)-1,bottom=Math.floor((camera.y+height/scale/2)/32)+1,keys=[];for(let y=top;y<=bottom;y++)for(let x=left;x<=right;x++)keys.push(`${x},${y}`);return keys;}
@@ -237,7 +245,7 @@ export function petWish(petId,round,catalog,lang='en'){const rng=createRng(hashS
 export function validHomeLabel(value){return value===undefined||typeof value==='string'&&value.length<=60&&!/[\p{Cc}\p{Cf}]/u.test(value);}
 export function validateHomePart(kind,value,catalog){
  if(!value||typeof value!=='object'||Array.isArray(value))throw Error('家园文件无效');
- if(kind==='chunk')for(const obj of Object.values(value)){if(!obj||!validHomeDrawing(obj.drawing)||(obj.drawing!==undefined&&!HOME_DRAWING_ITEMS.includes(obj.itemId))||!validHomeLabel(obj.label)||!validBuildingProperties(obj)||(obj.interactionEnabled!==undefined&&typeof obj.interactionEnabled!=='boolean')||!validHomeSize(obj.sizeScale)||typeof obj.id!=='string'||!catalog.some(i=>i.id===obj.itemId)||!Number.isFinite(obj.x)||!Number.isFinite(obj.y)||Math.abs(obj.x)>1e9||Math.abs(obj.y)>1e9)throw Error('家园物品无效');}
+ if(kind==='chunk')for(const obj of Object.values(value)){if(!obj||!validHomeUnderTable(obj)||!validHomeDrawing(obj.drawing)||(obj.drawing!==undefined&&!HOME_DRAWING_ITEMS.includes(obj.itemId))||!validHomeLabel(obj.label)||!validBuildingProperties(obj)||(obj.interactionEnabled!==undefined&&typeof obj.interactionEnabled!=='boolean')||!validHomeSize(obj.sizeScale)||typeof obj.id!=='string'||!catalog.some(i=>i.id===obj.itemId)||!Number.isFinite(obj.x)||!Number.isFinite(obj.y)||Math.abs(obj.x)>1e9||Math.abs(obj.y)>1e9)throw Error('家园物品无效');}
  if(kind==='inventory')for(const [key,n]of Object.entries(value)){if(!catalog.some(i=>key.startsWith(`${i.id}:`))||!Number.isSafeInteger(n)||n<0)throw Error('家园库存无效');}
  if(kind==='residents')for(const [id,p] of Object.entries(value)){if(id==='$selection'){if(p?.version!==1)throw Error('宠物名单版本无效');continue;}if(!p||!Number.isFinite(p.x)||!Number.isFinite(p.y)||Math.abs(p.x)>1e9||Math.abs(p.y)>1e9)throw Error('宠物位置无效');}
  return value;

@@ -1,0 +1,27 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {buildWordIndex,parseWordLexicon,seedWordLexicon} from '../js/word_lexicon_core.js';
+import {selectAuthoredHomeGame} from '../js/home_authored_game_core.js';
+import {homeGameActions,homeGameActionMatches} from '../js/home_language_game_core.js';
+import {recordEffectivePractice} from '../js/language_practice_core.js';
+const read=p=>JSON.parse(fs.readFileSync(new URL('../'+p,import.meta.url),'utf8'));
+const data=read('data/adventure/curriculum/english-home-practice.json'),catalog=read('data/adventure/home/catalog.json').items;
+const index=buildWordIndex(parseWordLexicon(fs.readFileSync(new URL('../data/adventure/locale/word_en.txt',import.meta.url),'utf8'),'en'));
+test('dirty introductions need a real bathing facility and budget; revisits do not teach unseen words',()=>{
+ const objects=[{id:'bath',itemId:'bathtub',x:0,y:0}],pets=[{id:'friend'}],state={words:{}};
+ const first=data.games.find(g=>g.id==='en-l1-dirty-bathtub-first'),again=data.games.find(g=>g.id==='en-l1-dirty-bathtub-again');
+ const args={mode:'care',index,state,objects,pets,catalog,actions:homeGameActions('care',objects,pets,catalog),newWordBudget:0};
+ const select=(g,a=args)=>selectAuthoredHomeGame({...data,games:[g],arcs:[]},a);
+ assert.equal(select(first),null);assert.equal(select(again,{...args,newWordBudget:3}),null);
+ const game=select(first,{...args,newWordBudget:1});assert.deepEqual(game.introducedWords,['dirty']);
+ assert.equal(select(first,{...args,newWordBudget:1,actions:[]}),null);
+ assert.equal(homeGameActionMatches(game,{...game.action,petId:'other'}),false);
+ assert.equal(homeGameActionMatches(game,{...game.action,activity:'sleep'}),false);
+ assert.ok(homeGameActionMatches(game,game.action));assert.deepEqual(state,{words:{}});
+ seedWordLexicon(state,index);
+ const event={id:'muddy-once',at:1000,input:'text',valid:true,words:game.words,source:'home-story:'+first.id};
+ assert.ok(recordEffectivePractice(state,event,index));assert.equal(recordEffectivePractice(state,event,index),false);
+ assert.equal(state.words.dirty.practiceCount,1);assert.equal(state.words.clean?.practiceCount||0,0);
+ const arc=data.arcs.find(a=>a.id==='en-l1-muddy-feet');assert.equal(arc.steps[1].usePet,0);assert.equal(arc.steps[2].usePet,0);
+});

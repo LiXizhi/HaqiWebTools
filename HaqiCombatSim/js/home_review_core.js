@@ -2,8 +2,39 @@ import {recordHomeStory} from './home_story_core.js';
 // Scheduling evidence only: these intervals are product defaults, not mastery.
 export const HOME_REVIEW_SESSION_GAP=30*60*1000;
 export const HOME_REVIEW_INTERVALS=[5*60*1000,86400000,3*86400000,7*86400000,14*86400000];
-const modes=new Set(['care','find','arrange','turn','write','count','place','draw','door','walk']);
+const modes=new Set(['talk','care','find','arrange','turn','write','count','place','draw','door','walk','stand','run','jump']);
 const count=n=>Number.isSafeInteger(n)&&n>=0?n:0;
+function touchHomeReviewSession(state,event){
+ if(Number.isFinite(state.homeReviewSession?.at)&&event.at<state.homeReviewSession.at)return null;
+ if(!homeReviewSessionActive(state,event.at))state.homeReviewSession={id:event.id,startedAt:event.at,at:event.at,introduced:0};
+ const session=state.homeReviewSession;session.at=event.at;
+ if(String(event.source||'').startsWith('home-story:')){const source=String(event.source).slice(0,120);session.stories=[...(Array.isArray(session.stories)?session.stories:[]).filter(s=>s!==source),source].slice(-64);}
+ return session;
+}
+export function homeComprehensionReviewDue(word,input,now){
+ const review=word?.comprehension?.[input]?.review;
+ if(word?.selfMark==='unknown'&&word.markAt>(review?.lastAt||0))return true;
+ return !Number.isFinite(review?.nextAt)||review.nextAt<=now;
+}
+// Called only after comprehension validation and receipt de-duplication.
+// Each skill owns its interval; a read fallback must never postpone listening.
+export function recordHomeComprehensionReview(state,event,ids){
+ if(!['read','listen'].includes(event.review?.mode)||!['read','listen'].includes(event.input))return;
+ const session=touchHomeReviewSession(state,event);if(!session)return;
+ for(const id of ids){
+  const word=state.words[id],evidence=word?.comprehension?.[event.input];if(!evidence)continue;
+  const review=evidence.review??={version:1,stage:0,visits:0};
+  if(Number.isFinite(review.lastAt)&&event.at<review.lastAt)continue;
+  const newVisit=review.sessionId!==session.id,reset=word.selfMark==='unknown'&&word.markAt>(review.lastAt||0);
+  if(newVisit)review.visits=count(review.visits)+1;
+  review.stage=Math.min(HOME_REVIEW_INTERVALS.length-1,count(review.stage));
+  if(reset||!Number.isFinite(review.nextAt)){review.stage=0;review.nextAt=event.at+HOME_REVIEW_INTERVALS[0];}
+  else if(event.assisted||event.attempts>1){review.stage=0;review.nextAt=review.nextAt>event.at?Math.min(review.nextAt,event.at+HOME_REVIEW_INTERVALS[0]):event.at+HOME_REVIEW_INTERVALS[0];}
+  else if(newVisit&&event.at>=review.nextAt){review.stage=Math.min(review.stage+1,HOME_REVIEW_INTERVALS.length-1);review.nextAt=event.at+HOME_REVIEW_INTERVALS[review.stage];}
+  else if(event.at>=review.nextAt)review.nextAt=event.at+HOME_REVIEW_INTERVALS[0];
+  review.sessionId=session.id;review.lastAt=event.at;
+ }
+}
 export function homeReviewSupport(event){
  if(event.review?.evidenceVersion!==1||typeof event.assisted!=='boolean'||!Number.isSafeInteger(event.attempts)||event.attempts<1)return 'unknown';
  return event.assisted?'assisted':event.attempts>1?'retried':'unassisted';
@@ -27,9 +58,7 @@ export function recordHomeReview(state,event,ids){
   for(const id of ids)if(state.words[id]&&!Number.isFinite(state.words[id].lastPractice?.at))state.homeReviewSession.introduced=count(state.homeReviewSession.introduced)+1;
   return;
  }
- if(!homeReviewSessionActive(state,event.at))state.homeReviewSession={id:event.id,startedAt:event.at,at:event.at,introduced:0};
- const session=state.homeReviewSession;session.at=event.at;
- if(String(event.source||'').startsWith('home-story:')){const source=String(event.source).slice(0,120);session.stories=[...(Array.isArray(session.stories)?session.stories:[]).filter(s=>s!==source),source].slice(-64);}
+ const session=touchHomeReviewSession(state,event);
  for(const id of ids){
   const word=state.words[id];if(!word)continue;
   if(!Number.isFinite(word.lastPractice?.at))session.introduced=count(session.introduced)+1;

@@ -22,6 +22,8 @@
         "export": "node scripts/export_data.mjs --config ../../config/Aries --out data --version both",
         "test": "node --test tests/*.test.mjs",
         "test:battle": "node scripts/test_battle_fast.mjs",
+        "curriculum:audit": "node scripts/audit_english_level_one.mjs",
+        "curriculum:check": "node scripts/audit_english_level_one.mjs --check",
         "locale:audit": "node scripts/audit_locale.mjs --report tmp/locale-audit/latest.json",
         "locale:check": "node scripts/audit_locale.mjs --check --report tmp/locale-audit/latest.json",
         "locale:prepare": "node scripts/update_locale_batches.mjs prepare",

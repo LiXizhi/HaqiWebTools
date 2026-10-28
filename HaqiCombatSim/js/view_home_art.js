@@ -134,7 +134,7 @@ function drawInteractiveEffect(ctx,kind,w,h,now=0){
 // the same support elevation at every zoom. Old unsupported surfaces stay put.
 export function homeObjectSurfaceLift(object,objectsById,catalog){
  const item=catalog.find(i=>i.id===object.itemId),parent=objectsById.get(object.parentId);
- if(item?.layer!=='top'||!parent)return 0;
+ if(object.underTable||item?.layer!=='top'||!parent)return 0;
  const support=catalog.find(i=>i.id===parent.itemId);
  if(!support?.slots||!(support.surfaceLiftRatio>0))return 0;
  const b=footprint(parent,catalog),bounds=homeObjectVisualBounds(support,parent,0,0,b.w,b.h);

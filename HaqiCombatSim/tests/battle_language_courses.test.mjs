@@ -21,7 +21,7 @@ test('language tasks join the island journal and reserve a tracker slot only in 
     assert.equal(recommended.id,'course:en-town-01');assert.equal(recommended.status,'可接取');
     const tracked=withLanguageQuest([{id:1},{id:2},{id:3}],recommended);assert.equal(tracked.length,3);assert.equal(tracked[0].id,recommended.id);
     assert.equal(withLanguageQuest(tracked,recommended).filter(q=>q.id===recommended.id).length,1);
-    assert.deepEqual(filterJournalQuests(tasks,{region:'town'},save,content).map(q=>q.id),[recommended.id]);
+    assert.deepEqual(filterJournalQuests(tasks,{region:'town'},save,content).map(q=>q.id),[recommended.id,'course:en-town-02','course:en-town-03','course:en-town-04','course:en-town-05','course:en-town-06','course:en-town-07','course:en-town-08','course:en-town-09']);
     assert.equal(focusJournalQuest(tasks,{region:'fire'},recommended.id,20,save,content).filters.region,'town');
     state.courses={'en-town-01':{acceptedAt:10,next:0}};tasks=languageQuestRows(data,state,'en');assert.equal(journalQuestStatus(save,content,tasks.find(q=>q.id===recommended.id)),'进行中');
     state.courses['en-town-01'].scene={version:1,next:4};tasks=languageQuestRows(data,state,'en');assert.equal(tasks.find(q=>q.id===recommended.id).status,'已完成');assert.notEqual(recommendedLanguageQuest(save,content,tasks).id,recommended.id);
@@ -41,9 +41,9 @@ test('Chinese language tracking uses the original quest identity and completed l
 test('nine recommended islands have independently authored four-language stories and every target has a playable card',()=>{
     validateLanguageCourses(data,indexes);validateWordCards(rows,cards);
     assert.deepEqual(data.route.map(r=>r.island),['hanzi','town','fire','ice','desert','dark','tide','float','sail']);
-    for(const l of WORD_LANGUAGES){assert.equal(data.courses.filter(c=>c.language===l).length,9);assert.ok(rows.some(r=>r.language===l));}
+    for(const l of WORD_LANGUAGES){assert.deepEqual(new Set(data.courses.filter(c=>c.language===l).map(c=>c.island)),new Set(data.route.map(r=>r.island)));assert.ok(rows.some(r=>r.language===l));}
     assert.equal(data.courses.find(c=>c.id==='en-hanzi-01').steps.length,6);
-    assert.equal(new Set(data.courses.filter(c=>!c.legacyQuestIds).map(c=>c.context)).size,35);
+    assert.equal(new Set(data.courses.filter(c=>!c.legacyQuestIds).map(c=>c.context)).size,data.courses.filter(c=>!c.legacyQuestIds).length);
     const keys=indexes.zh.data.keys;for(const l of WORD_LANGUAGES)assert.deepEqual(new Set(indexes[l].data.keys),new Set(keys));
     const all=[...rows,...read('data/adventure/dictionary/word-cards.json').cards.filter(r=>!rows.some(x=>x.id===r.id))];assert.ok(all.length>60);validateWordCards(all,cards);
 });

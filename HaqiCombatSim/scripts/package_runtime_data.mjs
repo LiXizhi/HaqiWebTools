@@ -120,7 +120,7 @@ function collectRuntimeData(source, files, prefix = '') {
             if(prefix==='adventure/'&&entry.name==='dungeons.json')continue;
             if(prefix==='promo/')continue; // Standalone filming script, loaded only by the studio.
             // Standalone website/character preview data is not part of game packs.
-            if(prefix===''&&['official-website.json','hero-preview.json','hero-outfits.json'].includes(entry.name))continue;
+            if(prefix===''&&['official-website.json','hero-preview.json','hero-outfits.json','ai-personas.json'].includes(entry.name))continue;
             const value = projectRuntimeData(`${prefix}${entry.name}`, JSON.parse(fs.readFileSync(from, 'utf8')));
             if (value === null) continue;
             files[`data/${prefix}${entry.name}`] = value;

@@ -66,7 +66,8 @@ export function prepareAppsRelease(repo, { localTest = false } = {}) {
             git(['merge-base', '--is-ancestor', 'HEAD', upstream]);
         } catch (ancestryError) {
             if (ancestryError.status !== 1) throw ancestryError;
-            throw new Error('apps/master 与 origin/master 已分叉，请人工合并后重试；未复制发布文件，未推送。');
+            console.log('apps/master 与 origin/master 已分叉，不合并、不改写本地历史；发布入口将由 publishRepo 基于 origin/master 独立发布。');
+            return;
         }
         try {
             git(['merge', '--ff-only', upstream]);

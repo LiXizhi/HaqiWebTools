@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {compileFilm,locateShot,filmText,srtFor,frameDelta,captionAt,narrationLimitedTime} from '../js/promo_timeline_core.js';
+import {resolvePromoEdition,compileFilm,locateShot,filmText,srtFor,frameDelta,captionAt,narrationLimitedTime} from '../js/promo_timeline_core.js';
 import {samplePromoMotion,planPromoPath,samplePromoZoom} from '../js/promo_motion_core.js';
 import {presentationEventDurationMs,samplePresentationClock} from '../js/battle_presentation_core.js';
 import {WALK_SPEED} from '../js/adventure_world_core.js';
@@ -142,4 +142,13 @@ test('精华保留社交、2对2、漩涡深圳沿路进城与真实学习奖励
  assert.equal(earth.cues.some(c=>c.name==='earth-focus'),false);assert.equal(by('city'),undefined);
  assert.deepEqual(by('skills').cues.map(c=>c.group),[1,2,3,4,5]);
  assert.ok(by('learning').cues.some(c=>c.action==='learning-battle'));
+});
+
+
+test('URL版本选择优先于简洁模式默认值，非法参数安全回退',()=>{
+ for(const simple of [false,true]){
+  assert.equal(resolvePromoEdition('short',simple),'short');
+  assert.equal(resolvePromoEdition('long',simple),'long');
+  for(const missing of [undefined,null,'','invalid'])assert.equal(resolvePromoEdition(missing,simple),simple?'short':'long');
+ }
 });

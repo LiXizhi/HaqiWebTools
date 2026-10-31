@@ -1,3 +1,7 @@
+// Explicit URL edition wins; unknown values use the mode's existing default.
+export function resolvePromoEdition(edition, simple=false) {
+    return ['short','long'].includes(edition) ? edition : simple ? 'short' : 'long';
+}
 // Declarative film timeline. No browser, storage or game state dependencies.
 export function compileFilm(script, edition = 'long') {
     if (script.version !== 1 || !Array.isArray(script.shots)) throw Error('剧本版本不受支持');

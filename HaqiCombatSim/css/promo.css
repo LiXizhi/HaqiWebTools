@@ -15,3 +15,29 @@
 .screen[data-format=phone] .narration #subtitle{font-size:clamp(12px,3.4cqw,20px);width:100%;line-height:1.5}
 
 #narration-voice{max-width:240px}#read-subtitles{accent-color:var(--accent,#b8d18b)}#narration-status{font-size:12px;color:#d9c995}
+
+/* Embed mode: one screen, one compact transport, no authoring tools. */
+.simple .studio-head,.simple .desk{display:none}
+.simple main{max-width:none;padding:0}
+.simple .cinema{position:relative;max-width:none;width:100%;border:0;box-shadow:none}
+.simple-bar{position:absolute;bottom:0;left:0;right:0;z-index:10;display:flex;align-items:center;gap:12px;padding:12px 16px;background:linear-gradient(transparent,#071a19f5);transition:opacity .2s}
+.simple-bar #seek{flex:1;min-width:24px;accent-color:#d6df9f}
+.simple-bar button{white-space:nowrap;min-height:40px;font-size:12px}
+#simple-clock{font:12px monospace;white-space:nowrap}
+#simple-start{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);z-index:8;border-radius:50px;padding:19px 30px;background:#f2ecd8;color:#18382e;font-size:18px;box-shadow:0 5px 30px #0005}
+#simple-error{position:absolute;left:0;right:0;top:65%;z-index:9;display:flex;justify-content:center;gap:20px;align-items:center}
+#simple-start[hidden],#simple-error[hidden]{display:none}
+.simple #loading{font-size:clamp(12px,2vw,20px);padding:24px;text-align:center}
+.simple.controls-hidden.is-playing .simple-bar:not(:focus-within){opacity:0;pointer-events:none}
+.simple .screen .narration{padding-bottom:8px}
+
+
+.simple button:focus-visible,.simple a:focus-visible,.simple input:focus-visible{outline:3px solid #efd49b;outline-offset:2px}
+@media(max-width:600px){.simple-bar{gap:6px;padding:8px}.simple-bar #play{min-width:48px}.simple-bar button{padding:7px}#simple-clock{display:none}#simple-start{padding:12px 22px;font-size:15px}}
+@media(prefers-reduced-motion:reduce){.simple-bar{transition:none}}
+
+#simple-message{position:absolute;top:8px;left:10%;right:10%;z-index:10;text-align:center;background:#102b2beb;border-radius:6px;padding:8px;font-size:12px}#simple-message[hidden]{display:none}
+
+.simple .cinema{aspect-ratio:auto;height:calc(100vw / var(--film-ratio) + 50px);padding-bottom:50px}
+.simple .cinema:fullscreen{height:100svh}
+.simple-bar{height:50px;background:#102b29;padding-block:5px}

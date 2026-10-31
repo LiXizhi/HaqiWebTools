@@ -236,3 +236,15 @@ test('verified release copies only its entry wrappers into sibling Maisi and app
         fs.rmSync(root, { recursive: true, force: true });
     }
 });
+
+
+test('CDN-only release never publishes apps or copies Maisi wrappers',async()=>{
+ const source=fs.readFileSync(new URL('../uploadRelease.mjs',import.meta.url),'utf8');
+ const block=source.slice(source.lastIndexOf('if (manifest.verified) {'));
+ const calls=[];
+ await vm.runInNewContext(`(async()=>{${block}})()`,{
+  manifest:{verified:true},args:new Set(['--cdn-only']),console:{log(){}},
+  syncAppsRelease:()=>calls.push('apps'),syncMaisiRelease:()=>calls.push('maisi'),
+ });
+ assert.deepEqual(calls,[]);
+});

@@ -156,7 +156,7 @@ function filmSkills(groupIndex,start){
 }
 async function prepare(next,seed){
     runtimeError=null;
-    if(next.scene!=='learning')void prefetchPromoLearning().catch(()=>{});
+    if(next.scene!=='learning')void prefetchPromoLearning(targetLocale).catch(()=>{});
     petInteraction=null;petClock=0;petStepped=0;petShared=false;
     features?.dispose();for(const dialog of document.querySelectorAll('dialog')){dialog.close();dialog.remove();}
     clear();pointerMotion=null;for(const node of [deckPointer,deckRing])node.hidden=true;deckClickAt=null;deckShowcase=null;sceneSeed=seed;shot=next;checks=[];frames=[];tactics=null;path=[];draft=null;lastBattleFrame=-1;
@@ -212,9 +212,9 @@ async function prepare(next,seed){
         case 'friends':social={owner:locale==='en'?'Demo character':'演示角色',mailTab:'friends',mailAvailable:false,applies:[{id:'promo-request',nickname:locale==='en'?'Luna (demo companion)':'小月（演示伙伴）'}],friends:[]};friends();check(!!nodes.overlay.querySelector('button'),'好友申请视图（固定演示数据）');break;
         case 'dungeons':dungeon=assets.content.dungeons.filter(d=>d.playable).sort((a,b)=>a.recommendedLevel-b.recommendedLevel)[0];check(!!dungeon,'存在可进入副本');await assets.dungeons.load(dungeon.id);renderDungeons(nodes.overlay,model(),callbacks);check(!!nodes.overlay.querySelector('.dungeon-list'),'副本目录可渲染');break;
         case 'learning':{
-            learningEvaluation=await prefetchPromoLearning();
-            const data=await createJsonReader()('data/adventure/camp-conversations.json'),profile=data.profiles.find(p=>p.stories?.length),story={...profile.stories[0],id:'promo-beach',title:'一起去海边',context:'用英语说明目的地，并向伙伴求助。',opening:promoQuestion,turns:[{id:"promo-beach",pattern:promoAnswer.en,question:promoQuestion,answer:promoAnswer}]};
-            chatState={profile,story,index:0,locale:'en',showChinese:true,portrait:assets.mode==='local'?profile.portrait.local:profile.portrait.cdn,messages:[{role:'assistant',text:promoQuestion}],status:'真实AI映射与评价已提前准备',hintLevel:0,done:false};paintChat();check(!!learning.root.querySelector('.camp-chat'),'真实API英语对话组件已加载');break;
+            learningEvaluation=await prefetchPromoLearning(targetLocale);
+            const data=await createJsonReader()('data/adventure/camp-conversations.json'),profile=data.profiles.find(p=>p.stories?.length),story={...profile.stories[0],id:'promo-beach',title:locale==='en'?'Let’s visit the beach':'一起去海边',context:locale==='en'?'Ask a friend for help in Chinese.':'用英语说明目的地，并向伙伴求助。',opening:promoQuestion,turns:[{id:"promo-beach",pattern:promoAnswer[targetLocale],question:promoQuestion,answer:promoAnswer}]};
+            chatState={profile,story,index:0,locale:targetLocale,showChinese:true,portrait:assets.mode==='local'?profile.portrait.local:profile.portrait.cdn,messages:[{role:'assistant',text:promoQuestion}],status:'真实AI映射与评价已提前准备',hintLevel:0,done:false};paintChat();check(!!learning.root.querySelector('.camp-chat'),'真实API双语对话组件已加载');break;
         }
         default:if(!await features.prepare(shot))throw Error(`未支持的镜头：${shot.scene}`);
     }
@@ -262,7 +262,7 @@ async function action(cue){
         case 'enter-dungeon':clear();enterDungeon(save,assets.content,dungeon.id);await scene();check(save.zone===dungeon.id,'通过正式规则进入副本');break;
         case 'dungeon-battle':filmBattle(dungeon.arenas[0].id,cue.time);break;
         case 'learning-reply':chatState.messages.push({role:'user',text:promoAnswer});paintChat();break;
-        case 'learning-next':{const reward=awardPromoLearning(save,assets.content,learningEvaluation);chatState.messages.at(-1).feedback=learningEvaluation.learning?.feedback||'本次未获得学习加成';chatState.messages.at(-1).learningReward=reward;chatState.messages=chatState.messages.slice(-1);chatState.messages.push({role:'assistant',text:{en:learningEvaluation.reply,'zh-CN':learningEvaluation.translation}});chatState.story.turns[1]={id:'promo-feedback'};chatState.index=1;paintChat();check(!!reward,'真实AI证据通过并获得语言战斗加成');break;}
+        case 'learning-next':{const reward=awardPromoLearning(save,assets.content,learningEvaluation,targetLocale);chatState.messages.at(-1).feedback=learningEvaluation.learning?.feedback||'本次未获得学习加成';chatState.messages.at(-1).learningReward=reward;chatState.messages=chatState.messages.slice(-1);chatState.messages.push({role:'assistant',text:{[targetLocale]:learningEvaluation.reply,[locale]:learningEvaluation.translation}});chatState.story.turns[1]={id:'promo-feedback'};chatState.index=1;paintChat();check(!!reward,'真实AI证据通过并获得语言战斗加成');break;}
         case 'learning-battle':learning.close();filmArena(arenaSeats(save,assets.content,assets.dataset,[],2),2,cue.time);check(Object.values(frames[0].arena.unitsById.hero.languageBuff||{}).some(n=>n>0),'语言加成通过正式赛场快照进入战斗');break;
         default:throw Error(`未支持的剧本动作：${cue.action}`);
     }

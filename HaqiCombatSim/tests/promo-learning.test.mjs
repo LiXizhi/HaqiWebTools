@@ -12,3 +12,13 @@ test('宣传片只为真实评价确认且原句包含的英文证据授予加�
  assert.equal(Object.values(dailyBuffs(save)).reduce((a,b)=>a+b,0),1);
  assert.equal(awardPromoLearning(save,content,response),null);
 });
+
+
+test('汉语演示只认可当前中文原句证据，中英奖励不混用',()=>{
+ const save={seed:530},content={};
+ assert.equal(awardPromoLearning(save,content,{learning:{worthy:true,quote:'go to the beach'}},'zh-CN'),null);
+ assert.equal(awardPromoLearning(save,content,{learning:{worthy:true,quote:'我想去海边'}},'en'),null);
+ const response={learning:{worthy:true,quote:'我想去海边'}};
+ assert.equal(awardPromoLearning(save,content,response,'zh-CN').total,1);
+ assert.equal(awardPromoLearning(save,content,response,'zh-CN'),null);
+});

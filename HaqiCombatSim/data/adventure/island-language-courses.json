@@ -831,23 +831,32 @@
         {
           "id": "conversation-2",
           "interaction": {
-            "kind": "landmark",
-            "id": "hanzi-2",
-            "name": "溪边小村"
+            "kind": "npc",
+            "id": 863001,
+            "name": "溪禾"
           },
-          "objective": "沿溪到小村寻找小灯，确认眼前的线索",
-          "hint": "你在溪边寻找小灯，还没有找到她。这一段是自己的观察；用 water 说出眼前的水，再去询问附近的溪禾。",
-          "prompt": "Xiaodeng? Are you here?",
-          "promptGloss": "小灯？你在这里吗？",
-          "answer": "Only water.",
-          "answerGloss": "只有水。",
-          "ending": "I'll ask Xihe.",
-          "endingGloss": "我去问问溪禾。",
-          "words": [
-            "water"
+          "objective": "去溪边小村，问溪禾有没有见过小灯",
+          "hint": "用英语问溪禾：小灯在哪里？可以说，也可以打字。",
+          "expressionHint": "问某个人在哪，可以用 Where is …?",
+          "retryHint": "溪禾还没听懂你在问谁在哪里。试着用 where 问小灯的位置，也可以点提示。",
+          "prompt": "Hi! Can I help you?",
+          "promptGloss": "你好！需要帮忙吗？",
+          "answer": "Where is Xiaodeng?",
+          "answerGloss": "小灯在哪里？",
+          "alternatives": [
+            {
+              "id": "ask-if-known",
+              "answer": "Do you know where Xiaodeng is?",
+              "answerGloss": "你知道小灯在哪里吗？"
+            }
           ],
-          "intro": "溪水流过小村，附近没有看见小灯。溪禾就在不远处。",
-          "speaker": "player"
+          "ending": "She went to ask Shibo for directions.",
+          "endingGloss": "她去找石伯问路了。",
+          "words": [
+            "where"
+          ],
+          "intro": "你好，我叫溪禾，刚从石头路那边回来。你在找人吗？",
+          "introReply": "用英语问小灯在哪"
         },
         {
           "id": "conversation-3",
@@ -856,7 +865,7 @@
             "id": 863001,
             "name": "溪禾"
           },
-          "objective": "向溪禾打听小灯，说清自己在帮助阿初",
+          "objective": "继续跟溪禾聊，告诉她你在帮阿初",
           "hint": "溪禾想知道你为什么找小灯。告诉她：你在帮助朋友阿初。回应后先处理石头路附近的小鼠，再回码头。",
           "prompt": "Are you helping Achu?",
           "promptGloss": "你在帮助阿初吗？",

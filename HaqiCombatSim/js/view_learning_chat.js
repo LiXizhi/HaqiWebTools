@@ -67,7 +67,7 @@ export function createLearningChatView(cb){
     const footer=el('footer','camp-chat-footer'),status=el('p','camp-chat-status');status.setAttribute('role','status');
     const form=el('form','camp-chat-input');form.hidden=true;
     const input=el('input');input.placeholder=tr('输入你的回答，答对即可继续');input.maxLength=500;input.setAttribute('aria-label',tr('文字回答'));
-    const send=button('发送',()=>{if(needsRecovery(state)){cb.retry?.();return;}const text=input.value.trim();if(text){if(state?.mode!=='free')input.value='';cb.help(text);}});form.onsubmit=e=>{e.preventDefault();send.click();};const inputBox=el('div','camp-chat-input-box');inputBox.append(input);form.append(inputBox,send);input.oninput=()=>cb.draft?.(input.value);
+    const send=button('发送',()=>{if(needsRecovery(state)){cb.retry?.();return;}const text=input.value.trim();if(text){if(state?.mode!=='free'&&!state?.progressiveHints)input.value='';cb.help(text);}});form.onsubmit=e=>{e.preventDefault();send.click();};const inputBox=el('div','camp-chat-input-box');inputBox.append(input);form.append(inputBox,send);input.oninput=()=>cb.draft?.(input.value);
     function needsRecovery(s){return s?.mode==='free'&&s.retryable&&(!s.ready||s.giftReply||!s.draft?.trim());}
     const actions=el('div','camp-chat-actions');
     const typing=button('输入',()=>{form.hidden=!form.hidden;if(!form.hidden)input.focus();},'secondary');
@@ -146,20 +146,21 @@ export function createLearningChatView(cb){
                     const yes=button('Yes',()=>cb.free?.(),'secondary small'),no=button('No',cb.close,'secondary small');
                     yes.textContent='Yes';no.textContent='No';choices.append(yes,no);invitation.append(choices);log.append(invitation);
                 }
-                if(!s.done&&(!free||s.hintLevel)){hintRow.className=`camp-chat-message ${free?'is-npc':'is-player'} camp-chat-prompt`;hintAvatar.textContent=free?s.profile.name.slice(0,1):tr('我');log.append(hintRow);}
+                if(!s.done&&(s.hintLevel||(!free&&!s.progressiveHints))){hintRow.className=`camp-chat-message ${free?'is-npc':'is-player'} camp-chat-prompt`;hintAvatar.textContent=free?s.profile.name.slice(0,1):tr('我');log.append(hintRow);}
                 log.scrollTop=log.scrollHeight;}
             for(const replay of log.querySelectorAll('button'))if(!replay.className.includes('camp-chat-replay'))replay.disabled=s.busy||s.recording;
             for(const line of lineViews)line.setDisabled(s.busy||s.recording);
-            hint.hidden=s.done||(free?!s.hintLevel:!s.story.turns[s.index]?.answer);
+            hint.hidden=s.done||(free?!s.hintLevel:!s.story.turns[s.index]?.answer||(s.progressiveHints&&!s.hintLevel));
             hint.classList.toggle('is-compact',!free&&!s.hintLevel);
-            hints.textContent=tr(s.hintLevel?'收起提示':'显示提示');hints.setAttribute('aria-expanded',String(!!s.hintLevel&&!s.done));
+            hints.textContent=tr(s.progressiveHints&&s.hintLevel===1?'显示示范':s.hintLevel?'收起提示':'显示提示');hints.setAttribute('aria-expanded',String(!!s.hintLevel&&!s.done));
+            if(s.done&&s.progressiveHints)input.value='';
             if(!hint.hidden&&free){hint.replaceChildren(el('p','',s.hintText||'正在生成提示…'));}
             if(!hint.hidden&&!free&&(logChanged||fresh)){const turn=s.story.turns[s.index];hint.replaceChildren();
                 if(s.hintLevel)hint.append(el('p','',turn.hint));
                 const pattern=s.taskScene?turn.answer[s.locale]:s.locale==='en'?turn.pattern.replace(/\{\w+\}/g,'…'):turn.answer['zh-CN'],answer=turn.answer[s.locale];
                 const same=pattern.trim().replace(/\s+/g,' ')===answer.trim().replace(/\s+/g,' ');
                 if(s.hintLevel&&!same)hint.append(el('p','camp-chat-original',pattern));
-                {
+                if(!s.progressiveHints||s.hintLevel>=3){
                     const sample=button('',()=>cb.speak(answer,'user'),'camp-chat-sample');
                     sample.setAttribute('aria-label',fill('朗读示范：{text}',{text:answer}).text);sample.title=tr('听示范');sample.disabled=s.busy||s.recording;
                     const icon=document.createElementNS('http://www.w3.org/2000/svg','svg');icon.setAttribute('viewBox','0 0 24 24');icon.setAttribute('aria-hidden','true');

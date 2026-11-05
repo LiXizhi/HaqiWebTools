@@ -97,3 +97,22 @@ test('scene tasks require real matching nearby interactions or victory, keeping 
  assert.ok(completeCourseStep(state,c,step.id,step.answer,{...event,interaction:{...step.interaction,zone:'hanzi',distance:40}},index));assert.equal(state.courses[c.id].next,6);assert.equal(coursePosition(state,c),1);
  const combat=c.steps.find(s=>s.interaction.kind==='encounter');assert.equal(courseInteractionMatches(c,combat,{interaction:{...combat.interaction,zone:'hanzi',won:false}}),false);assert.ok(courseInteractionMatches(c,combat,{interaction:{...combat.interaction,zone:'hanzi',won:true}}));
 });
+
+test('the second English scene asks Xihe for directions and preserves existing scene progress',()=>{
+ const course=data.courses.find(c=>c.id==='en-hanzi-01'),index=indexes.en;
+ const [,step,followUp]=course.steps;
+ const interaction={kind:'npc',id:863001,zone:'hanzi',distance:40};
+ for(const answer of ['Where is Xiaodeng?','Do you know where Xiaodeng is?']){
+  const state=emptyLanguageTree();seedWordLexicon(state,index);
+  const event={id:'ask-xihe',at:100,input:'text',interaction};
+  const first=course.steps[0];
+  assert.ok(completeCourseStep(state,course,first.id,first.answer,{...event,id:'greet-achu',interaction:{...interaction,id:863000}},index));
+  assert.equal(coursePosition(state,course),1);
+  assert.equal(completeCourseStep(state,course,step.id,'Only water.',event,index),false);
+  assert.equal(completeCourseStep(state,course,step.id,answer,{...event,interaction:{...interaction,kind:'landmark',id:'hanzi-2'}},index),false);
+  assert.ok(completeCourseStep(state,course,step.id,answer,event,index));
+  assert.equal(coursePosition(state,course),2);
+  assert.equal(completeCourseStep(state,course,step.id,answer,event,index),false);
+  assert.ok(completeCourseStep(state,course,followUp.id,followUp.answer,{...event,id:'help-achu'},index));
+ }
+});

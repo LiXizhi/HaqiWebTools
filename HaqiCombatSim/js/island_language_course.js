@@ -20,12 +20,16 @@ export function openIslandLanguageCourse({getState,courseId,interaction,actor,po
     async function finish(){try{if(starting)await starting;if(!valid()||!recording)return;const ticket=operation;recording=false;clearTimeout(recordTimer);await run(async()=>{const text=await voice.finish();if(valid()&&ticket===operation)await answer(text,'speech');});}catch(e){if(valid()&&session){session.status=e.message;paint();}}}
     async function start(){if(!valid()||busy||recording||starting||!session||session.done)return;const ticket=++operation;session.phase='connecting';paint();starting=voice.start(abort.signal);try{await starting;if(valid()&&ticket===operation){recording=true;session.phase='recording';recordTimer=setTimeout(finish,12000);}}catch(e){if(valid()){session.status=e.message+'；可以改用输入。';session.phase='ready';}}finally{starting=null;paint();}}
     const speak=(text,role)=>run(()=>voice.speak(text,language==='zh'?'zh-CN':language,abort.signal,role==='user'?origin.save:actor));
-    const view=viewFactory({close,start,finish,cancel,speak,help:text=>run(()=>answer(text,'text')),hint:()=>{session.hintLevel=session.hintLevel?0:3;paint();},chinese:()=>{session.showChinese=!session.showChinese;paint();},sceneContinue:()=>{close(false);onComplete();}});
+    const view=viewFactory({close,start,finish,cancel,speak,help:text=>run(()=>answer(text,'text')),hint:()=>{
+        if(session.progressiveHints&&session.hintLevel===0)session.hintLevel=1;
+        else session.hintLevel=session.hintLevel===3?0:3;
+        paint();
+    },chinese:()=>{session.showChinese=!session.showChinese;paint();},sceneContinue:()=>{close(false);onComplete();}});
     const timer=setInterval(()=>{if(!valid())close();},250);
     async function answer(text,input){
         if(!valid()||!step||session?.done)return;
         const accepted=courseAcceptedAnswer(step,text);
-        if(!accepted){session.status='再听一遍示范，照着说或输入就可以。';return;}
+        if(!accepted){session.status=step.retryHint||'再听一遍示范，照着说或输入就可以。';return;}
         const result=await languageTreeStore.update(wordTreeKey(context.key,language),s=>{
             if(!valid())throw Error('对话已结束');migrateWordLexicon(s,index);seedWordLexicon(s,index);
             return completeCourseStep(s,course,step.id,text,{id:receipt,input,at:Date.now(),interaction,interactionRange},index);
@@ -33,7 +37,9 @@ export function openIslandLanguageCourse({getState,courseId,interaction,actor,po
         if(!valid())return;if(!result.persisted)throw Error('本地进度尚未保存，请再回应一次');
         if(!result.result&&!result.state.practiceReceipts?.[receipt]){session.status='再听一遍示范，照着说或输入就可以。';return;}
         session.messages.push({role:'user',text,translation:accepted.answerGloss},{role:step.speaker==='player'?'user':'npc',text:localized(step.ending,step.endingGloss)});session.done=true;
-        const next=course.steps[coursePosition(result.state,course)];session.status=next?next.objective:course.completion||'这段岛屿故事完成了。学过的词可以在战斗和家园继续使用。';session.nextLabel=next?'前往下一处':'返回岛屿';
+        const next=course.steps[coursePosition(result.state,course)];session.status=next?next.objective:course.completion||'这段岛屿故事完成了。学过的词可以在战斗和家园继续使用。';
+        const sameNpc=interaction.kind==='npc'&&next?.interaction.kind==='npc'&&next.interaction.id===step.interaction.id;
+        session.nextLabel=sameNpc?'继续交谈':next?'前往下一处':'返回岛屿';
     }
     function localized(text,gloss){return {[language==='zh'?'zh-CN':language]:text,...(language==='zh'?{}:{'zh-CN':gloss})};}
     // A visible loading shell lets failures remain readable and closable.
@@ -50,7 +56,9 @@ export function openIslandLanguageCourse({getState,courseId,interaction,actor,po
         });
         if(!valid())return;if(!read.persisted)throw Error('本地任务进度暂时无法保存，请关闭后重试');
         const position=coursePosition(read.state,course);step=course.steps[position];
-        session.story={id:course.id+':'+step.id,title:course.title,context:'',turns:[{id:step.id,question:localized(step.prompt,step.promptGloss),answer:localized(step.answer,step.answerGloss),pattern:step.answer,hint:''}]};
+        session.progressiveHints=!!step.expressionHint;
+        if(session.progressiveHints)session.hintLevel=0;
+        session.story={id:course.id+':'+step.id,title:course.title,context:'',turns:[{id:step.id,question:localized(step.prompt,step.promptGloss),answer:localized(step.answer,step.answerGloss),pattern:step.answer,hint:step.expressionHint||''}]};
         if(step.speaker==='player'){session.profile={name:'我',role:'场景观察'};session.portraitNode=null;}
         session.messages=[{role:step.speaker==='player'?'user':'npc',text:localized(step.prompt,step.promptGloss)}];session.sceneProgress=`故事 ${position+1} / ${course.steps.length}`;session.status=step.hint;
         if(introFactory&&step.interaction.kind!=='landmark')intro=introFactory({course,step,position,actor,close,proceed:()=>{if(!valid())return;introducing=false;paint();}});

@@ -244,7 +244,10 @@ export function renderEntry(root,assets,stored,cb,error='') {
         else if(draft.step===2)setText(submit,'下一步 · 选择系别');
         else setText(submit,'确认选择{school} · 开始冒险',{school:SCHOOL_NAMES[draft.school]});
         form.append(submit);
-        if(draft.step===1)form.append(button('导入魔法哈奇角色',cb.importOriginal,'text-button creation-import'));
+        if(draft.step===1){
+            if(cb.playPrologue)form.append(button('播放开场动画',cb.playPrologue,'text-button'));
+            form.append(button('导入魔法哈奇角色',cb.importOriginal,'text-button creation-import'));
+        }
         if(draft.step>1)form.append(button('上一步',()=>{draft.step--;paint();root.scrollTop=0;},'text-button creation-back'));
         else if(accountChoice)form.append(button('返回',()=>{draft.account=undefined;paint();root.scrollTop=0;},'text-button creation-back'));
         if(cb.roles)form.append(button('返回我的角色',cb.roles,'text-button creation-back'));

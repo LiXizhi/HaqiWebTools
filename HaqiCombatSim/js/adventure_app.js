@@ -18,7 +18,7 @@ import {hanziAnimationActive} from './view_hanzi_animation.js';
 import {createHanziMemory} from './adventure_hanzi_memory.js';
 import {learningModeForced,enforceLearningMode} from './learning_mode_policy.js';
 const learningForced=learningModeForced(globalThis.location?.search);
-import {restoreVisibleFocus,createCloseButton} from './view_adventure_controls.js';
+import {restoreVisibleFocus} from './view_adventure_controls.js';
 import {locationSnapshot,mapCoordinateVersion} from './adventure_coordinates_core.js';
 import {createIslandHeroNavigation} from './island_hero_navigation.js';
 import {timeScrollCity} from './adventure_time_scroll_core.js';
@@ -164,10 +164,10 @@ let atlasView=null,atlasPortalFocus=null;
 function switchWorldMap(id){atlasPortalFocus=null;openPanel(id==='earth'?'earthmap':'worldmap');}
 let courseView=null;
 let homeView=null,homeTicket=0;
-async function openHomePanel(){
+async function openHomePanel({starterRoom=false}={}){
     if(stage!=='world')return;localPlay.closeAll();localPlay.clearKeys();close({silent:true});panel='home';const ticket=++homeTicket;
     try{const {openHomeSystem}=await import('./home_app.js');if(ticket!==homeTicket||panel!=='home')return;
-        const view=await openHomeSystem({root:nodes.overlay,close,cloud:cloudClient,assetMode:assets.mode,loadingAssets:assets,warmHero:()=>Promise.all([save,localPlay.second].filter(Boolean).map(hero=>assets.hero.ensure(assets.hero.appearance(hero,{mounted:false})))),drawTree:(ctx,x,y,size,variant)=>assets.environmentArt?.draw(ctx,'campTrees',['tallPine','layeredPine','cypressPine','blossomTree'][variant%4],x-size*.56,y-size*1.06,size*1.12,size*1.08),drawHero:(ctx,hero,x,y,time,moving,scale,options)=>assets.hero.drawSave(ctx,hero,x,y,time,moving,scale,options),onScene:active=>{nodes.hud.hidden=active;nodes.world.hidden=active;if(active){sceneLoading.invalidate();renderer.releaseScene();world.releaseSurface?.();}},getContext:()=>({owner:roleStore.owner,roleId:roleStore.catalog.activeId,save,secondSave:localPlay.second,secondFollowing:localPlay.secondFollowing,mouseOwner:localPlay.mouseOwner,settings:gameSettings.value,content:assets.content,active:panel==='home'&&stage==='world'&&ticket===homeTicket})});
+        const view=await openHomeSystem({root:nodes.overlay,close,starterRoom,cloud:cloudClient,assetMode:assets.mode,loadingAssets:assets,warmHero:()=>Promise.all([save,localPlay.second].filter(Boolean).map(hero=>assets.hero.ensure(assets.hero.appearance(hero,{mounted:false})))),drawTree:(ctx,x,y,size,variant)=>assets.environmentArt?.draw(ctx,'campTrees',['tallPine','layeredPine','cypressPine','blossomTree'][variant%4],x-size*.56,y-size*1.06,size*1.12,size*1.08),drawHero:(ctx,hero,x,y,time,moving,scale,options)=>assets.hero.drawSave(ctx,hero,x,y,time,moving,scale,options),onScene:active=>{nodes.hud.hidden=active;nodes.world.hidden=active;if(active){sceneLoading.invalidate();renderer.releaseScene();world.releaseSurface?.();}},getContext:()=>({owner:roleStore.owner,roleId:roleStore.catalog.activeId,save,secondSave:localPlay.second,secondFollowing:localPlay.secondFollowing,mouseOwner:localPlay.mouseOwner,settings:gameSettings.value,content:assets.content,active:panel==='home'&&stage==='world'&&ticket===homeTicket})});
         if(ticket!==homeTicket||panel!=='home'){view.dispose();return;}homeView=view;
     }catch(e){if(ticket===homeTicket){close();toast(e.message);}}
 }
@@ -772,9 +772,8 @@ async function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
     return loadLocaleFiles(ids).then(()=>{if(save!==newSave)return;configureLocale({locale:storedLocalePref()||save.locale,languageLearning:save.languageLearning});reveal();});
 }
 // Prologue 《失落的光》 (docs/prologue.md): lazily loaded, shares loaded assets and locale, needs no login
-// and never writes a role save. Auto-played when no roles exist, or offered via confirmation modal before creating a new role.
-const PROLOGUE_SEEN_KEY='haqi.prologue.seen.v1';
-let prologueRun=null,prologueOffered=false;
+// and never writes a role save. Opened from character creation or the direct URL.
+let prologueRun=null;
 async function setPrologueLocale(native,target){
     if(!isLocaleId(native))return;
     try{localStorage.setItem(LOCALE_PREF_KEY,native);}catch{}
@@ -791,9 +790,7 @@ function runPrologue({fromUrl=false,scene=null,lang=null,second=null}={}){
             if(lang&&lang!==displayLocale())await setPrologueLocale(native,target);
             const {mountPrologue}=await import('./prologue_app.js');
             const handle=await mountPrologue(document.body,{assets,renderer,spellSound,locale:native,second:target,start:scene,onLocaleChange:setPrologueLocale});
-            const result=await handle.exited;
-            try{localStorage.setItem(PROLOGUE_SEEN_KEY,'1');}catch{}
-            return result;
+            return await handle.exited;
         }catch(error){console.error('序章加载失败',error);document.querySelector('.prologue-layer')?.remove();toast('序章暂时无法播放，可以直接开始冒险。');return null;}
         finally{
             prologueRun=null;
@@ -817,11 +814,6 @@ async function showTitle() {
     world=W.createWorld(save.zone==='earth'?'camp':save.zone,assets.content,save.zone==='earth'?null:save);
     titleView=roleStore.catalog.roles.length||roleStore.recovering||roles.localOnly?'roles':'create';
     if(titleView==='create')roleDraft=null;paintTitle();
-    if(titleView==='create'&&!roleStore.catalog.roles.length&&!prologueOffered&&!prologueRun){
-        prologueOffered=true;
-        const result=await runPrologue();
-        if(result&&stage==='title')paintTitle();
-    }
 }
 function deleteCurrentRole() {
     if (roles.busy || cloud.busy || roles.conflict || stage !== 'world' || save?.pendingEncounter) {
@@ -954,34 +946,9 @@ function beginOriginalImport() {
 function openCreationForm(){
     titleView='create';roleDraft=null;paintCreation();
 }
-function promptPrologueBeforeCreate(){
-    const closePrompt=()=>{nodes.overlay.className='overlay';nodes.overlay.replaceChildren();};
-    const modal=V.el('div','modal prologue-confirm-modal',
-        V.el('div','modal-header',
-            V.el('div','',V.el('div','eyebrow','NEW HERO · PROLOGUE'),V.el('h2','','新建角色')),
-            createCloseButton(closePrompt,'关闭'),
-        ),
-        V.el('div','modal-body',
-            V.el('p','','新建角色前，是否播放开场动画《失落的光》？'),
-            V.el('div','cloud-actions',
-                V.button('播放开场动画',()=>{
-                    closePrompt();
-                    void runPrologue().then(()=>{if(stage==='title')openCreationForm();});
-                },'primary'),
-                V.button('直接创建角色',()=>{
-                    closePrompt();
-                    openCreationForm();
-                },'secondary'),
-            ),
-        ),
-    );
-    nodes.overlay.replaceChildren(modal);
-    nodes.overlay.className='overlay visible';
-}
 function newRoleForm() {
     if(roles.busy)return;
     if(roleStore.catalog.roles.length>=currentRoleLimit()){toast(roleLimitReachedMessage(accountIsVip()));return;}
-    if(roleStore.catalog.roles.length){promptPrologueBeforeCreate();return;}
     openCreationForm();
 }
 function paintCreation() {
@@ -994,6 +961,7 @@ function paintCreation() {
         accountChoice:!roleStore.owner&&!roleStore.catalog.roles.length,
         login:()=>void loginRoles(),cloud:()=>void loginRoles(),
         importOriginal:beginOriginalImport,
+        playPrologue:()=>void runPrologue().then(()=>{if(stage==='title'&&titleView==='create')paintCreation();}),
         previewChoices:school=>tutorialCards(assets,school),
         preview:(...args)=>creationPreview.play(...args),stopPreview:()=>creationPreview.stop(),pausePreview:()=>creationPreview.togglePause(),
         create:options=>roleOperation('正在创建角色…',async()=>{
@@ -1002,7 +970,9 @@ function paintCreation() {
             const native=displayLocale(),target=secondLocaleFor(native);
             next.locale=native;
             next.languageLearning={...next.languageLearning,native,target,selectionConfirmed:true};
-            const id=roleStore.create(next,{isVip:accountIsVip()});await activateRole(id);await syncRoles();
+            const id=roleStore.create(next,{isVip:accountIsVip()});await activateRole(id);
+            if(target==='en'&&native!==target&&roleStore.catalog.activeId===id)await openHomePanel({starterRoom:true});
+            await syncRoles();
         })
     },roles.error);
 }
@@ -1950,7 +1920,6 @@ async function boot(){
         // Rendering the guest title first briefly exposes creation/role selection.
         const familyPad=familyPadSignInRequested(location.search);
         const kicked=sessionStorage.getItem(KICKED_SESSION_KEY)==='1';
-        if(kicked)prologueOffered=true;
         const direct=!kicked&&directSignInRequested(location.search);
         const query=new URLSearchParams(location.search);
         if(query.has('prologue')){

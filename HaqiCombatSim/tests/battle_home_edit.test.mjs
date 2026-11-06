@@ -2,6 +2,7 @@ import {buildingItem,buildingPlacement} from '../js/home_building_core.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {homeFurnitureDragPosition} from '../js/home_edit_core.js';
+import {findHomePath,stepHomeWalk} from '../js/home_walk_core.js';
 
 test('furniture keeps its grabbed corner across zoom levels and negative world coordinates',()=>{
  for(const scale of [20,40,80]){
@@ -22,6 +23,38 @@ test('sub-cell pointer movement preserves fractional positions across zoom level
 import {readFileSync} from 'node:fs';
 const appSource=readFileSync(new URL('../js/home_app.js',import.meta.url),'utf8');
 const viewSource=readFileSync(new URL('../js/view_home.js',import.meta.url),'utf8');
+test('starter blanket uses the normal placement action only near a resident pet in an empty home',async()=>{
+ const source=appSource.slice(appSource.indexOf(' async function tap('),appSource.indexOf(' async function drop('));
+ const actions=[];
+ let empty=true;
+ const tap=new Function('selection','canPlaceStarterBlanket','resolvePlacement','pets','commit',source+';return tap;')(
+  {starterBlanket:true},()=>empty,(itemId,point)=>({itemId,...point}),[{x:0,y:3}],action=>actions.push(action));
+ await assert.rejects(tap({kind:'pet'},{x:0,y:3}),/空地/);
+ await assert.rejects(tap(null,{x:0,y:10}),/放近一点/);
+ await tap(null,{x:1,y:3});
+ empty=false;
+ await tap(null,{x:2,y:3});
+ assert.deepEqual(actions,[{type:'place',object:{itemId:'blanket',x:1,y:3},starterBlanket:true}]);
+});
+test('resident walks to the placed blanket and stops sleeping when it is removed',()=>{
+ const source=appSource.slice(appSource.indexOf(' function invitePetToBlanket('),appSource.indexOf(' async function restoreEdit('));
+ const parts={'chunk:0,0':{}},object={id:'blanket-one',itemId:'blanket',x:3,y:4,rotation:0};
+ applyHomeAction(parts,{type:'place',object},realCatalog);
+ const pet={id:'resident',x:1,y:4};
+ const objects=()=>Object.values(parts['chunk:0,0']);
+ const {invitePetToBlanket,stepPetFurnitureVisit}=new Function(
+  'pets','currentObjects','catalog','home','parts','selection','footprint','chunkKey','findHomePath','stepHomeWalk','isStarterFurniture',
+  'let petFurnitureVisit=null;'+source+';return {invitePetToBlanket,stepPetFurnitureVisit};'
+ )([pet],objects,{items:realCatalog},{id:'starter-home',seed:0},parts,null,footprint,chunkKey,findHomePath,stepHomeWalk,()=>false);
+ invitePetToBlanket(object);
+ for(let i=0;i<100&&!pet.activity;i++)stepPetFurnitureVisit(.05,objects());
+ assert.equal(pet.activity,'sleep');
+ assert.equal(pet.targetId,object.id);
+ applyHomeAction(parts,{type:'recall',id:object.id},realCatalog);
+ stepPetFurnitureVisit(.05,objects());
+ assert.equal(pet.activity,null);
+ assert.equal(pet.targetId,null);
+});
 test('canvas pointer coordinates preserve fractional world positions for catalog drops',()=>{
  const source=viewSource.slice(viewSource.indexOf(' function position(e)'),viewSource.indexOf(' function render(next)'));
  const position=new Function('canvas','model',source+';return position;')(
@@ -48,7 +81,7 @@ test('moving the mouse without a pressed drag never previews selected furniture'
  assert.deepEqual(previews,[]);
 });
 
-import {footprint,validateHomePart} from '../js/home_core.js';
+import {chunkKey,footprint,validateHomePart} from '../js/home_core.js';
 import {applyHomeAction} from '../js/home_actions_core.js';
 const resizeCatalog=[{id:'box',size:[2,1],layer:'solid'}];
 const resizeParts=()=>({inventory:{},'chunk:0,0':{a:{id:'a',itemId:'box',x:0,y:0}}});
@@ -125,8 +158,8 @@ test('normal-mode drag commits only enabled objects, while editing can move disa
  const source=appSource.slice(appSource.indexOf(' async function drop('),appSource.indexOf(' async function rotate('));
  for(const [build,enabled,expected] of [[false,false,0],[false,true,1],[true,false,1]]){
   const obj={id:'a',itemId:'cup',x:0,y:0,interactionEnabled:enabled},writes=[];
-  const drop=new Function('build','currentObjects','parts','homeObjectInteractive','catalog','commit','resolvePlacement','selection',source+';return drop;')(
-   build,()=>[obj],{},homeObjectInteractive,{items:realCatalog},action=>writes.push(action),(_,p)=>p,null);
+  const drop=new Function('build','currentObjects','parts','homeObjectInteractive','catalog','commit','resolvePlacement','selection','isStarterFurniture',source+';return drop;')(
+   build,()=>[obj],{},homeObjectInteractive,{items:realCatalog},action=>writes.push(action),(_,p)=>p,null,()=>false);
   await drop({kind:'object',id:'a'},{x:5,y:3});
   assert.equal(writes.length,expected);
   if(expected)assert.deepEqual(writes[0],{type:'move',id:'a',position:{x:5,y:3}});

@@ -23,6 +23,7 @@ import {homeHeldPointerTarget} from './home_walk_core.js';
 import {homeSceneHit} from './home_pointer_core.js';
 import {homeFurnitureDragPosition,homeStrokeCells} from './home_edit_core.js';
 import {createFrameMeter,createFramePacer} from './frame_meter_core.js';
+import {STARTER_ROOM_ID,STARTER_BLANKET_ID,STARTER_CHAIR_ID,STARTER_ROOM_HINT,starterLampExercise} from './home_starter_room_core.js';
 
 const el=(tag,cls='',...children)=>{
  const e=document.createElement(tag);
@@ -266,7 +267,7 @@ export function createHomeView(root,cb){
   body.append(heroBanner,list);
  }
 
- function closeSummonDrawer(){if(!body)return;body.dataset.drawer='build';signature='';render(model);canvas?.focus();}
+ function closeSummonDrawer(returnToRoom=false){if(!body)return;body.dataset.drawer=returnToRoom===true?'':'build';if(returnToRoom===true)cb.mode(false);signature='';render(model);canvas?.focus();}
  function openSummonDrawer(){
   if(!body)return;
   body.dataset.drawer='summon';
@@ -336,7 +337,7 @@ export function createHomeView(root,cb){
   mic.onpointercancel=()=>run(cb.cancelVoice);
   mic.onkeydown=e=>{if(e.code==='Space'&&!e.repeat){e.preventDefault();run(cb.record);}};
   mic.onkeyup=e=>{if(e.code==='Space'){e.preventDefault();run(cb.finish);}};
-  const readingClose=createCloseButton(()=>{cb.cancel();run(cb.cancelVoice);closeSummonDrawer();});readingClose.setAttribute('aria-label','关闭阅读');
+  const readingClose=createCloseButton(()=>{const returnToRoom=!!model.selection?.starterLamp;cb.cancel();run(cb.cancelVoice);closeSummonDrawer(returnToRoom);});readingClose.setAttribute('aria-label','关闭阅读');
   form.append(readingClose,input,button('召唤',()=>run(()=>cb.summon(input.value)),'primary'),mic);
   form.onsubmit=e=>{e.preventDefault();run(()=>cb.summon(input.value));};
 
@@ -503,6 +504,8 @@ export function createHomeView(root,cb){
    closeBtn,
    button('家园列表',()=>run(cb.back),'home-nav-pill'),
    el('strong','home-world-name',model.home.name),
+   button('给抱抱龙铺毯子',()=>run(cb.starterBlanket),'home-starter-blanket home-nav-pill'),
+   button('添一盏灯',()=>run(cb.starterLamp),'home-starter-lamp home-nav-pill'),
    el('span','home-capacity home-nav-pill'),
    button('显示屋顶',cb.roofs,'home-roof-toggle home-nav-pill')
   );
@@ -653,7 +656,7 @@ export function createHomeView(root,cb){
    clearTimeout(statusTimer);
    status.hidden=shouldHideStatus;
    syncSpellTip(isSummonTipTransient);
-   if((!shouldHideStatus||isSummonTipTransient)&&!next.unsaved){
+   if((!shouldHideStatus||isSummonTipTransient)&&!next.unsaved&&next.status!==STARTER_ROOM_HINT){
     statusTimer=setTimeout(()=>{
      if(dead)return;
      if(!model?.unsaved)status.hidden=true;
@@ -684,6 +687,14 @@ export function createHomeView(root,cb){
    return;
   }
   body.classList.toggle('is-building',!!next.build);
+  const starterBlanket=body.querySelector('.home-starter-blanket');
+  if(starterBlanket){
+   starterBlanket.hidden=!next.starterBlanket||Boolean(body.dataset.drawer);
+   starterBlanket.disabled=!!next.unsaved;
+   starterBlanket.textContent=tr(next.selection?.starterBlanket?'取消铺毯子':'给抱抱龙铺毯子');
+  }
+  const starterLamp=body.querySelector('.home-starter-lamp');
+  if(starterLamp)starterLamp.hidden=!next.starterLamp||Boolean(body.dataset.drawer);
 
   if(historyTools){historyTools.hidden=!next.build;historyTools.querySelector('[data-history=undo]').disabled=!next.history?.canUndo||next.unsaved;historyTools.querySelector('[data-history=redo]').disabled=!next.history?.canRedo||next.unsaved;}
   if(!next.build){paintStroke=null;eraseStroke=null;hoverPoint=null;if(buildTip)buildTip.hidden=true;}
@@ -711,11 +722,12 @@ export function createHomeView(root,cb){
   input.placeholder=next.lang==='en'?'I want a chair.':'我想要一把椅子。';
   tools.lastChild.setAttribute('aria-pressed',String(next.quiet));
 
-  const nextExample=JSON.stringify([next.selection?.itemId,next.selection?.color,next.lang]);
+  const nextExample=JSON.stringify([next.selection?.itemId,next.selection?.color,next.selection?.starterLamp,next.lang]);
   if(nextExample!==exampleSignature){
    exampleSignature=nextExample;
    if(next.selection?.itemId&&!next.selection.id){
-    const item=[...next.catalog.items,...(next.practiceItems||[])].find(i=>i.id===next.selection.itemId);
+    const selectedItem=[...next.catalog.items,...(next.practiceItems||[])].find(i=>i.id===next.selection.itemId);
+    const item=next.selection.starterLamp?starterLampExercise(selectedItem):selectedItem;
     example.replaceChildren();
     const chipRow=el('div','home-example-chips');
     for(const [index,sentence] of summonSentences(item,next.lang,next.selection.color).entries()){
@@ -744,7 +756,7 @@ export function createHomeView(root,cb){
     if(!item.templateId)swatchRow.append(el('span','home-swatch-break'));
     spellTip=el('span','home-spell-tip',DEFAULT_SUMMON_TIP);
     syncSpellTip();
-    swatchRow.append(spellTip,button('取消召唤',()=>{cb.cancel();body.dataset.drawer='build';signature='';render(model);},'home-speak-btn'));
+    swatchRow.append(spellTip,button('取消召唤',()=>{const returnToRoom=!!model.selection?.starterLamp;cb.cancel();closeSummonDrawer(returnToRoom);},'home-speak-btn'));
     example.append(chipRow,swatchRow);
    }else{
     spellTip=el('span','home-spell-tip',DEFAULT_SUMMON_TIP);
@@ -948,7 +960,8 @@ export function createHomeView(root,cb){
     const width=Math.min(220,ctx.measureText(o.label).width+16),cx=p.x+b.w*scale/2,cy=p.y+b.h*scale+(COLOR_HEX[o.color]?32:16);
     ctx.fillStyle='rgba(255,248,220,.95)';ctx.fillRect(cx-width/2,cy-12,width,24);ctx.fillStyle='#294734';ctx.fillText(o.label,cx,cy,width-16);ctx.restore();
    }
-   if(model.build||model.languageChoices?.includes(o.id)||item.building?.type==='door'||homeObjectInteractive(o,model.catalog.items)){
+   const starterFurniture=model.home.id===STARTER_ROOM_ID&&(o.id===STARTER_BLANKET_ID||o.id===STARTER_CHAIR_ID);
+   if(model.build||starterFurniture||model.languageChoices?.includes(o.id)||item.building?.type==='door'||homeObjectInteractive(o,model.catalog.items)){
     if(isEdge(item)){const height=(item.building.type==='fence'?.7:1.25)*(o.sizeScale??1);for(const foot of buildingWallFeet(o,buildingRow?.connections)){const q=project(foot.x,foot.y-height);hits.push({kind:'object',id:o.id,sx:q.x-3,sy:q.y-2,sw:foot.w*scale+6,sh:(foot.h+height)*scale+4});}}
     else hits.push({kind:'object',id:o.id,sx:bounds?.x??p.x,sy:bounds?.y??p.y-12,sw:bounds?.w??b.w*scale,sh:bounds?.h??b.h*scale+12,pixelHit:item.building?null:(x,y)=>homeObjectPixelHit(item,o,imageFor(item.art),bounds,x,y)});
    }
@@ -1146,6 +1159,23 @@ export function createHomeView(root,cb){
    if(activity==='bathe'){
     ctx.strokeStyle='#e5f6ee';
     for(let i=0;i<3;i++){ctx.beginPath();ctx.arc(-10+i*12,-10-Math.sin(phase+i)*6,4,0,Math.PI*2);ctx.stroke();}
+   }
+   if(model.blockedPetId===pet.id){
+    ctx.font='bold 16px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    const x=size*.28,y=-size*.83;
+    ctx.fillStyle='#fff8df';ctx.beginPath();ctx.arc(x,y,11,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#634a2f';ctx.fillText('?',x,y);
+   }
+   if(activity==='sunbathe'){
+    ctx.fillStyle='#ffdf83';
+    ctx.beginPath();ctx.arc(size*.27,-size*.78,6,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#fff0b0';ctx.lineWidth=1.5;
+    ctx.beginPath();
+    for(let i=0;i<8;i++){
+     const a=i*Math.PI/4,x=Math.cos(a),y=Math.sin(a);
+     ctx.moveTo(size*.27+8*x,-size*.78+8*y);ctx.lineTo(size*.27+11*x,-size*.78+11*y);
+    }
+    ctx.stroke();
    }
    if(['eat','drink','picnic'].includes(activity)){
     ctx.fillStyle='#f1d6a1';ctx.beginPath();ctx.ellipse(10,0,10,activity==='drink'?8:4,0,0,Math.PI*2);ctx.fill();

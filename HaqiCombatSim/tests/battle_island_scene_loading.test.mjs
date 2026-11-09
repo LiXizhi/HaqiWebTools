@@ -69,6 +69,15 @@ test('resource failure remains blocked with an explicit error',async()=>{
     const f=fixture();f.gate.update(f.world,f.save,0);await flush();f.requests[0].reject(Error('network'));await flush();
     assert.equal(f.gate.update(f.world,f.save,1),true);assert.equal(f.views.at(-1).phase,'error');assert.equal(f.ends,0);
 });
+
+test('late resources and terrain automatically finish after the timeout without manual retry',async()=>{
+ const f=fixture();f.gate.update(f.world,f.save,0);await flush();
+ assert.equal(f.gate.update(f.world,f.save,101),true);
+ f.requests[0].resolve();await flush();f.progress={ready:3,total:4};
+ assert.equal(f.gate.update(f.world,f.save,102),true);assert.equal(f.ends,0);
+ f.progress={ready:4,total:4};assert.equal(f.gate.update(f.world,f.save,103),false);
+ assert.equal(f.ends,1);assert.equal(f.starts,1);assert.equal(f.gate.active,false);
+});
 test('scene/character changes and cancellation cannot be unlocked by stale work',async()=>{
     const f=fixture();f.gate.update(f.world,f.save,0);await flush();const next={layout:{}};
     f.gate.update(next,f.save,1);await flush();f.requests[0].resolve();await flush();f.gate.update(next,f.save,2);assert.equal(f.prepared,0);

@@ -820,6 +820,23 @@
           "promptGloss": "你好！我是阿初。",
           "answer": "Hello, Achu!",
           "answerGloss": "你好，阿初！",
+          "alternatives": [
+            {
+              "id": "hi-achu",
+              "answer": "Hi, Achu!",
+              "answerGloss": "嗨，阿初！"
+            },
+            {
+              "id": "hello",
+              "answer": "Hello!",
+              "answerGloss": "你好！"
+            },
+            {
+              "id": "hi",
+              "answer": "Hi!",
+              "answerGloss": "嗨！"
+            }
+          ],
           "ending": "Please find Xiaodeng.",
           "endingGloss": "请帮我找找小灯。",
           "words": [

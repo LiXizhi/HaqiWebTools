@@ -27,7 +27,7 @@ import {hashSeed} from './rng_core.js';
 import {STARTER_ROOM_ID,STARTER_ROOM_SPAWN,STARTER_BLANKET_ID,STARTER_CHAIR_ID,STARTER_ROOM_HINT,starterRoomLayout,starterBlanketReaction,starterLampExercise,matchStarterLampRequest} from './home_starter_room_core.js';
 const directories=new Map();
 export async function primeHomeDirectory(cloud,role){if(!cloud?.owner||!role)return;const key=homeScope(cloud.owner,role);try{directories.set(key,await cloud.homeRead(`homes/${role}/index.json`,{refresh:true})||{version:1,entries:{}});}catch{directories.delete(key);}}
-export async function openHomeSystem({root,getContext,close,cloud,starterRoom=false,assetMode='cdn',loadingAssets,warmHero=()=>{},drawHero,drawTree,onScene=()=>{},catalog:providedCatalog,store:providedStore,voice:providedVoice,practiceVoiceFactory,initialHomeId,initialCategory,initialPosition={x:0,y:0}}){
+export async function openHomeSystem({root,getContext,close,cloud,starterRoom=false,offerStarterRoom=false,assetMode='cdn',loadingAssets,warmHero=()=>{},drawHero,drawTree,onScene=()=>{},catalog:providedCatalog,store:providedStore,voice:providedVoice,practiceVoiceFactory,initialHomeId,initialCategory,initialPosition={x:0,y:0}}){
  const context=getContext(),scope=homeScope(context.owner,context.roleId),store=providedStore||createHomeStore(scope);
  let entering=false,entryTicket=0,retryEntry=null;
  let speechSession=null;
@@ -254,6 +254,16 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
  async function list(){check();const local=await store.list();check();let index=directories.get(scope);if(remote&&!index){try{index=await remote.list();}catch(e){status=`本地家园已加载；${e.message}`;}}
   const rows=Object.values(index?.entries||{}).filter(row=>!local.some(h=>h.id===row.id));homes=[...local,...rows.map(row=>({...row,cloudOnly:true}))];emit();}
  async function create(name){check();const id=crypto.randomUUID();await store.create(createHome(id,name,hashSeed(id)));check();await enter({id});}
+ async function ensureStarterRoom(){
+  const row=await store.get(STARTER_ROOM_ID);
+  check();
+  if(row)return;
+  const petId=Object.keys(ownedPetRecords(getContext().save))[0];
+  if(!petId)return;
+  const layout=starterRoomLayout(catalog.items,petId);
+  try{await store.install(layout.home,layout.parts);}
+  catch(e){if(!(await store.get(STARTER_ROOM_ID)))throw e;}
+ }
  async function enterStarterRoom(){
   let row=await store.get(STARTER_ROOM_ID);
   check();
@@ -631,6 +641,7 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
  try{
   status='家园自动保存到本机，云端同步由你手动开启。';
   if(starterRoom)await enterStarterRoom();
+  else if(offerStarterRoom)await ensureStarterRoom();
   if(!home){await list();if(initialHomeId)await enter({id:initialHomeId});}
  }catch(e){error(e);}
  return {dispose,renderStats:()=>view.stats(),canClose:()=>!pending||confirm('仍有未保存操作，离开会丢失这些操作。确定离开？')};

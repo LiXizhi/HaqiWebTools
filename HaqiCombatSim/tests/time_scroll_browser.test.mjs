@@ -31,7 +31,7 @@ test('time scroll desktop and touch: walk, discover, type, revisit and return wi
         await page.screenshot({path:path.join(root,`tmp/time-scroll-${width}-scene.png`)});
         await page.getByRole('button',{name:'记事旅人 · 交谈',exact:true}).click();await page.getByRole('button',{name:'练习双语对话',exact:true}).click();
         const chat=page.getByRole('dialog',{name:'时光旅人双语对话',exact:true});await chat.waitFor();await page.screenshot({path:path.join(root,`tmp/time-scroll-${width}-dialogue.png`)});
-        await chat.getByRole('button',{name:'输入',exact:true}).click();
+        await chat.getByRole('button',{name:'打字回答',exact:true}).click();
         for(const answer of ['We are thinking about the past.','Some things change.','We can look for old records.']){
             await chat.getByRole('textbox').fill(answer);await chat.getByRole('button',{name:'发送',exact:true}).click();
         }

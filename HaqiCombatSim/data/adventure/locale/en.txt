@@ -1912,8 +1912,8 @@ Boss 已击败，可以退出副本。||Boss defeated. You can exit the dungeon.
 最后的考核||The Final Exam
 （利用任务追踪系统）打败“魔法营地”中死亡侦察兵。||(Use quest tracking) defeat the Death Scout in the Magic Camp.
 # chapter.json adapted quest descriptions
-点击地面移动，点击居民交谈，开始营地里的第一课。||Click the ground to move, click residents to talk, and start your first lesson in camp.
-与苏苏、莫卡交谈，听听他们为什么学习魔法。||Talk with Susu and Moka, and hear why they study magic.
+听青龙讲解移动和交谈的方法，开始营地里的第一课。||Listen to Qinglong explain how to move and talk, and start your first lesson in camp.
+与茜茜、莫尼交谈，听听他们为什么学习魔法。||Talk with Sissy and Moni, and hear why they study magic.
 击败烈火侦查兵，再向青龙回报。||Defeat the Fire Scout, then report back to Azure Dragon.
 击败寒冰侦查兵，再向青龙回报。||Defeat the Ice Scout, then report back to Azure Dragon.
 击败风暴侦察兵，再向青龙回报。||Defeat the Storm Scout, then report back to Azure Dragon.
@@ -5354,14 +5354,14 @@ S4死亡装供货商||S4 Death gear supplier
 # data/adventure/chapter.json
 欢迎来到魔法营地！我是青龙。从这里开始，学会你的第一道魔法吧。||Welcome to Magic Camp! I'm Azure Dragon. Let's start your journey by learning your first spell.
 我来试试||Let me try!
-点一下地面就能走过去，点一下居民就能上前交谈。先在营地里试试吧！||Click the ground to walk there, or click a resident to walk over and talk. Try it here in camp!
-迈出第一步了！接下来，去认识营地里的朋友，一起发现魔法的乐趣。||You've taken your first step! Now meet your friends around camp and discover the joys of magic together.
+点一下地面就能走过去，点一下居民就能上前交谈。记住这两招，就能在营地里四处走走了。||Click the ground to walk there, or click a resident to walk over and talk. With these two moves, you can explore the camp.
+很好！接下来，用刚学的方法去认识营地里的朋友，一起发现魔法的乐趣。||Well done! Now use what you just learned to meet your friends around camp and discover the joys of magic together.
 谢谢你||Thank you!
 请指教||Please teach me.
 魔法让我快乐！哪怕只是一个小法术，也能给平常的日子添点惊喜。你也去试试吧。||Magic makes me happy! Even a little spell can bring a touch of wonder to an ordinary day. Give it a try!
 记住了||Got it!
 我学习魔法，是想变得更强，守护身边的人。遇到困难时，有力量就能多帮上一把。||I study magic to grow stronger and protect the people around me. With that strength, I can lend a hand when times get tough.
-去问问苏苏和莫卡，他们为什么学习魔法。打开任务，点击“追踪目标”就能找到他们。||Ask Susu and Moka why they study magic. Open Quests and click "Track objectives" to find them.
+去问问茜茜和莫尼，他们为什么学习魔法。我先带你去找茜茜。||Ask Sissy and Moni why they study magic. Let's find Sissy first.
 有人为快乐，有人为守护。带着你自己的心愿，我们开始练习魔法吧！||Some learn for joy, others to protect people. Whatever your own wish may be, let's start practicing magic!
 去挑战烈火侦查兵。战斗时，先点卡牌，再点目标，就能施法；魔力不足时可以跳过回合。||Challenge the Fire Scout. In battle, click a card, then a target to cast your spell. You can pass a turn if you don't have enough pips.
 第一场胜利！这顶帽子送给你。打开“背包”穿上它，还能用上装备附带的卡牌。||Your first victory! Here's a hat for you. Open your Bag to equip it and use the cards it grants.
@@ -11459,5 +11459,18 @@ Word · 回忆拼写||Word · Recall Spelling
 爷爷、孩子，还有隔壁的人，都在这块田里。||Grandfather, the child, and the neighbors are all in this field.
 点一点田埂，看嫩苗再摇一摇||Tap a ridge and watch the seedlings sway again
 
-与茜茜、莫尼交谈，听听他们为什么学习魔法。||Talk with Sissy and Moni, and hear why they study magic.
-去问问茜茜和莫尼，他们为什么学习魔法。我先带你去找茜茜。||Ask Sissy and Moni why they study magic. Let's find Sissy first.
+前往{region}，开始岛屿故事。||Go to {region} to start the island story.
+前往{region}，继续岛屿故事。||Go to {region} to continue the island story.
+去找{name}，开始这段故事。||Find {name} to start this story.
+继续练习||Keep practicing
+再按一次 Esc 结束对话，本轮已答的句子不会保存。||Press Esc again to end the conversation. Answers from this round will not be saved.
+差一点！还差：{missing}。可以对照示范「{answer}」再试一次。||Almost! Still missing: {missing}. Compare with the example "{answer}" and try again.
+多了：{extra}。可以对照示范「{answer}」再试一次。||Extra words: {extra}. Compare with the example "{answer}" and try again.
+这一段要说的是「{meaning}」，可以先听示范，再说或打字。||This line means "{meaning}". Listen to the example first, then say it or type it.
+打字回答||Type an answer
+在线奖励||Online rewards
+前往家园||Go to home
+点一下开始说，再点一下结束||Tap once to start speaking, then tap again to finish.
+也可以按住说话，松开发送；滑出按钮则取消。||You can also hold to speak and release to send, or slide off the button to cancel.
+场景里的宠物可以拖回背包。||Drag a pet in the scene back into the bag.
+还没有宠物。先在冒险里结识一只伙伴。||No pets yet. Meet a partner on your adventure first.

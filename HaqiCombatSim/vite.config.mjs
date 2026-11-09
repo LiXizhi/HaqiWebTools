@@ -117,6 +117,8 @@ export default defineConfig(async ({ command }) => {
             emptyOutDir: true,
             target: 'es2022',
             modulePreload: { polyfill: false },
+            // Shadow-DOM stylesheets (word_tree.css) load through <link>; keep them as files, not data: URLs.
+            assetsInlineLimit: file => file.endsWith('.css') ? false : undefined,
             rollupOptions: {
                 input: Object.fromEntries(entries.map(name => [name, path.join(root, `${name}.html`)])),
             },

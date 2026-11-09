@@ -26,7 +26,7 @@ test('body recall requires viewing the cue and distinguishes retry, hint and ind
    await page.screenshot({path:path.join(root,`tmp/home-body-recall-${word}-${width}.png`)});await seen.click();assert.equal((await state()).words[word].practiceCount,1,'viewing alone grants no credit');
    if(i===0){await answer('nose');assert.equal((await state()).words.eye.practiceCount,1);}
    if(i===1)await page.getByRole('button',{name:'提示',exact:true}).click();
-   if(i===3){await page.evaluate(()=>worldLearning.voiceText='A foot.');const mic=page.getByRole('button',{name:'按住对话，松开发送；点击录制，再点结束；滑出取消',exact:true});await mic.click();await page.locator('.camp-chat-mic.is-recording').waitFor();await mic.click();}
+   if(i===3){await page.evaluate(()=>worldLearning.voiceText='A foot.');const mic=page.getByRole('button',{name:'点一下开始说，再点一下结束',exact:true});await mic.click();await page.locator('.camp-chat-mic.is-recording').waitFor();await mic.click();}
    else await answer(word);
    await page.getByRole('button',{name:'继续故事',exact:true}).waitFor();const saved=(await state()).words[word];assert.equal(saved.practiceCount,2);assert.equal(saved.homeReview.support,i===0?'retried':i===1?'assisted':'unassisted');assert.equal(saved.homeReview.lastEvidence.input,i===3?'speech':'text');assert.equal(saved.comprehension,undefined);
    await page.getByRole('button',{name:'继续故事',exact:true}).click();

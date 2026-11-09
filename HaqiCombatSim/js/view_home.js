@@ -43,7 +43,7 @@ const CATEGORY_PRIORITY={blocks:-1,garden:0,play:1,building:2,party:3,living:4,b
 export function createHomeView(root,cb){
  root.replaceChildren();root.className='overlay visible';
  const modal=el('section','modal home-modal'),header=el('header','modal-header'),title=el('h2','','家园'),body=el('div','home-body'),status=el('p','home-status');
- modal.setAttribute('role','dialog');modal.setAttribute('aria-label','宠物家园');modal.setAttribute('aria-modal','true');status.setAttribute('role','status');
+ modal.setAttribute('role','dialog');modal.setAttribute('aria-label',tr('家园'));modal.setAttribute('aria-modal','true');status.setAttribute('role','status');
  header.append(title,createCloseButton(cb.close));modal.append(header,body,status);root.append(modal);
  let model=null,mode='',signature='',exampleSignature='',gesture=null,catalogDrag=null,hits=[],frame=0,dead=false,lastPaint=0,activeDialog=null;
  const images=new Map(),terrain=createHomeTerrainCache();
@@ -231,6 +231,11 @@ export function createHomeView(root,cb){
   dialog.open(trigger);
  }
 
+ function formatHomeTime(ms){
+  if(!ms)return tr('暂无记录');
+  const lang=typeof document!=='undefined'?document.documentElement.lang:'';
+  try{return new Date(ms).toLocaleString(lang||undefined);}catch{return new Date(ms).toLocaleString();}
+ }
  function manager(){
   body.replaceChildren();body.className='home-body home-manager';
   const heroBanner=el('div','home-manager-banner');
@@ -257,7 +262,7 @@ export function createHomeView(root,cb){
    info.append(el('strong','',home.name));
    const visit=home.localVisit,updated=Math.max(home.updatedAt||0,visit?.lastPlayedAt||0);
    info.append(
-    el('small','',`${tr('更新于')} ${updated?new Date(updated).toLocaleString():tr('暂无记录')}`),
+    el('small','',`${tr('更新于')} ${formatHomeTime(updated)}`),
     el('small','',`${tr('已游玩')} ${visit?.playedMs?Math.floor(visit.playedMs/60000)>0?`${Math.floor(visit.playedMs/60000)} ${tr('分钟')}`:tr('不足1分钟'):tr('暂无记录')}`)
    );
    card.append(info);list.append(card);
@@ -719,7 +724,9 @@ export function createHomeView(root,cb){
   const drawerIdx={build:0,summon:1,pets:2,settings:3}[body.dataset.drawer];
   [...body.querySelectorAll('.home-dock-button')].forEach((b,i)=>b.setAttribute('aria-pressed',String(i===drawerIdx)));
   if(next.transcript!==undefined&&document.activeElement!==input)input.value=next.transcript;
-  input.placeholder=next.lang==='en'?'I want a chair.':'我想要一把椅子。';
+  const summonItem=next.selection?.itemId&&!next.selection.id?[...next.catalog.items,...(next.practiceItems||[])].find(item=>item.id===next.selection.itemId):null;
+  const summonTarget=summonItem&&next.selection.starterLamp?starterLampExercise(summonItem):summonItem;
+  input.placeholder=(summonTarget?summonSentences(summonTarget,next.lang,next.selection?.color)[0]:'')||(next.lang==='en'?'I want a chair.':'我想要一把椅子。');
   tools.lastChild.setAttribute('aria-pressed',String(next.quiet));
 
   const nextExample=JSON.stringify([next.selection?.itemId,next.selection?.color,next.selection?.starterLamp,next.lang]);
@@ -783,8 +790,9 @@ export function createHomeView(root,cb){
   }
   items.replaceChildren();
   if(petMode){
-   const pets=next.petBag||next.pets;
+   const pets=next.petBag||next.pets||[];
    summary.textContent=tr('拖入场景放出宠物；拖回背包或底部宠物背包按钮即可收回。');
+   if(!pets.length)items.append(el('p','home-empty-hint',(next.pets||[]).length?'场景里的宠物可以拖回背包。':'还没有宠物。先在冒险里结识一只伙伴。'));
    for(const pet of pets){
     const row=el('div','home-pet-card');
     row.homePetId=pet.id;

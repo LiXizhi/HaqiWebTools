@@ -10,7 +10,7 @@ try{
   const context=await browser.newContext({viewport:{width:1280,height:900}}),page=await context.newPage();
   await page.goto(`${url}/tests/fixtures/local-coop.html`);await page.waitForURL('**/Haqi.html?assets=local',{timeout:120000});
   await page.getByRole('button',{name:'继续旅程',exact:true}).first().click({timeout:120000});
-  await page.getByRole('button',{name:'宠物',exact:true}).waitFor({timeout:120000});await page.getByRole('button',{name:'宠物',exact:true}).click();await page.getByRole('button',{name:'宠物家园',exact:true}).click();
+  await page.getByRole('button',{name:'宠物',exact:true}).waitFor({timeout:120000});await page.getByRole('button',{name:'宠物',exact:true}).click();await page.getByRole('button',{name:'前往家园',exact:true}).click();
   page.once('dialog',dialog=>dialog.accept('正式入口家园'));await page.getByRole('button',{name:'新建家园',exact:true}).click();await page.locator('.home-canvas').waitFor();
   await page.getByRole('button',{name:'语音召唤',exact:true}).click();
   await page.getByRole('textbox',{name:'召唤句子'}).fill('I want a chair.');await page.getByRole('button',{name:'召唤',exact:true}).click();await page.waitForFunction(()=>document.querySelector('.home-status')?.textContent==='已保存到本机');

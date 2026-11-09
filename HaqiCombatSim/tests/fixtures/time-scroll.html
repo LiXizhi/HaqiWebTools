@@ -7,7 +7,7 @@ import {loadHeroLibrary} from '../../js/hero_renderer.js';
 import {awardDailySpeech} from '../../js/language_daily_buff_core.js';
 const read=path=>fetch('../../'+path).then(r=>r.json());
 const hero=await loadHeroLibrary(read,{mounts:[],sheets:{}});
-const city={id:'fixture-city',name:'示例城',lon:114,lat:22},data=await loadTimeScroll(city);
+const city={id:'fixture-city',name:'示例城',lon:114,lat:22},data=await loadTimeScroll(city,{base:new URL('../../',location.href)});
 const save={zone:'earth',position:{x:123,y:456},appearance:'boy',facing:2,revision:0,seed:42,inventory:{},languageLearning:{enabled:true,target:'en',native:'zh-CN',showChinese:true},languageAdventure:{version:1,progress:{}}};
 const state={save,role:'isolated-role',owner:null,stage:'world',online:false};
 const assets={hero,content:{}};let scroll;

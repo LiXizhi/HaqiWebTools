@@ -74,6 +74,20 @@ function moveToward(p,target,speed,dt,canWalk) {
     if(Math.abs(dx)>.01)p.facing=dx<0?-1:1;
     return true;
 }
+// Closing a panel or lesson must not finish a countdown that was frozen while the
+// screen was covered. The monster stays idle until the player leaves its territory.
+export function releaseFieldPursuit(world,hero){
+    if(!world||world.isDungeon||!hero)return;
+    const scene=scenes.get(world);if(!scene)return;
+    for(const encounter of world.encounters){
+        const poses=scene.get(encounter.id);if(!poses)continue;
+        const alert=inMonsterTerritory(world,encounter,hero);
+        for(const p of poses){
+            if(!(alert||p.mode==='warning'||p.mode==='chase'))continue;
+            p.holdUntilExit=true;p.mode='idle';p.alertRemaining=0;p.target=null;p.path=null;p.moving=false;
+        }
+    }
+}
 export function stepMonsterWander(world,encounter,dt,view,{enabled=true,ambient=true,hero=null,canWalk=()=>true}={}) {
     if(!enabled||encounter.hidden||!view||!(dt>0))return;
     const poses=monsterScenePositions(world,encounter);
@@ -87,6 +101,10 @@ export function stepMonsterWander(world,encounter,dt,view,{enabled=true,ambient=
     dt=Math.min(.055,dt);
     for(const p of poses){
         if(!monsterInViewport(p,view))continue;
+        if(p.holdUntilExit){
+            if(alert){p.moving=false;continue;}
+            p.holdUntilExit=false;
+        }
         if(!p.rng){p.rng=createRng(hashSeed(`${world.zone}:${encounter.id}:${p.index}:wander`));p.spawn={x:p.x,y:p.y};p.wait=rest(p);p.navWait=0;}
         p.moving=false;
         const center=world.isDungeon?p.spawn:encounter;

@@ -347,9 +347,10 @@ function catalogTrackLines(save,c,quest) {
 function appendTrackerQuest(tracker,entry,save,c,cb,teach) {
     if(entry.languageQuest?.courseId){
         const q=entry.languageQuest,open=()=>cb.panel('quests',{questId:q.id}),go=()=>cb.track(q.id,{pin:false});
-        const link=button([el('span','quest-state available','!'),el('span','quest-title','语言 · '+q.title)],open,'quest-track-title');
-        const text=q.status==='已完成'?'本岛语言任务已完成，可到家园复习。':q.region!==save.zone?'前往'+(QUEST_REGIONS[q.region]||q.region)+'，继续岛屿故事。':q.battleWon?'回到'+q.course.steps[0].interaction.name+'身边交谈':q.objective;
-        tracker.append(el('article','tracker-quest',el('h3','',link),el('div','tracker-line',button(text,go,'tracker-follow'),button('前往',go,'track-button'))));return;
+        const link=button([el('span',`quest-state ${q.status==='已完成'?'ready':q.status==='进行中'?'active':'available'}`,q.status==='已完成'?'?':'!'),el('span','quest-title','语言 · '+q.title)],open,'quest-track-title');
+        link.title=fill('{status}，点击查看任务详情',{status:q.status}).text;
+        const text=q.status==='已完成'?'本岛语言任务已完成，可到家园复习。':q.region!==save.zone?fill(q.status==='可接取'?'前往{region}，开始岛屿故事。':'前往{region}，继续岛屿故事。',{region:QUEST_REGIONS[q.region]||q.region}).text:q.battleWon?'回到'+q.course.steps[0].interaction.name+'身边交谈':q.status==='可接取'&&q.interaction?.name?fill('去找{name}，开始这段故事。',{name:q.interaction.name}).text:q.objective;
+        tracker.append(el('article','tracker-quest',el('h3','',link),el('div','tracker-line',button(text,go,'tracker-follow'),button(q.status==='进行中'&&q.region===save.zone?'继续练习':'前往',go,'track-button'))));return;
     }
     const chapter=c.quests.find(quest=>quest.id===entry.id),quest=chapter||c.catalogQuests.byId[entry.id];
     const ready=chapter?questReady(save,quest):catalogQuestReady(save,c,quest,catalogStatSnapshot(save,c));
@@ -450,7 +451,7 @@ function renderHudContents(root,model,cb) {
     root.append(status,el('div','location-label',el('span','',model.locationName||c.worldMaps?.[save.zone]?.name||islandName(save.zone)),el('small','',save.zone==='camp'?'在晨光中，发现魔法':'新的故事，在这里继续')));
     syncLocaleChrome();
     const utilities=el('nav','utility-nav');utilities.setAttribute('aria-label','其他功能');
-    const checkin=button([icon('gourd'),el('span','utility-label','签到'),el('small','','')],()=>cb.panel('checkin'),'utility-button checkin-button');
+    const checkin=button([icon('gourd'),el('span','utility-label','在线奖励'),el('small','','')],()=>cb.panel('checkin'),'utility-button checkin-button');
     checkin.title='米酒葫芦 · 在线领奖';
     utilities.append(checkin);
     for(const [label,key,action]of [['世界地图','map',()=>cb.panel('map')],['副本','dungeon',()=>cb.panel('dungeons')],['设置','settings',()=>cb.panel('settings')]])utilities.append(button([icon(key),el('span','utility-label',label)],action,'utility-button'));

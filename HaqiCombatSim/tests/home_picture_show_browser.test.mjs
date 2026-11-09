@@ -26,7 +26,7 @@ test('grownup and baby pictures are drawn, labelled and introduced without treat
   await intro();assert.equal((await state()).words[word].practiceCount,1,'entering recap does not count');
   if(word==='baby'){
    await page.evaluate(text=>worldLearning.voiceText=text,`A ${word}.`);
-   const mic=page.getByRole('button',{name:'按住对话，松开发送；点击录制，再点结束；滑出取消',exact:true});await mic.click();await page.locator('.camp-chat-mic.is-recording').waitFor();await mic.click();
+   const mic=page.getByRole('button',{name:'点一下开始说，再点一下结束',exact:true});await mic.click();await page.locator('.camp-chat-mic.is-recording').waitFor();await mic.click();
    await page.getByRole('button',{name:'检查并保存练习',exact:true}).waitFor();
   }else await answer(`This is a ${word}.`);
   assert.equal((await state()).words[word].practiceCount,1,'answer without pointing does not count');

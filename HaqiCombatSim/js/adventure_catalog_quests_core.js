@@ -254,12 +254,13 @@ export function unpinTrackedQuest(save, questId) {
     if (ids.length) save.trackedQuestIds = ids;
     else delete save.trackedQuestIds;
 }
+// Pins from other islands stay saved; the island only fills a free slot.
 export function supplementIslandTrack(save, content, zone, stats = {}) {
-    const tracked = trackedQuestIds(save, content);
-    save.trackedQuestIds = tracked;
+    const pinned = trackedQuestIds(save), tracked = trackedQuestIds(save, content);
+    if (pinned.length) save.trackedQuestIds = pinned; else delete save.trackedQuestIds;
     delete save.trackedQuestId;
-    if (!zone || tracked.length >= MAX_TRACKED_QUESTS) return null;
-    const taken = new Set(tracked);
+    if (!zone || tracked.length >= MAX_TRACKED_QUESTS || pinned.length >= MAX_TRACKED_QUESTS) return null;
+    const taken = new Set(pinned);
     let best = null;
     for (const quest of content.catalogQuests?.quests || []) {
         if (quest.region !== zone || taken.has(quest.id)) continue;
@@ -269,7 +270,7 @@ export function supplementIslandTrack(save, content, zone, stats = {}) {
         if (!best || rank < best.rank || (rank === best.rank && quest.id < best.id)) best = { id: quest.id, rank };
     }
     if (!best) return null;
-    save.trackedQuestIds = [...tracked, best.id];
+    save.trackedQuestIds = [...pinned, best.id];
     return best.id;
 }
 export function showCurrentChapter(save, content) {

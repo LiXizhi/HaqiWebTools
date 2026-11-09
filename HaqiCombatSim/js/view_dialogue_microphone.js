@@ -27,7 +27,8 @@ export function bindChatMicrophone(node,actions){
 
 export function createDialogueMicrophone(button,actions){
     const node=button('录音',()=>{},'camp-chat-mic');
-    node.setAttribute('aria-label',tr('按住对话，松开发送；点击录制，再点结束；滑出取消'));
+    node.setAttribute('aria-label',tr('点一下开始说，再点一下结束'));
+    node.title=tr('也可以按住说话，松开发送；滑出按钮则取消。');
     const reset=bindChatMicrophone(node,actions);
     return {node,reset,update({phase,disabled=false}){
         node.disabled=disabled;node.classList.toggle('is-recording',phase==='recording');

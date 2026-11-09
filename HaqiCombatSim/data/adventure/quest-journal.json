@@ -20682,7 +20682,7 @@
     {
       "id": 63000,
       "title": "开启全新魔法之旅",
-      "description": "点击地面移动，点击居民交谈，开始营地里的第一课。",
+      "description": "听青龙讲解移动和交谈的方法，开始营地里的第一课。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "青龙",

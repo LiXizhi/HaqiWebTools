@@ -8,7 +8,7 @@
 水||water,waters
 吃||eat,ate,eated,eaten,eating,eats
 去||go,goed,goes,going,gone,gos,went
-你好||hello,hellos
+你好||hello,hellos,hi
 感谢||thank,thanked,thanking,thanks,appreciate,appreciated,appreciates,appreciating
 心||heart,hearts
 我||i,is

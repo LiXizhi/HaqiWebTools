@@ -28,7 +28,7 @@ const loadAbort=new AbortController();
 const host=document.createElement('div');host.className='word-tree-instance';host.style.cssText='width:100%;height:100%;min-height:0';root.append(host);
 const shadow=host.attachShadow({mode:'open'});
 const style=document.createElement('link');style.rel='stylesheet';style.href=new URL('../css/word_tree.css',import.meta.url).href;
-let finishStyles;const stylesReady=new Promise((resolve,reject)=>{finishStyles=resolve;style.onload=resolve;style.onerror=()=>reject(Error('语言树样式加载失败'));});shadow.append(style);
+let finishStyles,styleFailed=false;const stylesReady=new Promise(resolve=>{finishStyles=resolve;style.onload=resolve;style.onerror=()=>{styleFailed=true;resolve();};});shadow.append(style);
 const el=(tag,text)=>{const n=document.createElement(tag);if(text)n.textContent=text;return n;};
 const surface=el('section');surface.className='word-tree';shadow.append(surface);
 // Keep dictionary / game hotkeys outside this component's interactions.
@@ -71,6 +71,7 @@ async function prepare(immediate=false){if(preparing&&immediate){prepareAgain=tr
 function changed(result){if(closed)return;state=result.state;const display=wordTreeDisplayState(state,options.index);view.setState(display);view.setQuestions(state.questions.filter(q=>['know','basic'].includes(display.words[q.target]?.mark)));if(result.warning)message(result.warning);}
 async function start(){
  await stylesReady;if(closed)return;
+ if(styleFailed)message('语言树样式加载失败，已用简易样式显示。');
  let entries=options.data?.entries;
  if(!entries){const response=await fetch(new URL('../data/adventure/dictionary/en.json',import.meta.url),{signal:loadAbort.signal});if(!response.ok)throw Error('词语加载失败');entries=(await response.json()).entries;}
  options.index??=await loadWordLexicon(options.data?.language||'en');

@@ -67,10 +67,10 @@ export function createLearningChatView(cb){
     const footer=el('footer','camp-chat-footer'),status=el('p','camp-chat-status');status.setAttribute('role','status');
     const form=el('form','camp-chat-input');form.hidden=true;
     const input=el('input');input.placeholder=tr('输入你的回答，答对即可继续');input.maxLength=500;input.setAttribute('aria-label',tr('文字回答'));
-    const send=button('发送',()=>{if(needsRecovery(state)){cb.retry?.();return;}const text=input.value.trim();if(text){if(state?.mode!=='free'&&!state?.progressiveHints)input.value='';cb.help(text);}});form.onsubmit=e=>{e.preventDefault();send.click();};const inputBox=el('div','camp-chat-input-box');inputBox.append(input);form.append(inputBox,send);input.oninput=()=>cb.draft?.(input.value);
+    const send=button('发送',()=>{if(needsRecovery(state)){cb.retry?.();return;}const text=input.value.trim();if(text)cb.help(text);});form.onsubmit=e=>{e.preventDefault();send.click();};const inputBox=el('div','camp-chat-input-box');inputBox.append(input);form.append(inputBox,send);input.oninput=()=>cb.draft?.(input.value);
     function needsRecovery(s){return s?.mode==='free'&&s.retryable&&(!s.ready||s.giftReply||!s.draft?.trim());}
     const actions=el('div','camp-chat-actions');
-    const typing=button('输入',()=>{form.hidden=!form.hidden;if(!form.hidden)input.focus();},'secondary');
+    const typing=button('打字回答',()=>{form.hidden=!form.hidden;if(!form.hidden)input.focus();},'secondary');
     const microphone=createDialogueMicrophone(button,{isRecording:()=>!!state?.recording,start:cb.start,finish:cb.finish,cancel:cb.cancel}),mic=microphone.node;
     const {node:micProgress,ring,ringFill,ringLabel}=createDialogueMicProgress(mic);
     const hints=button('提示',()=>cb.hint(),'secondary');
@@ -89,12 +89,16 @@ export function createLearningChatView(cb){
     });
     const sceneNext=button('继续冒险',()=>cb.sceneContinue?.(),'primary');sceneNext.hidden=true;
     actions.append(typing,micProgress,hints,sceneNext);
-    mic.title=tr('按住对话，松开发送 · 点击录制，再点结束');
+    mic.title=tr('也可以按住说话，松开发送；滑出按钮则取消。');
     footer.append(form,actions,status);panel.append(header,loginNotice,log,footer);room.append(aside,panel);root.append(room);document.body.append(root);
-    let portraitNode=null,state=null,trigger=null,key='',fingerprint='';
+    let portraitNode=null,state=null,trigger=null,key='',fingerprint='',inputTurn='',escArmedAt=0;
     const clearPress=microphone.reset;
     root.onkeydown=e=>{
-        e.stopPropagation();if(e.key==='Escape'){e.preventDefault();if(!headerMenu.hidden){setHeaderMenu(false,true);return;}if(!menu.hidden){setMore(false,true);return;}cb.close();}
+        e.stopPropagation();if(e.key==='Escape'){e.preventDefault();if(!headerMenu.hidden){setHeaderMenu(false,true);return;}if(!menu.hidden){setMore(false,true);return;}
+            // Esc peels one layer at a time: the typing box first, then an unfinished multi-turn lesson asks twice.
+            if(state?.mode!=='free'&&!form.hidden&&!state?.done&&!typing.hidden){form.hidden=true;typing.focus();return;}
+            if(state&&state.mode!=='free'&&!state.done&&state.index>0&&Date.now()-escArmedAt>3000){escArmedAt=Date.now();status.textContent=tr('再按一次 Esc 结束对话，本轮已答的句子不会保存。');return;}
+            cb.close();}
         if(e.key==='Tab'){
             const nodes=[...room.querySelectorAll('button:not(:disabled),input')].filter(n=>n.getClientRects().length);
             if(e.shiftKey&&document.activeElement===nodes[0]){e.preventDefault();nodes.at(-1)?.focus();}
@@ -123,7 +127,7 @@ export function createLearningChatView(cb){
     return {
         root,
         dispose(){this.close();toolbarObserver?.disconnect();root.remove();},
-        close(){revealedMessages.clear();revealedTurn='';clearMappings();bilingual.close();setMore(false);setHeaderMenu(false);clearPress();root.hidden=true;portraitNode?.remove();portraitNode=null;state=null;key='';fingerprint='';form.hidden=true;if(trigger?.isConnected)trigger.focus();},
+        close(){revealedMessages.clear();revealedTurn='';inputTurn='';input.value='';escArmedAt=0;clearMappings();bilingual.close();setMore(false);setHeaderMenu(false);clearPress();root.hidden=true;portraitNode?.remove();portraitNode=null;state=null;key='';fingerprint='';form.hidden=true;if(trigger?.isConnected)trigger.focus();},
         render(s){
             state=s;const fresh=root.hidden;if(fresh){trigger=document.activeElement;root.hidden=false;}
             if(key!==s.story.id){setMore(false);key=s.story.id;name.textContent=tr(s.profile.name);role.textContent=tr(s.profile.role);context.textContent=tr(s.story.context);title.textContent=tr(s.story.title);
@@ -153,7 +157,9 @@ export function createLearningChatView(cb){
             hint.hidden=s.done||(free?!s.hintLevel:!s.story.turns[s.index]?.answer||(s.progressiveHints&&!s.hintLevel));
             hint.classList.toggle('is-compact',!free&&!s.hintLevel);
             hints.textContent=tr(s.progressiveHints&&s.hintLevel===1?'显示示范':s.hintLevel?'收起提示':'显示提示');hints.setAttribute('aria-expanded',String(!!s.hintLevel&&!s.done));
-            if(s.done&&s.progressiveHints)input.value='';
+            // Wrong answers keep the typed text for editing; a new turn starts empty.
+            const answerKey=JSON.stringify([s.story.id,s.index,s.done]);
+            if(!free&&answerKey!==inputTurn){if(inputTurn)input.value='';inputTurn=answerKey;}
             if(!hint.hidden&&free){hint.replaceChildren(el('p','',s.hintText||'正在生成提示…'));}
             if(!hint.hidden&&!free&&(logChanged||fresh)){const turn=s.story.turns[s.index];hint.replaceChildren();
                 if(s.hintLevel)hint.append(el('p','',turn.hint));

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {WORD_LANGUAGES,parseWordLexicon,buildWordIndex,seedWordLexicon,wordTreeKey} from '../js/word_lexicon_core.js';
-import {validateLanguageCourses,courseWordCards,completeCourseStep,coursePosition,courseInteractionMatches} from '../js/language_course_core.js';
+import {validateLanguageCourses,courseWordCards,completeCourseStep,coursePosition,courseInteractionMatches,courseAnswerFeedback} from '../js/language_course_core.js';
 import {emptyLanguageTree} from '../js/language_tree_core.js';
 import {learningQuestMatches} from '../js/learning_quest_core.js';
 import {validateWordCards,makeWordCardSnapshot,syncDictionaryQuestProgress} from '../js/word_cards_core.js';
@@ -55,6 +55,17 @@ test('course answers are persisted once, wrong answers do not advance, and langu
         assert.equal(Object.keys(state.practiceReceipts).length,1);assert.ok(!state.masteryEarned);
     }
     assert.equal(new Set(WORD_LANGUAGES.map(l=>wordTreeKey('role',l))).size,4);
+});
+test('Achu greeting accepts reviewed synonyms and separates near misses from unrelated answers',()=>{
+    const course=data.courses.find(c=>c.id==='en-hanzi-01'),step=course.steps[0],index=indexes.en;
+    for(const text of ['Hello, Achu!','hi, achu','Hi!','Hello.'])assert.equal(courseAnswerFeedback(step,text).kind,'accepted',text);
+    const close=courseAnswerFeedback(step,'Hello Achu friend');assert.equal(close.kind,'close');assert.deepEqual(close.missing,[]);assert.deepEqual(close.extra,['friend']);
+    const extra=courseAnswerFeedback(step,'Hello there');assert.equal(extra.kind,'close');assert.deepEqual(extra.missing,[]);assert.deepEqual(extra.extra,['there']);
+    const partial=courseAnswerFeedback(course.steps[1],'Where Xiaodeng');assert.equal(partial.kind,'close');assert.deepEqual(partial.missing,['is']);
+    assert.equal(courseAnswerFeedback(step,'I like apples').kind,'unrelated');assert.equal(courseAnswerFeedback(step,'').kind,'unrelated');
+    const state=emptyLanguageTree();seedWordLexicon(state,index);
+    assert.ok(completeCourseStep(state,course,step.id,'Hi, Achu!',{id:'hi',at:1,input:'text',interaction:{...step.interaction,zone:course.island,distance:30}},index));
+    assert.equal(state.words.hello.practiceCount,1);
 });
 test('new snapshots select only the requested language and leave old mixed snapshots reproducible',()=>{
     const state={languages:Object.fromEntries(WORD_LANGUAGES.map(l=>[l,{entries:Object.fromEntries(rows.filter(r=>r.language===l).map((r,i)=>[r.entryId,{lastAttemptAt:i+1}]))}]))};

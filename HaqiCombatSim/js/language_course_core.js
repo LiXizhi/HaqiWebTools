@@ -23,6 +23,20 @@ export function coursePosition(state,course){const progress=state.courses?.[cour
 // Author-reviewed alternatives are local and deterministic. They must retain
 // this round's explicit targets; an AI judgement cannot grant course progress.
 export function courseAcceptedAnswer(step,text){return [step,...(step.alternatives||[])].find(reply=>wordReadingMatches(text,reply.answer))||null;}
+const answerTokens=text=>(String(text||'').normalize('NFKC').toLowerCase().match(/[\p{L}\p{N}']+/gu)||[]).flatMap(t=>/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(t)?[...t]:[t]);
+// accepted: matches an author-reviewed reply. close: shares at least half of the
+// nearest reply's words, so the player gets the missing words instead of a generic retry.
+export function courseAnswerFeedback(step,text){
+    const accepted=courseAcceptedAnswer(step,text);if(accepted)return {kind:'accepted',reply:accepted,missing:[],extra:[]};
+    const heard=new Set(answerTokens(text));let best={kind:'unrelated',reply:step,missing:[],extra:[],score:0};
+    if(heard.size)for(const reply of [step,...(step.alternatives||[])]){
+        const target=[...new Set(answerTokens(reply.answer))];if(!target.length)continue;
+        const missing=target.filter(t=>!heard.has(t)),extra=[...heard].filter(t=>!target.includes(t));
+        const score=(target.length-missing.length)/target.length;
+        if(score>best.score)best={kind:score>=0.5?'close':'unrelated',reply,missing,extra,score};
+    }
+    const {score,...result}=best;return result;
+}
 export function courseInteractionMatches(course,step,event){
     if(!course.sceneVersion)return true;
     const target=step.interaction,proof=event?.interaction;

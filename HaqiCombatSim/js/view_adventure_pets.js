@@ -208,6 +208,6 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
  },'secondary');
  const footer=el('footer','pet-collection-footer',button('图鉴与商店',()=>cb.panel('shop',{category:state.tab==='mount'?'mount':'pet'}),'secondary'),notes);
  footer.append(renderPetFood(body,model,cb,{el,button,art}));
- {const link=el('button','pet-home-link',icon('shop'),el('span','','宠物家园'));link.type='button';link.onclick=()=>cb.panel('home');footer.append(link);}
+ {const link=el('button','pet-home-link',icon('shop'),el('span','','前往家园'));link.type='button';link.onclick=()=>cb.panel('home');footer.append(link);}
  body.append(footer);
 }

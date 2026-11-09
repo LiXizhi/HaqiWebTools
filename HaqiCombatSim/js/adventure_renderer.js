@@ -282,7 +282,7 @@ export function createRenderer(canvas,assets) {
         if(!assets.drawMonster?.(c,m,-52*scale,-104*scale+bob,104*scale,104*scale))creature(c,m?.id||'water-bubble',0,bob,t,scale,false);
         c.restore();
     }
-    function render(world,save,time,{localSecond=null,localSecondMoving=false,localFollowing=false,localSecondFollowing=false,gatheringPets=[],graphics={particles:true,trails:true},socialGesture=null,petScene=null,socialActors=[],remotePlayers=[],inParty=false,moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,companionBubble=null,learningGreeting=null}={}) {
+    function render(world,save,time,{localSecond=null,localSecondMoving=false,localFollowing=false,localSecondFollowing=false,gatheringPets=[],graphics={particles:true,trails:true},socialGesture=null,petScene=null,socialActors=[],remotePlayers=[],inParty=false,moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,monstersPaused=false,companionBubble=null,learningGreeting=null}={}) {
         let phaseTime=perf.enabled?performance.now():0;
         const mark=name=>{if(phaseTime){const now=performance.now();perf.record(world.isEarth?name:name.replace('earth-','island-'),now-phaseTime);phaseTime=now;}};
         const markerFor=markerCache.forState(save,assets.content,world);
@@ -360,7 +360,7 @@ export function createRenderer(canvas,assets) {
             if(world.isEarth&&(o.x<queryRect.x||o.x>queryRect.x+queryRect.w||o.y<queryRect.y||o.y>queryRect.y+queryRect.h))continue;
             if(o.kind==='tree'&&world.isEarth&&world.earthDecorationBaked?.(o))continue;
             if(o.kind!=='mob'){scenery.push(o);continue;}
-            stepMonsterWander(world,o,monsterDt,viewport,{enabled:!title&&!motionHidden,ambient:!reducedMotion.matches,hero:save.position,canWalk:(x,y)=>walkable(monsterWorld,x,y)});
+            stepMonsterWander(world,o,monsterDt,viewport,{enabled:!title&&!motionHidden&&!monstersPaused,ambient:!reducedMotion.matches,hero:save.position,canWalk:(x,y)=>walkable(monsterWorld,x,y)});
             const warning=!title&&!motionHidden&&monsterTerritoryWarning(world,o,save.position);
             if(warning){
                 drawMonsterTerritory(ctx,o,save.position,monsterSceneParams(world),t,reducedMotion.matches);

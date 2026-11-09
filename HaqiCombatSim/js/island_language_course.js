@@ -1,10 +1,11 @@
 import {loadLanguageCourses} from './language_course.js';
-import {coursePosition,completeCourseStep,courseInteractionMatches,courseAcceptedAnswer} from './language_course_core.js';
+import {coursePosition,completeCourseStep,courseInteractionMatches,courseAnswerFeedback} from './language_course_core.js';
 import {languageTreeContext,languageTreeStore} from './language_tree_capture.js';
 import {wordLanguage,wordTreeKey,migrateWordLexicon,seedWordLexicon} from './word_lexicon_core.js';
 import {createLearningVoice} from './language_adventure_voice.js';
 import {createLearningChatView} from './view_learning_chat.js';
 import {learningParams} from './language_adventure_core.js';
+import {fill} from './locale_runtime.js';
 
 // One nearby scene interaction per conversation. The journal never runs this controller.
 export function openIslandLanguageCourse({getState,courseId,interaction,actor,portraitNode,onClose=()=>{},onComplete=()=>{},voiceFactory=createLearningVoice,viewFactory=createLearningChatView,introFactory}){
@@ -24,12 +25,15 @@ export function openIslandLanguageCourse({getState,courseId,interaction,actor,po
         if(session.progressiveHints&&session.hintLevel===0)session.hintLevel=1;
         else session.hintLevel=session.hintLevel===3?0:3;
         paint();
-    },chinese:()=>{session.showChinese=!session.showChinese;paint();},sceneContinue:()=>{close(false);onComplete();}});
+    },chinese:()=>{session.showChinese=!session.showChinese;if(origin.save.languageLearning)origin.save.languageLearning.showChinese=session.showChinese;paint();},sceneContinue:()=>{close(false);onComplete();}});
     const timer=setInterval(()=>{if(!valid())close();},250);
     async function answer(text,input){
         if(!valid()||!step||session?.done)return;
-        const accepted=courseAcceptedAnswer(step,text);
-        if(!accepted){session.status=step.retryHint||'再听一遍示范，照着说或输入就可以。';return;}
+        const feedback=courseAnswerFeedback(step,text),accepted=feedback.reply;
+        if(feedback.kind==='close'){
+            session.status=(feedback.missing.length?fill('差一点！还差：{missing}。可以对照示范「{answer}」再试一次。',{missing:feedback.missing.join(' '),answer:feedback.reply.answer}):fill('多了：{extra}。可以对照示范「{answer}」再试一次。',{extra:feedback.extra.join(' '),answer:feedback.reply.answer})).text;return;
+        }
+        if(feedback.kind!=='accepted'){session.status=step.retryHint||fill('这一段要说的是「{meaning}」，可以先听示范，再说或打字。',{meaning:step.answerGloss}).text;return;}
         const result=await languageTreeStore.update(wordTreeKey(context.key,language),s=>{
             if(!valid())throw Error('对话已结束');migrateWordLexicon(s,index);seedWordLexicon(s,index);
             return completeCourseStep(s,course,step.id,text,{id:receipt,input,at:Date.now(),interaction,interactionRange},index);
@@ -44,7 +48,7 @@ export function openIslandLanguageCourse({getState,courseId,interaction,actor,po
     function localized(text,gloss){return {[language==='zh'?'zh-CN':language]:text,...(language==='zh'?{}:{'zh-CN':gloss})};}
     // A visible loading shell lets failures remain readable and closable.
     session={taskScene:true,practiceOnly:true,profile:{name:actor?.name||'岛屿居民',role:interaction.kind==='npc'?'岛屿居民':interaction.kind==='encounter'?'战斗之后':'场景观察'},portraitNode,
-        locale:language==='zh'?'zh-CN':language,glossLocale:'zh-CN',showChinese:true,story:{id:courseId,title:'岛屿故事',context:'',turns:[]},index:0,messages:[],hintLevel:3,phase:'ready',status:'正在准备对话…',sceneProgress:'',dialogueLabel:interaction.kind==='npc'?'与'+actor.name+'交谈':'在'+actor.name+'互动'};paint();
+        locale:language==='zh'?'zh-CN':language,glossLocale:'zh-CN',showChinese:origin.save.languageLearning?.showChinese!==false,story:{id:courseId,title:'岛屿故事',context:'',turns:[]},index:0,messages:[],hintLevel:3,phase:'ready',status:'正在准备对话…',sceneProgress:'',dialogueLabel:interaction.kind==='npc'?'与'+actor.name+'交谈':'在'+actor.name+'互动'};paint();
     void run(async()=>{
         if(!context?.key)throw Error('请先选择角色');const loaded=await loadLanguageCourses(language);if(!valid())return;
         index=loaded.indexes[language];course=loaded.data.courses.find(c=>c.id===courseId&&c.language===language&&!c.legacyQuestIds);
@@ -61,7 +65,10 @@ export function openIslandLanguageCourse({getState,courseId,interaction,actor,po
         session.story={id:course.id+':'+step.id,title:course.title,context:'',turns:[{id:step.id,question:localized(step.prompt,step.promptGloss),answer:localized(step.answer,step.answerGloss),pattern:step.answer,hint:step.expressionHint||''}]};
         if(step.speaker==='player'){session.profile={name:'我',role:'场景观察'};session.portraitNode=null;}
         session.messages=[{role:step.speaker==='player'?'user':'npc',text:localized(step.prompt,step.promptGloss)}];session.sceneProgress=`故事 ${position+1} / ${course.steps.length}`;session.status=step.hint;
-        if(introFactory&&step.interaction.kind!=='landmark')intro=introFactory({course,step,position,actor,close,proceed:()=>{if(!valid())return;introducing=false;paint();}});
+        // Returning players continue at the practice line instead of rereading the story intro.
+        const introSeen=read.state.courses?.[course.id]?.introSeen===step.id;
+        const markIntroSeen=()=>void languageTreeStore.update(wordTreeKey(context.key,language),s=>{if(s.courses?.[course.id])s.courses[course.id].introSeen=step.id;}).catch(()=>{});
+        if(introFactory&&step.interaction.kind!=='landmark'&&!introSeen)intro=introFactory({course,step,position,actor,close,proceed:()=>{if(!valid())return;introducing=false;markIntroSeen();paint();}});
         else introducing=false;
     });
     return {dispose:()=>close(false)};

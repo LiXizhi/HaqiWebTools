@@ -169,7 +169,7 @@ test('tracks up to three quests and can abandon an accepted quest', () => {
     assert.equal(catalogTracksMonster({...save, trackedQuestIds: [chapter.id]}, content, {source: path}), true);
 });
 
-test('changing islands removes old island pins and keeps the latest accepted quest', () => {
+test('changing islands hides old island pins without dropping them and keeps the latest accepted quest', () => {
     const content = playableContent();
     const save = A.createAdventure(content, {name: '换岛追踪'});
     raise(save, content, content.progression.levelCap);
@@ -190,10 +190,12 @@ test('changing islands removes old island pins and keeps the latest accepted que
     A.applyAction(save, content, {type: 'travel', zone: 'fire'});
     assert.deepEqual(trackedQuestIds(save), stayed);
     while (trackedQuestIds(save).length < 3) {
-        const extra = town.find(q => !trackedQuestIds(save).includes(q.id));
+        const extra = [...town, ...fire].find(q => !trackedQuestIds(save).includes(q.id));
         A.applyAction(save, content, {type: 'track-catalog', questId: extra.id});
     }
+    const pinned = trackedQuestIds(save);
     A.applyAction(save, content, {type: 'travel', zone: 'town'});
+    assert.deepEqual(trackedQuestIds(save), pinned, 'travel must not rewrite manual pins');
     const visible = trackedQuestIds(save, content);
     assert.ok(visible.includes(active.id));
     assert.ok(visible.some(id => content.catalogQuests.byId[id]?.region === 'town'));

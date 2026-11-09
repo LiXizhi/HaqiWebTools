@@ -5,10 +5,11 @@ import {createLearningChatView} from './view_learning_chat.js';
 import {createLearningVoice} from './language_adventure_voice.js';
 
 const contentCache=new Map();
-export async function loadTimeScroll(city,{signal,fetcher=fetch}={}){
+export async function loadTimeScroll(city,{signal,fetcher=fetch,base=typeof document!=='undefined'?document.baseURI:import.meta.url.replace(/js\/[^/]*$/,'')}={}){
     validateTimeScrollReference(city.timeScroll);const reference=city.timeScroll||TIME_SCROLL_DEFAULT;
     if(contentCache.has(reference))return contentCache.get(reference);
-    const response=await fetcher(new URL(reference,new URL('../',import.meta.url)),{signal});
+    // Page-relative like runtime_data.js: Vite rewrites new URL('../',import.meta.url) into an invalid base.
+    const response=await fetcher(new URL(reference,base),{signal});
     if(!response.ok)throw Error('时光长卷暂时无法读取');
     const data=validateTimeScrollContent(await response.json());if(signal?.aborted)throw Error('已取消时光长卷加载');
     contentCache.set(reference,data);return data;

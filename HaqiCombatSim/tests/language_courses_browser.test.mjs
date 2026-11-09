@@ -15,11 +15,11 @@ test('desktop/mobile four-language course and card entry; home action, retry and
   const enterPractice=async()=>{
    const row=await page.evaluate(()=>languageTest.current);
    if(row.interaction.kind!=='landmark'){
-    await page.locator('.rpg-dialogue').waitFor();assert.equal(await page.getByRole('button',{name:'输入',exact:true}).count(),0);
+    await page.locator('.rpg-dialogue').waitFor();assert.equal(await page.getByRole('button',{name:'打字回答',exact:true}).count(),0);
     assert.ok(!(await page.locator('.dialogue-text').textContent()).includes(row.course.context));
     for(let line=0;line<10&&await page.locator('.rpg-dialogue').count();line++)await page.locator('.rpg-dialogue .dialogue-default').click();
    }
-   await page.getByRole('button',{name:'输入',exact:true}).waitFor();
+   await page.getByRole('button',{name:'打字回答',exact:true}).waitFor();
    assert.equal(await page.locator('.rpg-dialogue').count(),0);
    assert.equal(await page.locator('.camp-chat-scene-context').count(),0);
    assert.ok(!(await page.locator('.camp-chat-context').textContent()).includes(row.course.context));
@@ -41,7 +41,7 @@ test('desktop/mobile four-language course and card entry; home action, retry and
    }
    for(let step=0;step<4;step++){
     if(step)await tracker.getByRole('button',{name:'前往',exact:true}).click();
-    await enterPractice();await page.getByRole('button',{name:'输入',exact:true}).waitFor();await page.getByRole('button',{name:'输入',exact:true}).click();
+    await enterPractice();await page.getByRole('button',{name:'打字回答',exact:true}).waitFor();await page.getByRole('button',{name:'打字回答',exact:true}).click();
     const answer=language==='en'&&step===0?'I like milk and bread.':await page.evaluate(()=>languageTest.answer());
     if(language==='en'&&step===0){await page.screenshot({path:path.join(root,`tmp/language-npc-${width}.png`)});await page.getByRole('textbox',{name:'文字回答',exact:true}).fill('incorrect');await page.getByRole('button',{name:'发送',exact:true}).click();await page.getByRole('status').filter({hasText:'再听一遍示范'}).waitFor();}
     await page.getByRole('textbox',{name:'文字回答',exact:true}).fill(answer);await page.getByRole('button',{name:'发送',exact:true}).click();await page.getByRole('button',{name:step===3?'返回岛屿':'前往下一处',exact:true}).click();
@@ -54,7 +54,7 @@ test('desktop/mobile four-language course and card entry; home action, retry and
   await page.evaluate(()=>{languageTest.switch('en');languageTest.travel('fire');});
   for(let step=0;step<4;step++){
    await page.locator('.quest-tracker').getByRole('button',{name:'前往',exact:true}).click();await enterPractice();
-   await page.getByRole('button',{name:'输入',exact:true}).click();await page.getByRole('textbox',{name:'文字回答',exact:true}).fill(await page.evaluate(()=>languageTest.answer()));
+   await page.getByRole('button',{name:'打字回答',exact:true}).click();await page.getByRole('textbox',{name:'文字回答',exact:true}).fill(await page.evaluate(()=>languageTest.answer()));
    await page.getByRole('button',{name:'发送',exact:true}).click();
    if(step===3)await page.getByRole('status').filter({hasText:'没有看见火苗'}).waitFor();
    await page.getByRole('button',{name:step===3?'返回岛屿':'前往下一处',exact:true}).click();
@@ -64,21 +64,21 @@ test('desktop/mobile four-language course and card entry; home action, retry and
   const tracker=page.locator('.quest-tracker');await tracker.getByRole('button',{name:'前往',exact:true}).waitFor();
   for(let step=0;step<4;step++){
    await tracker.getByRole('button',{name:'前往',exact:true}).click();
-   if(step===3){assert.equal(await page.getByRole('button',{name:'输入',exact:true}).count(),0);assert.equal((await page.evaluate(()=>languageTest.current)).interaction.kind,'encounter');await page.evaluate(()=>languageTest.win());await tracker.getByRole('button',{name:'前往',exact:true}).click();}
-   await enterPractice();await page.getByRole('button',{name:'输入',exact:true}).click();const answer=await page.evaluate(()=>languageTest.answer());await page.getByRole('textbox',{name:'文字回答',exact:true}).fill(answer);await page.getByRole('button',{name:'发送',exact:true}).click();await page.getByRole('button',{name:'前往下一处',exact:true}).click();
+   if(step===3){assert.equal(await page.getByRole('button',{name:'打字回答',exact:true}).count(),0);assert.equal((await page.evaluate(()=>languageTest.current)).interaction.kind,'encounter');await page.evaluate(()=>languageTest.win());await tracker.getByRole('button',{name:'前往',exact:true}).click();}
+   await enterPractice();await page.getByRole('button',{name:'打字回答',exact:true}).click();const answer=await page.evaluate(()=>languageTest.answer());await page.getByRole('textbox',{name:'文字回答',exact:true}).fill(answer);await page.getByRole('button',{name:'发送',exact:true}).click();await page.getByRole('button',{name:'前往下一处',exact:true}).click();
   }
   await page.evaluate(()=>languageTest.switch('ja'));await page.evaluate(()=>languageTest.switch('en'));await tracker.getByRole('button',{name:'前往',exact:true}).waitFor();await tracker.getByRole('button',{name:'前往',exact:true}).click();
   await enterPractice();await page.locator('.camp-chat-progress').filter({hasText:'故事 5 / 6'}).waitFor();assert.equal((await page.evaluate(()=>languageTest.state('en'))).courses['en-hanzi-01'].scene.next,4);
   for(let step=4;step<6;step++){
    if(step===5){await tracker.getByRole('button',{name:'前往',exact:true}).click();await enterPractice();assert.equal((await page.evaluate(()=>languageTest.current)).interaction.name,'小灯');}
-   await page.getByRole('button',{name:'输入',exact:true}).click();await page.getByRole('textbox',{name:'文字回答',exact:true}).fill(await page.evaluate(()=>languageTest.answer()));await page.getByRole('button',{name:'发送',exact:true}).click();
+   await page.getByRole('button',{name:'打字回答',exact:true}).click();await page.getByRole('textbox',{name:'文字回答',exact:true}).fill(await page.evaluate(()=>languageTest.answer()));await page.getByRole('button',{name:'发送',exact:true}).click();
    const next=page.getByRole('button',{name:step===5?'返回岛屿':'前往下一处',exact:true});await next.waitFor();
    if(step===5){await page.getByRole('status').filter({hasText:'原来朋友没有失约'}).waitFor();await page.screenshot({path:path.join(root,`tmp/hanzi-story-ending-${width}.png`)});}
    await next.click();
   }
   assert.equal((await page.evaluate(()=>languageTest.state('en'))).courses['en-hanzi-01'].scene.next,6);
   for(const language of ['ja','ko']){
-   const answer=await page.evaluate(l=>languageTest.card(l),language);await page.getByRole('button',{name:'输入',exact:true}).click();await page.getByRole('textbox',{name:'文字回答',exact:true}).fill(answer);await page.getByRole('button',{name:'发送',exact:true}).click();await page.waitForFunction(()=>!document.querySelector('.word-practice'));
+   const answer=await page.evaluate(l=>languageTest.card(l),language);await page.getByRole('button',{name:'打字回答',exact:true}).click();await page.getByRole('textbox',{name:'文字回答',exact:true}).fill(answer);await page.getByRole('button',{name:'发送',exact:true}).click();await page.waitForFunction(()=>!document.querySelector('.word-practice'));
   }
   assert.equal(await page.evaluate(()=>languageTest.accepted),2);
   await page.evaluate(()=>languageTest.home());await page.getByRole('button',{name:'照顾宠物',exact:true}).click();await page.getByRole('textbox',{name:'输入回答'}).waitFor();
@@ -130,11 +130,11 @@ test('desktop/mobile four-language course and card entry; home action, retry and
   await page.evaluate(()=>languageTest.homeEvent({kind:'find',objectId:'lamp1'}));await page.getByRole('button',{name:'再玩一轮'}).waitFor();
   assert.deepEqual(new Set((await page.evaluate(()=>languageTest.cardPool())).cards.map(c=>c.entryId)),new Set(['book','lamp']));
   const lampAnswer=await page.evaluate(()=>languageTest.curriculumCard('lamp'));assert.equal(lampAnswer,'lamp');
-  await page.getByRole('button',{name:'输入',exact:true}).click();await page.getByRole('textbox',{name:'文字回答',exact:true}).fill(lampAnswer);
+  await page.getByRole('button',{name:'打字回答',exact:true}).click();await page.getByRole('textbox',{name:'文字回答',exact:true}).fill(lampAnswer);
   await page.getByRole('button',{name:'发送',exact:true}).click();await page.waitForFunction(()=>!document.querySelector('.word-practice'));
   assert.equal((await page.evaluate(()=>languageTest.state('en'))).words.lamp.practiceCount,2);
   const cardAnswer=await page.evaluate(()=>languageTest.curriculumCard('book'));assert.equal(cardAnswer,'My book has magic.');
-  await page.getByRole('button',{name:'输入',exact:true}).click();await page.getByRole('textbox',{name:'文字回答',exact:true}).fill(cardAnswer);
+  await page.getByRole('button',{name:'打字回答',exact:true}).click();await page.getByRole('textbox',{name:'文字回答',exact:true}).fill(cardAnswer);
   await page.getByRole('button',{name:'发送',exact:true}).click();await page.waitForFunction(()=>!document.querySelector('.word-practice'));
   assert.equal((await page.evaluate(()=>languageTest.state('en'))).words.book.practiceCount,3);
   await page.evaluate(()=>languageTest.authoredTurnHome());await page.getByRole('button',{name:'轮流小游戏',exact:true}).click();

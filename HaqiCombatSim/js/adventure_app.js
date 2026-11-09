@@ -18,7 +18,7 @@ import {hanziAnimationActive} from './view_hanzi_animation.js';
 import {createHanziMemory} from './adventure_hanzi_memory.js';
 import {learningModeForced,enforceLearningMode} from './learning_mode_policy.js';
 const learningForced=learningModeForced(globalThis.location?.search);
-import {restoreVisibleFocus} from './view_adventure_controls.js';
+import {restoreVisibleFocus,createCloseButton} from './view_adventure_controls.js';
 import {locationSnapshot,mapCoordinateVersion} from './adventure_coordinates_core.js';
 import {createIslandHeroNavigation} from './island_hero_navigation.js';
 import {timeScrollCity} from './adventure_time_scroll_core.js';
@@ -772,8 +772,8 @@ async function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
     return loadLocaleFiles(ids).then(()=>{if(save!==newSave)return;configureLocale({locale:storedLocalePref()||save.locale,languageLearning:save.languageLearning});reveal();});
 }
 // Prologue 《失落的光》 (docs/prologue.md): lazily loaded, shares loaded assets and locale, needs no login
-// and never writes a role save. Opened from character creation or the direct URL.
-let prologueRun=null;
+// and never writes a role save. First-time players see it before character creation.
+let prologueRun=null,prologueOffered=false;
 async function setPrologueLocale(native,target){
     if(!isLocaleId(native))return;
     try{localStorage.setItem(LOCALE_PREF_KEY,native);}catch{}
@@ -784,6 +784,7 @@ async function setPrologueLocale(native,target){
 }
 function runPrologue({fromUrl=false,scene=null,lang=null,second=null}={}){
     if(prologueRun)return prologueRun;
+    prologueOffered=true;
     const native=isLocaleId(lang)?lang:displayLocale(),target=isLocaleId(second)&&second!==native?second:secondLocaleFor(native);
     prologueRun=(async()=>{
         try{
@@ -814,6 +815,10 @@ async function showTitle() {
     world=W.createWorld(save.zone==='earth'?'camp':save.zone,assets.content,save.zone==='earth'?null:save);
     titleView=roleStore.catalog.roles.length||roleStore.recovering||roles.localOnly?'roles':'create';
     if(titleView==='create')roleDraft=null;paintTitle();
+    if(titleView==='create'&&!roleStore.catalog.roles.length&&!prologueOffered&&!prologueRun){
+        await runPrologue();
+        if(stage==='title')paintTitle();
+    }
 }
 function deleteCurrentRole() {
     if (roles.busy || cloud.busy || roles.conflict || stage !== 'world' || save?.pendingEncounter) {
@@ -946,9 +951,34 @@ function beginOriginalImport() {
 function openCreationForm(){
     titleView='create';roleDraft=null;paintCreation();
 }
+function promptPrologueBeforeCreate(){
+    const closePrompt=()=>{nodes.overlay.className='overlay';nodes.overlay.replaceChildren();};
+    const modal=V.el('div','modal prologue-confirm-modal',
+        V.el('div','modal-header',
+            V.el('div','',V.el('div','eyebrow','NEW HERO · PROLOGUE'),V.el('h2','','新建角色')),
+            createCloseButton(closePrompt,'关闭'),
+        ),
+        V.el('div','modal-body',
+            V.el('p','','新建角色前，是否播放开场动画《失落的光》？'),
+            V.el('div','cloud-actions',
+                V.button('播放开场动画',()=>{
+                    closePrompt();
+                    void runPrologue().then(()=>{if(stage==='title')openCreationForm();});
+                },'primary'),
+                V.button('直接创建角色',()=>{
+                    closePrompt();
+                    openCreationForm();
+                },'secondary'),
+            ),
+        ),
+    );
+    nodes.overlay.replaceChildren(modal);
+    nodes.overlay.className='overlay visible';
+}
 function newRoleForm() {
     if(roles.busy)return;
     if(roleStore.catalog.roles.length>=currentRoleLimit()){toast(roleLimitReachedMessage(accountIsVip()));return;}
+    if(roleStore.catalog.roles.length){promptPrologueBeforeCreate();return;}
     openCreationForm();
 }
 function paintCreation() {
@@ -971,7 +1001,6 @@ function paintCreation() {
             next.locale=native;
             next.languageLearning={...next.languageLearning,native,target,selectionConfirmed:true};
             const id=roleStore.create(next,{isVip:accountIsVip()});await activateRole(id);
-            if(target==='en'&&native!==target&&roleStore.catalog.activeId===id)await openHomePanel({starterRoom:true});
             await syncRoles();
         })
     },roles.error);

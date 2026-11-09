@@ -1,7 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { createHash } from 'node:crypto';
 import { installExpansion } from '../js/adventure_expansion_core.js';
 import { installNpcCatalog, npcOffers, npcOfferStatus, npcPurchaseBounds } from '../js/adventure_npc_core.js';
 import { installRuneCatalog, catchChanceMilli, runeObtainLines, runeStatus } from '../js/adventure_runes_core.js';
@@ -29,15 +28,16 @@ function catchBattle(itemId, petId, hp) {
     return { save, battle, rune };
 }
 
-test('RuneList export keeps every grid entry and the original catch weights', () => {
+test('committed RuneList catalog keeps every grid entry and the original catch weights', () => {
     assert.equal(catalog.listed, 45);
     assert.equal(catalog.runes.length, 45);
     assert.equal(new Set(catalog.runes.map(row => row.gsid)).size, 45);
     assert.ok(catalog.unlisted.length > 0);
     const weights = Object.fromEntries(catalog.runes.filter(row => row.type === 'CatchPet').map(row => [row.gsid, row.baseWeight]));
     assert.deepEqual(weights, { 23439: 2, 23440: 5, 23441: 20 });
-    const source = fs.readFileSync(new URL('../../../config/Aries/Cards/RuneList.xml', import.meta.url));
-    assert.equal(catalog.sources['config/Aries/Cards/RuneList.xml'], createHash('sha256').update(source).digest('hex'));
+    // Raw source bytes belong to the export check (npm run check:rune-source).
+    // Runtime behavior must run from this independent repository alone.
+    assert.match(catalog.sources['config/Aries/Cards/RuneList.xml'], /^[a-f0-9]{64}$/);
     assert.match(runeObtainLines(content, 23439).join('；'), /哈奇岛·安卓婆婆，10仙豆/);
     assert.match(runeObtainLines(content, 23441).join('；'), /原服兑换未开放/);
     assert.equal(runeStatus(content.items[23439], content, dataset).catch, true);

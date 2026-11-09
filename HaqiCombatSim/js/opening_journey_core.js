@@ -18,6 +18,7 @@ export function validateOpeningJourney(save){
  if(state===undefined)return;
  assert(state&&state.version===1&&PHASES.includes(state.phase),'新手冒险记录无效');
  assert(state.route===undefined||['talk','battle'].includes(state.route),'新手冒险路线无效');
+ assert(state.celebrated===undefined||typeof state.celebrated==='boolean','新手冒险完成记录无效');
  assert(state.petId===undefined||typeof state.petId==='string'&&state.petId.length<=200,'新手伙伴记录无效');
  if(state.practice){
   const event=state.practice;
@@ -41,8 +42,14 @@ export function openingJourneyTarget(save){
 }
 export function applyOpeningJourney(save,content,action){
  const state=openingJourney(save);
- assert(state&&state.phase!=='done','这段冒险已经结束');
+ assert(state,'找不到这段冒险');
  assert(save.zone==='camp'&&!save.pendingEncounter,'先回到营地并结束当前战斗');
+ if(action.step==='continue'){
+  assert(state.phase==='done','先和新伙伴完成挑战');
+  state.celebrated=true;
+  return {changed:true,message:'咕噜噜会继续陪你冒险。去找青龙吧。'};
+ }
+ assert(state.phase!=='done','这段冒险已经结束');
  const expected={accept:36211,meet:36201,route:36201,explain:36201,rescue:36201}[action.step];
  if(expected){
   const point=content.worldMaps?.camp?.npcPositions?.[expected];

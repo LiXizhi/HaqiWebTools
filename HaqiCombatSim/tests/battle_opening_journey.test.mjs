@@ -94,3 +94,26 @@ test('live individual-pet roles recruit a saved individual and field it in the n
  assert.equal(fight(save,'ice-scout').winner,'near');
  assert.equal(save.openingJourney.phase,'done');
 });
+
+test('completion handoff requires a win, persists acknowledgement and never awards twice',()=>{
+ let save=fresh();guide(save,'talk');
+ assert.throws(()=>act(save,'continue'),/先和新伙伴/);
+ act(save,'explain',{text:'We are friends.',receipt:'handoff',at:4});
+ act(save,'rescue',{join:true});fight(save,'ice-scout');
+ const inventory=structuredClone(save.inventory),pets=structuredClone(save.pets);
+ act(save,'continue');act(save,'continue');
+ assert.deepEqual(save.inventory,inventory);assert.deepEqual(save.pets,pets);
+ save=checkedProgress(save,content,dataset).save;
+ assert.equal(save.openingJourney.celebrated,true);
+ assert.equal(A.currentQuest(save,content).startNpc,36211);
+});
+
+test('failed completion handoff storage keeps the completion screen eligible on re-entry',()=>{
+ const save=fresh();guide(save,'talk');
+ act(save,'explain',{text:'We are friends.',receipt:'handoff-quota',at:5});
+ act(save,'rescue',{join:true});fight(save,'ice-scout');
+ const before=JSON.stringify(save);
+ assert.throws(()=>persistReward(save,content,{type:'opening-journey',step:'continue'},{},{getItem:()=>null,setItem:()=>{throw Error('quota');}}),/quota/);
+ assert.equal(JSON.stringify(save),before);
+ assert.equal(save.openingJourney.celebrated,undefined);
+});

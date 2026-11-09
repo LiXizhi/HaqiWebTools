@@ -518,7 +518,7 @@ function persist() {
 function close({silent=false}={}) {openingSpeech?.abort();openingSpeech=null;courseView?.dispose();courseView=null;mapServersDispose?.();mapServersDispose=null;if(!silent&&homeView&&!homeView.canClose())return;homeTicket++;homeView?.dispose();homeView=null;earthLoadingView.hide();earthLoadingRetry=null;earthLoadingExit=null;wordPractice.close();hanziMemory.close();dictionaryTicket++;dictionary?.close();dictionary=null;timeScrollTicket++;timeScrollLoad?.abort();timeScrollLoad=null;timeScroll?.close();timeScroll=null;hanziTicket++;hanziIsland?.close();nodes.overlay.disposeMap?.();atlasView?.dispose();atlasView=null;earthPractice?.close();earthViewTicket++;earthView?.dispose();earthView=null;if(earthTraveling){earthService?.cancelPending();earthTraveling=false;}battleIntro.close();dungeonStory.close();if(stage==='world')nodes.hud.hidden=false;if(!silent&&(panel||dialog))spellSound.play('close');characterChat.close();secondCharacterChat?.close();islandSocial.close();fishingLoadEpoch++;languageAdventure.close();fishingApproach=null;talkApproach=null;sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
 // Streaming/social updates repaint the HUD during held movement; only explicit
 // cancellation (panel transitions, blur, pointer release) may clear that input.
-function paintHud() {languageTasks.ensure();if(world){const languageQuest=openingJourneyActive(save)?null:recommendedLanguageQuest(save,assets.content,languageTasks.snapshot().rows);world.languageQuestTarget=languageQuest?.courseId?languageSceneTarget(languageQuest,world):null;}V.renderHud(nodes.hud,model(),{panel:openPanel,playerPanel:(owner,kind)=>localPlay.openPanel(owner,kind),playerMountToggle:owner=>localPlay.toggleMount(owner),membership:()=>openPanel('membership'),cloud:()=>void loginRoles(),track,untrack,leaveDungeon:exitDungeon,interact:interactNearest,mountToggle:()=>performAction({type:'mount-visibility',hidden:!save?.mountHidden})});}
+function paintHud() {languageTasks.ensure();if(world){const languageQuest=openingJourneyActive(save)||(save.zone==='camp'&&openingJourney(save))?null:recommendedLanguageQuest(save,assets.content,languageTasks.snapshot().rows);world.languageQuestTarget=languageQuest?.courseId?languageSceneTarget(languageQuest,world):null;}V.renderHud(nodes.hud,model(),{panel:openPanel,playerPanel:(owner,kind)=>localPlay.openPanel(owner,kind),playerMountToggle:owner=>localPlay.toggleMount(owner),membership:()=>openPanel('membership'),cloud:()=>void loginRoles(),track,untrack,leaveDungeon:exitDungeon,interact:interactNearest,mountToggle:()=>performAction({type:'mount-visibility',hidden:!save?.mountHidden})});}
 function paintPanel() {
     if(panel==='opening-journey'){paintOpeningJourney();return;}
     mapServersDispose?.();mapServersDispose=null;
@@ -767,7 +767,7 @@ async function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
     if(!save.pendingEncounter){wordRecordings.clear();stopWordAudio();const currentSave=save,key=dictionaryCardKey();void dictionaryCardsStore.read(key).then(state=>{if(save===currentSave&&dictionaryCardKey()===key){applyWordLearning(state);paintHud();}}).catch(()=>{});}
     if(save.pendingEncounter){battle=restoredBattle||P.restorePveBattle(assets.dataset,assets.content,save.pendingEncounter);stage='battle';nodes.hud.hidden=true;paintBattle();}
     else {sceneLoading.update(world,save,performance.now());maybeExchangeMagicBeans({announce:announceBeans});}
-    if(openingJourney(save)?.phase==='done'&&!save.openingJourney.celebrated){save.openingJourney.celebrated=true;globalReward.show({title:'第一次搭档完成',lines:['咕噜噜已经和你一起完成了挑战。','去宠物面板看看它，或继续认识营地里的朋友。']});}persist();queueCloudSave();updateMusic();if(!save.pendingEncounter)void drainOpeningPractice();
+    if(openingJourney(save)?.phase==='done'&&!save.openingJourney.celebrated&&!save.pendingEncounter&&save.zone==='camp')openOpeningJourney();persist();queueCloudSave();updateMusic();if(!save.pendingEncounter)void drainOpeningPractice();
     if(save.timeScrollRuntime?.active&&!save.pendingEncounter&&timeScrollCity(world,save)?.id===save.timeScrollRuntime.cityId)void openTimeScroll();
     };
     const ids=localeFilesToLoad();
@@ -1242,10 +1242,15 @@ function openOpeningJourney(){
     close();panel='opening-journey';paintOpeningJourney();
 }
 function paintOpeningJourney(){
-    if(panel!=='opening-journey'||!openingJourneyActive(save)){close();return;}
+    if(panel!=='opening-journey'||!openingJourney(save)){close();return;}
+    const leave=()=>{
+        if(openingJourney(save)?.phase==='done'&&!save.openingJourney.celebrated&&performAction({type:'opening-journey',step:'continue'})===false)return false;
+        close();return true;
+    };
     renderOpeningJourney(nodes.overlay,model(),{
-        close,
-        pets:()=>openPanel('pet'),
+        close:leave,
+        continue:()=>{if(leave())track();},
+        pets:()=>{if(leave())openPanel('pet');},
         listen:()=>safely(async()=>{
             openingSpeech?.abort();const controller=new AbortController();openingSpeech=controller;
             await dialogueVoice.speak('We are friends.','en',controller.signal);
@@ -1253,10 +1258,11 @@ function paintOpeningJourney(){
         go:()=>trackOpeningJourney(),
         action:value=>{
             const result=performAction({type:'opening-journey',...value,receipt:crypto.randomUUID(),at:Date.now()});
-            if(result===false)return;
+            if(result===false)return false;
             if(value.step==='accept'){close();paintHud();}
             if(value.step==='route'&&value.route==='battle')trackOpeningJourney();
             if(value.step==='explain')void drainOpeningPractice();
+            return result;
         }
     });
 }

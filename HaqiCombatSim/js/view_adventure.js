@@ -478,7 +478,8 @@ function renderHudContents(root,model,cb) {
         const cleared=dungeonProgress(save)?.[save.zone]?.cleared.length||0,remaining=dungeon.arenas.filter(a=>!a.blocked.length&&!dungeonProgress(save)?.[save.zone]?.cleared.includes(a.id)).length;
         tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，可以退出副本。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可以退出副本。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button('退出副本',()=>cb.leaveDungeon?.(),'track-button'));
     }else{
-        const entries=withLanguageQuest(trackerEntries(save,c),recommendedLanguageQuest(save,c,model.languageTasks?.rows||[],catalogStatSnapshot(save,c)));
+        const languageQuest=save.zone==='camp'&&openingJourney(save)?null:recommendedLanguageQuest(save,c,model.languageTasks?.rows||[],catalogStatSnapshot(save,c));
+        const entries=withLanguageQuest(trackerEntries(save,c),languageQuest);
         // 低于10级跨区域开启；其他等级保留营地任务链规则。
         // 指针挂在第一条符合条件的未交付追踪任务上，自动寻路期间不打扰。
         const teach={allow:!!teachingMode(save,c)};

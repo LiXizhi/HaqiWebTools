@@ -25,6 +25,7 @@ import {purchaseNpcOffer} from './adventure_npc_core.js';
 import {claimMagicStar,validateMagicStarClaims,magicStarCombatLevel,applyMagicStarCombat} from './adventure_magic_star_core.js';
 import {equipmentSetStats,dragonTotemStage,progressionStatEntry,chooseDragonTotem,useDragonTotemItem} from './adventure_progression_bonuses_core.js';
 import {customizeHero} from './adventure_hero_customize_core.js';
+import {applyOpeningJourney,openingJourneyActive,openingJourneyWon,validateOpeningJourney} from './opening_journey_core.js';
 import {publicPhotoHead} from './photo_head_core.js';
 // AdventureContent / AdventureSave v1. Pure chapter rules; no browser or storage APIs.
 import { islandFor, islandSpawn, travelStatus } from './adventure_world_map_core.js';
@@ -392,6 +393,13 @@ function applyAdventureAction(save, content, action, access={}) {
     case 'use-totem-item': useDragonTotemItem(save,content,action.itemId);break;
     case 'checkin': claimCheckin(save, content, action.now, action.index, access, action.bonus===true); break;
     case 'speech-reward': claimSpeechReward(save,content,action.index,action.now);notice='领取成功，奖励已放入背包！';break;
+    case 'opening-journey': {
+        const result=applyOpeningJourney(save,content,action);
+        if(action.step==='accept'&&q?.id===63000&&!questState(save,63000).accepted)applyAction(save,content,{type:'accept',questId:63000,npcId:36211});
+        if(action.step==='rescue'&&q?.id===63000&&questReady(save,q))applyAction(save,content,{type:'claim',questId:63000,npcId:36211});
+        notice=result.message;
+        break;
+    }
     case 'accept': {
         assert(q && q.id === Number(action.questId) && q.startNpc === Number(action.npcId), '当前没有可接取的任务');
         if (!save.quests[q.id]) {
@@ -441,6 +449,7 @@ function applyAdventureAction(save, content, action, access={}) {
     case 'claim': {
         const target = content.quests.find(x => x.id === Number(action.questId));
         if (save.quests[target?.id]?.claimed) return { changed: false };
+        assert(target?.id!==63000||!openingJourneyActive(save)||save.openingJourney.phase==='showcase','先和莫尼一起帮咕噜噜解围');
         assert(target === q && questReady(save,q) && q.endNpc === Number(action.npcId), '任务尚未完成');
         grantQuestRewards(save,content,q);
         save.quests[q.id].claimed = true;
@@ -647,6 +656,7 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
     if(content.pets)settleParty(save,content,battle);
     let insufficientStamina=false,staminaSpent=0;
     if (battle.winner === 'near') {
+        openingJourneyWon(save,pending);
         if(save.petTraitEncounters)delete save.petTraitEncounters[pending.encounterId];
         const cityDungeon=dungeonFor(content,save.zone);
         if(cityDungeon?.kind==='city')recordCityBattleWin(save,cityDungeon,encounter.id);
@@ -687,6 +697,7 @@ export function parseSave(raw,content) {
     const s = typeof raw === 'string' ? JSON.parse(raw) : clone(raw);
     if(s?.schemaVersion===1){s.schemaVersion=SAVE_VERSION;if(content.pets){Pets.initializePets(s,content);if(s.pet&&content.pets.legacy_gululu)Pets.addPet(s,content,'legacy_gululu',s.pet.xp);}}
     assert(s && s.schemaVersion === SAVE_VERSION && s.contentVersion === content.contentVersion,'存档版本不兼容');
+    validateOpeningJourney(s);
     normalizeLocaleSave(s);
     validateHanziProgress(s.hanzi);
     validateTimeScrollProgress(s.timeScrollProgress);validateTimeScrollRuntime(s.timeScrollRuntime);

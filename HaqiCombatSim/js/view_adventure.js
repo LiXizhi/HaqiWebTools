@@ -17,6 +17,7 @@ import {renderLearningMode} from './view_learning_mode.js';
 import {createHeroPicker} from './view_hero_picker.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
 import {heroPortrait} from './hero_renderer.js';
+import {openingJourney,openingJourneyActive,openingJourneyTarget} from './opening_journey_core.js';
 import {renderNpcServices} from './view_adventure_npc.js';
 import {npcServices,npcHasActiveQuest} from './adventure_npc_core.js';
 import {renderGems} from './view_adventure_gems.js';
@@ -463,7 +464,14 @@ function renderHudContents(root,model,cb) {
     const chapterCount=el('span','chapter-count');setText(chapterCount,catalogClaimed?'{done} / 14 · 全岛 {claimed}':'{done} / 14',{done:chapterDone,claimed:catalogClaimed});
     const tracker=el('section','quest-tracker',el('div','tracker-top',el('span','eyebrow','冒险手记'),chapterCount));
     const dungeon=dungeonFor(c,save.zone);
-    if(save.zone==='earth'){
+    if(save.zone==='camp'&&!model.localSecond&&openingJourneyActive(save)){
+        const state=openingJourney(save),goal=openingJourneyTarget(save);
+        tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','第一次搭档')),
+            el('h3','','帮咕噜噜找到朋友'),el('p','',goal.objective),
+            el('p','muted',state.phase==='showcase'?'新伙伴可以在战斗中和你一起行动。':'咕噜噜被拦在营地外，它想找个朋友。'),
+            button('前往',()=>cb.track('opening-journey'),'track-button'));
+        if(state.phase==='challenge')tracker.append(button('和莫尼商量别的办法',()=>cb.track('opening-journey-plan'),'track-button'));
+    }else if(save.zone==='earth'){
         const chapter=model.earthChapter,city=c.earthWorld?.city,step=chapter?.steps[earthCityChapterProgress(save,chapter).step],side=earthCityQuestTarget(save,city);
         tracker.replaceChildren(el('h3','',side?.name||chapter?.name||'与世界同行'),el('p','',side?.description||step?.name||(chapter?'本章完成。和伙伴继续探索吧。':'靠近居民，了解这座城市的故事。')));
     }else if(dungeon){

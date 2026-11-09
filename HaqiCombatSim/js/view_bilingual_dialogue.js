@@ -11,7 +11,8 @@ export function createBilingualDialogue({button,mapWords,createWordLearning=crea
     const results=new Map(),views=new Set();
     const remember=(map,key,value)=>{map.set(key,value);if(map.size>100)map.delete(map.keys().next().value);};
     const mapper=mapWords||mapDialogue;
-    function attach({container,original,gloss,text,translation,locale,native,onRead,onError=()=>{},showRead=true}){
+    function attach({container,original,gloss,text,translation,locale,native,onRead,onError=()=>{},showRead=true,deferMapping=false}){
+        let expanded=!deferMapping;
         let disposed=false,busy=false,disabled=false,mapped=false,hasFeedback=false,abort,links=()=>{},learner=null,modelResult=null,closeWord=()=>{},wordVoice=null,wordAbort=null,unsubscribe=()=>{},revealed=false,learningReady=Promise.resolve();
         const lines=[{text,locale},{text:translation,locale:native}],key=JSON.stringify(lines);
         const controls=[];
@@ -32,10 +33,10 @@ export function createBilingualDialogue({button,mapWords,createWordLearning=crea
         }
         let currentResult=null;
         function show(result){currentResult=result;links();links=renderDialogueMapping(container,[originalLabel,glossLabel],result,{onWord:learner?openWord:null});mappingLabel(mapped?'已连线':'模型连线');update();}
-        function showLocal(){if(!learner?.valid())return;const local=learner.mapping();show(modelResult?supplementWordMapping(lines,local,modelResult,learner.index,learner.state):local);}
+        function showLocal(){if(!expanded||!learner?.valid())return;const local=learner.mapping();show(modelResult?supplementWordMapping(lines,local,modelResult,learner.index,learner.state):local);}
         if(gloss&&translation&&text){
             mapping=control('',async()=>{
-                if(disabled||disposed||busy||mapped)return;finishDialogueReveal(originalLabel);busy=true;update();mapping.setAttribute('aria-busy','true');mappingLabel('映射中…');abort=new AbortController();
+                if(!expanded||disabled||disposed||busy||mapped)return;finishDialogueReveal(originalLabel);busy=true;update();mapping.setAttribute('aria-busy','true');mappingLabel('映射中…');abort=new AbortController();
                 try{await learningReady;if(disposed||abort.signal.aborted)return;
                     const excluded=learner?[...new Set([...matchWordText(learner.index,text).filter(w=>learner.state.words[w.id]?.mark==='know').map(w=>w.text)])]:[];
                     const requestLines=excluded.length?[{...lines[0],excludeWords:excluded},lines[1]]:lines,requestKey=JSON.stringify(requestLines);
@@ -44,6 +45,18 @@ export function createBilingualDialogue({button,mapWords,createWordLearning=crea
                 finally{busy=false;if(!disposed){mapping.setAttribute('aria-busy','false');update();}}
             },'camp-chat-replay camp-chat-map',gloss);
             mapping.append(icon('map'));mappingLabel('模型连线');
+            if(deferMapping){
+                mapping.hidden=true;mapping.style.display='none';
+                const toggle=control('看看词语对应',()=>{
+                    if(disposed||disabled)return;
+                    expanded=!expanded;finishDialogueReveal(originalLabel);
+                    toggle.setAttribute('aria-expanded',String(expanded));toggle.textContent=tr(expanded?'收起词语对应':'看看词语对应');
+                    mapping.hidden=!expanded;mapping.style.display=expanded?'':'none';
+                    if(expanded)showLocal();
+                    else{abort?.abort();closeWord();wordAbort?.abort();links();links=()=>{};originalLabel.textContent=text;if(glossLabel)glossLabel.textContent=translation;}
+                },'secondary dialogue-learning-toggle',container);
+                toggle.setAttribute('aria-expanded','false');
+            }
             // A cache miss never generates a cloud request. Preserve sequential reveal
             // and pronunciation feedback while the IndexedDB read is in flight.
             learningReady=(async()=>{

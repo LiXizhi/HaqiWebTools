@@ -19,7 +19,7 @@ class Element extends EventTarget {
  close(){this.open=false;this.dispatchEvent(new Event('close'));}
  remove(){this.isConnected=false;if(this.parent)this.parent.children=this.parent.children.filter(n=>n!==this);}
 }
-function setup(t,{delay=false,friend=false,pair=null}={}){
+function setup(t,{delay=false,friend=false,pair=null,deferMapping=false}={}){
  const before=Object.fromEntries(['document','ResizeObserver','requestAnimationFrame','cancelAnimationFrame'].map(k=>[k,globalThis[k]]));
  globalThis.document={body:new Element('body'),createElement:t=>new Element(t),createElementNS:(_,t)=>new Element(t)};globalThis.ResizeObserver=class {observe(){} disconnect(){}};globalThis.requestAnimationFrame=()=>1;globalThis.cancelAnimationFrame=()=>{};
  let controller; t.after(()=>{controller?.close();for(const [key,value] of Object.entries(before))if(value===undefined)delete globalThis[key];else globalThis[key]=value;});
@@ -31,10 +31,21 @@ function setup(t,{delay=false,friend=false,pair=null}={}){
  const button=(text,run,cls)=>{const e=new Element('button');e.textContent=text;e.onclick=run;e.className=cls||'';return e;};
  controller=createBilingualDialogue({button,createWordLearning:()=>delay?new Promise(done=>resolve=done):Promise.resolve(learner),mapWords:async input=>{generated++;requested=input;return [[{text:'Worried',color:'#123'},{text:' book'}],[{text:'担心',color:'#123'},{text:'书'}]];}});
  const container=new Element('section'),original=new Element('p'),gloss=new Element('p');container.append(original,gloss);document.body.append(container);
- const view=controller.attach({container,original,gloss,text:lines[0].text,translation:lines[1].text,locale:lines[0].locale,native:lines[1].locale,onRead:()=>{}});
+ const view=controller.attach({container,original,gloss,text:lines[0].text,translation:lines[1].text,locale:lines[0].locale,native:lines[1].locale,onRead:()=>{},deferMapping});
  return {view,controller,container,learner,original,gloss,resolve:()=>resolve(learner),switchRole:()=>active=false,get generated(){return generated;},get requested(){return requested;}};
 }
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
+
+test('task dialogue stays plain until expanded and collapsing preserves optional learning',async t=>{
+ const ui=setup(t,{deferMapping:true});await settle();
+ const toggle=ui.container.querySelectorAll('.dialogue-learning-toggle')[0],map=ui.gloss.querySelectorAll('.camp-chat-map')[0];
+ assert.equal(ui.original.querySelectorAll('.dialogue-learning-word').length,0);assert.equal(map.hidden,true);assert.equal(ui.generated,0);
+ toggle.onclick();assert.equal(toggle.attributes['aria-expanded'],'true');assert.equal(map.hidden,false);
+ assert.equal(ui.original.querySelectorAll('.dialogue-learning-word').length,2);
+ toggle.onclick();assert.equal(ui.original.textContent,'Worried book');assert.equal(map.hidden,true);
+ assert.equal(ui.original.querySelectorAll('.dialogue-learning-word').length,0);
+ toggle.onclick();await map.onclick();assert.equal(ui.generated,1);
+});
 test('local dialogue is clickable without model calls; mark popup shares state and removes all forms',async t=>{
  const ui=setup(t);await settle();assert.equal(ui.generated,0);assert.equal(ui.original.textContent,'Worried book');
  assert.equal(ui.original.querySelectorAll('.dialogue-learning-word').length,2);

@@ -1185,8 +1185,9 @@ function finishTrackedDialogue() {
     if(ids.length===1)track(ids[0],{pin:false});
     return true;
 }
-function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog,{close,chat:npc=>{close();if(save.zone==='camp'&&save.languageLearning?.enabled)void languageAdventure.open(npc);else openFreeTalk(npc);},mapDialogue,readDialogue:(text,locale,signal,speaker)=>dialogueVoice.speak(text,locale,signal,speaker),next:nextDialogue,startQuest:q=>startLines(q.startDialog,'接取任务',()=>{
+function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog,{close,chat:npc=>{close();if(save.zone==='camp'&&save.languageLearning?.enabled)void languageAdventure.open(npc);else openFreeTalk(npc);},mapDialogue,readDialogue:(text,locale,signal,speaker)=>dialogueVoice.speak(text,locale,signal,speaker),next:nextDialogue,startQuest:q=>startLines(q.startDialog,q.id===63001?'接下任务，带我去':'接取任务',()=>{
     const result=A.applyAction(save,assets.content,{type:'accept',questId:q.id,npcId:q.startNpc});toast(result.full?'已接取：{title}。追踪已满3个，请先取消一条。':'已接取：{title}',{title:q.title});
+    if(q.id===63001)return true;
 }),finishQuest:q=>startLines(q.endDialog,'领取奖励',()=>{
     const before=rewardSnapshot(save);
     A.applyAction(save,assets.content,{type:'claim',questId:q.id,npcId:q.endNpc});islandSocial.activity('quest');

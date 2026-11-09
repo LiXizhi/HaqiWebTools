@@ -42,7 +42,7 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],autoRead
         reveal.finish();
         if(event.target.closest('input,textarea,select,[contenteditable=true]'))return;
         if(event.key==='Tab'){
-            const buttons=[...box.querySelectorAll('button:not(:disabled)')];
+            const buttons=[...box.querySelectorAll('button:not(:disabled)')].filter(button=>!button.hidden);
             const position=buttons.indexOf(document.activeElement);
             const next=position<0?(event.shiftKey?buttons.length-1:0):(position+(event.shiftKey?-1:1)+buttons.length)%buttons.length;
             event.preventDefault();buttons[next]?.focus();
@@ -63,7 +63,7 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],autoRead
     box.classList.add('is-speaking');
     if(lines.length){
         ready=true;box.classList.remove('is-speaking');box.classList.add('dialogue-learning');text.replaceChildren();
-        const idleHint='同色词语已自动对应；点击词语标记理解程度，模型按钮可补充连线。';
+        const idleHint='先继续冒险；需要时可展开词语对应。';
         const makeButton=(label,run,cls)=>{const node=document.createElement('button');node.type='button';node.className=cls;node.textContent=label;node.onclick=run;return node;};
         const bilingual=createBilingualDialogue({button:makeButton,mapWords});
         const read=async()=>{
@@ -72,13 +72,14 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],autoRead
                 if(!readAloud)throw Error('朗读暂时不可用，请稍后重试。');
                 await readAloud(lines[0].text,lines[0].locale,current.signal);
                 if(!disposed&&!current.signal.aborted)setText(hint,idleHint);
-            }catch(error){if(!disposed&&!current.signal.aborted)hint.textContent=error.message;}
+            }catch(error){if(!disposed&&!current.signal.aborted){hint.textContent='朗读暂不可用，点击喇叭可重试；仍可继续任务。';hint.title=error.message;}}
         };
         const labels=lines.map(row=>{const label=document.createElement('p');label.className=row.locale===targetLocale?'dialogue-original':'dialogue-translation';label.lang=row.locale;label.textContent=row.text;text.append(label);return label;});
         const line=bilingual.attach({container:text,original:labels[0],gloss:labels[1],text:lines[0].text,translation:lines[1]?.text,locale:lines[0].locale,native:lines[1]?.locale,
-            onRead:read,
+            onRead:read,deferMapping:true,
             onError:error=>{if(!disposed)hint.textContent=error.message;}});
         reveal.start([{node:line.textNode,translation:line.translationNode}]);
+        if(labels[1])text.prepend(labels[1]);
         void waitForDialogueReveal(line.textNode).then(()=>{if(disposed)return;for(let i=0;i<lines.length;i++){const row=lines[i];captureStops.push(watchTreeText(i===0?line.textNode:labels[i],{source:languageSource,label:languageLabel,text:row.text,locale:row.locale,zh:lines.find(l=>l.locale==='zh-CN')?.text||sourceZh}));}});
         disposeLinks=()=>{reveal.finish();line.dispose();bilingual.close();};
         setText(hint,idleHint);

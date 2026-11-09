@@ -162,7 +162,7 @@
       "questId": 63001,
       "section": "description",
       "original": "熟练掌握了一些简单的操作后，青龙导师让我利用追踪系统与居民谈话。",
-      "replacement": "与苏苏、莫卡交谈，听听他们为什么学习魔法。",
+      "replacement": "与茜茜、莫尼交谈，听听他们为什么学习魔法。",
       "reason": "compact-web-opening"
     },
     {
@@ -213,7 +213,7 @@
       "replacement": [
         {
           "npcId": 36211,
-          "text": "去问问苏苏和莫卡，他们为什么学习魔法。打开任务，点击“追踪目标”就能找到他们。",
+          "text": "去问问茜茜和莫尼，他们为什么学习魔法。我先带你去找茜茜。",
           "buttons": [
             {
               "action": "doaccept",
@@ -2310,7 +2310,7 @@
     {
       "id": 63001,
       "title": "与居民探讨魔法",
-      "description": "与苏苏、莫卡交谈，听听他们为什么学习魔法。",
+      "description": "与茜茜、莫尼交谈，听听他们为什么学习魔法。",
       "startNpc": 36211,
       "endNpc": 36211,
       "requires": [
@@ -2394,7 +2394,7 @@
       "startDialog": [
         {
           "npcId": 36211,
-          "text": "去问问苏苏和莫卡，他们为什么学习魔法。打开任务，点击“追踪目标”就能找到他们。",
+          "text": "去问问茜茜和莫尼，他们为什么学习魔法。我先带你去找茜茜。",
           "buttons": [
             {
               "action": "doaccept",

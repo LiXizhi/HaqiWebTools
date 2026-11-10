@@ -140,7 +140,7 @@ pets / formation（扩展）, pendingEncounter.player
 
 `playerSpec()` 输出形状：`{ id, name, school, level, isBot, stats, deck, fixedCards, deckCapacity, deckEachCapacity }`。这是本引擎目前能直接开战的「角色规格」，真实账号数据最终需要映射到这一层（或等价的 `unitSpec`）。
 
-### 兄弟项目：`HaqiCombatEmulator/`（同仓库，非本目录）
+### 已移除的兄弟项目：`HaqiCombatEmulator/`（已不在本仓库，以下仅作历史参考）
 
 模拟器本目录**没有** VIP 数值实现。兄弟实验室已经有一套**手工填写**的 VIP / 装备计算，仍不是线上拉取：
 

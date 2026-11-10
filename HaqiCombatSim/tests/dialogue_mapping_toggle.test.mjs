@@ -29,4 +29,3 @@ test('mapped words survive collapse and reopen when local vocabulary is unavaila
     assert.equal(container.children.filter(n=>n.attributes.class==='dialogue-mapping-links').length,1,'only one connector layer');
     ui.close();assert.equal(container.children.filter(n=>n.attributes.class==='dialogue-mapping-links').length,0);
 });
-

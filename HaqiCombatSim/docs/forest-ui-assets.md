@@ -22,4 +22,3 @@ ONE standalone blank primary UI button. Wide rounded rectangle 4:1 width:height,
 ### secondary
 
 ONE standalone blank secondary UI button, same construction and proportions as forest primary button. Wide rounded rectangle 4:1 width:height, small transparent margin, uniform softly bevelled carved honey wood rim, warm light cream center with subtle paper texture, tiny carved leaf accent confined to far left end and small curling vine far right end. Center 65 percent completely blank for dynamic text. No writing, no symbols in center, no backdrop, no surrounding UI. Soft dimensional handpainted game art. Ends and rim suitable for nine slice stretch, center edges straight.
-

@@ -482,7 +482,7 @@ function renderHudContents(root,model,cb) {
         tracker.replaceChildren(el('h3','',side?.name||chapter?.name||'与世界同行'),el('p','',side?.description||step?.name||(chapter?'本章完成。和伙伴继续探索吧。':'靠近居民，了解这座城市的故事。')));
     }else if(dungeon){
         const cleared=dungeonProgress(save)?.[save.zone]?.cleared.length||0,remaining=dungeon.arenas.filter(a=>!a.blocked.length&&!dungeonProgress(save)?.[save.zone]?.cleared.includes(a.id)).length;
-        tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，可以退出副本。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可以退出副本。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button('退出副本',()=>cb.leaveDungeon?.(),'track-button'));
+        tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`清怪 ${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，可以退出副本。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可以退出副本。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button('退出副本',()=>cb.leaveDungeon?.(),'track-button'));
     }else{
         const languageQuest=save.zone==='camp'&&openingJourney(save)?null:recommendedLanguageQuest(save,c,model.languageTasks?.rows||[],catalogStatSnapshot(save,c));
         const entries=withLanguageQuest(trackerEntries(save,c),languageQuest);

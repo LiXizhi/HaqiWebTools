@@ -30,6 +30,7 @@ import {createEarthPlaces} from './adventure_earth_places.js';
 import {createLocalPlay} from './adventure_local_play.js';
 import {createPhotoHeadFeature} from './photo_head_feature.js';
 import {confirmDuoRole} from './role_selection_core.js';
+import {askAdventureConfirm} from './view_adventure_confirm.js';
 import {npcCharacter} from './adventure_city_people_core.js';
 import {gearScoreV2} from './combat_formulas_core.js';
 import {magicStarCombatLevel} from './adventure_magic_star_core.js';
@@ -1156,9 +1157,9 @@ async function loadAndEnterDungeon(id,restart=false){
     finally{dungeonLoading=null;if(panel==='dungeons')paintPanel();}
 }
 function exitDungeon(){safely(()=>{if(world.isCityDungeon)leaveCityDungeon(save,assets.content);else leaveDungeon(save,assets.content);enterWorld(save);queueCloudSave();});}
-function travel(zone){safely(()=>{
+function travel(zone){safely(async()=>{
     const status=travelStatus(save,assets.content,zone);
-    if(status.allowed&&status.requiresConfirmation&&!window.confirm(tr('那里很危险，确定还要前往吗？')))return;
+    if(status.allowed&&status.requiresConfirmation&&!await askAdventureConfirm({parent:nodes.overlay,title:tr('危险的地方'),message:tr('那里很危险，确定还要前往吗？')}))return;
     if(world.isCityDungeon){while(save.zone.startsWith('city:'))leaveCityDungeon(save,assets.content);}else if(dungeonFor(assets.content,save.zone))leaveDungeon(save,assets.content);
     A.applyAction(save,assets.content,{type:'travel',zone});earthService?.cancel();earthOwner=null;delete assets.content.earthWorld;enterWorld(save);showTeleportEffect();toast('已抵达{name}。',{name:islandName(zone)});
 });}
@@ -1609,10 +1610,11 @@ window.addEventListener('keydown',e=>{
     if(typeof e.key!=='string')return;
     if(sceneLoading.active)return;
     framePacer.wake();
+    // Arrow keys belong to the second keyboard map and would be swallowed before fishing.
+    if(sceneFishing.key(e)){e.preventDefault();return;}
     if(localPlay.key(e,true)){e.preventDefault();return;}
     if(languageAdventure.active)return;
     if(rewardRoot.contains(e.target))return;
-    if(sceneFishing.key(e)){e.preventDefault();return;}
     if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;
     const key=e.key.toLowerCase();if(directionKeys[key]&&stage==='world'&&!panel&&!dialog){e.preventDefault();languageAdventure.close();talkApproach=null;heldPointer=null;keys.add(directionKeys[key]);path=[];destination=null;}
     if(e.repeat)return;

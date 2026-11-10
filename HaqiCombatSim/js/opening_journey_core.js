@@ -13,6 +13,52 @@ export function openingJourneyActive(save){
  const state=openingJourney(save);
  return !!state&&state.phase!=='done';
 }
+// Credit only events proved by the persisted opening state; never grant quest rewards here.
+export function openingTrainingCredit(save,questId,goal){
+ const state=openingJourney(save);if(!state)return 0;
+ if(questId===63001&&goal.kind==='talk'&&goal.id===36201&&state.petId)return 1;
+ if(questId===63002&&goal.kind==='defeat'&&goal.id===40250&&state.route==='battle'&&['rescue','showcase','done'].includes(state.phase))return 1;
+ if(questId===63003&&goal.kind==='defeat'&&goal.id===40249&&state.phase==='done')return 1;
+ return 0;
+}
+export function openingGuideAnchor(save,npc){
+ if(save.zone!=='camp'||openingJourney(save)?.phase!=='guide'||!npc)return null;
+ const dx=npc.x-save.position.x,dy=npc.y-save.position.y,distance=Math.hypot(dx,dy);
+ return distance>180?{x:save.position.x+dx/distance*96,y:save.position.y+dy/distance*96}:null;
+}
+// Derived from persisted progress: opening a panel never earns a milestone.
+export function openingJourneyMilestones(save){
+ const state=openingJourney(save);
+ if(!state)return [];
+ const index=PHASES.indexOf(state.phase);
+ return [
+  {label:'帮咕噜噜进入营地',complete:index>=PHASES.indexOf('rescue')},
+  {label:'邀请咕噜噜成为搭档',complete:!!state.petId},
+  {label:'和搭档赢得一次挑战',complete:state.phase==='done'}
+ ];
+}
+export function openingFriendAnswer(text){
+ const normalized=String(text||'').toLowerCase().replace(/’/g,"'").replace(/[.,!?，。！？]/gu,'').replace(/\s+/g,' ').trim();
+ const accepted=['we are friends',"we're friends",'yes we are friends',"yes we're friends"].includes(normalized);
+ const message=!normalized?'先告诉莫尼：我们是朋友。可以听示范，再试着输入。':/\b(not|no|enemies)\b/.test(normalized)?'这句话没有表达“我们是朋友”。试试：We are friends.':/\bfriend\b/.test(normalized)?'这里说的是我们两个人，用复数 friends：We are friends.':"莫尼还没明白。试试 We are friends. 或 We're friends.";
+ return {accepted,message:accepted?'莫尼明白了。咕噜噜可以进来了。':message};
+}
+export function openingJourneyScene(save,npc){
+ const state=openingJourney(save);
+ if(save.zone!=='camp'||!npc||!state||state.phase==='offer'||state.petId)return null;
+ const free=state.phase==='rescue';
+ return {x:npc.x+(free?-40:48),y:npc.y+28,free,label:free?'咕噜噜 · 想和你一起走':'咕噜噜 · 等你帮忙'};
+}
+export function openingCompanionEvent(save,battle,event){
+ if(openingJourney(save)?.phase!=='showcase')return '';
+ const unit=battle?.unitsById?.[event.caster];
+ if(!unit||unit.speciesId!==OPENING_PET)return '';
+ if(event.type==='cast')return '咕噜噜开始行动了！你的搭档会自己选择招式。';
+ if(event.type==='damage'&&event.amount>0)return '咕噜噜帮你造成了 '+event.amount+' 点伤害。';
+ if(event.type==='heal'&&event.amount>0)return '咕噜噜恢复了 '+event.amount+' 点生命。';
+ if(event.type==='fizzle')return '咕噜噜这次施法失误了。下一回合再一起试试。';
+ return '';
+}
 export function validateOpeningJourney(save){
  const state=save.openingJourney;
  if(state===undefined)return;
@@ -59,17 +105,18 @@ export function applyOpeningJourney(save,content,action){
  case 'accept':assert(state.phase==='offer','先完成当前步骤');state.phase='guide';break;
  case 'meet':assert(state.phase==='guide','先完成当前步骤');state.phase='route';break;
  case 'route':
-  assert(['route','explain','challenge'].includes(state.phase),'先完成当前步骤');
+  assert(['guide','route','explain','challenge'].includes(state.phase),'先完成当前步骤');
   assert(['talk','battle'].includes(action.route),'请选择一个办法');
   state.route=action.route;state.phase=action.route==='talk'?'explain':'challenge';break;
  case 'explain':{
   assert(state.phase==='explain','先和莫尼商量办法');
   const text=String(action.text||'').trim();
-  const normalized=text.toLowerCase().replace(/’/g,"'").replace(/[.,!?，。！？]/gu,'').replace(/\s+/g,' ').trim();
-  assert(['we are friends',"we're friends"].includes(normalized),'试试输入 We are friends.，意思是“我们是朋友”。');
+  const answer=openingFriendAnswer(text);
+  assert(answer.accepted,answer.message);
   assert(typeof action.receipt==='string'&&action.receipt.length<=100,'练习记录无效');
   assert(Number.isFinite(action.at)&&action.at>=0,'练习时间无效');
-  state.practice={id:action.receipt,input:'text',itemId:'opening-friend',language:'en',at:action.at};
+  // Choosing a supplied reply advances the story, but is not evidence of typed/spoken recall.
+  if(!action.choice)state.practice={id:action.receipt,input:'text',itemId:'opening-friend',language:'en',at:action.at};
   state.phase='rescue';break;
  }
  case 'rescue':{

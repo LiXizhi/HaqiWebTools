@@ -1,4 +1,5 @@
 import {ownedPetRecords} from './adventure_pet_files_core.js';
+import {openingGuideAnchor} from './opening_journey_core.js';
 import {petContentKey} from './adventure_pet_files_core.js';
 import {islandCompanionNavigation} from './island_companion_navigation.js';
 import {updatePetIdle} from './adventure_pet_mood_core.js';
@@ -125,6 +126,8 @@ export function createPetScene({isFriend=()=>false,getState,commit,toast,sound=(
             effects=effects.filter(e=>e.ids.every(id=>actors.has(id)&&petMeetingClear(actors.get(id).position,owners,content)));
             if(meeting&&!petMeetingTargets(meeting.anchor,content).every(t=>petMeetingClear(t,owners,content))){meeting=null;food=null;}
             for(const row of entries){
+                const guide=row.id===leader&&!inParty&&openingGuideAnchor(current,world.npcs.find(n=>n.id===36201));
+                if(guide&&walkable(world,guide.x,guide.y))row.position=guide;
                 let actor=actors.get(row.id);if(!actor){actor={id:row.id,...createCompanion(world,row.position,`${save.seed}:${row.id}`)};actors.set(row.id,actor);}
                 actor.sceneOpacity=row.sceneOpacity??1;
                 const ownerId=residents.find(r=>npcPetId(r.id)===row.id)?.id;

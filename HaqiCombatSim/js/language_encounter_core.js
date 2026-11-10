@@ -25,6 +25,11 @@ export function storyReward(save,content,story,now,awarded=null) {
     if(awarded!==null)status.amount=awarded;
     const p=learningParams(content),nominal=mode==='basic'?p.basicReward:p.beginnerReward;
     const reason=status.count>=status.limit?'同组课程今日奖励次数已用完':status.amount<nominal?'今日奖励额度不足':'';
+    return {remaining:Math.max(0,status.limit-status.count),dailyRemaining:Math.max(0,(mode==='basic'?p.basicDailyCap:p.challengeDailyCap)-(status.ledger.totals[status.currency]||0)),amount:status.amount,currency:status.currency,balance:save.inventory?.[status.currency]||0,reason,...currencyRewardUse(save,content,status.currency,status.amount)};
+}
+// Shared by language rewards and ordinary adventure rewards; prices remain in BalanceParams.
+export function currencyRewardUse(save,content,currency,amount){
+    const status={currency,amount};
     let use='仙豆可用于强化已有装备。',action=null,guid=null,useKey=use,useVars={};
     if(status.currency===100){
         const price=petParams(content).foodPrice, count=price>0?Math.floor(status.amount/price):0;
@@ -35,7 +40,7 @@ export function storyReward(save,content,story,now,awarded=null) {
         const info=strengtheningItems(save,content).map(row=>strengtheningPreview(save,content,row.guid)).find(info=>info.next?.cost[0]===17213);
         if(info){guid=info.instance.guid;use=`${info.item.name}强化需要 ${info.next.cost[1]} 仙豆，当前 ${info.held}，还差 ${Math.max(0,info.next.cost[1]-info.held)}。`;useKey='{item}强化需要 {price} 仙豆，当前 {held}，还差 {missing}。';useVars={item:info.item.name,price:info.next.cost[1],held:info.held,missing:Math.max(0,info.next.cost[1]-info.held)};action='upgrade';}
     }
-    return {remaining:Math.max(0,status.limit-status.count),dailyRemaining:Math.max(0,(mode==='basic'?p.basicDailyCap:p.challengeDailyCap)-(status.ledger.totals[status.currency]||0)),amount:status.amount,currency:status.currency,balance:save.inventory?.[status.currency]||0,reason,use,useKey,useVars,action,guid};
+    return {use,useKey,useVars,action,guid};
 }
 
 export function learningModeDraft(save,locale=save.locale) {

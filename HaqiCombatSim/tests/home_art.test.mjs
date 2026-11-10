@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+import {validateMedia} from '../scripts/lib/asset_decode.mjs';
 import {drawHomeObject,HOME_FURNITURE_SCALE,HOME_GROUND_SCALE} from '../js/view_home_art.js';
 
 const catalog=JSON.parse(fs.readFileSync(new URL('../data/adventure/home/catalog.json',import.meta.url))).items;
@@ -13,7 +15,20 @@ function draw(item,thumb=false){
 }
 test('home crops match the manifest and stay inside each atlas cell',()=>{
  for(const item of catalog.filter(i=>!i.building&&!i.roofDecoration)){
-  const a=item.art,frame=manifest.atlases[a.atlas].frames[item.id];
+  const a=item.art;
+  const standalone={'home-body-friend':['body-parts','image'],'home-goat-figure':['goat-figure','art']}[a.atlas];
+  if(standalone){
+   const [file,key]=standalone,entry=JSON.parse(fs.readFileSync(new URL(`../data/adventure/home/${file}.json`,import.meta.url)))[key];
+   assert.deepEqual(a.crop,entry.crop,item.id);
+   assert.equal(a.cdn,entry.cdn,item.id);
+   const bytes=fs.readFileSync(new URL('../'+entry.local,import.meta.url));
+   assert.ok(bytes.length<=200000);assert.equal(bytes.length,entry.bytes);
+   assert.equal(createHash('sha256').update(bytes).digest('hex'),entry.sha256);
+   assert.deepEqual(validateMedia(entry.local,bytes),{width:entry.width,height:entry.height});
+   const [x,y,w,h]=a.crop;assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=entry.width&&y+h<=entry.height,item.id);
+   continue;
+  }
+  const frame=manifest.atlases[a.atlas].frames[item.id];
   assert.deepEqual(a.crop,frame.rect,item.id);
   const [x,y,w,h]=a.crop,cell=a.atlasWidth/4;
   assert.ok(x>=frame.cell%4*cell&&y>=Math.floor(frame.cell/4)*cell,item.id);

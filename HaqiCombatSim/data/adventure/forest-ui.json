@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "style": "森林精灵",
+  "status": "cdn-verified",
+  "assets": {
+    "frame": {
+      "local": "assets/adventure/ui/forest/frame.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/ui/forest/20261110-v1/forest/frame.webp",
+      "width": 1024,
+      "height": 683,
+      "slice": [
+        180,
+        210,
+        180,
+        210
+      ],
+      "size": 103736,
+      "sha256": "06a227826e83b37a56e8881c0439cdc306a35fb8a27c58d4eaecbbc2168078f9",
+      "source": {
+        "generator": "image_gen",
+        "file": "exec-0a00abe6-d781-491e-8be4-0684099974d6.png",
+        "sha256": "1d9a62cc8078b978d6d3841ee86f0ba9d024acdb2544363a9ba2456aae678985",
+        "width": 1536,
+        "height": 1024,
+        "crop": null
+      },
+      "quality": 95,
+      "alpha": true
+    },
+    "primary": {
+      "local": "assets/adventure/ui/forest/primary.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/ui/forest/20261110-v1/forest/primary.webp",
+      "width": 768,
+      "height": 175,
+      "slice": [
+        32,
+        140,
+        32,
+        140
+      ],
+      "size": 43912,
+      "sha256": "168fd8149fb434ea41f29e6cd93bce2db0bac326eac2432d0dc8b97c2762b400",
+      "source": {
+        "generator": "image_gen",
+        "file": "exec-1160b98b-4679-49a1-bdcd-c6cef7c95b04.png",
+        "sha256": "111ad3020bca77dc5482e5becc67d2cc46840a49a5382f08229b0c5e057c381a",
+        "width": 2172,
+        "height": 724,
+        "crop": [
+          7,
+          105,
+          2165,
+          598
+        ]
+      },
+      "quality": 95,
+      "alpha": true
+    },
+    "secondary": {
+      "local": "assets/adventure/ui/forest/secondary.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/ui/forest/20261110-v1/forest/secondary.webp",
+      "width": 768,
+      "height": 173,
+      "slice": [
+        32,
+        140,
+        32,
+        140
+      ],
+      "size": 39264,
+      "sha256": "1bb88519375b7510d727c21e30811662b10128179599300d35ea1c99fbe203c7",
+      "source": {
+        "generator": "image_gen",
+        "file": "exec-6baffa25-81aa-468a-ac8d-379bf1f0cc9a.png",
+        "sha256": "2055b4e025c049d88e336bc482df0f95c998e7b6eff75410d8b65f97ea111ec1",
+        "width": 2172,
+        "height": 724,
+        "crop": [
+          88,
+          138,
+          2067,
+          584
+        ]
+      },
+      "quality": 95,
+      "alpha": true
+    }
+  },
+  "notes": "Native transparent image_gen. Frame has no characters or text. Buttons separately cropped to complete alpha silhouettes with margin; labels remain DOM. Nine-slice keeps end ornaments intact."
+}

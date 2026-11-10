@@ -154,7 +154,7 @@ export function createLearningChatView(cb){
                 log.scrollTop=log.scrollHeight;}
             for(const replay of log.querySelectorAll('button'))if(!replay.className.includes('camp-chat-replay'))replay.disabled=s.busy||s.recording;
             for(const line of lineViews)line.setDisabled(s.busy||s.recording);
-            hint.hidden=s.done||(free?!s.hintLevel:!s.story.turns[s.index]?.answer||(s.progressiveHints&&!s.hintLevel));
+            hint.hidden=!!(s.done||(free?!s.hintLevel:!s.story.turns[s.index]?.answer||(s.progressiveHints&&!s.hintLevel)));
             hint.classList.toggle('is-compact',!free&&!s.hintLevel);
             hints.textContent=tr(s.progressiveHints&&s.hintLevel===1?'显示示范':s.hintLevel?'收起提示':'显示提示');hints.setAttribute('aria-expanded',String(!!s.hintLevel&&!s.done));
             // Wrong answers keep the typed text for editing; a new turn starts empty.

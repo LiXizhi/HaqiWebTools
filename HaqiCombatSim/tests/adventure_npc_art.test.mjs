@@ -44,7 +44,17 @@ test('all NPC appearances have verified 256px transparent WebPs below 48,000 byt
         assert.equal(createHash('sha256').update(raw).digest('hex'),entry.sha256);
         assert.deepEqual(validateMedia(entry.local,raw),{width:entry.width,height:entry.height});
         assert.ok(assetUrl(entry).endsWith('.webp'));
-        const source=art.sources[id];assert.ok(source.model);
+        const native=read('hanzi/island-art').assets.find(row=>row.local===entry.local);
+        if(native){
+            assert.equal(native.sha256,entry.sha256,id);
+            assert.equal(native.source.generator,'image_gen');
+            assert.match(native.source.sha256,/^[a-f0-9]{64}$/);
+            assert.ok(Math.min(native.source.width,native.source.height)>=512,id);
+            const [x,y,w,h]=native.source.sourceRect;
+            assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=native.source.width&&y+h<=native.source.height,id);
+            continue;
+        }
+        const source=art.sources[id];assert.ok(source?.model,id);
         if(source.method==='original-image'){
             assert.ok(source.original.entry.includes(source.original.md5));
             assert.ok(Math.min(...source.sourceSize)>=256);

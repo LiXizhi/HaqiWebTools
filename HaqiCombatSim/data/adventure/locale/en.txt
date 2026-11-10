@@ -11474,3 +11474,23 @@ Word · 回忆拼写||Word · Recall Spelling
 也可以按住说话，松开发送；滑出按钮则取消。||You can also hold to speak and release to send, or slide off the button to cancel.
 场景里的宠物可以拖回背包。||Drag a pet in the scene back into the bag.
 还没有宠物。先在冒险里结识一只伙伴。||No pets yet. Meet a partner on your adventure first.
+
+向茜茜学习选牌与搭档配合，再向青龙回报。||Learn to choose cards and work with your partner. Then report to Azure Dragon.
+去找茜茜，她会告诉你怎么选卡配合伙伴。已经和莫尼一起救过咕噜噜，就不用再去问他了。||Find Sissy. She can show you how to choose cards and help your partner. If you already helped Gululu with Moni, you do not need to ask him again.
+先看卡牌需要几点魔力，再看它打谁。想给伙伴留机会，可以先用低消耗招式；受伤了，也可以选择治疗。下一场由你决定！||Check the mana cost and the target on your card. Try a low-cost spell to give your partner a chance. If you are hurt, you can heal. You choose next time!
+我想守护身边的人。战斗里伙伴会自己出招，你只要决定自己的卡牌和目标，就能一起配合。||I want to protect my friends. Your partner chooses its own moves. You choose your cards and targets. That is teamwork!
+选哪一招由你决定。接下来完成训练，就能领到带有卡牌的帽子；穿上后，战斗里可以直接使用装备卡。||You choose your spell. Finish the next training to earn a hat with a card. Wear the hat to use that card in battle.
+打赢烈火侦查兵，就能领这顶帽子。穿上就能用它附带的卡牌。救援时已经赢过，也算完成。||Beat the Fire Scout to earn this hat. Wear it to use its card. If you already won during the rescue, that counts too.
+烈火训练完成！这顶帽子送给你。点奖励提示里的穿戴按钮，下一场试试它附带的卡牌。||Fire training is complete! This hat is yours. Use the equip button on your reward, then try its card in your next battle.
+寒冰训练会送你一件衣服。如果已经和咕噜噜赢过寒冰侦查兵，就直接领取，不用重复挑战。||Ice training gives you a coat. If you already beat the Ice Scout with Gululu, collect it now. You do not need to fight again.
+我来选招式||I will choose a spell
+一起配合||Let us work together
+
+去找茜茜，学学怎么和伙伴一起出招。||Find Sissy. Learn to fight with your partner.
+接下来，赢一顶能带来新招式的帽子吧。||Next, earn a hat with a new spell.
+赢下这次训练，这顶帽子就是你的。||Win this training battle. This hat will be yours.
+拿到了！点奖励里的“立即穿上”，试试新帽子。||You earned it! Tap Equip Now and try your new hat.
+这个对手会先开护盾。和咕噜噜配合，试试怎么破盾。||This opponent uses a shield. Work with Gululu to break it.
+配合得不错！穿上这件法袍，准备下一次挑战。||Good teamwork! Put on this coat for your next challenge.
+这次对手会蓄力。看清它的动作，再决定怎么出牌。||This opponent charges up. Watch its moves before choosing a card.
+先点一张能用的牌，再点目标。不知道点哪里，就问身边的抱抱龙。||Pick a card you can use, then pick a target. Need help? Ask your dragon.

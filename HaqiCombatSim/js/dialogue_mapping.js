@@ -36,12 +36,12 @@ export function createMappingStore({databaseName='haqi-dialogue-mapping-v2'}={})
 }
 
 export function createDialogueMapper({store=createMappingStore(),generate}={}){
-    const voice=createLearningVoice({getSettings:()=>({model:'keepwork-lite'})});
+    const voice=createLearningVoice({getSettings:()=>({model:'keepwork-flash'})});
     const call=generate||((lines,signal)=>voice.judge(dialogueMappingPrompt(lines),signal,{maxTokens:1200,rawText:true}));
     const pending=new Map();
     // Include the exact rules too: editing a prompt without bumping its version
     // must never reuse stale results. All cache/lock paths share this identity.
-    const cacheKey=lines=>JSON.stringify(['dialogue-mapping',DIALOGUE_MAPPING_PROMPT_VERSION,'keepwork-lite',false,dialogueMappingPrompt(lines)[0].content,lines]);
+    const cacheKey=lines=>JSON.stringify(['dialogue-mapping',DIALOGUE_MAPPING_PROMPT_VERSION,'keepwork-flash',false,dialogueMappingPrompt(lines)[0].content,lines]);
     async function peek(lines){
         try{
             const key=cacheKey(lines),saved=await store.get(key);

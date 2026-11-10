@@ -1,0 +1,16 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><title>森林奖励弹窗布局验收</title><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_rewards.css"><style>body{background:#35564a}nav{position:fixed;top:8px;left:8px;z-index:100;background:#fff7df;padding:8px;max-width:95%}nav select{max-width:100%}.reward-feedback{z-index:40}</style></head><body class="haqi-app"><nav><select aria-label="弹窗用例"><option value="win">战斗胜利</option><option value="lose">战斗失败</option><option value="long">长英文结算</option><option value="gear">装备奖励</option><option value="many">多件装备奖励</option></select><small> 布局夹具，不修改存档</small></nav><div id="root"></div><script type="module">
+import {loadUiArt} from './js/adventure_ui_art.js';
+import {createRewardFeedback} from './js/view_adventure_rewards.js';
+await loadUiArt('cdn');
+const root=document.querySelector('#root');
+function show(){root.replaceChildren();const mode=document.querySelector('select').value;
+if(mode==='gear'||mode==='many'){const layer=document.createElement('div');layer.className='reward-feedback';root.append(layer);const feedback=createRewardFeedback(layer,{showBanner:false,describe:r=>({name:r.name,label:'立即穿上',reason:''}),activate:()=>true});feedback.push({items:Array.from({length:mode==='many'?5:1},(_,i)=>({id:i,gear:true,name:'初级烈火魔法师帽',count:1}))});feedback.tick(0,true);return;}
+// Same DOM contract as renderBattle's result-card; battle outcomes are not simulated here.
+const panel=document.createElement('section');panel.className='result-card';
+const eyebrow=document.createElement('p');eyebrow.className='eyebrow';eyebrow.textContent=mode==='lose'?'继续加油':'对决胜利';
+const heading=document.createElement('h2');heading.textContent=mode==='lose'?'休息一下，再来挑战':'我们赢了！继续下一场冒险吧。';
+const reward=document.createElement('p');reward.textContent=mode==='lose'?'已保留你的物品与任务进度。':'获得 1 经验 · 50 奇豆';
+const action=document.createElement('button');action.className='primary';action.textContent=mode==='long'?'Collect your rewards and continue the adventure with your companion':mode==='lose'?'回到安全地点':'收下奖励，继续冒险';
+panel.append(eyebrow,heading,reward,action);root.append(panel);}
+document.querySelector('select').onchange=show;show();
+</script></body></html>

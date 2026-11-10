@@ -54,6 +54,7 @@ export async function loadUiArt(mode,read=fetchJson) {
     document.getElementById(style.id)?.remove();
     document.head.append(style);
     document.documentElement.classList.add('storybook-ui');
+    await loadForestUi(mode,read).catch(error=>console.warn('森林界面素材暂未加载，沿用原皮肤',error.message));
     return manifest;
 }
 
@@ -72,4 +73,20 @@ export function applyUiIcon(element,manifest,name,mode='cdn'){
     element.style.fontSize='0';
     for(const child of element.children)child.style.visibility='hidden';
     return true;
+}
+
+// Optional skin overlay: activate atomically after all three images decode.
+async function loadForestUi(mode,read){
+    const manifest=await read('data/adventure/forest-ui.json');
+    const names={frame:'paper',primary:'jade',secondary:'cream'},rules=[];
+    await Promise.all(Object.entries(manifest.assets).map(async([id,row])=>{
+        const url=mode==='local'?row.local:row.cdn;
+        if(!url||(mode!=='local'&&!url.startsWith('https://cdn.keepwork.com/')))throw Error('森林皮肤资源地址无效');
+        const image=new Image();image.crossOrigin='anonymous';
+        await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{image.onload=image.onerror=null;reject(Error('加载超时'));},8000);image.onload=()=>{clearTimeout(timer);resolve();};image.onerror=()=>{clearTimeout(timer);reject(Error('图片加载失败'));};image.src=url;});
+        if(image.naturalWidth!==row.width||image.naturalHeight!==row.height)throw Error('素材尺寸不匹配');
+        rules.push(`--ui-${names[id]}:url(${JSON.stringify(new URL(url,document.baseURI).href)});--ui-${names[id]}-slice:${row.slice.join(' ')};`);
+    }));
+    const style=document.createElement('style');style.id='forest-ui-art';style.textContent=`.storybook-ui{${rules.join('')}}`;
+    document.getElementById(style.id)?.remove();document.head.append(style);document.documentElement.classList.add('forest-ui');
 }

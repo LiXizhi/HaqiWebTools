@@ -105,6 +105,8 @@ export function defaultParams(version = 'teen') {
             gatherSmeltValue:60,gatherSmeltSeconds:2,gatherDropDistance:65,gatherPickupDistance:23,
             gatherFairyChance:.2,gatherFairyAmount:5,gatherBeanAmount:60,gatherPetCooldown:12,gatherPetRange:160,
             monsterRespawnMs:30000,
+            // Web opening training v1: preserve original rewards and card formulas.
+            openingFireHp:150,openingIceHp:260,openingStormHp:360,
             fieldEncounterRadius:24,
             dungeonEncounterRadius:84,
             iceAreaAttackThreatRatio:2,

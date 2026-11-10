@@ -36,7 +36,7 @@ test('NPC purchase previews details, cancels safely, confirms once and rechecks 
         const serviceNpc=content.npcCatalog.npcs.find(n=>n.id===30429),save=createAdventure(content);
         save.zone=serviceNpc.zone;save.inventory[17213]=10000;
         const body=el('div'),modal=el('div'),header=el('header'),title=el('h2'),eyebrow=el('span');
-        body.closest=()=>modal;modal.querySelector=()=>header;header.querySelector=s=>s==='h2'?title:eyebrow;
+        body.closest=selector=>selector==='.modal'?modal:null;modal.querySelector=()=>header;header.querySelector=s=>s==='h2'?title:eyebrow;
         let purchases=0;
         const button=(label,action,cls)=>{const b=el('button',cls,label);b.onclick=action;return b;};
         renderNpcServices(body,{assets:{content,dataset,draw(){}},save,serviceNpc},{action:a=>{purchases++;applyAction(save,content,a);}},{el,button,spellFace:()=>null,art:()=>null});

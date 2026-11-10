@@ -135,7 +135,9 @@ test('精华保留社交、2对2、漩涡深圳沿路进城与真实学习奖励
  const short=compileFilm(script,'short'),by=id=>short.shots.find(s=>s.id===id);
  for(const id of ['party','friends','pets','learning'])assert.ok(by(id));
  assert.equal(by('skills').scene,'skills-battle');
- assert.match(by('atlas').cues[0].selector,/map-vortex/);
+ assert.equal(by('atlas').cues[0].selector,'button');
+ assert.equal(by('atlas').cues[0].text,'现实世界');
+ assert.equal(by('atlas').cues[0].expect,'.earth-atlas');
  const earth=by('earth'),walk=earth.cues.find(c=>c.name==='earth-walk'),enter=earth.cues.find(c=>c.name==='earth-enter'),exit=earth.cues.find(c=>c.name==='earth-exit');
  assert.ok(walk.time-earth.cues.find(c=>c.action==='ui-click').time>=3);
  assert.ok(enter.time-walk.time>=5&&enter.time-walk.time<=10);assert.ok(exit.time-enter.time>=3);

@@ -35,3 +35,17 @@ test('storybook UI ships as one alpha WebP below 100,000 bytes with valid nine-s
     for (const name of ['paper', 'wood', 'jade', 'cream']) assert.ok(manifest.frames[name].slice);
     for (const name of ['book', 'cards', 'bag', 'pet', 'shop', 'map', 'cloud', 'settings', 'gourd', 'close', 'dungeon', 'home']) assert.ok(manifest.frames[name]);
 });
+
+test('forest skin has three independent alpha assets and safe stretchable centers',async()=>{
+ const manifest=JSON.parse(await readFile(new URL('data/adventure/forest-ui.json',root)));
+ assert.equal(manifest.status,'cdn-verified');
+ assert.deepEqual(Object.keys(manifest.assets).sort(),['frame','primary','secondary']);
+ for(const row of Object.values(manifest.assets)){
+  const bytes=await readFile(new URL(row.local,root));
+  assert.equal(bytes.length,row.size);assert.ok(bytes.length<=200000);
+  assert.equal(createHash('sha256').update(bytes).digest('hex'),row.sha256);
+  assert.ok(bytes[20]&0x10);assert.equal(bytes.readUIntLE(24,3)+1,row.width);assert.equal(bytes.readUIntLE(27,3)+1,row.height);
+  const [t,r,b,l]=row.slice;assert.ok(t+b<row.height&&l+r<row.width);
+  assert.ok(row.cdn.startsWith('https://cdn.keepwork.com/'));
+ }
+});

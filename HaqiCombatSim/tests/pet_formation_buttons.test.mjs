@@ -43,8 +43,8 @@ test('pet details deploy fills the next empty slot and undeploy rests without ch
  const ui=harness(t,save);
  ui.open(STARTERS[1]);
  const deploy=ui.walk().find(node=>node.tagName==='button'&&node.textContent==='上阵');
- const undeploy=ui.walk().find(node=>node.tagName==='button'&&node.textContent==='下阵');
- assert.ok(deploy);assert.ok(undeploy);assert.equal(deploy.disabled,false);assert.equal(undeploy.disabled,true);
+ assert.ok(deploy);assert.equal(deploy.disabled,false);
+ assert.equal(ui.walk().some(node=>node.tagName==='button'&&node.textContent==='下阵'),false,'undeployed pet exposes only its relevant action');
  deploy.click();
  assert.deepEqual(ui.actions.at(-1),{type:'formation',slots:[STARTERS[0],STARTERS[1],null,null],heroSlot:0});
  assert.deepEqual(save.formation,[STARTERS[0],STARTERS[1],null,null]);

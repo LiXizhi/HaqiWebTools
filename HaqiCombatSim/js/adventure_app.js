@@ -6,7 +6,7 @@ import {mergeCurriculumWordCards} from './language_curriculum_core.js';
 import {createLanguageQuestJournal} from './language_quest.js';
 import {isLanguageCourseId,recommendedLanguageQuest,languageSceneTarget} from './language_quest_core.js';
 import {createLanguageSceneIntro} from './view_language_scene_intro.js';
-import {openingJourney,openingJourneyActive,openingJourneyTarget} from './opening_journey_core.js';
+import {openingJourney,openingJourneyActive,openingJourneyTarget,openingCompanionEvent,openingJourneyScene} from './opening_journey_core.js';
 import {renderOpeningJourney} from './view_opening_journey.js';
 import {openIslandLanguageCourse} from './island_language_course.js';
 import {wordLanguage} from './word_lexicon_core.js';
@@ -478,13 +478,15 @@ function showRewards(before,actionType=''){
     const event=rewardChanges(before,save,assets.content);
     queueCloudSave();
     for(const item of event.items)if(item.kind==='card')item.name=assets.dataset.cards[item.key]?.name||item.name;
-    rewardFeedback.push(event);
+    const openingPet=actionType==='opening-journey'&&event.items.some(item=>item.kind==='pet');
+    rewardFeedback.push(openingPet?{...event,items:event.items.filter(item=>item.kind!=='pet')}:event);
     const lines=[
         ...(event.level?[['等级 {from} → {to}',{from:event.fromLevel,to:event.level}]]:[]),
         ...(event.xp?[['经验 +{xp}',{xp:event.xp}]]:[]),
-        ...event.items.map(item=>['{name} +{count}',{name:item.name,count:item.count}]),
+        ...event.items.filter(item=>!openingPet||item.kind!=='pet').map(item=>['{name} +{count}',{name:item.name,count:item.count}]),
     ];
-    globalReward.show({title:'获得奖励',lines});
+    if(openingPet)lines.unshift([save.formation.includes(openingJourney(save).petId)?'咕噜噜已入队':'咕噜噜已放入宠物背包',{}]);
+    globalReward.show({title:openingPet?'搭档加入':'获得奖励',lines});
     if(!storageWarning){const cue=rewardSound(event,actionType);if(cue)spellSound.play(cue);}
 }
 function toast(message, vars) {
@@ -959,35 +961,15 @@ function beginOriginalImport() {
 function openCreationForm(){
     titleView='create';roleDraft=null;paintCreation();
 }
-function promptPrologueBeforeCreate(){
-    const closePrompt=()=>{nodes.overlay.className='overlay';nodes.overlay.replaceChildren();};
-    const modal=V.el('div','modal prologue-confirm-modal',
-        V.el('div','modal-header',
-            V.el('div','',V.el('div','eyebrow','NEW HERO · PROLOGUE'),V.el('h2','','新建角色')),
-            createCloseButton(closePrompt,'关闭'),
-        ),
-        V.el('div','modal-body',
-            V.el('p','','新建角色前，是否播放开场动画《失落的光》？'),
-            V.el('div','cloud-actions',
-                V.button('播放开场动画',()=>{
-                    closePrompt();
-                    void runPrologue().then(()=>{if(stage==='title')openCreationForm();});
-                },'primary'),
-                V.button('直接创建角色',()=>{
-                    closePrompt();
-                    openCreationForm();
-                },'secondary'),
-            ),
-        ),
-    );
-    nodes.overlay.replaceChildren(modal);
-    nodes.overlay.className='overlay visible';
+async function playPrologueBeforeCreate(){
+    if(prologueRun)return;
+    await runPrologue();
+    if(stage==='title')openCreationForm();
 }
 function newRoleForm() {
     if(roles.busy)return;
     if(roleStore.catalog.roles.length>=currentRoleLimit()){toast(roleLimitReachedMessage(accountIsVip()));return;}
-    if(roleStore.catalog.roles.length){promptPrologueBeforeCreate();return;}
-    openCreationForm();
+    void playPrologueBeforeCreate();
 }
 function paintCreation() {
     creationPreview?.stop();
@@ -1192,7 +1174,7 @@ function finishTrackedDialogue() {
 }
 function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog,{close,chat:npc=>{close();if(save.zone==='camp'&&save.languageLearning?.enabled)void languageAdventure.open(npc);else openFreeTalk(npc);},mapDialogue,readDialogue:(text,locale,signal,speaker)=>dialogueVoice.speak(text,locale,signal,speaker),next:nextDialogue,startQuest:q=>startLines(q.startDialog,q.id===63001?'接下任务，带我去':'接取任务',()=>{
     const result=A.applyAction(save,assets.content,{type:'accept',questId:q.id,npcId:q.startNpc});toast(result.full?'已接取：{title}。追踪已满3个，请先取消一条。':'已接取：{title}',{title:q.title});
-    if(q.id===63001)return true;
+    if(q.id===63001||A.questReady(save,q))return true;
 }),finishQuest:q=>startLines(q.endDialog,'领取奖励',()=>{
     const before=rewardSnapshot(save);
     A.applyAction(save,assets.content,{type:'claim',questId:q.id,npcId:q.endNpc});islandSocial.activity('quest');
@@ -1265,9 +1247,9 @@ function paintOpeningJourney(){
         action:value=>{
             const result=performAction({type:'opening-journey',...value,receipt:crypto.randomUUID(),at:Date.now()});
             if(result===false)return false;
-            if(value.step==='accept'){close();paintHud();}
+            if(value.step==='accept')trackOpeningJourney();
             if(value.step==='route'&&value.route==='battle')trackOpeningJourney();
-            if(value.step==='explain')void drainOpeningPractice();
+            if(value.step==='explain'){void drainOpeningPractice();close();paintHud();toast('莫尼听明白了！看看身边的咕噜噜，再邀请它一起走。');}
             return result;
         }
     });
@@ -1580,7 +1562,10 @@ function tickAnimation(now) {
         if(e.type==='damage')a.hp[e.target]=Math.max(0,a.hp[e.target]-e.amount);
         if(e.type==='heal')a.hp[e.target]=Math.min(battle.unitsById[e.target].maxHp,Number.isFinite(e.hp)?e.hp:a.hp[e.target]+e.amount);
         if(e.type==='cast'&&e.wordCardId)playWordRecording(e.wordCardId);
-        const text=e.type==='speak'?'':V.eventLabel(e,battle,assets);if(text||e.type==='speak')$('cast-announcement').textContent=text;
+        const companionText=openingCompanionEvent(save,battle,e);
+        if(companionText)a.companionFeedback=companionText;
+        const hint=nodes.battle.querySelector('.opening-battle-purpose');if(hint&&companionText)hint.textContent=companionText;
+        const text=e.type==='speak'?'':companionText||V.eventLabel(e,battle,assets);if(text||e.type==='speak')$('cast-announcement').textContent=text;
     }
     a.statusFeedback=a.statusFeedback.filter(change=>now-change.start<700);
     const duration=presentationEventDurationMs(e,{effects:assets.effects,card:battle.resolved.cards[e.card],hp:a.hp[e.target],reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
@@ -1621,6 +1606,7 @@ function controllerAction(action,down,repeat=false){
 }
 const directionKeys={w:'up',arrowup:'up',s:'down',arrowdown:'down',a:'left',arrowleft:'left',d:'right',arrowright:'right'};
 window.addEventListener('keydown',e=>{
+    if(typeof e.key!=='string')return;
     if(sceneLoading.active)return;
     framePacer.wake();
     if(localPlay.key(e,true)){e.preventDefault();return;}
@@ -1635,7 +1621,7 @@ window.addEventListener('keydown',e=>{
     if(key==='e'){e.preventDefault();interactNearest();}
     if(key==='r')openPanel('equipment');if(key==='j')openPanel('quests');if(key==='b'||key==='i')openPanel('inventory');if(key==='c')openPanel('deck');if(key==='p')openPanel('pet');
 });
-window.addEventListener('keyup',e=>{if(localPlay.key(e,false)){e.preventDefault();return;}keys.delete(directionKeys[e.key.toLowerCase()]);});
+window.addEventListener('keyup',e=>{if(typeof e.key!=='string')return;if(localPlay.key(e,false)){e.preventDefault();return;}keys.delete(directionKeys[e.key.toLowerCase()]);});
 window.addEventListener('blur',()=>{localPlay.clearKeys();if(!languageAdventure.active)languageAdventure.close();talkApproach=null;fishingLoadEpoch++;fishingApproach=null;sceneFishing.stop(false);resetMovementInput();path=[];destination=null;persist();});
 window.addEventListener('pagehide',()=>{persist();void roleStore?.flushRuntime();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(animation)animation.silentThrough=animation.index;languageAdventure.suspend();characterChat.suspend();}spellSound.stop();if(document.hidden){fishingApproach=null;sceneFishing.stop(false);resetMovementInput();path=[];destination=null;persist();music?.pause();}else{languageAdventure.resume();if(stage==='world'&&save?.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);updateMusic();}});
@@ -1657,6 +1643,7 @@ function clickWorld(clientX,clientY) {
     fishingLoadEpoch++;
     if(localPlay.paused)return false;
     const {p,target}=pickWorldTarget(clientX,clientY);
+    if(target?.kind==='companion-guide'){path=[];destination=null;nodes.hud.guideOpen=true;paintHud();return false;}
     const memoryNode=world.memoryNodes?.find(n=>Math.hypot(n.x-p.x,n.y-p.y)<38);if(memoryNode){walkTo(memoryNode,false);return false;}
     if(localPlay.interceptSocial(p)){path=[];destination=null;return false;}
     if(localPlay.routePointer(p,target))return false;
@@ -1689,6 +1676,10 @@ function clickWorld(clientX,clientY) {
 function pickWorldTarget(clientX,clientY) {
     const rect=nodes.world.getBoundingClientRect(),p=renderer.screenToWorld(clientX-rect.left,clientY-rect.top);
     const targets=[...world.npcs.map(n=>({...n,kind:'npc'})),...world.encounters.flatMap(n=>monsterInteractionTargets(world,n)),...(world.landmarks||[]).map(n=>({...n,kind:'landmark'})),...(world.entrancePortal?[{...world.entrancePortal,kind:'portal'}]:[]),{...world.portal,kind:'portal'}];
+    const companion=!localPlay.active&&openingJourneyScene(save,world.npcs.find(n=>n.id===36201));
+    if(companion)targets.push({...companion,id:36201,kind:'npc',name:'咕噜噜'});
+    const follower=!localPlay.active&&renderer.companionTarget();
+    if(follower)targets.push({...follower,kind:'companion-guide',name:'同行伙伴'});
     const portal=targets.find(n=>n.cityDungeon&&!n.hidden&&Math.abs(n.x-p.x)<35&&Math.abs(n.y-p.y)<24);
     const target=portal||targets.filter(n=>!n.hidden&&Math.abs(n.x-p.x)<48&&p.y>n.y-100&&p.y<n.y+35).sort((a,b)=>W.distance(a,p)-W.distance(b,p))[0];
     return {p,target};

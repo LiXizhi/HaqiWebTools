@@ -1,0 +1,14 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><title>森林界面长文字验收</title><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_dialogue.css"><style>body{background:#42614b}nav{position:fixed;z-index:1000;top:8px;left:8px;right:8px;display:flex;gap:8px;flex-wrap:wrap;background:#fff8e8;padding:8px}nav select{max-width:100%}#case-info{width:100%;color:#36513d;font-size:12px}</style></head><body class="haqi-app"><nav><select aria-label="对白用例"></select><button id="prev">上一条用例</button><button id="next">下一条用例</button><span id="case-info">内存测试，不修改玩家存档</span></nav><div id="root"></div><script type="module">
+import {loadResources} from './js/adventure_assets.js';
+import {createAdventure} from './js/adventure_core.js';
+import {renderDialogue} from './js/view_adventure.js';
+const assets=await loadResources(),save=createAdventure(assets.content,{name:'界面排版验收'}),root=document.querySelector('#root');
+save.languageLearning.enabled=false;
+const cases=[];
+for(const q of assets.content.quests){for(const [kind,lines] of [['接任务',q.startDialog],['领奖',q.endDialog],...q.talks.map(t=>['交谈',t.dialog])])for(const [i,line] of (lines||[]).entries())cases.push({label:q.title+' · '+kind+' '+(i+1),line,finishLabel:line.buttons?.[0]?.label?.replace(/.*NEXT.*/,'继续')||(kind==='领奖'?'领取奖励':'继续')});}
+cases.push({label:'长按钮边界用例',line:{npcId:36201,text:'这是按钮换行边界验收，不是游戏剧情。'},finishLabel:'带抱抱龙一起前往森林营地寻找新的冒险伙伴'});
+cases.push({label:'English long label',line:{npcId:36201,text:'This is a layout test, not game dialogue.'},finishLabel:'Take me to the forest camp and meet our new companion'});
+const select=document.querySelector('select');cases.forEach((c,i)=>{const o=document.createElement('option');o.value=i;o.textContent=c.label;select.append(o);});let index=0;
+function show(){const c=cases[index];select.value=index;document.querySelector('#case-info').textContent=`${index+1}/${cases.length} · 内存测试，不修改玩家存档`;renderDialogue(root,{assets,save},{lines:[c.line],index:0,finishLabel:c.finishLabel},{close:()=>root.replaceChildren(),next:()=>{index=(index+1)%cases.length;show();},readDialogue:()=>Promise.resolve()});}
+select.onchange=()=>{index=Number(select.value);show();};document.querySelector('#prev').onclick=()=>{index=(index+cases.length-1)%cases.length;show();};document.querySelector('#next').onclick=()=>{index=(index+1)%cases.length;show();};show();
+</script></body></html>

@@ -101,8 +101,11 @@ export function socialMonsterGap(encounter,params=SOCIAL_DEFAULTS){
     const spread=count>1?(count-1)/2*42:0;
     return (params.monsterClearance??96)+spread;
 }
+function clearsEntrances(world,p,params=SOCIAL_DEFAULTS){
+    return p&&(world.landmarks||[]).filter(e=>e.dungeonId).every(e=>Math.hypot(p.x-e.x,p.y-e.y+(e.entranceKind==='tower'?25:0))>=params.entranceClearance);
+}
 function clearsMonsters(world,p,params=SOCIAL_DEFAULTS){
-    if(!p)return false;
+    if(!p||!clearsEntrances(world,p,params))return false;
     return (world.encounters||[]).every(e=>Math.hypot(e.x-p.x,e.y-p.y)>socialMonsterGap(e,params));
 }
 function actorGap(params=SOCIAL_DEFAULTS){return params.actorSeparation??120;}
@@ -281,6 +284,9 @@ export function stepSocialActors(actors,world,dt,{paused=false,locked=null,team=
     dt=Math.max(0,Math.min(dt,.1));let moving=actors.filter(a=>a.path.length).length;const limit=Math.ceil(actors.length/4);
     const hubs=socialActivityHubs(world);
     for(const a of actors){
+        if(!clearsEntrances(world,a.position,params)){
+            a.position=standClearOfMonsters(world,a.position,params);a.path=[];a.moving=false;
+        }
         if(a.inParty)continue;
         if(!walkable(world,a.position.x,a.position.y)){
             const occupied=actors.filter(o=>o!==a).map(o=>o.position);
@@ -303,7 +309,7 @@ export function stepSocialActors(actors,world,dt,{paused=false,locked=null,team=
             if(clearsPeople(world,p,occupied))a.path=findPath(world,a.position,p);
             a.wait=a.rng.int(SOCIAL_DEFAULTS.idleMin,SOCIAL_DEFAULTS.idleMax);if(a.path.length)moving++;
         }
-        const before={...a.position},next=followPath(world,a.position,a.path,speed*dt);a.position=next.position;a.path=next.path;a.moving=Math.hypot(a.position.x-before.x,a.position.y-before.y)>.01;
+        const before={...a.position},next=followPath(world,a.position,a.path,speed*dt);a.position=clearsEntrances(world,next.position,params)?next.position:before;a.path=clearsEntrances(world,next.position,params)?next.path:[];a.moving=Math.hypot(a.position.x-before.x,a.position.y-before.y)>.01;
         if(a.moving)a.facing=socialFacing(a.position.x-before.x,a.position.y-before.y,true);
         else if(a.facing===3)a.facing=hashSeed(a.profile.id)%2+1;
     }

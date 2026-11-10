@@ -21,7 +21,7 @@ test('classic islands with full layout warm islandLandmarks, islandTrees and isl
     const {islandSceneryFloorSteps}=await import('../js/adventure_camp_scenery_core.js');
     for(const zone of ['town','fire','ice','desert','dark']){
         const world={
-            zone,w:6000,h:5200,center:{x:3000,y:2600},
+            zone,paths:[],w:6000,h:5200,center:{x:3000,y:2600},
             trees:[{snow:zone==='ice'}],
             layout:{w:6000,h:5200,coast:[[500,500],[5500,500],[5500,4700],[500,4700]],regions:[{biome:zone==='ice'?'ice':'grass'}],farms:zone==='town'?[{x:1480,y:2840,cols:6,rows:3}]:[],rules:{plaza:{radiusX:280,radiusY:170}}},
         };

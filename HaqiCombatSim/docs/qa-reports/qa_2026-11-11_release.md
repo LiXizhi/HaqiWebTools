@@ -32,3 +32,5 @@
 - 上线地址：https://keepwork.com/api/raw/official/apps/MagicHaqi/release/Haqi_v1.html
 
 本记录区分变更专项通过与完整产品验收，前述未覆盖范围仍有效。
+
+补充：首次恢复脚本只等待任务栏，遇到保存于胜利结算的正常存档时超时；修正脚本先处理结算、领奖，再等待场景加载完成。随后实际打开背包、刷新恢复、打开宠物面板均通过，页面错误 0。最终截图为已完成渲染的营地，证据 nov11-production-restore.log。此处未修改游戏代码。

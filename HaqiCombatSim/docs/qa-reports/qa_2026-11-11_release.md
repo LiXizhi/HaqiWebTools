@@ -17,5 +17,18 @@
 
 ## 发布闸门与未覆盖范围
 
-正式构建包的新访客到风暴/生命训练、保存恢复正在做最终复验；完成后追加结果，再切换正式入口。
+正式构建包新访客至风暴、生命训练与领奖已完成，页面异常和 HTTP 错误均为 0。生命战实际经历治疗和加强攻击。随后完成 CDN、正式入口发布及线上访客战斗/刷新恢复复验。
 本轮不包含真实支付、麦克风语音、真人社交、所有岛屿穷举。已登录云存档、AI 和游戏服的最近实际验证为 11 月 10 日，本轮不冒充重新验证。故事导出两项独立校验仍受原版 XML 缺失与档案不同步影响；不运行会缩减原档案的导出覆盖。当前运行时数据保留。
+
+## 17:15 正式发布完成
+
+- 源码构建对应已推送 origin/main：4771c3009b811c176de78ca9dd52190bd563c421。
+- CDN：697d7921f5313f4d，154 个文件逐项 GET 内容哈希与 CORS 验证通过。
+- apps origin：a40784df5337aac9af3235061d3bade11fa61004。
+- Keepwork：87db587f91626cfb8e5a2894c737f27a7cc51a83。
+- 仅更新 Haqi_v1.html、HaqiOfficialWebsite_v1.html、HaqiOfficialWebsite.html、HaqiPromo_v1.html。原有 AIMovieMaker 工作区修改保持未提交，其他项目未发布。未同步 Maisi、digitalhuman-resource。
+- 四个正式入口均 HTTP 200，字节与已验证本地发布页一致，见 nov11-public-verification.json。
+- 正式线上入口新访客实际完成自动序章、角色创建、错误英语不推进、有效变体通过、伙伴入队、冰战胜利、领奖、返回青龙；刷新后角色恢复，任务仍为“与居民探讨魔法”。页面错误 0、HTTP 错误 0，见 nov11-production-browser.log 与 nov11-production-verified.png。
+- 上线地址：https://keepwork.com/api/raw/official/apps/MagicHaqi/release/Haqi_v1.html
+
+本记录区分变更专项通过与完整产品验收，前述未覆盖范围仍有效。

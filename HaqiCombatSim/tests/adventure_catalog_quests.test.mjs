@@ -184,8 +184,9 @@ test('changing islands hides old island pins without dropping them and keeps the
     assert.equal(before < 3, true);
     A.applyAction(save, content, {type: 'travel', zone: 'fire'});
     const arrived = trackedQuestIds(save);
-    assert.equal(arrived.includes(active.id), true);
-    assert.equal(arrived.length, Math.min(3, before + 1 + (before ? 0 : 1)));
+    assert.equal(arrived.includes(active.id), false, 'travel does not re-pin an explicitly unpinned quest');
+    assert.equal(arrived.length, before, 'travel preserves manual pin slots');
+    assert.ok(trackedQuestIds(save, content).includes(active.id), 'latest accepted quest remains visible without rewriting pins');
     const stayed = [...arrived];
     A.applyAction(save, content, {type: 'travel', zone: 'fire'});
     assert.deepEqual(trackedQuestIds(save), stayed);

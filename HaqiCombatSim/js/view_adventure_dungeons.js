@@ -57,6 +57,7 @@ export function renderDungeons(root,{assets,save,dungeonLoading=null,social=null
             if(cleared)picture.append(el('span','dungeon-status',complete?'已通关':'探索中'));
             const info=el('div','dungeon-card-info',el('h3','',d.name));
             info.append(el('p','dungeon-boss-name',d.kind==='tower'?fill('{floors}层 · 已通过 {floor}层',{floors:d.floors,floor:save.towerRecords?.[d.id]?.floor||0}).text:d.kind==='elite'?fill('剧情精英 · {size}v{size}',{size:d.partySize}).text:d.boss?.name||'秘境探索'));
+            if((save.level||1)<d.recommendedLevel)info.append(el('p','dungeon-stamina',tr('当前等级低于建议等级，可能较难通关。')));
             const hint=dungeonStaminaHint(d);
             if(hint){
                 const line=el('p','dungeon-stamina');

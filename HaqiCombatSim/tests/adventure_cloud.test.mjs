@@ -126,6 +126,6 @@ test('new SDK script is versioned and configured before resolving the shared loa
         delete globalThis.keepwork;
         globalThis.document={createElement:()=>({}),head:{append:script=>{src=script.src;globalThis.keepwork=sdk;script.onload();}}};
         assert.equal(await loadKeepwork(),sdk);assert.equal(sdk.personalPageStore.disableLegacyFileFallback,true);
-        assert.equal(src,SDK_URL);assert.equal(new URL(src).hostname,'cdn.keepwork.com');assert.ok(new URL(src).searchParams.has('haqi-storage'));
+        assert.equal(src,SDK_URL);assert.equal(new URL(src).hostname,'cdn.keepwork.com');assert.match(new URL(src).searchParams.get('v'),/^[a-f0-9]{12}$/);
     }finally{if(original===undefined)delete globalThis.keepwork;else globalThis.keepwork=original;if(document===undefined)delete globalThis.document;else globalThis.document=document;}
 });

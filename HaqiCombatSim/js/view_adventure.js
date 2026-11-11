@@ -17,7 +17,7 @@ import {renderLearningMode} from './view_learning_mode.js';
 import {createHeroPicker} from './view_hero_picker.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
 import {heroPortrait} from './hero_renderer.js';
-import {openingJourney,openingJourneyActive,openingJourneyTarget} from './opening_journey_core.js';
+import {openingJourney,openingJourneyActive,openingJourneyTarget,openingJourneyMilestones,openingCompanionEvent} from './opening_journey_core.js';
 import {renderNpcServices} from './view_adventure_npc.js';
 import {npcServices,npcHasActiveQuest} from './adventure_npc_core.js';
 import {renderGems} from './view_adventure_gems.js';
@@ -49,6 +49,8 @@ import { renderPetCollection,starterPicker,petPortrait } from './view_adventure_
 import { renderShop } from './view_adventure_shop.js';
 // DOM rendering and input bindings. Actions go to the adventure_app controller.
 import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck,catalogStatSnapshot,teachingMode,beginnerTeaching } from './adventure_core.js';
+import {renderCompanionGuide} from './view_companion_guide.js';
+import {openingEnemyIntent} from './opening_training_core.js';
 import {catalogVisibleGoalRows,catalogQuestReady,catalogQuestsForNpc,catalogTalksForNpc,catalogQuestStatus,trackedQuestIds} from './adventure_catalog_quests_core.js';
 import * as U from './combat_unit_core.js';
 import { cardTargetKind } from './combat_cards_core.js';
@@ -143,7 +145,7 @@ export function createEntryFooter(){
     return isChineseSystem()?el('footer','entry-license',ONLINE_GAME_LICENSE):null;
 }
 export function createEntryIntro({owner,login,cloud,locale,secondLocale,setLocale,setSecondLocale}={}) {
-    const intro=el('div','entry-intro',createEntryEmblem(),el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','带上你的宠物和来自世界各地的用户开启魔法之旅。\n练习你的第二语言。'),el('div','entry-tags',...['宠物相伴','结识朋友','双语冒险'].map(label=>el('span','badge',label))));
+    const intro=el('div','entry-intro',createEntryEmblem(),el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','带上抱抱龙，认识营地里的伙伴。\n帮它们解决麻烦，用简单英语交流，再一起挑战魔法对手。'),el('div','entry-tags',...['宠物相伴','结识朋友','双语冒险'].map(label=>el('span','badge',label))));
     if(new URLSearchParams(globalThis.location?.search||'').get('product')==='hanzi'){
         const en=locale==='en';intro.querySelector('.eyebrow').textContent=en?'HANZI MAGIC · CHAPTER ONE':'字源岛 · 第一章';intro.querySelector('.game-title').textContent=en?'Hanzi Magic':'字有魔法';intro.querySelector('.chapter-title').textContent=en?'Island of living words':'文字会醒来的地方';intro.querySelector('.entry-description').textContent=en?'Speak a character to awaken its magic. Write it to give it shape. Use recently practiced words as battle cards.':'说出汉字，唤醒力量。写出汉字，赋予形状。练习之后，在战斗中读写激活文字卡。';intro.querySelector('.entry-tags').replaceChildren(...(en?['Discover','Write & speak','Battle']:['探索字义','说字写字','文字战斗']).map(label=>el('span','badge',label)));
     }
@@ -294,10 +296,12 @@ export function updateCheckin(root,model) {
     const nav=root.querySelector('.checkin-button');
     const navLabel=nav?.querySelector('small');
     if(nav&&navLabel){
-        if(status.ready)setText(navLabel,'可领取');
+        const quiet=openingJourneyActive(model.save);
+        if(quiet)setText(navLabel,'稍后查看');
+        else if(status.ready)setText(navLabel,'可领取');
         else if(status.finished)setText(navLabel,'已领完');
         else setText(navLabel,'{minutes} 分钟',{minutes:minutesLeft(status.remainingMs)});
-        nav.classList.toggle('reward-ready',status.ready);
+        nav.classList.toggle('reward-ready',status.ready&&!quiet);
     }
     const grid=root.querySelector('.checkin-gourds');if(!grid)return;
     for(const g of status.gourds){
@@ -418,7 +422,8 @@ export function renderHeroTitle(model,cb) {
         if(art)assets.draw(icon.getContext('2d'),art,0,0,32,32);
         const node=el('span','hero-currency',icon,el('span','',amount));
         node.dataset.zh=label;
-        node.title=`${tr(label)} ${amount}`;
+        const purpose={100:'可用于商城补给和宠物营养餐',17213:'可用于已有装备强化，先留着也没关系',984:'用于标注魔豆价格的商品'}[id];
+        node.title=`${tr(label)} ${amount} · ${purpose}`;
         node.setAttribute('aria-label',node.title);
         return node;
     };
@@ -467,9 +472,9 @@ function renderHudContents(root,model,cb) {
     const dungeon=dungeonFor(c,save.zone);
     if(save.zone==='camp'&&!model.localSecond&&openingJourneyActive(save)){
         const state=openingJourney(save),goal=openingJourneyTarget(save);
-        tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','第一次搭档')),
+        tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow',`第一次搭档 · ${openingJourneyMilestones(save).filter(x=>x.complete).length}/3`)),
             el('h3','','帮咕噜噜找到朋友'),el('p','',goal.objective),
-            el('p','muted',state.phase==='showcase'?'新伙伴可以在战斗中和你一起行动。':'咕噜噜被拦在营地外，它想找个朋友。'),
+            el('p','muted',`已完成 ${openingJourneyMilestones(save).filter(x=>x.complete).length}/3 · `+(state.phase==='showcase'?'和新搭档一起赢得挑战。':state.phase==='rescue'?'你帮它进来了，现在可以邀请它同行。':'咕噜噜被拦在营地外，它想找个朋友。')),
             button('前往',()=>cb.track('opening-journey'),'track-button'));
         if(state.phase==='challenge')tracker.append(button('和莫尼商量别的办法',()=>cb.track('opening-journey-plan'),'track-button'));
     }else if(save.zone==='earth'){
@@ -477,7 +482,7 @@ function renderHudContents(root,model,cb) {
         tracker.replaceChildren(el('h3','',side?.name||chapter?.name||'与世界同行'),el('p','',side?.description||step?.name||(chapter?'本章完成。和伙伴继续探索吧。':'靠近居民，了解这座城市的故事。')));
     }else if(dungeon){
         const cleared=dungeonProgress(save)?.[save.zone]?.cleared.length||0,remaining=dungeon.arenas.filter(a=>!a.blocked.length&&!dungeonProgress(save)?.[save.zone]?.cleared.includes(a.id)).length;
-        tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，可以退出副本。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可以退出副本。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button('退出副本',()=>cb.leaveDungeon?.(),'track-button'));
+        tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`清怪 ${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，可以退出副本。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可以退出副本。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button('退出副本',()=>cb.leaveDungeon?.(),'track-button'));
     }else{
         const languageQuest=save.zone==='camp'&&openingJourney(save)?null:recommendedLanguageQuest(save,c,model.languageTasks?.rows||[],catalogStatSnapshot(save,c));
         const entries=withLanguageQuest(trackerEntries(save,c),languageQuest);
@@ -491,6 +496,7 @@ function renderHudContents(root,model,cb) {
     const nav=el('nav','game-nav');nav.setAttribute('aria-label','游戏菜单');
     for(const [id,label,key]of [['home','家园','home'],['deck','卡包','cards'],['inventory','背包','bag'],['pet','宠物','pet'],['shop','商店','shop']])nav.append(button([icon(key),el('span','',label)],()=>cb.panel(id),'nav-button'));
     root.append(nav);
+    renderCompanionGuide(root,model,cb);
     // 坐骑显隐开关：仅漫游场景生效，战斗中恒显示；没有坐骑时不渲染按钮。
     if(save.mountId||model.localSecond){
         // 图标用当前坐骑的形象图（c.items 的图集裁剪，同装备栏/宠物栏做法）；无形象数据时回落名称 emoji。
@@ -671,7 +677,19 @@ export function renderDialogue(root,model,dialog,cb) {
         box.style.setProperty('--dialogue-action-width',`${Math.max(150,...labels.map(label=>Array.from(label||'继续').length*14+36))}px`);
         const next=button(last?lastLabel:replyLabel(line),cb.next,'primary');
         if(last)next.title=tr(dialog.finishLabel);
-        content.append(el('p','dialogue-text',line.text),el('div','dialogue-bottom',el('span','muted',`${dialog.index+1} / ${dialog.lines.length}`),next));
+        content.append(el('p','dialogue-text',line.text));
+        const quest=currentQuest(save,c);
+        if(last&&quest&&[63002,63003].includes(quest.id)&&[quest.startNpc,quest.endNpc].includes(npc.id)){
+            for(const reward of rewardsFor(save,c,quest)){
+                const item=c.items[reward.id];if(!item?.slot)continue;
+                const cards=[139,140,141].map(id=>c.cardItems[item.stats?.[id]]).filter(Boolean).map(key=>assets.dataset.cards[key]?.name||key);
+                content.append(el('div','opening-equipment-preview',art(assets,item.art,64,64),el('div','',
+                    el('strong','',item.name),
+                    el('p','',cards.length?'穿上后可在战斗中使用：'+cards.join('、'):'穿上后提升角色属性。'),
+                    el('small','muted','完成任务后领取，可从奖励提示直接穿戴。'))));
+            }
+        }
+        content.append(el('div','dialogue-bottom',el('span','muted',`${dialog.index+1} / ${dialog.lines.length}`),next));
     }
     else {
         const q=currentQuest(save,c),state=q&&questState(save,q.id),ready=q&&questReady(save,q);
@@ -748,6 +766,10 @@ function renderBattleContent(root,model,cb) {
     if(battle.redMushroom&&!model.localDuo&&!battle.finished){const timer=el('span','badge arena-countdown',animating?'施法中…':fill('选牌剩余 {seconds} 秒',{seconds:model.arenaCountdown??30}).text);timer.dataset.arenaCountdown='';root.append(timer);}
     const canvas=retainedCanvas||el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');bindBattleTargeting(canvas,cb.target);
     const blockedMessage=selected?castBlockedMessage(hero,battle.resolved.cards[selected.key],battle.resolved):'';
+    if(openingJourney(save)?.phase==='showcase'){
+        const feedback=!animating&&[...battle.events].reverse().map(e=>openingCompanionEvent(save,battle,e)).find(Boolean);
+        const hint=el('p','opening-battle-purpose',feedback||'先选牌，再选目标；咕噜噜会自动帮忙。');hint.setAttribute('role','status');top.append(hint);
+    }
     const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');setText(status,battle.finished?'对决结束':animating?'魔法正在生效…':blockedMessage);
     status.classList.toggle('cast-blocked',!!blockedMessage&&!animating&&!battle.finished);
     const hand=el('div','battle-hand'),bottom=el('div','battle-controls');
@@ -816,7 +838,7 @@ function renderBattleContent(root,model,cb) {
         const toggle=button(hintIcon,cb.aiHintsToggle,'battle-sound battle-pet-hint-toggle');
         toggle.title=model.aiHintsMuted?'开启本场宠物提示':'关闭本场宠物提示';
         toggle.setAttribute('aria-label',toggle.title);toggle.setAttribute('aria-pressed',String(!model.aiHintsMuted));toggle.disabled=battle.finished;
-        top.lastChild.insertBefore(toggle,sound);
+        sound.parentNode.insertBefore(toggle,sound);
     }
     root.battlePetHint=createBattlePetHint(model,{el,onDismiss:cb.aiHintDismiss});
     if(root.battlePetHint)root.append(root.battlePetHint);
@@ -871,6 +893,9 @@ function renderBattleContent(root,model,cb) {
     }
     if(model.localBattleShared){bottom.querySelector('.battle-actions')?.remove();runePager.remove();hand.hidden=true;}
     root.append(top,canvas,status,...(model.localBattleShared?[]:[hand]),bottom);
+    const intent=openingEnemyIntent(battle);
+    if(intent&&!animating&&!battle.finished&&!model.localBattlePane){const notice=el('p','opening-enemy-intent',intent);notice.setAttribute('role','status');top.append(notice);}
+    renderCompanionGuide(root,model,cb,{battle:true});
     attachStatusTooltips(root,canvas);
     // The centred face passes left clicks to the arena; resolve its right click by bounds.
     root.oncontextmenu=e=>{
@@ -907,7 +932,7 @@ function renderBattleContent(root,model,cb) {
             const coins=battle.monsterTemplates.reduce((sum,m)=>sum+m.coins,0);
             setText(rewardLine,'获得 {xp} 经验 · {coins} 奇豆',{xp,coins});
         }else setText(rewardLine,'已保留你的物品与任务进度。');
-        const result=el('div','result-card',el('p','eyebrow',won?'对决胜利':'继续加油'),el('h2','',won?'魔法的力量，属于你！':'休息一下，再来挑战'),rewardLine,button(battle.redMushroom?'返回红蘑菇赛场':won?'收下奖励，继续冒险':'回到安全地点',cb.finish,'primary'));root.append(result);
+        const result=el('div','result-card',el('p','eyebrow',won?'对决胜利':'继续加油'),el('h2','',won?'我们赢了！':'休息一下，再来挑战'),rewardLine,button(battle.redMushroom?'返回红蘑菇赛场':won?'收下奖励':'回到安全地点',cb.finish,'primary'));root.append(result);
         if(model.aiReview){
             const review=model.aiReview,p=review.presentation;
             result.querySelector('h2').textContent=p.headline;

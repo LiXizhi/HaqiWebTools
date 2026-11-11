@@ -65,8 +65,8 @@ test('terrain caches only bounded small tiles, reuses warm frames and invalidate
 });
 
 test('terrain tile paint skips farmland outside the tile',()=>{
-    let fills=0;
-    const c={fillRect(){fills++;},beginPath(){},moveTo(){},lineTo(){},quadraticCurveTo(){},setLineDash(){},closePath(){},stroke(){},fill(){},save(){},restore(){},clip(){},translate(){},scale(){},rotate(){},ellipse(){},createRadialGradient(){return{addColorStop(){}};}};
+    const fills=[];
+    const c={fillRect(...args){fills.push(args);},beginPath(){},moveTo(){},lineTo(){},quadraticCurveTo(){},setLineDash(){},closePath(){},stroke(){},fill(){},save(){},restore(){},clip(){},translate(){},scale(){},rotate(){},ellipse(){},createRadialGradient(){return{addColorStop(){}};}};
     const world={w:4000,h:4000,zone:'town',center:{x:200,y:200},paths:[],trees:[],layout:{
         coast:[[0,0],[400,0],[400,400],[0,400]],regions:[],mountains:[],rivers:[],lakes:[],bridges:[],details:[],features:[],
         farms:[{x:3000,y:3000,rows:2,cols:2}],
@@ -75,7 +75,13 @@ test('terrain tile paint skips farmland outside the tile',()=>{
             plaza:{radiusX:10,radiusY:8,edge:'#aaa',fill:'#ddd',line:'#bbb'},biomes:{}},
     }};
     paintLargeTerrain(c,world,{x:0,y:0,w:200,h:200});
-    assert.equal(fills,1);
+    const outside=fills.slice();
+    world.layout.farms=[];fills.length=0;
+    paintLargeTerrain(c,world,{x:0,y:0,w:200,h:200});
+    assert.deepEqual(outside,fills,'off-tile farm must add no draw calls');
+    world.layout.farms=[{x:30,y:30,rows:1,cols:1}];fills.length=0;
+    paintLargeTerrain(c,world,{x:0,y:0,w:200,h:200});
+    assert.ok(fills.some(([x,y,w,h])=>x===30&&y===30&&w===115&&h===74),'visible farm must still draw');
 });
 
 test('terrain density changes rebuild sharp tiles within a fixed pixel budget',()=>{

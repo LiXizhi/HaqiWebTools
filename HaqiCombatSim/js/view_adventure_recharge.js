@@ -16,7 +16,7 @@ export function renderRecharge(body,model,cb,{el,button}) {
     const account=el('p','');setText(account,'充值账号：{name}',{name:member.username||tr('尚未登录')});
     const expiry=el('strong','');
     if(member.isVip&&Number.isFinite(Date.parse(member.expiresAt)))setText(expiry,'VIP 到期日：{date}（北京时间）',{date:formatExchangeDate(beijingYmd(Date.parse(member.expiresAt)))});
-    else setText(expiry,member.isVip?'有效日期待确认':'开通后显示 VIP 到期日');
+    else setText(expiry,member.isVip?'有效期以账号为准':'开通后显示 VIP 到期日');
     const balance=el('strong','');setText(balance,'当前魔豆：{count}',{count:model.save.inventory[MAGIC_BEAN_ID]||0});
     const exchange=el('p','');showExchange(exchange,magicBeanExchangeText(member,model.magicBeanExchange||null,now,{inBattle:!!model.save.pendingEncounter}));
     const starLabel=el('strong','recharge-star-level');

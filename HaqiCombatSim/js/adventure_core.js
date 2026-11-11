@@ -25,7 +25,8 @@ import {purchaseNpcOffer} from './adventure_npc_core.js';
 import {claimMagicStar,validateMagicStarClaims,magicStarCombatLevel,applyMagicStarCombat} from './adventure_magic_star_core.js';
 import {equipmentSetStats,dragonTotemStage,progressionStatEntry,chooseDragonTotem,useDragonTotemItem} from './adventure_progression_bonuses_core.js';
 import {customizeHero} from './adventure_hero_customize_core.js';
-import {applyOpeningJourney,openingJourneyActive,openingJourneyWon,validateOpeningJourney} from './opening_journey_core.js';
+import {applyOpeningJourney,openingJourneyActive,openingJourneyWon,validateOpeningJourney,openingTrainingCredit} from './opening_journey_core.js';
+import {OPENING_TRAINING_IDS} from './opening_training_core.js';
 import {publicPhotoHead} from './photo_head_core.js';
 // AdventureContent / AdventureSave v1. Pure chapter rules; no browser or storage APIs.
 import { islandFor, islandSpawn, travelStatus } from './adventure_world_map_core.js';
@@ -77,7 +78,7 @@ export function teachingMode(save, content) {
 export function questState(save, id) { return save.quests[id] || { accepted: false, claimed: false, progress: {} }; }
 export function questProgress(save, quest) {
     const state = questState(save, quest.id);
-    return quest.goals.map(g => ({ ...g, value: Math.min(g.count, state.progress[`${g.kind}:${g.id}`] || 0) }));
+    return quest.goals.map(g => ({ ...g, value: Math.min(g.count, Math.max(state.progress[`${g.kind}:${g.id}`] || 0,openingTrainingCredit(save,quest.id,g))) }));
 }
 export function pendingQuestTalk(save, quest, npcId) {
     if (!quest || !questState(save, quest.id).accepted || questState(save, quest.id).claimed) return null;
@@ -264,7 +265,9 @@ export function playerSpec(save, content, starLevel=save.pendingEncounter?.magic
             break;
         }
         for(const source of bonuses)for(const [id,value] of Object.entries(source)){
-            const entry=(!save.pendingEncounter||save.pendingEncounter.progressionRulesVersion>=3?progressionStatEntry:statIdToEntry)(id);if(!entry)continue;
+            const modern=!save.pendingEncounter||save.pendingEncounter.progressionRulesVersion>=3;
+            if(!modern&&Number(id)>=151&&Number(id)<=166)continue;
+            const entry=(modern?progressionStatEntry:statIdToEntry)(id);if(!entry)continue;
             const amount=value*(entry.scale??1);
             if(typeof stats[entry.stat]==='object')stats[entry.stat][entry.school]=(stats[entry.stat][entry.school]||0)+amount;
             else stats[entry.stat]=(stats[entry.stat]||0)+amount;
@@ -586,6 +589,7 @@ export function beginEncounter(save,content,encounterId,access={}) {
     const serial = ++save.encounterSerial;
     save.pendingEncounter = { id: `${save.seed}:${serial}`, encounterId,
         seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 2, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1, dispelRulesVersion:1, specialCardRulesVersion:1, captureRulesVersion:1 };
+    if(save.openingJourney?.version===1&&save.zone==='camp'&&OPENING_TRAINING_IDS.includes(encounterId))save.pendingEncounter.openingTrainingVersion=1;
     if(encounter.monsterIds){const formation=journeyEnemyFormation(encounter,dungeon,initialParty);save.pendingEncounter.dungeonMonsterIds=[...formation.ids];save.pendingEncounter.dungeonMonsterSlots=[...formation.slots];}
     if(content.pets){
         const checkpoint=save.pendingEncounter,params=petTraitParams(content);
@@ -757,6 +761,7 @@ export function parseSave(raw,content) {
     assert(dungeonFor(content,s.zone)?.playable||travelStatus({...s,pendingEncounter:null},content,s.zone).allowed,'存档目的地无效');
     dungeonLanguageBuff(s,content);
     if (s.pendingEncounter) {
+        assert(s.pendingEncounter.openingTrainingVersion===undefined||(s.pendingEncounter.openingTrainingVersion===1&&s.openingJourney?.version===1&&s.zone==='camp'&&OPENING_TRAINING_IDS.includes(s.pendingEncounter.encounterId)),'新手训练版本无效');
         assert(s.pendingEncounter.dailyLanguageVersion===undefined||s.pendingEncounter.dailyLanguageVersion===1,'语言加成版本无效');
         if(s.pendingEncounter.player?.hanziBattle)validateHanziBattleSpec(s.pendingEncounter.player.hanziBattle);
         for(const unit of s.pendingEncounter.party||[])if(unit.hanziBattle)validateHanziBattleSpec(unit.hanziBattle);

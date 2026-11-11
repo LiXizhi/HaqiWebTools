@@ -57,7 +57,7 @@ export function createRewardFeedback(root,{describe,activate,showBanner=true}) {
         setText(use,info.label);
         use.onclick=()=>{if(activate(reward)!==false)next();};
         const skip=document.createElement('button');skip.type='button';skip.className='secondary';
-        if(active.items.length>1)setText(skip,'稍后处理 · 下一件（{count}）',{count:active.items.length-1});
+        if(active.items.length>1){setText(skip,'下一件（{count}）',{count:active.items.length-1});skip.title=tr('这件已放入背包，继续查看下一件奖励');}
         else setText(skip,'稍后处理');
         skip.onclick=next;
         popup.append(heading,name,hint,use,skip);

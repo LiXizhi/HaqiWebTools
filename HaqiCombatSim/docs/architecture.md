@@ -1,3 +1,50 @@
+## 2026-11-10：森林界面皮肤
+
+```mermaid
+flowchart LR
+    Original[原 UI 图集] --> Loader[adventure_ui_art]
+    Manifest[forest-ui.json 三张无字 WebP] --> Loader
+    Loader --> Decode[CDN 解码与尺寸检查]
+    Decode -->|全部成功| Skin[forest-ui 类和共享 CSS 变量]
+    Decode -->|失败| Fallback[继续使用原皮肤]
+    Skin --> NineSlice[边框和主次按钮九宫格拉伸]
+    Text[原 DOM 文案及翻译] --> Buttons[等宽按钮与长文换行]
+    NineSlice --> Buttons
+```
+
+资源制作与边界见 [forest-ui-assets.md](forest-ui-assets.md)。不改变战斗世界坐标、卡牌或任务回调。
+
+## 2026-11-10：区域战斗美术
+
+```mermaid
+flowchart LR
+    Zone[遭遇所在岛屿与角色位置] --> Select[battle_scenery_core 区域优先与岛屿回退]
+    Select --> Freeze[battle_scenery 每场战斗冻结主题]
+    Manifest[battle-scenery.json 已核验 CDN 与本地 WebP] --> Freeze
+    Freeze --> Draw[adventure_renderer 背景与圆盘分层]
+    Camera[battle_camera_core 原施法镜头] --> Mesh[圆盘纹理网格投影]
+    Mesh --> Draw
+    Viewport[battle_viewport_core 原有尺寸适配] --> Draw
+```
+
+所有域名默认读取 CDN；仅显式本地资源参数启用本地副本。背景与圆盘都完成加载才一起替换，失败保留原绘制，不阻断出牌。主题不写存档、不改数值或奖励；沿用原有战斗尺寸、角色站位、点击区域与施法特写坐标变换。资源来源、生成提示和上传校验见 `docs/battle-scenery.md` 与资源清单。
+
+## 2026-11-10：随行引导与新手训练
+
+```mermaid
+flowchart LR
+    Save[真实任务与旅程状态] --> Guide[companion_guide_core 只读下一步]
+    Guide --> View[view_companion_guide 原角色头像与操作提示]
+    View --> Route[原 track / panel 回调]
+    Battle[当前选牌与动画状态] --> View
+    View --> Focus[突出已有牌或目标按钮 不自动操作]
+    Checkpoint[pendingEncounter 训练版本] --> Training[opening_training_core]
+    Params[BalanceParams 训练生命] --> Training
+    Training --> Restore[combat_pve_core 恢复原战斗引擎]
+```
+
+引导展开状态只存 HUD 实例，换角色重置；不复制任务进度，不写学习回执。训练适配保留原怪物 ID 和奖励、原卡牌与公式，旧检查点无版本时保留旧规则。战斗辅助 Worker 设超时并清理队列，使现有降级分支可按玩家选择继续出牌，避免分析一直无响应时阻断操作。
+
 ## 2026-10-26：语言故事场景驱动
 
 任务目录是只读目标投影；不再挂载练习控制器。`languageSceneTarget` 从当前真实世界的NPC／地标／遭遇列表解析配置，`track` 调用已有寻路，`interact` 核对正确对象及既有语言交互距离（默认85）才创建 `island_language_course`。普通任务追踪的 `questDialogue` 保持原对话优先。对话复用 `createLearningChatView`，关闭后继续下一处，保持场景异步身份保护。

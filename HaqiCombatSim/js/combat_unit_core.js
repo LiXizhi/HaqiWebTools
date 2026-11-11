@@ -90,7 +90,9 @@ function scalarStat(unit, name) {
 
 function statsFromTemplate(tpl, statName, school) {
     let sum = 0;
-    for (const { id, value } of tpl._stats || (tpl._stats = parseMiniauraStats(tpl.stats))) {
+    // Analysis snapshots share resolved templates. Lazy cache writes would change
+    // their state identity in the Worker and silently discard the player's cast.
+    for (const { id, value } of tpl._stats || parseMiniauraStats(tpl.stats)) {
         const e = statIdToEntry(id);
         if (!e || e.stat !== statName) continue;
         if (e.school === 'all' || e.school === school) sum += value;

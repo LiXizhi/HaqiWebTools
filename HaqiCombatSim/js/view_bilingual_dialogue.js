@@ -33,7 +33,7 @@ export function createBilingualDialogue({button,mapWords,createWordLearning=crea
         }
         let currentResult=null;
         function show(result){currentResult=result;links();links=renderDialogueMapping(container,[originalLabel,glossLabel],result,{onWord:learner?openWord:null});mappingLabel(mapped?'已连线':'模型连线');update();}
-        function showLocal(){if(!expanded||!learner?.valid())return;const local=learner.mapping();show(modelResult?supplementWordMapping(lines,local,modelResult,learner.index,learner.state):local);}
+        function showLocal(){if(!expanded)return;if(!learner){if(modelResult)show(modelResult);return;}if(!learner.valid())return;const local=learner.mapping();show(modelResult?supplementWordMapping(lines,local,modelResult,learner.index,learner.state):local);}
         if(gloss&&translation&&text){
             mapping=control('',async()=>{
                 if(!expanded||disabled||disposed||busy||mapped)return;finishDialogueReveal(originalLabel);busy=true;update();mapping.setAttribute('aria-busy','true');mappingLabel('映射中…');abort=new AbortController();

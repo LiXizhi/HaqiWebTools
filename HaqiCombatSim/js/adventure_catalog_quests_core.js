@@ -270,7 +270,6 @@ export function supplementIslandTrack(save, content, zone, stats = {}) {
         if (!best || rank < best.rank || (rank === best.rank && quest.id < best.id)) best = { id: quest.id, rank };
     }
     if (!best) return null;
-    save.trackedQuestIds = [...pinned, best.id];
     return best.id;
 }
 export function showCurrentChapter(save, content) {

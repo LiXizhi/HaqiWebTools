@@ -1,4 +1,4 @@
-/* NPC conversation: a quiet reading area and a separate response rail. */
+/* NPC conversation: soft storybook bubble, existing dialogue behavior unchanged. */
 .rpg-dialogue .dialogue-chat{position:absolute;z-index:2;left:140px;top:16px;width:48px;height:48px;min-height:48px;padding:5px;border:0;background:transparent;box-shadow:none;cursor:pointer}
 .rpg-dialogue .dialogue-chat svg{display:block;width:100%;height:100%}
 .rpg-dialogue .dialogue-chat:hover{filter:brightness(1.08);transform:scale(1.06)}
@@ -12,42 +12,42 @@
 .storybook-ui .rpg-dialogue-layer { padding:40px 24px max(88px,calc(env(safe-area-inset-bottom) + 76px)); background:linear-gradient(180deg,#10292510 15%,#10251f66 75%,#091c20b3); }
 .storybook-ui .rpg-dialogue {
  width:min(960px,100%); height:auto; min-height:260px; max-height:calc(100dvh - 140px);
- padding:0 30px 0 208px; border-radius:9px 25px 9px 25px;
- box-shadow:0 22px 65px #071b2366; animation:dialogue-arrive .28s ease-out; outline:none;
+ padding:0 30px 0 208px; border-radius:32px;
+ box-shadow:none;filter:drop-shadow(0 12px 15px #071b2340); transform-origin:50% 100%; animation:dialogue-arrive .32s cubic-bezier(.2,.8,.3,1); outline:none;
 }
-.storybook-ui .rpg-dialogue::before { inset:0; border:1px solid #c99c51; border-image:none; border-radius:inherit; background:radial-gradient(ellipse at 12% 65%,#dfc38266,transparent 40%),linear-gradient(115deg,#f1dfb5,#fff4d9 50%,#f0ddb0); box-shadow:inset 0 0 0 3px #fff4d09c,inset 0 0 0 5px #be965833; filter:none; }
-.storybook-ui .rpg-dialogue::after { content:""; position:absolute; left:193px; top:34px; bottom:30px; width:1px; background:linear-gradient(transparent,#b48b4766,transparent); pointer-events:none; }
+.storybook-ui .rpg-dialogue::before { inset:0; border:3px solid #dcc697; border-image:none; border-radius:inherit; background:radial-gradient(ellipse at 8% 100%,#dbeac9 0,transparent 45%),linear-gradient(135deg,#fffdf2,#fff4da); box-shadow:inset 0 0 0 5px #ffffffa6; filter:none; }
+.storybook-ui .rpg-dialogue::after { content:""; position:absolute; left:24px; bottom:26px; width:148px; height:148px; border-radius:50%; background:#d6e7bb66; z-index:-1; pointer-events:none; }
 .storybook-ui .rpg-dialogue .dialogue-portrait { left:12px; bottom:26px; top:auto; width:184px!important; height:240px!important; filter:drop-shadow(0 10px 7px #664b3340); }
-.storybook-ui .rpg-dialogue .dialogue-content { display:flex; flex-direction:column; align-items:stretch; gap:0; height:auto; min-height:260px; max-height:calc(100dvh - 145px); padding:25px 4px 16px 12px; overflow:auto; }
+.storybook-ui .rpg-dialogue .dialogue-content { display:flex; flex-direction:column; align-items:stretch; gap:0; height:auto; min-height:260px; max-height:calc(100dvh - 145px); padding:38px 12px 26px 12px; overflow:auto; }
 .storybook-ui .rpg-dialogue .dialogue-content>.eyebrow { display:block; order:0; margin:0 52px 4px 0; padding:0; font-size:10px; letter-spacing:3px; color:#88734f; }
-.storybook-ui .rpg-dialogue .dialogue-content h2 { position:static; order:1; align-self:flex-start; min-width:0; max-width:calc(100% - 52px); margin:0 0 14px; padding:0; font-family:"STKaiti","KaiTi",serif; font-size:27px; line-height:1.3; letter-spacing:3px; color:#275e4d; }
+.storybook-ui .rpg-dialogue .dialogue-content h2 { position:static; order:1; align-self:flex-start; min-width:0; max-width:calc(100% - 52px); margin:0 0 14px; padding:5px 16px; border-radius:18px; background:#e5efcf; font-family:"Microsoft YaHei","PingFang SC",sans-serif; font-weight:800; font-size:25px; line-height:1.3; letter-spacing:1px; color:#275e4d; }
 .storybook-ui .rpg-dialogue .dialogue-content h2::before { display:none; }
-.storybook-ui .rpg-dialogue .dialogue-text { order:2; flex:1 0 auto; margin:0; min-height:64px; max-height:none; overflow:visible; font-size:16px; line-height:1.95; letter-spacing:.5px; color:#503d29; }
+.storybook-ui .rpg-dialogue .dialogue-text { order:2; flex:1 0 auto; margin:0; min-height:64px; max-height:none; overflow:visible; padding:12px 16px; border-radius:20px; background:#ffffff94; font-size:17px; line-height:1.85; letter-spacing:.5px; color:#503d29; }
 .rpg-dialogue.is-speaking .dialogue-text>span:first-child::after { content:""; display:inline-block; width:5px; height:14px; margin-left:5px; background:#ad894d; vertical-align:-1px; animation:dialogue-caret .8s steps(2,end) infinite; }
 .dialogue-sr { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
 .dialogue-rewards { order:3; display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:12px 0 4px; font-size:11px; line-height:1.7; }
 .dialogue-reward-label { color:#89724d; margin-right:3px; }
-.dialogue-reward { padding:3px 8px; border:1px solid #ba95483b; border-radius:4px; background:#fff8e16b; color:#71572e; }
-.storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom) { position:static; order:4; display:flex; flex-direction:row; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:8px; width:100%; margin:16px 0 0; padding:12px 0 0; border-top:1px solid #b99a5550; }
+.dialogue-reward { padding:3px 8px; border:1px solid #ba95483b; border-radius:14px; background:#fff8e1; color:#71572e; }
+.storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom) { position:static; order:4; display:flex; flex-direction:row; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:8px; width:100%; margin:16px 0 0; padding:12px 0 0; border-top:0; }
 .storybook-ui .rpg-dialogue .dialogue-bottom>.muted { margin-right:auto; font-size:11px; letter-spacing:2px; }
-.storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom) button { width:auto; max-width:100%; height:auto; min-height:42px; padding:10px 20px; font-size:13px; line-height:1.5; white-space:normal; }
+.storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom) button { width:auto; max-width:100%; height:auto; min-height:48px; padding:10px 22px; border-radius:18px; font-weight:700; font-size:15px; line-height:1.5; white-space:normal; }
 .storybook-ui .rpg-dialogue .dialogue-choices .text-button { order:-1; margin-right:auto; color:#8b7755; }
-.storybook-ui .rpg-dialogue .dialogue-default { box-shadow:0 3px 8px #285b3826; }
+.storybook-ui .rpg-dialogue .dialogue-default { box-shadow:none; }
 .storybook-ui .rpg-dialogue .dialogue-default:focus-visible { outline:2px solid #936f31; outline-offset:4px; }
 .dialogue-hint { order:5; margin:10px 0 0; text-align:right; font-size:10px; line-height:1.5; color:#937d55; }
 .storybook-ui .rpg-dialogue>.close-button { right:13px; top:13px; }
-@keyframes dialogue-arrive { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes dialogue-arrive { 0% { opacity:0; transform:translateY(14px) scale(.96); } 70% { opacity:1; transform:translateY(-2px) scale(1.008); } 100% { opacity:1; transform:none; } }
 @keyframes dialogue-caret { 50% { opacity:0; } }
 @media(max-width:650px) {
  .storybook-ui .rpg-dialogue-layer { padding:22px 10px max(78px,calc(env(safe-area-inset-bottom) + 68px)); }
  .storybook-ui .rpg-dialogue { padding:0 18px; min-height:260px; max-height:calc(100dvh - 110px); }
  .storybook-ui .rpg-dialogue::after { display:none; }
  .storybook-ui .rpg-dialogue .dialogue-portrait { left:9px; top:-16px; bottom:auto; width:90px!important; height:118px!important; }
- .storybook-ui .rpg-dialogue .dialogue-content { min-height:260px; max-height:calc(100dvh - 116px); padding:20px 0 13px; }
+ .storybook-ui .rpg-dialogue .dialogue-content { min-height:260px; max-height:calc(100dvh - 116px); padding:28px 10px 23px; }
  .storybook-ui .rpg-dialogue .dialogue-content>.eyebrow { margin-left:88px; font-size:9px; letter-spacing:2px; }
  .storybook-ui .rpg-dialogue .dialogue-content h2 { margin:2px 42px 30px 88px; font-size:23px; max-width:calc(100% - 130px); }
  .storybook-ui .rpg-dialogue .dialogue-text { font-size:14px; min-height:76px; }
- .storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom) button { flex:0 1 auto; min-height:44px; padding:9px 12px; font-size:12px; }
+ .storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom) button { flex:0 1 auto; min-height:44px; padding:9px 12px; font-size:14px; }
  .dialogue-hint { font-size:9px; }
 }
 @media(max-height:540px) and (min-width:651px) {
@@ -55,7 +55,7 @@
  .storybook-ui .rpg-dialogue { min-height:0; padding-left:146px; max-height:calc(100dvh - 85px); }
  .storybook-ui .rpg-dialogue::after { left:140px; }
  .storybook-ui .rpg-dialogue .dialogue-portrait { width:126px!important; height:169px!important; bottom:16px; }
- .storybook-ui .rpg-dialogue .dialogue-content { min-height:0; max-height:calc(100dvh - 90px); padding-top:15px; }
+ .storybook-ui .rpg-dialogue .dialogue-content { min-height:0; max-height:calc(100dvh - 90px); padding-top:28px; }
  .storybook-ui .rpg-dialogue .dialogue-content h2 { font-size:22px; margin-bottom:8px; }
  .storybook-ui .rpg-dialogue .dialogue-text { min-height:40px; font-size:14px; }
  .storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom) { margin-top:9px; padding-top:8px; }
@@ -82,3 +82,17 @@
 .dialogue-text.has-word-mapping .dialogue-translation{margin-top:28px}
 .dungeon-story-bubble.has-word-mapping{position:relative;isolation:isolate}.dungeon-story-bubble.has-word-mapping .story-translation{margin-top:28px}
 .dungeon-story-bubble.narrator .camp-chat-replay{color:#f4dfa2}
+
+@media(prefers-reduced-motion:reduce){.storybook-ui .rpg-dialogue button{transition:none}}
+
+/* Decorative corners stay outside the live text. No generated lettering is used. */
+.forest-ui .rpg-dialogue::before{border:64px solid transparent;border-image:var(--ui-paper) var(--ui-paper-slice) fill / 64px / 0 stretch;background:none;box-shadow:none;}
+.forest-ui .rpg-dialogue .dialogue-text{background:transparent;padding:10px 0;}
+.forest-ui .rpg-dialogue .dialogue-content h2{background:#416526;color:#fff8dc;border-radius:24px 8px 24px 8px;padding:8px 24px;text-shadow:0 1px #274214;}
+.storybook-ui .rpg-dialogue .dialogue-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:12px;}
+.storybook-ui .rpg-dialogue .dialogue-choices .text-button{order:-1;margin:0;color:#684823;}
+.storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom)>button,.storybook-ui .rpg-dialogue.dialogue-sequence .dialogue-bottom .primary{position:relative;isolation:isolate;box-sizing:border-box;min-width:0;width:100%;min-height:56px;height:auto;max-width:100%;padding:14px 36px;font-size:15px;line-height:1.5;white-space:normal;overflow-wrap:anywhere;align-self:stretch;}
+.storybook-ui .rpg-dialogue .dialogue-bottom{display:grid;grid-template-columns:1fr minmax(0,320px);gap:12px;}
+.storybook-ui .rpg-dialogue .dialogue-choices .text-button::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;border:12px solid transparent;border-image:var(--ui-cream) var(--ui-cream-slice) fill / 12px 34px / 0 stretch;}
+.storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom)>button::before{border-image-width:12px 34px;}
+@media(max-width:650px){.forest-ui .rpg-dialogue::before{border-width:42px;border-image-width:42px}.storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom)>button{font-size:14px;padding:12px 26px;min-height:56px}.storybook-ui .rpg-dialogue .dialogue-choices{gap:8px}.storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom)>button::before{border-image-width:12px 24px}}

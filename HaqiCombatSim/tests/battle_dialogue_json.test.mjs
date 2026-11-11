@@ -33,3 +33,15 @@ test('streaming JSON previews only reply text and keeps evaluation gated until c
     assert.equal((await voice.judge([],new AbortController().signal,{onReply:text=>chunks.push(text)})).reply,'Hi there!');
     assert.deepEqual(chunks,['Hi','Hi there!']);
 });
+
+
+test('对话默认使用已验证的 flash，保留用户显式选型并拒绝无结构回复',async()=>{
+ for(const selected of ['', 'keepwork-pro']){
+  let options;
+  const voice=createLearningVoice({getSettings:()=>({model:selected}),load:async()=>({token:'test',aiChat:{chat:async request=>{options=request;return '{"reply":"Hello","translation":"你好"}';}}})});
+  assert.equal((await voice.judge([],new AbortController().signal)).reply,'Hello');
+  assert.equal(options.model,selected||'keepwork-flash');
+ }
+ const voice=createLearningVoice({load:async()=>({token:'test',aiChat:{chat:async()=> 'Hello!'}})});
+ await assert.rejects(voice.judge([],new AbortController().signal),/格式不完整/);
+});

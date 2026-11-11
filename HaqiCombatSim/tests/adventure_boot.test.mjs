@@ -35,6 +35,10 @@ test('startup loads the learning target and native dictionaries', () => {
 
 test('missing, damaged or inaccessible storage leaves startup in Chinese', () => {
     for (const input of [storage({}), storage({ 'haqi.roles.v1.guest': '{' }), { getItem() { throw Error('blocked'); } }]) {
-        assert.deepEqual(localeIdsToLoad(readBootLocale(input)), []);
+        const result=readBootLocale(input);
+        assert.equal(result.locale,'zh-CN');
+        // The UI stays Chinese while the default English learning dictionary loads.
+        assert.equal(result.languageLearning.target,'en');
+        assert.deepEqual(localeIdsToLoad(result), ['en']);
     }
 });

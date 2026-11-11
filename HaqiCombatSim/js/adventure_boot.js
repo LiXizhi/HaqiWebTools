@@ -37,7 +37,8 @@ export async function bootAdventure() {
     if(new URLSearchParams(location.search).get('product')==='hanzi'){document.title='字有魔法 · Hanzi Magic';document.getElementById('load-title').textContent=preferences.locale==='en'?'Hanzi Magic':'字有魔法';document.getElementById('load-chapter').textContent=preferences.locale==='en'?'Island of living words':'文字会醒来的地方';document.getElementById('load-note').textContent=preferences.locale==='en'?'Speak, write, and collect your magic.':'说出它，写出它，把魔法珍藏成卡。';}
     card.hidden = false;
     try { await import('./adventure_app.js'); }
-    catch {
+    catch (error) {
+        console.error('冒险启动失败：',error);
         card.setAttribute('aria-busy', 'false');
         setText(document.getElementById('load-status'), '冒险暂时无法开始');
         document.getElementById('load-progress').hidden = true;

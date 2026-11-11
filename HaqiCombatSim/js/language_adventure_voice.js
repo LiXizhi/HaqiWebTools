@@ -177,7 +177,7 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
             const abortController=new AbortController(),abort=()=>abortController.abort();
             signal.addEventListener('abort',abort,{once:true});
             try{
-                const model=getSettings().model;
+                const model=getSettings().model||'keepwork-flash';
                 const result=await deadline(sdk.aiChat.chat({messages,...(model?{model}:{}),stream:!!onReply,...(onReply?{onMessage:text=>{if(!signal.aborted&&!abortController.signal.aborted)onReply(dialogueReplyPreview(text));}}:{}),tools:[],enableTools:[],needMqttTools:false,needPersonalTools:false,reasoning:false,maxTokens,abortController}),45000,signal);
                 received=true;
                 const text=typeof result==='string'?result:result?.choices?.[0]?.message?.content||result?.result;

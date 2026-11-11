@@ -235,11 +235,12 @@
         {
           "at": 0.45,
           "action": "ui-click",
-          "selector": ".map-vortex:not([hidden])",
+          "selector": "button",
+          "text": "现实世界",
           "expect": ".earth-atlas",
           "caption": {
-            "zh-CN": "穿过漩涡，从魔法群岛走向现实世界。",
-            "en": "Cross the vortex from magical islands into the real world."
+            "zh-CN": "切换地图，从魔法群岛走向现实世界。",
+            "en": "Switch maps from magical islands to the real world."
           }
         }
       ]

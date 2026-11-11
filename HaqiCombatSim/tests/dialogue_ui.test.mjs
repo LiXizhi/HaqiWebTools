@@ -50,7 +50,7 @@ test('tracking dialogue closes after success and follows only the sole updated t
     const controller=source.slice(source.indexOf('function finishTrackedDialogue()'),source.indexOf('function interact(target)'));
     for(const scenario of [
         {name:'accept and follow objective',tracked:true,ids:[1],expected:1},
-        {name:'claim opens next chapter',tracked:true,ids:[],chapter:2,expected:2,advance:'reward'},
+        {name:'claim does not auto-travel to an unaccepted next chapter',tracked:true,ids:[],chapter:2,advance:'reward'},
         {name:'talk continues to next destination',tracked:true,ids:[1],expected:1,advance:true},
         {name:'multiple tracks only close',tracked:true,ids:[1,2]},
         {name:'finished all tasks only close',tracked:true,ids:[]},
@@ -70,7 +70,7 @@ test('tracking dialogue closes after success and follows only the sole updated t
             rewardFeedback:{hasPendingItems:!!scenario.rewards},
             A:{currentQuest:()=>scenario.chapter?{id:scenario.chapter}:null,applyAction:()=>{update();return {}; }},
             close:()=>{calls.push('close');context.dialog=null;},track:(id,options)=>{assert.equal(context.dialog,null);assert.equal(options.pin,false);calls.push(id);},
-            persist(){},queueCloudSave(){},paintHud(){},petScene:{dialogue(){}},missingRewardPets:()=>[],loadPet(){},safely:callback=>callback(),
+            persist(){},queueCloudSave(){},paintHud(){},refreshWordGoals(){},petScene:{dialogue(){}},missingRewardPets:()=>[],loadPet(){},safely:callback=>callback(),
             nodes:{overlay:{}},model:()=>({}),V:{renderDialogue:(_root,_model,_dialog,cb)=>{callbacks=cb;calls.push('render');}},
             mapDialogue(){},dialogueVoice:{},openPanel(){},travel(){},toast(){},rewardSnapshot(){},showRewards(){},islandSocial:{activity(){}},
         });
@@ -88,7 +88,7 @@ function setup(t,reduced=false,options={}){
     const backdrop={closest:()=>null};
     const box={isConnected:true,classList:{add:c=>classes.add(c),remove:c=>classes.delete(c)},focus(){document.activeElement=this;},querySelectorAll:()=>[button],contains:node=>node!==backdrop};
     const root={addEventListener:(k,fn)=>listeners.set(k,fn),removeEventListener:k=>listeners.delete(k)};
-    const text={dataset:{},textContent:'你好，年轻的魔法师。',replaceChildren(...children){this.children=children;},append(child){this.children.push(child);}};
+    const text={dataset:{},textContent:'你好，年轻的魔法师。',replaceChildren(...children){this.children=children;},append(child){this.children.push(child);},prepend(child){this.children=this.children.filter(n=>n!==child);this.children.unshift(child);}};
     const hint=node();
     t.mock.method(globalThis,'setTimeout',()=>1);
     t.mock.method(globalThis,'clearTimeout',()=>{});
@@ -103,7 +103,11 @@ function setup(t,reduced=false,options={}){
     bindDialogue(root,box,text,hint,button,options);
     const target={closest:()=>null};
     const event=extra=>({target,preventDefault(){},stopPropagation(){},stopImmediatePropagation(){},...extra});
-    return {root,text,hint,classes,backdrop,drawLinks:()=>frames.splice(0).forEach(fn=>fn()),get calls(){return calls;},key:extra=>listeners.get('keydown')?.(event({key:' ',code:'Space',...extra})),click:extra=>listeners.get('click')?.(event(extra)),listeners};
+    return {root,text,hint,classes,backdrop,
+        get original(){return text.children.find(n=>n.lang===options.lines?.[0]?.locale);},
+        get translation(){return text.children.find(n=>n.lang===options.lines?.[1]?.locale);},
+        get toggle(){return text.children.find(n=>n.className==='secondary dialogue-learning-toggle');},
+        drawLinks:()=>frames.splice(0).forEach(fn=>fn()),get calls(){return calls;},key:extra=>listeners.get('keydown')?.(event({key:' ',code:'Space',...extra})),click:extra=>listeners.get('click')?.(event(extra)),listeners};
 }
 test('first space reveals, held space never advances, second space advances once',t=>{
     const ui=setup(t);assert.ok(ui.classes.has('is-speaking'));
@@ -135,10 +139,10 @@ test('NPC chat shortcut stays clickable while the dialogue text is typing',t=>{
 
 test('learning dialogue displays both languages; reading does not trigger quest action and closing cancels audio',async t=>{
     const calls=[];const ui=setup(t,false,{lines:[{text:'Hello!',locale:'en'},{text:'你好！',locale:'zh-CN'}],readAloud:async(text,locale,signal)=>{calls.push({text,locale,signal});}});
-    assert.deepEqual(ui.text.children.slice(0,2).map(n=>n.textContent),['Hello!','你好！']);assert.equal(ui.classes.has('is-speaking'),false);
-    ui.click({target:{closest:selector=>selector==='.camp-chat-replay'?ui.text.children[0].children[0]:null}});assert.equal(ui.calls,0);
-    await ui.text.children[0].children[0].onclick();await ui.text.children[0].children[0].onclick();
-    assert.equal(ui.text.children.length,2,'actions do not add another text row');assert.equal(ui.text.children[0].children[0].children.length,1,'speaker button is separate from clickable word text');assert.equal(calls[0].signal.aborted,true);assert.equal(calls[1].locale,'en');assert.equal(ui.calls,0);
+    assert.deepEqual(ui.text.children.slice(0,2).map(n=>n.textContent),['你好！','Hello!']);assert.equal(ui.classes.has('is-speaking'),false);
+    ui.click({target:{closest:selector=>selector==='.camp-chat-replay'?ui.original.children[0]:null}});assert.equal(ui.calls,0);
+    await ui.original.children[0].onclick();await ui.original.children[0].onclick();
+    assert.equal(ui.text.children.filter(n=>n.lang).length,2,'actions do not add another text row');assert.equal(ui.original.children[0].children.length,1,'speaker button is separate from clickable word text');assert.equal(calls[0].signal.aborted,true);assert.equal(calls[1].locale,'en');assert.equal(ui.calls,0);
     ui.root.disposeDialogue();assert.equal(calls[1].signal.aborted,true);
 });
 
@@ -146,7 +150,7 @@ for(const locale of ['en','zh-CN'])test(`auto read opens in the target language 
     const calls=[],lines=locale==='en'?[{text:'Hello!',locale:'en'},{text:'你好！',locale:'zh-CN'}]:[{text:'你好！',locale:'zh-CN'},{text:'Hello!',locale:'en'}];
     const ui=setup(t,false,{lines,targetLocale:locale,autoReadDialogue:true,readAloud:async(text,language,signal)=>calls.push({text,language,signal})});
     assert.equal(calls.length,1);assert.equal(calls[0].language,locale);assert.equal(calls[0].text,lines[0].text);assert.equal(ui.calls,0);
-    await ui.text.children[0].children[0].onclick();
+    await ui.original.children[0].onclick();
     assert.equal(calls.length,2);assert.equal(calls[0].signal.aborted,true);
     ui.root.disposeDialogue();assert.equal(calls[1].signal.aborted,true);
 });
@@ -162,16 +166,17 @@ test('auto read respects opt out and skips ordinary or untranslated dialogue',t=
 test('automatic reading failure keeps manual retry available and late failures cannot update a closed dialogue',async t=>{
     let reject;let attempts=0;
     const ui=setup(t,false,{lines:[{text:'Hello!',locale:'en'}],autoReadDialogue:true,readAloud:()=>{attempts++;return attempts===1?Promise.reject(Error('请重试')):new Promise((_,fail)=>{reject=fail;});}});
-    await new Promise(resolve=>setImmediate(resolve));assert.equal(ui.hint.textContent,'请重试');
-    const pending=ui.text.children[0].children[0].onclick();assert.equal(attempts,2);
+    await new Promise(resolve=>setImmediate(resolve));assert.equal(ui.hint.textContent,'朗读暂不可用，点击喇叭可重试；仍可继续任务。');
+    const pending=ui.original.children[0].onclick();assert.equal(attempts,2);
     ui.root.disposeDialogue();const hint=ui.hint.textContent;reject(Error('迟到的错误'));await pending;assert.equal(ui.hint.textContent,hint);
 });
 
 test('translation maps once without speaking or advancing and ignores late result after closing',async t=>{
     let resolve,calls=0,signal;const ui=setup(t,false,{lines:[{text:'Go',locale:'en'},{text:'走',locale:'zh-CN'}],readAloud:()=>{throw Error('must not speak');},mapWords:(_,s)=>{calls++;signal=s;return new Promise(r=>{resolve=r;});}});
-    const pending=ui.text.children[1].children[1].onclick();await new Promise(done=>setImmediate(done));await ui.text.children[1].children[1].onclick();assert.equal(calls,1);assert.equal(ui.calls,0);
+    ui.toggle.onclick();
+    const pending=ui.translation.children[1].onclick();await new Promise(done=>setImmediate(done));await ui.translation.children[1].onclick();assert.equal(calls,1);assert.equal(ui.calls,0);
     ui.root.disposeDialogue();assert.equal(signal.aborted,true);resolve([]);await pending;
-    assert.equal(ui.text.children[0].textContent,'Go');
+    assert.equal(ui.original.children[1].textContent,'Go');
 });
 
 test('shared NPC mapping appears only after clicking and draws paired connectors',async t=>{
@@ -179,13 +184,14 @@ test('shared NPC mapping appears only after clicking and draws paired connectors
     mapWords.peek=async()=>{peeked++;};
     const ui=setup(t,false,{lines:[{text:'Go',locale:'en'},{text:'走',locale:'zh-CN'}],mapWords});
     assert.equal(generated,0);assert.equal(peeked,0);
-    await ui.text.children[1].children[1].onclick();
-    assert.equal(ui.text.children[0].children[1].children[0].style.color,'#A23');
-    assert.equal(ui.text.children[1].children[1].title,'已连线');ui.drawLinks();
-    const links=ui.text.children[2];assert.equal(links.attributes['aria-hidden'],'true');
+    ui.toggle.onclick();
+    await ui.translation.children[1].onclick();
+    assert.equal(ui.original.children[1].children[0].style.color,'#A23');
+    assert.equal(ui.translation.children[1].title,'已连线');ui.drawLinks();
+    const links=ui.text.children.find(n=>n.attributes?.['aria-hidden']==='true');assert.equal(links.attributes['aria-hidden'],'true');
     assert.equal(links.children.length,1);assert.equal(links.children[0].attributes.stroke,'#A23');
     assert.match(links.children[0].attributes.d,/^M /);
-    await ui.text.children[1].children[1].onclick();assert.equal(generated,1);assert.equal(ui.calls,0);
+    await ui.translation.children[1].onclick();assert.equal(generated,1);assert.equal(ui.calls,0);
 });
 
 
@@ -194,10 +200,10 @@ test('old model caches do not override automatic local vocabulary matching',asyn
     const mapWords=async()=>{generated++;return result;};mapWords.peek=async()=>result;
     const ui=setup(t,false,{lines:[{text:'Go',locale:'en'},{text:'走',locale:'zh-CN'}],mapWords});
     await new Promise(resolve=>setImmediate(resolve));
-    assert.notEqual(ui.text.children[1].children[1].title,'已连线');
+    assert.notEqual(ui.translation.children[1].title,'已连线');
     ui.key();
     await new Promise(resolve=>setImmediate(resolve));
-    assert.equal(ui.text.children[1].children[1].title,'模型连线');
+    assert.equal(ui.translation.children[1].title,'模型连线');
     assert.equal(generated,0);ui.root.disposeDialogue();
 });
 
@@ -206,5 +212,5 @@ test('late cached mappings do not update a closed dialogue',async t=>{
     const ui=setup(t,false,{lines:[{text:'Go',locale:'en'},{text:'走',locale:'zh-CN'}],mapWords});
     ui.root.disposeDialogue();assert.equal(resolve,undefined,'old model cache is not read automatically');
     await new Promise(resolve=>setImmediate(resolve));
-    assert.notEqual(ui.text.children[1].children[1].title,'已连线');
+    assert.notEqual(ui.translation.children[1].title,'已连线');
 });

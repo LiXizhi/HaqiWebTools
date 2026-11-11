@@ -16,7 +16,7 @@ test('firelight story requires finding visible fire, choosing a book, actual pet
   await page.goto(`http://127.0.0.1:${server.address().port}/tests/fixtures/home-learning-world.html?fire-story&unlearned`);await page.waitForFunction(()=>window.worldLearning?.ready);
   const state=()=>page.evaluate(()=>worldLearning.learning());
   const open=async()=>{await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();await page.getByRole('button',{name:'火光里的故事时间',exact:true}).click();};
-  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();};
+  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.locator('.rpg-dialogue .dialogue-default').click();};
   const answer=async text=>{await page.getByRole('textbox',{name:'输入回答'}).fill(text);await page.getByRole('button',{name:'回答',exact:true}).click();};
   const canvas=await page.locator('.home-canvas').boundingBox(),point=(x,y)=>({x:canvas.x+canvas.width/2+x*40,y:canvas.y+canvas.height/2+y*40}),pick=async(x,y)=>{const p=point(x,y);await page.mouse.click(p.x,p.y);};
   await open();await intro();await answer('I see fire.');await pick(3.7,-.15);assert.equal((await state()).words.fire?.practiceCount||0,0);await pick(.8,1.2);await page.getByRole('button',{name:'继续故事',exact:true}).click();await intro();await answer('A book.');await pick(2.5,1.25);await page.getByRole('button',{name:'继续故事',exact:true}).waitFor();

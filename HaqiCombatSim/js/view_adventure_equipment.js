@@ -236,7 +236,14 @@ export function renderEquipment(body,model,cb,ui) {
                 table.append(el('thead','',el('tr','',...['属性','当前',equipped?'卸下后':'换装后','变化'].map(label=>el('th','',label)))));
                 const rows=el('tbody','');
                 for(const row of changes)rows.append(el('tr','',el('th','',row.label),el('td','',`${row.before}${row.unit}`),el('td','',`${row.value}${row.unit}`),el('td',row.delta>0?'equipment-gain':'equipment-loss',`${row.delta>0?'+':''}${row.delta}${row.unit}`)));
-                table.append(rows);if(changes.length)detail.append(table);
+                table.append(rows);
+                if(changes.length){
+                    const keyChanges=changes.filter(row=>['hp','damagePct','fixed','capacity'].includes(row.key)||row.delta<0);
+                    const quick=el('div','equipment-quick-changes');
+                    for(const row of (keyChanges.length?keyChanges:changes.slice(0,3)))quick.append(el('p',row.delta>0?'equipment-gain':'equipment-loss',`${row.label} ${row.delta>0?'+':''}${row.delta}${row.unit}`));
+                    const comparison=el('details','equipment-full-comparison',el('summary','',fill('查看完整属性对比（{count}项）',{count:changes.length}).text),table);
+                    detail.append(quick,comparison);
+                }
                 if(!changes.length)detail.append(el('p','muted','基础属性不变，请查看附加法术。'));
                 if(preview.trimmed)detail.append(el('p','equipment-warning',fill(`卡包容量降低，将按现有顺序移出 {v0} 张配卡。拥有的卡牌不会丢失，可在卡包中重新配置。`,{v0:String(preview.trimmed)}).text));
                 const b=button(equipped?'卸下':'穿上',()=>{dialog.close();cb.action(action);},equipped?'secondary':'primary');

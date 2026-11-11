@@ -19,7 +19,7 @@ import {createLanguagePracticeView} from './view_language_practice.js';
 import {createLanguageSceneIntro} from './view_language_scene_intro.js';
 import {loadAuthoredHomeGames} from './home_authored_game.js';
 import {selectAuthoredHomeGame} from './home_authored_game_core.js';
-import {HOME_LANGUAGE_MODES,homeStoryPetEligible,homeGameExposesTarget,homeComprehensionExposesTarget,homePracticeWords,homeGameActions,homeGameMessages,validateHomeGame,homeGameAnswer,homeGameReply,homeGameActionMatches,homeGameObjectMatches,homeGamePetMatches} from './home_language_game_core.js';
+import {homeGameOpening,HOME_LANGUAGE_MODES,homeStoryPetEligible,homeGameExposesTarget,homeComprehensionExposesTarget,homePracticeWords,homeGameActions,homeGameMessages,validateHomeGame,homeGameAnswer,homeGameReply,homeGameActionMatches,homeGameObjectMatches,homeGamePetMatches} from './home_language_game_core.js';
 
 export function createHomeLanguageGame({getState,onChange=()=>{},voiceFactory=createLearningVoice,record=recordWordPractice,loadAuthored=loadAuthoredHomeGames}){
     let session=null,api,bodyDiagram;
@@ -35,7 +35,7 @@ export function createHomeLanguageGame({getState,onChange=()=>{},voiceFactory=cr
     function countCurrent(s){const state=getState();return !s.game?.counting||homeCountCurrent(s.game.counting,state.objects,state.catalog);}
     function valid(s){const state=getState(),context=languageTreeContext();return session===s&&state.active&&state.homeId===s.homeId&&wordLanguage(state.target)===s.language&&context?.key===s.key&&context?.epoch===s.epoch;}
     function close(){const s=session;if(!s)return;session=null;s.abort.abort();clearInterval(s.timer);clearTimeout(s.recordTimer);void s.voice.cancel();s.intro?.dispose();s.introRoot?.remove();s.bodyView?.destroy();s.view.dispose();onChange();}
-    async function run(s,fn){if(!valid(s)||s.busy)return;s.busy=true;s.view.phase('judging');try{await fn();}catch(e){if(valid(s))s.view.message(e.message);}finally{s.busy=false;if(valid(s))s.view.phase('ready');}}
+    async function run(s,fn){if(!valid(s)||s.busy)return;s.busy=true;s.view.phase('judging');try{await fn();}catch(e){if(valid(s)){s.intro?.dispose();s.introRoot?.remove();s.intro=null;s.introRoot=null;s.view.visible(true);s.view.message(e.message);}}finally{s.busy=false;if(valid(s))s.view.phase('ready');}}
     async function persist(s){
         if(!valid(s)||!s.answered||!s.acted||s.saved)return;
         if(!homeGamePetMatches(s.game,getState().pets))throw Error('这位伙伴已经变化，请重新选择故事。');
@@ -144,7 +144,7 @@ export function createHomeLanguageGame({getState,onChange=()=>{},voiceFactory=cr
             const pet=state.pets.find(p=>p.id===s.game.action.petId)||state.pets[0],actor={id:'home-pet:'+pet.id,name:pet.name||'家园伙伴',locationLabel:state.homeName?'家园 · '+state.homeName:'家园'};
             s.view.visible(false);s.introRoot=document.createElement('div');s.introRoot.style.zIndex='110';document.body.append(s.introRoot);
             const model=state.introModel||{assets:{content:{npcs:{}},draw:()=>false,drawPet:()=>false},save:{zone:'town',languageLearning:{}}};
-            s.intro=createLanguageSceneIntro(s.introRoot,model,{actor,step:{intro:s.game.opening||'我们一起玩吧。准备好了吗？',introReply:'好呀'},close,proceed:()=>{s.intro?.dispose();s.introRoot?.remove();s.intro=null;s.introRoot=null;begin();}});
+            s.intro=createLanguageSceneIntro(s.introRoot,model,{actor,step:{intro:homeGameOpening(s.game),introReply:'好呀'},close,proceed:()=>{s.intro?.dispose();s.introRoot?.remove();s.intro=null;s.introRoot=null;begin();}});
         }else begin();
     }
     function missingStory(s,id,message){

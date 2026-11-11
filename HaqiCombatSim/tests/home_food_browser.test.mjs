@@ -13,7 +13,7 @@ test('food props render and support real finding and persistent writing without 
  const url=`http://127.0.0.1:${server.address().port}`;
  try{for(const width of [1280,390])for(const word of ['apple','orange']){
   const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce'}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
-  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();};
+  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.locator('.rpg-dialogue .dialogue-default').click();};
   const item=word==='orange'?'orange-fruit':word;
   await page.goto(url+'/tests/fixtures/home-learning-world.html?food='+item);await page.waitForFunction(()=>window.worldLearning?.ready);
   const menu=async(mode)=>{await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();await page.getByRole('button',{name:mode,exact:true}).click();await intro();};

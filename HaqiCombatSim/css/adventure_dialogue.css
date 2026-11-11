@@ -96,3 +96,23 @@
 .storybook-ui .rpg-dialogue .dialogue-choices .text-button::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;border:12px solid transparent;border-image:var(--ui-cream) var(--ui-cream-slice) fill / 12px 34px / 0 stretch;}
 .storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom)>button::before{border-image-width:12px 34px;}
 @media(max-width:650px){.forest-ui .rpg-dialogue::before{border-width:42px;border-image-width:42px}.storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom)>button{font-size:14px;padding:12px 26px;min-height:56px}.storybook-ui .rpg-dialogue .dialogue-choices{gap:8px}.storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom)>button::before{border-image-width:12px 24px}}
+
+/* Read the immediate action first; keep the learning line available at a steady size. */
+.rpg-dialogue .dialogue-text .dialogue-translation{font-size:18px;line-height:1.6;letter-spacing:0;}
+.rpg-dialogue .dialogue-text>.dialogue-translation:first-child{margin:0 0 8px;padding-top:0;border-top:0;}
+.rpg-dialogue .dialogue-text .dialogue-original{font-size:17px;line-height:1.6;letter-spacing:0;}
+.dialogue-hint:empty{display:none;}
+@media(max-width:650px){
+ .storybook-ui .rpg-dialogue .dialogue-content h2{font-size:20px;margin-bottom:16px;}
+ .rpg-dialogue .dialogue-text .dialogue-translation{font-size:16px;}
+ .rpg-dialogue .dialogue-text .dialogue-original{font-size:15px;}
+}
+
+/* Short landscapes keep the action visible; only the spoken content scrolls. */
+@media(max-height:540px) and (min-width:651px){
+ .storybook-ui .rpg-dialogue .dialogue-content{height:calc(100dvh - 90px);min-height:0;box-sizing:border-box;overflow:hidden;padding:16px 12px 14px;}
+ .storybook-ui .rpg-dialogue .dialogue-text{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;}
+ .storybook-ui .rpg-dialogue .dialogue-content>:is(.eyebrow,h2,.dialogue-rewards,.dialogue-choices,.dialogue-bottom,.dialogue-hint){flex-shrink:0;}
+ .storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom){margin-top:8px;padding-top:0;}
+ .storybook-ui .rpg-dialogue .dialogue-content h2{font-size:20px;margin-bottom:4px;padding:4px 16px;}
+}

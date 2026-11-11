@@ -53,10 +53,10 @@ export function openingCompanionEvent(save,battle,event){
  if(openingJourney(save)?.phase!=='showcase')return '';
  const unit=battle?.unitsById?.[event.caster];
  if(!unit||unit.speciesId!==OPENING_PET)return '';
- if(event.type==='cast')return '咕噜噜开始行动了！你的搭档会自己选择招式。';
- if(event.type==='damage'&&event.amount>0)return '咕噜噜帮你造成了 '+event.amount+' 点伤害。';
- if(event.type==='heal'&&event.amount>0)return '咕噜噜恢复了 '+event.amount+' 点生命。';
- if(event.type==='fizzle')return '咕噜噜这次施法失误了。下一回合再一起试试。';
+ if(event.type==='cast')return '这回我来！';
+ if(event.type==='damage'&&event.amount>0)return '打中了，'+event.amount+' 点伤害！';
+ if(event.type==='heal'&&event.amount>0)return '恢复了 '+event.amount+' 点生命！';
+ if(event.type==='fizzle')return '失误了，下回合再来！';
  return '';
 }
 export function validateOpeningJourney(save){
@@ -80,7 +80,7 @@ export function openingJourneyTarget(save){
   route:[36201,'和莫尼商量，怎么帮咕噜噜解围。'],
   explain:[36201,'向莫尼说明：We are friends.'],
   challenge:['fire-scout','挑战烈火侦查兵，帮咕噜噜解围。'],
-  rescue:[36201,'回到莫尼身边，接咕噜噜一起走。'],
+  rescue:[36201,'邀请咕噜噜一起走。'],
   showcase:['ice-scout','带咕噜噜挑战寒冰侦查兵，试试新搭档。']
  };
  const [id,objective]=rows[state.phase];

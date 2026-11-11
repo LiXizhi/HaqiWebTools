@@ -1,3 +1,21 @@
+## 2026-11-11：当前对话与真实战斗反馈
+
+```mermaid
+flowchart LR
+    Messages[既有语言故事消息] --> Turns[dialogue_turns_core 当前轮与历史分组]
+    Turns --> Chat[view_learning_chat 当前短句和可展开历史]
+    Answer[用户输入] --> Check[language_story 原题目允许的表达校验]
+    Check --> Hint[逐步提示 不自动答题]
+    Check --> Progress[原学习回执与场景推进]
+    Checkpoint[版本化训练检查点] --> Training[opening_training_core v1/v2/v3]
+    Training --> Engine[原卡牌与战斗引擎]
+    Engine --> Events[实际效果消耗与伙伴施法事件]
+    Events --> Cue[openingStrategyCue / openingCompanionEvent]
+    Cue --> Speech[原角色气泡控制器]
+```
+
+分组仅影响显示，不截断消息或改变题目顺序。默认收起词语连线，展开后复用原映射机制；错答保留输入，不推进。新手意图仅依据已知训练脚本，不推测普通 AI 的隐藏选择。助手只提示合法操作，玩家仍自行选择卡牌与目标。家园故事默认收起完整教学说明，短开场来自原作者开场白或第一句完整剧情；练习证据与真实场景动作校验不删减。见[当日实现与验证](devlog/devlog_2026-11-11.md)。
+
 ## 2026-11-10：森林界面皮肤
 
 ```mermaid

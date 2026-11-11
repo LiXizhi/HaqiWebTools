@@ -15,7 +15,7 @@ test('children operate the same real door, learn open and close, and resume the 
   await page.goto(`http://127.0.0.1:${server.address().port}/tests/fixtures/home-learning-world.html?door-story&unlearned`);await page.waitForFunction(()=>window.worldLearning?.ready);
   const state=()=>page.evaluate(()=>worldLearning.learning()),door=()=>page.evaluate(async()=>(await worldLearning.schoolObjects()).door);
   const open=async()=>{await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();await page.getByRole('button',{name:'我们约好的开门信号',exact:true}).click();};
-  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();};
+  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.locator('.rpg-dialogue .dialogue-default').click();};
   const answer=async text=>{await page.getByRole('textbox',{name:'输入回答'}).fill(text);await page.getByRole('button',{name:'回答',exact:true}).click();};
   const operate=async title=>{await page.getByRole('button',{name:'选中这扇门',exact:true}).click();await page.getByRole('button',{name:title,exact:true}).click();await page.getByRole('button',{name:'继续故事',exact:true}).waitFor();};
   await open();await intro();await answer('The book.');assert.equal((await state()).words.door?.practiceCount||0,0);await answer('The door.');await operate('开门');assert.equal((await door()).doorOpen,true);assert.equal((await state()).words.door.practiceCount,1);

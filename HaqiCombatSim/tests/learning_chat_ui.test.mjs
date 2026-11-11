@@ -25,6 +25,10 @@ test('English UI never translates Chinese teaching text; translation toggle work
     assert.equal(nodes().some(n=>n.className==='camp-chat-reward'),false);
     assert.equal(mapCalls,0,'mapping must be explicitly requested');
     const mapButton=nodes().find(n=>n.className==='camp-chat-replay camp-chat-map');
+    assert.equal(mapButton.hidden,true,'word annotations stay out of the conversation until requested');
+    await mapButton.onclick();assert.equal(mapCalls,0,'a collapsed annotation cannot start a request');
+    nodes().find(n=>n.className==='secondary dialogue-learning-toggle').onclick();
+    assert.equal(mapButton.hidden,false);
     await mapButton.onclick();assert.equal(mapCalls,1);assert.equal(mapButton.disabled,true);
     await mapButton.onclick();assert.equal(mapCalls,1,'repeated click does not regenerate mapping');
     assert.ok(nodes().filter(n=>n.className==='camp-chat-original').every(n=>n.textContent==='你好！'));
@@ -36,11 +40,13 @@ test('English UI never translates Chinese teaching text; translation toggle work
     assert.equal(hintBox.querySelectorAll('*').filter(n=>n.className==='camp-chat-original').length,1,'identical pattern and answer appear once');
     const sample=hintBox.querySelectorAll('button')[0];assert.equal(sample.className,'camp-chat-sample');assert.equal(sample.children.at(-1).tag,'svg');sample.onclick();assert.deepEqual(spoken.at(-1),['你好！','user']);
     view.render({...state,locale:'en'});
-    const lines=hintBox.querySelectorAll('*').filter(n=>n.className==='camp-chat-original');assert.deepEqual(lines.map(n=>n.textContent),['Hello.','Hello!']);
+    const lines=hintBox.querySelectorAll('*').filter(n=>n.className==='camp-chat-original');assert.deepEqual(lines.map(n=>n.textContent),['Hello!']);
     assert.equal(hintBox.querySelectorAll('button')[0].children[0].tag,'svg');assert.ok(hintBox.querySelectorAll('*').some(n=>n.className==='camp-chat-original'&&n.textContent==='Hello!'),'sample text stays beside the read button so words can be independent buttons');
     const answerMap=hintBox.querySelectorAll('button').find(n=>n.className.includes('camp-chat-map'));
     assert.ok(answerMap,'player answer has the same mapping control');
-    const beforeMap=mapCalls;await answerMap.onclick();assert.equal(mapCalls,beforeMap+1);
+    const beforeMap=mapCalls;
+    hintBox.querySelectorAll('button').find(n=>n.className==='secondary dialogue-learning-toggle').onclick();
+    await answerMap.onclick();assert.equal(mapCalls,beforeMap+1);
     view.render({...state,locale:'en'});assert.equal(hintBox.querySelectorAll('button').find(n=>n.className.includes('camp-chat-map')),answerMap,'unchanged render preserves the mapping request and control');
     await answerMap.onclick();assert.equal(mapCalls,beforeMap+1);
     view.render({...state,locale:'en',hintLevel:0});
@@ -50,7 +56,7 @@ test('English UI never translates Chinese teaching text; translation toggle work
     assert.equal(collapsed.children[0].tag,'svg');assert.ok(hintBox.querySelectorAll('*').some(n=>n.className==='camp-chat-original'&&n.textContent==='Hello!'));collapsed.onclick();
     assert.deepEqual(spoken.at(-1),['Hello!','user']);
     view.render({...state,locale:'en',hintLevel:3});
-    assert.ok(hintBox.children.some(n=>n.textContent==='Hello.'));
+    assert.ok(!hintBox.children.some(n=>n.textContent==='Hello.'),'punctuation alone must not duplicate the sample');
     assert.ok(hintBox.children.some(n=>n.textContent==='你好！'));
     view.render({...state,locale:'en',hintLevel:0,practice:{qualified:1,phase:'waiting',params:{speechPracticeCount:3},feedback:{accuracy:.5,parts:[{text:'Hello',missing:true},{text:'!',missing:false}]}}});
     assert.ok(hintBox.querySelectorAll('*').some(n=>n.className==='story-speech-missing'&&n.textContent==='Hello'));

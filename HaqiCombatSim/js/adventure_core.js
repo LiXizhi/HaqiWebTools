@@ -589,7 +589,7 @@ export function beginEncounter(save,content,encounterId,access={}) {
     const serial = ++save.encounterSerial;
     save.pendingEncounter = { id: `${save.seed}:${serial}`, encounterId,
         seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 2, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1, dispelRulesVersion:1, specialCardRulesVersion:1, captureRulesVersion:1 };
-    if(save.openingJourney?.version===1&&save.zone==='camp'&&OPENING_TRAINING_IDS.includes(encounterId))save.pendingEncounter.openingTrainingVersion=1;
+    if(save.openingJourney?.version===1&&save.zone==='camp'&&OPENING_TRAINING_IDS.includes(encounterId))save.pendingEncounter.openingTrainingVersion=3;
     if(encounter.monsterIds){const formation=journeyEnemyFormation(encounter,dungeon,initialParty);save.pendingEncounter.dungeonMonsterIds=[...formation.ids];save.pendingEncounter.dungeonMonsterSlots=[...formation.slots];}
     if(content.pets){
         const checkpoint=save.pendingEncounter,params=petTraitParams(content);
@@ -598,7 +598,11 @@ export function beginEncounter(save,content,encounterId,access={}) {
         const seed=encounterPetTraitSeed(save,encounterId,params),owned=Object.values(ownedPetRecords(save));
         checkpoint.petTraitRulesVersion=1;checkpoint.petTraitParams=clone(params);
         const byMonster=save.petTraitEncounters[encounterId]?.byMonster||{};
-        checkpoint.monsterTraits=stamped.map((mob,index)=>byMonster[`${mob.id}:${index}`]??=monsterPetTraits(seed,mob,index,params,owned.find(p=>p.speciesId===mob.speciesId)?.passiveTraits));
+        // Scripted training has fixed opponents: rare wild traits must not randomly double its HP.
+        // The version belongs to this new checkpoint; existing v1 battle replays keep their traits.
+        checkpoint.monsterTraits=stamped.map((mob,index)=>checkpoint.openingTrainingVersion>=2
+            ?(byMonster[`${mob.id}:${index}`]={})
+            :(byMonster[`${mob.id}:${index}`]??=monsterPetTraits(seed,mob,index,params,owned.find(p=>p.speciesId===mob.speciesId)?.passiveTraits)));
         save.petTraitEncounters[encounterId]={seed,byMonster:clone(byMonster)};
     }
     const languageBuff=save.dailyLanguageBuff?dailyBuffs(save):dungeonLanguageBuff(save,content);
@@ -761,7 +765,7 @@ export function parseSave(raw,content) {
     assert(dungeonFor(content,s.zone)?.playable||travelStatus({...s,pendingEncounter:null},content,s.zone).allowed,'存档目的地无效');
     dungeonLanguageBuff(s,content);
     if (s.pendingEncounter) {
-        assert(s.pendingEncounter.openingTrainingVersion===undefined||(s.pendingEncounter.openingTrainingVersion===1&&s.openingJourney?.version===1&&s.zone==='camp'&&OPENING_TRAINING_IDS.includes(s.pendingEncounter.encounterId)),'新手训练版本无效');
+        assert(s.pendingEncounter.openingTrainingVersion===undefined||([1,2,3].includes(s.pendingEncounter.openingTrainingVersion)&&s.openingJourney?.version===1&&s.zone==='camp'&&OPENING_TRAINING_IDS.includes(s.pendingEncounter.encounterId)),'新手训练版本无效');
         assert(s.pendingEncounter.dailyLanguageVersion===undefined||s.pendingEncounter.dailyLanguageVersion===1,'语言加成版本无效');
         if(s.pendingEncounter.player?.hanziBattle)validateHanziBattleSpec(s.pendingEncounter.player.hanziBattle);
         for(const unit of s.pendingEncounter.party||[])if(unit.hanziBattle)validateHanziBattleSpec(unit.hanziBattle);

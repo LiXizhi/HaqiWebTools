@@ -17,7 +17,7 @@ test('real home label editor saves the object and records the active writing tas
   const context=await browser.newContext({viewport:{width,height:900}}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(`http://127.0.0.1:${server.address().port}/tests/fixtures/home-learning-world.html${word==='grey'?'?color=grey':''}`);
   await page.waitForFunction(()=>window.worldLearning?.ready);await page.locator('.home-canvas').waitFor();
-  const finishIntro=async()=>{await page.locator('.rpg-dialogue').waitFor();assert.equal(await page.locator('.rpg-dialogue .eyebrow').textContent(),'家园 · 我的故事角');for(let i=0;i<5&&await page.locator('.rpg-dialogue').count();i++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();};
+  const finishIntro=async()=>{await page.locator('.rpg-dialogue').waitFor();assert.equal(await page.locator('.rpg-dialogue .eyebrow').textContent(),'家园 · 我的故事角');for(let i=0;i<5&&await page.locator('.rpg-dialogue').count();i++)await page.locator('.rpg-dialogue .dialogue-default').click();};
   const openTask=async()=>{
    await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();
    await page.getByRole('button',{name:'写作品标签',exact:true}).click();await finishIntro();
@@ -42,7 +42,7 @@ test('real home label editor saves the object and records the active writing tas
   await page.reload();await page.waitForFunction(()=>window.worldLearning?.ready);
   assert.equal(await page.evaluate(()=>worldLearning.label()),label);assert.equal((await page.evaluate(()=>worldLearning.learning())).words[word].practiceCount,2);
   const review=(await page.evaluate(()=>worldLearning.learning())).words[word].homeReview;
-  assert.equal(review.visits,1);assert.equal(review.modes.write,1);assert.equal(review.inputs.text,1);assert.equal(review.support,'unknown');
+  assert.equal(review.visits,1);assert.equal(review.modes.write,1);assert.equal(review.inputs.text,1);assert.equal(review.support,'assisted','visible authored examples and object labels must not count as unaided writing');
   assert.deepEqual(errors,[]);await context.close();
  }}finally{await browser.close();await new Promise(r=>server.close(r));}
 });

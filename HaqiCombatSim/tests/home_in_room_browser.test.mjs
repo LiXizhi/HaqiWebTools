@@ -17,7 +17,7 @@ test('in-room story requires a saved move inside a real room',{skip:!process.env
   const state=()=>page.evaluate(()=>worldLearning.learning());
   await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();await page.getByRole('button',{name:'把小故事搬进屋',exact:true}).click();
   for(let step=0;step<2;step++){
-   await page.locator('.rpg-dialogue').waitFor();for(let n=0;n<8&&await page.locator('.rpg-dialogue').count();n++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();
+   await page.locator('.rpg-dialogue').waitFor();for(let n=0;n<8&&await page.locator('.rpg-dialogue').count();n++)await page.locator('.rpg-dialogue .dialogue-default').click();
    await page.getByRole('textbox',{name:'输入回答'}).fill(step?'In the room.':'Put it in.');await page.getByRole('button',{name:'回答',exact:true}).click();
    await page.getByRole('button',{name:'开始摆放',exact:true}).click();assert.equal((await state()).words.in?.practiceCount||0,step);
    const canvas=await page.locator('.home-canvas').boundingBox(),point=(x,y)=>({x:canvas.x+canvas.width/2+x*40+20,y:canvas.y+canvas.height/2+y*40+10});

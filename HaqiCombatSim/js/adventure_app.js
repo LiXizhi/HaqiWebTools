@@ -1,3 +1,4 @@
+import {openingStrategyCue} from './opening_training_core.js';
 import {mountMapServers} from './view_map_servers.js';
 import {claimTreeMasteryRewards} from './language_tree_rewards_core.js';
 import {configureLearningReport} from './learning_report.js';
@@ -70,7 +71,7 @@ import {BattleAIClient} from './battle_ai/client.js';
 import {observeBattle,haqiRulesAdapter} from './battle_ai/haqi_adapter_core.js';
 const battleAIClient=new BattleAIClient();
 const battleAdvisors=new WeakMap();
-function advisorFor(value){if(!battleAdvisors.has(value))battleAdvisors.set(value,{session:new BattleReviewSession(),muted:false});return battleAdvisors.get(value);}
+function advisorFor(value){if(!battleAdvisors.has(value))battleAdvisors.set(value,{session:new BattleReviewSession(),muted:!!value.monsterTemplates?.some(row=>row.openingLesson)});return battleAdvisors.get(value);}
 import {startCoopRun} from './adventure_coop_core.js';
 import {learningParams} from './language_adventure_core.js';
 import {mapDialogue} from './dialogue_mapping.js';
@@ -705,7 +706,7 @@ function setMountVisibility(hidden) {
     toast(save.mountHidden ? '坐骑已在场景中隐藏，战斗时仍会出现。' : '坐骑会跟随主角一起行动。');
     return true;
 }
-function performAction(value,access={}) {return safely(()=>{if(value.type==='pet-feed'&&save.petInstanceVersion===1){petScene.feed(value.petId);paintPanel();return true;}if(value.type==='magic-star-follow')return setMagicStarFollow(value.follow!==false);if(value.type==='mount-visibility')return setMountVisibility(value.hidden===true);const sceneFeedback=value.type==='fish'&&sceneFishing.active;const equipmentBefore=['equip','unequip','ride','dismount','upgrade','mount-gem','remove-gems'].includes(value.type)?equipmentSummary(save,assets.content):null;const before=rewardSnapshot(save);const request=value.type==='checkin'?{...value,now:Date.now()}:value;let result;if(['opening-journey','npc-purchase','checkin','speech-reward','magic-star-claim','choose-totem','use-totem-item','fish','stamina-potion'].includes(value.type)){const committed=persistReward(save,assets.content,request,access,roleStorage);save=committed.save;result=committed.result;storageWarning=false;}else{result=A.applyAction(save,assets.content,request,access);if(value.type==='accept-catalog')refreshWordGoals();persist();if(storageWarning)return false;}if(equipmentBefore)globalReward.show({title:'装备属性提升',lines:equipmentGainLines(equipmentBefore,equipmentSummary(save,assets.content)).map(row=>['{label} +{delta}{unit}',row])});if(!sceneFeedback)showRewards(before,value.type);if(['claim','claim-catalog'].includes(value.type))islandSocial.activity('quest');queueCloudSave();paintHud();paintPanel();const text={checkin:'领取成功，奖励已放入背包！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',ride:'已经骑上坐骑。属性将在下一场战斗中生效。',dismount:'已经下来了。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};if(!sceneFeedback)toast(result?.message||text[value.type]||'进度已保存');if(value.type==='fish')languageAdventure.emit('fish','camp-coast',{caught:!!result?.caught,itemId:result?.items?.[0]?.id});else if(['equip','unequip','ride','dismount'].includes(value.type))languageAdventure.emit('equipment','equipment',{itemId:value.itemId});else if(['buy','npc-purchase','claim','claim-catalog'].includes(value.type))languageAdventure.emit('item-gained','inventory');return result?.message?result:true;});}
+function performAction(value,access={}) {return safely(()=>{if(value.type==='pet-feed'&&save.petInstanceVersion===1){petScene.feed(value.petId);paintPanel();return true;}if(value.type==='magic-star-follow')return setMagicStarFollow(value.follow!==false);if(value.type==='mount-visibility')return setMountVisibility(value.hidden===true);const sceneFeedback=value.type==='fish'&&sceneFishing.active;const equipmentBefore=['equip','unequip','ride','dismount','upgrade','mount-gem','remove-gems'].includes(value.type)?equipmentSummary(save,assets.content):null;const before=rewardSnapshot(save);const request=value.type==='checkin'?{...value,now:Date.now()}:value;let result;if(['opening-journey','npc-purchase','checkin','speech-reward','magic-star-claim','choose-totem','use-totem-item','fish','stamina-potion'].includes(value.type)){const committed=persistReward(save,assets.content,request,access,roleStorage);save=committed.save;result=committed.result;storageWarning=false;}else{result=A.applyAction(save,assets.content,request,access);if(value.type==='accept-catalog')refreshWordGoals();persist();if(storageWarning)return false;}if(equipmentBefore)globalReward.show({title:'装备属性提升',lines:equipmentGainLines(equipmentBefore,equipmentSummary(save,assets.content)).slice(0,3).map(row=>['{label} +{delta}{unit}',row])});if(!sceneFeedback)showRewards(before,value.type);if(['claim','claim-catalog'].includes(value.type))islandSocial.activity('quest');queueCloudSave();paintHud();paintPanel();const text={checkin:'领取成功，奖励已放入背包！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',ride:'已经骑上坐骑。属性将在下一场战斗中生效。',dismount:'已经下来了。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};if(!sceneFeedback&&(value.type!=='opening-journey'||result?.message))toast(result?.message||text[value.type]||'进度已保存');if(value.type==='fish')languageAdventure.emit('fish','camp-coast',{caught:!!result?.caught,itemId:result?.items?.[0]?.id});else if(['equip','unequip','ride','dismount'].includes(value.type))languageAdventure.emit('equipment','equipment',{itemId:value.itemId});else if(['buy','npc-purchase','claim','claim-catalog'].includes(value.type))languageAdventure.emit('item-gained','inventory');return result?.message?result:true;});}
 let exchangingBeans=false;
 function maybeExchangeMagicBeans({announce=true}={}) {
     if(exchangingBeans||!assets||!save||!roleStore?.owner||save.pendingEncounter)return;
@@ -1249,7 +1250,7 @@ function paintOpeningJourney(){
             if(result===false)return false;
             if(value.step==='accept')trackOpeningJourney();
             if(value.step==='route'&&value.route==='battle')trackOpeningJourney();
-            if(value.step==='explain'){void drainOpeningPractice();close();paintHud();toast('莫尼听明白了！看看身边的咕噜噜，再邀请它一起走。');}
+            if(value.step==='explain'){void drainOpeningPractice();paintHud();}
             return result;
         }
     });
@@ -1513,6 +1514,8 @@ function playRound(decision,readyAnalysis=null) {
         readyAnalysis={candidates:[],evaluated:[],settings:battle.resolved.battleAI};
     }
     if(!readyAnalysis&&advisor.hintAnalysis?.stateId===haqiRulesAdapter.stateId(observeBattle(battle,battle.sides.near[0].id)))readyAnalysis=advisor.hintAnalysis;
+    // Beginner controls must respond immediately; optional advice is not a turn gate.
+    if(!readyAnalysis&&battle.monsterTemplates?.some(row=>row.openingLesson))readyAnalysis={unavailable:true,settings:battle.resolved.battleAI};
     if(!readyAnalysis){
         if(advisor.analyzing)return;
         const currentBattle=battle,observation=observeBattle(battle,battle.sides.near[0].id);
@@ -1526,7 +1529,7 @@ function playRound(decision,readyAnalysis=null) {
     }
     safely(()=>{
         const analysis=readyAnalysis;advisor.strategyMemory=analysis.memory||advisor.strategyMemory;
-        if(!battle.redMushroom)advisor.session.record(battle,analysis,decision);
+        if(!battle.redMushroom)advisor.session.record(battle,analysis.unavailable?null:analysis,decision);
         const chatRequest=battleChatRequests.get(battle);
         decision={...decision,aiVersion:1,...(chatRequest&&!battle.redMushroom?{chatRequest}:{})};
         const hp=Object.fromEntries(Object.values(battle.unitsById).map(u=>[u.id,u.hp])),aura=battle.aura?{...battle.aura}:null;
@@ -1562,9 +1565,13 @@ function tickAnimation(now) {
         if(e.type==='damage')a.hp[e.target]=Math.max(0,a.hp[e.target]-e.amount);
         if(e.type==='heal')a.hp[e.target]=Math.min(battle.unitsById[e.target].maxHp,Number.isFinite(e.hp)?e.hp:a.hp[e.target]+e.amount);
         if(e.type==='cast'&&e.wordCardId)playWordRecording(e.wordCardId);
+        const strategyCue=openingStrategyCue(battle,e);
+        if(strategyCue){const speech=V.battleSpeechController(battle);speech.clear(strategyCue.unitId);speech.say(strategyCue.unitId,strategyCue.text,{duration:2800});}
         const companionText=openingCompanionEvent(save,battle,e);
-        if(companionText)a.companionFeedback=companionText;
-        const hint=nodes.battle.querySelector('.opening-battle-purpose');if(hint&&companionText)hint.textContent=companionText;
+        if(companionText){
+            a.companionFeedback=companionText;
+            const speech=V.battleSpeechController(battle);speech.clear(e.caster);speech.say(e.caster,companionText,{duration:3500});
+        }
         const text=e.type==='speak'?'':companionText||V.eventLabel(e,battle,assets);if(text||e.type==='speak')$('cast-announcement').textContent=text;
     }
     a.statusFeedback=a.statusFeedback.filter(change=>now-change.start<700);

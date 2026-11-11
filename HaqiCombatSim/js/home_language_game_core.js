@@ -10,6 +10,15 @@ import {COLORS} from './home_core.js';
 import {canonicalWord,matchWordText} from './word_lexicon_core.js';
 import {wordReadingMatches} from './word_cards_core.js';
 
+// Keep the authored greeting; older stories can use their first complete sentence.
+// Teaching examples and full instructions remain in the expandable context.
+export function homeGameOpening(game){
+    if(game.opening?.trim())return game.opening.trim();
+    const intro=String(game.intro||'').trim();
+    const first=intro.match(/^[^。！？\n]+[。！？]/u)?.[0];
+    return first&&Array.from(first).length<=72?first:'我们一起玩吧。准备好了吗？';
+}
+
 export const HOME_LANGUAGE_MODES={talk:'和伙伴聊一聊',jump:'和伙伴跳一下',run:'和伙伴跑一小段',stand:'到故事角站好',walk:'和伙伴散步',door:'和伙伴检查家门',draw:'画一张小画',care:'照顾宠物',find:'找物游戏',arrange:'一起布置',turn:'轮流小游戏',write:'写作品标签',read:'读线索找物',listen:'听伙伴找物',count:'和伙伴数一数',place:'按线索布置'};
 export function homeGameExposesTarget(game,index,objects=[]){
  const exposed=new Set(matchWordText(index,[game.opening||'',game.intro||'',game.prompt||'',...objects.map(o=>o.label||'')].join('\n')).map(w=>w.id));

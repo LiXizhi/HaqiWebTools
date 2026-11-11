@@ -1,3 +1,4 @@
+import {partitionGuidedMessages} from './dialogue_turns_core.js';
 import {createDialogueReveal} from './dialogue_reveal.js';
 import {createBilingualDialogue,renderSpeechWords} from './view_bilingual_dialogue.js';
 import {DAILY_BUFF_NAMES} from './language_daily_buff_core.js';
@@ -18,7 +19,7 @@ export function createLearningChatView(cb){
     const room=el('section','camp-chat');room.setAttribute('role','dialog');room.setAttribute('aria-modal','true');room.setAttribute('aria-label','营地双语对话');
     const aside=el('aside','camp-chat-character'),portrait=el('img','camp-chat-portrait'),name=el('h2'),role=el('p','camp-chat-role'),context=el('p','camp-chat-context');
     const portraitFrame=el('div','camp-chat-portrait-frame');
-    portrait.alt='';portrait.onerror=()=>{portrait.hidden=true;};portraitFrame.append(portrait);aside.append(name,role,portraitFrame,context);
+    portrait.alt='';portrait.onerror=()=>{portrait.hidden=true;};const contextDetails=el('details','camp-chat-context-details');contextDetails.append(el('summary','','这段对话'),context);portraitFrame.append(portrait);aside.append(name,role,portraitFrame,contextDetails);
     room.addEventListener('pointerdown',()=>reveal.finish(),true);room.addEventListener('keydown',()=>reveal.finish(),true);
     const panel=el('div','camp-chat-panel'),header=el('header','camp-chat-header'),title=el('h3'),progress=el('span','camp-chat-progress');
     const chinese=button('隐藏释义',()=>cb.chinese(),'secondary small'),change=button('换个故事',()=>cb.next(),'secondary small');
@@ -41,7 +42,7 @@ export function createLearningChatView(cb){
         const natural=items.reduce((sum,n,i)=>sum+width(n)+(i?gap:0),0);
         const available=toolbar.clientWidth-floor-gap;
         let fit=items.length;
-        if(natural>available+0.5){
+        if(state?.mode!=='free'){fit=0;}else if(natural>available+0.5){
             headerMore.hidden=false;
             const reserve=width(headerMore)+gap;
             let used=0;fit=0;
@@ -70,7 +71,7 @@ export function createLearningChatView(cb){
     const send=button('发送',()=>{if(needsRecovery(state)){cb.retry?.();return;}const text=input.value.trim();if(text)cb.help(text);});form.onsubmit=e=>{e.preventDefault();send.click();};const inputBox=el('div','camp-chat-input-box');inputBox.append(input);form.append(inputBox,send);input.oninput=()=>cb.draft?.(input.value);
     function needsRecovery(s){return s?.mode==='free'&&s.retryable&&(!s.ready||s.giftReply||!s.draft?.trim());}
     const actions=el('div','camp-chat-actions');
-    const typing=button('打字回答',()=>{form.hidden=!form.hidden;if(!form.hidden)input.focus();},'secondary');
+    const typing=button('打字回答',()=>{form.hidden=!form.hidden;typing.textContent=tr(form.hidden?'打字回答':'收起输入');if(!form.hidden)input.focus();},'secondary');
     const microphone=createDialogueMicrophone(button,{isRecording:()=>!!state?.recording,start:cb.start,finish:cb.finish,cancel:cb.cancel}),mic=microphone.node;
     const {node:micProgress,ring,ringFill,ringLabel}=createDialogueMicProgress(mic);
     const hints=button('提示',()=>cb.hint(),'secondary');
@@ -92,11 +93,21 @@ export function createLearningChatView(cb){
     mic.title=tr('也可以按住说话，松开发送；滑出按钮则取消。');
     footer.append(form,actions,status);panel.append(header,loginNotice,log,footer);room.append(aside,panel);root.append(room);document.body.append(root);
     let portraitNode=null,state=null,trigger=null,key='',fingerprint='',inputTurn='',escArmedAt=0;
+    function alignGuidedQuestion(){
+        if(root.hidden||!state||state.mode==='free')return;
+        const rows=log.querySelectorAll(':scope > .camp-chat-message.is-npc');
+        const current=rows[rows.length-1];
+        if(!current||typeof current.getBoundingClientRect!=='function')return;
+        const box=log.getBoundingClientRect(),question=current.getBoundingClientRect();
+        log.scrollTop+=question.top-box.top;
+    }
+    const logObserver=typeof ResizeObserver==='function'&&typeof log.getBoundingClientRect==='function'?new ResizeObserver(alignGuidedQuestion):null;
+    logObserver?.observe(log);
     const clearPress=microphone.reset;
     root.onkeydown=e=>{
         e.stopPropagation();if(e.key==='Escape'){e.preventDefault();if(!headerMenu.hidden){setHeaderMenu(false,true);return;}if(!menu.hidden){setMore(false,true);return;}
             // Esc peels one layer at a time: the typing box first, then an unfinished multi-turn lesson asks twice.
-            if(state?.mode!=='free'&&!form.hidden&&!state?.done&&!typing.hidden){form.hidden=true;typing.focus();return;}
+            if(state?.mode!=='free'&&!form.hidden&&!state?.done&&!typing.hidden){form.hidden=true;typing.textContent=tr('打字回答');typing.focus();return;}
             if(state&&state.mode!=='free'&&!state.done&&state.index>0&&Date.now()-escArmedAt>3000){escArmedAt=Date.now();status.textContent=tr('再按一次 Esc 结束对话，本轮已答的句子不会保存。');return;}
             cb.close();}
         if(e.key==='Tab'){
@@ -126,13 +137,14 @@ export function createLearningChatView(cb){
     }
     return {
         root,
-        dispose(){this.close();toolbarObserver?.disconnect();root.remove();},
+        dispose(){this.close();toolbarObserver?.disconnect();logObserver?.disconnect();root.remove();},
         close(){revealedMessages.clear();revealedTurn='';inputTurn='';input.value='';escArmedAt=0;clearMappings();bilingual.close();setMore(false);setHeaderMenu(false);clearPress();root.hidden=true;portraitNode?.remove();portraitNode=null;state=null;key='';fingerprint='';form.hidden=true;if(trigger?.isConnected)trigger.focus();},
         render(s){
-            state=s;const fresh=root.hidden;if(fresh){trigger=document.activeElement;root.hidden=false;}
-            if(key!==s.story.id){setMore(false);key=s.story.id;name.textContent=tr(s.profile.name);role.textContent=tr(s.profile.role);context.textContent=tr(s.story.context);title.textContent=tr(s.story.title);
+            state=s;root.classList.toggle('is-guided',s.mode!=='free');room.classList.toggle('is-guided',s.mode!=='free');room.classList.toggle('has-character-art',!!(s.portrait||s.portraitNode));const fresh=root.hidden;if(fresh){trigger=document.activeElement;root.hidden=false;}
+            if(key!==s.story.id){contextDetails.open=s.mode==='free';setMore(false);key=s.story.id;name.textContent=tr(s.profile.name);role.textContent=tr(s.profile.role);context.textContent=tr(s.story.context);title.textContent=tr(s.story.title);
                 portraitNode?.remove();portraitNode=s.portraitNode||null;if(portraitNode){portraitNode.classList.add('camp-chat-character-art');portraitFrame.append(portraitNode);}portraitFrame.hidden=!s.portrait&&!portraitNode;portrait.hidden=!s.portrait||!!portraitNode;name.title=name.textContent;role.title=role.textContent;if(s.portrait)portrait.src=s.portrait;form.hidden=true;
             }
+            contextDetails.hidden=!!s.taskScene;if(s.mode==='free')aside.append(contextDetails);
             const free=s.mode==='free';more.hidden=!free;inputBox.classList.toggle('has-more',free);if(!free)setMore(false);
             room.setAttribute('aria-label',free?'跨文化自由对话':'营地双语对话');
             change.hidden=free||s.practiceOnly;freeTalk.hidden=free||s.done||!cb.free||s.practiceOnly;freeTalk.disabled=s.busy||s.recording;details.hidden=!free;gift.hidden=!free||!s.canGift;upgrade.hidden=!free||s.vip;
@@ -142,9 +154,17 @@ export function createLearningChatView(cb){
             chinese.textContent=tr(s.showChinese?'隐藏释义':'显示释义');chinese.setAttribute('aria-pressed',String(!s.showChinese));
             const print=JSON.stringify([s.messages,s.showChinese,s.locale,s.reward?.amount,s.reward?.currency,s.done,s.index,s.hintLevel,s.hintText,s.practice]);
             const logChanged=print!==fingerprint;
-            if(print!==fingerprint){fingerprint=print;clearMappings();log.replaceChildren(...s.messages.map(row=>message(row,s)));
+            if(print!==fingerprint){fingerprint=print;clearMappings();npcReveal=null;answerReveal=null;
+                const exchange=free?{history:[],current:s.messages}:partitionGuidedMessages(s.messages);
+                log.replaceChildren();
+                if(!free&&!s.taskScene)log.append(contextDetails);
+                if(exchange.history.length){
+                    const history=el('details','camp-chat-history'),summary=el('summary','','回看刚才的对话');
+                    history.append(summary,...exchange.history.map(row=>message(row,s)));log.append(history);
+                }
+                log.append(...exchange.current.map(row=>message(row,s)));
                 if(s.taskScene&&s.story.context)log.prepend(el('p','camp-chat-scene-context',s.story.context));
-                if(s.done&&!free&&!s.practiceOnly){
+                if(s.done&&!free&&!s.practiceOnly&&!s.taskScene){
                     const invitation=message({role:'npc',text:{en:'Would you like to keep chatting?','zh-CN':'还想继续聊聊吗？'}},s);
                     const choices=el('div','camp-chat-continue');
                     const yes=button('Yes',()=>cb.free?.(),'secondary small'),no=button('No',cb.close,'secondary small');
@@ -159,13 +179,15 @@ export function createLearningChatView(cb){
             hints.textContent=tr(s.progressiveHints&&s.hintLevel===1?'显示示范':s.hintLevel?'收起提示':'显示提示');hints.setAttribute('aria-expanded',String(!!s.hintLevel&&!s.done));
             // Wrong answers keep the typed text for editing; a new turn starts empty.
             const answerKey=JSON.stringify([s.story.id,s.index,s.done]);
-            if(!free&&answerKey!==inputTurn){if(inputTurn)input.value='';inputTurn=answerKey;}
+            if(!free&&answerKey!==inputTurn){if(inputTurn)input.value='';inputTurn=answerKey;
+                if(!s.done&&(!s.practiceOnly||s.taskScene)){form.hidden=false;input.placeholder=tr('试着回答；不会说就点提示');}
+            }
             if(!hint.hidden&&free){hint.replaceChildren(el('p','',s.hintText||'正在生成提示…'));}
             if(!hint.hidden&&!free&&(logChanged||fresh)){const turn=s.story.turns[s.index];hint.replaceChildren();
                 if(s.hintLevel)hint.append(el('p','',turn.hint));
                 const pattern=s.taskScene?turn.answer[s.locale]:s.locale==='en'?turn.pattern.replace(/\{\w+\}/g,'…'):turn.answer['zh-CN'],answer=turn.answer[s.locale];
-                const same=pattern.trim().replace(/\s+/g,' ')===answer.trim().replace(/\s+/g,' ');
-                if(s.hintLevel&&!same)hint.append(el('p','camp-chat-original',pattern));
+                const same=pattern.toLowerCase().replace(/[.,!?。！？，]/g,'').trim().replace(/\s+/g,' ')===answer.toLowerCase().replace(/[.,!?。！？，]/g,'').trim().replace(/\s+/g,' ');
+                if(s.hintLevel&&!same&&(!s.progressiveHints||s.hintLevel>=3))hint.append(el('p','camp-chat-original',pattern));
                 if(!s.progressiveHints||s.hintLevel>=3){
                     const sample=button('',()=>cb.speak(answer,'user'),'camp-chat-sample');
                     sample.setAttribute('aria-label',fill('朗读示范：{text}',{text:answer}).text);sample.title=tr('听示范');sample.disabled=s.busy||s.recording;
@@ -207,8 +229,10 @@ export function createLearningChatView(cb){
             if(s.done){form.hidden=false;input.placeholder=tr('想聊些什么？');}
             if(s.practiceOnly){room.setAttribute('aria-label','时光旅人双语对话');settings.hidden=true;if(s.done){form.hidden=true;actions.hidden=true;}}else settings.hidden=false;
             sceneNext.hidden=!s.taskScene||!s.done;
+            if(s.taskScene&&s.done)form.hidden=true;
             if(s.taskScene){room.setAttribute('aria-label',s.dialogueLabel||'岛屿任务对话');close.setAttribute('aria-label','关闭任务对话');settings.hidden=true;progress.textContent=s.done?'这一段已完成':s.sceneProgress;actions.hidden=false;typing.hidden=micProgress.hidden=hints.hidden=!!s.done;sceneNext.textContent=s.nextLabel||'继续冒险';}
             else {typing.hidden=false;micProgress.hidden=false;}
+              typing.textContent=tr(form.hidden?'打字回答':'收起输入');
             loginTitle.textContent=tr('登录 KeepWork，开启 AI 对话');loginText.textContent=tr('离线角色暂时无法使用大模型。登录后会自动将当前本地角色转为云端角色，保留冒险进度。');loginButton.textContent=tr('登录并转为云端角色');
             status.textContent=s.loginRequired?'':tr(s.status);
             const moreLabel=tr('更多聊天操作');headerMore.title=moreLabel;headerMore.setAttribute('aria-label',moreLabel);

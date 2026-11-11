@@ -14,7 +14,7 @@ test('a family gift keeps the child drawing and recipient on the original paper 
   const context=await browser.newContext({viewport:{width,height:900},hasTouch:width===390}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(`http://127.0.0.1:${server.address().port}/tests/fixtures/home-learning-world.html?drawing-story&unlearned`);await page.waitForFunction(()=>window.worldLearning?.ready);
   const state=()=>page.evaluate(()=>worldLearning.learning()),paper=()=>page.evaluate(async()=>(await worldLearning.schoolObjects()).paper);
-  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();};
+  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.locator('.rpg-dialogue .dialogue-default').click();};
   const answer=async text=>{await page.getByRole('textbox',{name:'输入回答'}).fill(text);await page.getByRole('button',{name:'回答',exact:true}).click();};
   await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();await page.getByRole('button',{name:'给妈妈的小画',exact:true}).click();await intro();await answer('Some paper.');
   const scene=await page.locator('.home-canvas').boundingBox();await page.mouse.click(scene.x+scene.width/2+100,scene.y+scene.height/2+50);await page.getByRole('button',{name:'继续故事',exact:true}).click();await intro();await answer('I can draw.');

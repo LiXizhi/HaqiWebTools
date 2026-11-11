@@ -50,7 +50,7 @@ import { renderShop } from './view_adventure_shop.js';
 // DOM rendering and input bindings. Actions go to the adventure_app controller.
 import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck,catalogStatSnapshot,teachingMode,beginnerTeaching } from './adventure_core.js';
 import {renderCompanionGuide} from './view_companion_guide.js';
-import {openingEnemyIntent} from './opening_training_core.js';
+import {openingEnemyIntentInfo} from './opening_training_core.js';
 import {catalogVisibleGoalRows,catalogQuestReady,catalogQuestsForNpc,catalogTalksForNpc,catalogQuestStatus,trackedQuestIds} from './adventure_catalog_quests_core.js';
 import * as U from './combat_unit_core.js';
 import { cardTargetKind } from './combat_cards_core.js';
@@ -474,7 +474,6 @@ function renderHudContents(root,model,cb) {
         const state=openingJourney(save),goal=openingJourneyTarget(save);
         tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow',`第一次搭档 · ${openingJourneyMilestones(save).filter(x=>x.complete).length}/3`)),
             el('h3','','帮咕噜噜找到朋友'),el('p','',goal.objective),
-            el('p','muted',`已完成 ${openingJourneyMilestones(save).filter(x=>x.complete).length}/3 · `+(state.phase==='showcase'?'和新搭档一起赢得挑战。':state.phase==='rescue'?'你帮它进来了，现在可以邀请它同行。':'咕噜噜被拦在营地外，它想找个朋友。')),
             button('前往',()=>cb.track('opening-journey'),'track-button'));
         if(state.phase==='challenge')tracker.append(button('和莫尼商量别的办法',()=>cb.track('opening-journey-plan'),'track-button'));
     }else if(save.zone==='earth'){
@@ -678,15 +677,14 @@ export function renderDialogue(root,model,dialog,cb) {
         const next=button(last?lastLabel:replyLabel(line),cb.next,'primary');
         if(last)next.title=tr(dialog.finishLabel);
         content.append(el('p','dialogue-text',line.text));
-        const quest=currentQuest(save,c);
+        const quest=Array.isArray(c.quests)&&save.quests?currentQuest(save,c):null;
         if(last&&quest&&[63002,63003].includes(quest.id)&&[quest.startNpc,quest.endNpc].includes(npc.id)){
             for(const reward of rewardsFor(save,c,quest)){
                 const item=c.items[reward.id];if(!item?.slot)continue;
                 const cards=[139,140,141].map(id=>c.cardItems[item.stats?.[id]]).filter(Boolean).map(key=>assets.dataset.cards[key]?.name||key);
                 content.append(el('div','opening-equipment-preview',art(assets,item.art,64,64),el('div','',
                     el('strong','',item.name),
-                    el('p','',cards.length?'穿上后可在战斗中使用：'+cards.join('、'):'穿上后提升角色属性。'),
-                    el('small','muted','完成任务后领取，可从奖励提示直接穿戴。'))));
+                    el('p','',cards.length?'穿上可用：'+cards.join('、'):'穿上后提升角色属性。'))));
             }
         }
         content.append(el('div','dialogue-bottom',el('span','muted',`${dialog.index+1} / ${dialog.lines.length}`),next));
@@ -766,10 +764,6 @@ function renderBattleContent(root,model,cb) {
     if(battle.redMushroom&&!model.localDuo&&!battle.finished){const timer=el('span','badge arena-countdown',animating?'施法中…':fill('选牌剩余 {seconds} 秒',{seconds:model.arenaCountdown??30}).text);timer.dataset.arenaCountdown='';root.append(timer);}
     const canvas=retainedCanvas||el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');bindBattleTargeting(canvas,cb.target);
     const blockedMessage=selected?castBlockedMessage(hero,battle.resolved.cards[selected.key],battle.resolved):'';
-    if(openingJourney(save)?.phase==='showcase'){
-        const feedback=!animating&&[...battle.events].reverse().map(e=>openingCompanionEvent(save,battle,e)).find(Boolean);
-        const hint=el('p','opening-battle-purpose',feedback||'先选牌，再选目标；咕噜噜会自动帮忙。');hint.setAttribute('role','status');top.append(hint);
-    }
     const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');setText(status,battle.finished?'对决结束':animating?'魔法正在生效…':blockedMessage);
     status.classList.toggle('cast-blocked',!!blockedMessage&&!animating&&!battle.finished);
     const hand=el('div','battle-hand'),bottom=el('div','battle-controls');
@@ -845,6 +839,10 @@ function renderBattleContent(root,model,cb) {
     const legalTargets=selected?validTargets(battle,hero,battle.resolved.cards[selected.key]):[];
     const targetEnemy=button('对敌方施法',()=>cb.target(legalTargets[0]?.id),'primary'),targetSelf=button(legalTargets[0]?.id===hero.id?'对自己施法':'对友方施法',()=>cb.target(legalTargets[0]?.id),'primary');
     const kind=selected&&cardTargetKind(battle.resolved.cards[selected.key]),canPlay=selected&&!discarded.includes(selected.seq)&&U.isAlive(hero);targetEnemy.hidden=legalTargets.length!==1||kind==='friendly'||kind==='self';targetSelf.hidden=legalTargets.length!==1||kind==='hostile'||kind==='all';targetEnemy.disabled=targetSelf.disabled=animating||battle.finished||!canPlay;
+    if(selected&&!animating&&!battle.finished&&!model.localDuo){
+        const instruction=el('p','battle-target-instruction',blockedMessage||(!legalTargets.length?'暂时没有可选目标。':kind==='friendly'||kind==='self'?'点自己或伙伴施法':'点亮着的对手出招'));
+        instruction.setAttribute('role','status');const chosen=hand.querySelector('.hand-card.selected');if(chosen)chosen.insertBefore(instruction,chosen.querySelector('.card-select'));root.classList.add('has-selected-card');
+    }
     const deckLeft=el('small','');
     setText(deckLeft,'卡包剩余 {count} 张',{count:U.deckRemaining(hero)-discarded.length});
     const chat=cb.battleChat?createBattleChat({el,button,onSend:cb.battleChat,disabled:animating||battle.finished||hero.hp<=0,tactical:!battle.redMushroom}):null;
@@ -893,8 +891,11 @@ function renderBattleContent(root,model,cb) {
     }
     if(model.localBattleShared){bottom.querySelector('.battle-actions')?.remove();runePager.remove();hand.hidden=true;}
     root.append(top,canvas,status,...(model.localBattleShared?[]:[hand]),bottom);
-    const intent=openingEnemyIntent(battle);
-    if(intent&&!animating&&!battle.finished&&!model.localBattlePane){const notice=el('p','opening-enemy-intent',intent);notice.setAttribute('role','status');top.append(notice);}
+    const intent=openingEnemyIntentInfo(battle);
+    if(intent&&!animating&&!battle.finished&&!model.localBattlePane){
+        const notice=el('aside','opening-enemy-intent intent-'+intent.kind,el('span','intent-symbol',intent.kind==='guard'?'◇':intent.kind==='charge'?'…':'!'),el('span','',el('small','','对手这一回合'),el('strong','',intent.label)));
+        notice.setAttribute('role','status');notice.setAttribute('aria-label','对手这一回合：'+intent.label);notice.title=intent.detail;top.append(notice);
+    }
     renderCompanionGuide(root,model,cb,{battle:true});
     attachStatusTooltips(root,canvas);
     // The centred face passes left clicks to the arena; resolve its right click by bounds.
@@ -916,6 +917,17 @@ function renderBattleContent(root,model,cb) {
         const footer=bottom.offsetHeight+(parseFloat(getComputedStyle(bottom).bottom)||0)+12;
         if(!selected)hand.style.bottom=`${footer}px`;
         status.style.top=`${top.offsetTop+top.offsetHeight+8}px`;
+        // Keep the companion launcher above the real hand, including wrapped controls.
+        const guide=root.querySelector('.companion-guide.in-battle');
+        if(guide&&typeof guide.getBoundingClientRect==='function'){
+            guide.style.bottom='';
+            if(!selected&&!animating&&!battle.finished){
+                const g=guide.getBoundingClientRect(),h=hand.getBoundingClientRect(),r=root.getBoundingClientRect();
+                if(g.right>h.left&&g.left<h.right&&g.bottom>h.top-8)
+                    guide.style.bottom=`${Math.max(0,Math.min(r.height-g.height-8,r.bottom-h.top+8))}px`;
+            }
+        }
+
         // The arena fills the viewport. Cards and HUD float above it without resizing it.
     };
     root.battleLayoutObserver=new ResizeObserver(layout);

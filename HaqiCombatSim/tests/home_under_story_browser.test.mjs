@@ -16,7 +16,7 @@ test('under-table story uses a distinct ground placement and persists the origin
   await page.goto(`http://127.0.0.1:${server.address().port}/tests/fixtures/home-learning-world.html?table&unlearned`);await page.waitForFunction(()=>window.worldLearning?.ready);
   const state=()=>page.evaluate(()=>worldLearning.learning());
   const open=async()=>{await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();await page.getByRole('button',{name:'桌子下面的书',exact:true}).click();};
-  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();};
+  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.locator('.rpg-dialogue .dialogue-default').click();};
   const answer=async text=>{await page.getByRole('textbox',{name:'输入回答'}).fill(text);await page.getByRole('button',{name:'回答',exact:true}).click();};
   const canvas=await page.locator('.home-canvas').boundingBox(),point=(x,y)=>({x:canvas.x+canvas.width/2+x*40,y:canvas.y+canvas.height/2+y*40}),pick=async(x,y)=>{const p=point(x,y);await page.mouse.click(p.x,p.y);};
   const drag=async(a,b)=>{await page.mouse.move(a.x,a.y);await page.mouse.down();await page.mouse.move(b.x,b.y,{steps:12});await page.mouse.up();};

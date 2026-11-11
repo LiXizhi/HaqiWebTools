@@ -32,9 +32,9 @@
     "../../config/Aries/WorldData/FlamingPhoenixIsland.NPC.xml": "20ab9f3cdd738a744ffd50e05b6e87db468a9b472a2b737b620c1399a5ed300b",
     "../../config/Aries/WorldData/FrostRoarIsland.NPC.xml": "aeca7f1eb612ee2e5ad773ea3f564852b62f1622f38fbb77cf4c1963e08bd12d",
     "../../config/Aries/WorldData/NewUserIsland.NPC.xml": "58a26a06131b1cd15a84cf4f5b7d9ff5b6d6cabb5b27cc71d3630471bd3d6777",
-    "config/opening-dialogue.json": "0ca1b08b8b4d54e4e2777156b4899ffc6af7b639d61a37b2a3c8068f4dede9f0",
+    "config/opening-dialogue.json": "e785d40a968ad1e85351020fbfdc397329376e62ccf699cb655692cd8021cb92",
     "data/adventure/camp-conversations.json": "e1c745bd86af42a1eb0a4a216eec7df63611d54fbccf44334a0b868f7d652658",
-    "data/adventure/chapter.json": "f7437300d9098cf081902d0d00f3fa72a8fb60e48061fabbdf21060fdc1031ab",
+    "data/adventure/chapter.json": "ca8638c77d43c0ddd5cbea1be2af161f56be04e131f9c905212a5b24c62b0332",
     "data/adventure/curriculum/english-home-practice.json": "14dc582838bfa3e761d21443f0a8292e9c6ad57ec7d837d6ff7bb6e52b23beab",
     "data/adventure/dungeon-journeys.json": "5bc161e28c518580864c9c33dafc5e9b7667fdbcb3b817a8b66b55acfa7e0662",
     "data/adventure/earth/time-scroll/common.json": "ac98afb4d910c94fd7b25553e5efb74fddc961c6519bcaffbee220727b59a3cf",
@@ -48,7 +48,7 @@
     "data/adventure/npc-art.json": "cb5eea54e918411dfae536c0a4ac1d758632f1bcff0a148c30a616d3329b3244",
     "data/adventure/npc-catalog.json": "5301f9cc9973203e55735ab851b45d1cc8ecd5e5d0ed0a7947d0e8516b24430a",
     "data/adventure/quest-catalog.json": "784a94f3714961f7dd796312de39e8912775e4226942e37e62b8874f1600bd8b",
-    "data/adventure/quest-journal.json": "c02e556424126f11220f1b1ec7ecfbc2365cf65af72ae15946df8a58326ed21e",
+    "data/adventure/quest-journal.json": "f4453b1dc94f597d114770c5beced8c53cb46fde2955e6c528186c8870bbffc4",
     "data/adventure/quest-runtime.json": "44fcf7d152dd63fc54f51887a6e2720e3a76ce6367e371f922241e2dc28db8b8",
     "js/adventure_catalog_quests_core.js": "8103f8188a426550c604c3cc4e3c45f38b868761c4535e5bbc001bc9d37b6c05",
     "js/adventure_core.js": "3d75cf93c5b16231be71ce94ade308c7bf6077cd93c2c089eab5cf453acfd19b",
@@ -1903,7 +1903,7 @@
         {
           "id": "S0006-L01",
           "key": "description",
-          "text": "击败生命侦查兵，再去找古奇。",
+          "text": "击败生命侦查兵，再去找莫纳。",
           "speaker": "任务",
           "phase": "目标",
           "source": {
@@ -1924,7 +1924,7 @@
         {
           "id": "S0006-L02",
           "key": "startDialog:0:text",
-          "text": "接下来是精英生命侦查兵，试试你的实力吧！获胜后去找古奇，为出行准备装备。",
+          "text": "接下来是精英生命侦查兵，试试你的实力吧！获胜后去找莫纳，为出行准备装备。",
           "speaker": "青龙",
           "phase": "接取",
           "source": {
@@ -1987,7 +1987,7 @@
         }
       ],
       "questId": 63005,
-      "objective": "击败生命侦查兵，再去找古奇。",
+      "objective": "击败生命侦查兵，再去找莫纳。",
       "classification": "NPC支线任务",
       "level": 0,
       "rewardSource": {

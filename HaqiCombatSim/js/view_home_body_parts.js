@@ -13,7 +13,8 @@ export function openHomeBodyParts(parent,{diagram,assetMode='cdn',group='face',o
  const button=(text,fn)=>{const b=el('button','secondary',text);b.type='button';b.onclick=fn;return b;};
  const svgNode=(name,attrs)=>{const node=document.createElementNS('http://www.w3.org/2000/svg',name);for(const [k,v] of Object.entries(attrs))node.setAttribute(k,String(v));return node;};
  const pins={face:[[.12,.08],[.10,.43],[.10,.86],[.89,.53],[.89,.88]],body:[[.12,.35],[.10,.64],[.12,.80],[.82,.92]]};
- const source=new URL(assetMode==='local'?diagram.image.local:diagram.image.cdn,document.baseURI).href;
+ // Local assets belong to the app root, including nested preview pages.
+ const source=assetMode==='local'?new URL('../'+diagram.image.local,import.meta.url).href:new URL(diagram.image.cdn,document.baseURI).href;
  function render(){
   if(dead)return;frame.replaceChildren();
   const [x,y,w,h]=diagram.groups[currentGroup].viewBox,ratio=w*diagram.image.width/(h*diagram.image.height);

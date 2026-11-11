@@ -29,3 +29,8 @@ test('opening dialogue stays compact and preserves speakers and completion actio
     }
     assert.equal(count,37);
 });
+
+test('life training dialogue points to the actual reward NPC name',()=>{
+ const quest=chapter.quests.find(q=>q.id===63005),name=chapter.npcs[quest.endNpc].name;
+ assert.ok(quest.description.includes(name));assert.ok(quest.startDialog.some(line=>line.text.includes(name)));
+});

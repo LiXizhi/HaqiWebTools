@@ -60,9 +60,9 @@ export function openIslandLanguageCourse({getState,courseId,interaction,actor,po
         });
         if(!valid())return;if(!read.persisted)throw Error('本地任务进度暂时无法保存，请关闭后重试');
         const position=coursePosition(read.state,course);step=course.steps[position];
-        session.progressiveHints=!!step.expressionHint;
-        if(session.progressiveHints)session.hintLevel=0;
-        session.story={id:course.id+':'+step.id,title:course.title,context:'',turns:[{id:step.id,question:localized(step.prompt,step.promptGloss),answer:localized(step.answer,step.answerGloss),pattern:step.answer,hint:step.expressionHint||''}]};
+        // Ask first. Meaning and the full model answer remain available as deliberate hints.
+        session.progressiveHints=true;session.hintLevel=0;
+        session.story={id:course.id+':'+step.id,title:course.title,context:'',turns:[{id:step.id,question:localized(step.prompt,step.promptGloss),answer:localized(step.answer,step.answerGloss),pattern:step.answer,hint:step.expressionHint||step.answerGloss||''}]};
         if(step.speaker==='player'){session.profile={name:'我',role:'场景观察'};session.portraitNode=null;}
         session.messages=[{role:step.speaker==='player'?'user':'npc',text:localized(step.prompt,step.promptGloss)}];session.sceneProgress=`故事 ${position+1} / ${course.steps.length}`;session.status=step.hint;
         // Returning players continue at the practice line instead of rereading the story intro.

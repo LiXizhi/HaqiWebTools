@@ -14,7 +14,7 @@ test('length comparison uses rendered pencil and pen lengths and preserves pract
  try{for(const width of [1280,390])for(const word of ['long','short'])for(const item of ['pencil','pen']){
   const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce'}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   const entry=word;
-  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();};
+  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.locator('.rpg-dialogue .dialogue-default').click();};
   await page.goto(url+'/tests/fixtures/home-learning-world.html?compare='+word+'&length-item='+item);await page.waitForFunction(()=>window.worldLearning?.ready);
   await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();await page.getByRole('button',{name:'找物游戏',exact:true}).click();await intro();
   const input=page.getByRole('textbox',{name:'输入回答'});await input.fill('The '+word+' '+item+'.');await page.getByRole('button',{name:'回答',exact:true}).click();

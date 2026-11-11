@@ -14,7 +14,7 @@ export function createLanguagePracticeView({title,close,submit,start,finish,canc
     let mic=null,input=null,send=null;
     return {button,body,
         storyChoice(title,description,choose){const row=el('div'),detail=el('p',description);row.style.marginBottom='12px';detail.style.cssText='margin:4px 0;color:var(--muted);font-size:12px';row.append(button(title,choose),detail);return row;},
-        storyContext(text){const details=el('details'),summary=el('summary','故事与玩法提示');details.open=true;details.append(summary,el('p',text));body.prepend(details);},
+        storyContext(text){const details=el('details'),summary=el('summary','故事与玩法提示');details.open=false;details.append(summary,el('p',text));body.prepend(details);},
         visible(value){root.style.display=value?'':'none';},
         list(rows){mic?.reset();mic=null;input=null;send=null;body.replaceChildren(...rows);},
         storyMenu(stories,modes){

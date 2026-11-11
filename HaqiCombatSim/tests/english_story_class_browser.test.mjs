@@ -23,13 +23,13 @@ test('story class uses six real NPC conversations without advancing the earlier 
   assert.equal(await page.locator('.journal-detail h3').textContent(),'石伯的故事课','late catalogue loading preserves the selected story');
   await page.getByRole('button',{name:'前往交谈',exact:true}).click();
   for(let i=0;i<6;i++){
-   if(i)await tracker.getByRole('button',{name:'前往',exact:true}).click();
+   if(i)await tracker.getByRole('button',{name:/^(前往|继续练习)$/,exact:true}).click();
    await page.locator('.rpg-dialogue').waitFor();
    assert.equal(await page.evaluate(()=>languageTest.current.courseId),'en-hanzi-02',`course at width ${width}, step ${i+1}`);
    assert.equal(await page.getByRole('textbox',{name:'文字回答',exact:true}).count(),0);
    if(i===0)await page.screenshot({path:path.join(root,`tmp/story-class-intro-${width}.png`)});
    for(let n=0;n<10&&await page.locator('.rpg-dialogue').count();n++)await page.locator('.rpg-dialogue .dialogue-default').click();
-   await page.getByRole('button',{name:'打字回答',exact:true}).click();
+   if(!await page.getByRole('textbox',{name:'文字回答',exact:true}).isVisible())await page.getByRole('button',{name:'打字回答',exact:true}).click();
    if(i===3)await page.screenshot({path:path.join(root,`tmp/story-class-writing-${width}.png`)});
    await page.getByRole('textbox',{name:'文字回答',exact:true}).fill(await page.evaluate(()=>languageTest.answer()));
    await page.getByRole('button',{name:'发送',exact:true}).click();

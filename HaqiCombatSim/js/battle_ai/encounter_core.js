@@ -20,6 +20,7 @@ export function runHaqiEncounter(dataset,scenario,seed,{policy='reasoning_advanc
         if(pve){const pick=policies[arena.sides.near[0].id].pick(arena,arena.sides.near[0]);if(session)session.record(arena,session.analyze(arena,hero),pick);playPveRound(arena,{...pick,aiVersion:1});}
         else {const picks=coordinateTeam(arena,policies);if(session&&arena.currentSide==='near')session.record(arena,session.analyze(arena,hero),picks[hero.id]||{pass:true});playTurn(arena,picks);}
     }
-    return {winner:arena.winner,turns:arena.turn,unsupported:arena.unsupported,review:session?.review(arena),
+    // The engine uses null for a draw; the designer/evaluation API uses an explicit label.
+    return {winner:arena.winner??'draw',turns:arena.turn,unsupported:arena.unsupported,review:session?.review(arena),
         remainingHp:Object.fromEntries(Object.values(arena.unitsById).map(u=>[u.id,u.hp]))};
 }

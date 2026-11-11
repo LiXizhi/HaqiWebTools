@@ -15,7 +15,7 @@ test('action listening requires hearing, choosing and real movement, with a sepa
   await page.goto(`http://127.0.0.1:${server.address().port}/tests/fixtures/home-learning-world.html?walking-story&unlearned&action-listening`);await page.waitForFunction(()=>window.worldLearning?.ready);
   const state=()=>page.evaluate(()=>worldLearning.learning()),choice={walk:'走过去',run:'跑过去',stand:'站好',jump:'跳一下'};
   await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();await page.getByRole('button',{name:`小演员口令卡${i+1}`,exact:true}).click();
-  await page.locator('.rpg-dialogue').waitFor();for(let n=0;n<8&&await page.locator('.rpg-dialogue').count();n++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();
+  await page.locator('.rpg-dialogue').waitFor();for(let n=0;n<8&&await page.locator('.rpg-dialogue').count();n++)await page.locator('.rpg-dialogue .dialogue-default').click();
   assert.equal(await page.getByRole('textbox',{name:'输入回答'}).count(),0);
   await page.getByRole('button',{name:choice[mode],exact:true}).click();assert.equal((await state()).words[mode].comprehension,undefined);
   if(mode==='run')await page.evaluate(()=>worldLearning.failSpeech=true);

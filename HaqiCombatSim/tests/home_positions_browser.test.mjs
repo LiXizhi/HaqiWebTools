@@ -18,8 +18,9 @@ test('position requests require a correctly saved real drag and preserve the chi
   await page.route('**/data/adventure/curriculum/english-home-practice.json',async route=>{const response=await route.fetch(),data=await response.json();data.games=data.games.filter(g=>g.mode!=='place'||g.arcOnly||g.position.kind==='left');await route.fulfill({response,json:data});});
   await page.goto(url+'/tests/fixtures/home-learning-world.html?place');await page.waitForFunction(()=>window.worldLearning?.ready);
   await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();await page.getByRole('button',{name:'按线索布置',exact:true}).click();
-  await page.locator('.rpg-dialogue').waitFor();assert.match(await page.locator('.dialogue-text').textContent(),/left/);
-  for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();
+  await page.locator('.rpg-dialogue').waitFor();assert.match(await page.locator('.dialogue-text').textContent(),/我想坐一会儿/);
+  for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.locator('.rpg-dialogue .dialogue-default').click();
+  await page.getByText('故事与玩法提示',{exact:true}).click();assert.match(await page.locator('.language-practice-modal details').textContent(),/left/);await page.getByText('故事与玩法提示',{exact:true}).click();
   const input=page.getByRole('textbox',{name:'输入回答'});await input.fill('Right.');await page.getByRole('button',{name:'回答',exact:true}).click();await page.getByRole('status').filter({hasText:'请完成本轮表达'}).waitFor();
   await input.fill('Left.');await page.getByRole('button',{name:'回答',exact:true}).click();await page.getByRole('button',{name:'开始摆放',exact:true}).click();
   assert.equal((await page.evaluate(()=>worldLearning.learning())).words.left.practiceCount||0,0);

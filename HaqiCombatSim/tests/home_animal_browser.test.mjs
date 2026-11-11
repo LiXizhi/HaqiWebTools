@@ -14,7 +14,7 @@ test('eight animal stories preserve the verified companion across real activitie
  try{for(const width of [1280,390])for(const animal of (process.env.HAQI_ANIMAL?process.env.HAQI_ANIMAL.split(','):['cat','dog','bird','frog','cow','sheep','rabbit','mouse'])){
   const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce'}),page=await context.newPage(),errors=[];page.setDefaultTimeout(15000);page.on('pageerror',e=>errors.push(e.message)); console.log('animal case',animal,width);
   await page.goto(url+'/tests/fixtures/home-learning-world.html?animal='+animal);await page.waitForFunction(()=>window.worldLearning?.ready);
-  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();};
+  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.locator('.rpg-dialogue .dialogue-default').click();};
   const openStory=async()=>{await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();await page.getByRole('button',{name:({cat:'和猫伙伴的一天',dog:'和狗伙伴的一天',bird:'小鸟的安静书角',frog:'青蛙的慢慢玩约定',cow:'奶牛的小小休息站',sheep:'小羊的安静约定',rabbit:'兔子的再玩一会儿',mouse:'小鼠也有大故事'})[animal],exact:true}).click();};
   const answer=async(text)=>{await page.getByRole('textbox',{name:'输入回答'}).fill(text);await page.getByRole('button',{name:'回答',exact:true}).click();};
   const progress=async()=>Object.values((await page.evaluate(()=>worldLearning.learning())).homeStories||{})[0];

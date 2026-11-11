@@ -63,7 +63,7 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],autoRead
     box.classList.add('is-speaking');
     if(lines.length){
         ready=true;box.classList.remove('is-speaking');box.classList.add('dialogue-learning');text.replaceChildren();
-        const idleHint='先继续冒险；需要时可展开词语对应。';
+        const idleHint='';
         const makeButton=(label,run,cls)=>{const node=document.createElement('button');node.type='button';node.className=cls;node.textContent=label;node.onclick=run;return node;};
         const bilingual=createBilingualDialogue({button:makeButton,mapWords});
         const read=async()=>{

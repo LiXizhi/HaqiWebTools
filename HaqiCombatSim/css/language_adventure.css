@@ -121,3 +121,79 @@
 .story-speech-matched{background:#c5e6a8;color:#244f3b;border-radius:3px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 
 .camp-chat-prompt[hidden]{display:none}
+
+.camp-chat-history{margin:0 0 16px;border-bottom:1px solid #244f3b25;padding-bottom:8px;}
+.camp-chat-history>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;color:#526b50;font-size:14px;text-decoration:underline;text-underline-offset:3px;}
+.camp-chat-history[open]>summary{margin-bottom:12px;}
+.camp-chat-bubble .dialogue-learning-toggle,.camp-chat-hint .dialogue-learning-toggle{min-height:44px;font-size:14px;margin-top:8px;}
+
+/* A scene exchange stays close to the world, with the NPC beside the current line. */
+.camp-chat-overlay.is-guided{align-items:end;padding-bottom:max(20px,env(safe-area-inset-bottom));background:#10271c30;backdrop-filter:none;}
+.camp-chat.is-guided{width:min(920px,100%);height:min(540px,86dvh);grid-template-columns:210px minmax(0,1fr);}
+.camp-chat.is-guided:not(.has-character-art){grid-template-columns:140px minmax(0,1fr);}
+.camp-chat.is-guided .camp-chat-character{padding:20px 12px;}
+.camp-chat.is-guided .camp-chat-character h2{font-size:21px;}
+.camp-chat.is-guided .camp-chat-character-art{max-height:230px;width:auto!important;height:auto!important;}
+.camp-chat.is-guided .camp-chat-portrait{max-height:230px;margin:12px 0;}
+.camp-chat.is-guided .camp-chat-header{padding:12px 20px 8px;gap:4px;}
+.camp-chat.is-guided .camp-chat-header h3{font-size:16px;min-height:30px;}
+.camp-chat.is-guided .camp-chat-log{padding:16px 20px;}
+.camp-chat.is-guided .camp-chat-message{margin-bottom:12px;}
+.camp-chat.is-guided .camp-chat-translation{font-size:15px;}
+.camp-chat.is-guided .camp-chat-actions .story-mic-progress{transform:scale(.85);margin:-7px;}
+.forest-ui .camp-chat.is-guided{border:0;background:#f6edcf;isolation:isolate;padding:20px;box-sizing:border-box;}
+.forest-ui .camp-chat.is-guided::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;border:42px solid transparent;border-image:var(--ui-paper) var(--ui-paper-slice) fill / 42px / 0 stretch;}
+.forest-ui .camp-chat.is-guided :is(.camp-chat-character,.camp-chat-header,.camp-chat-footer){background:transparent;}
+.forest-ui .camp-chat.is-guided .camp-chat-character{color:#385733;}
+.forest-ui .camp-chat.is-guided .camp-chat-role{color:#786544;}
+.forest-ui .camp-chat.is-guided .camp-chat-character::before{display:none;}
+@media(max-width:700px){
+ .camp-chat-overlay.is-guided{padding:6px 6px max(8px,env(safe-area-inset-bottom));}
+ .camp-chat.is-guided,.camp-chat.is-guided:not(.has-character-art){height:min(660px,94dvh);grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);}
+ .camp-chat.is-guided .camp-chat-character{padding:6px 50px 6px 8px;min-height:64px;}
+ .camp-chat.is-guided .camp-chat-character h2{font-size:18px;}
+ .camp-chat.is-guided .camp-chat-portrait-frame .camp-chat-character-art{width:76px!important;height:94px!important;}
+ .camp-chat.is-guided .camp-chat-header,.camp-chat.is-guided .camp-chat-log{padding:10px;}
+ .forest-ui .camp-chat.is-guided{padding:16px;}
+}
+@media(max-height:550px){
+ .camp-chat.is-guided,.camp-chat.is-guided:not(.has-character-art){height:94dvh;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);}
+ .camp-chat.is-guided .camp-chat-character{display:none;}
+ .camp-chat.is-guided .camp-chat-header{padding:4px 12px;}
+ .camp-chat.is-guided .camp-chat-header h3{min-height:24px;}
+ .camp-chat.is-guided .camp-chat-log{padding:8px 12px;}
+}
+
+.forest-ui .camp-chat.is-guided .camp-chat-context{color:#786544;font-size:13px;line-height:1.6;}
+
+.camp-chat-context-details{font-size:13px;max-width:100%;color:inherit;}
+.camp-chat-context-details summary{cursor:pointer;padding:8px;min-height:36px;box-sizing:border-box;}
+.camp-chat-context-details .camp-chat-context{margin:4px 0;}
+
+/* Optional context stays reachable in the scrollable conversation on narrow screens. */
+.camp-chat.is-guided .camp-chat-log .camp-chat-context{display:block;max-width:none;}
+.camp-chat.is-guided .camp-chat-log .camp-chat-context-details{margin-bottom:10px;color:#786544;}
+
+@media(max-height:550px){
+ .camp-chat.is-guided .camp-chat-panel{overflow:hidden;}
+ .camp-chat.is-guided .camp-chat-log{flex:1 1 0;min-height:0;overflow-y:auto;}
+ .camp-chat.is-guided .camp-chat-footer{padding:4px 12px;}
+ .camp-chat.is-guided .camp-chat-input{margin-bottom:4px;}
+ .camp-chat.is-guided .camp-chat-status:empty{display:none;}
+ .camp-chat.is-guided.has-character-art .camp-chat-character{display:flex;position:absolute;top:20px;left:24px;width:52px;height:64px;padding:0;z-index:2;background:none;}
+ .camp-chat.is-guided.has-character-art .camp-chat-character :is(h2,.camp-chat-role){display:none;}
+ .camp-chat.is-guided.has-character-art .camp-chat-portrait-frame .camp-chat-character-art{width:48px!important;height:60px!important;}
+ .camp-chat.is-guided.has-character-art .camp-chat-portrait{width:48px;height:60px;margin:0;}
+ .camp-chat.is-guided.has-character-art .camp-chat-header{padding-left:66px;}
+}
+
+@media(max-height:550px) and (min-width:600px){
+ .camp-chat.is-guided .camp-chat-footer{display:grid;grid-template-columns:minmax(150px,1fr) auto;gap:4px 12px;align-items:center;}
+ .camp-chat.is-guided .camp-chat-input{margin:0;}
+ .camp-chat.is-guided .camp-chat-actions{gap:8px;}
+ .camp-chat.is-guided .camp-chat-status{grid-column:1/-1;margin:0;min-height:0;}
+}
+
+@media(max-height:550px){
+ .camp-chat.is-guided .story-ring-label{bottom:0;}
+}

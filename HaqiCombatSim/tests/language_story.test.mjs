@@ -37,7 +37,7 @@ test('wrong typed answers never advance; three voice results complete with share
     for(const t of story.turns)await h.say(t.answer.en);
     assert.equal(h.ui.done,true);assert.equal(h.claims,1);assert.equal(h.state.save.inventory[100],10);
     const answers=h.ui.messages.filter(row=>row.feedback);assert.equal(answers.length,3);assert.equal(answers[0].feedback,'答对了');assert.equal(answers[2].feedback,'答对了 · +10 奇豆');
-    const progress=h.state.save.languageAdventure.stories.en[story.id];assert.equal(progress.completed,1);assert.equal(progress.hintsUsed,true);validateLearningSave(h.state.save);
+    const progress=h.state.save.languageAdventure.stories.en[story.id];assert.equal(progress.completed,1);assert.equal(progress.hintsUsed,false);validateLearningSave(h.state.save);
     await h.cb.finish();assert.equal(h.claims,1);h.chat.close();
 });
 test('AI accepts correct meaning without prescribed construction, but requires real evidence',()=>{
@@ -225,4 +225,22 @@ test('partial ASR highlights matched words without advancing or awarding, stale 
  partial('unrelated');assert.equal(h.ui.practice.feedback.accuracy,0);
  await h.cb.cancel();const previous=h.ui.practice.feedback;partial(story.turns[0].answer.en);assert.equal(h.ui.practice.feedback,previous);
  h.chat.close();
+});
+
+test('camp hints are requested gradually and preserve assistance evidence across later turns',async()=>{
+ const h=harness();await flush();assert.equal(h.ui.hintLevel,0);assert.equal(h.ui.hintsUsed,false);
+ h.cb.hint();assert.equal(h.ui.hintLevel,1);h.cb.hint();assert.equal(h.ui.hintLevel,3);h.cb.hint();assert.equal(h.ui.hintLevel,0);
+ for(const t of story.turns){await h.cb.help(t.answer.en);if(!h.ui.done)assert.equal(h.ui.hintLevel,0);}
+ assert.equal(h.claims,1);assert.equal(h.state.save.languageAdventure.stories.en[story.id].hintsUsed,true);
+});
+
+test('authored alternative answers pass once and keep the actual player words as evidence',async()=>{
+ const h=harness();await flush();
+ for(const t of story.turns){const alternative=t.variants.en[0];await h.cb.help(alternative);}
+ assert.equal(h.ui.done,true);assert.equal(h.claims,1);
+ assert.deepEqual(h.ui.proof.map(p=>p.quote),story.turns.map(t=>t.variants.en[0]));
+});
+test('an unrelated answer gives useful feedback without granting progress',async()=>{
+ const h=harness();await flush();await h.cb.help('volcano spaceship');
+ assert.equal(h.ui.index,0);assert.equal(h.claims,0);assert.match(h.ui.status,/提示/);
 });

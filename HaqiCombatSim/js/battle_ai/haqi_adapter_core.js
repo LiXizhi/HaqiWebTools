@@ -154,6 +154,10 @@ export const haqiRulesAdapter={
     stateId:observation=>{
         // Earth geography/visual budgets must never change combat decision seeds.
         const {earth,...resolved}=observation.resolved;
+        // Encounter setup is already reflected in public units. New training-only
+        // budgets must not reseed unrelated live AI choices.
+        resolved.adventure={...resolved.adventure};
+        for(const key of ['openingStormPartyHpV2','openingFirePartyHpV3','openingFireSoloHpV3','openingStormPartyHpV3','openingLifePartyHpV3','openingLifeSoloHpV3'])delete resolved.adventure[key];
         return String(hashSeed(JSON.stringify({...observation,resolved})));
     },
     coverage:observation=>U.selectableCards(observation.units.find(u=>u.id===observation.unitId)).map(h=>observation.resolved.cards[h.key]).filter(Boolean).filter(c=>!isSupportedType(c.type)).map(c=>({key:c.key,type:c.type,status:'unsupported'})),

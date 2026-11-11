@@ -17,7 +17,7 @@ test('listen requests require expression, a request and the correct real object'
   const state=()=>page.evaluate(()=>worldLearning.learning());
   await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();await page.getByRole('button',{name:'先听清，再找道具',exact:true}).click();
   for(const [i,word] of ['book','ball','cup'].entries()){
-   await page.locator('.rpg-dialogue').waitFor();for(let n=0;n<8&&await page.locator('.rpg-dialogue').count();n++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();
+   await page.locator('.rpg-dialogue').waitFor();for(let n=0;n<8&&await page.locator('.rpg-dialogue').count();n++)await page.locator('.rpg-dialogue .dialogue-default').click();
    const canvas=await page.locator('.home-canvas').boundingBox();
    const click=async w=>{const [x,y]={book:[2.5,1.25],ball:[.5,1.25],cup:[3.5,.25]}[w];await page.mouse.click(canvas.x+canvas.width/2+x*40,canvas.y+canvas.height/2+y*40);};
    const count=async()=>((await state()).words.listen?.practiceCount||0);

@@ -17,12 +17,12 @@ test('old-book-new-story conversation enters through journal, keeps active track
   await page.getByText('旧书里的新故事',{exact:true}).click();
   await page.getByRole('button',{name:'前往交谈',exact:true}).click();
   for(let i=0;i<6;i++){
-   if(i)await tracker.getByRole('button',{name:'前往',exact:true}).click();
+   if(i)await tracker.getByRole('button',{name:/^(前往|继续练习)$/,exact:true}).click();
    await page.locator('.rpg-dialogue').waitFor();
    assert.equal(await page.getByRole('textbox',{name:'文字回答',exact:true}).count(),0);
    if(i===0)await page.screenshot({path:path.join(root,`tmp/old-new-story-intro-${width}.png`)});
    for(let n=0;n<10&&await page.locator('.rpg-dialogue').count();n++)await page.locator('.rpg-dialogue .dialogue-default').click();
-   await page.getByRole('button',{name:'打字回答',exact:true}).click();
+   if(!await page.getByRole('textbox',{name:'文字回答',exact:true}).isVisible())await page.getByRole('button',{name:'打字回答',exact:true}).click();
    if(i===3)await page.screenshot({path:path.join(root,`tmp/old-new-story-speak-${width}.png`)});
    await page.getByRole('textbox',{name:'文字回答',exact:true}).fill(await page.evaluate(()=>languageTest.answer()));
    await page.getByRole('button',{name:'发送',exact:true}).click();

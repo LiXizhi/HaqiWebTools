@@ -19,7 +19,7 @@ test('home recall records actual hints and retries without crediting empty or wr
   await page.route('**/english-home-practice.json',route=>route.fulfill({json:{...data,games:[game],arcs:[]}}));
   await page.goto(`http://127.0.0.1:${server.address().port}/tests/fixtures/home-learning-world.html?support-practice`);await page.waitForFunction(()=>window.worldLearning?.ready);
   await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();await page.getByRole('button',{name:'找物游戏',exact:true}).click();
-  await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();
+  await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.locator('.rpg-dialogue .dialogue-default').click();
   assert.equal(await page.getByText('本轮词语：where',{exact:true}).count(),0);
   const answer=async text=>{await page.getByRole('textbox',{name:'输入回答'}).fill(text);await page.getByRole('button',{name:'回答',exact:true}).click();};
   await answer('');assert.equal((await page.evaluate(()=>worldLearning.learning())).words.where.practiceCount,1);

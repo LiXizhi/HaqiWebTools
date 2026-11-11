@@ -16,7 +16,7 @@ test('tabletop requests require real surface placement and preserve the child la
   await page.goto(url+'/tests/fixtures/home-learning-world.html?table');await page.waitForFunction(()=>window.worldLearning?.ready);
   await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();await page.getByRole('button',{name:'按线索布置',exact:true}).click();
   await page.locator('.rpg-dialogue').waitFor();assert.match(await page.locator('.dialogue-text').textContent(),/on/);
-  for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();
+  for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.locator('.rpg-dialogue .dialogue-default').click();
   const input=page.getByRole('textbox',{name:'输入回答'});await input.fill('Under the table.');await page.getByRole('button',{name:'回答',exact:true}).click();await page.getByRole('status').filter({hasText:'请完成本轮表达'}).waitFor();
   await input.fill('On the table.');await page.getByRole('button',{name:'回答',exact:true}).click();await page.getByRole('button',{name:'开始摆放',exact:true}).click();
   assert.equal((await page.evaluate(()=>worldLearning.learning())).words.on.practiceCount||0,1);

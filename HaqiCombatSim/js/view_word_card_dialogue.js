@@ -6,7 +6,7 @@ export function createWordCardDialogue({text,translation,locale,onRead,onError,o
  const node=el('div','word-card-dialogue'),row=el('article','camp-chat-message is-player camp-chat-prompt'),hint=el('div','camp-chat-hint'),avatar=el('span','camp-chat-avatar','我');
  const original=el('p','camp-chat-original'),gloss=translation?el('p','camp-chat-translation'):null;
  hint.append(original);if(gloss)hint.append(gloss);row.append(avatar,hint);
- const bilingual=createBilingualDialogue({button}),line=bilingual.attach({container:hint,original,gloss,text,translation,locale,native:locale==='en'?'zh-CN':'en',onRead,onError});
+ const bilingual=createBilingualDialogue({button}),line=bilingual.attach({container:hint,original,gloss,text,translation,locale,native:locale==='en'?'zh-CN':'en',onRead,onError,deferMapping:false});
  const microphone=createDialogueMicrophone(button,{start,finish,cancel,isRecording}),mic=microphone.node;mic.classList.add('story-microphone','word-practice-mic');
  const progress=createDialogueMicProgress(mic),footer=el('footer','camp-chat-footer'),actions=el('div','camp-chat-actions');
  const form=el('form','camp-chat-input'),input=el('input');input.setAttribute('aria-label','文字回答');input.placeholder='输入你的回答，答对即可继续';input.maxLength=500;

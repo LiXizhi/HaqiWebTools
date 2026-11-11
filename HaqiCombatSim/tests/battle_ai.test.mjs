@@ -144,3 +144,16 @@ test('Earth visual budgets do not change combat observation identity or AI choic
  assert.equal(haqiRulesAdapter.stateId(observeBattle(a,id)),identity);
  assert.deepEqual(new ReasoningBot({difficulty:'easy'}).pick(a,a.unitsById[id]),pick);
 });
+
+test('designer runner reports an exhausted encounter as an explicit draw',()=>{
+ const scenario={near:[{...unitSpec(dataset,'fire',{level:1}),deck:[]}],far:[{...unitSpec(dataset,'ice',{level:1}),deck:[]}]};
+ const result=runHaqiEncounter(dataset,scenario,37,{policy:'reasoning_easy',review:false});
+ assert.equal(result.winner,'draw');assert.ok(Object.values(result.remainingHp).every(hp=>hp>0));
+});
+
+test('new training setup budgets do not reseed AI decisions in an existing arena',()=>{
+ const a=arena(),id=a.sides.near[0].id,first=observeBattle(a,id),identity=haqiRulesAdapter.stateId(first);
+ const bot=new ReasoningBot({difficulty:'easy'}),pick=bot.pick(a,a.unitsById[id]);
+ a.resolved.adventure={...a.resolved.adventure,openingStormPartyHpV2:999,openingFirePartyHpV3:999,openingFireSoloHpV3:999,openingStormPartyHpV3:999,openingLifePartyHpV3:999,openingLifeSoloHpV3:999};
+ assert.equal(haqiRulesAdapter.stateId(observeBattle(a,id)),identity);assert.deepEqual(bot.pick(a,a.unitsById[id]),pick);
+});

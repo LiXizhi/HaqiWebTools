@@ -11,7 +11,7 @@ export function createBilingualDialogue({button,mapWords,createWordLearning=crea
     const results=new Map(),views=new Set();
     const remember=(map,key,value)=>{map.set(key,value);if(map.size>100)map.delete(map.keys().next().value);};
     const mapper=mapWords||mapDialogue;
-    function attach({container,original,gloss,text,translation,locale,native,onRead,onError=()=>{},showRead=true,deferMapping=false}){
+    function attach({container,original,gloss,text,translation,locale,native,onRead,onError=()=>{},showRead=true,deferMapping=true}){
         let expanded=!deferMapping;
         let disposed=false,busy=false,disabled=false,mapped=false,hasFeedback=false,abort,links=()=>{},learner=null,modelResult=null,closeWord=()=>{},wordVoice=null,wordAbort=null,unsubscribe=()=>{},revealed=false,learningReady=Promise.resolve();
         const lines=[{text,locale},{text:translation,locale:native}],key=JSON.stringify(lines);

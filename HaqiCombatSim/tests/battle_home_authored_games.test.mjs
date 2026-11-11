@@ -170,3 +170,13 @@ test('meal invitations require prior eating vocabulary and a real eating action;
         assert.equal(homeGameActionMatches(label,{...label.action,text:'My table.'}),false);
     }
 });
+
+
+test('older home stories open with a short contextual sentence while retaining full teaching material',async()=>{
+ const {homeGameOpening}=await import('../js/home_language_game_core.js');
+ const game={intro:'我想喝点水，可是还没找到喝水的地方。thirsty 就是口渴。你可以问 Are you thirsty?'};
+ assert.equal(homeGameOpening(game),'我想喝点水，可是还没找到喝水的地方。');
+ assert.match(game.intro,/Are you thirsty/);
+ assert.equal(homeGameOpening({...game,opening:'陪我找找杯子，好吗？'}),'陪我找找杯子，好吗？');
+ assert.equal(homeGameOpening({intro:'尚未写完的句子'}),'我们一起玩吧。准备好了吗？');
+});

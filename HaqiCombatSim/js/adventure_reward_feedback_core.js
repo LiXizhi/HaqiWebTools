@@ -17,7 +17,9 @@ export function rewardChanges(before,save,content) {
 // Returns {label,delta,unit} rows for the UI to format with fill('{label} +{delta}{unit}', row).
 export function equipmentGainLines(before,after){
     const previous=new Map(before.map(row=>[row.key,row.value]));
-    return after.flatMap(row=>{
+    const order=['fixed','hp','damagePct','resistPct','capacity','pip','gearScore'];
+    const rank=row=>order.includes(row.key)?order.indexOf(row.key):order.length;
+    return [...after].sort((a,b)=>rank(a)-rank(b)).flatMap(row=>{
         const delta=Math.round((row.value-(previous.get(row.key)??row.value))*100)/100;
         return row.key!=='penetrationReceive'&&Number.isFinite(delta)&&delta>0?[{label:row.label,delta,unit:row.unit||''}]:[];
     });

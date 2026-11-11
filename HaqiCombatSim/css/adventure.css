@@ -1128,7 +1128,6 @@
 
 .avatar-gender-hint{order:-1;flex:0 0 100%;margin:0;font-size:12px;color:var(--muted,#7d6b49)}
 .avatar-gender-icon{position:absolute;top:4px;left:7px;font:22px/1 sans-serif;color:var(--green,#406c43);pointer-events:none}
-.opening-battle-purpose{position:absolute;top:110px;left:15%;right:15%;margin:0;padding:6px 10px;text-align:center;font-size:12px;line-height:1.5;background:#12353cee;border-radius:6px;pointer-events:none}
 .opening-progress{margin:8px 0;color:var(--muted);font-size:12px}
 .opening-progress summary{cursor:pointer}
 
@@ -1139,7 +1138,7 @@
 .companion-guide{position:absolute;left:max(14px,env(safe-area-inset-left));bottom:max(92px,env(safe-area-inset-bottom));z-index:15;pointer-events:auto;max-width:calc(100vw - 28px)}
 .companion-guide-toggle{display:flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border-radius:38px;background:var(--paper,#fff4d4);color:var(--ink,#433824);border:2px solid var(--gold,#c5a15d);min-height:56px}
 .companion-guide-card{position:absolute;bottom:76px;left:0;width:min(290px,calc(100vw - 28px));box-sizing:border-box;padding:16px;background:var(--paper,#fff4d4);border:2px solid var(--gold,#c5a15d);border-radius:16px;box-shadow:0 5px 20px #0003}
-.companion-guide-card>strong{display:block;padding-right:40px}.companion-guide-card>.close-button{position:absolute;right:4px;top:4px}
+.companion-guide-speaker{display:flex;align-items:center;gap:8px;padding-right:36px}.companion-guide-speaker .pet-sheet{flex-shrink:0}.companion-guide-speaker strong{font-size:18px}.companion-guide-card>.close-button{position:absolute;right:4px;top:4px}
 .companion-guide-card p{font-size:16px;line-height:1.5;margin:12px 0}.companion-guide-card>button:not(.close-button){display:block;min-height:44px;width:100%;margin-top:8px}
 .companion-guide-highlight{outline:4px solid #ffe165!important;outline-offset:5px;box-shadow:0 0 0 8px #865b2b!important}
 .companion-guide-card{max-height:calc(100dvh - 230px);overflow:auto}
@@ -1147,3 +1146,20 @@
 .companion-guide.in-battle .companion-guide-card{max-height:calc(64dvh - 100px)}
 @media(max-width:600px){.companion-guide{bottom:112px}.companion-guide.in-battle .companion-guide-toggle span{display:none}.companion-guide.in-battle .companion-guide-card{width:230px;bottom:64px}.companion-guide-toggle .pet-sheet{width:44px!important;height:44px!important}}
 .opening-enemy-intent{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:min(540px,80vw);text-align:center;background:#fff5dc;color:#513c1a;border:1px solid #c5a15d;border-radius:12px;padding:9px 14px;font-size:15px;pointer-events:none}
+
+.opening-enemy-intent{display:flex;align-items:center;justify-content:center;gap:10px;width:max-content;max-width:min(420px,80vw);box-sizing:border-box;margin-top:8px;padding:8px 16px;}
+.opening-enemy-intent small{display:block;font-size:12px;font-weight:400;line-height:1.4;color:#706341;}
+.opening-enemy-intent strong{display:block;font-size:16px;line-height:1.4;}
+.opening-enemy-intent .intent-symbol{display:grid;place-items:center;width:32px;height:32px;flex-shrink:0;border:2px solid currentColor;border-radius:50%;font-size:23px;font-weight:700;color:#8d491d;}
+.opening-enemy-intent.intent-charge .intent-symbol{color:#695195;}
+.opening-enemy-intent.intent-guard .intent-symbol{color:#357690;}
+.opening-enemy-intent.intent-heavy{border:2px solid #a44b35;background:#fff0df;}
+
+ .battle-target-instruction{margin:0;padding:4px 10px;border-radius:12px;background:#fff7dfed;color:#425332;font-size:15px;line-height:1.4;text-align:center;pointer-events:none;max-width:min(340px,82vw);}
+@media(max-width:650px),(max-height:550px){.battle-target-instruction{font-size:13px;}}
+@media(max-height:500px){.battle-layer.has-selected-card .opening-enemy-intent{display:none;}.battle-hand.hand-focused .hand-card.selected{gap:5px;}}
+
+
+.equipment-quick-changes{display:flex;flex-wrap:wrap;gap:4px 16px;margin:8px 0;}.equipment-quick-changes p{margin:2px 0;font-size:15px;}.equipment-full-comparison summary{cursor:pointer;padding:10px 0;min-height:44px;box-sizing:border-box;color:#655339;}
+
+@media(max-height:500px){.companion-guide.in-battle .companion-guide-toggle span{display:none}}

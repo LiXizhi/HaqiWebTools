@@ -52,3 +52,10 @@ test('equipment notice shows only actual positive deltas and preserves units',()
     assert.deepEqual(equipmentGainLines(before,after),[{label:'最大生命',delta:20,unit:''},{label:'攻击',delta:2,unit:'%'}]);
     assert.deepEqual(equipmentGainLines(after,after),[]);
 });
+
+test('equipment feedback puts the new card and useful gains before secondary school stats',()=>{
+ const before=[{key:'gearScore',label:'战力',value:100},{key:'ice.damagePct',label:'寒冰攻击',value:0},{key:'fixed',label:'装备附加牌',value:0,unit:'张'},{key:'hp',label:'最大生命',value:100}];
+ const after=before.map(r=>({...r,value:r.value+1}));const original=JSON.stringify(after);
+ assert.deepEqual(equipmentGainLines(before,after).slice(0,2).map(r=>r.label),['装备附加牌','最大生命']);
+ assert.equal(JSON.stringify(after),original);
+});

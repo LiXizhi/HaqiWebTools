@@ -13,12 +13,12 @@ test('a child can ask a thirsty companion and completes only after its matching 
  const url=`http://127.0.0.1:${server.address().port}`;
  try{for(const width of [1280,390]){
   const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce'}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
-  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();};
+  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.locator('.rpg-dialogue .dialogue-default').click();};
   await page.goto(url+'/tests/fixtures/language-courses.html');await page.waitForFunction(()=>window.languageTest);
   await page.evaluate(()=>languageTest.authoredHome());await page.getByRole('button',{name:'照顾宠物',exact:true}).click();await intro();
   await page.getByRole('textbox',{name:'输入回答'}).fill('Water, please.');await page.getByRole('button',{name:'回答',exact:true}).click();
   await page.getByRole('button',{name:'检查并保存练习',exact:true}).waitFor();await page.evaluate(()=>languageTest.event());await page.getByRole('button',{name:'再玩一轮',exact:true}).click();
-  await page.locator('.rpg-dialogue').waitFor();assert.match(await page.locator('.dialogue-text').textContent(),/thirsty/);await intro();
+  await page.locator('.rpg-dialogue').waitFor();assert.match(await page.locator('.dialogue-text').textContent(),/我想喝点水/);await intro();
   assert.match(await page.locator('.language-practice-modal').textContent(),/Water, please/);
   assert.equal((await page.evaluate(()=>languageTest.state('en'))).words.thirsty.practiceCount||0,0);
   await page.getByRole('textbox',{name:'输入回答'}).fill('Are you hungry?');await page.getByRole('button',{name:'回答',exact:true}).click();

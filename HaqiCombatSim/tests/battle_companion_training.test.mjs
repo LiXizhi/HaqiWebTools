@@ -5,7 +5,7 @@ import * as A from '../js/adventure_core.js';
 import * as P from '../js/combat_pve_core.js';
 import {SimpleBot} from '../js/combat_policy_core.js';
 import {installExpansion} from '../js/adventure_expansion_core.js';
-import {openingEnemyIntent} from '../js/opening_training_core.js';
+import {openingTrainingMonsters,openingEnemyIntent,openingStrategyCue} from '../js/opening_training_core.js';
 import {companionWorldGuide,guidePet} from '../js/companion_guide_core.js';
 import {observeBattle,haqiRulesAdapter} from '../js/battle_ai/haqi_adapter_core.js';
 import {analyzeDecision} from '../js/battle_ai/inference_core.js';
@@ -68,4 +68,78 @@ test('advisory analysis retains the battle identity after storm status effects',
  const result=analyzeDecision(observation,{rulesAdapter:haqiRulesAdapter,difficulty:'expert'});
  assert.deepEqual(observation,before);
  assert.equal(result.stateId,haqiRulesAdapter.stateId(before));
+});
+
+test('intent stops announcing a shield after the opening, and no longer promises scripted charge after its sequence',()=>{
+ const ice=start('ice-scout').battle;P.playPveRound(ice,{pass:true});
+ assert.doesNotMatch(openingEnemyIntent(ice),/开护盾/);
+ const storm=start('storm-scout').battle;storm.turn=14;
+ assert.doesNotMatch(openingEnemyIntent(storm),/不攻击|蓄力/);
+ storm.finished=true;assert.equal(openingEnemyIntent(storm),null);
+});
+
+test('new training checkpoints have stable HP across seeds, while old rare-trait battles replay unchanged',()=>{
+ for(let seed=1;seed<=100;seed++){
+  const {save,battle}=start('ice-scout',seed);
+  assert.equal(save.pendingEncounter.openingTrainingVersion,3);
+  assert.deepEqual(save.pendingEncounter.monsterTraits,[{}]);
+  assert.equal(battle.sides.far[0].maxHp,260,`seed ${seed}`);
+ }
+ const {save}=start('ice-scout',35),legacy=structuredClone(save.pendingEncounter);
+ legacy.openingTrainingVersion=1;legacy.monsterTraits=[{vitality:6}];
+ const battle=P.restorePveBattle(dataset,content,legacy);
+ assert.equal(battle.sides.far[0].maxHp,530);
+ const action=new SimpleBot().pick(battle,battle.sides.near[0]);P.playPveRound(battle,action);
+ legacy.decisions.push(action);
+ const replay=P.restorePveBattle(dataset,content,legacy);
+ assert.equal(replay.sides.far[0].hp,battle.sides.far[0].hp);
+ assert.equal(replay.sides.near[0].hp,battle.sides.near[0].hp);
+});
+
+test('paired storm training has a decision window without changing solo or legacy checkpoint HP',()=>{
+ const monster={id:'storm-scout',attributes:{}};
+ const hp=checkpoint=>openingTrainingMonsters([monster],{encounterId:'storm-scout',...checkpoint})[0].hp;
+ assert.equal(hp({openingTrainingVersion:2,party:[{hp:415},{hp:460}]}),480);
+ assert.equal(hp({openingTrainingVersion:2,party:[{hp:415},{hp:0}]}),360);
+ assert.equal(hp({openingTrainingVersion:2}),360);
+ assert.equal(hp({openingTrainingVersion:1,party:[{hp:415},{hp:460}]}),360);
+});
+
+test('v3 fire prepares before attacking and life has exactly one recovery window',()=>{
+ const fire=start('fire-scout').battle;
+ assert.match(openingEnemyIntent(fire),/不攻击/);
+ const before=fire.sides.near[0].hp;P.playPveRound(fire,{pass:true});
+ assert.equal(fire.sides.near[0].hp,before);
+ assert.ok(fire.events.some(e=>e.type==='cast'&&e.card==='Fire_FireDamageBlade'));
+ P.playPveRound(fire,{pass:true});assert.ok(fire.sides.near[0].hp<before);
+ const life=start('life-scout').battle;
+ P.playPveRound(life,{pass:true});assert.match(openingEnemyIntent(life),/下回合恢复/);
+ P.playPveRound(life,{pass:true});assert.match(openingEnemyIntent(life),/恢复生命.*不攻击/);
+ life.sides.far[0].hp-=150;const wounded=life.sides.far[0].hp,hp=life.sides.near[0].hp;
+ P.playPveRound(life,{pass:true});assert.equal(life.sides.near[0].hp,hp);assert.ok(life.sides.far[0].hp>wounded);
+ assert.match(openingEnemyIntent(life),/加强攻击/);
+ assert.equal(life.monsterTemplates[0].sequences.flat().filter(r=>r.card==='Life_SingleHeal_Level0').length,1);
+});
+
+test('new training replays all setup and recovery turns exactly; v2 keeps its prior setup',()=>{
+ for(const id of ['fire-scout','life-scout']){
+  const {save,battle}=start(id);
+  for(let n=0;n<4&&!battle.finished;n++){const decision={pass:true};P.playPveRound(battle,decision);A.recordDecision(save,decision,battle);}
+  const replay=P.restorePveBattle(dataset,content,save.pendingEncounter);
+  assert.deepEqual(replay.events,battle.events);assert.equal(replay.rng.state(),battle.rng.state());
+ }
+ const {save}=start('fire-scout');save.pendingEncounter.openingTrainingVersion=2;
+ const old=P.restorePveBattle(dataset,content,save.pendingEncounter);assert.equal(old.sides.far[0].maxHp,150);
+ P.playPveRound(old,{pass:true});assert.ok(!old.events.some(e=>e.type==='cast'&&e.card==='Fire_FireDamageBlade'));
+});
+
+test('strategy bubbles only describe a real consumed effect in new training',()=>{
+ const battle={monsterTemplates:[{openingTrainingVersion:3}],unitsById:{hero:{}},resolved:{wards:{1:{boost_damage:-50},2:{boost_damage:30}},charms:{3:{boost_damage:40}}}};
+ const event={sourceType:'effect_used',target:'hero',kind:'ward',id:1};
+ assert.match(openingStrategyCue(battle,event).text,/一层护盾/);
+ assert.match(openingStrategyCue(battle,{...event,id:2}).text,/陷阱/);
+ assert.match(openingStrategyCue(battle,{...event,kind:'charm',id:3}).text,/增益/);
+ assert.equal(openingStrategyCue(battle,{...event,sourceType:'damage'}),null);
+ assert.equal(openingStrategyCue(battle,{...event,id:999}),null);
+ battle.monsterTemplates[0].openingTrainingVersion=2;assert.equal(openingStrategyCue(battle,event),null);
 });

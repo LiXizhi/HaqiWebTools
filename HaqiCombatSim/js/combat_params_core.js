@@ -107,6 +107,10 @@ export function defaultParams(version = 'teen') {
             monsterRespawnMs:30000,
             // Web opening training v1: preserve original rewards and card formulas.
             openingFireHp:150,openingIceHp:260,openingStormHp:360,
+            // v2 paired lesson lasts long enough to respond to the charge; solo and v1 retain 360.
+            openingStormPartyHpV2:480,
+            openingFirePartyHpV3:380,openingFireSoloHpV3:220,openingStormPartyHpV3:600,
+            openingLifePartyHpV3:520,openingLifeSoloHpV3:360,
             fieldEncounterRadius:24,
             dungeonEncounterRadius:84,
             iceAreaAttackThreatRatio:2,

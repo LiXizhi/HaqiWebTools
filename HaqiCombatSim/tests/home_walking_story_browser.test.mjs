@@ -15,7 +15,7 @@ test('children really walk to their selected chair and invite a pet to sit after
   await page.goto(`http://127.0.0.1:${server.address().port}/tests/fixtures/home-learning-world.html?walking-story&unlearned`);await page.waitForFunction(()=>window.worldLearning?.ready);
   const state=()=>page.evaluate(()=>worldLearning.learning());
   const open=async()=>{await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();await page.getByRole('button',{name:'走到伙伴的休息角',exact:true}).click();};
-  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();};
+  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.locator('.rpg-dialogue .dialogue-default').click();};
   const answer=async text=>{await page.getByRole('textbox',{name:'输入回答'}).fill(text);await page.getByRole('button',{name:'回答',exact:true}).click();};
   const canvas=await page.locator('.home-canvas').boundingBox(),point=(x,y)=>({x:canvas.x+canvas.width/2+x*40,y:canvas.y+canvas.height/2+y*40});
   await open();await intro();await answer('A chair.');await page.mouse.click(point(3.5,1.25).x,point(3.5,1.25).y);await page.getByRole('button',{name:'继续故事',exact:true}).click();await intro();await answer('I can run.');assert.equal((await state()).words.walk?.practiceCount||0,0);await answer('I can walk.');await page.getByRole('button',{name:'开始散步',exact:true}).click();await page.getByRole('button',{name:'检查并保存练习',exact:true}).click();assert.equal((await state()).words.walk?.practiceCount||0,0);

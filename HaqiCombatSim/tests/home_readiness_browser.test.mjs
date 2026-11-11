@@ -15,7 +15,7 @@ test('a new learner can prepare a word then return to the original story without
   await page.goto(`http://127.0.0.1:${server.address().port}/tests/fixtures/home-learning-world.html?unlearned`);await page.waitForFunction(()=>window.worldLearning?.ready);
   const state=()=>page.evaluate(()=>worldLearning.learning());
   const open=async()=>{await page.getByRole('button',{name:'家园设置',exact:true}).click();await page.getByRole('button',{name:'情境练习',exact:true}).click();};
-  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.getByRole('button',{name:'我来帮你',exact:true}).click();};
+  const intro=async()=>{await page.locator('.rpg-dialogue').waitFor();for(let i=0;i<8&&await page.locator('.rpg-dialogue').count();i++)await page.locator('.rpg-dialogue .dialogue-default').click();};
   const answer=async text=>{await page.getByRole('textbox',{name:'输入回答'}).fill(text);await page.getByRole('button',{name:'回答',exact:true}).click();};
   await open();const title=page.getByRole('button',{name:'留在书上的小名字',exact:true});await title.waitFor();assert.match(await title.locator('..').textContent(),/先认识：book/);
   await title.click();assert.equal((await state()).words.book?.practiceCount||0,0);assert.equal(Object.keys((await state()).homeStories||{}).length,0);

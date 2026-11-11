@@ -8,7 +8,7 @@ import {parseLocaleFile} from '../js/locale_core.js';
 import {validateDictionary} from '../js/dictionary_core.js';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const dictionary=JSON.parse(read('data/adventure/dictionary/zh.json'));
-const completed = new Set(['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','men','yu','xiu','sen','guang','guo','ming','mu-eye','er','xin','tian-field']);
+const completed = new Set(['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','men','yu','xiu','sen','guang','guo','ming','mu-eye','er','xin','tian-field','yun']);
 test('all 30 words retain writing data; only completed authored stories expose an animation',()=>{
  assert.equal(dictionary.entries.length,30);assert.equal(validateDictionary(dictionary),dictionary);
  for(const entry of dictionary.entries){
@@ -27,7 +27,7 @@ test('animation paths admit disambiguated names but reject traversal, alternate 
 });
 test('authored replacements are standalone executable pages with writing and completion hooks',()=>{
  const mapped=read('js/hanzi_story_animations.js');
- for(const id of ['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','mu_eye','xi','er','xin','tian_field']){
+ for(const id of ['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','mu_eye','jing','xi','er','xin','tian_field','yun','li','zhi','zhi_peak']){
   const filename=`hanzi_${id}.html`,html=read('hanzi/'+filename);
   const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];
   assert.ok(scripts.length>=2,filename);for(const [,script]of scripts)new vm.Script(script,{filename});
@@ -132,11 +132,48 @@ test('xin writing embeds strokes.json outlines and medians without retuning',()=
  assert.ok(intro);
  assert.doesNotMatch(intro[0],/haqiHanziWritten|haqiHanziComplete/);
 });
+test('yun writing embeds strokes.json outlines and medians without retuning',()=>{
+ const yun=JSON.parse(read('data/adventure/hanzi/strokes.json')).characters['云'];
+ const html=read('hanzi/hanzi_yun.html');
+ assert.ok(html.includes(JSON.stringify({strokes:yun.strokes,medians:yun.medians})));
+ assert.match(html,/translate\(0,\s*900\);\s*ctx\.scale\(1,\s*-1\)/);
+ assert.equal(yun.medians.length,4);
+ assert.match(html,/haqiHanziWritten\?\.\(\)/);
+ assert.match(html,/haqiHanziComplete\(\)/);
+ const intro=html.match(/async function introPlay[\s\S]*?\n\}/);
+ assert.ok(intro);
+ assert.doesNotMatch(intro[0],/haqiHanziWritten|haqiHanziComplete/);
+});
 test('each painting supplies nonempty scene contours for a continuous glyph morph',()=>{
  const context={};vm.runInNewContext(read('hanzi/source/contours.js')+';globalThis.get=storyContours',context);for(const s of stories){const paths=context.get(s.theme);assert.ok(paths.length>=2);for(const points of paths){assert.ok(points.length>=2);assert.ok(points.flat().every(Number.isFinite));}}
 });
+test('jing, li, zhi and zhi_peak embed pinned makemeahanzi outlines and medians outside the dictionary',()=>{
+ for(const [id,glyph,pinyin,varName,count] of [
+  ['jing','径','jìng','JING',8],
+  ['li','李','lǐ','LI',7],
+  ['zhi','知','zhī','ZHI',8],
+  ['zhi_peak','峙','zhì','ZHI_PEAK',9],
+ ]){
+  const html=read(`hanzi/hanzi_${id}.html`);
+  assert.match(html,new RegExp(`<title>${glyph} ${pinyin} `));
+  assert.ok(html.includes('bddc96d41bef78427ed0e034e9f7e31d71fd1b92'),id);
+  const start=html.indexOf(`const ${varName} = {`);
+  assert.ok(start>=0,`${id}: ${varName}`);
+  let i=html.indexOf('{',start),depth=0;
+  for(;i<html.length;i++){if(html[i]==='{')depth++;else if(html[i]==='}'&&--depth===0){i++;break;}}
+  const data=vm.runInNewContext(`(${html.slice(html.indexOf('{',start),i)})`);
+  assert.equal(data.strokes.length,count,id);
+  assert.equal(data.medians.length,count,id);
+  assert.equal(dictionary.entries.some(e=>e.text===glyph),false,id);
+  assert.match(html,/haqiHanziWritten\?\.\(\)/,id);
+  assert.match(html,/haqiHanziComplete(?:\?\.)?\(\)/,id);
+  const intro=html.match(/async function introPlay[\s\S]*?\n\}/);
+  assert.ok(intro,id);
+  assert.doesNotMatch(intro[0],/haqiHanziWritten|haqiHanziComplete/,id);
+ }
+});
 test('authored hanzi_*.html scripts compile cleanly and use forgiving trend-based stroke tracing without permanent drag.bad locks',()=>{
- const files=['er','guang','guo','huo','kou','men','ming','mu','mu_eye','ren','ri','sen','shan','shi','shou','shui','tian_field','tu','wu','xi','xin','xiu','yu','yue'];
+ const files=['er','guang','guo','huo','jing','kou','li','men','ming','mu','mu_eye','ren','ri','sen','shan','shi','shou','shui','tian_field','tu','wu','xi','xin','xiu','yu','yue','yun','zhi','zhi_peak'];
  for(const name of files){
   const html=read(`hanzi/hanzi_${name}.html`);
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]);

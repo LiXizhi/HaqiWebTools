@@ -28,7 +28,9 @@ const loadAbort=new AbortController();
 const host=document.createElement('div');host.className='word-tree-instance';host.style.cssText='width:100%;height:100%;min-height:0';root.append(host);
 const shadow=host.attachShadow({mode:'open'});
 const style=document.createElement('link');style.rel='stylesheet';style.href=new URL('../css/word_tree.css',import.meta.url).href;
-let finishStyles,styleFailed=false;const stylesReady=new Promise(resolve=>{finishStyles=resolve;style.onload=resolve;style.onerror=()=>{styleFailed=true;resolve();};});shadow.append(style);
+const markStyle=document.createElement('link');markStyle.rel='stylesheet';markStyle.href=new URL('../css/word_mark.css',import.meta.url).href;
+let styleFailed=false;const linkReady=link=>new Promise(resolve=>{link.onload=resolve;link.onerror=()=>{styleFailed=true;resolve();};});
+const stylesReady=Promise.all([linkReady(style),linkReady(markStyle)]);shadow.append(style,markStyle);
 const el=(tag,text)=>{const n=document.createElement(tag);if(text)n.textContent=text;return n;};
 const surface=el('section');surface.className='word-tree';shadow.append(surface);
 // Keep dictionary / game hotkeys outside this component's interactions.
@@ -83,7 +85,7 @@ async function start(){
  if(!closed)await prepare();
 }
 const timer=setInterval(()=>{if(session)void prepare();},15000);
-function close(){if(closed)return;closed=true;unsubscribe();loadAbort.abort();finishStyles();stopSpeech();session?.close();view.dispose();clearInterval(timer);clearTimeout(toastTimer);popup.close();host.remove();window.removeEventListener('pagehide',close);}
+function close(){if(closed)return;closed=true;unsubscribe();loadAbort.abort();stopSpeech();session?.close();view.dispose();clearInterval(timer);clearTimeout(toastTimer);popup.close();host.remove();window.removeEventListener('pagehide',close);}
 window.addEventListener('pagehide',close);
 const ready=start().catch(error=>{if(closed)return;message(error.message);throw error;});
 return {ready,dispose:close,async refresh(){await ready;if(!closed){await session.open();await prepare(true);}},get state(){return state;},get camera(){return view.camera;},get hits(){return view.hits;},get fruits(){return view.fruits;},get stats(){return view.stats;}};

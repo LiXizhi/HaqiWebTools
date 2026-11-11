@@ -49,7 +49,7 @@ export function renderMembership(body,model,cb,ui) {
     const starState=el('p','');setText(starState,member.status==='ready'?(star.level?'魔法星已激活':'魔法星未激活'):labels[member.status]);
     const expiry=el('p','muted');
     if(star.expiresAt){const date=new Date(star.expiresAt);setText(expiry,'有效期至 {date}',{date:`${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`});}
-    else setText(expiry,star.level?'有效日期待确认':'升级会员，点亮魔法星');
+    else setText(expiry,star.level?'有效期以账号为准':'升级会员，点亮魔法星');
     const identity=el('div','magic-star-identity',
         el('div','magic-star-emblem-stack',membershipEmblem(el,assets,star.level),
             membershipFollowToggle(el,save.magicStarFollow!==false,{disabled:star.level===0,onChange:follow=>cb.action({type:'magic-star-follow',follow})})),
@@ -85,7 +85,7 @@ export function renderMembership(body,model,cb,ui) {
             const table=el('table','magic-star-table'),head=el('tr','');
             for(const title of ['等级','生命','攻击','防御','治疗','被治疗','命中','经验'])head.append(el('th','',title));
             table.append(el('thead','',head));const rows=el('tbody','');
-            for(const row of config.levels){const tr=el('tr',star.level===row.level?'current':'');if(star.level===row.level)tr.setAttribute('aria-current','true');for(const field of ['level','HP','attack','guard','cure','becured','hit','exp']){const cell=el('td','');if(field==='level')setText(cell,'{level}级',{level:row[field]});else cell.textContent=`${row[field]}%`;tr.append(cell);}rows.append(tr);}
+            for(const row of config.levels){const tr=el('tr',star.level===row.level?'current':'');if(star.level===row.level)tr.setAttribute('aria-current','true');for(const field of ['level','HP','attack','guard','cure','becured','hit','exp']){const cell=el('td','');if(field==='level')setText(cell,'{level}级',{level:row[field]});else if(field==='exp')setText(cell,'暂未开放');else cell.textContent=`${row[field]}%`;tr.append(cell);}rows.append(tr);}
             table.append(rows);detail.append(el('div','magic-star-table-scroll',table));
         }else if(key==='growth'){
             detail.append(el('h3','','魔法星如何成长'),el('p','','魔法星等级按会员剩余有效期计算。未开通或已到期为 0 级；一个月为 1 级，一年达到最高 10 级。'),el('p','','不足一个月按一个月计算，最高 10 级。剩余有效期变短时，魔法星等级也会随之变化。'),el('p','','有效日期暂时无法确认时，已确认的会员按 1 级显示。'),el('p','','剩余有效期按北京时间的日历天数自动兑换为魔豆，每天 10 颗。第一次从今天算到到期日；记下这次兑到的日期后，再次兑换只计算更晚的新增天数。'),el('p','muted','续期后点击“刷新会员状态”，查看最新等级。新增的会员天数会自动兑换。'));

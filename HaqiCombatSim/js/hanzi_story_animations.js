@@ -34,4 +34,12 @@ export const islandStoryAnimations = {
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_xin.html': new URL('../hanzi/hanzi_xin.html', import.meta.url).href,
     'hanzi/hanzi_tian_field.html': new URL('../hanzi/hanzi_tian_field.html', import.meta.url).href,
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_tian_field.html': new URL('../hanzi/hanzi_tian_field.html', import.meta.url).href,
+    'hanzi/hanzi_yun.html': new URL('../hanzi/hanzi_yun.html', import.meta.url).href,
+    'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_yun.html': new URL('../hanzi/hanzi_yun.html', import.meta.url).href,
+    'hanzi/hanzi_li.html': new URL('../hanzi/hanzi_li.html', import.meta.url).href,
+    'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_li.html': new URL('../hanzi/hanzi_li.html', import.meta.url).href,
+    'hanzi/hanzi_zhi.html': new URL('../hanzi/hanzi_zhi.html', import.meta.url).href,
+    'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_zhi.html': new URL('../hanzi/hanzi_zhi.html', import.meta.url).href,
+    'hanzi/hanzi_zhi_peak.html': new URL('../hanzi/hanzi_zhi_peak.html', import.meta.url).href,
+    'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_zhi_peak.html': new URL('../hanzi/hanzi_zhi_peak.html', import.meta.url).href,
 };

@@ -1,4 +1,3 @@
-@import url("./word_mark.css");
 :host{display:block;width:100%;height:100%;min-height:0}*{box-sizing:border-box}button{font:inherit;color:#e7dfb5;border:1px solid #78976a77;border-radius:7px;padding:8px 12px;background:#153b34;cursor:pointer}button:hover{background:#285446}button:disabled{opacity:.5;cursor:default}
 .word-tree{position:relative;width:100%;height:100%;font:14px/1.5 system-ui,sans-serif;overflow:hidden;background:radial-gradient(ellipse at 50% 45%,#204339,#081f20 75%)}.word-tree>canvas{width:100%;height:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}.tree-toast{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);max-width:90vw;padding:10px 18px;border-radius:12px;background:#0d302bef;color:#eed9a0;text-align:center;pointer-events:none}
 

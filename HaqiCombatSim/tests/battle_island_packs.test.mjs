@@ -43,7 +43,7 @@ test('Camp newcomers can explore Hanzi independently: practice quests complete o
     assert.ok(!(save.trackedQuestIds||[]).includes(pack.quests.find(q=>!q.retired).id));
     const campQuests=structuredClone(save.quests);
     A.applyAction(save,content,{type:'travel',zone:'hanzi'});
-    assert.equal(save.zone,'hanzi');assert.deepEqual(save.quests,campQuests);assert.ok(save.trackedQuestIds.includes(pack.quests.find(q=>!q.retired).id));
+    assert.equal(save.zone,'hanzi');assert.deepEqual(save.quests,campQuests);assert.ok(!(save.trackedQuestIds||[]).includes(pack.quests.find(q=>!q.retired).id));
     assert.equal(catalogAcceptBlock(save,content,pack.quests.filter(q=>!q.retired)[1]),'请先完成前置任务');
     for(const q of pack.quests.filter(q=>!q.retired)){
         A.applyAction(save,content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});

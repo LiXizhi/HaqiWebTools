@@ -56,7 +56,7 @@ export function createDungeonStoryView(root,cb){
         line(line,{target,translation,index,total,learning,loginRequired,rewardKey,percent,locale,native}){
             reveal.finish();
             if(activeBubble){activeBubble.disabled=true;activeBubble.tabIndex=-1;activeBubble.setAttribute('aria-disabled','true');}
-            progress.textContent=`${index+1} / ${total}`;
+            progress.textContent=`剧情 ${index+1} / ${total}`;
             const bubble=el('article',`dungeon-story-bubble ${line.role}`);
             const player=line.role==='player',name=player?(portraitModel.save.name||'我'):line.speaker;
             const row=el('div',`story-message ${line.role}`),content=el('div','story-message-content');

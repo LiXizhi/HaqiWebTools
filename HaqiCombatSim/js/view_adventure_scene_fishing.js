@@ -8,6 +8,8 @@ import {fishingPullMotion,FISHING_PULL_MS} from './view_adventure_fishing_motion
 
 const DIRECTIONS=[{id:'up',label:'上',symbol:'↑',x:0,y:-1},{id:'right',label:'右',symbol:'→',x:1,y:0},{id:'down',label:'下',symbol:'↓',x:0,y:1},{id:'left',label:'左',symbol:'←',x:-1,y:0}];
 const KEY_DIRECTION={ArrowUp:'up',ArrowRight:'right',ArrowDown:'down',ArrowLeft:'left',KeyW:'up',KeyD:'right',KeyS:'down',KeyA:'left'};
+const PRESS_FLASH={good:'按中',miss:'偏了',neutral:'收到'};
+const PRESS_SEEN_MS=640;
 const CAST_MS=600, REEL_MS=1100, SHOW_MS=4200;
 // Transient scene state; the callback remains the only inventory/persistence boundary.
 export function createSceneFishing(root, cb, { el, button }) {
@@ -26,6 +28,7 @@ export function createSceneFishing(root, cb, { el, button }) {
         return node;
     });
     const caught=el('div','fishing-catch-label');caught.setAttribute('role','status');
+    const pressFlash=el('div','fishing-press-flash');pressFlash.setAttribute('role','status');pressFlash.setAttribute('aria-live','polite');pressFlash.hidden=true;
     const select=el('select','fishing-select');select.setAttribute('aria-label','选择捕鱼道具');
     const stamina=el('small','fishing-energy');
     const potions=el('div','fishing-potions');
@@ -41,11 +44,11 @@ export function createSceneFishing(root, cb, { el, button }) {
     recordsButton.setAttribute('aria-expanded','false');
     species.addEventListener('change',refreshRecords);
     const controls=el('div','fishing-controls',stamina,gear,recordsButton,createCloseButton(()=>stop(),'结束钓鱼'));
-    layer.append(canvas,status,trigger,...directions,caught,controls,tools,records);root.append(layer);
+    layer.append(canvas,status,trigger,...directions,pressFlash,caught,controls,tools,records);root.append(layer);
     const reduced=matchMedia('(prefers-reduced-motion: reduce)');
     let active=false,model,water,netId=null,phase='idle',at=0,castNumber=0,biteAt=0,pending=null,result=null,lastInventory='',count=0;
     let lastSize='',pulls=0,pullGoal=3,fightRng,nextBite=0,lastPull=-Infinity,expectedDirection=null,rounds=0,mistakes=0,restPenalized=false;
-    let pullDirection=null,pullAt=-Infinity,pullFeedback='';
+    let pullDirection=null,pullAt=-Infinity,pullFeedback='',pressSerial=0;
     function pulse(pattern){if(!reduced.matches)cb.vibrate?.(pattern);}
     function refreshRecords(){
         const id=Number(species.value)||fishingSpecies[0],rows=model.save.fishingRecords?.byFish[id]||[];
@@ -99,7 +102,7 @@ export function createSceneFishing(root, cb, { el, button }) {
     }
     function stop(restoreFocus=true){
         if(!active)return;
-        cb.activeChanged?.(false);cb.vibrate?.(0);active=false;pending=null;result=null;pullDirection=null;pullAt=-Infinity;layer.hidden=true;root.classList.remove('is-fishing');
+        cb.activeChanged?.(false);cb.vibrate?.(0);active=false;pending=null;result=null;pullDirection=null;pullAt=-Infinity;pressSerial=0;pressFlash.hidden=true;pressFlash.classList.remove('is-on');layer.hidden=true;root.classList.remove('is-fishing');
         if(restoreFocus)cb.focus?.();
     }
     function act(direction){
@@ -110,7 +113,7 @@ export function createSceneFishing(root, cb, { el, button }) {
         if(busy()&&!direction)return;
         if(phase==='cast'||phase==='reel')return;
         if(direction&&['wait','bite','rest'].includes(phase)&&!pending?.automatic){
-            pullDirection=direction;pullAt=now;
+            pullDirection=direction;pullAt=now;pressSerial+=1;
             pullFeedback=phase==='bite'?(direction===expectedDirection?'good':'miss'):'neutral';
         }
         if(phase==='wait'){
@@ -214,15 +217,37 @@ export function createSceneFishing(root, cb, { el, button }) {
         const ringY=compact?68:78;
         directions.forEach((node,i)=>{
             const d=DIRECTIONS[i];place(node,hero.x+d.x*86,centerY+d.y*ringY,34);
-            const responding=d.id===pullDirection&&time-pullAt>=0&&time-pullAt<FISHING_PULL_MS;
+            const responding=d.id===pullDirection&&time-pullAt>=0&&time-pullAt<PRESS_SEEN_MS;
             const impulse=responding?fishingPullMotion(pullDirection,time-pullAt,reduced.matches):{x:0,y:0,strength:0};
             node.dataset.feedback=responding?pullFeedback:'';
-            node.style.setProperty('--pull-x',`${impulse.x*7}px`);
-            node.style.setProperty('--pull-y',`${impulse.y*7}px`);
-            node.style.setProperty('--pull-scale',String(1-impulse.strength*.13));
-            node.style.setProperty('--pull-ring',String(1+impulse.strength*.32));
+            if(responding&&node.dataset.burst!==String(pressSerial)){
+                node.dataset.burst=String(pressSerial);
+                node.classList.remove('is-pressed');
+                node.getBoundingClientRect();
+                node.classList.add('is-pressed');
+            }else if(!responding&&node.dataset.burst){
+                node.classList.remove('is-pressed');
+                node.dataset.burst='';
+            }
+            node.style.setProperty('--pull-x',`${impulse.x*18}px`);
+            node.style.setProperty('--pull-y',`${impulse.y*18}px`);
+            node.style.setProperty('--pull-scale',String(1+impulse.strength*.42));
+            node.style.setProperty('--pull-ring',String(1+impulse.strength*.7));
             node.hidden=!['cast','wait','bite','rest'].includes(phase);node.disabled=phase==='cast'||!!pending?.automatic;
         });
+        const pressed=directions.find(node=>node.dataset.burst===String(pressSerial)&&node.dataset.feedback);
+        if(pressed){
+            pressFlash.hidden=false;
+            if(pressFlash.dataset.burst!==String(pressSerial)){
+                pressFlash.dataset.burst=String(pressSerial);
+                pressFlash.dataset.feedback=pullFeedback;
+                setText(pressFlash,PRESS_FLASH[pullFeedback]||'收到');
+                pressFlash.classList.remove('is-on');
+                pressFlash.getBoundingClientRect();
+                pressFlash.classList.add('is-on');
+            }
+            place(pressFlash,parseFloat(pressed.style.left)||hero.x, (parseFloat(pressed.style.top)||centerY)-52, 36);
+        }else{pressFlash.hidden=true;pressFlash.classList.remove('is-on');}
         place(status,compact?hero.x+side*195:hero.x,compact?Math.max(32,hero.y-70):centerY-128,110);
         place(controls,hero.x,hero.y+108,Math.min(145,w/2));
         place(tools,h<520?hero.x+side*185:hero.x,h<520?Math.max(24,hero.y-90):hero.y+144,Math.min(130,w/2));

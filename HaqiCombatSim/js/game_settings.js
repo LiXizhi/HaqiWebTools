@@ -8,7 +8,7 @@ export function createGameSettings({indexedDB=globalThis.indexedDB,legacyStorage
     }));return chain;}
     return {
         get value(){return {...value};},
-        open({music=false}={}){return opening||=(async()=>{
+        open({music}={}){return opening||=(async()=>{
             const stored=await new Promise(resolve=>{
                 if(!indexedDB)return resolve(null);
                 let finished=false;const finish=v=>{if(finished)return;finished=true;clearTimeout(timer);resolve(v);};
@@ -35,8 +35,8 @@ export function createGameSettings({indexedDB=globalThis.indexedDB,legacyStorage
 // Read only existing local bytes before login; never seed from a cloud response.
 export function legacyLocalMusic(storage){
     try{const account=storage.getItem('haqi.roles.last-account.v1');const raw=storage.getItem('haqi.roles.v1.'+(account?'account.'+encodeURIComponent(account):'guest'));
-        if(raw){const {catalog}=JSON.parse(raw);return catalog?.roles?.find(row=>row.id===catalog.activeId)?.save?.music===true;}
-        if(!account)return JSON.parse(storage.getItem('haqi.adventure.kids.v1')||'null')?.music===true;
+        if(raw){const {catalog}=JSON.parse(raw);const value=catalog?.roles?.find(row=>row.id===catalog.activeId)?.save?.music;return typeof value==='boolean'?value:undefined;}
+        if(!account){const value=JSON.parse(storage.getItem('haqi.adventure.kids.v1')||'null')?.music;return typeof value==='boolean'?value:undefined;}
     }catch{}
-    return false;
+    return undefined;
 }

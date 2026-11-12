@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "local": "assets/adventure/ui/forest/loading-camp-v1.webp",
+  "cdn": "https://cdn.keepwork.com/haqi/ui/forest/20261112-v1/loading-camp-v1.webp",
+  "width": 960,
+  "height": 437,
+  "size": 176082,
+  "sha256": "6d764f651f0ab97e01f50839853d5d71838bdba65f21e773895f114416d6470d",
+  "source": {
+    "generator": "image_gen",
+    "file": "exec-7167e41c-0f7e-49ec-9d0c-81b4d6d65c43.png",
+    "sha256": "9e724193b0992961f59615e7cfec9b3e7fd7f359922ba36608f6cb5dccb8923f",
+    "size": [
+      1860,
+      846
+    ]
+  }
+}

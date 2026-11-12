@@ -4,9 +4,28 @@ import {bindDialogue} from '../js/view_adventure_dialogue.js';
 import fs from 'node:fs';
 import vm from 'node:vm';
 
+test('Sissy starts hands-on practice without awarding talk or closing the practice panel',async()=>{
+    const source=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
+    const start=source.slice(source.indexOf('function startQuestTalk('),source.indexOf('function startLines('));
+    const next=source.slice(source.indexOf('async function nextDialogue('),source.indexOf('function openCompanionPractice('));
+    let opened=0,talks=0,result,closed=0,saved=0;
+    const context=vm.createContext({save:{},assets:{content:{}},A:{currentQuest:()=>({id:63001}),applyAction:()=>talks++},
+        startLines:(_lines,_label,done)=>{result=done();},openCompanionPractice:()=>opened++,
+        dialog:{npcId:36200,lines:[{}],index:0},dialogDone:()=> 'practice',
+        missingRewardPets:()=>[],loadPet(){},safely:fn=>fn(),toast(){},petScene:{dialogue(){}},
+        persist:()=>saved++,queueCloudSave(){},paintHud(){},finishTrackedDialogue:()=>closed++,close:()=>closed++
+    });
+    vm.runInContext(start+next,context);
+    context.startQuestTalk({npcId:36200,dialog:[{}]});
+    assert.equal(opened,1);assert.equal(talks,0);assert.equal(result,'practice');
+    await context.nextDialogue();assert.equal(closed,0);assert.equal(saved,0);
+    context.startQuestTalk({npcId:36201,dialog:[{}]});assert.equal(talks,1);
+    context.startQuestTalk({npcId:36200,dialog:[{}]},true);assert.equal(talks,2);
+});
+
 test('tracked NPC dialogue executes only one available quest choice and consumes intent',()=>{
     const source=fs.readFileSync(new URL('../js/view_adventure.js',import.meta.url),'utf8');
-    const renderSource=source.slice(source.indexOf('export function renderDialogue('),source.indexOf('// 战斗卡牌说明')).replace('export function','function');
+    const renderSource=source.slice(source.indexOf('export function renderDialogue('),source.indexOf('export function renderBattle(')).replace('export function','function');
     const quest={id:1,title:'Quest',startNpc:10,endNpc:10};
     const npc={id:10,name:'NPC',zone:'camp',description:'Default greeting'};
     const element=(tag,cls,...children)=>({tag,children,dataset:{},textContent:'text',classList:{toggle(){},add(){}},style:{setProperty(){}},setAttribute(){},append(...items){this.children.push(...items);},replaceChildren(...items){this.children=items;},querySelector(){return element('button');}});
@@ -146,6 +165,14 @@ test('learning dialogue displays both languages; reading does not trigger quest 
     ui.root.disposeDialogue();assert.equal(calls[1].signal.aborted,true);
 });
 
+test('clicking bilingual prose reveals English without accepting the quest',t=>{
+ const ui=setup(t,false,{lines:[{text:'Find your partner.',locale:'en'},{text:'去找你的伙伴。',locale:'zh-CN'}]});
+ assert.equal(ui.translation.hidden,false,'the next action is readable immediately');
+ assert.equal(ui.original.children[1].textContent,'F');
+ ui.click();assert.equal(ui.original.children[1].textContent,'Find your partner.');assert.equal(ui.calls,0);
+ ui.click();assert.equal(ui.calls,0,'a second prose click still does not accept');
+});
+
 for(const locale of ['en','zh-CN'])test(`auto read opens in the target language ${locale} and replay cancels previous audio`,async t=>{
     const calls=[],lines=locale==='en'?[{text:'Hello!',locale:'en'},{text:'你好！',locale:'zh-CN'}]:[{text:'你好！',locale:'zh-CN'},{text:'Hello!',locale:'en'}];
     const ui=setup(t,false,{lines,targetLocale:locale,autoReadDialogue:true,readAloud:async(text,language,signal)=>calls.push({text,language,signal})});
@@ -213,4 +240,10 @@ test('late cached mappings do not update a closed dialogue',async t=>{
     ui.root.disposeDialogue();assert.equal(resolve,undefined,'old model cache is not read automatically');
     await new Promise(resolve=>setImmediate(resolve));
     assert.notEqual(ui.translation.children[1].title,'已连线');
+});
+
+test('an intentional button click is not swallowed while prose is typing',t=>{
+ const ui=setup(t);let prevented=false,stopped=false;
+ ui.click({target:{closest:selector=>selector==='button,input,textarea,select,summary,a'?{}:null},preventDefault(){prevented=true;},stopImmediatePropagation(){stopped=true;}});
+ assert.equal(prevented,false);assert.equal(stopped,false);assert.equal(ui.classes.has('is-speaking'),false);assert.equal(ui.calls,0,'the real button handler, not the reveal handler, owns the action');
 });

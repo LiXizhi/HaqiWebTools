@@ -26,7 +26,7 @@ test('local fallback migrates sound once and never replaces explicit device pref
 function fakeIDB(saved){const writes=[];return {writes,open(){const req={};queueMicrotask(()=>{req.result={createObjectStore(){},close(){},transaction(){const tx={objectStore:()=>({get(){const r={};queueMicrotask(()=>{r.result=saved; r.onsuccess();});return r;},put(value){saved=structuredClone(value);writes.push(saved);queueMicrotask(()=>tx.oncomplete());}})};return tx;}};req.onupgradeneeded();req.onsuccess();});return req;}};}
 test('IndexedDB serializes writes and restores settings in a new session without legacy override',async()=>{
  const indexedDB=fakeIDB(),first=createGameSettings({indexedDB,legacyStorage:emptyStorage});await first.open();
- first.set({particles:'off'});first.set({trails:'on',volume:.7});await first.flush();
+ first.set({particles:'off',music:false});first.set({trails:'on',volume:.7});await first.flush();
  const second=createGameSettings({indexedDB,legacyStorage:emptyStorage});await second.open({music:true});
  assert.deepEqual(second.value,first.value);assert.equal(second.value.music,false);assert.equal(indexedDB.writes.at(-1).trails,'on');
 });
@@ -50,7 +50,7 @@ test('disabled trails clear and resume without a catch-up burst',()=>{
 test('migration reads the last account local cache only and safely handles corrupt storage',()=>{
  const rows={'haqi.roles.last-account.v1':'local-account','haqi.roles.v1.account.local-account':JSON.stringify({catalog:{activeId:'a',roles:[{id:'a',save:{music:true}}]}})};
  assert.equal(legacyLocalMusic({getItem:k=>rows[k]||null}),true);
- assert.equal(legacyLocalMusic({getItem:()=>'{bad'}),false);
+ assert.equal(legacyLocalMusic({getItem:()=>'{bad'}),undefined);
 });
 test('failed IndexedDB opens keep the same usable session preferences',async()=>{
  const settings=createGameSettings({indexedDB:{open(){throw Error('blocked');}},legacyStorage:emptyStorage});await settings.open();settings.set({trails:'off',sound:false});await settings.flush();assert.equal(settings.value.trails,'off');assert.equal(settings.value.sound,false);
@@ -59,3 +59,8 @@ test('failed IndexedDB opens keep the same usable session preferences',async()=>
 test('explicit automatic weather survives a device settings reopen',async()=>{const indexedDB=fakeIDB(),first=createGameSettings({indexedDB,legacyStorage:emptyStorage});await first.open();assert.equal(first.value.earthLight,'day');assert.equal(first.value.earthWeather,'clear');first.set({earthLight:'auto',earthWeather:'auto'});await first.flush();const second=createGameSettings({indexedDB,legacyStorage:emptyStorage});await second.open();assert.equal(second.value.earthWeather,'auto');assert.equal(second.value.earthLight,'auto');});
 
 test('legacy default automatic environment migrates to daylight and clear sky',async()=>{const indexedDB=fakeIDB({version:1,earthLight:'auto',earthWeather:'auto',particles:'off'}),settings=createGameSettings({indexedDB,legacyStorage:emptyStorage});await settings.open();assert.equal(settings.value.earthLight,'day');assert.equal(settings.value.earthWeather,'clear');assert.equal(settings.value.particles,'off');assert.equal(indexedDB.writes.at(-1).environmentVersion,2);});
+
+test("new devices enable music, while an explicit old mute remains off",async()=>{
+ const fresh=createGameSettings({indexedDB:null,legacyStorage:()=>({getItem:()=>null})});await fresh.open({music:legacyLocalMusic({getItem:()=>null})});assert.equal(fresh.value.music,true);
+ const muted=createGameSettings({indexedDB:null,legacyStorage:()=>({getItem:()=>null})});await muted.open({music:false});assert.equal(muted.value.music,false);
+});

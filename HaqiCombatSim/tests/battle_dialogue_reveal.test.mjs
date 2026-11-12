@@ -2,6 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createDialogueReveal,waitForDialogueReveal} from '../js/dialogue_reveal.js';
 
+test('quest translation stays readable while the original types',t=>{
+ t.mock.timers.enable({apis:['setTimeout']});
+ const node={textContent:'Hello!'},translation={hidden:true};
+ const reveal=createDialogueReveal({reduced:()=>false,showTranslationImmediately:true});
+ reveal.start([{node,translation}]);assert.equal(node.textContent,'H');assert.equal(translation.hidden,false);
+ reveal.finish();assert.equal(node.textContent,'Hello!');assert.equal(translation.hidden,false);
+});
+
 test('script reveal streams NPC before player text and finish restores both',t=>{
  t.mock.timers.enable({apis:['setTimeout']});
  const a={textContent:'ABC'},b={textContent:'DEF'},reveal=createDialogueReveal({reduced:()=>false,stepMs:10});

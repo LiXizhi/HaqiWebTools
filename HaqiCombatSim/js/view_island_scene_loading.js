@@ -1,3 +1,4 @@
+import {loadJourneyArtwork} from './loading_art.js';
 import {createCloseButton} from './view_adventure_controls.js';
 import {setText} from './locale_runtime.js';
 import {petAppearanceStage} from './adventure_pets_core.js';
@@ -14,7 +15,6 @@ export function createIslandSceneLoadingView({retry,exit,title='向冒险出发'
     const heading=document.createElement('h2'),caption=document.createElement('p'),progress=document.createElement('progress'),again=document.createElement('button');
     setText(heading,title);caption.setAttribute('role','status');progress.setAttribute('aria-label','地形准备进度');
     const scene=document.createElement('div');scene.className='loading-pet-scene';scene.setAttribute('aria-hidden','true');
-    for(const name of ['sun','cloud','hills','road']){const part=document.createElement('div');part.className='loading-pet-'+name;scene.append(part);}
     const runner=document.createElement('div');runner.className='loading-pet-runner';
     const shadow=document.createElement('span');shadow.className='loading-pet-shadow';
     const portrait=document.createElement('canvas');portrait.width=portrait.height=160;portrait.className='loading-pet-portrait';
@@ -25,8 +25,10 @@ export function createIslandSceneLoadingView({retry,exit,title='向冒险出发'
     root.addEventListener('cancel',event=>{event.preventDefault();exit();});
     // Keep modal keyboard actions from becoming world shortcuts.
     root.addEventListener('keydown',event=>event.stopPropagation());root.addEventListener('keyup',event=>event.stopPropagation());
-    let last='',portraitTicket=0,portraitScope=null,portraitRole=null;
+    let last='',portraitTicket=0,portraitScope=null,portraitRole=null,disposed=false;
+    const paintBackdrop=assets=>{void loadJourneyArtwork(assets?.mode).then(url=>{if(!disposed&&url){scene.style.backgroundImage=`url(${JSON.stringify(url)})`;scene.classList.add('has-painted-background');}});};
     function paintPet(assets,save){
+        paintBackdrop(assets);
         const ticket=++portraitTicket,pet=selectLoadingPet(save,assets?.content),ctx=portrait.getContext('2d');
         ctx.clearRect(0,0,160,160);runner.hidden=false;setText(note,'小伙伴正在前方探路…');
         // Bake one small portrait. CSS animates its transform; no per-frame canvas work.
@@ -59,7 +61,7 @@ export function createIslandSceneLoadingView({retry,exit,title='向冒险出发'
             }
             if(!root.open)root.showModal();
         },
-        dispose(){portraitTicket++;root.close();root.remove();},
+        dispose(){disposed=true;portraitTicket++;root.close();root.remove();},
         hide(){portraitTicket++;portraitScope=null;portraitRole=null;if(root.open)root.close();last='';},
     };
 }

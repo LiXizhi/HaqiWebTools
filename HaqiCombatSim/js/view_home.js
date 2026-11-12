@@ -571,6 +571,9 @@ export function createHomeView(root,cb){
    if(paintStroke?.id===e.pointerId){paintStroke=null;if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);return;}
    if(!gesture||gesture.id!==e.pointerId)return;
    const g=gesture,p=position(e);
+   // A final coalesced pointer position can arrive without a pointermove event.
+   // Such a drag must never fall through into the pet's click/wish action.
+   g.moved ||= Math.hypot(p.sx-g.start.sx,p.sy-g.start.sy)>6;
    gesture=null;
    if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);
    if(g.steering){cb.stopWalk();return;}

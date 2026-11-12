@@ -1,3 +1,91 @@
+## 2026-11-12 下午：可选探索与交互提交
+
+```mermaid
+flowchart LR
+    Invite[伙伴挑战结束 短句邀请] --> Goal[camp_detour_core 三段探索状态]
+    Goal --> Track[adventure_app 寻路仅带路]
+    Track --> Touch[玩家走近后点击真实场景物]
+    Touch --> Plan[camp_toys planInteraction]
+    Plan --> Commit[persistReward 克隆校验并保存]
+    Commit --> Feedback[保存成功后提交场景动画与声音]
+    Commit --> Rune[晶簇第三次 单次普通抓宠符文]
+    Goal --> Pause[随时暂停 返回原主线]
+```
+
+探索存于角色 `openingJourney.detour`，刷新后以存档步数同步晶簇外观。目标距离、步骤、奖励物品存在性由纯核心检查；错误目标不推进，保存失败不先播放破碎或扣除互动次数。探索不写语言掌握、不自动补记战斗，不封锁既有主线。按用户当日下午追加意见，新手不再主动邀请家园；初次伙伴挑战后优先提供英语口令互动，场景探索仍可从抱抱龙入口选择。
+
+```mermaid
+flowchart LR
+    Opening[伙伴挑战完成] --> Wordplay[companion_wordplay 场景动作会话]
+    Wordplay --> Voice[现有LearningVoice 或玩家输入]
+    Voice --> Validate[companion_wordplay_core 语义与阶段校验]
+    Validate --> Store[persistReward 成功后才推进]
+    Store --> Reaction[view_companion_wordplay 伙伴回应 跳跃 靠近]
+    Store --> Queue[角色practices队列及唯一receipt]
+    Queue --> WordTree[recordHomePractice 真实目标词练习]
+```
+
+听示范、点继续和展示句子不计有效练习；提交失败不推进。语音会话以角色、阶段与取消代数隔离，关闭停止录音；已验证练习队列只在WordTree成功保存后移除。重复收据不能重复过关。非当前轮但有意义的口令可以触发动作，不冒充当前目标完成。小游戏不发货币，不另建语言掌握等级。
+
+HUD 后台刷新经 `hud_render_guard`：按住交互控件期间只合并渲染请求，原生 click 完成后读取最新模型绘制；取消、失焦、角色与场景变化解除守卫。不缓存或重放按钮业务动作。
+
+## 2026-11-12：随行助手基于真实可用操作给提示
+
+```mermaid
+flowchart LR
+    Sissy[茜茜任务63001对白] --> Practice[companion_practice_core 独立练习竞技场]
+    Practice --> Select[借用攻击牌与治疗牌 玩家选择]
+    Select --> Target[玩家点击受伤伙伴]
+    Target --> Rules[原validTargets canCast useCard]
+    Rules --> Health[真实生命变化与完成状态]
+    Health --> Commit[persistReward保存原talk进度]
+    Commit --> Track[原主线追踪]
+```
+
+练习竞技场不共享角色背包、宠物生命或战斗随机数；只在真实治疗成功后开放继续按钮。关闭、换角色、旧存档回调均不能提交；保存失败保留重试机会，成功后才清理会话。既有任务条件与奖励沿用原配置。对话层允许任务译文立即显示，正文点击只补全文字，接取任务仍由按钮触发；其他学习聊天保持原逐句显示顺序。
+
+```mermaid
+flowchart LR
+    Battle[真实战斗与当前可见手牌] --> Advice[companion_battle_advice_core 只读判断]
+    Rules[既有魔力 冷却 合法目标 符文库存] --> Advice
+    Advice --> View[view_companion_guide 一句建议]
+    View --> Highlight[高亮现有牌或目标按钮]
+    Highlight --> Player[玩家自行选牌和施法]
+    Player --> Engine[原战斗规则与语言卡互动]
+```
+
+助手不执行出牌、不修改战斗或学习记录。已选卡先检查可用性；待激活语言卡与已能施法的牌分开提示；符文直接读取原库存接口。治疗提示优先指出真实受伤且合法的目标，满血时建议留牌。增益建议校验伤害系别及现有同种效果，但不宣称是最优解。
+
+战斗助手与重新选牌按钮放入可测量的底部操作区，不覆盖在卡牌下方的独立绝对定位层。新手训练仅缩短跳过、普通状态和敌人短句的等待；技能演出、命中、治疗、失误、公式与事件顺序均沿用原逻辑。
+
+## 2026-11-12：光动画之后的交互表现层
+
+```mermaid
+flowchart LR
+    Input[原 Canvas 点击与移动] --> Feedback[interaction_feedback 独立表现模块]
+    Feedback --> Frame[原 adventure_renderer 渲染循环]
+    State[原角色与任务状态] --> Guide[companion_guide_core 只读目标]
+    Guide --> Trail[idle_world_guide 空闲短路径]
+    Trail --> Frame
+    State --> HUD[view_objective_progress 目标进度]
+    Reward[真实奖励队列 onBurst] --> Flight[FloatingFeedback 道具飞入]
+    Flight --> Frame
+    Camp[真实营地与可行走地面] --> Toys[camp_toys 五种可选环境互动]
+    Toys --> Frame
+    Toys --> Reply[抱抱龙一句回应和采样音效]
+    Manifest[WebP及音频清单 CDN默认] --> Art[新提示纸框 互动图集 加载插画]
+    Manifest --> Samples[audio_samples CC0采样]
+    Samples --> Sound[spell_sound 既有事件]
+    Settings[原声音设置与页面可见性] --> Music[background_music 原版曲目]
+    Speech[语音活动计数] --> Music
+```
+
+表现模块不写角色位置、任务进度、背包或战斗随机数。`ParticleSystem` 最多96粒，`FloatingFeedback` 最多24个，绘制复用原循环；切场、角色切换和阻断界面清理瞬态。空闲引导调用原分片寻路，只画前280像素，玩家输入后淡出。玩具图集失败后不逐帧重新下载，也不留下隐形点击目标。
+
+真实奖励先按既有事务结算，再由奖励队列触发飞入；动画结束不再次发奖。奖励的读屏播报保留；装备选择和特殊伙伴奖励仍使用原交互界面。新目标进度条只投影真实任务，不以时间自动推进。
+
+音乐保留已有静音选择，新设备默认开启；播放依赖真实操作解锁，朗读时自动压低，隐藏页面、回标题或关闭音乐立即暂停。新音效失败沿用旧反馈，不阻塞游戏。新的提示框是独立无字图片，文字继续由 DOM 和语言字典维护；图片加载失败保留原森林纸框。原光序章和战斗数值不变。
+
 ## 2026-11-11：当前对话与真实战斗反馈
 
 ```mermaid

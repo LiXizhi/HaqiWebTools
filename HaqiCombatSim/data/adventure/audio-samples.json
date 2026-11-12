@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "assets": {
+    "click_003": {
+      "local": "assets/adventure/audio/kenney/click_003.ogg",
+      "cdn": "https://cdn.keepwork.com/haqi/audio/kenney/20261112-v1/kenney/click_003.ogg",
+      "sha256": "2fa929138bc3a0f432696588f66eac94b8f6d463905ec8808c6461ce4b054292",
+      "size": 4371,
+      "source": "https://kenney.nl/assets/interface-sounds",
+      "license": "CC0-1.0"
+    },
+    "open_001": {
+      "local": "assets/adventure/audio/kenney/open_001.ogg",
+      "cdn": "https://cdn.keepwork.com/haqi/audio/kenney/20261112-v1/kenney/open_001.ogg",
+      "sha256": "a27c6bb0df7da1e6af5dd5937593c98bc58b6e513f42fe6a3254cd6a6949c648",
+      "size": 9834,
+      "source": "https://kenney.nl/assets/interface-sounds",
+      "license": "CC0-1.0"
+    },
+    "close_001": {
+      "local": "assets/adventure/audio/kenney/close_001.ogg",
+      "cdn": "https://cdn.keepwork.com/haqi/audio/kenney/20261112-v1/kenney/close_001.ogg",
+      "sha256": "44af8249b933e0fd35ec957a638bb1a0b01f85b53fbe9674bf77bd3ca3168ef4",
+      "size": 9915,
+      "source": "https://kenney.nl/assets/interface-sounds",
+      "license": "CC0-1.0"
+    },
+    "select_002": {
+      "local": "assets/adventure/audio/kenney/select_002.ogg",
+      "cdn": "https://cdn.keepwork.com/haqi/audio/kenney/20261112-v1/kenney/select_002.ogg",
+      "sha256": "4cc6ac5341b9b2c86fef80c347de028e9ab9f2e037586ac7d9fa59a403a1c012",
+      "size": 5463,
+      "source": "https://kenney.nl/assets/interface-sounds",
+      "license": "CC0-1.0"
+    },
+    "confirmation_002": {
+      "local": "assets/adventure/audio/kenney/confirmation_002.ogg",
+      "cdn": "https://cdn.keepwork.com/haqi/audio/kenney/20261112-v1/kenney/confirmation_002.ogg",
+      "sha256": "33b17a9a9a2397c62b285c52c33a907fdffb476909c99e42dde603f6a7a8b12c",
+      "size": 14169,
+      "source": "https://kenney.nl/assets/interface-sounds",
+      "license": "CC0-1.0"
+    },
+    "glass_002": {
+      "local": "assets/adventure/audio/kenney/glass_002.ogg",
+      "cdn": "https://cdn.keepwork.com/haqi/audio/kenney/20261112-v1/kenney/glass_002.ogg",
+      "sha256": "08e972c73e53c91d6d310e107e80db60edce78ae47225889a028e628a6f3da49",
+      "size": 4917,
+      "source": "https://kenney.nl/assets/interface-sounds",
+      "license": "CC0-1.0"
+    },
+    "error_002": {
+      "local": "assets/adventure/audio/kenney/error_002.ogg",
+      "cdn": "https://cdn.keepwork.com/haqi/audio/kenney/20261112-v1/kenney/error_002.ogg",
+      "sha256": "76810ec365f41078fd0507101da5bb7b8730fe011dde43908329fdabd8575e79",
+      "size": 7369,
+      "source": "https://kenney.nl/assets/interface-sounds",
+      "license": "CC0-1.0"
+    },
+    "bookFlip1": {
+      "local": "assets/adventure/audio/kenney/bookFlip1.ogg",
+      "cdn": "https://cdn.keepwork.com/haqi/audio/kenney/20261112-v1/kenney/bookFlip1.ogg",
+      "sha256": "fa81ac2fedc8c641661b87e349630a36c9800e795e0c800e029214efdbe26a7d",
+      "size": 18248,
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    "cloth1": {
+      "local": "assets/adventure/audio/kenney/cloth1.ogg",
+      "cdn": "https://cdn.keepwork.com/haqi/audio/kenney/20261112-v1/kenney/cloth1.ogg",
+      "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d",
+      "size": 16508,
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    "handleCoins": {
+      "local": "assets/adventure/audio/kenney/handleCoins.ogg",
+      "cdn": "https://cdn.keepwork.com/haqi/audio/kenney/20261112-v1/kenney/handleCoins.ogg",
+      "sha256": "8a91f969e932df709df80ee124d86a51389eed9b67f22e5e716bc2bbf60d8dab",
+      "size": 25394,
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    "chop": {
+      "local": "assets/adventure/audio/kenney/chop.ogg",
+      "cdn": "https://cdn.keepwork.com/haqi/audio/kenney/20261112-v1/kenney/chop.ogg",
+      "sha256": "d00c2b3c9fff07e376145c8c8c45c90e5084ec192f6ce0387db233f7b86f1486",
+      "size": 9370,
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    "knifeSlice": {
+      "local": "assets/adventure/audio/kenney/knifeSlice.ogg",
+      "cdn": "https://cdn.keepwork.com/haqi/audio/kenney/20261112-v1/kenney/knifeSlice.ogg",
+      "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f",
+      "size": 15532,
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    }
+  }
+}

@@ -45,9 +45,10 @@ test('completed opening battles credit training without auto-accepting or duplic
  assert.equal(progress.find(g=>g.id!==36201).value,0);
 });
 test('friend answer accepts equivalent beginner expressions but never negations or unrelated answers',()=>{
- for(const text of ['We are friends.','Yes, WE’RE friends!',' we  are friends '])assert.equal(openingFriendAnswer(text).accepted,true);
- for(const text of ['', 'We are not friends', 'We are friend', 'friends', 'no'])assert.equal(openingFriendAnswer(text).accepted,false);
- assert.match(openingFriendAnswer('We are friend').message,/复数/);
+ for(const text of ['We are friends.','Yes, WE’RE friends!',' we  are friends ','He is my friend.',"He's my friend!",'This is my friend.','Yes, he is our friend.'])assert.equal(openingFriendAnswer(text).accepted,true,text);
+ for(const text of ['', 'We are not friends', 'We are friend', 'friends', 'no','He is not my friend.','Is he my friend?','He is my friend but we are enemies.','I have a lamp.'])assert.equal(openingFriendAnswer(text).accepted,false,text);
+ assert.match(openingFriendAnswer('We are friend').message,/加 s/);
+ assert.doesNotMatch(openingFriendAnswer('My friend is kind.').message,/加 s/);
 });
 test('scene companion responds to earned progress and disappears once a real pet exists',()=>{
  const save={zone:'camp',openingJourney:{version:1,phase:'offer'}},npc={x:100,y:100};

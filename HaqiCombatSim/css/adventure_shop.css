@@ -89,3 +89,25 @@
 .pet-free-talk .pet-free-icon{width:36px;height:36px;flex:none}
 .pet-free-talk:hover{background:#fff3d4}
 @media(max-width:720px){.pet-buy-dialog .modal-header,.pet-buy-dialog .modal-body{padding:14px 16px}.pet-free-talk{padding:12px 14px 14px}}
+
+/* Adventure supplies size to their actual cards; the full catalogue keeps its grid. */
+.shop-catalog[hidden]{display:none!important}
+.modal.shop-modal.shop-modal-focused{width:min(760px,100%)}
+.shop-layout-focused{grid-template-columns:minmax(180px,230px) minmax(0,1fr);align-items:start}
+.shop-layout-focused .shop-preview{min-height:0}
+.shop-layout-focused .shop-goods{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));min-height:0}
+.shop-layout-focused .shop-good{display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 12px}
+.shop-layout-focused .shop-good-name{font-size:16px;white-space:normal}
+.shop-layout-focused .shop-good-level{font-size:14px;line-height:1.5;margin:0;text-align:center}
+.shop-layout-focused .shop-good .shop-buy{min-height:44px;font-size:14px;padding:8px 22px;width:100%}
+.shop-layout-focused.shop-layout-empty{grid-template-columns:minmax(0,460px);justify-content:center}
+.shop-layout-empty .shop-sidebar{display:grid;grid-template-columns:1fr;gap:14px}
+.shop-layout-empty .shop-preview{padding:20px;gap:14px}
+.shop-layout-empty .shop-item-meta{font-size:15px;line-height:1.65}
+@media(max-width:720px){
+ .shop-layout-focused{grid-template-columns:minmax(0,1fr)}
+ .shop-layout-focused .shop-sidebar{display:grid}
+ .shop-layout-focused .shop-catalog{grid-row:auto}
+ .shop-layout-focused .shop-preview{grid-row:auto}
+ .shop-layout-focused .shop-goods{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
+}

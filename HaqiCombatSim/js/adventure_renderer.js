@@ -1,3 +1,6 @@
+import {createCampToys} from './camp_toys.js';
+import {createInteractionFeedback} from './interaction_feedback.js';
+import {createIdleWorldGuide} from './idle_world_guide.js';
 import {openingJourneyScene,openingGuideAnchor,OPENING_PET} from './opening_journey_core.js';
 import {createBattleScenery,drawBattleBackground,drawBattleDisk} from './battle_scenery.js';
 import {presenceLanguageLabel} from './adventure_presence_core.js';
@@ -136,6 +139,9 @@ export function questMarker(save,content,npcId,stats=()=>catalogStatSnapshot(sav
     return null;
 }
 export function createRenderer(canvas,assets) {
+    const interactionFeedback=createInteractionFeedback();
+    const idleGuide=createIdleWorldGuide();
+    const campToys=createCampToys(assets.campToyArt);
     const battleScenery=createBattleScenery();
     const markerCache=createQuestMarkerCache(questMarker,catalogStatSnapshot);
     const drawSignpost=createSignpostPainter();
@@ -285,7 +291,10 @@ export function createRenderer(canvas,assets) {
         if(!assets.drawMonster?.(c,m,-52*scale,-104*scale+bob,104*scale,104*scale))creature(c,m?.id||'water-bubble',0,bob,t,scale,false);
         c.restore();
     }
-    function render(world,save,time,{localSecond=null,localSecondMoving=false,localFollowing=false,localSecondFollowing=false,gatheringPets=[],graphics={particles:true,trails:true},socialGesture=null,petScene=null,socialActors=[],remotePlayers=[],inParty=false,moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,monstersPaused=false,companionBubble=null,learningGreeting=null}={}) {
+    function render(world,save,time,{localSecond=null,localSecondMoving=false,localFollowing=false,localSecondFollowing=false,gatheringPets=[],graphics={particles:true,trails:true},socialGesture=null,petScene=null,socialActors=[],remotePlayers=[],inParty=false,moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,hideLocalActors=false,monstersPaused=false,companionBubble=null,learningGreeting=null}={}) {
+        interactionFeedback.update(world,save,time,{moving,disabled:title||motionHidden||monstersPaused,reducedMotion:reducedMotion.matches,particlesEnabled:graphics.particles&&!graphics.low});
+        campToys.prepare(world);
+        idleGuide.update(world,save,assets.content,time,{moving,disabled:title||motionHidden||monstersPaused||!!localSecond,reduced:reducedMotion.matches});
         let phaseTime=perf.enabled?performance.now():0;
         const mark=name=>{if(phaseTime){const now=performance.now();perf.record(world.isEarth?name:name.replace('earth-','island-'),now-phaseTime);phaseTime=now;}};
         const markerFor=markerCache.forState(save,assets.content,world);
@@ -302,6 +311,7 @@ export function createRenderer(canvas,assets) {
         earthEnvironment.update(world,save.position,time,{light:graphics.earthLight,weather:graphics.earthWeather,at:gestureAt,reducedMotion:reducedMotion.matches});
         ctx.save();
         try {
+        const shake=interactionFeedback.shake.offset(time,reducedMotion.matches);ctx.translate(shake.x,shake.y);
         ctx.scale(cam.scale,cam.scale);ctx.translate(-cam.x,-cam.y);
         mark('earth-render-setup');
         if(world.isEarth)world.terrainPainter(ctx,world,{x:cam.x,y:cam.y,w:w/cam.scale,h:h/cam.scale});
@@ -320,6 +330,8 @@ export function createRenderer(canvas,assets) {
         ctx.strokeStyle='#e3f3da33';ctx.lineWidth=2;
         if(!world.layout&&!reducedMotion.matches)for(let i=0;i<38;i++){const x=(i*151+t*8)%1750,y=80+(i*269)%1450;if(onIsland(x,y,-12))continue;ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+13,y+4,x+26,y);ctx.stroke();}
         if(path.length&&!title){ctx.strokeStyle='#fff6bc88';ctx.setLineDash([3,10]);ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(save.position.x,save.position.y);for(const p of path)ctx.lineTo(p.x,p.y);ctx.stroke();ctx.setLineDash([]);const end=path[path.length-1];circleRune(ctx,end.x,end.y,15,t,'#fff3ae');}
+        interactionFeedback.drawGround(ctx,time);
+        idleGuide.draw(ctx,time);
         if(!world.portal.hidden)circleRune(ctx,world.portal.x,world.portal.y,45,t,save.graduated?'#e9e29a':'#a6bab0');
         if(world.entrancePortal)circleRune(ctx,world.entrancePortal.x,world.entrancePortal.y,45,t,'#a6bab0');
         const identity=save.name+':'+save.appearance+':'+save.seed;
@@ -370,6 +382,7 @@ export function createRenderer(canvas,assets) {
             }
             if(!o.hidden)for(const pose of monsterScenePositions(world,o))objects.push({...o,...pose,monsterIds:null,groupSize:o.monsterIds?.length||1});
         }
+        if(!title&&!localSecond)objects.push(...campToys.rows);
         if(!save.observer) objects.push({...save.position,kind:'hero'});
         const openingActor=!title&&!localSecond&&openingJourneyScene(save,world.npcs.find(n=>n.id===36201));
         if(openingActor){if(!walkable(world,openingActor.x,openingActor.y)){const npc=world.npcs.find(n=>n.id===36201);openingActor.x=npc.x;openingActor.y=npc.y+12;}objects.push({...openingActor,kind:'opening-companion'});}
@@ -424,6 +437,7 @@ export function createRenderer(canvas,assets) {
         if(world.dungeon?.scene.streetscape)objects.push(...streetPainter.objects(world,viewport,time,save.position,reducedMotion.matches));
         if(!title&&!motionHidden)for(const row of gatheringPets)objects.push({...row.position,kind:'pet-social',row:{...row,scale:petDisplayScale(row.pet,assets.content)}});
         if(!title&&!motionHidden){for(const n of world.memoryNodes||[])objects.push({...n,kind:'hanzi-memory'});for(const n of world.memorySigns||[])objects.push({...n,kind:'hanzi-sign'});}
+        if(hideLocalActors)objects=objects.filter(o=>!['hero','pet','pet-social','local-player','opening-companion'].includes(o.kind));
         objects=mergeSceneObjects(scenery,objects);
         const streetFocus=world.dungeon?.scene.streetscape?[...world.npcs,...streetPainter.people()].filter(n=>Math.hypot(n.x-save.position.x,n.y-save.position.y)<120):[];
         mark('earth-render-actors');
@@ -475,13 +489,18 @@ export function createRenderer(canvas,assets) {
                 if(o.cityDungeon&&!world.isEarth){const art=cityEntranceAppearance(o.cityLevel,o.cityNodeEntrance);plate(ctx,o.name,o.x,o.y-art.h/2-17,{...PLATE.place,text:art.color});}
                 else if(!world.isEarth&&o.cityHotspot)plate(ctx,o.name,o.x,o.y+32);
             }
+            if(o.kind==='camp-toy')campToys.draw(ctx,o,time,{reduced:reducedMotion.matches,near:Math.hypot(o.x-save.position.x,o.y-save.position.y)<120});
             if(o.kind==='npc') {
                 shadow(ctx,o.x,o.y,25);const dragon=[36211,30112].includes(o.id),sw=dragon?100:64,sh=dragon?104:86;
+                const response=interactionFeedback.npcPose(o,save.position,time);
+                ctx.save();ctx.translate(0,-response.lift);
+                if(response.glow){ctx.shadowColor='#fff0ad';ctx.shadowBlur=graphics.low?4:10;}
                 const character=npcCharacter(o,assets.hero?.manifest,world.isCityDungeon===true);
-                if(character)avatar(ctx,{...character,facing:o.facing||0},o.x,o.y,t,false,1,false);
+                if(character)avatar(ctx,{...character,facing:response.facing},o.x,o.y,t,false,1,false);
                 else if(!assets.draw(ctx,o.portrait,o.x-sw/2,o.y-sh+Math.sin(t*1.6+o.id)*1.5,sw,sh,true,false)){
                     ellipse(ctx,o.x,o.y-27,19,28,'#668b76');ellipse(ctx,o.x,o.y-65,14,16,'#efd6ad');
                 }
+                ctx.restore();
                 plate(ctx,o.name,o.x,o.y+19,PLATE.npc);
                 const marker=world.languageQuestTarget?.kind==='npc'&&world.languageQuestTarget.id===o.id?'!':o.earthNpc?earthCityNpcMarker(save,world.city,o.id):markerFor(o.id);
                 if(marker){text(ctx,marker,o.x,o.y-sh-8+Math.sin(t*3)*3,29,'#fff1a3');}
@@ -554,7 +573,10 @@ export function createRenderer(canvas,assets) {
                     nameY=o.y+21;
                 }else{
                     if(graphics.trails&&!title&&!motionHidden&&!teleportEffect)drawMotionAccessory(ctx,motion,o,time,reducedMotion.matches);
+                    const response=interactionFeedback.heroPose(time);
+                    ctx.save();ctx.translate(o.x,o.y);ctx.scale(response.x,response.y);ctx.translate(-o.x,-o.y);
                     const heroBottom=avatar(ctx,{...visualSave,facing:heroPose.facing},o.x,o.y,t,moving,1,true,heroPose);
+                    ctx.restore();
                     if(graphics.trails&&!title&&!motionHidden&&!teleportEffect)drawMotionAccessory(ctx,motion,o,time,reducedMotion.matches,true);
                     nameY=heroBottom+21;
                 }
@@ -576,7 +598,7 @@ export function createRenderer(canvas,assets) {
         mark('earth-render-objects');
         if(!title&&companion&&openingGuideAnchor(save,world.npcs.find(n=>n.id===36201)))plate(ctx,'去看看那只小家伙',companion.position.x,companion.position.y-72,PLATE.place);
         if(petScene&&!title)drawPetSocialEffects(ctx,assets,objects.filter(o=>o.kind==='pet-social'&&o.x>=cam.x-80&&o.x<=cam.x+w/cam.scale+80&&o.y>=cam.y&&o.y<=cam.y+h/cam.scale+80).map(o=>o.row),petScene.effects,time,reducedMotion.matches,petScene.now);
-        if(petScene?.food&&!title){const f=petScene.food;ctx.fillStyle='#b58a55';ctx.beginPath();ctx.ellipse(f.x,f.y,16,7,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#efcc80';for(let i=0;i<5;i++){ctx.beginPath();ctx.arc(f.x-8+i*4,f.y-2-(i%2)*3,3,0,Math.PI*2);ctx.fill();}}
+        if(petScene?.food&&!title&&!hideLocalActors){const f=petScene.food;ctx.fillStyle='#b58a55';ctx.beginPath();ctx.ellipse(f.x,f.y,16,7,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#efcc80';for(let i=0;i<5;i++){ctx.beginPath();ctx.arc(f.x-8+i*4,f.y-2-(i%2)*3,3,0,Math.PI*2);ctx.fill();}}
         if(learningGreeting&&!title){
             const g=learningGreeting,at=g.npc;
             const maxWidth=Math.min(260,(w-24)/cam.scale),lines=[];
@@ -610,7 +632,7 @@ export function createRenderer(canvas,assets) {
         }
         if(!world.portal.hidden)plate(ctx,world.portal.name,world.portal.x,world.portal.y+48);
         if(world.entrancePortal)plate(ctx,world.entrancePortal.name,world.entrancePortal.x,world.entrancePortal.y+48);
-        if(!title)drawRewardEffect(ctx,save.position.x,save.position.y,rewardEffect,reducedMotion.matches);
+        if(!title&&rewardEffect?.level)drawRewardEffect(ctx,save.position.x,save.position.y,rewardEffect,reducedMotion.matches);
         if(!title)drawTeleportEffect(ctx,teleportEffect,time,reducedMotion.matches);
         dungeonFog(ctx,world,save.position,{x:cam.x,y:cam.y,w:w/cam.scale,h:h/cam.scale},cam.scale,save.dungeonExploration?.[world.zone]);
         } finally {ctx.restore();}
@@ -629,6 +651,7 @@ export function createRenderer(canvas,assets) {
             vignette.addColorStop(0,'transparent');vignette.addColorStop(1,'#113b4b66');g.fillStyle=vignette;g.fillRect(0,0,w,h);
         }
         ctx.drawImage(vignetteCanvas,0,0,w,h);
+        if(!title)interactionFeedback.floating.draw(ctx,time,{reduced:reducedMotion.matches});
         mark('earth-render-overlay');
         if(world.isEarth&&!title){
             // Screen-size labels stay readable at every scene zoom, above scenery.
@@ -821,7 +844,7 @@ export function createRenderer(canvas,assets) {
         target.updateStatusTargets?.(target.battleStatusRects);
         return Object.fromEntries(Object.entries(positions).map(([id,at])=>[id,{x:(at.x+shakeX)*scale,y:(at.y+shakeY)*scale}]));
     }
-    function releaseScene(){terrainTiles.clear();terrainRasterizer?.dispose();terrainRasterizer=null;islandScenery.clear();streetPainter.reset();if(backing)backing.width=backing.height=0;backing=null;backingZone=null;if(overview)overview.width=overview.height=0;overview=null;overviewWorld=null;canvas.width=canvas.height=1;}
-    return {releaseScene,prepareScene,isAnimating:()=>cameraZoom.active||performance.now()<zoomUntil||terrainTiles.pending>0||!!(weatherFade?.previous&&weatherFade.previousWeight>.01),frameStats:()=>frameMeter.value,pauseFrameMeter:()=>frameMeter.sample(0,false),environmentStats:()=>earthEnvironment.stats,streetStats:streetPainter.stats,streetPeople:streetPainter.people,terrainStats:()=>({tiles:terrainTiles.size,pending:terrainTiles.pending,...terrainTiles.stats(),scenery:islandScenery.stats()}),resetZoom:()=>{zoomUntil=performance.now()+300;return cameraZoom.reset();},render,minimap,worldToScreen:point=>({x:(point.x-cam.x)*cam.scale,y:(point.y-cam.y)*cam.scale}),screenToWorld,renderBattle,zoomBy,setFishingCamera:active=>cameraZoom.setFishing(active),viewRect:()=>viewRect?{...viewRect}:null,bubbleTarget:()=>bubbleTarget,greetingTarget:()=>greetingTarget,companionTarget:()=>companion?{x:companion.position.x,y:companion.position.y}:null};
+    function releaseScene(){campToys.clear();idleGuide.clear();interactionFeedback.clear();terrainTiles.clear();terrainRasterizer?.dispose();terrainRasterizer=null;islandScenery.clear();streetPainter.reset();if(backing)backing.width=backing.height=0;backing=null;backingZone=null;if(overview)overview.width=overview.height=0;overview=null;overviewWorld=null;canvas.width=canvas.height=1;}
+    return {campToys,idleGuide,interactionFeedback,releaseScene,prepareScene,isAnimating:()=>campToys.active(performance.now())||idleGuide.active||interactionFeedback.active()||cameraZoom.active||performance.now()<zoomUntil||terrainTiles.pending>0||!!(weatherFade?.previous&&weatherFade.previousWeight>.01),frameStats:()=>frameMeter.value,pauseFrameMeter:()=>frameMeter.sample(0,false),environmentStats:()=>earthEnvironment.stats,streetStats:streetPainter.stats,streetPeople:streetPainter.people,terrainStats:()=>({tiles:terrainTiles.size,pending:terrainTiles.pending,...terrainTiles.stats(),scenery:islandScenery.stats()}),resetZoom:()=>{zoomUntil=performance.now()+300;return cameraZoom.reset();},render,minimap,worldToScreen:point=>({x:(point.x-cam.x)*cam.scale,y:(point.y-cam.y)*cam.scale}),screenToWorld,renderBattle,zoomBy,setFishingCamera:active=>cameraZoom.setFishing(active),viewRect:()=>viewRect?{...viewRect}:null,bubbleTarget:()=>bubbleTarget,greetingTarget:()=>greetingTarget,companionTarget:()=>companion?{x:companion.position.x,y:companion.position.y}:null};
 }
 

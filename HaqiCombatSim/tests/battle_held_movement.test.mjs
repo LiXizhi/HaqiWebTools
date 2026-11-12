@@ -5,6 +5,7 @@ import vm from 'node:vm';
 import * as W from '../js/adventure_world_core.js';
 import {earthRules} from '../js/adventure_earth_core.js';
 import {bindTouchMovement} from '../js/view_adventure_movement.js';
+import {createHudRenderGuard} from '../js/hud_render_guard.js';
 import {openingJourneyActive} from '../js/opening_journey_core.js';
 
 const source=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
@@ -19,16 +20,17 @@ function harness(terrain){
     surface.releasePointerCapture=id=>captures.delete(id);
     surface.getBoundingClientRect=()=>({left:0,top:0});
     let renders=0,layoutReads=0,cancellations=0;surface.getBoundingClientRect=()=>{layoutReads++;return {left:0,top:0};};
-    const context=vm.createContext({W,bindTouchMovement,openingJourneyActive,heroNavigation:{cancel(){cancellations++;}},
+    const hud=new EventTarget();hud.ownerDocument=new EventTarget();hud.ownerDocument.defaultView=new EventTarget();hud.contains=()=>false;
+    const context=vm.createContext({W,bindTouchMovement,openingJourneyActive,createHudRenderGuard,setTimeout,clearTimeout,roleEpoch:1,roleStore:{owner:'test',catalog:{activeId:'test'}},heroNavigation:{cancel(){cancellations++;}},
         world:{isEarth:true,earthBoating:true,w:8640000,h:4320000,earthRules:earthRules(),terrainAt:()=>terrain,paths:[],buildings:[],landmarks:[]},
         save:{position:{x:800,y:600}},assets:{content:{}},dt:1/60,now:1000,moving:false,
         keys:new Set(),joystick:{x:0,y:0},heldPointer:null,path:[],destination:null,talkApproach:null,
         stage:'world',panel:null,dialog:null,languageAdventure:{active:false,close(){}},
-        nodes:{world:surface,hud:{}},touchIndicator:{hidden:true,style:{},firstElementChild:{style:{}}},
+        nodes:{world:surface,hud},touchIndicator:{hidden:true,style:{},firstElementChild:{style:{}}},
         recommendedLanguageQuest:()=>null,languageTasks:{ensure(){},snapshot(){return {rows:[]};}},V:{renderHud(){renders++;}},model:()=>({}),openPanel(){},track(){},untrack(){},exitDungeon(){},interactNearest(){},
     });
     context.renderer={screenToWorld:(x,y)=>({x:context.save.position.x+x-400,y:context.save.position.y+y-300})};
-    vm.runInContext([line('const touchMovement='),line('function resetMovementInput()'),line('function paintHud()')].join('\n'),context);
+    vm.runInContext([line('const touchMovement='),line('function resetMovementInput()'),line('const hudRenderGuard='),line('function paintHud()'),line('function paintHudNow()')].join('\n'),context);
     return {context,captures,get renders(){return renders;},get layoutReads(){return layoutReads;},get cancellations(){return cancellations;},pointer(type,x){
         const event=new Event(type);Object.assign(event,{pointerType:'touch',pointerId:1,button:0,clientX:x,clientY:300});surface.dispatchEvent(event);
     }};
@@ -54,6 +56,7 @@ for(const terrain of ['water','ocean','grass'])for(const input of ['mouse','keyb
         const stopped=c.save.position.x;c.moving=false;movement.runInContext(c);
         assert.equal(c.save.position.x,stopped);assert.equal(c.moving,false);
         assert.equal(c.keys.size,0);assert.equal(c.heldPointer,null);assert.equal(h.captures.size,0);
+        vm.runInContext('hudRenderGuard.dispose()',c);
     });
 }
 
@@ -62,4 +65,5 @@ test('touch release after HUD refresh stops movement and releases capture',()=>{
     vm.runInContext('paintHud()',h.context);h.pointer('pointerup',460);
     movement.runInContext(h.context);
     assert.equal(h.context.save.position.x,800);assert.equal(h.captures.size,0);
+    vm.runInContext('hudRenderGuard.dispose()',h.context);
 });

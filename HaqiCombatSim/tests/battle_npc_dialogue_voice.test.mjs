@@ -12,7 +12,7 @@ import {tr} from '../js/locale_runtime.js';
 // separate course/free-chat controllers. This is the NPC speech-button path.
 test('task dialogue forwards Azure Dragon and each subsequent speaker to SDK synthesis',async()=>{
  const source=fs.readFileSync(new URL('../js/view_adventure.js',import.meta.url),'utf8');
- const renderSource=source.slice(source.indexOf('export function renderDialogue('),source.indexOf('// 战斗卡牌说明')).replace('export function','function');
+ const renderSource=source.slice(source.indexOf('export function renderDialogue('),source.indexOf('export function renderBattle(')).replace('export function','function');
  const app=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
  const controller=app.slice(app.indexOf('function finishTrackedDialogue()'),app.indexOf('function interact(target)'));
  const chapter=JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json',import.meta.url)));

@@ -1,0 +1,34 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<base href="../../"><title>抱抱龙引导隔离测试</title><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css">
+<style>html,body{width:100%;height:100%;overflow:hidden}.preview-exit{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:10000;padding:8px 16px;border-radius:20px;background:#fff4d8;color:#284d48;font-size:14px;text-decoration:none}</style>
+<body class="haqi-app"><a class="preview-exit" href="Haqi.html">抱抱龙引导测试 · 返回游戏</a><div id="root">正在准备战斗预览，角色仅在内存中，不读取或保存游戏进度。</div><script type="module">
+import {loadResources} from './js/adventure_assets.js';
+import {createAdventure,playerSpec} from './js/adventure_core.js';
+import {validTargets} from './js/combat_arena_core.js';
+import {createPveBattle,playPveRound,runeCardsInHand} from './js/combat_pve_core.js';
+import {renderBattle} from './js/view_adventure.js';
+import {createRenderer} from './js/adventure_renderer.js';
+
+const assets=await loadResources(),save=createAdventure(assets.content,{name:'场景体验',school:'fire',starter:'dragon_green'});
+const renderer=createRenderer(document.createElement('canvas'),assets),root=document.querySelector('#root');let battle,selected=null,presentation=null;
+const choices=[['海滩 · A','town','beach'],['森林 · C','camp','forest'],['雪山 · B','ice','snow'],['学院 · A','camp','town'],['岩谷 · C','fire','volcanic'],['星夜 · B','dark','dark']];
+function select(index){const [name,zone,biome]=choices[index],region=assets.content.worldMaps[zone].regions.find(r=>r.biome===biome);save.zone=zone;save.position={x:region.x,y:region.y};battle=createPveBattle({dataset:assets.dataset,player:playerSpec(save,assets.content),monsters:[assets.content.monsters['fire-scout']],seed:9});selected=null;presentation=null;
+ const hero=battle.sides.near[0],mode=new URLSearchParams(location.search).get('case');
+ hero.petDeckSeq=[];hero.petDeckMap=[];
+ hero.deckSeq=['Ice_SingleAttack_Level1'];hero.deckMap=[1];hero.wordCards={};
+ hero.pips={normal:mode==='blocked'?0:7,power:0};
+ if(mode==='fallen'){hero.hp=0;hero.petDeckSeq=['Ice_SingleAttack_Level1'];hero.petDeckMap=[1];}
+ if(mode==='practice')hero.wordCards={0:{activated:false,title:'Help my friend.',description:'测试语言卡'}};
+ if(mode==='rune'){const key=Object.keys(battle.resolved.cards).find(k=>battle.resolved.cards[k].type==='CatchPet');battle.runes=[{itemId:12345,key,count:1}];battle.runeUsed={};battle.captureRulesVersion=1;battle.sides.far[0].isMob=true;battle.sides.far[0].template.speciesId='test';}
+ paint();}
+function exitPreview(){location.replace(new URL('Haqi.html',document.baseURI).href);}
+function step(action){if(battle.finished)return;playPveRound(battle,action);selected=null;paint();}
+function target(id){document.body.dataset.targetClicked=id;if(new URLSearchParams(location.search).get('case')==='practice')return;if(!selected||battle.finished)return;const hero=battle.sides.near[0],card=battle.resolved.cards[selected.key];if(!validTargets(battle,hero,card).some(unit=>unit.id===id))return;step({...selected,targetId:id});}
+function paint(){renderBattle(root,{assets,save,battle,selected,runeCardsOpen:new URLSearchParams(location.search).get("case")==="rune",runeHand:runeCardsInHand(battle),discarded:[],animating:false,soundEnabled:false},{sound(){},retreat:exitPreview,pass:()=>step({pass:true}),select:h=>{selected=h;paint();},reselect:()=>{selected=null;paint();},target,discard(){},toggleRunes(){},togglePetCards(){},finish:exitPreview,aiHintsToggle(){},aiHintDismiss(){}});}
+function frame(t){const canvas=document.querySelector('#battle-canvas');if(canvas)canvas.battlePositions=renderer.renderBattle(canvas,battle,save,t,null);requestAnimationFrame(frame);}
+// Automated art checks may select a fixture through its URL; players have no theme control.
+const requested=new URLSearchParams(location.search).get('fixtureScene');
+const index=['beach','forest','snow','academy','canyon','starlight'].indexOf(requested);
+select(index<0?1:index);requestAnimationFrame(frame);
+</script></body></html>
+

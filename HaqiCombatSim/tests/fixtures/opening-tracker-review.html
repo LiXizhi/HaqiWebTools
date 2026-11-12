@@ -1,0 +1,6 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><title>新手追踪按钮隔离测试</title><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><body class="haqi-app"><main class="game-shell"><div id="hud" class="hud"></div></main><script type="module">
+import {createHudRenderGuard} from './js/hud_render_guard.js';
+import {loadResources} from './js/adventure_assets.js';import {createAdventure} from './js/adventure_core.js';import {renderHud} from './js/view_adventure.js';
+const assets=await loadResources(),save=createAdventure(assets.content);save.openingJourney={version:1,phase:'challenge',route:'battle'};window.tracked=[];const cb=new Proxy({track:id=>window.tracked.push(id)},{get:(o,k)=>o[k]||(()=>{})});window.hudScope=1;window.hudActive=true;window.renderCount=0;const guard=createHudRenderGuard(document.querySelector('#hud'),{render:()=>{window.renderCount++;renderHud(document.querySelector('#hud'),{assets,save},cb);},getScope:()=>[window.hudScope],canRender:()=>window.hudActive});window.repaintHud=()=>guard.request();window.repaintHud();window.ready=true;
+</script></body></html>
+

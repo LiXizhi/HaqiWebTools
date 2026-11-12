@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "atlases": {
+    "toys": {
+      "local": "assets/adventure/environment/camp-toys-v1.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/environment/20261112-v1/camp-toys-v1.webp",
+      "width": 1280,
+      "height": 288,
+      "size": 89300,
+      "sha256": "c76cffa6ca3e9522ff045fa6c76138bd7f277b554b00e175837a721a78677b52",
+      "source": {
+        "generator": "image_gen",
+        "file": "exec-88919038-371a-461e-bc1d-b4b8e0ffd71b.png",
+        "sha256": "41b51a0c6828b4c5c025b5c1bb2e3a87b154adb578edda27d80d0c2fcd7098a1",
+        "width": 2172,
+        "height": 724
+      },
+      "frames": {
+        "mushroom": {
+          "rect": [
+            55,
+            66,
+            155,
+            175
+          ],
+          "sourceRect": [
+            0,
+            0,
+            461,
+            724
+          ]
+        },
+        "crystal": {
+          "rect": [
+            315,
+            67,
+            138,
+            171
+          ],
+          "sourceRect": [
+            461,
+            9,
+            392,
+            715
+          ]
+        },
+        "bells": {
+          "rect": [
+            563,
+            56,
+            157,
+            184
+          ],
+          "sourceRect": [
+            853,
+            3,
+            439,
+            721
+          ]
+        },
+        "fireflies": {
+          "rect": [
+            816,
+            72,
+            158,
+            164
+          ],
+          "sourceRect": [
+            1292,
+            15,
+            430,
+            709
+          ]
+        },
+        "spring": {
+          "rect": [
+            1071,
+            102,
+            162,
+            132
+          ],
+          "sourceRect": [
+            1722,
+            18,
+            444,
+            706
+          ]
+        }
+      }
+    }
+  }
+}

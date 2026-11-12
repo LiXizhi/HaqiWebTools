@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import {npcCharacter} from '../js/adventure_city_people_core.js';
+import {createInteractionFeedback} from '../js/interaction_feedback.js';
 import {fill,tr,setText} from '../js/locale_runtime.js';
 const source=file=>fs.readFileSync(new URL('../js/'+file,import.meta.url),'utf8');
 
@@ -10,6 +11,8 @@ test('actual scene NPC branch preserves original dragon art and limits generated
     const s=source('adventure_renderer.js'),start=s.indexOf("if(o.kind==='npc') {"),end=s.indexOf("if(o.kind==='mob')",start),code=s.slice(start,end);
     const draws=[],avatars=[];
     const context={npcCharacter,o:{kind:'npc',id:36211,name:'青龙',zone:'camp',portrait:{id:'dragon'},x:100,y:200},world:{isCityDungeon:false},assets:{hero:{},content:{},draw:(...args)=>{draws.push(args);return true;}},ctx:{},t:0,save:{},stats:()=>({}),shadow(){},avatar:(...args)=>avatars.push(args),plate(){},PLATE:{npc:{}},markerFor:()=>null,earthCityNpcMarker:()=>null,text(){},ellipse(){},Math};
+    Object.assign(context,{interactionFeedback:createInteractionFeedback(),time:0,graphics:{low:false}});
+    context.save.position={x:300,y:300};Object.assign(context.ctx,{save(){},restore(){},translate(){}});
     vm.runInNewContext(code,context);assert.equal(avatars.length,0);assert.deepEqual(draws[0].slice(4,6),[100,104]);assert.equal(draws[0][1].id,'dragon');
     context.world.isCityDungeon=true;context.o={...context.o,id:991000,zone:'city:sample:default'};
     vm.runInNewContext(code,context);assert.equal(draws.length,1);assert.equal(avatars.length,1);assert.ok(avatars[0][1].appearance);

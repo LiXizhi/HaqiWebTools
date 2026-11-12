@@ -75,17 +75,19 @@ export function applyUiIcon(element,manifest,name,mode='cdn'){
     return true;
 }
 
-// Optional skin overlay: activate atomically after all three images decode.
+// Optional skin overlay: activate atomically after its required images decode.
 async function loadForestUi(mode,read){
     const manifest=await read('data/adventure/forest-ui.json');
-    const names={frame:'paper',primary:'jade',secondary:'cream'},rules=[];
+    const names={frame:'paper',primary:'jade',secondary:'cream',tooltip:'tooltip'},rules=[];
     await Promise.all(Object.entries(manifest.assets).map(async([id,row])=>{
+        try{
         const url=mode==='local'?row.local:row.cdn;
         if(!url||(mode!=='local'&&!url.startsWith('https://cdn.keepwork.com/')))throw Error('森林皮肤资源地址无效');
         const image=new Image();image.crossOrigin='anonymous';
         await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{image.onload=image.onerror=null;reject(Error('加载超时'));},8000);image.onload=()=>{clearTimeout(timer);resolve();};image.onerror=()=>{clearTimeout(timer);reject(Error('图片加载失败'));};image.src=url;});
         if(image.naturalWidth!==row.width||image.naturalHeight!==row.height)throw Error('素材尺寸不匹配');
         rules.push(`--ui-${names[id]}:url(${JSON.stringify(new URL(url,document.baseURI).href)});--ui-${names[id]}-slice:${row.slice.join(' ')};`);
+        }catch(error){if(id!=='tooltip')throw error;console.warn('提示框图片暂不可用，沿用森林纸框');}
     }));
     const style=document.createElement('style');style.id='forest-ui-art';style.textContent=`.storybook-ui{${rules.join('')}}`;
     document.getElementById(style.id)?.remove();document.head.append(style);document.documentElement.classList.add('forest-ui');

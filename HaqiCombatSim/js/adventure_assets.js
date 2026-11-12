@@ -69,6 +69,7 @@ export async function loadResources(progress) {
     validateSpellEffects(effects,dataset.cards);
     const mode=assetMode(location.hostname,location.search);
     // Manifests only: island sheets and cards load when the current zone or UI needs them.
+    const campToyArtReady=loadEnvironmentArt(mode,json,'data/adventure/camp-toy-art.json').catch(()=>null);
     const environmentReady=loadEnvironmentArt(mode,json).catch(error=>{console.warn('使用基础场景素材：',error.message);return null;});
     const buildingArtReady=loadEnvironmentArt(mode,json,'data/adventure/building-art.json').catch(error=>{console.warn('使用基础建筑素材：',error.message);return null;});
     const entranceArtReady=loadEnvironmentArt(mode,json,'data/adventure/entrance-art.json').catch(error=>{console.warn('使用基础副本入口：',error.message);return null;});
@@ -211,7 +212,7 @@ export async function loadResources(progress) {
     for(const [id,entry] of Object.entries(monsterArt.entries))lazyImages.set('monster:'+id,entry);
     const drawMonster=createMonsterArtRenderer(monsterArt,content,draw,drawPet);
     await uiArtReady;
-    const environmentArt=await environmentReady;
+    const environmentArt=await environmentReady,campToyArt=await campToyArtReady;
     const buildingArt=await buildingArtReady;
     const entranceArt=await entranceArtReady;
     const terrainDecorationArt=await terrainDecorationsReady;
@@ -284,7 +285,7 @@ export async function loadResources(progress) {
 
     const loadLegacyJournal=createQuestJournalLoader(json);
     const loadQuestJournal=async()=>{const journal=await loadLegacyJournal();return {...journal,quests:[...journal.quests,...islandPackJournal(islandPacks)]};};
-    return {registerImage,releaseImage,ensureImage,prepareEarthScene,warmNearby,warmBattle,warmActors,hero,sceneryTile,loadFishing,drawMonster,monsterArt,loadQuestJournal,dungeons,environmentArt,buildingArt,entranceArt,terrainDecorationArt,warmScenery,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
+    return {campToyArt,registerImage,releaseImage,ensureImage,prepareEarthScene,warmNearby,warmBattle,warmActors,hero,sceneryTile,loadFishing,drawMonster,monsterArt,loadQuestJournal,dungeons,environmentArt,buildingArt,entranceArt,terrainDecorationArt,warmScenery,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

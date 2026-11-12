@@ -149,3 +149,9 @@
 @keyframes loading-pet-road{to{transform:translateX(-66px)}}
 @keyframes loading-pet-dust{from{transform:translateX(0) scale(.7);opacity:.8}to{transform:translateX(-12px) scale(1.2);opacity:0}}
 @media(prefers-reduced-motion:reduce){.loading-pet-runner,.loading-pet-portrait,.loading-pet-dust,.loading-pet-road::after{animation:none}.loading-pet-dust{display:none}}
+
+/* Generated camp illustration, with the existing pet layered above it. */
+.loading-pet-scene{background:#e9e6ce center / cover no-repeat}
+.forest-ui .island-scene-loading{border:25px solid transparent;border-image:var(--ui-paper) var(--ui-paper-slice) fill / 38px / 0 stretch;background:none;border-radius:0;box-shadow:none;padding:10px 12px 12px}
+.loading-pet-scene.has-painted-background{border-radius:10px}
+.island-scene-loading .loading-pet-note{font-size:13px;line-height:1.5}

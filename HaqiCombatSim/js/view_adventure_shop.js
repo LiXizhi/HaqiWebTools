@@ -7,6 +7,7 @@ import { productPrice,foodInfo } from './adventure_pets_core.js';
 import { petPortrait } from './view_adventure_pets.js';
 import { showPetDetails } from './view_adventure_pet_details.js';
 import { createCloseButton } from './view_adventure_controls.js';
+import { shopGuidance,adventureShopSelection } from './adventure_shop_guidance_core.js';
 
 // Layout: HaqiShop.kids1.html (account/preview, two tab rows, 3 × 3 goods).
 // The original GetByCate provider is replaced by the local JSON catalogue.
@@ -15,6 +16,8 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
     const {save,assets}=model,c=assets.content,config=c.shopConfig;
     const inspector=new ItemDetails(body,model,{el,spellFace,tile});
     const state=model.shopView||(model.shopView={});
+    const selection=adventureShopSelection(save,c);
+    let focused=selection.active&&!state.showAll;
     let category=config.categories.find(row=>row.id===state.category)||config.categories[0];
     let sub=state.subcategoryCategory===category.id&&Number.isInteger(state.subcategory)?state.subcategory:0;
     if(!category.subcategories[sub])sub=0;
@@ -47,7 +50,7 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
     const grid=el('div','shop-goods'),pager=el('nav','shop-pagination'),status=el('span','shop-count');
     status.setAttribute('aria-live','polite');pager.setAttribute('aria-label','商品分页');
     const catalog=el('section','shop-catalog',subtabs,el('div','shop-toolbar',query,ownership,level,school),grid,pager);
-    body.append(el('div','shop-layout',aside,catalog));
+    const layout=el('div','shop-layout',aside,catalog);body.append(layout);
     body.addEventListener('pointerdown',event=>{if(event.target.closest('.shop-bean'))return;for(const node of body.querySelectorAll('.shop-bean.is-open'))node.classList.remove('is-open');});
     const NOT_FOR_SALE_BEANS=10000;
     function magicBeanPrice(item){return item.kind==='mount'&&item.currency===984?productPrice(item,c):null;}
@@ -117,7 +120,7 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
         const close=()=>dialog.close();
         const exit=createCloseButton(close,'关闭购买');
         const food=foodInfo(c,item.itemId),quantity=el('input','');quantity.type='number';quantity.min='1';quantity.max='999';quantity.step='1';quantity.value='1';quantity.setAttribute('aria-label','购买数量');
-        const confirm=button('确认',()=>{if(food&&!quantity.reportValidity())return;close();cb.action({type:'buy',productId:item.id,...(food?{count:Number(quantity.value)}:{})});},'primary');
+        const confirm=button('确认',()=>{if(food&&!quantity.reportValidity())return;confirm.disabled=true;const entry=focused&&selection.rows.find(row=>row.productId===item.id),beforeCount=save.inventory[item.itemId]||0,beforeTransactions=save.transactions?.length||0;close();const result=cb.action({type:'buy',productId:item.id,...(food?{count:Number(quantity.value)}:{})});if(entry&&result===true&&model.save===save&&((save.inventory[item.itemId]||0)>beforeCount||(save.transactions||[]).slice(beforeTransactions).some(row=>row.productId===item.id)))cb.panel(entry.panel);},'primary');
         confirm.setAttribute('aria-label',fill(`{v0}：确认`,{v0:String(item.name)}).text);
         const body=el('div','modal-body pet-buy-body',el('div','shop-preview-art',picture(item,112)),el('h3','',item.name),el('p','shop-preview-price',priceLabel(item,' / 件')),confirm);
         if(food){
@@ -125,7 +128,7 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
             const update=()=>{const count=Number(quantity.value),cost=productPrice(item,c)*count;total.textContent=fill(`合计 {v0} 奇豆`,{v0:String(Number.isSafeInteger(cost)&&cost>=0?cost:'—')}).text;confirm.disabled=!Number.isInteger(count)||count<1||count>999||cost>(save.inventory[100]||0);};
             quantity.addEventListener('input',update);update();
             body.insertBefore(el('label','pet-food-quantity',el('span','','购买数量'),quantity),confirm);body.insertBefore(total,confirm);
-            body.insertBefore(el('p','muted',fill(`每份饱食 +{v0}{v1}。购买后到宠物页面放入食槽。`,{v0:String(food.restore),v1:String(food.xp?fill(`，经验 +{v0}`,{v0:String(food.xp)}).text:'')}).text),confirm);
+            body.insertBefore(el('p','muted',fill(`每份饱食 +{v0}{v1}。空食槽会自动补入，可到宠物页查看。`,{v0:String(food.restore),v1:String(food.xp?fill(`，经验 +{v0}`,{v0:String(food.xp)}).text:'')}).text),confirm);
         }
         const nodes=[el('header','modal-header',el('h2','','确认购买'),exit),body];
 
@@ -156,11 +159,19 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
         preview.replaceChildren();
         if(!item){
             if(tile)preview.append(heroPortrait(assets,save,120,150));
-            preview.append(el('p','muted','点击商品图标查看详情'));return;
+            const advice=shopGuidance(save,c),product=c.shop.find(row=>row.id===advice.productId);
+            preview.append(el('strong','','冒险准备'),el('p','shop-item-meta',advice.text));
+            if(product&&!advice.owned){
+                preview.append(el('h3','',product.name),el('p','shop-preview-price',priceLabel(product)));
+                if(advice.shortfall)preview.append(el('small','muted',`还差 ${advice.shortfall} 奇豆`));
+                const choose=button('看看这件',()=>paintPreview(product),'secondary');preview.append(choose);
+            }else preview.append(button(advice.panel==='pet'?'去照顾伙伴':'去配卡',()=>cb.panel(advice.panel),'secondary'));
+            return;
         }
         preview.append(el('div','shop-preview-art',picture(item,112)),el('h3','',item.name),el('p','shop-item-meta',itemMeta(item,true)));
         const gear=c.items[item.itemId];
         if(item.kind==='gear'){
+            if(item.slot===24)preview.append(el('p','shop-item-meta',`可装 ${gear.stats[167]||10} 张，同张可带 ${gear.stats[170]||2} 张。`));
             if(gear.iconFallback)preview.append(el('small','muted','原图缺失 · 同部位示意图'));
             if(gear.unsupportedStats?.length){const note=el('small','muted');setText(note,'当前未生效属性：{stats}',{stats:gear.unsupportedStats.join('、')});preview.append(note);}
             if(!canEquip(save,gear,c))preview.append(el('small','shop-item-warning',equipmentBlockReason(save,gear,c)));
@@ -171,6 +182,7 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
             const capture=button('寻找并捕获',()=>cb.encounter('wild:'+item.petId),'secondary');capture.disabled=save.level<item.level;preview.append(capture,el('small','muted','捕获时从符文卡使用抓宠符文。普通和高级符文由哈奇岛的安卓婆婆出售。'));
         }
         if(item.kind==='mount')preview.append(el('small','muted','购买后在背包的坐骑分类中骑乘。骑乘时属性加入战斗。'));
+        if(foodInfo(c,item.itemId))preview.append(button('去宠物食槽',()=>cb.panel('pet'),'secondary'));
         preview.append(el('p','shop-preview-price',priceLabel(item,' / 件')),buyButton(item));
     }
     function remember(){Object.assign(state,{category:category.id,subcategory:sub,subcategoryCategory:category.id,page,query:query.value,ownership:ownership.value,level:level.value,school:school.value,slot:''});}
@@ -186,6 +198,36 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
     }
     function paint(){
         remember();
+        tabs.replaceChildren();
+        if(selection.active){
+            const toggle=button(focused?'查看全部商品':'回到冒险补给',()=>{focused=!focused;state.showAll=!focused;state.selected=null;paint();},'secondary');
+            tabs.append(toggle);
+        }
+        if(!focused)for(const row of config.categories){const tab=button(row.label,()=>{category=row;sub=0;page=0;state.selected=null;paint();},'secondary');tab.dataset.category=row.id;tabs.append(tab);}
+        catalog.hidden=focused&&selection.rows.length===0;
+        layout.classList.toggle('shop-layout-focused',focused);
+        layout.classList.toggle('shop-layout-empty',catalog.hidden);
+        layout.dataset.focusedCount=focused?String(selection.rows.length):'';
+        modal.classList.toggle('shop-modal-focused',focused);
+        catalog.querySelector('.shop-toolbar').hidden=focused;
+        subtabs.hidden=focused;pager.hidden=focused;aside.querySelector('.shop-trial').hidden=focused;
+        if(focused){
+            grid.replaceChildren();preview.replaceChildren(el('strong','','当前冒险需要'),el('p','shop-item-meta',selection.message));
+            if(!selection.rows.length)preview.append(button('去试试配卡',()=>cb.panel('deck'),'secondary'));
+            for(const row of selection.rows){
+                const item=c.shop.find(p=>p.id===row.productId),card=el('article','shop-good');
+                card.append(el('strong','shop-good-name',item?.name||(row.panel==='pet'?'已有口粮':'已有卡包')));
+                if(item)card.append(picture(item,80));
+                card.append(el('p','shop-good-level',row.text));
+                if(row.owned)card.append(button(row.panel==='pet'?'去宠物食槽':'去装备配卡',()=>cb.panel(row.panel),'secondary shop-buy'));
+                else{
+                    card.append(el('span','shop-good-price',priceLabel(item)),el('small','shop-good-level',row.shortfall?`还差 ${row.shortfall} 奇豆`:`买后${row.panel==='pet'?'去食槽喂伙伴':'去配卡使用'}`));
+                    const buy=buyButton(item);buy.disabled=row.shortfall>0;card.append(buy);
+                }
+                grid.append(card);
+            }
+            return;
+        }
         school.hidden=category.id!=='gear';
         for(const tab of tabs.children)tab.setAttribute('aria-pressed',String(tab.dataset.category===category.id));
         subtabs.replaceChildren();
@@ -218,9 +260,6 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
         pager.append(previous,status,next);
         const selected=visible.find(item=>item.id===state.selected);if(!selected)state.selected=null;
         paintPreview(selected);
-    }
-    for(const row of config.categories){
-        const tab=button(row.label,()=>{category=row;sub=0;page=0;state.selected=null;paint();},'secondary');tab.dataset.category=row.id;tabs.append(tab);
     }
     for(const input of [query,ownership,level,school])input.oninput=()=>{page=0;state.selected=null;paint();};
     const trial=el('select','');trial.setAttribute('aria-label','试炼等级');

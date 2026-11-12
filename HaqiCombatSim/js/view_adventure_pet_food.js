@@ -2,6 +2,10 @@ import {fill,tr,setText} from './locale_runtime.js';
 import {DetailDialog} from './view_detail_dialog.js';
 import {FOOD_ID,foodInfo,hungryPets} from './adventure_pets_core.js';
 
+// Manual feeding accepts any non-full owned pet; auto-feeding keeps its threshold.
+export function manualFoodCandidate(save){
+ return Object.entries(save.pets||{}).filter(([,pet])=>Number.isFinite(pet.hunger)&&pet.hunger<100).sort((a,b)=>a[1].hunger-b[1].hunger)[0]||null;
+}
 export function renderPetFood(parent,model,cb,{el,button,art}){
  const {save,assets}=model,c=assets.content;
  const box=el('section','pet-food-station');box.setAttribute('aria-label',tr('宠物自动食槽'));
@@ -14,7 +18,7 @@ export function renderPetFood(parent,model,cb,{el,button,art}){
   dialog.body.append(el('p','muted','先吃左槽，再吃右槽。只消耗放入食槽的口粮；战斗和离线期间暂停。'));
   if(current){
    dialog.body.append(el('p','',fill(`槽内：{v0} × {v1}`,{v0:String(c.items[current.itemId].name),v1:String(current.count)}).text));
-   const hungry=hungryPets(save,c)[0];
+   const hungry=manualFoodCandidate(save);
    if(hungry)dialog.footer.append(button('喂养'+c.pets[hungry[1].speciesId].name,()=>{dialog.close();cb.action({type:'pet-food-feed',slot:index,petId:hungry[0]});},'primary'));
    dialog.footer.append(button('全部取回背包',()=>{dialog.close();cb.action({type:'pet-food-take',slot:index});},'secondary'));
   }
@@ -32,14 +36,22 @@ export function renderPetFood(parent,model,cb,{el,button,art}){
   dialog.footer.append(button('前往补给商店',()=>{dialog.close();cb.panel('shop',{category:'supply'});},'secondary'));
   dialog.open(trigger);
  }
+ const guided=el('div','pet-food-guided');
  const hint=el('small','pet-food-hint');hint.setAttribute('aria-live','polite');
- box.append(slots,hint);
+ box.append(slots,guided,hint);
  let signature;
  box.refresh=()=>{
   const hungry=hungryPets(save,c)[0];
-  const next=JSON.stringify([save.petFoodSlots,!!save.pendingEncounter,hungry?.[0]]);
+  const candidate=manualFoodCandidate(save),lesson=save.quests?.[63009],teaching=!!lesson?.accepted&&!lesson.claimed&&!(lesson.progress?.['action:79019']>=1)&&!save.tips?.petFed;
+  const next=JSON.stringify([save.petFoodSlots,!!save.pendingEncounter,hungry?.[0],teaching,candidate?.[0]]);
   if(signature===next)return;signature=next;
-  slots.replaceChildren();
+  slots.replaceChildren();guided.replaceChildren();
+  const feedSlot=save.petFoodSlots?.findIndex(row=>row&&row.count>0)??-1;
+  if(teaching&&candidate&&feedSlot>=0&&!save.pendingEncounter){
+   const label=fill('喂{pet}一份口粮',{pet:c.pets[candidate[1].speciesId].name}).text;
+   const feed=button(label,()=>cb.action({type:'pet-food-feed',slot:feedSlot,petId:candidate[0]}),'primary teach-target');
+   guided.append(feed);
+  }
   for(let index=0;index<2;index++){
    const row=save.petFoodSlots?.[index],item=row&&c.items[row.itemId];
    const b=button([item?art(assets,item.art,48,48):el('span','pet-food-empty','+'),...(row?[el('strong','',`× ${row.count}`)]:[])],()=>open(index,b),'secondary pet-food-slot');

@@ -84,6 +84,26 @@
       },
       "quality": 95,
       "alpha": true
+    },
+    "tooltip": {
+      "local": "assets/adventure/ui/forest/tooltip-v1.webp",
+      "width": 960,
+      "height": 410,
+      "slice": [
+        100,
+        120,
+        100,
+        120
+      ],
+      "size": 66158,
+      "sha256": "f45cb047e9ddfc96e22ece675ac4ff5e4f8451063313d284283b4d7e74d260a8",
+      "source": {
+        "generator": "image_gen",
+        "file": "exec-823de8b1-51f8-48fb-b947-b0e850c32636.png",
+        "sha256": "eab74bb5aa8b0f77a9edf8d6f6e44b23586af8696492116d7c5b70160b5229dc"
+      },
+      "alpha": true,
+      "cdn": "https://cdn.keepwork.com/haqi/ui/forest/20261112-v1/tooltip-v1.webp"
     }
   },
   "notes": "Native transparent image_gen. Frame has no characters or text. Buttons separately cropped to complete alpha silhouettes with margin; labels remain DOM. Nine-slice keeps end ornaments intact."

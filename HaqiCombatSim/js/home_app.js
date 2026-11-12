@@ -120,16 +120,7 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
    status='点抱抱龙附近的空地，铺下毯子。';
    emit();
   },
-  starterLamp:()=>{
-   if(!canRequestStarterLamp())return;
-   const point=[{x:2,y:2},{x:6,y:2},{x:2,y:3}].find(p=>canPlace(at('bedside-lamp',p),currentObjects(),catalog.items).ok);
-   if(!point)throw Error('先挪出一点空间，再添灯。');
-   select('bedside-lamp');
-   Object.assign(selection,{spellPosition:point,starterLamp:true});
-   status='用英语要一盏灯，拿到后就能照亮小屋。';
-   emit();
-   view.openSummon();
-  },
+  starterLamp:requestStarterLamp,
   initialCategory,
   drawHero,
   drawTree,
@@ -193,6 +184,7 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
   },
   color:value=>{if(selection){spellEpoch++;selection.color=value;if(preview)preview.color=value;emit();}},
   helpWish:()=>{
+   if(home?.id===STARTER_ROOM_ID)return requestStarterLamp();
    if(wish){
     select(wish.itemId,wish.color||'',wish.phase==='place');
     view.setInput('');
@@ -247,6 +239,23 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
   if(home?.id!==STARTER_ROOM_ID||lang()!=='en')return false;
   const objects=currentObjects(),blanket=objects.find(obj=>obj.id===STARTER_BLANKET_ID);
   return !!blanket&&(blanket.x!==4||blanket.y!==3)&&!objects.some(obj=>obj.itemId==='bedside-lamp');
+ }
+ function requestStarterLamp(){
+   if(!canRequestStarterLamp())return;
+   const point=[{x:2,y:2},{x:6,y:2},{x:2,y:3}].find(p=>canPlace(at('bedside-lamp',p),currentObjects(),catalog.items).ok);
+   if(!point)throw Error('先挪出一点空间，再添灯。');
+   select('bedside-lamp');
+   Object.assign(selection,{spellPosition:point,starterLamp:true});
+   status='用英语要一盏灯，拿到后就能照亮小屋。';
+   emit();
+   view.openSummon();
+ }
+ function currentPetWish(petId,expanded=false){
+  if(home?.id===STARTER_ROOM_ID){
+   if(!canRequestStarterLamp())return null;
+   return {petId,itemId:'bedside-lamp',starterLamp:true,text:'Can I have a lamp?',translation:'可以给我一盏灯吗？',expanded,until:Date.now()+22000};
+  }
+  return {petId,...petWish(petId,round++,catalog.items,lang()),expanded,until:Date.now()+22000};
  }
  function emit(){if(valid())view.render({languageAnchors:languageGame.positionAnchors(),languageCount:languageGame.countOverlay(),languageChoices:languageGame.choiceIds(),history:editHistory.state(),showRoofs,hero,secondHero:duo()?secondHero:null,secondSave:getContext().secondSave,pointerOwner:pointerOwner(),destination,heroSave:getContext().save,build,home,homes,guests,catalog,practiceItems:TEMPLATE_PRACTICE,objects:currentObjects(),pets,petBag,camera,scale,status,selection,preview,candidates,quiet,wish,translation,unsaved:!!pending,starterBlanket:canPlaceStarterBlanket(),starterLamp:canRequestStarterLamp(),blockedPetId:petFurnitureVisit?.route===null?petFurnitureVisit.petId:null,lang:lang(),assetMode});}
  function error(e){if(!valid())return;status=pending?'未保存：本机存储写入失败，请重试保存。':e.message||'操作未完成，请重试';emit();}
@@ -363,9 +372,10 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
   }
   if(hit?.kind==='pet'){
    if(languageGame.talkToPet(hit.id))return;
-   wish=wish?.petId===hit.id
+   wish=home?.id===STARTER_ROOM_ID?currentPetWish(hit.id,true):wish?.petId===hit.id
     ?{...wish,expanded:true,until:Date.now()+22000}
-    :{petId:hit.id,...petWish(hit.id,round++,catalog.items,lang()),expanded:true,until:Date.now()+22000};
+    :currentPetWish(hit.id,true);
+   if(!wish&&home?.id===STARTER_ROOM_ID)status=currentObjects().some(o=>o.itemId==='bedside-lamp')?'灯光暖暖的，抱抱龙很喜欢这里。':'挪一挪毯子，看看抱抱龙喜欢哪里。';
    translation=false;
    emit();
    return;
@@ -427,6 +437,7 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
   if(!pet)return;
   const route=petFurnitureRoute(pet,target,objects);
   const starter=isStarterFurniture(object);
+  if(starter){wish=null;translation=false;}
   if(!route&&!starter)return;
   const previous=pets.find(p=>p.id===petFurnitureVisit?.petId);
   if(petFurnitureVisit?.homeId===home.id&&previous?.targetId===petFurnitureVisit.objectId&&previous.activity===petFurnitureVisit.activity){
@@ -559,7 +570,7 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
    const practice=attempt.practiceValid?{id:attempt.receipt,input:attempt.input,itemId:candidate.itemId,language:attempt.language,at:attempt.at,...(starterLamp?{starterLamp:true}:{})}:null;
    await commit({type:'summon',...candidate,receipt:attempt.receipt,input:attempt.input,object,practice});
    attempt=null;speechSession=null;
-   if(starterLamp)status='灯亮了。按住灯，可以给它换个位置。';
+   if(starterLamp){status='灯亮了。按住灯，可以给它换个位置。';wish=null;translation=false;emit();}
    view.setInput('');view.closeSummon(starterLamp);
    const b=footprint(object,catalog.items);
    view.celebrateSummon?.({x:b.x+b.w/2,y:b.y+b.h*.75,w:b.w,h:b.h});
@@ -632,7 +643,7 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
    const available=near.filter(p=>!p.activity&&selection?.petId!==p.id&&petFurnitureVisit?.petId!==p.id),pet=available.length?available[petTurn++%available.length]:null;
    if(pet){const facility=currentObjects().find(o=>{const b=footprint(o,catalog.items);return b.item.activity&&pet.x>=b.x&&pet.x<b.x+b.w&&pet.y>=b.y&&pet.y<b.y+b.h&&!pets.some(other=>other.targetId===o.id&&other.until>now);});
     if(facility){pet.activity=catalog.items.find(i=>i.id===facility.itemId).activity;pet.targetId=facility.id;pet.until=now+10000;}
-    if(['zh','en'].includes(lang())&&!quiet&&(!wish||now>wish.until)){wish={petId:pet.id,...petWish(pet.id,round++,catalog.items,lang()),until:now+15000};translation=false;}
+    if(['zh','en'].includes(lang())&&!quiet&&(!wish||now>wish.until)&&!(home.id===STARTER_ROOM_ID&&(build||selection))){wish=currentPetWish(pet.id);translation=false;}
    }
   }
   emit();

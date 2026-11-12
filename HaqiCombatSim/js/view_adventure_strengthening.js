@@ -1,4 +1,4 @@
-import {fill} from './locale_runtime.js';
+import {fill,setText} from './locale_runtime.js';
 import {STRENGTHENING_FILTERS,affordableUnstrengthenedGear,strengtheningItems,strengtheningPreview} from './adventure_strengthening_core.js';
 import {teachPointer} from './view_teaching.js';
 // Kids MCML window: selected equipment → target properties / material; 4 × 3 paged inventory.
@@ -77,7 +77,7 @@ export function renderStrengthening(body,model,cb,{el,button,art}) {
         const pages=Math.max(1,Math.ceil(rows.length/12));state.page=Math.max(0,Math.min(state.page||0,pages-1));
         [...tabs.children].forEach((b,i)=>b.setAttribute('aria-pressed',String(i===state.filter)));
         slot.replaceChildren();preview.replaceChildren();material.replaceChildren();grid.replaceChildren();pager.replaceChildren();
-        slot.disabled=!p.item;
+        slot.disabled=!p.item;setText(heading,p.item?'确认材料，强化这件装备':'先选一件要强化的装备');
         if(p.item){
             slot.append(art(assets,p.item.art,64,64),el('span','strengthening-level',`+${p.level}`));
             slot.title=fill(`{v0} +{v1}，点击取出`,{v0:String(p.item.name),v1:String(p.level)}).text;
@@ -111,7 +111,7 @@ export function renderStrengthening(body,model,cb,{el,button,art}) {
         previous.disabled=state.page===0;next.disabled=state.page===pages-1;
         pager.append(previous,el('span','',`${state.page+1} / ${pages}`),next);
         const visible=guide&&[...grid.children].find(node=>node.getAttribute?.('data-guid')===guide.guid);
-        showGuide(guide?(state.guid===guide.guid?submit:visible||submit):null);
+        showGuide(guide?(p.item&&!p.error?submit:visible||submit):null);
     }
     paint();
 }

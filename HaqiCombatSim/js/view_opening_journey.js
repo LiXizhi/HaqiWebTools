@@ -7,7 +7,7 @@ import {OPENING_PET,openingJourney,openingJourneyMilestones,openingFriendAnswer}
 export function renderOpeningJourney(root,model,cb){
  const state=openingJourney(model.save);
  root.replaceChildren();root.className='overlay visible opening-conversation-layer';
- const modal=el('section','modal opening-journey-modal');modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');
+ const modal=el('section','modal opening-journey-modal opening-character-dialogue');modal.dataset.phase=state.phase;modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');
  const title=state.phase==='offer'?'抱抱龙发现了什么？':state.phase==='rescue'?'新伙伴：咕噜噜':state.phase==='done'?'初战告捷':'第一次搭档';
  modal.setAttribute('aria-label',title);
  const body=el('div','modal-body');
@@ -17,8 +17,8 @@ export function renderOpeningJourney(root,model,cb){
  const moni=['guide','route','explain','challenge'].includes(state.phase);
  const speaker=moni?'莫尼':state.phase==='offer'?'抱抱龙':'咕噜噜';
  const npc=model.assets.content.npcs[36201];
- const portrait=moni&&npc?.portrait?art(model.assets,npc.portrait,148,180):petPortrait(model.assets,state.phase==='offer'?guidePet(model.save,model.assets.content):OPENING_PET,0,148);
- const speakerBox=el('aside','opening-speaker',portrait,el('strong','',speaker));
+ const portrait=moni&&npc?.portrait?art(model.assets,npc.portrait,240,304):petPortrait(model.assets,state.phase==='offer'?guidePet(model.save,model.assets.content):OPENING_PET,0,220);
+ const speakerBox=el('aside','opening-speaker',portrait);speakerBox.setAttribute('aria-label',speaker);
  modal.append(speakerBox);
  const milestones=openingJourneyMilestones(model.save);
  const details=el('details','opening-progress');details.append(el('summary','',`这次冒险 · 已完成 ${milestones.filter(x=>x.complete).length}/3`));
@@ -35,8 +35,9 @@ export function renderOpeningJourney(root,model,cb){
   action('先和侦查兵切磋',{step:'route',route:'battle'});
  }else if(state.phase==='explain'){
   say('它是和你们一起的吗？');
-  body.append(button('We are friends. · 我们是朋友',()=>cb.action({step:'explain',text:'We are friends.',choice:true}),'primary'));
-  body.append(button('听示范',cb.listen,'secondary'));
+  body.append(el('div','opening-replies',
+   button('We are friends. · 我们是朋友',()=>cb.action({step:'explain',text:'We are friends.',choice:true}),'primary'),
+   button('听示范',cb.listen,'secondary')));
   const form=el('form',''),input=el('input','name-input'),feedback=el('p','muted','也可写 We\'re friends.');
   input.setAttribute('aria-label','告诉莫尼我们是朋友');input.autocomplete='off';input.maxLength=100;
   input.setAttribute('aria-describedby','opening-answer-feedback');
@@ -69,11 +70,11 @@ export function renderOpeningJourney(root,model,cb){
   else actions.append(button('去试试新搭档',cb.go,'primary'));
   actions.append(button('查看伙伴',cb.pets,'secondary'));
  }else if(state.phase==='done'){
-  say('配合得不错！找青龙学个新招吧。');
-  actions.append(button('去找青龙',cb.continue,'primary'),button('查看伙伴',cb.pets,'secondary'));
+  say('抱抱龙想和你玩口令，试试用英语指挥它！');
+  actions.append(button('和伙伴玩口令',cb.wordplay,'primary'),button('先去找青龙',cb.continue,'secondary'));
  }
  body.append(actions,details);
- modal.append(el('header','modal-header',el('h2','',title),createCloseButton(cb.close)),body);
+ modal.append(el('header','modal-header',el('h2','',speaker),createCloseButton(cb.close)),body);
  root.append(modal);
  modal.addEventListener('keydown',event=>{
   event.stopPropagation();

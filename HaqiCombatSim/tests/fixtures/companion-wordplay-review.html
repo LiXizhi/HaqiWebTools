@@ -1,0 +1,21 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><title>伙伴口语动作试玩 · 内存进度</title>
+<link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_dialogue.css">
+<style>html,body{height:100%;margin:0;overflow:hidden}#world{position:fixed;inset:0;width:100%;height:100%}.review-note{position:fixed;z-index:1001;top:8px;left:12px;background:#fff8de;padding:7px 12px;color:#395035;font:12px sans-serif;border-radius:12px;max-width:80vw}#review-result{position:fixed;inset:40% 10%;z-index:1002;text-align:center;background:#fff8de;padding:20px}#review-result:empty{display:none}</style>
+<body class="haqi-app forest-ui"><canvas id="world"></canvas><div class="review-note">独立试玩 · 进度仅在内存，不修改角色存档 · <span id="progress">准备中</span></div><div id="overlay"></div><div id="review-result"></div>
+<script type="module">
+import {loadResources} from './js/adventure_assets.js';
+import * as A from './js/adventure_core.js';
+import {createWorld} from './js/adventure_world_core.js';
+import {createRenderer} from './js/adventure_renderer.js';
+import {openCompanionWordplay} from './js/companion_wordplay.js';
+import {createLearningVoice} from './js/language_adventure_voice.js';
+const assets=await loadResources();let save=A.createAdventure(assets.content,{name:'口语试玩',school:'fire',starter:'dragon_green'});
+save.zone='camp';save.openingJourney={...(save.openingJourney||{}),phase:'done'};delete save.pendingEncounter;
+const world=createWorld('camp',assets.content,save),canvas=document.querySelector('#world'),renderer=createRenderer(canvas,assets);
+await renderer.prepareScene(world,save);let active=true,session;
+function frame(t){if(!active)return;renderer.render(world,save,t,{monstersPaused:true,motionHidden:true,hideLocalActors:true});requestAnimationFrame(frame);}requestAnimationFrame(frame);
+const progress=document.querySelector('#progress');function update(){progress.textContent=`有效互动 ${save.openingJourney.wordplay?.step||0}/3`;}
+function close(done){session.dispose();active=false;document.querySelector('#overlay').className='';document.querySelector('#review-result').textContent=done?'三轮完成，伙伴听懂了！刷新可重新试玩。':'已退出。刷新可重新试玩。';}
+session=openCompanionWordplay({root:document.querySelector('#overlay'),getState:()=>({assets,save,active}),voice:createLearningVoice({getSettings:()=>save.languageLearning}),commit(action){const clone=structuredClone(save),result=A.applyAction(clone,assets.content,action);if(result.accepted){save=clone;update();}return result;},onClose:()=>close(false),onDone:()=>close(true)});update();
+window.wordplayReview={get progress(){return save.openingJourney.wordplay?.step||0;},get practices(){return structuredClone(save.openingJourney.wordplay?.practices||[]);}};
+</script></body></html>

@@ -2,7 +2,7 @@
 import {EARTH_LIGHT_MODES,EARTH_WEATHER_MODES} from './adventure_earth_environment_core.js';
 import {normalizeLocalKeys} from './local_controls_core.js';
 import {normalizePlayerInputs} from './player_input_core.js';
-export const defaultGameSettings = Object.freeze({version:1,environmentVersion:2,particles:'auto',trails:'auto',earthLight:'day',earthWeather:'clear',music:false,sound:true,volume:.3});
+export const defaultGameSettings = Object.freeze({version:1,environmentVersion:2,particles:'auto',trails:'auto',earthLight:'day',earthWeather:'clear',music:true,sound:true,volume:.3});
 export function normalizeGameSettings(value={}) {
     const result={...defaultGameSettings};
     result.localKeys=normalizeLocalKeys(value.localKeys);

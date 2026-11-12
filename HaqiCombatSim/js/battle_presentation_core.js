@@ -9,17 +9,20 @@ export function presentationEffectDuration(effects,card,reducedMotion=false){
     return reducedMotion?effectDuration(effects,card,true):Math.max(1500,effectDuration(effects,card)*1.65);
 }
 
-export function presentationEventDurationMs(event, {effects, card, hp = 0, reducedMotion = false} = {}) {
+export function presentationEventDurationMs(event, {effects, card, hp = 0, reducedMotion = false, briskTraining = false} = {}) {
     if (!event?.type || event.type === 'combat_end') return 0;
     if (event.type === 'movearrow') return POINTER_TURN_MS;
-    if (event.type === 'status') return 700;
+    if (event.type === 'status') return briskTraining ? 450 : 700;
     if (event.type === 'aura') return 1;
-    if (event.type === 'speak') return 1300;
+    if (event.type === 'speak') return briskTraining ? 900 : 1300;
     if (event.type === 'cast') {
         const base=presentationEffectDuration(effects,card,reducedMotion);
         return cinematicCast(event,card)?CAST_NAME_HOLD_MS+base*.88:base;
     }
-    if (event.type === 'pass'||event.type === 'fizzle') return 2100;
+    // A skipped turn has no spell to watch. Keep failures readable and preserve
+    // every cast, hit and reward event; only shorten idle beginner beats.
+    if (event.type === 'pass') return briskTraining ? 750 : 2100;
+    if (event.type === 'fizzle') return 2100;
     if (['damage','dot'].includes(event.type)) return hp>0?HIT_DURATION_MS:900;
     if (['heal','hot'].includes(event.type)) return 1000;
     return 600;

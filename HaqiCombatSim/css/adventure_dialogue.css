@@ -116,3 +116,174 @@
  .storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom){margin-top:8px;padding-top:0;}
  .storybook-ui .rpg-dialogue .dialogue-content h2{font-size:20px;margin-bottom:4px;padding:4px 16px;}
 }
+/* A resident speaks beside the paper bubble; the world remains the stage. */
+.storybook-ui .rpg-dialogue-layer:has(.companion-conversation){padding:24px 24px max(24px,env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent 32%,#10251f22 66%,#091c2077);}
+.storybook-ui .rpg-dialogue.companion-conversation{width:min(1080px,100%);min-height:0;max-height:calc(100dvh - 72px);padding:0 24px 0 252px;background:none;border:0;border-radius:0;box-shadow:none;isolation:isolate;}
+.forest-ui .rpg-dialogue.companion-conversation::before{inset:0 0 0 222px;border-width:36px;border-image-width:36px;}
+.storybook-ui .rpg-dialogue.companion-conversation::after{display:none;}
+.storybook-ui .rpg-dialogue.companion-conversation .dialogue-portrait{position:absolute;left:0;top:auto;bottom:0;width:244px!important;height:308px!important;object-fit:contain;margin:0;pointer-events:none;filter:drop-shadow(0 8px 8px #17382c55);}
+.storybook-ui .rpg-dialogue.companion-conversation .dialogue-portrait.portrait-height{left:122px;width:auto!important;height:308px!important;transform:translateX(-50%);}
+.storybook-ui .rpg-dialogue.companion-conversation .dialogue-content{display:flex;min-height:0;height:auto;max-height:calc(100dvh - 80px);overflow:auto;padding:24px 18px 24px 8px;}
+.storybook-ui .companion-conversation .dialogue-content>.eyebrow{display:none;}
+.storybook-ui .companion-conversation .dialogue-content h2{font-size:23px;line-height:1.3;padding:4px 16px;margin:0 42px 8px 0;letter-spacing:0;}
+.storybook-ui .companion-conversation .dialogue-text{font-size:21px;line-height:1.6;letter-spacing:0;padding:4px 0;min-height:0;flex:0 0 auto;}
+.storybook-ui .companion-conversation .dialogue-text .dialogue-translation{font-size:21px;line-height:1.6;margin:0 0 5px;}
+.storybook-ui .companion-conversation .dialogue-text .dialogue-original{font-size:16px;line-height:1.6;color:#62714d;}
+.storybook-ui .companion-conversation .dialogue-learning-toggle{margin:5px 0 0;min-height:32px;padding:4px 12px;font-size:12px;}
+.storybook-ui .companion-conversation :is(.dialogue-choices,.dialogue-bottom){margin-top:10px;padding:0;gap:8px;}
+.storybook-ui .companion-conversation .dialogue-bottom{grid-template-columns:auto auto minmax(130px,1fr);align-items:center;}
+.storybook-ui .companion-conversation .dialogue-bottom>.primary{grid-column:-2 / -1;}
+.storybook-ui .companion-conversation .dialogue-bottom>.muted{letter-spacing:0;}
+.storybook-ui .companion-conversation .dialogue-bottom>.dialogue-back{width:auto;min-height:44px;padding:8px 12px;font-size:14px;color:#6b6649;background:none;border:0;}
+.storybook-ui .companion-conversation .dialogue-bottom>.dialogue-back::before{display:none;}
+.storybook-ui .companion-conversation :is(.dialogue-choices,.dialogue-bottom)>button{min-height:50px;padding:10px 30px;}
+.storybook-ui .companion-conversation .dialogue-chat{left:164px;top:auto;bottom:264px;}
+.storybook-ui .companion-conversation>.close-button{right:14px;top:14px;}
+.dialogue-services{order:5;font-size:14px;margin:8px 0 0;color:#626349;}
+.dialogue-services summary{cursor:pointer;min-height:32px;line-height:32px;}
+.dialogue-service-choices{display:flex;flex-wrap:wrap;gap:8px;padding:5px 0;}
+.storybook-ui .companion-conversation .dialogue-service-choices button{min-height:44px;padding:8px 22px;font-size:14px;}
+@media(max-width:650px){
+ .storybook-ui .rpg-dialogue-layer:has(.companion-conversation){padding:12px 8px max(14px,env(safe-area-inset-bottom));}
+ .storybook-ui .rpg-dialogue.companion-conversation{padding:0 16px;max-height:calc(100dvh - 100px);}
+ .forest-ui .rpg-dialogue.companion-conversation::before{inset:0;border-width:28px;border-image-width:28px;}
+ .storybook-ui .rpg-dialogue.companion-conversation .dialogue-portrait{left:12px;bottom:auto;top:-94px;width:112px!important;height:142px!important;}
+ .storybook-ui .rpg-dialogue.companion-conversation .dialogue-portrait.portrait-height{left:66px;top:-94px;height:142px!important;width:auto!important;}
+ .storybook-ui .rpg-dialogue.companion-conversation .dialogue-content{padding:18px 6px;max-height:calc(100dvh - 125px);}
+ .storybook-ui .companion-conversation .dialogue-content h2{margin:0 34px 14px 106px;padding:4px 10px;font-size:20px;max-width:calc(100% - 140px);}
+ .storybook-ui .companion-conversation .dialogue-text,.storybook-ui .companion-conversation .dialogue-text .dialogue-translation{font-size:18px;}
+ .storybook-ui .companion-conversation .dialogue-text .dialogue-original{font-size:15px;}
+ .storybook-ui .companion-conversation .dialogue-bottom{grid-template-columns:auto auto minmax(100px,1fr);gap:4px;}
+ .storybook-ui .companion-conversation :is(.dialogue-choices,.dialogue-bottom)>button{padding:10px 22px;min-height:48px;font-size:14px;}
+ .storybook-ui .companion-conversation .dialogue-bottom>.dialogue-back{padding:6px;font-size:12px;}
+ .storybook-ui .companion-conversation .dialogue-chat{left:86px;top:-62px;bottom:auto;width:40px;height:40px;}
+}
+@media(max-height:540px) and (min-width:651px){
+ .storybook-ui .rpg-dialogue-layer:has(.companion-conversation){padding:10px 16px;}
+ .storybook-ui .rpg-dialogue.companion-conversation{padding-left:172px;max-height:calc(100dvh - 24px);width:min(880px,100%);}
+ .forest-ui .rpg-dialogue.companion-conversation::before{left:150px;border-width:28px;border-image-width:28px;}
+ .storybook-ui .rpg-dialogue.companion-conversation .dialogue-portrait{width:166px!important;height:210px!important;}
+ .storybook-ui .rpg-dialogue.companion-conversation .dialogue-portrait.portrait-height{left:83px;height:210px!important;}
+ .storybook-ui .rpg-dialogue.companion-conversation .dialogue-content{padding:16px 14px 16px 4px;max-height:calc(100dvh - 30px);}
+ .storybook-ui .companion-conversation .dialogue-content h2{font-size:20px;margin-bottom:5px;}
+ .storybook-ui .companion-conversation .dialogue-text,.storybook-ui .companion-conversation .dialogue-text .dialogue-translation{font-size:17px;}
+ .storybook-ui .companion-conversation .dialogue-text .dialogue-original{font-size:14px;}
+ .storybook-ui .companion-conversation .dialogue-chat{left:106px;bottom:170px;}
+ .storybook-ui .companion-conversation :is(.dialogue-choices,.dialogue-bottom)>button{min-height:44px;padding:8px 26px;font-size:14px;}
+}
+/* Split-screen retains its own portrait budget rather than overflowing the other player. */
+.storybook-ui .local-personal .rpg-dialogue.companion-conversation{padding-left:120px;}
+.storybook-ui .local-personal .rpg-dialogue.companion-conversation::before{left:104px;}
+.storybook-ui .local-personal .rpg-dialogue.companion-conversation .dialogue-portrait{left:0;top:auto;bottom:0;width:104px!important;height:140px!important;}
+.storybook-ui .local-personal .rpg-dialogue.companion-conversation .dialogue-portrait.portrait-height{left:52px;width:auto!important;height:140px!important;}
+/* The opening uses the same character-and-bubble language as resident dialogue. */
+.forest-ui .opening-conversation-layer:has(.opening-character-dialogue){padding:100px 24px max(24px,env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent 32%,#10251f22 66%,#091c2077);}
+.forest-ui .opening-character-dialogue.opening-journey-modal{display:block;position:relative;isolation:isolate;width:min(1080px,100%);max-height:calc(100dvh - 124px);padding:24px 36px 24px 260px;overflow:visible;border:0;background:none;box-shadow:none;}
+.forest-ui .opening-character-dialogue::before{inset:0 0 0 222px;border-width:36px;border-image-width:36px;}
+.forest-ui .opening-character-dialogue .opening-speaker{position:absolute;left:0;bottom:0;width:244px;height:308px;display:flex;justify-content:flex-end;align-items:center;pointer-events:none;filter:drop-shadow(0 8px 8px #17382c55);}
+.forest-ui .opening-character-dialogue .opening-speaker canvas{width:240px!important;height:304px!important;max-width:none;object-fit:contain;}
+.forest-ui .opening-character-dialogue .opening-speaker .pet-sheet{width:220px!important;height:220px!important;flex:none;margin-bottom:24px;}
+.forest-ui .opening-character-dialogue .modal-header{display:flex;align-items:center;padding:0 44px 10px 0;background:none;border:0;}
+.forest-ui .opening-character-dialogue .modal-header h2{display:inline-block;font:800 23px/1.3 "Microsoft YaHei",sans-serif;color:#fff8dc;background:#416526;border-radius:24px 8px;padding:4px 16px;margin:0;}
+.forest-ui .opening-character-dialogue .modal-header>.close-button{position:absolute;right:14px;top:14px;}
+.forest-ui .opening-character-dialogue .modal-body{padding:0;max-height:calc(100dvh - 218px);overflow:auto;overscroll-behavior:contain;}
+.forest-ui .opening-character-dialogue .modal-body>.opening-spoken-line{font-size:21px;line-height:1.6;margin:4px 0 14px;}
+.forest-ui .opening-character-dialogue .cloud-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px;}
+.forest-ui .opening-character-dialogue .cloud-actions>button:only-child{grid-column:1/-1;justify-self:end;width:min(360px,100%);}
+.forest-ui .opening-character-dialogue :is(.cloud-actions,.opening-replies)>button{min-height:50px;padding:10px 30px;font-size:15px;line-height:1.5;}
+.forest-ui .opening-character-dialogue .opening-progress{font-size:13px;margin-top:8px;line-height:1.6;}
+.forest-ui .opening-character-dialogue .opening-progress>summary{min-height:32px;line-height:32px;cursor:pointer;}
+.forest-ui .opening-character-dialogue .opening-progress form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:6px 0;}
+.forest-ui .opening-character-dialogue .opening-progress form .name-input{min-width:0;width:100%;margin:0;}
+.forest-ui .opening-character-dialogue .opening-progress form p{grid-column:1/-1;margin:0;}
+.forest-ui .opening-character-dialogue .opening-replies{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;}
+@media(max-width:650px){
+ .forest-ui .opening-conversation-layer:has(.opening-character-dialogue){padding:100px 8px max(14px,env(safe-area-inset-bottom));}
+ .forest-ui .opening-character-dialogue.opening-journey-modal{padding:18px 22px;max-height:calc(100dvh - 115px);}
+ .forest-ui .opening-character-dialogue::before{inset:0;border-width:28px;border-image-width:28px;}
+ .forest-ui .opening-character-dialogue .opening-speaker{left:10px;top:-90px;bottom:auto;width:112px;height:142px;}
+ .forest-ui .opening-character-dialogue .opening-speaker canvas{width:112px!important;height:142px!important;}
+ .forest-ui .opening-character-dialogue .opening-speaker .pet-sheet{width:112px!important;height:112px!important;margin-bottom:10px;}
+ .forest-ui .opening-character-dialogue .modal-header{padding:0 32px 14px 106px;min-height:36px;}
+ .forest-ui .opening-character-dialogue .modal-header h2{font-size:20px;white-space:normal;padding:4px 10px;}
+ .forest-ui .opening-character-dialogue .modal-body{max-height:calc(100dvh - 205px);}
+ .forest-ui .opening-character-dialogue .modal-body>.opening-spoken-line{font-size:18px;margin-bottom:10px;}
+ .forest-ui .opening-character-dialogue :is(.cloud-actions,.opening-replies){grid-template-columns:1fr;gap:6px;}
+ .forest-ui .opening-character-dialogue :is(.cloud-actions,.opening-replies)>button{min-height:48px;padding:10px 26px;font-size:14px;}
+ .forest-ui .opening-character-dialogue .opening-replies>.secondary{justify-self:start;min-height:36px;padding:6px 24px;}
+ .forest-ui .opening-character-dialogue .opening-progress form{grid-template-columns:1fr;}
+}
+@media(max-height:540px) and (min-width:651px){
+ .forest-ui .opening-conversation-layer:has(.opening-character-dialogue){padding:10px 16px;}
+ .forest-ui .opening-character-dialogue.opening-journey-modal{width:min(880px,100%);padding:16px 30px 16px 180px;max-height:calc(100dvh - 24px);}
+ .forest-ui .opening-character-dialogue::before{left:150px;border-width:28px;border-image-width:28px;}
+ .forest-ui .opening-character-dialogue .opening-speaker{width:166px;height:210px;}
+ .forest-ui .opening-character-dialogue .opening-speaker canvas{width:166px!important;height:210px!important;}
+ .forest-ui .opening-character-dialogue .opening-speaker .pet-sheet{width:152px!important;height:152px!important;margin-bottom:16px;}
+ .forest-ui .opening-character-dialogue .modal-header{padding-bottom:5px;}
+ .forest-ui .opening-character-dialogue .modal-header h2{font-size:20px;}
+ .forest-ui .opening-character-dialogue .modal-body{max-height:calc(100dvh - 105px);}
+ .forest-ui .opening-character-dialogue .modal-body>.opening-spoken-line{font-size:17px;margin:4px 0 8px;}
+ .forest-ui .opening-character-dialogue :is(.cloud-actions,.opening-replies)>button{min-height:44px;padding:8px 26px;font-size:14px;}
+}
+/* The world is the play space; paper holds only the current spoken action. */
+.forest-ui .companion-wordplay-layer{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:0;padding:14px 16px max(18px,env(safe-area-inset-bottom));background:linear-gradient(transparent 30%,#10251f40);backdrop-filter:none;}
+.wordplay-stage{--pet-width:176px;--hero-width:130px;--wordplay-jump:-64px;--come-left:calc(95% - var(--hero-width) - var(--pet-width) + 20px);position:relative;width:min(800px,94vw);height:270px;min-height:180px;flex:1 1 270px;max-height:340px;pointer-events:none;}
+.wordplay-actor{position:absolute;left:2%;bottom:12px;width:var(--pet-width);height:var(--pet-width);transform-origin:50% 90%;filter:drop-shadow(0 8px 8px #17382c55);}
+.wordplay-actor .pet-sheet{width:var(--pet-width)!important;height:var(--pet-width)!important;}
+.wordplay-stage[data-step="2"] .wordplay-actor{left:18%;}
+.wordplay-hero{position:absolute;right:5%;bottom:12px;width:var(--hero-width);display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 8px 8px #17382c55);}
+.wordplay-hero canvas{width:var(--hero-width)!important;height:auto!important;aspect-ratio:130/176;}
+.wordplay-hero span{font-size:14px;color:#fff8df;text-shadow:0 1px 3px #172b20;}
+.forest-ui .companion-wordplay{flex:none;width:min(760px,96vw);padding:18px 30px;max-height:calc(100dvh - 205px);}
+.forest-ui .companion-wordplay .modal-header{display:flex;align-items:center;gap:12px;padding:0 42px 4px 4px;}
+.forest-ui .companion-wordplay .modal-header h2{font:800 20px/1.4 "Microsoft YaHei",sans-serif;margin:0;color:#365633;}
+.companion-wordplay .wordplay-count{margin-left:auto;color:#7d7458;font-size:13px;white-space:nowrap;}
+.forest-ui .companion-wordplay .modal-body{padding:0 4px 4px;overflow:auto;max-height:calc(100dvh - 285px);text-align:center;overscroll-behavior:contain;}
+.forest-ui .companion-wordplay .wordplay-intent{font-size:20px;line-height:1.5;margin:5px 0 10px;color:#4a5135;}
+.wordplay-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:stretch;}
+.forest-ui .companion-wordplay .wordplay-controls>button{width:100%;min-width:0;min-height:50px;padding:10px 28px;font-size:16px;white-space:normal;line-height:1.4;}
+.wordplay-mic{touch-action:none;user-select:none;-webkit-user-select:none;}
+.wordplay-typing{margin-top:6px;text-align:left;font-size:14px;color:#68714c;}
+.wordplay-typing summary{cursor:pointer;text-align:center;min-height:32px;line-height:32px;}
+.wordplay-input{display:flex;gap:8px;align-items:center;margin-top:4px;}
+.wordplay-input .name-input{min-width:0;flex:1;margin:0;width:100%;font-size:17px;}
+.forest-ui .companion-wordplay .wordplay-input>button{min-width:90px;min-height:44px;padding:8px 24px;font-size:15px;}
+.wordplay-status{font-size:14px;line-height:1.5;color:#6e613e;margin:6px 0 0;min-height:0;}
+.wordplay-status:empty{display:none;}
+.forest-ui .companion-wordplay .wordplay-next{width:min(320px,100%);min-height:50px;padding:10px 30px;margin:5px auto 0;font-size:16px;}
+.companion-wordplay [hidden]{display:none!important;}
+.response-greet .wordplay-actor{animation:wordplay-greet .7s ease-in-out;}
+.response-jump .wordplay-actor{animation:wordplay-jump .85s ease-in-out forwards;}
+.response-come .wordplay-actor{animation:wordplay-come .9s ease-out forwards;}
+@keyframes wordplay-greet{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}65%{transform:rotate(8deg)}}
+@keyframes wordplay-jump{0%{left:2%;transform:translateY(0)}15%{left:2%;transform:scale(1.08,.92)}50%{transform:translateY(var(--wordplay-jump))}85%{left:18%;transform:scale(1.06,.94)}100%{left:18%;transform:none}}
+@keyframes wordplay-come{0%{left:18%;transform:translateY(0)}20%,60%{transform:translateY(-10px)}40%,80%{transform:translateY(0)}100%{left:var(--come-left);transform:translateY(0)}}
+@media(max-width:650px){
+ .wordplay-stage{--pet-width:130px;--hero-width:100px;--wordplay-jump:-42px;height:210px;min-height:175px;max-height:280px;}
+ .forest-ui .companion-wordplay{padding:16px 20px;width:min(560px,96vw);}
+ .forest-ui .companion-wordplay .modal-header h2{font-size:18px;}
+ .forest-ui .companion-wordplay .wordplay-intent{font-size:18px;}
+ .forest-ui .companion-wordplay .wordplay-controls>button{font-size:14px;padding:10px 23px;min-height:48px;}
+ .wordplay-controls{gap:6px;}
+ .wordplay-input{flex-wrap:wrap;}.wordplay-input .name-input{flex-basis:100%;}.wordplay-input>button{margin-left:auto;}
+}
+@media(max-height:540px) and (min-width:651px){
+ .forest-ui .companion-wordplay-layer{flex-direction:row;align-items:flex-end;justify-content:center;gap:10px;padding:10px 14px;}
+ .wordplay-stage{--pet-width:116px;--hero-width:90px;--wordplay-jump:-42px;flex:1 1 46%;min-width:280px;max-width:420px;min-height:180px;height:calc(100dvh - 32px);max-height:none;}
+ .forest-ui .companion-wordplay{flex:1 1 54%;width:auto;max-width:440px;padding:16px 22px;max-height:calc(100dvh - 24px);}
+ .forest-ui .companion-wordplay .modal-body{max-height:calc(100dvh - 100px);}
+ .forest-ui .companion-wordplay .wordplay-intent{font-size:17px;margin:4px 0 8px;}
+ .forest-ui .companion-wordplay .wordplay-controls{grid-template-columns:1fr;gap:6px;}
+ .forest-ui .companion-wordplay .wordplay-controls>button{min-height:44px;font-size:14px;padding:8px 24px;}
+ .wordplay-typing{margin-top:4px;font-size:13px;}.wordplay-input .name-input{font-size:15px;}
+ .wordplay-input{flex-wrap:wrap;}.wordplay-input .name-input{flex-basis:100%;}.wordplay-input>button{margin-left:auto;}
+}
+@media(prefers-reduced-motion:reduce){.wordplay-stage .wordplay-actor{animation:none!important;}.response-jump .wordplay-actor{left:18%;}.response-come .wordplay-actor{left:var(--come-left);}}
+
+/* Compact action strip: actors stay in the world, never inside a paper modal. */
+.forest-ui .companion-wordplay{background:rgba(255,248,223,.94);border:1px solid #bca46b;border-image:none;border-radius:24px;box-shadow:0 8px 28px #142e3040;padding:12px 24px;}
+.forest-ui .companion-wordplay::before,.forest-ui .companion-wordplay::after{display:none;}
+.forest-ui .companion-wordplay .modal-header{min-height:25px;padding-bottom:0;}
+.forest-ui .companion-wordplay .modal-header h2{font-size:14px;color:#68714c;}
+.forest-ui .companion-wordplay .wordplay-intent{margin:2px 0 8px;}

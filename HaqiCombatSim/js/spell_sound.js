@@ -3,7 +3,7 @@ import {spellSoundCues,crossedSoundCues} from './spell_sound_core.js';
 import {gameSoundRecipe} from './game_sound_core.js';
 import {audioActivityActive,subscribeAudioActivity} from './audio_activity.js';
 const KEY='haqi.spell-sound.v1',VOLUME_KEY='haqi.game-sound.volume.v1';
-export function createSpellSound({defaultEnabled=false,persistPreferences=true,contextFactory=()=>new (globalThis.AudioContext||globalThis.webkitAudioContext)(),now=()=>globalThis.performance.now()}={}) {
+export function createSpellSound({defaultEnabled=false,persistPreferences=true,samples=null,contextFactory=()=>new (globalThis.AudioContext||globalThis.webkitAudioContext)(),now=()=>globalThis.performance.now()}={}) {
     let enabled=defaultEnabled,volume=.3,context,master,noise,previous=null,lastKey='',unlocked=false,disposed=false;
     try{const stored=persistPreferences?localStorage.getItem(KEY):null;if(stored!==null)enabled=stored==='on';const value=persistPreferences?localStorage.getItem(VOLUME_KEY):null;if(value!==null&&Number.isFinite(Number(value)))volume=Math.max(0,Math.min(1,Number(value)));}catch{}
     const groups=new Set(),lastPlayed=new Map(),tokens=new Set();
@@ -20,7 +20,7 @@ export function createSpellSound({defaultEnabled=false,persistPreferences=true,c
                 noise=context.createBuffer(1,context.sampleRate,context.sampleRate);const data=noise.getChannelData(0),rng=createRng(hashSeed('haqi-spell-noise'));
                 for(let i=0;i<data.length;i++)data[i]=rng.float()*2-1;
             }
-            if(context.state==='suspended')await context.resume();unlocked=context.state==='running';return unlocked;
+            if(context.state==='suspended')await context.resume();unlocked=context.state==='running';if(unlocked)void samples?.load(context);return unlocked;
         }catch{unlocked=false;return false;}
     }
     function voice(cue,noisy,group,delay=0){
@@ -33,6 +33,16 @@ export function createSpellSound({defaultEnabled=false,persistPreferences=true,c
         const handle={source,cleanup(){if(cleaned)return;cleaned=true;source.disconnect();filter.disconnect();gain.disconnect();group.voices.delete(handle);if(!group.voices.size)groups.delete(group);}};
         group.voices.add(handle);source.onended=handle.cleanup;source.start(t);source.stop(t+cue.duration+.02);
     }
+    function sample(name,priority,cast=false,rate=1,level=1){
+        const buffer=samples?.get(name);if(!buffer||!ready())return false;
+        if(priority===0&&[...groups].some(g=>g.priority>0))return false;
+        if(groups.size>=8){const lowest=[...groups].sort((a,b)=>a.priority-b.priority)[0];if(lowest.priority>=priority)return false;remove(lowest);}
+        const group={priority,cast,voices:new Set()},source=context.createBufferSource(),gain=context.createGain();
+        source.buffer=buffer;if(source.playbackRate)source.playbackRate.value=rate;gain.gain.value=(['hit','release'].includes(name)?.65:.5)*level;source.connect(gain);gain.connect(master);
+        let cleaned=false;const handle={source,cleanup(){if(cleaned)return;cleaned=true;source.disconnect();gain.disconnect();group.voices.delete(handle);groups.delete(group);}};
+        group.voices.add(handle);groups.add(group);source.onended=handle.cleanup;
+        try{source.start();return true;}catch{remove(group);return false;}
+    }
     function ready(){return enabled&&volume>0&&!muted()&&unlocked&&context?.state==='running'&&!globalThis.document?.hidden&&!disposed;}
     function emit(cues,priority,cast=false){
         if(!ready())return false;
@@ -43,24 +53,28 @@ export function createSpellSound({defaultEnabled=false,persistPreferences=true,c
         try{for(const cue of cues){voice(cue,false,group,priority===0?.035:0);if(cue.noise)voice(cue,true,group,priority===0?.035:0);}return true;}
         catch{remove(group);return false;}
     }
-    function play(name){
+    function play(name,{rate=1,gain=1}={}){
+        rate=Number.isFinite(rate)?Math.max(.75,Math.min(1.3,rate)):1;
+        gain=Number.isFinite(gain)?Math.max(0,Math.min(1,gain)):1;
+        if(!gain)return false;
         const recipe=gameSoundRecipe(name);if(!recipe||!ready()||(name==='click'&&groups.size))return false;
         const time=now();if(time-(lastPlayed.get(name)??-Infinity)<100)return false;
-        if(!emit(recipe.cues,recipe.priority))return false;lastPlayed.set(name,time);return true;
+        const cues=recipe.cues.map(cue=>({...cue,frequency:cue.frequency*rate,end:cue.end*rate,duration:cue.duration/rate,delay:(cue.delay||0)/rate,gain:cue.gain*gain}));
+        if(!sample(name,recipe.priority,false,rate,gain)&&!emit(cues,recipe.priority))return false;lastPlayed.set(name,time);return true;
     }
     function track(config,card,progress,{active=true,failed=false,reducedMotion=false,instance=''}={}){
         if(!active||!ready()){stopCast();return;}
         const key=card.key+':'+failed+':'+instance;
         if(key!==lastKey){stopCast();lastKey=key;previous=progress<.08?-.001:null;}
         const cues=spellSoundCues(config,card,{failed,reducedMotion});
-        for(const cue of crossedSoundCues(cues,previous,progress))emit([cue],1,true);
+        for(const cue of crossedSoundCues(cues,previous,progress)){const effect=failed?'fizzle':cue.at===0?'cast':cue.at>=config.timeline.impact?(['life'].includes(card.spellSchool)?'heal':'hit'):'release';if(!sample(effect,1,true))emit([cue],1,true);}
         previous=progress;
     }
-    return {get enabled(){return enabled;},get volume(){return volume;},unlock,track,play,stop,stopCast,
+    return {get sampleCount(){return samples?.count||0;},get enabled(){return enabled;},get volume(){return volume;},unlock,track,play,stop,stopCast,
         configure(settings){enabled=!!settings.sound;this.setVolume(settings.volume);if(!enabled)stop();},
         setVolume(value){if(!Number.isFinite(Number(value)))return;volume=Math.max(0,Math.min(1,Number(value)));if(master){if(master.gain.setTargetAtTime)master.gain.setTargetAtTime(volume,context.currentTime,.015);else master.gain.setValueAtTime(volume,context.currentTime);}if(!volume)stop();try{if(persistPreferences)localStorage.setItem(VOLUME_KEY,String(volume));}catch{}},
         acquireMute(){const token={};tokens.add(token);stop();return ()=>tokens.delete(token);},
         async setEnabled(value){enabled=!!value;try{if(persistPreferences)localStorage.setItem(KEY,enabled?'on':'off');}catch{}if(!enabled){stop();return false;}return unlock();},
-        async dispose(){disposed=true;unsubscribe();stop();await context?.close();context=null;unlocked=false;}
+        async dispose(){disposed=true;samples?.dispose();unsubscribe();stop();await context?.close();context=null;unlocked=false;}
     };
 }

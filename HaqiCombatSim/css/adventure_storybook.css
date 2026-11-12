@@ -693,3 +693,8 @@
  .forest-ui .opening-journey-modal .modal-body>.opening-spoken-line{font-size:18px;}
  .forest-ui .opening-journey-modal .cloud-actions{grid-template-columns:1fr;}
 }
+
+/* Opening alternatives must not occupy the same absolute-positioned hit target. */
+.storybook-ui .opening-tracker-actions { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.storybook-ui .opening-tracker-actions .track-button { position:static; flex:1 1 auto; min-height:36px; margin:0; font-size:12px; }
+.storybook-ui .quest-tracker:has(.opening-tracker-actions)>p { margin-right:0; }

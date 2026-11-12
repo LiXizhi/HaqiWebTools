@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import {bindTouchMovement} from '../js/view_adventure_movement.js';
 import {createStoryChat} from '../js/language_story.js';
+import {createHudRenderGuard} from '../js/hud_render_guard.js';
 import {recordLearningCompletion} from '../js/language_adventure_core.js';
 
 const app=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
@@ -11,17 +12,18 @@ const app=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf
 // catch HUD refresh -> conversation.close regressions.
 const wiring=app.split(/\r?\n/).find(line=>line.startsWith('const touchMovement=bindTouchMovement'));
 const reset=app.split(/\r?\n/).find(line=>line.startsWith('function resetMovementInput()'));
-const hud=app.split(/\r?\n/).find(line=>line.startsWith('function paintHud()'));
+const hud=app.split(/\r?\n/).filter(line=>line.startsWith('const hudRenderGuard=')||line.startsWith('function paintHud()')||line.startsWith('function paintHudNow()')).join('\n');
 const catalog=JSON.parse(fs.readFileSync(new URL('../data/adventure/camp-conversations.json',import.meta.url)));
 const profile=catalog.profiles.find(row=>row.npcId===36205),story=profile.stories[0];
 
 test('real HUD refresh preserves NPC dialogue after every spoken reward and final settlement',async()=>{
     const surface=new EventTarget();surface.hasPointerCapture=()=>false;
-    let callbacks,ui,chat,awards=0,closed=0,transcript='';
+    let callbacks,ui,chat,awards=0,closed=0,renders=0,transcript='';
+    const hudRoot=new EventTarget();hudRoot.ownerDocument=new EventTarget();hudRoot.ownerDocument.defaultView=new EventTarget();hudRoot.contains=()=>false;
     const state={stage:'world',role:'test',identity:'test',content:{},save:{zone:'camp',inventory:{},languageLearning:{enabled:true,target:'en',native:'zh-CN'},languageAdventure:{version:1,progress:{}}}};
-    const context=vm.createContext({bindTouchMovement,nodes:{world:surface},touchIndicator:{hidden:true},stage:'world',panel:null,dialog:null,keys:new Set(),joystick:{x:0,y:0},heldPointer:null,path:['keep'],destination:'keep',talkApproach:null,
+    const context=vm.createContext({bindTouchMovement,createHudRenderGuard,setTimeout,clearTimeout,save:state.save,assets:{content:{}},roleEpoch:1,roleStore:{owner:'test',catalog:{activeId:'test'}},nodes:{world:surface,hud:hudRoot},touchIndicator:{hidden:true},stage:'world',panel:null,dialog:null,keys:new Set(),joystick:{x:0,y:0},heldPointer:null,path:['keep'],destination:'keep',talkApproach:null,
         languageAdventure:{get active(){return chat?.active;},close(){closed++;chat.close();}}});
-    Object.assign(context,{world:null,recommendedLanguageQuest:()=>null,languageTasks:{ensure(){},snapshot(){return {rows:[]};}},V:{renderHud(){}},model:()=>({}),openPanel(){},track(){},untrack(){},exitDungeon(){},interactNearest(){}});
+    Object.assign(context,{world:null,recommendedLanguageQuest:()=>null,languageTasks:{ensure(){},snapshot(){return {rows:[]};}},V:{renderHud(){renders++;}},model:()=>({}),openPanel(){},track(){},untrack(){},exitDungeon(){},interactNearest(){}});
     vm.runInContext(wiring+'\n'+reset+'\n'+hud,context);
     const refreshHud=()=>vm.runInContext('paintHud()',context);
     chat=createStoryChat({getState:()=>state,onSpeech:()=>{awards++;refreshHud();return {key:'attack',percent:awards,total:awards};},
@@ -38,5 +40,6 @@ test('real HUD refresh preserves NPC dialogue after every spoken reward and fina
     for(let i=0;i<3;i++)refreshHud();
     assert.equal(chat.active,true);assert.equal(closed,0);
     assert.deepEqual(Array.from(context.path),['keep'],'stopping input does not clear unrelated navigation');
-    callbacks.close();assert.equal(chat.active,false);
+    assert.ok(renders>=6,'the actual guard must dispatch HUD rendering rather than a stub');
+    callbacks.close();assert.equal(chat.active,false);vm.runInContext('hudRenderGuard.dispose()',context);
 });

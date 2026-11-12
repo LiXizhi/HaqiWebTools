@@ -20,11 +20,11 @@ function absorbReward(target,event){
         else target.items.push({...item});
     }
 }
-export function createRewardFeedback(root,{describe,activate,showBanner=true}) {
+export function createRewardFeedback(root,{describe,activate,showBanner=true,onBurst=()=>{}}) {
     const queue=[];let active=null,shown=null,started=0,lastTick=null;
     const banner=document.createElement('div');banner.className='reward-banner';banner.setAttribute('role','status');
     const popup=document.createElement('section');popup.className='reward-popup';popup.hidden=true;popup.setAttribute('aria-label',tr('新获得的物品'));
-    root.append(banner,popup);root.hidden=true;
+    const announcement=document.createElement('p');announcement.className='dialogue-sr';announcement.setAttribute('role','status');root.append(banner,popup,announcement);root.hidden=true;
     function dismiss(){active=null;popup.replaceChildren();popup.hidden=true;}
     function takeBurst(){
         const burst=queue.shift();
@@ -41,6 +41,7 @@ export function createRewardFeedback(root,{describe,activate,showBanner=true}) {
             const node=document.createElement('div');node.className='reward-stack-row';
             setText(node,source,vars);return node;
         }));
+        if(!showBanner)announcement.textContent=banner.textContent;
         banner.classList.remove('reward-stack-dense');
         if(rows.length>4)banner.classList.add('reward-stack-dense');
     }
@@ -67,20 +68,20 @@ export function createRewardFeedback(root,{describe,activate,showBanner=true}) {
     return {
         get hasPendingItems(){return !!active?.items.length||queue.some(event=>event.items.some(actionable));},
         push(event){if(event.xp||event.level||event.items.length)queue.push({...event,items:[...event.items]});},
-        reset(){queue.length=0;shown=null;dismiss();root.hidden=true;banner.replaceChildren();banner.classList.remove('reward-stack-dense');lastTick=null;},
+        reset(){announcement.textContent='';queue.length=0;shown=null;dismiss();root.hidden=true;banner.replaceChildren();banner.classList.remove('reward-stack-dense');lastTick=null;},
         tick(now,visible){
             if(!visible&&active&&lastTick!==null)started+=now-lastTick;
             lastTick=now;root.hidden=!visible;if(!visible)return null;
             if(queue.length&&active&&shown&&now-started<=HOLD_MS){
                 const burst=takeBurst();
-                absorbReward(shown,burst);
+                absorbReward(shown,burst);onBurst(burst,now);
                 active.items.push(...burst.items.filter(actionable));
                 active.xp=shown.xp;active.level=shown.level;active.fromLevel=shown.fromLevel;
                 paintBanner(shown);
                 if(popup.hidden&&active.items.length)paint();
             }else if(queue.length&&(!active||now-started>HOLD_MS)){
                 const pending=active?.items||[];const burst=takeBurst();started=now;
-                shown={xp:0,fromLevel:null,level:null,items:[]};absorbReward(shown,burst);paintBanner(shown);
+                shown={xp:0,fromLevel:null,level:null,items:[]};absorbReward(shown,burst);paintBanner(shown);onBurst(burst,now);
                 active={...burst,items:[...pending,...burst.items.filter(actionable)]};
                 banner.classList.remove('reward-enter');void banner.offsetWidth;banner.classList.add('reward-enter');paint();
             }

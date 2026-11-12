@@ -26,6 +26,8 @@ import {claimMagicStar,validateMagicStarClaims,magicStarCombatLevel,applyMagicSt
 import {equipmentSetStats,dragonTotemStage,progressionStatEntry,chooseDragonTotem,useDragonTotemItem} from './adventure_progression_bonuses_core.js';
 import {customizeHero} from './adventure_hero_customize_core.js';
 import {applyOpeningJourney,openingJourneyActive,openingJourneyWon,validateOpeningJourney,openingTrainingCredit} from './opening_journey_core.js';
+import {applyCampDetour,validateCampDetour} from './camp_detour_core.js';
+import {applyCompanionWordplay,validateCompanionWordplay} from './companion_wordplay_core.js';
 import {OPENING_TRAINING_IDS} from './opening_training_core.js';
 import {publicPhotoHead} from './photo_head_core.js';
 // AdventureContent / AdventureSave v1. Pure chapter rules; no browser or storage APIs.
@@ -382,6 +384,8 @@ function applyAdventureAction(save, content, action, access={}) {
     const q = currentQuest(save,content);
     let notice, trackFull = false;
     switch (action.type) {
+    case 'companion-wordplay': {const result=applyCompanionWordplay(save,content,action);if(result.accepted)save.revision++;return result;}
+    case 'camp-detour': {const result=applyCampDetour(save,content,action,access);if(result.changed===false)return result;notice=result.message;break;}
     case 'language-complete': {const result=recordLearningCompletion(save,content,action.completion,access);save.revision++;return result;}
     case 'npc-purchase': purchaseNpcOffer(save,content,action,access);break;
     case 'fish': {const result=castFishing(save,content,action,createRng(hashSeed(`${save.revision}:fish:${action.netId}`)));save.revision++;return {...result,changed:true};}
@@ -706,6 +710,8 @@ export function parseSave(raw,content) {
     if(s?.schemaVersion===1){s.schemaVersion=SAVE_VERSION;if(content.pets){Pets.initializePets(s,content);if(s.pet&&content.pets.legacy_gululu)Pets.addPet(s,content,'legacy_gululu',s.pet.xp);}}
     assert(s && s.schemaVersion === SAVE_VERSION && s.contentVersion === content.contentVersion,'存档版本不兼容');
     validateOpeningJourney(s);
+    validateCampDetour(s);
+    validateCompanionWordplay(s);
     normalizeLocaleSave(s);
     validateHanziProgress(s.hanzi);
     validateTimeScrollProgress(s.timeScrollProgress);validateTimeScrollRuntime(s.timeScrollRuntime);

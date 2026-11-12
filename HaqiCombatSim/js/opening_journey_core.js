@@ -39,8 +39,11 @@ export function openingJourneyMilestones(save){
 }
 export function openingFriendAnswer(text){
  const normalized=String(text||'').toLowerCase().replace(/’/g,"'").replace(/[.,!?，。！？]/gu,'').replace(/\s+/g,' ').trim();
- const accepted=['we are friends',"we're friends",'yes we are friends',"yes we're friends"].includes(normalized);
- const message=!normalized?'先告诉莫尼：我们是朋友。可以听示范，再试着输入。':/\b(not|no|enemies)\b/.test(normalized)?'这句话没有表达“我们是朋友”。试试：We are friends.':/\bfriend\b/.test(normalized)?'这里说的是我们两个人，用复数 friends：We are friends.':"莫尼还没明白。试试 We are friends. 或 We're friends.";
+ // This is an introduction, not an exact-sentence dictation. Keep a bounded set
+ // so negations, questions and unrelated sentences cannot grant practice credit.
+ const introduction=normalized.replace(/^yes /,'');
+ const accepted=['we are friends',"we're friends",'he is my friend',"he's my friend",'she is my friend',"she's my friend",'it is my friend',"it's my friend",'this is my friend','he is our friend',"he's our friend",'we are his friends'].includes(introduction);
+ const message=!normalized?'告诉莫尼你们是朋友，也可以先听示范。':/\b(not|no|enemies)\b/.test(normalized)?'这句还没说明你们是朋友。试试：We are friends.':/^(we are|we're) friend$/.test(introduction)?'说“我们是朋友”，friend 要加 s：We are friends.':'可以说 We are friends.，或 He is my friend.';
  return {accepted,message:accepted?'莫尼明白了。咕噜噜可以进来了。':message};
 }
 export function openingJourneyScene(save,npc){
@@ -65,6 +68,7 @@ export function validateOpeningJourney(save){
  assert(state&&state.version===1&&PHASES.includes(state.phase),'新手冒险记录无效');
  assert(state.route===undefined||['talk','battle'].includes(state.route),'新手冒险路线无效');
  assert(state.celebrated===undefined||typeof state.celebrated==='boolean','新手冒险完成记录无效');
+ assert(state.homeBreakSeen===undefined||typeof state.homeBreakSeen==='boolean','小屋邀请记录无效');
  assert(state.petId===undefined||typeof state.petId==='string'&&state.petId.length<=200,'新手伙伴记录无效');
  if(state.practice){
   const event=state.practice;
@@ -93,7 +97,7 @@ export function applyOpeningJourney(save,content,action){
  if(action.step==='continue'){
   assert(state.phase==='done','先和新伙伴完成挑战');
   state.celebrated=true;
-  return {changed:true,message:'咕噜噜会继续陪你冒险。去找青龙吧。'};
+  return {changed:true,message:'咕噜噜会继续陪你冒险。'};
  }
  assert(state.phase!=='done','这段冒险已经结束');
  const expected={accept:36211,meet:36201,route:36201,explain:36201,rescue:36201}[action.step];

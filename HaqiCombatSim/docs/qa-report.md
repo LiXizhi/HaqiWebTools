@@ -5045,3 +5045,20 @@ home家园机会1→2、here2→3、please2→3、thank you3→4；总作者机�
 - 15项CDN媒体重新GET，SHA256、大小和CORS通过；新manifest打包回读完整。source origin无入站冲突，apps已快进74提交。正式发行构建5.71秒成功，仅chunk体积warning；首次npm缓存权限改为可写cache后成功。
 - 商店最终CSS硬刷新实屏通过：760宽视口单列460宽居中、空商品目录移除、console warning/error为空；截图`shop-final-compact.jpg`，构建已包含正确CSS。发布未完成，未声称全功能云端、真实麦克风、手机实机或全量黑盒验收；商店精选不等于经济重平衡。
 - 详细记录：[17:00收尾报告](qa-reports/qa_2026-11-12_1700_release.md)。
+
+
+## 发布完成补记（2026-11-12，保留上述发布前记录）
+
+**本轮授权的哈奇正式入口已发布，实际线上入口已验证。** 上文“尚未发布”为当时状态，不覆盖历史记录。
+
+- 源代码提交 `ef80c8ba80e4c96acc0d60e2894d3589c21a12fa` 已推送源仓库origin。
+- 发行标识 `1ad5c558270629c1`；154个文件、23,561,954字节CDN逐项校验通过，发行manifest verified=true。
+- apps origin提交 `9bed215e2aaa639ddac3146c8389c1c7906fd3c3`，Keepwork提交 `9e87a748fde4e3edf351baae19d7c55ab61ceccd`。本轮仅发布 `official/apps/MagicHaqi/release/Haqi_v1.html`，没有发布其他项目或同步Maisi。
+- 正式原始入口GET 200，返回2434字节，与发布入口精确一致；Node核验记录 `live-entry-verification.json`。
+- Edge打开真实raw入口，到达启动选角，DOM base指向新发行标识，console无异常；截图 `live-release-entry.jpg`。发行dist亦实际进入原QA角色营地、商店和探索，未见error。
+- 最终商店硬刷新实屏通过：760宽视口单列460宽居中，空目录移除，console warning/error为空；截图 `shop-final-compact.jpg`。
+- 既有账号显示已连接游戏服务器，同时出现云端与本地存档差异提示。测试未点击云端加载、覆盖或保存；**这不等于云存档读写验收通过**。真实麦克风、手机实机、支付、全岛功能和留存仍未验证。
+
+试玩入口：https://keepwork.com/api/raw/official/apps/MagicHaqi/release/Haqi_v1.html
+
+证据目录：`D:/paracraft-apps/output/haqi/king-wargod-20261112/`。本补记只更新发布与验收状态，不改变经济限制及未覆盖范围。

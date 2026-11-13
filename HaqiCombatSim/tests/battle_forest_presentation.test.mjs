@@ -116,11 +116,12 @@ test('forest dialog keeps Escape and Tab within its own controls',()=>{
  ui.modal.events.keydown({key:'Escape',stopPropagation(){},preventDefault(){}});assert.deepEqual(ui.calls,['close']);
 });
 
-test('each route-note tactic opens its matching borrowed-card exercise',()=>{
- const ui=render('briefing'),practice=ui.all.filter(n=>n.textContent==='借卡练习这项配合');
- assert.equal(practice.length,4);
- for(const node of practice)node.click();
- assert.deepEqual(ui.calls,[{training:'focus'},{training:'guard'},{training:'break-shield'},{training:'squad'}]);
+test('the route note starts one real monster fight without theory exercises',()=>{
+ const ui=render('briefing'),practice=ui.all.filter(n=>n.textContent==='和茜茜打怪');
+ assert.equal(practice.length,1);
+ assert.equal(ui.all.some(n=>n.textContent==='借卡练习这项配合'),false);
+ practice[0].click();
+ assert.deepEqual(ui.calls,['training']);
 });
 
 test('a low-level patrol gives a mainline route while a prepared character can choose the dungeon',()=>{

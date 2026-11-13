@@ -101,16 +101,9 @@ export function renderForestCommission(root,model,cb){
  }else if(phase==='briefing'){
   say('Keep together 是一起行动，Focus on one enemy 是集中攻击一个敌人。这次巡夜灯可以单人挑战；以后和伙伴组队时，便签上的话就能帮你们分工。');
   handover('brief');pouch(body,save);
-  const tips=el('div','forest-tactics-notes');
-  for(const [title,text,lesson]of [
-   ['单人进攻：强化 → 陷阱 → 攻击','先给自己加对应学派强化，再把同系陷阱放到选定敌人身上，最后攻击那个敌人。强化在进攻者身上，陷阱在受击者身上，攻击学派要匹配。','focus'],
-   ['看见重击：虚弱 + 护盾','给准备进攻的敌人加虚弱，再保护可能被攻击的队友。两种效果可以共同减伤；没有匹配到攻击学派的盾，未必会触发。','guard'],
-   ['看见护盾：先试探，再重击','对应学派的小攻击可以先消耗护盾，再让主攻打出重击。注意：试探也可能用掉自己身上的强化或目标陷阱，先看状态再出牌。','break-shield'],
-   ['组队配合：把加成都交给主攻','辅助给主攻加强化，另一人给同一个目标挂陷阱，再由主攻攻击。4对4还要留人保护队友；不要把陷阱和攻击分到不同敌人身上。','squad']
-  ])tips.append(el('details','forest-help',el('summary','',title),el('p','',text),button('借卡练习这项配合',()=>cb.training(lesson),'secondary')));
-  body.append(tips,el('p','muted','战术课堂可借用卡组练习反例、2对2与4对4，不消耗你的正式卡牌。正式副本需要自己已学会并装入卡组的法术。'),el('p','muted','正式组队时，你给主角出牌，伙伴自己行动。打开战斗中的「对白与表情」，选「我在憋大招」请求伙伴强化或保护你，选「给我加血」请求治疗。请求只影响下一回合；伙伴必须手里有能用、法力足够且目标合法的卡牌，不能保证每次响应。'));
+  body.append(el('p','muted','茜茜：旁边有怪物堵住了巡逻路。跟我一起打，卡组先借给你。'));
   if(model.nearby)act('和茜茜确认巡逻路线',{step:'brief'});else go('拿便签给茜茜');
-  actions.append(button('先试战术搭配',cb.training,'secondary'));
+  actions.append(button('和茜茜打怪',cb.training,'secondary'));
  }else if(phase==='patrol'){
   say('出发前先在营地休息，等队伍生命恢复，再检查装备和卡组。副本要求从入口到首领完整走一轮，路上不会自动回血；可以回营地休整后接着走。护盾与虚弱能省下生命，强化、陷阱和集中攻击能缩短战斗。失败或撤退可以重新准备再试，便签不会丢。');
   pouch(body,save);body.append(el('p','forest-next-goal',goal.label),el('p','',goal.hint));
@@ -118,7 +111,7 @@ export function renderForestCommission(root,model,cb){
    body.append(el('p','forest-level-note',`你现在${save.level}级。先继续主线升到5级，再回来巡逻；靴子可以立即使用，便签和委托进度会保留。`));
    actions.append(button('继续主线升级',cb.mainline,'primary'));
   }
-  actions.append(button('查看巡逻副本',cb.patrol,save.level<5?'secondary':'primary'),button('练习2对2 / 4对4',cb.training,'secondary'),button('准备装备与卡组',cb.equipment,'secondary'));
+  actions.append(button('查看巡逻副本',cb.patrol,save.level<5?'secondary':'primary'),button('和茜茜打怪',cb.training,'secondary'),button('准备装备与卡组',cb.equipment,'secondary'));
  }else if(phase==='report'){
   say('巡夜灯亮起来了！你找到了补给，也把巡逻路线走通了。这件5级披风是你的回礼：除了生命，还能增强本学派的攻击。先看看属性比较，再决定是否穿上。');
   handover('report');rewards('report');if(model.nearby)act('归还便签并领取回礼',{step:'report'});else go('回营地向茜茜汇报');

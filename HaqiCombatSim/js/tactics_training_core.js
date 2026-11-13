@@ -113,6 +113,7 @@ export function validateTacticsTraining(save){
  const value=save.tacticsTraining;if(value===undefined)return;
  if(!value||value.version!==1||!value.completed||typeof value.completed!=='object'||Array.isArray(value.completed))throw Error('战术演练记录无效');
  for(const [id,row] of Object.entries(value.completed)){
+  if(row?.fieldWins!==undefined&&(!Number.isSafeInteger(row.fieldWins)||row.fieldWins<1||row.fieldWins>9999))throw Error('实战记录无效');
   if(!lessonFor(id)||!row||!Number.isSafeInteger(row.runs)||row.runs<1||row.runs>9999||![row.plain,row.actual].every(n=>Number.isSafeInteger(n)&&n>=0&&n<=5000))throw Error('战术演练记录无效');
  }
 }

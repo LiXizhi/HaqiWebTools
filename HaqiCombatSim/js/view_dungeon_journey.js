@@ -35,7 +35,7 @@ export function renderDungeonJourney(root,{assets,save,dungeon:d},cb){
         size>=4?'让不同成员承担强化、布置陷阱、保护和主攻；集中攻击同一个目标。':size>=2?'辅助把强化交给主攻，陷阱挂在集火目标上，再用对应学派攻击。':'先强化自己，再给对手挂对应学派陷阱，最后打出攻击。',
         '看清敌人意图：重击前给进攻者挂虚弱，同时给受击队友加盾。',
         '可选挑战：在一场胜利中触发强化加陷阱，或虚弱加护盾的组合。'
-    ],footnote:'不会额外限制你的打法。战斗结束后可查看实际生效次数，胜利实绩记录在茜茜的战术课堂。'}));
+    ],footnote:'不会额外限制你的打法。战斗结束后可查看实际生效次数，胜利实绩记入冒险手记。'}));
     const actions=el('div','dungeon-actions',button('暂不进入',cb.close,'secondary'));
     if(size>=2&&cb.party)actions.append(button('安排出战伙伴',cb.party,'secondary'));
     actions.append(button('进入',()=>cb.prepare(),'primary'));

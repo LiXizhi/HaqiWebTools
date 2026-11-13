@@ -1,5 +1,6 @@
 // Explicit URLs for standalone Hanzi story animations.
 export const islandStoryAnimations = {
+    'hanzi/hanzi_sun.html': new URL('../hanzi/hanzi_sun.html', import.meta.url).href,
     'hanzi/hanzi_ri.html': new URL('../hanzi/hanzi_ri.html', import.meta.url).href,
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_ri.html': new URL('../hanzi/hanzi_ri.html', import.meta.url).href,
     'hanzi/hanzi_yue.html': new URL('../hanzi/hanzi_yue.html', import.meta.url).href,
@@ -42,4 +43,8 @@ export const islandStoryAnimations = {
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_zhi.html': new URL('../hanzi/hanzi_zhi.html', import.meta.url).href,
     'hanzi/hanzi_zhi_peak.html': new URL('../hanzi/hanzi_zhi_peak.html', import.meta.url).href,
     'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_zhi_peak.html': new URL('../hanzi/hanzi_zhi_peak.html', import.meta.url).href,
+    'hanzi/hanzi_quan.html': new URL('../hanzi/hanzi_quan.html', import.meta.url).href,
+    'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_quan.html': new URL('../hanzi/hanzi_quan.html', import.meta.url).href,
+    'hanzi/hanzi_chuan.html': new URL('../hanzi/hanzi_chuan.html', import.meta.url).href,
+    'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_chuan.html': new URL('../hanzi/hanzi_chuan.html', import.meta.url).href,
 };

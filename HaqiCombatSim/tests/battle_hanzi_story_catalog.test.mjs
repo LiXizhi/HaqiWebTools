@@ -27,7 +27,7 @@ test('animation paths admit disambiguated names but reject traversal, alternate 
 });
 test('authored replacements are standalone executable pages with writing and completion hooks',()=>{
  const mapped=read('js/hanzi_story_animations.js');
- for(const id of ['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','mu_eye','jing','xi','er','xin','tian_field','yun','li','zhi','zhi_peak']){
+ for(const id of ['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','mu_eye','jing','xi','er','xin','tian_field','yun','li','zhi','zhi_peak','sun']){
   const filename=`hanzi_${id}.html`,html=read('hanzi/'+filename);
   const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];
   assert.ok(scripts.length>=2,filename);for(const [,script]of scripts)new vm.Script(script,{filename});
@@ -147,12 +147,13 @@ test('yun writing embeds strokes.json outlines and medians without retuning',()=
 test('each painting supplies nonempty scene contours for a continuous glyph morph',()=>{
  const context={};vm.runInNewContext(read('hanzi/source/contours.js')+';globalThis.get=storyContours',context);for(const s of stories){const paths=context.get(s.theme);assert.ok(paths.length>=2);for(const points of paths){assert.ok(points.length>=2);assert.ok(points.flat().every(Number.isFinite));}}
 });
-test('jing, li, zhi and zhi_peak embed pinned makemeahanzi outlines and medians outside the dictionary',()=>{
+test('jing, li, zhi, zhi_peak and chuan embed pinned makemeahanzi outlines and medians outside the dictionary',()=>{
  for(const [id,glyph,pinyin,varName,count] of [
   ['jing','径','jìng','JING',8],
   ['li','李','lǐ','LI',7],
   ['zhi','知','zhī','ZHI',8],
   ['zhi_peak','峙','zhì','ZHI_PEAK',9],
+  ['chuan','传','chuán','CHUAN',6],
  ]){
   const html=read(`hanzi/hanzi_${id}.html`);
   assert.match(html,new RegExp(`<title>${glyph} ${pinyin} `));
@@ -173,7 +174,7 @@ test('jing, li, zhi and zhi_peak embed pinned makemeahanzi outlines and medians 
  }
 });
 test('authored hanzi_*.html scripts compile cleanly and use forgiving trend-based stroke tracing without permanent drag.bad locks',()=>{
- const files=['er','guang','guo','huo','jing','kou','li','men','ming','mu','mu_eye','ren','ri','sen','shan','shi','shou','shui','tian_field','tu','wu','xi','xin','xiu','yu','yue','yun','zhi','zhi_peak'];
+ const files=['chuan','er','guang','guo','huo','jing','kou','li','men','ming','mu','mu_eye','ren','ri','sen','shan','shi','shou','shui','tian_field','tu','wu','xi','xin','xiu','yu','yue','yun','zhi','zhi_peak'];
  for(const name of files){
   const html=read(`hanzi/hanzi_${name}.html`);
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]);

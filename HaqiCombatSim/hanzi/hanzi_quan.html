@@ -1,0 +1,2217 @@
+<!doctype html>
+<!-- Hand-authored standalone Hanzi story for 泉 (quán). Do not regenerate from a template; see hanzi/docs/16_quan.md. -->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1420">
+<title>泉 quán · 明月松间，清泉石上</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --night:#0b1420;--deep:#132638;--slate:#1d3a4a;
+  --spring:#5fc9c6;--jade:#8fe3d8;--moss:#3f7a63;
+  --moon:#f4dfa6;--amber:#e9b45c;--cinnabar:#b5402c;
+  --paper:#f6f0e2;--cream:#eef5f4;--ink:#1a2228;
+  --kai:"Kaiti SC","STKaiti","KaiTi","BiauKai","Kaiti TC","DFKai-SB","Songti SC","STSong","SimSun",serif;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--night);color:var(--cream);font-family:var(--serif);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touch-action:manipulation}
+button:focus-visible,canvas:focus-visible{outline:2px solid var(--jade);outline-offset:3px}
+[hidden]{display:none!important}
+#stage{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+body.listen #stage,body.dig #stage,body.play #stage{cursor:pointer}
+body.trace #stage{cursor:crosshair}
+
+#brand{
+  position:fixed;left:max(16px,env(safe-area-inset-left));top:max(14px,env(safe-area-inset-top));
+  display:flex;align-items:center;gap:9px;z-index:8;pointer-events:none;
+  font-family:var(--kai);font-size:15px;letter-spacing:.22em;color:var(--cream);
+  text-shadow:0 1px 10px rgba(0,0,0,.7);
+}
+#brand .seal{
+  background:var(--cinnabar);color:#fff7ea;border-radius:3px;padding:4px 6px 3px;
+  font-size:15px;line-height:1;letter-spacing:0;box-shadow:0 2px 10px rgba(0,0,0,.45);
+}
+body.paper #brand{color:var(--ink);text-shadow:none}
+
+#progress{
+  position:fixed;top:max(16px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);
+  display:flex;list-style:none;margin:0;padding:0;gap:clamp(8px,1.8vw,20px);
+  z-index:10;opacity:0;transition:opacity .7s;pointer-events:none;
+}
+#progress::before{content:"";position:absolute;top:3px;left:12px;right:12px;height:1px;background:rgba(143,227,216,.26)}
+body.paper #progress::before{background:rgba(40,58,60,.22)}
+body.started #progress{opacity:1}
+#progress li{
+  position:relative;font-family:var(--kai);font-size:13px;letter-spacing:.08em;
+  padding-top:12px;color:rgba(238,245,244,.55);transition:color .45s;white-space:nowrap;
+}
+body.paper #progress li{color:rgba(38,54,56,.55)}
+#progress li::before{
+  content:"";position:absolute;top:0;left:50%;width:7px;height:7px;margin-left:-3.5px;border-radius:50%;
+  background:rgba(95,201,198,.34);transition:background .45s,transform .45s,box-shadow .45s;
+}
+#progress li.done{color:var(--cream)}
+body.paper #progress li.done{color:var(--ink)}
+#progress li.done::before{background:var(--spring)}
+#progress li.on{color:var(--jade);font-weight:600}
+body.paper #progress li.on{color:#14606b}
+#progress li.on::before{background:var(--jade);transform:scale(1.55);box-shadow:0 0 11px 2px rgba(143,227,216,.55)}
+
+#controls{
+  position:fixed;right:max(14px,env(safe-area-inset-right));top:max(12px,env(safe-area-inset-top));
+  display:flex;gap:8px;z-index:12;opacity:0;pointer-events:none;transition:opacity .6s;
+}
+body.started #controls{opacity:1;pointer-events:auto}
+#controls button{
+  font-family:var(--kai);font-size:14px;letter-spacing:.16em;color:var(--cream);
+  background:rgba(13,28,40,.76);border:1px solid rgba(95,201,198,.46);
+  border-radius:4px;padding:6px 11px 6px 13px;backdrop-filter:blur(6px);
+}
+body.paper #controls button{color:var(--ink);background:rgba(250,245,233,.88);border-color:rgba(20,96,107,.4)}
+
+#hint{
+  position:fixed;left:16px;right:16px;margin:0 auto;width:fit-content;max-width:calc(100vw - 32px);
+  top:max(58px,calc(env(safe-area-inset-top) + 46px));text-align:center;
+  color:#e9fffb;opacity:0;transition:opacity .4s;pointer-events:none;z-index:9;
+  padding:7px 20px 8px;border:1px solid rgba(95,201,198,.55);border-radius:22px;
+  background:rgba(11,26,38,.86);backdrop-filter:blur(6px);box-shadow:0 6px 22px rgba(0,0,0,.42);
+}
+body.paper #hint{color:#12303a;background:rgba(251,247,238,.92);border-color:rgba(20,96,107,.45)}
+#hint span{font-family:var(--kai);font-size:clamp(15px,2.1vh,19px);letter-spacing:.1em}
+#hint.on{opacity:1;animation:pulseHint 2.1s ease-in-out infinite}
+@keyframes pulseHint{50%{box-shadow:0 0 0 6px rgba(95,201,198,.15),0 6px 24px rgba(0,0,0,.44)}}
+
+#caption{
+  position:fixed;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translate(-50%,10px);
+  width:min(880px,calc(100vw - 24px));text-align:center;opacity:0;
+  transition:opacity .48s,transform .62s cubic-bezier(.2,.7,.2,1);pointer-events:none;z-index:7;
+  padding:18px 24px 14px;border-radius:16px;
+  background:radial-gradient(ellipse at center,rgba(8,20,30,.9) 44%,rgba(8,20,30,0) 78%);
+}
+body.paper #caption{background:radial-gradient(ellipse at center,rgba(248,242,229,.95) 45%,rgba(248,242,229,0) 78%)}
+#caption.on{opacity:1;transform:translate(-50%,0)}
+#capTitle{
+  margin:0 0 6px;font-weight:400;font-family:var(--kai);font-size:clamp(14px,2vh,18px);
+  letter-spacing:.38em;margin-left:.38em;color:var(--jade);
+}
+body.paper #capTitle{color:#14606b}
+#capText{
+  margin:0;font-family:var(--kai);font-size:clamp(19px,calc(.95vw + 1.5vh),27px);
+  line-height:1.68;letter-spacing:.06em;min-height:1.68em;color:var(--cream);
+  text-shadow:0 1px 12px rgba(0,0,0,.8);
+}
+body.paper #capText{color:var(--ink);text-shadow:0 1px 8px rgba(255,252,244,.9)}
+#capText .ch{animation:inkFade .85s ease-out both;animation-delay:calc(var(--i) * 48ms + 60ms)}
+@keyframes inkFade{from{opacity:0;filter:blur(2px)}to{opacity:1;filter:none}}
+.haqi-sub-trans{
+  display:block;margin-top:4px;font-family:Georgia,"Times New Roman",system-ui,sans-serif;
+  font-size:clamp(13px,1.75vh,16px);line-height:1.45;color:#bfd6d8;letter-spacing:.02em;
+}
+body.paper .haqi-sub-trans{color:#4d5a58}
+
+.actions{display:flex;justify-content:center;gap:12px;margin-top:11px}
+.actions button{pointer-events:auto;font-family:var(--kai);letter-spacing:.2em;border-radius:4px;transition:transform .16s,filter .16s}
+.actions button:hover{transform:translateY(-1px);filter:brightness(1.08)}
+#action{
+  font-size:17px;padding:8px 22px 8px 26px;color:#f2fffd;
+  border:1px solid #8fe3d8;background:linear-gradient(180deg,#1d7f88,#10454f);
+  box-shadow:0 6px 18px rgba(0,0,0,.45),inset 0 1px 0 rgba(190,255,247,.32);
+}
+#demo{
+  font-size:16px;padding:7px 16px 7px 20px;color:var(--ink);
+  background:rgba(250,245,233,.93);border:1px solid rgba(20,96,107,.45);
+}
+
+#note{
+  position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(10px,env(safe-area-inset-bottom));
+  font-size:11px;color:rgba(198,220,222,.66);letter-spacing:.06em;z-index:4;pointer-events:none;max-width:46vw;
+}
+body.paper #note{color:rgba(56,72,72,.72)}
+
+#intro{position:fixed;inset:0;z-index:20;pointer-events:none;transition:opacity .95s,transform .95s}
+#intro.off{opacity:0;transform:scale(1.03)}
+#intro.off *{pointer-events:none!important}
+.introTop,.introBottom{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
+.introTop{top:max(20px,env(safe-area-inset-top))}
+.introBottom{bottom:max(18px,env(safe-area-inset-bottom));gap:7px}
+.tag{display:flex;align-items:center;gap:12px;font-family:var(--kai);font-size:clamp(14px,2vh,18px);letter-spacing:.3em;color:var(--jade)}
+.tag i{display:block;width:clamp(24px,5vw,56px);height:1px;background:currentColor;opacity:.6}
+.pinyin{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:clamp(30px,5vh,46px);line-height:1.05;color:var(--cream);letter-spacing:.08em;text-shadow:0 2px 18px rgba(0,0,0,.7)}
+.mean{font-family:var(--kai);font-size:clamp(18px,2.5vh,23px);letter-spacing:.22em;color:#f7e6bd;text-shadow:0 2px 14px rgba(0,0,0,.7)}
+.sub{font-family:var(--kai);font-size:clamp(14px,2vh,18px);color:#c6dcdc;letter-spacing:.1em;margin:2px 0 0;line-height:1.65;text-shadow:0 1px 12px rgba(0,0,0,.75)}
+.btn-main{
+  pointer-events:auto;margin-top:8px;font-family:var(--kai);font-size:clamp(18px,2.5vh,22px);
+  letter-spacing:.38em;padding:10px 26px 10px 34px;color:#f4fffd;
+  background:linear-gradient(180deg,#1f8b93,#0f414b);border:1px solid #8fe3d8;border-radius:4px;
+  box-shadow:0 8px 26px rgba(0,0,0,.5),inset 0 1px 0 rgba(190,255,247,.36);
+  transition:transform .2s;animation:glowBtn 2.8s ease-in-out infinite;
+}
+.btn-main:hover{transform:translateY(-2px)}
+@keyframes glowBtn{50%{box-shadow:0 8px 26px rgba(0,0,0,.52),0 0 0 8px rgba(95,201,198,.15)}}
+.meta{font-size:12px;color:#9db6ba;letter-spacing:.1em;margin:2px 0 0}
+.rise{opacity:0;transform:translateY(12px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--d,0s)}
+@keyframes rise{to{opacity:1;transform:none}}
+
+body.portrait #brand,body.portrait #note{display:none}
+body.portrait #controls{top:max(56px,calc(env(safe-area-inset-top) + 46px))}
+body.portrait #hint{top:max(102px,calc(env(safe-area-inset-top) + 92px))}
+body.portrait #controls button{font-size:13px;padding:6px 9px 6px 11px;letter-spacing:.1em}
+body.portrait #progress li{font-size:11px}
+body.portrait #capText{font-size:clamp(18px,4.6vw,22px);line-height:1.58}
+@media (max-height:560px){.sub,.meta,#note{display:none}#caption{padding:8px 14px 6px}.actions{margin-top:6px}#capText{line-height:1.5;min-height:1.5em}}
+@media (prefers-reduced-motion:reduce){#intro,#caption{transition-duration:.35s}#hint.on,.btn-main{animation:none}#capText .ch{animation-duration:.2s;animation-delay:0s}}
+</style>
+<script>
+// Haqi H5 protocol v1: independent pages remain usable without a parent.
+(()=>{let context=null,written=false,finished=false,serial=0;const callbacks=new Map(),subCache=new Map(),uiCache=new Map(),pending=new Set(),uiNodes=new Map();
+const isZh=loc=>!loc||/^zh\b/i.test(loc);
+const send=data=>{if(context)parent.postMessage({channel:'haqi-hanzi',version:1,entryId:context.entryId,sessionId:context.sessionId,...data},context.origin);};
+const refreshDom=()=>{for(const[el,zh]of uiNodes){if(!el?.isConnected){uiNodes.delete(el);continue;}const tr=!isZh(context?.locale)&&uiCache.get(zh);const next=(tr&&tr!==zh)?tr:zh;if(el.dataset.haqiKind==='seal'){const seal=el.querySelector('.seal');el.textContent=next;if(seal)el.prepend(seal);}else if(el.dataset.haqiKind==='tag'){const i1=document.createElement('i'),i2=document.createElement('i');el.replaceChildren(i1,document.createTextNode(next),i2);}else el.textContent=next;}document.querySelectorAll('[data-haqi-caption]').forEach(el=>renderCaption(el,el.dataset.haqiCaption));};
+const flushPending=()=>{if(!context||!pending.size)return;const texts=[...pending];pending.clear();window.haqiHanziTranslate(texts);};
+const ensureTexts=texts=>{const need=[];for(const t of texts){const s=typeof t==='string'?t.trim():'';if(s&&(!subCache.has(s)||!uiCache.has(s))&&!pending.has(s)){pending.add(s);need.push(s);}}if(need.length&&context)flushPending();};
+const renderCaption=(el,zh)=>{if(!el)return;el.dataset.haqiCaption=zh||'';let sub=el.querySelector('.haqi-sub-trans');if(!zh||isZh(context?.subtitleLocale||context?.locale)){sub?.remove();return;}const tr=subCache.get(zh);if(!tr||tr===zh){sub?.remove();ensureTexts([zh]);return;}if(!sub){sub=document.createElement('span');sub.className='haqi-sub-trans';const host=el.querySelector('#capText')||el;if(host!==el&&host.parentNode===el)host.insertAdjacentElement('afterend',sub);else el.appendChild(sub);}sub.textContent=tr;};
+const trackUi=(el,zh,kind='')=>{if(!el||!zh)return;if(kind)el.dataset.haqiKind=kind;uiNodes.set(el,zh);ensureTexts([zh]);};
+const scanStatic=()=>{if(!document.body)return;document.querySelectorAll('#start,#replay,#mute,#pause,#demo,#action,#progress li,#note,.introBottom .mean,.introBottom .sub,.introBottom .meta').forEach(el=>{const zh=(el.textContent||'').trim();if(zh&&!uiNodes.has(el))trackUi(el,zh);});document.querySelectorAll('#brand,.brand').forEach(el=>{if(uiNodes.has(el))return;const clone=el.cloneNode(true);clone.querySelector?.('.seal')?.remove();const zh=(clone.textContent||'').trim();if(zh)trackUi(el,zh,'seal');});document.querySelectorAll('.introTop .tag,.tag').forEach(el=>{if(uiNodes.has(el))return;const zh=(el.textContent||'').trim();if(zh)trackUi(el,zh,'tag');});refreshDom();};
+if(document.readyState==='loading')addEventListener('DOMContentLoaded',scanStatic,{once:true});else scanStatic();
+window.haqiHanziWritten=()=>{written=true;send({type:'written'});};
+window.haqiHanziComplete=()=>{if(!written){written=true;send({type:'written'});}finished=true;send({type:'completed'});};
+window.haqiHanziPrefetch=texts=>ensureTexts(Array.isArray(texts)?texts:[texts]);
+window.haqiHanziUi=(zh,el)=>{const s=typeof zh==='string'?zh.trim():'';if(!s)return zh;if(el)trackUi(el,s);else ensureTexts([s]);const tr=!isZh(context?.locale)&&uiCache.get(s);return(tr&&tr!==s)?tr:zh;};
+window.haqiHanziCaption=(el,zh)=>{const s=typeof zh==='string'?zh.trim():'';if(s)ensureTexts([s]);renderCaption(el,s);};
+window.haqiHanziTranslate=texts=>new Promise(resolve=>{const list=(Array.isArray(texts)?texts:[]).map(t=>typeof t==='string'?t.trim():'').filter(Boolean);if(!context||!list.length){resolve({});return;}const requestId=String(++serial);const timer=setTimeout(()=>{callbacks.delete(requestId);resolve({});},1500);callbacks.set(requestId,msg=>{clearTimeout(timer);const sub=msg?.translations||{},ui=msg?.uiTranslations||sub;for(const[k,v]of Object.entries(sub))if(typeof v==='string'&&v.trim())subCache.set(k,v.trim());for(const[k,v]of Object.entries(ui))if(typeof v==='string'&&v.trim())uiCache.set(k,v.trim());refreshDom();resolve(sub);});send({type:'translate',requestId,texts:list});});
+addEventListener('message',event=>{const m=event.data;if(event.source!==parent||parent===window||m?.channel!=='haqi-hanzi'||m.version!==1)return;
+if(m.type==='init'&&typeof m.sessionId==='string'&&typeof m.entryId==='string'){if(document.referrer&&event.origin!==new URL(document.referrer).origin)return;context={...m,origin:event.origin};scanStatic();flushPending();refreshDom();if(written)send({type:'written'});if(finished)send({type:'completed'});}
+else if(context&&event.origin===context.origin&&m.sessionId===context.sessionId&&m.type==='translations'){callbacks.get(m.requestId)?.(m);callbacks.delete(m.requestId);}});
+if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'ready'},'*');})();
+</script>
+</head>
+<body>
+<canvas id="stage" tabindex="0" role="img" aria-label="空山月夜，一轮明月照在松林与溪石上，崖壁石洞里涌出清泉，跳过层层山石汇成深潭；泉眼与流水收束成上白下水的泉字。"></canvas>
+<div id="brand"><span class="seal">泉</span>一字一画卷</div>
+<ol id="progress" aria-label="故事进度">
+  <li>空山</li><li>寻声</li><li>泉涌</li><li>成字</li><li>写字</li><li>词意</li><li>余韵</li>
+</ol>
+<div id="controls">
+  <button id="pause" type="button" aria-pressed="false">暂停</button>
+  <button id="mute" type="button" aria-pressed="false">静音</button>
+  <button id="replay" type="button">重播</button>
+</div>
+<div id="hint" role="status"></div>
+<section id="caption" aria-live="polite" aria-atomic="true">
+  <h2 id="capTitle"></h2>
+  <p id="capText"></p>
+  <div class="actions">
+    <button id="action" type="button" hidden></button>
+    <button id="demo" type="button" hidden>看示范</button>
+  </div>
+</section>
+<div id="note">上「白」本象泉穴之形，下「水」象涌流；古文字为艺术示意，描红笔顺依规范楷书。</div>
+<div id="intro">
+  <div class="introTop"><div class="tag rise" style="--d:.2s"><i></i>月夜山水 · 汉字故事<i></i></div></div>
+  <div class="introBottom">
+    <div class="pinyin rise" style="--d:1.0s">quán</div>
+    <div class="mean rise" style="--d:1.3s">泉 · 明月松间，清泉石上</div>
+    <p class="sub rise" style="--d:1.6s">空山新雨后，天气晚来秋——听，石头缝里藏着一眼泉。</p>
+    <button id="start" class="btn-main rise" style="--d:1.9s" type="button">开始</button>
+    <p class="meta rise" style="--d:2.2s">约三分钟 · 寻声凿泉、九笔描红与月夜余韵 · 建议开启声音</p>
+  </div>
+</div>
+<script>
+(() => {
+'use strict';
+
+const $ = s => document.querySelector(s);
+const TAU = Math.PI * 2;
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = t => { t = clamp(t); return t * t * (3 - 2 * t); };
+const bump = (s, c, w) => Math.exp(-(((s - c) / w) ** 2));
+const ease = {
+  inOut: t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+  out: t => 1 - Math.pow(1 - t, 3),
+  sine: t => -(Math.cos(Math.PI * t) - 1) / 2,
+  lin: t => t,
+};
+function mulberry32(a) {
+  return () => {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function parseCol(c) {
+  if (Array.isArray(c)) return c;
+  if (c[0] === '#') return [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)];
+  const m = String(c).match(/\d+(?:\.\d+)?/g);
+  return m ? [+m[0], +m[1], +m[2]] : [0, 0, 0];
+}
+function mixCol(c1, c2, t) {
+  const a = parseCol(c1), b = parseCol(c2), u = clamp(t);
+  return `rgb(${Math.round(lerp(a[0], b[0], u))},${Math.round(lerp(a[1], b[1], u))},${Math.round(lerp(a[2], b[2], u))})`;
+}
+
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const QUERY = new URLSearchParams(location.search);
+const FAST = QUERY.has('fast') ? 0.06 : 1;
+const AUTO = QUERY.has('auto');
+const M = reduceMotion ? 0.6 : 1;
+const SEED = 20261113;
+let rand = mulberry32(SEED);
+
+class Cancelled extends Error {}
+let clock = 0, DT = 16, visible = true;
+let waiters = [];
+let token = { dead: true };
+function frame(tk) { return new Promise((res, rej) => waiters.push({ tk, res, rej })); }
+async function wait(ms, tk) { ms *= FAST; const t0 = clock; while (clock - t0 < ms) await frame(tk); }
+async function tween(ms, fn, tk, ez = ease.inOut) {
+  ms *= FAST;
+  if (ms <= 0) { fn(1); return; }
+  const t0 = clock;
+  for (;;) {
+    await frame(tk);
+    const t = clamp((clock - t0) / ms);
+    fn(ez(t));
+    if (t >= 1) return;
+  }
+}
+const bg = p => p.catch(e => { if (!(e instanceof Cancelled)) console.error(e); });
+
+/* ---------- WebAudio：夜山低吟、泉流白噪、水滴、古琴与石磬 ---------- */
+const NOTE = { A2: 110.00, D3: 146.83, A3: 220.00, D4: 293.66, E4: 329.63, G4: 392.00, A4: 440.00, B4: 493.88, D5: 587.33, E5: 659.26, G5: 783.99, A5: 880.00, B5: 987.77, D6: 1174.66 };
+const PENTA = [NOTE.D4, NOTE.E4, NOTE.G4, NOTE.A4, NOTE.B4, NOTE.D5, NOTE.E5, NOTE.G5, NOTE.A5];
+const Sound = {
+  ctx: null, master: null, streamGain: null, streamFilter: null, noise: null,
+  muted: false, nCursor: 0, lastFlow: -1, lastDrip: 0,
+  init() {
+    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    try { this.ctx = new AC(); } catch { return; }
+    const c = this.ctx;
+    this.master = c.createGain();
+    this.master.gain.value = this.muted ? 0 : 0.62;
+    this.master.connect(c.destination);
+
+    const len = Math.floor(c.sampleRate * 2);
+    const buf = c.createBuffer(1, len, c.sampleRate);
+    const d = buf.getChannelData(0), r = mulberry32(7717);
+    for (let i = 0; i < len; i++) d[i] = r() * 2 - 1;
+    this.noise = buf;
+
+    // 夜山低吟：空五度长音垫
+    const pad = c.createGain(); pad.gain.value = 0.0001;
+    const plp = c.createBiquadFilter(); plp.type = 'lowpass'; plp.frequency.value = 420;
+    pad.connect(plp); plp.connect(this.master);
+    for (const [f, v] of [[NOTE.A2, 0.3], [NOTE.D3, 0.2], [NOTE.A3, 0.08]]) {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = 'sine'; o.frequency.value = f; g.gain.value = v;
+      o.connect(g); g.connect(pad); o.start();
+    }
+    pad.gain.exponentialRampToValueAtTime(0.055, c.currentTime + 2.6);
+
+    // 泉流：带通白噪 + 缓慢摆动的滤波，音量随画面水流实时联动
+    const src = c.createBufferSource(); src.buffer = buf; src.loop = true;
+    const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1500; bp.Q.value = 0.7;
+    const hp = c.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 420;
+    this.streamGain = c.createGain(); this.streamGain.gain.value = 0.0001;
+    src.connect(bp); bp.connect(hp); hp.connect(this.streamGain); this.streamGain.connect(this.master);
+    src.start();
+    this.streamFilter = bp;
+    const lfo = c.createOscillator(), lg = c.createGain();
+    lfo.type = 'sine'; lfo.frequency.value = 0.17; lg.gain.value = 420;
+    lfo.connect(lg); lg.connect(bp.frequency); lfo.start();
+  },
+  setMuted(v) {
+    this.muted = v;
+    if (this.master && this.ctx) this.master.gain.setTargetAtTime(v ? 0 : 0.62, this.ctx.currentTime, 0.06);
+  },
+  // 暂停 / 切后台时冻结整条声音链，恢复时续播（不重建，不叠加）
+  setSuspended(v) {
+    if (!this.ctx) return;
+    if (v) { if (this.ctx.state === 'running') void this.ctx.suspend().catch(() => {}); }
+    else if (this.ctx.state === 'suspended') void this.ctx.resume().catch(() => {});
+  },
+  setFlow(v) {
+    if (!this.streamGain || !this.ctx) return;
+    if (Math.abs(v - this.lastFlow) < 0.02) return;
+    this.lastFlow = v;
+    this.streamGain.gain.setTargetAtTime(0.0001 + v * 0.075, this.ctx.currentTime, 0.35);
+  },
+  // 水滴：短促下滑正弦 + 微小气泡尾音
+  drip(freq = 900, vol = 0.1) {
+    if (!this.ctx || this.muted) return;
+    const c = this.ctx, t = c.currentTime;
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(freq * 1.9, t);
+    o.frequency.exponentialRampToValueAtTime(freq * 0.62, t + 0.11);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.006);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+    o.connect(g); g.connect(this.master);
+    o.start(t); o.stop(t + 0.34);
+  },
+  // 古琴拨弦
+  pluck(freq, vol = 0.12, dur = 1.7) {
+    if (!this.ctx || this.muted) return;
+    const c = this.ctx, t = c.currentTime;
+    for (const [m, a, tp] of [[1, 1, 'triangle'], [2, 0.32, 'sine'], [3, 0.12, 'sine']]) {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = tp; o.frequency.value = freq * m;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(vol * a, t + 0.014);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur / m);
+      o.connect(g); g.connect(this.master);
+      o.start(t); o.stop(t + dur + 0.05);
+    }
+  },
+  // 石磬 / 铜铃
+  bell(freq = NOTE.D5, vol = 0.1) {
+    if (!this.ctx || this.muted) return;
+    const c = this.ctx, t = c.currentTime;
+    for (const [r, a, d] of [[1, 1, 3.0], [2.02, 0.38, 2.1], [2.81, 0.22, 1.4], [4.16, 0.1, 0.9]]) {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = 'sine'; o.frequency.value = freq * r;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(vol * a, t + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+      o.connect(g); g.connect(this.master);
+      o.start(t); o.stop(t + d + 0.05);
+    }
+  },
+  createNoise(c) { const s = c.createBufferSource(); s.buffer = this.noise; return s; },
+  // 水花 / 泉涌 / 松风，均由可见事件触发
+  splash(dur = 0.5, vol = 0.05, freq = 1800, q = 0.8) {
+    if (!this.ctx || !this.noise || this.muted) return;
+    const c = this.ctx, t = c.currentTime;
+    const s = this.createNoise(c);
+    const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = freq; bp.Q.value = q;
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(vol, t + Math.min(0.12, dur * 0.25));
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(bp); bp.connect(g); g.connect(this.master);
+    this.nCursor = (this.nCursor + 0.31) % 1.2;
+    s.start(t, this.nCursor); s.stop(t + dur + 0.06);
+  },
+  gush() {
+    if (!this.ctx || !this.noise || this.muted) return;
+    const c = this.ctx, t = c.currentTime;
+    const s = this.createNoise(c);
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(300, t);
+    lp.frequency.exponentialRampToValueAtTime(3200, t + 0.5);
+    lp.frequency.exponentialRampToValueAtTime(900, t + 1.8);
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.14, t + 0.16);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 2.0);
+    s.connect(lp); lp.connect(g); g.connect(this.master);
+    s.start(t, 0.2); s.stop(t + 2.1);
+    this.bell(NOTE.A4, 0.07);
+  },
+  wind() { this.splash(1.9, 0.03, 620, 0.5); },
+};
+
+/* ---------- 画布、2.5D 视差相机与麻纸肌理 ---------- */
+const cvs = $('#stage'), ctx = cvs.getContext('2d');
+const hempC = document.createElement('canvas'), hempX = hempC.getContext('2d');
+let SW = 1280, SH = 800, DPR = 1, portrait = false, vignette = null;
+
+function buildHemp(w, h) {
+  hempC.width = w; hempC.height = h;
+  hempX.clearRect(0, 0, w, h);
+  const r = mulberry32(2411);
+  hempX.lineWidth = 1;
+  for (let i = 0; i < 420; i++) {
+    const x = r() * w, y = r() * h, l = 16 + r() * 48;
+    hempX.strokeStyle = r() > 0.5 ? 'rgba(255,252,240,0.032)' : 'rgba(0,0,0,0.042)';
+    hempX.beginPath(); hempX.moveTo(x, y); hempX.lineTo(x + l, y + (r() - 0.5) * 6); hempX.stroke();
+  }
+}
+
+const cam = { x: 1200, y: 480, z: 1, orbitX: 0 };
+const CV = { x: 1200, y: 480, k: 1 };
+const VIEW = {
+  intro:  { x: 1210, y: 470, z: 1.02 },
+  night:  { x: 1200, y: 452, z: 1.0 },
+  listen: { x: 1120, y: 540, z: 1.05 },
+  gush:   { x: 1000, y: 566, z: 1.16 },
+  glyph:  { x: 1200, y: 470, z: 1.08 },
+  finale: { x: 1210, y: 476, z: 1.0 },
+};
+/* 竖屏是「立轴」构图：横幅机位会把崖壁、泉眼与月亮全部裁出画外，必须单独给一套机位 */
+const VIEW_TALL = {
+  intro:  { x: 1120, y: 470, z: 1.02 },
+  night:  { x: 1090, y: 452, z: 1.0 },
+  listen: { x: 1010, y: 540, z: 1.05 },
+  gush:   { x: 980,  y: 566, z: 1.16 },
+  glyph:  { x: 1200, y: 470, z: 1.08 },
+  finale: { x: 1120, y: 476, z: 1.0 },
+};
+const camView = name => (portrait ? VIEW_TALL : VIEW)[name];
+
+function updateView() {
+  const ar = SW / SH;
+  // 竖屏改用「立轴」适配：横幅的 cover 缩放会把崖壁、泉眼与月亮全部裁出画外
+  const vw = portrait ? 700 : lerp(940, 1520, clamp((ar - 0.55) / 0.95));
+  CV.k = Math.max(SW / vw, SH / (portrait ? 1240 : 880)) * cam.z;
+  const sh = W.shake || 0;
+  CV.x = cam.x + cam.orbitX * 46 + (sh ? Math.sin(clock * 0.085) * sh : 0);
+  CV.y = cam.y + (portrait ? 24 : 0) + (sh ? Math.cos(clock * 0.11) * sh * 0.6 : 0);
+}
+function camCenter(px = 1) {
+  return {
+    x: (CV.x - cam.orbitX * 70 * (px - 0.6)) * px + 1200 * (1 - px),
+    y: CV.y * (0.35 + 0.65 * px) + 470 * 0.65 * (1 - px),
+  };
+}
+function setCam(c, px = 1) {
+  const k = CV.k, C = camCenter(px);
+  c.setTransform(DPR * k, 0, 0, DPR * k, DPR * (SW / 2 - C.x * k), DPR * (SH / 2 - C.y * k));
+}
+// 命中测试必须与绘制该图元的视差层一致，否则点中画面上的光圈却判定落空
+function toWorld(sx, sy, px = 1) { const C = camCenter(px); return { x: (sx - SW / 2) / CV.k + C.x, y: (sy - SH / 2) / CV.k + C.y }; }
+function toScreen(wx, wy, px = 1) { const C = camCenter(px); return { x: (wx - C.x) * CV.k + SW / 2, y: (wy - C.y) * CV.k + SH / 2 }; }
+async function camTo(v, ms, tk, ez = ease.inOut) {
+  const a = { ...cam };
+  await tween(ms, t => { cam.x = lerp(a.x, v.x, t); cam.y = lerp(a.y, v.y, t); cam.z = lerp(a.z, v.z, t); }, tk, ez);
+}
+function resize() {
+  DPR = Math.min(devicePixelRatio || 1, 2);
+  SW = Math.max(1, innerWidth); SH = Math.max(1, innerHeight);
+  portrait = SW < SH * 0.92;
+  document.body.classList.toggle('portrait', portrait);
+  // 画幅切换时同步天象与交互锚点，保留已寻得的回声进度
+  MOON = portrait ? MOON_TALL : MOON_WIDE;
+  if (W.spots) {
+    const src = portrait ? SPOTS_TALL : SPOTS;
+    W.spots.forEach((s, i) => { s.x = src[i].x; s.y = src[i].y; });
+  }
+  cvs.width = Math.max(1, Math.round(SW * DPR));
+  cvs.height = Math.max(1, Math.round(SH * DPR));
+  buildHemp(cvs.width, cvs.height);
+  vignette = null;
+}
+
+/* ---------- 规范楷书「泉」9 笔（skishore/makemeahanzi@bddc96d41bef78427ed0e034e9f7e31d71fd1b92） ---------- */
+const QUAN = {"strokes":["M 408 664 Q 447 698 471 722 Q 537 788 558 801 Q 579 814 565 831 Q 549 847 520 858 Q 493 870 480 865 Q 467 861 473 848 Q 482 824 410 709 Q 394 685 377 659 Q 376 659 376 658 C 359 633 385 644 408 664 Z","M 345 654 Q 333 660 300 664 Q 288 667 285 661 Q 279 654 288 639 Q 322 572 346 462 Q 350 428 371 407 Q 390 385 395 402 Q 396 408 397 415 L 396 447 Q 395 460 391 475 Q 384 502 379 523 L 374 546 Q 362 597 358 620 C 353 649 352 651 345 654 Z","M 581 438 Q 599 407 616 397 Q 626 388 643 409 Q 661 434 700 577 Q 710 608 735 632 Q 748 644 737 658 Q 722 676 681 704 Q 660 716 579 695 Q 557 695 421 668 Q 414 667 408 664 L 376 658 Q 360 657 345 654 C 315 649 329 612 358 620 Q 443 645 596 666 Q 630 672 641 660 Q 654 644 650 627 Q 614 477 597 463 C 581 437 581 439 581 438 Z","M 379 523 Q 385 522 395 523 Q 489 539 560 551 Q 581 554 573 565 Q 563 578 541 582 Q 520 585 374 546 C 345 538 349 525 379 523 Z","M 478 427 Q 518 434 581 438 C 611 440 620 444 597 463 Q 590 469 580 475 Q 564 482 536 476 Q 457 457 396 447 C 366 442 367 414 397 415 Q 404 415 416 416 Q 426 419 439 421 L 478 427 Z","M 521 335 Q 524 353 530 367 Q 539 385 523 398 Q 501 417 478 427 C 451 441 425 447 439 421 Q 440 417 446 408 Q 468 369 466 326 Q 470 166 462 82 Q 461 58 449 50 Q 442 46 362 56 Q 349 57 351 50 Q 352 43 363 36 Q 433 -19 461 -55 Q 476 -71 490 -57 Q 526 -20 522 48 Q 519 90 518 299 L 521 335 Z","M 151 319 Q 139 319 138 311 Q 135 305 150 297 Q 190 272 217 279 Q 319 301 327 300 Q 339 296 326 275 Q 278 181 234 135 Q 189 84 107 32 Q 92 22 101 19 Q 111 18 130 24 Q 202 52 262 102 Q 319 147 390 265 Q 402 284 413 294 Q 428 303 421 313 Q 414 326 379 341 Q 360 353 304 333 Q 244 321 151 319 Z","M 600 271 Q 654 298 685 317 Q 757 365 786 374 Q 810 381 800 402 Q 787 421 762 439 Q 738 455 724 453 Q 711 453 714 439 Q 714 405 584 283 C 562 262 573 258 600 271 Z","M 584 283 Q 553 308 521 335 C 498 354 498 322 518 299 Q 621 179 754 55 Q 778 34 812 39 Q 932 57 968 67 Q 978 71 980 77 Q 980 83 963 90 Q 800 130 705 194 Q 654 230 600 271 L 584 283 Z"],"medians":[[[482,854],[494,847],[512,817],[407,678],[381,665]],[[294,654],[323,632],[330,616],[383,407]],[[353,651],[370,641],[614,687],[667,677],[691,641],[634,463],[621,438],[596,437]],[[383,530],[392,539],[492,558],[544,565],[565,560]],[[401,420],[413,433],[434,438],[588,460]],[[446,417],[474,404],[496,374],[487,38],[471,7],[358,49]],[[148,310],[208,299],[339,321],[370,303],[329,221],[253,122],[173,58],[107,24]],[[723,443],[734,432],[744,401],[650,319],[603,287],[596,290]],[[525,329],[534,303],[620,223],[715,143],[790,92],[971,76]]]};
+const QUAN_PATHS = QUAN.strokes.map(d => new Path2D(d));
+const NS = 9;
+
+function densify(pts, step) {
+  const out = [[pts[0][0], pts[0][1]]];
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i];
+    const n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / step));
+    for (let k = 1; k <= n; k++) out.push([lerp(a[0], b[0], k / n), lerp(a[1], b[1], k / n)]);
+  }
+  return out;
+}
+function resamplePoly(pts, count = 64) {
+  const d = [0];
+  for (let i = 1; i < pts.length; i++) d.push(d[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+  const total = d[d.length - 1] || 1, out = [];
+  let j = 0;
+  for (let i = 0; i <= count; i++) {
+    const target = total * i / count;
+    while (j < d.length - 2 && d[j + 1] < target) j++;
+    const seg = (d[j + 1] - d[j]) || 1, f = clamp((target - d[j]) / seg);
+    out.push([lerp(pts[j][0], pts[j + 1][0], f), lerp(pts[j][1], pts[j + 1][1], f)]);
+  }
+  return out;
+}
+function bezierChain(segs) {
+  const pts = [];
+  for (const s of segs) {
+    for (let i = 0; i <= 20; i++) {
+      const t = i / 20, u = 1 - t;
+      if (s.length === 4) {
+        pts.push([
+          u * u * u * s[0][0] + 3 * u * u * t * s[1][0] + 3 * u * t * t * s[2][0] + t * t * t * s[3][0],
+          u * u * u * s[0][1] + 3 * u * u * t * s[1][1] + 3 * u * t * t * s[2][1] + t * t * t * s[3][1],
+        ]);
+      } else pts.push([lerp(s[0][0], s[1][0], t), lerp(s[0][1], s[1][1], t)]);
+    }
+  }
+  return resamplePoly(pts, 64);
+}
+
+const MMD = QUAN.medians.map(m => densify(m, 10));
+const MLD = MMD.map(pts => pts.map(([x, y]) => [x / 10.24, (900 - y) / 10.24]));
+const KPTS = MLD.map(pts => resamplePoly(pts, 64));
+
+// 甲骨文「泉」艺术示意：圆拱泉穴之内画出层叠水纹，穴下水脉四散
+const OPTS = [
+  bezierChain([[[46, 12], [41, 13], [36, 16], [32, 21]]]),
+  bezierChain([[[31, 22], [28, 31], [27, 41], [28, 50]]]),
+  bezierChain([[[31, 22], [36, 13], [52, 10], [62, 14]], [[62, 14], [68, 20], [71, 34], [69, 50]]]),
+  bezierChain([[[33, 32], [41, 29], [51, 34], [62, 31]]]),
+  bezierChain([[[32, 43], [41, 40], [52, 45], [64, 42]]]),
+  bezierChain([[[49, 50], [52, 62], [46, 74], [40, 86]]]),
+  bezierChain([[[22, 58], [31, 58], [35, 65], [24, 77]]]),
+  bezierChain([[[60, 55], [65, 59], [69, 63], [75, 66]]]),
+  bezierChain([[[50, 66], [60, 74], [70, 79], [86, 81]]]),
+];
+// 小篆「泉」艺术示意：泉穴端正修长，水脉圆转对称
+const SPTS = [
+  bezierChain([[[46, 8], [43, 11], [40, 14], [37, 17]]]),
+  bezierChain([[[35, 18], [34, 28], [33, 38], [33, 47]]]),
+  bezierChain([[[35, 18], [44, 13], [56, 13], [64, 17]], [[64, 17], [66, 27], [67, 38], [66, 47]]]),
+  bezierChain([[[37, 28], [45, 27], [55, 27], [62, 28]]]),
+  bezierChain([[[37, 38], [45, 38], [55, 39], [63, 40]]]),
+  bezierChain([[[50, 47], [50, 60], [49, 74], [43, 88]]]),
+  bezierChain([[[26, 55], [33, 58], [35, 63], [25, 76]]]),
+  bezierChain([[[62, 52], [66, 57], [70, 61], [74, 65]]]),
+  bezierChain([[[52, 64], [62, 71], [73, 77], [86, 80]]]),
+];
+
+const KAI = [
+  { name: '撇', w: 5.6, p: 'p' },
+  { name: '竖', w: 5.4, p: 'v' },
+  { name: '横折', w: 5.6, p: 'hz' },
+  { name: '横', w: 4.8, p: 'h' },
+  { name: '横', w: 5.0, p: 'h' },
+  { name: '竖钩', w: 5.9, p: 'vg' },
+  { name: '横撇', w: 5.4, p: 'hp' },
+  { name: '撇', w: 5.4, p: 'p' },
+  { name: '捺', w: 6.2, p: 'n' },
+];
+const PROF = {
+  carve: s => 0.46 + 0.54 * Math.sin(Math.PI * clamp(s * 1.04)) ** 0.55,
+  seal:  s => 0.9 + 0.1 * Math.sin(Math.PI * s),
+  h:  s => 0.72 + 0.34 * bump(s, 0.08, 0.09) + 0.32 * bump(s, 0.92, 0.1) - 0.12 * Math.sin(Math.PI * s),
+  v:  s => 0.76 + 0.34 * bump(s, 0.07, 0.08) - 0.24 * smooth((s - 0.8) / 0.2),
+  hz: s => 0.74 + 0.3 * bump(s, 0.07, 0.08) + 0.34 * bump(s, 0.5, 0.09) - 0.2 * smooth((s - 0.86) / 0.14),
+  vg: s => 0.78 + 0.22 * bump(s, 0.07, 0.08) - 0.44 * smooth((s - 0.86) / 0.14),
+  hp: s => 0.72 + 0.28 * bump(s, 0.08, 0.09) + 0.26 * bump(s, 0.4, 0.1) - 0.52 * smooth((s - 0.58) / 0.42),
+  p:  s => 0.92 + 0.18 * bump(s, 0.06, 0.07) - 0.72 * smooth(Math.pow(s, 0.85)),
+  n:  s => 0.34 + 0.92 * bump(s, 0.74, 0.28) - 0.22 * smooth((s - 0.9) / 0.1),
+};
+
+/* ---------- 世界坐标布局：月、松、崖、泉眼、叠石与深潭 ---------- */
+/* 横幅与竖幅两套天象/锚点：竖屏画框窄，月亮与水纹必须收进画内，否则主交互点不到 */
+const MOON_WIDE = { x: 1726, y: 176, r: 56 };
+const MOON_TALL = { x: 1268, y: 206, r: 52 };
+let MOON = MOON_WIDE;
+// 潭中月影随画幅收拢，竖屏下才不会落到画外
+const moonPoolX = () => (portrait ? 1150 : MOON.x * 0.52 + 620);
+const POOL_Y = 766;
+const CAVE = { x: 900, y: 470, w: 44, h: 47 };
+const FLOW = [[900, 500], [914, 540], [944, 574], [962, 612], [1000, 646], [1026, 684], [1074, 714], [1124, 742], [1182, 764]];
+const FLOW_D = densify(FLOW, 5);
+const FLOW_LEN = (() => { const d = [0]; for (let i = 1; i < FLOW_D.length; i++) d.push(d[i - 1] + Math.hypot(FLOW_D[i][0] - FLOW_D[i - 1][0], FLOW_D[i][1] - FLOW_D[i - 1][1])); return d; })();
+const FLOW_TOTAL = FLOW_LEN[FLOW_LEN.length - 1];
+function flowAt(u) {
+  const target = clamp(u) * FLOW_TOTAL;
+  let j = 0;
+  while (j < FLOW_LEN.length - 2 && FLOW_LEN[j + 1] < target) j++;
+  const seg = (FLOW_LEN[j + 1] - FLOW_LEN[j]) || 1, f = clamp((target - FLOW_LEN[j]) / seg);
+  const a = FLOW_D[j], b = FLOW_D[j + 1];
+  const tx = b[0] - a[0], ty = b[1] - a[1], l = Math.hypot(tx, ty) || 1;
+  return { x: lerp(a[0], b[0], f), y: lerp(a[1], b[1], f), tx: tx / l, ty: ty / l };
+}
+const LEDGES = [
+  { x: 944, y: 582, rx: 46, ry: 15, rot: -0.22 },
+  { x: 1012, y: 656, rx: 56, ry: 17, rot: -0.16 },
+  { x: 1100, y: 724, rx: 66, ry: 19, rot: -0.1 },
+];
+const POOL_ROCKS = [
+  { x: 640, y: 792, rx: 62, ry: 20 },
+  { x: 1382, y: 806, rx: 74, ry: 22 },
+  { x: 1560, y: 852, rx: 52, ry: 17 },
+  { x: 452, y: 856, rx: 46, ry: 15 },
+];
+/* 竖幅潭石：收进窄画框，避免全部落在画外 */
+const POOL_ROCKS_TALL = [
+  { x: 872, y: 800, rx: 58, ry: 19 },
+  { x: 1244, y: 828, rx: 66, ry: 20 },
+  { x: 1046, y: 872, rx: 50, ry: 16 },
+];
+const SPOTS = [
+  { x: 566, y: 726, note: NOTE.A4, label: '苔石' },
+  { x: 1372, y: 754, note: NOTE.D5, label: '浅滩' },
+  { x: CAVE.x, y: CAVE.y + 6, note: NOTE.A5, label: '泉眼' },
+];
+/* 竖幅锚点：收进窄画框内的潭面与泉眼，保证三处回声都点得到 */
+const SPOTS_TALL = [
+  { x: 812, y: 792, note: NOTE.A4, label: '苔石' },
+  { x: 1196, y: 806, note: NOTE.D5, label: '浅滩' },
+  { x: CAVE.x, y: CAVE.y + 6, note: NOTE.A5, label: '泉眼' },
+];
+const GL = { cx: 1200, cy: 470, s: 3.35 };
+
+/* 山脊：三角包络 + 分形噪声，一次性生成 Path2D 与披麻皴纹理 */
+function makeRidge(seed, x0, x1, baseY, peaks, rough) {
+  const r = mulberry32(seed);
+  const oct = [];
+  for (let o = 0; o < 4; o++) oct.push({ f: 0.0022 * Math.pow(2.15, o), a: rough / Math.pow(1.95, o), p: r() * TAU });
+  const pts = [];
+  for (let x = x0; x <= x1; x += 10) {
+    let env = 0;
+    for (const pk of peaks) {
+      const d = Math.abs((x - pk.x) / pk.w);
+      if (d < 1) env = Math.max(env, pk.h * Math.pow(1 - d, 1.3));
+    }
+    let n = 0;
+    for (const o of oct) n += Math.sin(x * o.f + o.p) * o.a;
+    pts.push([x, baseY - env - n * (0.35 + 0.65 * clamp(env / 160))]);
+  }
+  const path = new Path2D();
+  path.moveTo(x0, baseY + 420);
+  for (const p of pts) path.lineTo(p[0], p[1]);
+  path.lineTo(x1, baseY + 420);
+  path.closePath();
+  // 披麻皴：顺着山势向下的短皴笔
+  const cun = [];
+  for (let i = 0; i < 210; i++) {
+    const k = Math.floor(r() * (pts.length - 1));
+    const [px, py] = pts[k];
+    const depth = 12 + r() * (baseY - py) * 0.82;
+    const len = 16 + r() * 54;
+    const drift = (r() - 0.5) * 26;
+    cun.push([px, py + depth, px + drift, py + depth + len, 0.05 + r() * 0.13]);
+  }
+  return { path, pts, cun, baseY };
+}
+const RIDGE_FAR = makeRidge(3301, -200, 2600, 646, [
+  { x: 240, h: 214, w: 330 }, { x: 700, h: 306, w: 380 }, { x: 1290, h: 236, w: 330 },
+  { x: 1880, h: 330, w: 430 }, { x: 2380, h: 208, w: 300 },
+], 26);
+const RIDGE_MID = makeRidge(4409, -200, 2600, 712, [
+  { x: 140, h: 246, w: 300 }, { x: 560, h: 330, w: 330 }, { x: 1210, h: 196, w: 270 },
+  { x: 1760, h: 292, w: 360 }, { x: 2270, h: 250, w: 320 },
+], 30);
+const RIDGE_BANK = makeRidge(5507, -200, 2600, POOL_Y + 6, [
+  { x: 110, h: 86, w: 320 }, { x: 420, h: 62, w: 280 },
+  { x: 1580, h: 112, w: 320 }, { x: 1930, h: 152, w: 360 }, { x: 2320, h: 96, w: 320 },
+], 14);
+
+/* 泉崖：左侧承载泉眼的巨岩 */
+const CLIFF = (() => {
+  const p = new Path2D();
+  p.moveTo(676, POOL_Y + 60);
+  p.lineTo(700, 596); p.lineTo(742, 500); p.lineTo(776, 424);
+  p.lineTo(818, 372); p.lineTo(884, 344); p.lineTo(950, 366);
+  p.lineTo(1006, 414); p.lineTo(1048, 494); p.lineTo(1082, 596);
+  p.lineTo(1112, POOL_Y + 60);
+  p.closePath();
+  const r = mulberry32(6603);
+  const cun = [];
+  for (let i = 0; i < 130; i++) {
+    const x = 700 + r() * 400, y = 380 + r() * 380;
+    const len = 18 + r() * 62, drift = (r() - 0.5) * 22;
+    cun.push([x, y, x + drift, y + len, 0.06 + r() * 0.16]);
+  }
+  return { path: p, cun };
+})();
+
+/* 松：树干 + 层叠针簇，一次性生成 */
+function makePine(x, y, h, seed) {
+  const r = mulberry32(seed);
+  const lean = (r() - 0.5) * 0.16;
+  const tiers = [];
+  const n = 4 + Math.floor(r() * 2);
+  for (let i = 0; i < n; i++) {
+    const t = i / (n - 1);
+    const ty = -h * (0.34 + t * 0.62);
+    const w = h * (0.44 - t * 0.26) * (0.85 + r() * 0.3);
+    const needles = [];
+    const cnt = 9 + Math.floor(r() * 6);
+    for (let k = 0; k < cnt; k++) {
+      const u = (k / (cnt - 1)) * 2 - 1;
+      needles.push([u * w, ty + Math.abs(u) * h * 0.055 - r() * h * 0.03, h * (0.045 + r() * 0.05)]);
+    }
+    tiers.push({ ty, w, needles, dx: lean * ty * -1 });
+  }
+  return { x, y, h, lean, tiers, ph: r() * TAU };
+}
+const PINES = [
+  makePine(206, 706, 132, 8101), makePine(372, 720, 104, 8102),
+  makePine(806, 372, 118, 8103), makePine(1040, 414, 96, 8104),
+  makePine(1582, 664, 158, 8105), makePine(1730, 636, 196, 8106),
+  makePine(1892, 622, 172, 8107), makePine(2058, 668, 128, 8108),
+];
+const STARS = (() => {
+  const r = mulberry32(9099), out = [];
+  for (let i = 0; i < 110; i++) {
+    const x = -100 + r() * 2600, y = 20 + r() * 430;
+    if (Math.hypot(x - MOON_WIDE.x, y - MOON_WIDE.y) < 210) continue;
+    if (Math.hypot(x - MOON_TALL.x, y - MOON_TALL.y) < 200) continue;
+    out.push({ x, y, r: 0.7 + r() * 1.5, ph: r() * TAU, sp: 0.6 + r() * 1.6 });
+  }
+  return out;
+})();
+const MISTS = [
+  { y: 596, h: 62, sp: 0.0055, a: 0.16, off: 0 },
+  { y: 664, h: 74, sp: 0.0038, a: 0.2, off: 900 },
+  { y: 726, h: 58, sp: 0.0072, a: 0.15, off: 1700 },
+];
+const BLOOMS = [
+  { x: 0.42, y: 0.44, d: 0 }, { x: 0.66, y: 0.58, d: 0.14 },
+  { x: 0.24, y: 0.62, d: 0.24 }, { x: 0.78, y: 0.3, d: 0.32 }, { x: 0.5, y: 0.2, d: 0.4 },
+];
+
+let W = {};
+function resetWorld() {
+  W = {
+    intro: true,
+    moon: 0, stars: 0, mood: 0, shafts: 0, mist: 1, shake: 0,
+    listenUI: 0,
+    spots: (portrait ? SPOTS_TALL : SPOTS).map((s, i) => ({ ...s, i, found: false, a: 0 })),
+    charge: 0, spring: 0, flow: 0, pool: 0, gushUI: 0, crack: 0,
+    drops: [], splashes: [], ripples: [], flies: [],
+    veil: 0, bloomT: 1,
+    glyph: {
+      alpha: 0, m: 0, prog: Array(NS).fill(0),
+      outline: 0, plate: 0, labels: 0, ghost: 0, stamp: 0, words: 0, glow: 0, trace: false,
+    },
+    trace: { stroke: 0, pen: null },
+    wordOn: -1, poem: 0,
+  };
+  const r = mulberry32(SEED + 7);
+  for (let i = 0; i < 26; i++) {
+    W.flies.push({ x: portrait ? 760 + r() * 470 : 300 + r() * 1800, y: 520 + r() * 250, ph: r() * TAU, sp: 0.35 + r() * 0.7, r: 1.6 + r() * 1.8, a: 0 });
+  }
+  for (let i = 0; i < 90; i++) W.drops.push({ u: r(), o: (r() - 0.5) * 12, sp: 0.00022 + r() * 0.00016, r: 1.1 + r() * 2.1, ph: r() * TAU });
+}
+
+function setPaperMode(on) { document.body.classList.toggle('paper', !!on); }
+
+function spawnRipple(x, y, max = 70, a = 0.5, dur = 1500) {
+  if (W.ripples.length > 46) W.ripples.shift();
+  W.ripples.push({ x, y, max, a, t0: clock, dur });
+}
+function spawnSplash(x, y, n = 14, power = 1) {
+  for (let i = 0; i < n; i++) {
+    if (W.splashes.length > 260) break;
+    W.splashes.push({
+      x: x + (rand() - 0.5) * 26, y: y + (rand() - 0.5) * 10,
+      vx: (rand() - 0.5) * 2.6 * power, vy: -(1.1 + rand() * 2.9) * power,
+      r: 1.2 + rand() * 2.8, t0: clock, dur: 620 + rand() * 620,
+    });
+  }
+}
+
+/* ---------- 绘制：夜空、明月、松风、山峦、泉崖、流水与深潭 ---------- */
+function moodCols() {
+  const m1 = clamp(1 - Math.abs(W.mood - 1)), m2 = clamp(W.mood - 1);
+  let top = '#08111d', mid = '#12283a', bot = '#22485a';
+  if (m1 > 0.01) { top = mixCol(top, '#0a1a1c', m1 * 0.85); mid = mixCol(mid, '#173a38', m1 * 0.85); bot = mixCol(bot, '#38695c', m1 * 0.85); }
+  if (m2 > 0.01) { top = mixCol(top, '#101c30', m2 * 0.85); mid = mixCol(mid, '#2b4a63', m2 * 0.85); bot = mixCol(bot, '#7fa8b4', m2 * 0.85); }
+  return { top, mid, bot, m1, m2 };
+}
+function drawSky() {
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  const C = moodCols();
+  const g = ctx.createLinearGradient(0, 0, 0, cvs.height);
+  g.addColorStop(0, C.top); g.addColorStop(0.52, C.mid); g.addColorStop(1, C.bot);
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, cvs.width, cvs.height);
+
+  if (W.stars > 0.01) {
+    setCam(ctx, 0.28);
+    for (const s of STARS) {
+      const tw = reduceMotion ? 0.7 : 0.55 + 0.45 * Math.sin(clock * 0.0013 * s.sp + s.ph);
+      ctx.fillStyle = `rgba(226,244,246,${(W.stars * tw * 0.72).toFixed(3)})`;
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, TAU); ctx.fill();
+    }
+  }
+}
+function drawMoon() {
+  if (W.moon <= 0.01) return;
+  setCam(ctx, 0.32);
+  const my = lerp(MOON.y + 190, MOON.y, ease.out(W.moon));
+  const a = W.moon;
+  const halo = ctx.createRadialGradient(MOON.x, my, MOON.r * 0.6, MOON.x, my, MOON.r * 7.4);
+  halo.addColorStop(0, `rgba(244,223,166,${(0.3 * a).toFixed(3)})`);
+  halo.addColorStop(0.34, `rgba(198,226,224,${(0.11 * a).toFixed(3)})`);
+  halo.addColorStop(1, 'rgba(160,200,210,0)');
+  ctx.fillStyle = halo;
+  ctx.beginPath(); ctx.arc(MOON.x, my, MOON.r * 7.4, 0, TAU); ctx.fill();
+
+  const disc = ctx.createRadialGradient(MOON.x - 16, my - 18, 6, MOON.x, my, MOON.r);
+  disc.addColorStop(0, '#fffdf2'); disc.addColorStop(0.66, '#f7e6bb'); disc.addColorStop(1, '#e2c98f');
+  ctx.globalAlpha = a;
+  ctx.fillStyle = disc;
+  ctx.beginPath(); ctx.arc(MOON.x, my, MOON.r, 0, TAU); ctx.fill();
+  // 淡墨月海
+  ctx.fillStyle = 'rgba(196,178,140,0.24)';
+  ctx.beginPath(); ctx.ellipse(MOON.x + 14, my + 8, 20, 14, 0.4, 0, TAU); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(MOON.x - 18, my + 20, 12, 9, -0.3, 0, TAU); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(MOON.x - 6, my - 22, 9, 7, 0.2, 0, TAU); ctx.fill();
+  ctx.globalAlpha = 1;
+  W._moonY = my;
+}
+function drawShafts() {
+  if (W.shafts <= 0.01) return;
+  setCam(ctx, 0.62);
+  const my = W._moonY || MOON.y;
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 5; i++) {
+    const sway = reduceMotion ? 0 : Math.sin(clock * 0.00042 + i * 1.7) * 26;
+    const x0 = MOON.x - 40 + i * 12, w0 = 12 + i * 4;
+    const x1 = 620 + i * 300 + sway, w1 = 110 + i * 34;
+    const g = ctx.createLinearGradient(x0, my, x1, POOL_Y + 40);
+    g.addColorStop(0, `rgba(244,232,196,${(0.11 * W.shafts).toFixed(3)})`);
+    g.addColorStop(0.55, `rgba(180,226,222,${(0.05 * W.shafts).toFixed(3)})`);
+    g.addColorStop(1, 'rgba(150,210,214,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.moveTo(x0 - w0, my); ctx.lineTo(x0 + w0, my);
+    ctx.lineTo(x1 + w1, POOL_Y + 40); ctx.lineTo(x1 - w1, POOL_Y + 40);
+    ctx.closePath(); ctx.fill();
+  }
+  ctx.restore();
+}
+function drawRidge(R, px, fill, rim, rimA, cunA) {
+  setCam(ctx, px);
+  ctx.fillStyle = fill;
+  ctx.fill(R.path);
+  ctx.save();
+  ctx.clip(R.path);
+  ctx.lineWidth = 1.5;
+  for (const [x0, y0, x1, y1, a] of R.cun) {
+    ctx.strokeStyle = `rgba(6,14,20,${(a * cunA).toFixed(3)})`;
+    ctx.beginPath(); ctx.moveTo(x0, y0);
+    ctx.quadraticCurveTo((x0 + x1) / 2 + 6, (y0 + y1) / 2, x1, y1);
+    ctx.stroke();
+  }
+  ctx.restore();
+  if (rimA > 0.01) {
+    ctx.strokeStyle = rim; ctx.globalAlpha = rimA; ctx.lineWidth = 1.9;
+    ctx.beginPath(); ctx.moveTo(R.pts[0][0], R.pts[0][1]);
+    for (const p of R.pts) ctx.lineTo(p[0], p[1]);
+    ctx.stroke(); ctx.globalAlpha = 1;
+  }
+}
+function drawMountains() {
+  const C = moodCols();
+  const moonlit = W.moon;
+  drawRidge(RIDGE_FAR, 0.44,
+    mixCol('#16293a', C.mid, 0.42),
+    mixCol('#9fc8d0', '#e8dcb4', W.mood > 1 ? clamp(W.mood - 1) : 0),
+    0.2 + moonlit * 0.24, 0.55);
+
+  // 中景山峦：更实的墨色与更亮的月华脊线
+  drawRidge(RIDGE_MID, 0.68,
+    mixCol('#0e1f2c', C.top, 0.3),
+    '#cfe6e2', 0.24 + moonlit * 0.34, 0.85);
+
+  // 松林（中景山脊之上）
+  setCam(ctx, 0.68);
+  for (let i = 0; i < PINES.length; i++) {
+    if (i === 2 || i === 3) continue;
+    drawPine(PINES[i], moonlit);
+  }
+}
+function drawPine(P, moonlit) {
+  const sway = reduceMotion ? 0 : Math.sin(clock * 0.00055 + P.ph) * 0.026;
+  ctx.save();
+  ctx.translate(P.x, P.y);
+  ctx.rotate(sway);
+  // 树干
+  ctx.strokeStyle = '#0a141b';
+  ctx.lineWidth = Math.max(2.2, P.h * 0.035);
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  // 树干必须与针簇层同一倾斜量（层偏移 = -2*lean*ty），否则会被拉成横贯天空的长线
+  ctx.moveTo(0, 0);
+  ctx.quadraticCurveTo(P.lean * P.h, -P.h * 0.5, P.lean * P.h * 1.92, -P.h * 0.96);
+  ctx.stroke();
+  for (const T of P.tiers) {
+    ctx.save();
+    ctx.translate(T.dx + P.lean * T.ty * -1, T.ty);
+    // 针簇团块
+    ctx.fillStyle = '#0d1d22';
+    ctx.beginPath();
+    ctx.moveTo(-T.w, 2);
+    ctx.quadraticCurveTo(-T.w * 0.4, -P.h * 0.075, 0, -P.h * 0.05);
+    ctx.quadraticCurveTo(T.w * 0.4, -P.h * 0.075, T.w, 2);
+    ctx.quadraticCurveTo(0, P.h * 0.035, -T.w, 2);
+    ctx.closePath(); ctx.fill();
+    // 放射松针
+    ctx.strokeStyle = '#12292c'; ctx.lineWidth = 1.1;
+    ctx.beginPath();
+    for (const [nx, ny, nl] of T.needles) {
+      for (let k = -1; k <= 1; k++) {
+        ctx.moveTo(nx, ny);
+        ctx.lineTo(nx + k * nl * 0.5, ny - nl);
+      }
+    }
+    ctx.stroke();
+    // 月华镶边
+    if (moonlit > 0.05) {
+      ctx.strokeStyle = `rgba(206,232,224,${(0.3 * moonlit).toFixed(3)})`;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(T.w * 0.1, -P.h * 0.052);
+      ctx.quadraticCurveTo(T.w * 0.55, -P.h * 0.072, T.w, 1);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+  ctx.restore();
+}
+function drawMist(front) {
+  if (W.mist <= 0.01) return;
+  setCam(ctx, front ? 1.06 : 0.78);
+  const list = front ? [MISTS[2]] : MISTS.slice(0, 2);
+  for (const M of list) {
+    const drift = reduceMotion ? M.off : (clock * M.sp + M.off) % 3000;
+    for (let k = -1; k <= 2; k++) {
+      const cx = drift + k * 1000 - 500;
+      const g = ctx.createLinearGradient(0, M.y - M.h, 0, M.y + M.h);
+      const a = M.a * W.mist;
+      g.addColorStop(0, 'rgba(206,232,234,0)');
+      g.addColorStop(0.5, `rgba(206,232,234,${a.toFixed(3)})`);
+      g.addColorStop(1, 'rgba(206,232,234,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.ellipse(cx, M.y, 620, M.h, 0, 0, TAU);
+      ctx.fill();
+    }
+  }
+}
+function drawCliff() {
+  setCam(ctx, 0.94);
+  const C = moodCols();
+  const g = ctx.createLinearGradient(700, 350, 1110, POOL_Y);
+  g.addColorStop(0, mixCol('#16262e', '#20343a', W.moon * 0.5));
+  g.addColorStop(0.55, '#0d1a22');
+  g.addColorStop(1, '#08131a');
+  ctx.fillStyle = g;
+  ctx.fill(CLIFF.path);
+  ctx.save();
+  ctx.clip(CLIFF.path);
+  // 披麻皴
+  ctx.lineWidth = 1.6;
+  for (const [x0, y0, x1, y1, a] of CLIFF.cun) {
+    ctx.strokeStyle = `rgba(4,10,14,${a.toFixed(3)})`;
+    ctx.beginPath(); ctx.moveTo(x0, y0);
+    ctx.quadraticCurveTo((x0 + x1) / 2 + 5, (y0 + y1) / 2, x1, y1);
+    ctx.stroke();
+  }
+  // 月光斜照的岩面
+  const lit = ctx.createLinearGradient(1090, 360, 830, 700);
+  lit.addColorStop(0, `rgba(200,228,222,${(0.2 * W.moon).toFixed(3)})`);
+  lit.addColorStop(1, 'rgba(200,228,222,0)');
+  ctx.fillStyle = lit;
+  ctx.fillRect(676, 330, 440, 500);
+  // 湿润水痕
+  ctx.strokeStyle = `rgba(120,190,190,${(0.1 + 0.2 * W.spring).toFixed(3)})`;
+  ctx.lineWidth = 8;
+  ctx.beginPath();
+  ctx.moveTo(CAVE.x + 4, CAVE.y + 30);
+  ctx.quadraticCurveTo(CAVE.x + 20, 620, 968, POOL_Y);
+  ctx.stroke();
+  ctx.restore();
+
+  // 月华岩脊
+  ctx.strokeStyle = `rgba(214,238,232,${(0.22 + W.moon * 0.4).toFixed(3)})`;
+  ctx.lineWidth = 2.1;
+  ctx.beginPath();
+  ctx.moveTo(700, 596); ctx.lineTo(742, 500); ctx.lineTo(776, 424);
+  ctx.lineTo(818, 372); ctx.lineTo(884, 344); ctx.lineTo(950, 366);
+  ctx.lineTo(1006, 414); ctx.lineTo(1048, 494); ctx.lineTo(1082, 596);
+  ctx.stroke();
+
+  // 崖顶松
+  setCam(ctx, 0.94);
+  drawPine(PINES[2], W.moon); drawPine(PINES[3], W.moon);
+
+  // 泉穴
+  const cx = CAVE.x, cy = CAVE.y;
+  ctx.save();
+  const hole = new Path2D();
+  hole.moveTo(cx - CAVE.w, cy + CAVE.h);
+  hole.quadraticCurveTo(cx - CAVE.w - 4, cy - CAVE.h * 0.5, cx, cy - CAVE.h);
+  hole.quadraticCurveTo(cx + CAVE.w + 4, cy - CAVE.h * 0.5, cx + CAVE.w, cy + CAVE.h);
+  hole.closePath();
+  const hg = ctx.createRadialGradient(cx, cy + 10, 4, cx, cy, CAVE.h * 1.5);
+  hg.addColorStop(0, mixCol('#04090d', '#0d3b40', W.spring));
+  hg.addColorStop(1, '#03070a');
+  ctx.fillStyle = hg; ctx.fill(hole);
+  // 穴口湿石高光
+  ctx.strokeStyle = `rgba(180,224,220,${(0.2 + W.spring * 0.5).toFixed(3)})`;
+  ctx.lineWidth = 2.2; ctx.stroke(hole);
+  // 泉眼光晕
+  if (W.spring > 0.01) {
+    const pulse = reduceMotion ? 0.7 : 0.7 + 0.3 * Math.sin(clock * 0.0026);
+    const gl = ctx.createRadialGradient(cx, cy + 16, 2, cx, cy + 16, 120 * W.spring * pulse);
+    gl.addColorStop(0, `rgba(190,255,246,${(0.6 * W.spring).toFixed(3)})`);
+    gl.addColorStop(0.4, `rgba(95,201,198,${(0.24 * W.spring).toFixed(3)})`);
+    gl.addColorStop(1, 'rgba(95,201,198,0)');
+    ctx.fillStyle = gl;
+    ctx.beginPath(); ctx.arc(cx, cy + 16, 120 * W.spring * pulse, 0, TAU); ctx.fill();
+  }
+  // 蓄水进度（三处回声点亮泉眼）
+  if (W.charge > 0.01 && W.spring < 0.99) {
+    ctx.strokeStyle = `rgba(143,227,216,${(0.85).toFixed(2)})`;
+    ctx.lineWidth = 3.4; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.arc(cx, cy + 4, CAVE.h + 20, -Math.PI / 2, -Math.PI / 2 + TAU * W.charge);
+    ctx.stroke();
+  }
+  // 凿痕
+  if (W.crack > 0.01) {
+    ctx.strokeStyle = `rgba(226,250,246,${(0.8 * W.crack).toFixed(3)})`;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(cx - 34, cy - 30); ctx.lineTo(cx - 12, cy - 6); ctx.lineTo(cx - 22, cy + 16);
+    ctx.moveTo(cx + 30, cy - 26); ctx.lineTo(cx + 10, cy - 2); ctx.lineTo(cx + 24, cy + 20);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+}
+/* 交互提示必须画在景物之上：潭水填充会盖住落在潭面的水纹光圈 */
+function drawInteractHints() {
+  if (W.listenUI <= 0.01 && W.gushUI <= 0.01 && !W.spots.some(s => s.a > 0.01)) return;
+  setCam(ctx, 0.94);
+  // 寻声光点
+  if (W.listenUI > 0.01) {
+    for (const sp of W.spots) {
+      if (sp.found) continue;
+      const p = reduceMotion ? 0.6 : 0.5 + 0.5 * Math.sin(clock * 0.0035 + sp.i * 1.9);
+      ctx.strokeStyle = `rgba(143,227,216,${(W.listenUI * (0.4 + 0.5 * p)).toFixed(3)})`;
+      ctx.lineWidth = 2.2;
+      ctx.beginPath(); ctx.arc(sp.x, sp.y, 26 + p * 16, 0, TAU); ctx.stroke();
+      ctx.strokeStyle = `rgba(143,227,216,${(W.listenUI * 0.26 * (1 - p)).toFixed(3)})`;
+      ctx.beginPath(); ctx.arc(sp.x, sp.y, 40 + p * 34, 0, TAU); ctx.stroke();
+      ctx.fillStyle = `rgba(226,255,250,${(W.listenUI * 0.8).toFixed(3)})`;
+      ctx.beginPath(); ctx.arc(sp.x, sp.y, 3.4, 0, TAU); ctx.fill();
+    }
+  }
+  // 已寻得的回声余韵
+  for (const sp of W.spots) {
+    if (sp.a <= 0.01) continue;
+    ctx.fillStyle = `rgba(143,227,216,${(sp.a * 0.5).toFixed(3)})`;
+    ctx.beginPath(); ctx.arc(sp.x, sp.y, 5, 0, TAU); ctx.fill();
+  }
+  // 涌泉提示
+  if (W.gushUI > 0.01 && W.spring < 0.4) {
+    const p = reduceMotion ? 0.6 : 0.5 + 0.5 * Math.sin(clock * 0.004);
+    ctx.strokeStyle = `rgba(244,223,166,${(W.gushUI * (0.45 + 0.45 * p)).toFixed(3)})`;
+    ctx.lineWidth = 2.6;
+    ctx.beginPath(); ctx.arc(CAVE.x, CAVE.y + 4, 74 + p * 18, 0, TAU); ctx.stroke();
+  }
+}
+function drawRock(x, y, rx, ry, rot, wet) {
+  ctx.save();
+  ctx.translate(x, y); ctx.rotate(rot || 0);
+  const g = ctx.createLinearGradient(0, -ry, 0, ry);
+  g.addColorStop(0, mixCol('#25373c', '#3b5158', W.moon * 0.6));
+  g.addColorStop(0.6, '#16262c');
+  g.addColorStop(1, '#0a151b');
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.ellipse(0, 0, rx, ry, 0, 0, TAU); ctx.fill();
+  ctx.strokeStyle = `rgba(206,234,228,${(0.18 + W.moon * 0.34).toFixed(3)})`;
+  ctx.lineWidth = 1.7;
+  ctx.beginPath(); ctx.ellipse(0, -1.2, rx * 0.94, ry * 0.86, 0, Math.PI * 1.08, Math.PI * 1.96); ctx.stroke();
+  if (wet > 0.01) {
+    ctx.fillStyle = `rgba(143,227,216,${(0.2 * wet).toFixed(3)})`;
+    ctx.beginPath(); ctx.ellipse(0, -ry * 0.42, rx * 0.7, ry * 0.3, 0, 0, TAU); ctx.fill();
+  }
+  ctx.restore();
+}
+function drawStream() {
+  setCam(ctx, 1);
+  for (const L of LEDGES) drawRock(L.x, L.y, L.rx, L.ry, L.rot, W.flow);
+
+  if (W.flow <= 0.01) return;
+  const t = reduceMotion ? 0 : clock * 0.001;
+  const reach = W.flow;
+  const widthAt = u => lerp(11, 34, u) * (0.85 + 0.15 * Math.sin(t * 2 + u * 8));
+  const N = 54;
+  const L = [], R = [];
+  for (let i = 0; i <= N; i++) {
+    const u = (i / N) * reach;
+    const P = flowAt(u);
+    const wob = Math.sin(u * 26 - t * 4.4) * (2.2 + u * 3.4) * (reduceMotion ? 0.35 : 1);
+    const w = widthAt(u) / 2;
+    L.push([P.x - P.ty * w + wob, P.y + P.tx * w]);
+    R.push([P.x + P.ty * w + wob, P.y - P.tx * w]);
+  }
+  const g = ctx.createLinearGradient(900, 500, 1190, POOL_Y);
+  g.addColorStop(0, '#bff6ee');
+  g.addColorStop(0.42, '#63cfcb');
+  g.addColorStop(1, '#2b8f9c');
+  ctx.save();
+  ctx.globalAlpha = 0.9;
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.moveTo(L[0][0], L[0][1]);
+  for (const p of L) ctx.lineTo(p[0], p[1]);
+  for (let i = R.length - 1; i >= 0; i--) ctx.lineTo(R[i][0], R[i][1]);
+  ctx.closePath(); ctx.fill();
+  // 水面高光条纹
+  ctx.globalCompositeOperation = 'lighter';
+  for (let k = 0; k < 3; k++) {
+    ctx.strokeStyle = `rgba(236,255,252,${(0.16 + k * 0.05).toFixed(2)})`;
+    ctx.lineWidth = 1.6 - k * 0.3;
+    ctx.beginPath();
+    for (let i = 0; i <= N; i++) {
+      const u = (i / N) * reach;
+      const P = flowAt(u);
+      const off = Math.sin(u * 30 - t * (5 + k) + k * 2) * (widthAt(u) * 0.3);
+      const x = P.x - P.ty * off, y = P.y + P.tx * off;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // 顺流而下的水珠
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (const d of W.drops) {
+    const u = d.u * reach;
+    if (u <= 0.002) continue;
+    const P = flowAt(u);
+    const off = d.o * (0.4 + u * 0.8);
+    const x = P.x - P.ty * off, y = P.y + P.tx * off;
+    const tw = reduceMotion ? 0.8 : 0.6 + 0.4 * Math.sin(clock * 0.006 + d.ph);
+    ctx.fillStyle = `rgba(240,255,252,${(0.55 * tw * W.flow).toFixed(3)})`;
+    ctx.beginPath(); ctx.ellipse(x, y, d.r * 1.5, d.r * 0.8, Math.atan2(P.ty, P.tx), 0, TAU); ctx.fill();
+  }
+  ctx.restore();
+}
+function drawPool() {
+  setCam(ctx, 1.04);
+  const C = moodCols();
+  const g = ctx.createLinearGradient(0, POOL_Y - 10, 0, 1000);
+  g.addColorStop(0, mixCol('#123340', '#1d5a5c', W.pool * 0.7));
+  g.addColorStop(0.5, mixCol('#0b2029', '#123c42', W.pool * 0.6));
+  g.addColorStop(1, '#06121a');
+  ctx.fillStyle = g;
+  ctx.fillRect(-200, POOL_Y - 4, 2900, 340);
+
+  // 岸边线
+  ctx.strokeStyle = `rgba(190,230,226,${(0.16 + W.pool * 0.3).toFixed(3)})`;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let x = -200; x <= 2700; x += 24) {
+    const y = POOL_Y + Math.sin(x * 0.011 + (reduceMotion ? 0 : clock * 0.0011)) * 2.6;
+    if (x === -200) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // 月影：一列破碎的银光
+  if (W.moon > 0.05) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const mx = moonPoolX();
+    for (let i = 0; i < 22; i++) {
+      const y = POOL_Y + 8 + i * 11;
+      const ph = reduceMotion ? i : clock * 0.0016 + i * 0.9;
+      const w = lerp(20, 92, i / 22) * (0.6 + 0.4 * Math.sin(ph));
+      const x = mx + Math.sin(ph * 0.7) * (8 + i * 1.6);
+      ctx.fillStyle = `rgba(246,232,192,${(W.moon * (0.3 - i * 0.011)).toFixed(3)})`;
+      ctx.beginPath(); ctx.ellipse(x, y, Math.max(3, w), 2.1, 0, 0, TAU); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // 涟漪
+  ctx.save();
+  for (const rp of W.ripples) {
+    const u = clamp((clock - rp.t0) / rp.dur);
+    const r = rp.max * ease.out(u);
+    ctx.strokeStyle = `rgba(198,244,240,${(rp.a * (1 - u)).toFixed(3)})`;
+    ctx.lineWidth = 1.8 * (1 - u * 0.6);
+    ctx.beginPath(); ctx.ellipse(rp.x, rp.y, r, r * 0.3, 0, 0, TAU); ctx.stroke();
+    if (u < 0.7) {
+      ctx.strokeStyle = `rgba(198,244,240,${(rp.a * (1 - u) * 0.45).toFixed(3)})`;
+      ctx.beginPath(); ctx.ellipse(rp.x, rp.y, r * 0.6, r * 0.18, 0, 0, TAU); ctx.stroke();
+    }
+  }
+  ctx.restore();
+
+  // 潭中石
+  for (const R of (portrait ? POOL_ROCKS_TALL : POOL_ROCKS)) drawRock(R.x, R.y, R.rx, R.ry, 0, W.pool * 0.6);
+}
+function drawBank() {
+  drawRidge(RIDGE_BANK, 1.12, '#081219', '#bcded8', 0.14 + W.moon * 0.2, 0.5);
+}
+function drawParticles() {
+  setCam(ctx, 1);
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (const sp of W.splashes) {
+    const u = clamp((clock - sp.t0) / sp.dur);
+    ctx.fillStyle = `rgba(232,255,252,${((1 - u) * 0.8).toFixed(3)})`;
+    ctx.beginPath(); ctx.arc(sp.x, sp.y, sp.r * (1 - u * 0.35), 0, TAU); ctx.fill();
+  }
+  ctx.restore();
+  // 流萤
+  if (W.flies.length) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    for (const f of W.flies) {
+      if (f.a <= 0.01) continue;
+      const bl = reduceMotion ? 0.7 : 0.35 + 0.65 * Math.pow(Math.max(0, Math.sin(clock * 0.0011 * f.sp + f.ph)), 2);
+      const a = f.a * bl;
+      const g = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 7);
+      g.addColorStop(0, `rgba(226,255,190,${(a * 0.85).toFixed(3)})`);
+      g.addColorStop(0.35, `rgba(170,230,140,${(a * 0.3).toFixed(3)})`);
+      g.addColorStop(1, 'rgba(150,220,130,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(f.x, f.y, f.r * 7, 0, TAU); ctx.fill();
+      ctx.fillStyle = `rgba(248,255,226,${a.toFixed(3)})`;
+      ctx.beginPath(); ctx.arc(f.x, f.y, f.r * 0.7, 0, TAU); ctx.fill();
+    }
+    ctx.restore();
+  }
+}
+
+/* ---------- 字源演进：石壁拓痕 → 竹简小篆 → 宣纸米字格 ---------- */
+function glyphCam() {
+  setCam(ctx, 1);
+  ctx.translate(GL.cx, GL.cy);
+  ctx.scale(GL.s, GL.s);
+  ctx.translate(-50, -50);
+}
+function toLocal(wx, wy) { return { x: (wx - GL.cx) / GL.s + 50, y: (wy - GL.cy) / GL.s + 50 }; }
+function withMmah(fn) {
+  ctx.save();
+  ctx.scale(100 / 1024, 100 / 1024);
+  ctx.translate(0, 900); ctx.scale(1, -1);
+  fn();
+  ctx.restore();
+}
+function strokePts(i) {
+  const m = W.glyph.m;
+  if (m <= 0) return OPTS[i];
+  if (m >= 2) return KPTS[i];
+  const [a, b, e] = m < 1 ? [OPTS[i], SPTS[i], ease.inOut(m)] : [SPTS[i], KPTS[i], ease.inOut(m - 1)];
+  return a.map((p, j) => [lerp(p[0], b[j][0], e), lerp(p[1], b[j][1], e)]);
+}
+function strokeW(i, s) {
+  const m = W.glyph.m;
+  if (m <= 1) return lerp(2.8 * PROF.carve(s), 3.6 * PROF.seal(s), ease.inOut(clamp(m)));
+  return lerp(3.6 * PROF.seal(s), KAI[i].w * PROF[KAI[i].p](s), ease.inOut(clamp(m - 1)));
+}
+function brush(c, i, upto) {
+  if (upto <= 0.001) return;
+  const pts = strokePts(i);
+  const n = pts.length - 1, m = upto * n, mi = Math.floor(m);
+  const P = pts.slice(0, mi + 1);
+  if (mi < n && m > mi) { const a = pts[mi], b = pts[mi + 1], f = m - mi; P.push([lerp(a[0], b[0], f), lerp(a[1], b[1], f)]); }
+  if (P.length < 2) return;
+  const Lp = [], Rp = [];
+  for (let j = 0; j < P.length; j++) {
+    const a = P[Math.max(0, j - 1)], b = P[Math.min(P.length - 1, j + 1)];
+    let tx = b[0] - a[0], ty = b[1] - a[1]; const l = Math.hypot(tx, ty) || 1; tx /= l; ty /= l;
+    const s = Math.min(1, (j / (P.length - 1)) * (m / n));
+    const w = strokeW(i, s) / 2;
+    Lp.push([P[j][0] - ty * w, P[j][1] + tx * w]);
+    Rp.push([P[j][0] + ty * w, P[j][1] - tx * w]);
+  }
+  c.beginPath(); c.moveTo(Lp[0][0], Lp[0][1]);
+  for (const p of Lp) c.lineTo(p[0], p[1]);
+  for (let j = Rp.length - 1; j >= 0; j--) c.lineTo(Rp[j][0], Rp[j][1]);
+  c.closePath(); c.fill();
+  const e0 = P[0], e1 = P[P.length - 1];
+  c.beginPath();
+  c.arc(e0[0], e0[1], strokeW(i, 0) / 2, 0, TAU);
+  c.arc(e1[0], e1[1], strokeW(i, Math.min(1, m / n)) / 2, 0, TAU);
+  c.fill();
+}
+function paintStroke(i, q) {
+  if (q <= 0) return;
+  const path = QUAN_PATHS[i];
+  if (q >= 1) { ctx.fill(path); return; }
+  ctx.save();
+  ctx.clip(path);
+  ctx.lineWidth = 175; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.strokeStyle = ctx.fillStyle;
+  const pts = MMD[i], count = (pts.length - 1) * q, k = Math.floor(count);
+  ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+  for (let j = 1; j <= k && j < pts.length; j++) ctx.lineTo(pts[j][0], pts[j][1]);
+  if (k < pts.length - 1) {
+    const a = pts[k], b = pts[k + 1], f = count - k;
+    ctx.lineTo(lerp(a[0], b[0], f), lerp(a[1], b[1], f));
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawPlates(a, m) {
+  const stone = a * (1 - smooth(m * 1.3));
+  const slip = a * smooth(m * 2.2 - 0.5) * (1 - smooth((m - 1.15) * 2.2));
+  const paper = a * smooth((m - 1.25) * 2.2);
+  if (stone > 0.01) {
+    // 湿润石壁拓痕底板
+    ctx.save(); ctx.globalAlpha = stone;
+    const g = ctx.createRadialGradient(44, 36, 8, 50, 50, 78);
+    g.addColorStop(0, '#2a3a3e'); g.addColorStop(0.68, '#1a282e'); g.addColorStop(1, '#111d23');
+    ctx.fillStyle = g;
+    ctx.fillRect(-6, -6, 112, 112);
+    ctx.strokeStyle = '#7fb8b4'; ctx.lineWidth = 1.2;
+    ctx.strokeRect(-6, -6, 112, 112);
+    ctx.restore();
+  }
+  if (slip > 0.01) {
+    ctx.save();
+    for (const [x0, w, f] of [[-22, 42, 0.45], [24, 52, 1], [80, 42, 0.45]]) {
+      ctx.globalAlpha = slip * f;
+      const g = ctx.createLinearGradient(x0, 0, x0 + w, 0);
+      g.addColorStop(0, '#bfa066'); g.addColorStop(0.5, '#e2cd9b'); g.addColorStop(1, '#b5945c');
+      ctx.fillStyle = g; ctx.fillRect(x0, -8, w, 116);
+      ctx.strokeStyle = 'rgba(90,66,36,0.35)'; ctx.lineWidth = 0.4;
+      for (let k = 1; k < 5; k++) {
+        ctx.beginPath(); ctx.moveTo(x0 + w * k / 5, -8); ctx.lineTo(x0 + w * k / 5, 108); ctx.stroke();
+      }
+    }
+    ctx.restore();
+  }
+  if (paper > 0.01) {
+    ctx.save(); ctx.globalAlpha = paper;
+    ctx.fillStyle = 'rgba(18,26,30,0.18)'; ctx.fillRect(-5, -4, 114, 114);
+    ctx.fillStyle = '#faf5e8'; ctx.fillRect(-8, -8, 116, 116);
+    ctx.strokeStyle = '#14606b'; ctx.lineWidth = 1.2; ctx.strokeRect(-8, -8, 116, 116);
+    ctx.strokeStyle = 'rgba(20,96,107,0.26)'; ctx.lineWidth = 0.5;
+    ctx.setLineDash([2, 2]);
+    ctx.beginPath();
+    ctx.moveTo(50, -8); ctx.lineTo(50, 108);
+    ctx.moveTo(-8, 50); ctx.lineTo(108, 50);
+    ctx.moveTo(-8, -8); ctx.lineTo(108, 108);
+    ctx.moveTo(108, -8); ctx.lineTo(-8, 108);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+  }
+}
+function drawLabels() {
+  const g = W.glyph;
+  if (g.labels <= 0.01) return;
+  ctx.save();
+  ctx.globalAlpha = g.alpha * g.labels;
+  ctx.font = '5.8px "Kaiti SC","STKaiti","KaiTi",serif';
+  ctx.textBaseline = 'middle';
+  const upT = window.haqiHanziUi ? window.haqiHanziUi('白 · 泉穴之形') : '白 · 泉穴之形';
+  const downT = window.haqiHanziUi ? window.haqiHanziUi('水 · 涌流四散') : '水 · 涌流四散';
+  if (portrait) {
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#14606b'; ctx.fillText(upT, 50, 0);
+    ctx.fillStyle = '#b5402c'; ctx.fillText(downT, 50, 101);
+  } else {
+    ctx.textAlign = 'right'; ctx.fillStyle = '#14606b'; ctx.fillText(upT, -12, 30);
+    ctx.textAlign = 'left'; ctx.fillStyle = '#b5402c'; ctx.fillText(downT, 112, 70);
+  }
+  ctx.restore();
+}
+function drawTraceUI() {
+  const T = W.trace;
+  if (!W.glyph.trace || T.stroke >= NS) return;
+  const pts = MLD[T.stroke];
+  ctx.save();
+  ctx.globalAlpha = W.glyph.alpha;
+  ctx.strokeStyle = 'rgba(181,64,44,0.86)'; ctx.lineWidth = 0.68; ctx.setLineDash([1.6, 1.7]);
+  ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+  for (const p of pts) ctx.lineTo(p[0], p[1]);
+  ctx.stroke(); ctx.setLineDash([]);
+
+  const a = pts[Math.max(0, pts.length - 3)], b = pts[pts.length - 1];
+  const ang = Math.atan2(b[1] - a[1], b[0] - a[0]);
+  ctx.fillStyle = 'rgba(181,64,44,0.9)';
+  ctx.beginPath();
+  ctx.moveTo(b[0] + Math.cos(ang) * 2.5, b[1] + Math.sin(ang) * 2.5);
+  ctx.lineTo(b[0] + Math.cos(ang + 2.5) * 2.3, b[1] + Math.sin(ang + 2.5) * 2.3);
+  ctx.lineTo(b[0] + Math.cos(ang - 2.5) * 2.3, b[1] + Math.sin(ang - 2.5) * 2.3);
+  ctx.fill();
+
+  const [sx, sy] = pts[0];
+  const pulse = reduceMotion ? 0.6 : 0.5 + 0.5 * Math.sin(clock / 220);
+  ctx.fillStyle = `rgba(181,64,44,${(0.24 * pulse).toFixed(3)})`;
+  ctx.beginPath(); ctx.arc(sx, sy, 3.6 + pulse * 1.5, 0, TAU); ctx.fill();
+  ctx.fillStyle = '#b5402c';
+  ctx.beginPath(); ctx.arc(sx, sy, 2.1, 0, TAU); ctx.fill();
+  ctx.font = '600 5px system-ui,sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(String(T.stroke + 1), sx - 5.6, sy - 3.6);
+  ctx.textAlign = 'start';
+
+  if (T.pen) {
+    ctx.fillStyle = '#fffdf4';
+    ctx.shadowColor = 'rgba(143,227,216,0.95)'; ctx.shadowBlur = 11 * DPR;
+    ctx.beginPath(); ctx.arc(T.pen[0], T.pen[1], 2.1, 0, TAU); ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+  ctx.restore();
+}
+function drawStamp(a) {
+  if (a <= 0.01) return;
+  const s = lerp(1.45, 1, ease.out(a));
+  ctx.save();
+  ctx.translate(96, 96); ctx.scale(s, s); ctx.rotate(-0.05);
+  ctx.globalAlpha = W.glyph.alpha * Math.min(1, a * 1.5);
+  ctx.fillStyle = '#b5402c';
+  ctx.fillRect(-10.5, -10.5, 21, 21);
+  ctx.translate(-8, -8); ctx.scale(0.16, 0.16);
+  ctx.fillStyle = '#faf3e4';
+  withMmah(() => { for (const p of QUAN_PATHS) ctx.fill(p); });
+  ctx.restore();
+}
+
+const WORDS = [
+  ['清泉', '从石头缝里涌出的干净凉水，就叫清泉。'],
+  ['甘泉', '泉水清凉微甜，古人把最好喝的水叫作甘泉。'],
+  ['清泉石上流', '“明月松间照，清泉石上流”——唐代王维写下月夜里泉水漫过石头的声音。'],
+];
+const WORD_MOOD = [0, 1, 2];
+
+function wordLayout(size) {
+  ctx.font = `${size}px "Kaiti SC","STKaiti","KaiTi",serif`;
+  const shown = WORDS.map(([w]) => window.haqiHanziUi ? window.haqiHanziUi(w) : w);
+  const widths = shown.map(s => ctx.measureText(s).width);
+  return { shown, widths };
+}
+function drawWords() {
+  setCam(ctx, 1);
+  const g = W.glyph;
+  const size = portrait ? 27 : 38;
+  const gap = size * 1.15;
+  const y = GL.cy + GL.s * 60 + (portrait ? 40 : 50);
+  ctx.textBaseline = 'middle';
+  const { shown, widths } = wordLayout(size);
+  const total = widths.reduce((a, b) => a + b, 0) + gap * (shown.length - 1);
+  let x = GL.cx - total / 2;
+  shown.forEach((s, i) => {
+    const a = clamp(g.words - i) * g.alpha;
+    if (a > 0) {
+      const on = W.wordOn === i;
+      ctx.textAlign = 'left';
+      ctx.globalAlpha = a * (on ? 1 : 0.5);
+      ctx.fillStyle = on ? '#b5402c' : '#1e2a2c';
+      ctx.fillText(s, x, y + (1 - clamp(g.words - i)) * 14);
+    }
+    x += widths[i] + gap;
+  });
+  ctx.globalAlpha = 1; ctx.textAlign = 'start';
+}
+function drawGlyph() {
+  const g = W.glyph;
+  if (g.alpha <= 0.001) return;
+  ctx.save();
+  glyphCam();
+  if (g.plate > 0.01) drawPlates(g.alpha * g.plate, g.m);
+  if (g.ghost > 0.01) {
+    ctx.save();
+    ctx.globalAlpha = g.alpha * g.ghost;
+    ctx.fillStyle = '#d5cbb4';
+    withMmah(() => { for (let i = 0; i < NS; i++) if (g.prog[i] < 0.99) ctx.fill(QUAN_PATHS[i]); });
+    ctx.restore();
+  }
+  if (g.outline < 0.99) {
+    ctx.save();
+    ctx.globalAlpha = g.alpha * (1 - g.outline);
+    const stoneGlow = 1 - smooth(g.m * 1.35);
+    const inkCol = mixCol('#22323a', '#16202a', smooth(g.m - 0.8));
+    ctx.fillStyle = mixCol(inkCol, '#9fe8dc', stoneGlow);
+    for (let i = 0; i < NS; i++) brush(ctx, i, g.prog[i]);
+    ctx.restore();
+  }
+  if (g.outline > 0.01) {
+    ctx.save();
+    ctx.globalAlpha = g.alpha * g.outline;
+    withMmah(() => {
+      for (let i = 0; i < NS; i++) {
+        ctx.fillStyle = g.labels > 0.1 ? (i < 5 ? '#14606b' : '#b5402c') : '#18222a';
+        paintStroke(i, g.prog[i]);
+      }
+    });
+    ctx.restore();
+  }
+  drawLabels();
+  drawTraceUI();
+  drawStamp(g.stamp);
+  ctx.restore();
+  if (g.words > 0.01) drawWords();
+}
+function drawVeil() {
+  if (W.veil <= 0.001) return;
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.fillStyle = `rgba(246,240,226,${W.veil.toFixed(3)})`;
+  ctx.fillRect(0, 0, SW, SH);
+}
+function drawBloom() {
+  if (W.bloomT >= 1 || W.bloomT <= 0) return;
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  const t = W.bloomT;
+  ctx.save();
+  for (const b of BLOOMS) {
+    const u = clamp((t - b.d) / (1 - b.d));
+    if (u <= 0) continue;
+    const r = ease.out(u) * Math.hypot(SW, SH) * 0.78;
+    const a = Math.sin(Math.PI * u) * 0.9;
+    if (a <= 0.005) continue;
+    const g = ctx.createRadialGradient(SW * b.x, SH * b.y, r * 0.12, SW * b.x, SH * b.y, r);
+    g.addColorStop(0, `rgba(248,243,231,${a.toFixed(3)})`);
+    g.addColorStop(0.62, `rgba(246,240,226,${(a * 0.86).toFixed(3)})`);
+    g.addColorStop(1, 'rgba(246,240,226,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, SW, SH);
+  }
+  ctx.restore();
+}
+
+/* ---------- 帧更新与渲染 ---------- */
+let introPt = null;
+function updateParticles() {
+  const k = DT * 0.05;
+  for (const sp of W.splashes) {
+    sp.x += sp.vx * k; sp.y += sp.vy * k; sp.vy += 0.075 * k;
+  }
+  W.splashes = W.splashes.filter(sp => clock - sp.t0 < sp.dur);
+  W.ripples = W.ripples.filter(rp => clock - rp.t0 < rp.dur);
+
+  if (W.flow > 0.02) {
+    for (const d of W.drops) {
+      d.u += d.sp * DT * (reduceMotion ? 0.35 : 1);
+      if (d.u > 1) {
+        d.u -= 1;
+        if (W.pool > 0.4 && rand() > 0.72) {
+          const P = flowAt(1);
+          spawnRipple(P.x + (rand() - 0.5) * 40, POOL_Y + 6 + rand() * 14, 34 + rand() * 26, 0.3, 1400);
+        }
+      }
+    }
+    // 叠石处的水花与滴水声
+    if (!reduceMotion && W.flow > 0.3 && clock - Sound.lastDrip > 620) {
+      const li = Math.floor(rand() * LEDGES.length);
+      const L = LEDGES[li];
+      if (W.flow > li * 0.28 + 0.2) {
+        spawnSplash(L.x + 6, L.y - L.ry * 0.6, 3, 0.55);
+        if (rand() > 0.55) { Sound.drip(760 + li * 190 + rand() * 120, 0.045); Sound.lastDrip = clock; }
+      }
+    }
+  }
+  for (const f of W.flies) {
+    if (f.a <= 0.001) continue;
+    const a = clock * 0.00022 * f.sp + f.ph;
+    f.x += Math.cos(a * 1.7) * 0.35 * k;
+    f.y += Math.sin(a * 2.3) * 0.24 * k;
+    if (f.x < 200) f.x = 2200; if (f.x > 2260) f.x = 240;
+    f.y = clamp(f.y, 470, 800);
+  }
+  Sound.setFlow(W.intro ? 0.7 : W.flow * 0.9);
+  if (W.shake > 0.01) W.shake = Math.max(0, W.shake - DT * 0.008);
+
+  if (W.intro) {
+    W.moon = 1; W.stars = 1; W.shafts = 0.85; W.mist = 1;
+    W.spring = 1; W.flow = 1; W.pool = 1; W.charge = 1;
+    W.spots.forEach(s => { s.found = true; s.a = 0; });
+    W.flies.forEach(f => { f.a = 0.85; });
+    const targetOrbit = introPt ? clamp((introPt.x / SW - 0.5) * 2, -1, 1) : (reduceMotion ? 0 : Math.sin(clock * 0.00055) * 0.6);
+    cam.orbitX += (targetOrbit - cam.orbitX) * Math.min(1, DT / 240);
+    if (!reduceMotion && clock - Sound.lastDrip > 1500 && W.intro) {
+      Sound.lastDrip = clock;
+      const P = flowAt(0.4 + rand() * 0.6);
+      spawnRipple(P.x, POOL_Y + 8 + rand() * 20, 30 + rand() * 24, 0.26, 1500);
+    }
+  } else {
+    cam.orbitX *= 0.92;
+  }
+}
+function render() {
+  updateView();
+  const w = cvs.width, h = cvs.height;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+
+  drawSky();
+  drawMoon();
+  drawShafts();
+  drawMountains();
+  drawMist(false);
+  drawCliff();
+  drawBank();
+  drawPool();
+  drawStream();
+  drawParticles();
+  drawMist(true);
+  drawInteractHints();
+  drawVeil();
+  drawBloom();
+  drawGlyph();
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+  ctx.drawImage(hempC, 0, 0);
+  if (!vignette || vignette.w !== w || vignette.h !== h) {
+    const g = ctx.createRadialGradient(w / 2, h * 0.46, Math.min(w, h) * 0.34, w / 2, h * 0.46, Math.hypot(w, h) * 0.66);
+    g.addColorStop(0, 'rgba(6,12,18,0)');
+    g.addColorStop(1, 'rgba(6,12,18,0.42)');
+    vignette = { w, h, g };
+  }
+  ctx.fillStyle = vignette.g;
+  ctx.fillRect(0, 0, w, h);
+}
+
+let last = null, paused = false;
+function loop(now) {
+  requestAnimationFrame(loop);
+  if (last == null) last = now;
+  const dt = Math.min(50, Math.max(0, now - last));
+  last = now;
+  if (visible && !paused) {
+    DT = dt;
+    clock += dt;
+    updateParticles();
+    const list = waiters; waiters = [];
+    for (const wt of list) { if (wt.tk.dead) wt.rej(new Cancelled()); else wt.res(clock); }
+  }
+  render();
+}
+
+/* ---------- 字幕与交互控制 ---------- */
+const ui = {
+  cap: $('#caption'), capT: $('#capTitle'), capP: $('#capText'),
+  hint: $('#hint'), action: $('#action'), demo: $('#demo'),
+  prog: [...document.querySelectorAll('#progress li')],
+};
+const CHAR_MS = 65;
+let capMinEnd = 0;
+function span(cls, text) { const s = document.createElement('span'); if (cls) s.className = cls; s.textContent = text; return s; }
+function showCaption(title, text) {
+  ui.capT.textContent = window.haqiHanziUi ? window.haqiHanziUi(title, ui.capT) : title;
+  ui.capP.replaceChildren(...[...text].map((c, i) => { const s = span('ch', c); s.style.setProperty('--i', i); return s; }));
+  window.haqiHanziCaption?.(ui.cap, text);
+  ui.cap.classList.remove('on'); void ui.cap.offsetWidth; ui.cap.classList.add('on');
+}
+async function caption(title, text, tk, hold = 0) {
+  window.haqiHanziPrefetch?.([title, text]);
+  while (clock < capMinEnd) await frame(tk);
+  ui.cap.classList.remove('on');
+  await wait(340, tk);
+  showCaption(title, text);
+  const n = [...text].length;
+  capMinEnd = clock + (Math.max(reduceMotion ? 1300 : n * CHAR_MS + 1200, n * 140) + 520 + hold) * FAST;
+}
+async function captionDone(tk) { while (clock < capMinEnd) await frame(tk); }
+function hint(text) {
+  if (text) {
+    const s = span('', '');
+    s.textContent = window.haqiHanziUi ? window.haqiHanziUi(text, s) : text;
+    ui.hint.replaceChildren(s); ui.hint.classList.add('on');
+  } else ui.hint.classList.remove('on');
+}
+function progress(i) { ui.prog.forEach((li, j) => { li.classList.toggle('on', j === i); li.classList.toggle('done', j < i); }); }
+function mode(m) { document.body.classList.remove('listen', 'dig', 'trace', 'play'); if (m) document.body.classList.add(m); S.mode = m; }
+let actionFn = null;
+function setAction(label, fn) {
+  actionFn = fn;
+  if (label) {
+    ui.action.textContent = window.haqiHanziUi ? window.haqiHanziUi(label, ui.action) : label;
+    ui.action.hidden = false;
+  } else ui.action.hidden = true;
+}
+function stopAll() {
+  token.dead = true;
+  const list = waiters; waiters = [];
+  for (const wt of list) wt.rej(new Cancelled());
+}
+
+const S = { handler: null, demo: null, finish: null, mode: null, interactions: [] };
+let activePid = null;
+addEventListener('pointermove', e => { if (W.intro) introPt = { x: e.clientX, y: e.clientY }; });
+cvs.addEventListener('pointerdown', e => {
+  if (!e.isPrimary || activePid != null) return;
+  const h = S.handler; if (!h || !h.down) return;
+  activePid = e.pointerId;
+  try { cvs.setPointerCapture(e.pointerId); } catch {}
+  e.preventDefault();
+  h.down(toWorld(e.clientX, e.clientY, h.px ?? 1), e);
+});
+cvs.addEventListener('pointermove', e => {
+  if (e.pointerId !== activePid) return;
+  const h = S.handler; if (!h || !h.move) return;
+  const list = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+  for (const ev of (list.length ? list : [e])) h.move(toWorld(ev.clientX, ev.clientY, h.px ?? 1), ev);
+});
+function endPtr(e, cancel) {
+  if (e.pointerId !== activePid) return;
+  activePid = null;
+  const h = S.handler;
+  h?.up?.(toWorld(e.clientX, e.clientY, h.px ?? 1), cancel);
+}
+cvs.addEventListener('pointerup', e => endPtr(e, false));
+cvs.addEventListener('pointercancel', e => endPtr(e, true));
+cvs.addEventListener('lostpointercapture', e => endPtr(e, true));
+cvs.addEventListener('keydown', e => {
+  if (e.code !== 'Space' && e.code !== 'Enter') return;
+  if (e.repeat) return;
+  e.preventDefault();
+  if (S.mode === 'trace' && S.demo) S.demo();
+  else if (actionFn) actionFn();
+});
+ui.action.addEventListener('click', () => { if (actionFn) actionFn(); });
+ui.demo.addEventListener('click', () => { if (S.demo) S.demo(); });
+
+function publish(sc) { window.__quan.scene = sc; window.__quan.interactions = S.interactions; window.__quan.state = W; }
+
+/* ---------- 七幕剧情 ---------- */
+async function sNight(tk) {
+  publish('sNight');
+  progress(0);
+  setPaperMode(false);
+  W.intro = false;
+  W.moon = 0; W.stars = 0; W.shafts = 0; W.mist = 1;
+  W.spring = 0; W.flow = 0; W.pool = 0.15; W.charge = 0;
+  W.spots.forEach(s => { s.found = false; s.a = 0; });
+  W.flies.forEach(f => { f.a = 0; });
+  bg(camTo(camView('night'), 2600 * M, tk));
+  Sound.wind();
+  await caption('空山', '空山新雨后，夜色像刚洗过一样干净。', tk);
+  bg(tween(3200 * M, t => { W.stars = t; W.moon = t; W.shafts = t * 0.85; }, tk, ease.out));
+  await caption('空山', '一轮明月升上松梢，山静得能听见自己的呼吸。', tk);
+  Sound.bell(NOTE.A4, 0.07);
+  await caption('空山', '可是——听，石头里好像藏着细细的水声。', tk, 320);
+  await captionDone(tk);
+}
+
+async function sListen(tk) {
+  publish('sListen');
+  progress(1);
+  bg(camTo(camView('listen'), 2000 * M, tk));
+  bg(tween(600, t => { W.listenUI = t; }, tk));
+  hint('点一点发亮的水纹，听见三处回声就能找到泉眼');
+  mode('listen');
+
+  let found = 0, lastAct = clock;
+  const hear = (sp, how) => {
+    if (!sp || sp.found) return;
+    lastAct = clock;
+    sp.found = true; found++;
+    S.interactions.push(how);
+    Sound.drip(sp.note * 1.1, 0.12);
+    Sound.pluck(sp.note, 0.1, 1.5);
+    spawnRipple(sp.x, Math.max(sp.y + 18, POOL_Y + 6), 78, 0.55, 1600);
+    spawnSplash(sp.x, sp.y + 10, 10, 0.7);
+    bg(tween(900, t => { sp.a = t; W.charge = found / SPOTS.length; }, tk, ease.out));
+    if (found < SPOTS.length) hint(`回声 ${found} / ${SPOTS.length} · 再听听别处`);
+  };
+  const hearNext = how => hear(W.spots.find(s => !s.found), how);
+  setAction('听一处水声', () => hearNext('button'));
+  S.handler = {
+    px: 0.94,
+    down(p) {
+      const hit = W.spots.find(s => !s.found && Math.hypot(p.x - s.x, p.y - s.y) < 110);
+      if (hit) hear(hit, 'tap'); else hearNext('tap');
+    },
+  };
+  while (found < SPOTS.length) {
+    await frame(tk);
+    if (clock - lastAct > (AUTO ? 450 : 8200)) hearNext('auto');
+  }
+  S.handler = null; setAction(null); mode(null); hint(null); W.listenUI = 0;
+  Sound.bell(NOTE.D5, 0.1);
+  await caption('寻声', '三处回声连成一条线，都指向崖壁上那个湿湿的黑洞口。', tk, 320);
+  await captionDone(tk);
+}
+
+async function sGush(tk) {
+  publish('sGush');
+  progress(2);
+  bg(camTo(camView('gush'), 2200 * M, tk));
+  await caption('泉涌', '把手放在石缝上，轻轻叩一叩——山肚子里的水醒了吗？', tk);
+  hint('点一点泉眼，叩开石缝，让泉水涌出来');
+  mode('dig');
+  bg(tween(550, t => { W.gushUI = t; }, tk));
+
+  let taps = 0, lastAct = clock, opened = false;
+  const NEED = 3;
+  const tap = how => {
+    if (opened) return;
+    lastAct = clock;
+    taps++;
+    S.interactions.push(how);
+    W.shake = 5;
+    Sound.splash(0.28, 0.06, 520, 1.2);
+    spawnSplash(CAVE.x, CAVE.y + 30, 8, 0.6);
+    W.crack = Math.min(1, taps / NEED);
+    W.spring = Math.min(0.42, taps / NEED * 0.42);
+    if (taps >= NEED) opened = true;
+    else hint(`再叩 ${NEED - taps} 下，石缝就要开了`);
+  };
+  setAction('叩开石缝', () => tap('button'));
+  S.handler = { px: 0.94, down() { tap('tap'); } };
+  while (!opened) {
+    await frame(tk);
+    if (clock - lastAct > (AUTO ? 380 : 7000)) tap('auto');
+  }
+  S.handler = null; setAction(null); mode(null); hint(null); W.gushUI = 0;
+
+  W.shake = 9;
+  Sound.gush();
+  spawnSplash(CAVE.x, CAVE.y + 34, 40, 1.5);
+  await tween(1500 * M, t => { W.spring = lerp(0.42, 1, t); W.crack = 1 - t * 0.4; }, tk, ease.out);
+  await caption('泉涌', '哗——一股清泉从石头心里涌了出来！', tk, 200);
+
+  Sound.splash(1.2, 0.05, 2200, 0.7);
+  bg(tween(3200 * M, t => { W.flow = t; }, tk, ease.sine));
+  await tween(2600 * M, t => { W.pool = lerp(0.15, 1, t); }, tk);
+  for (let i = 0; i < 3; i++) {
+    const L = LEDGES[i];
+    spawnSplash(L.x, L.y - L.ry * 0.6, 14, 0.9);
+    Sound.drip(820 + i * 180, 0.08);
+    await wait(420 * M, tk);
+  }
+  spawnRipple(1190, POOL_Y + 10, 150, 0.6, 2200);
+  Sound.bell(NOTE.G5, 0.08);
+  bg(tween(1800 * M, t => { W.flies.forEach(f => { f.a = t * 0.85; }); }, tk));
+  await caption('泉涌', '泉水跳过一层层山石，落成小瀑，汇进一潭月色。', tk, 380);
+  await captionDone(tk);
+}
+
+async function sGlyph(tk) {
+  publish('sGlyph');
+  progress(3);
+  // 竖屏画幅拉远后同步放大字号，保证描红落笔区域足够大
+  GL.cx = 1200; GL.cy = 470; GL.s = portrait ? 4.3 : 3.35;
+  bg(camTo(camView('glyph'), 2000 * M, tk));
+  W.glyph = { alpha: 1, m: 0, prog: Array(NS).fill(0), outline: 0, plate: 0, labels: 0, ghost: 0, stamp: 0, words: 0, glow: 0, trace: false };
+  W.bloomT = 0;
+  setPaperMode(true);
+  Sound.splash(2.0, 0.035, 1100, 0.5);
+  await tween(2200 * M, t => {
+    W.bloomT = t;
+    W.veil = 0.95 * smooth(t * 1.15);
+    W.glyph.plate = t;
+    for (let i = 0; i < NS; i++) W.glyph.prog[i] = clamp(t * 1.4 - i * 0.05);
+  }, tk);
+  W.bloomT = 1;
+  W.glyph.prog.fill(1);
+  Sound.bell(NOTE.D5, 0.09);
+  await caption('字源部件', '古人画一个泉穴，穴里点着水，穴下画出水往外流的样子。', tk, 420);
+  await captionDone(tk);
+
+  Sound.splash(1.8, 0.024, 1500);
+  await tween(2500 * M, t => { W.glyph.m = t; }, tk, ease.lin);
+  Sound.pluck(NOTE.E5, 0.11);
+  await caption('小篆结构', '小篆把泉穴写得端端正正，水脉在下方舒展开来。', tk, 450);
+  await captionDone(tk);
+
+  Sound.splash(1.8, 0.024, 1750);
+  await tween(2500 * M, t => { W.glyph.m = 1 + t; }, tk, ease.lin);
+  await tween(550, t => { W.glyph.outline = t; }, tk);
+  bg(tween(700, t => { W.glyph.labels = t; }, tk));
+  Sound.bell(NOTE.A5, 0.075);
+  await caption('楷书', '楷书上半是「白」形的泉穴，下半就是「水」——泉，就是石头里流出来的水。', tk, 560);
+  await captionDone(tk);
+  await tween(500, t => { W.glyph.labels = 1 - t; }, tk);
+}
+
+async function sWrite(tk) {
+  publish('sWrite');
+  progress(4);
+  await caption('写字', '「泉」一共九笔，先写上面的白，再写下面的水。', tk);
+  await tween(800, t => { W.glyph.prog = W.glyph.prog.map(() => 1 - t); W.glyph.ghost = t; }, tk);
+  W.glyph.prog = Array(NS).fill(0);
+  W.glyph.trace = true; W.trace = { stroke: 0, pen: null };
+
+  const showStroke = () => {
+    capMinEnd = 0;
+    showCaption('写字', `第 ${W.trace.stroke + 1} 笔，共 ${NS} 笔。`);
+    hint(`${KAI[W.trace.stroke].name}：从红点起笔，顺着虚线写`);
+  };
+  await captionDone(tk);
+  showStroke();
+
+  let samples = MLD[0], drag = null, lastInput = clock, demoing = false, completed = 0, invalidHint = 0;
+  const finishStroke = () => {
+    const i = W.trace.stroke;
+    if (i >= NS) return;
+    W.glyph.prog[i] = 1;
+    Sound.pluck(PENTA[i % PENTA.length], 0.12, 1.4);
+    W.trace.stroke++;
+    W.trace.pen = null;
+    completed++;
+    if (W.trace.stroke < NS) { samples = MLD[W.trace.stroke]; showStroke(); }
+  };
+  S.finish = finishStroke;
+  const tolLocal = () => Math.max(20, 48 / (CV.k * GL.s));
+
+  S.handler = {
+    down(p) {
+      if (demoing || W.trace.stroke >= NS) return;
+      lastInput = clock;
+      const q = toLocal(p.x, p.y), t = tolLocal();
+      const lastPt = samples[samples.length - 1];
+      const dEnd = Math.hypot(q.x - lastPt[0], q.y - lastPt[1]);
+      let startIdx = -1, bestD = Infinity;
+      const startLimit = Math.max(1, Math.floor(samples.length * 0.35));
+      for (let j = 0; j < startLimit; j++) {
+        const d = Math.hypot(q.x - samples[j][0], q.y - samples[j][1]);
+        if (d < bestD) { bestD = d; startIdx = j; }
+      }
+      if (bestD > t * 1.75 || (bestD > dEnd * 1.15 && dEnd < t * 1.2)) {
+        if (clock - invalidHint > 500) { hint('从这一笔的红点开始哦'); invalidHint = clock; }
+        return;
+      }
+      drag = { idx: startIdx, fIdx: startIdx, lastQ: q };
+      W.glyph.prog[W.trace.stroke] = drag.idx / (samples.length - 1);
+      W.trace.pen = samples[drag.idx];
+    },
+    move(p) {
+      if (!drag) return;
+      lastInput = clock;
+      const q = toLocal(p.x, p.y), t = tolLocal();
+      const prev = drag.lastQ || q;
+      const distMove = Math.hypot(q.x - prev.x, q.y - prev.y);
+      const steps = Math.max(1, Math.min(8, Math.ceil(distMove / 4)));
+      const lastIdx = samples.length - 1;
+      for (let s = 1; s <= steps; s++) {
+        const u = s / steps, sx = lerp(prev.x, q.x, u), sy = lerp(prev.y, q.y, u);
+        const win = Math.max(18, Math.ceil(lastIdx * 0.55));
+        let best = drag.idx, bd = Infinity;
+        for (let j = Math.max(0, drag.idx - 2); j <= Math.min(lastIdx, drag.idx + win); j++) {
+          const d = Math.hypot(sx - samples[j][0], sy - samples[j][1]);
+          if (d < bd) { bd = d; best = j; }
+        }
+        if (bd <= t * 1.35 && best >= drag.idx) {
+          const a = samples[drag.idx], b = samples[best];
+          const mvx = q.x - prev.x, mvy = q.y - prev.y, svx = b[0] - a[0], svy = b[1] - a[1];
+          if (best === drag.idx || distMove < 0.5 || (mvx * svx + mvy * svy) >= -0.25 * distMove * Math.hypot(svx, svy)) {
+            drag.idx = best; drag.fIdx = Math.max(drag.fIdx || 0, best);
+          }
+        }
+      }
+      if (distMove > 0.4 && drag.idx < lastIdx) {
+        const curIdx = Math.min(lastIdx - 1, drag.idx);
+        const lookIdx = Math.min(lastIdx, curIdx + Math.max(6, Math.ceil(lastIdx * 0.18)));
+        const tx = samples[lookIdx][0] - samples[curIdx][0], ty = samples[lookIdx][1] - samples[curIdx][1];
+        const tLen = Math.hypot(tx, ty) || 1;
+        const forwardProj = ((q.x - prev.x) * tx + (q.y - prev.y) * ty) / tLen;
+        const curD = Math.hypot(q.x - samples[curIdx][0], q.y - samples[curIdx][1]);
+        if (forwardProj > 0.15 && curD <= t * 2.6) {
+          let totalLen = 0;
+          for (let j = 1; j <= lastIdx; j++) totalLen += Math.hypot(samples[j][0] - samples[j - 1][0], samples[j][1] - samples[j - 1][1]);
+          const avgSeg = Math.max(0.6, totalLen / lastIdx);
+          drag.fIdx = Math.min(lastIdx, Math.max(drag.fIdx || drag.idx, drag.idx) + (forwardProj / avgSeg) * 1.25);
+          drag.idx = Math.max(drag.idx, Math.floor(drag.fIdx));
+        }
+      }
+      drag.lastQ = q;
+      W.glyph.prog[W.trace.stroke] = drag.idx / lastIdx;
+      W.trace.pen = samples[drag.idx];
+    },
+    up(p, cancel) {
+      if (!drag) return;
+      const d = drag; drag = null; W.trace.pen = null;
+      const lastIdx = samples.length - 1;
+      const needIdx = Math.min(lastIdx - 2, Math.max(3, Math.ceil(lastIdx * 0.56)));
+      if (!cancel && d.idx >= needIdx) { finishStroke(); return; }
+      const i = W.trace.stroke, from = W.glyph.prog[i];
+      bg(tween(260, t => { if (W.trace.stroke === i) W.glyph.prog[i] = from * (1 - t); }, tk));
+      if (clock - invalidHint > 400) { hint('顺着虚线方向写到箭头附近即可'); invalidHint = clock; }
+    },
+  };
+
+  const demo = async () => {
+    if (demoing || W.trace.stroke >= NS) return;
+    demoing = true; ui.demo.disabled = true; drag = null;
+    hint('看笔尖光点走过每一笔');
+    while (W.trace.stroke < NS) {
+      const i = W.trace.stroke, pts = MLD[i];
+      W.glyph.prog[i] = 0;
+      await tween(720 * M, t => { W.glyph.prog[i] = t; W.trace.pen = pts[Math.round(t * (pts.length - 1))]; }, tk, ease.sine);
+      W.trace.pen = null;
+      finishStroke();
+      await wait(160, tk);
+    }
+  };
+  S.demo = () => { S.interactions.push('demo'); bg(demo()); };
+  mode('trace'); ui.demo.hidden = false;
+  if (AUTO) { S.interactions.push('auto'); bg(demo()); }
+
+  let nudged = false;
+  while (W.trace.stroke < NS) {
+    await frame(tk);
+    if (!demoing && !nudged && clock - lastInput > 14000) { hint('写不出来也没关系，点“看示范”'); nudged = true; }
+    if (!demoing && completed === 0 && clock - lastInput > 26000) { S.interactions.push('auto'); bg(demo()); }
+  }
+
+  S.handler = null; S.demo = null; S.finish = null; mode(null); hint(null);
+  ui.demo.hidden = true; ui.demo.disabled = false; W.glyph.trace = false;
+  if (!S.interactions.includes('demo') && !S.interactions.includes('auto')) S.interactions.push('user');
+  window.__quan.events.push('written');
+  window.haqiHanziWritten?.();
+
+  await tween(500, t => { W.glyph.ghost = 1 - t; }, tk);
+  await tween(480, t => { W.glyph.stamp = t; }, tk, ease.out);
+  Sound.bell(NOTE.A4, 0.11); Sound.pluck(NOTE.A5, 0.08);
+  await caption('写字', '写好了！泉，山泉的泉。', tk);
+  await captionDone(tk);
+}
+
+async function sWords(tk) {
+  publish('sWords');
+  progress(5);
+  const g0 = { ...GL };
+  await tween(1000 * M, t => {
+    GL.cy = lerp(g0.cy, g0.cy - 26, t);
+    GL.s = lerp(g0.s, portrait ? 3.2 : 2.84, t);
+    W.veil = lerp(0.95, 0.74, t);
+  }, tk);
+
+  for (let i = 0; i < WORDS.length; i++) {
+    const pCap = caption(WORDS[i][0], WORDS[i][1], tk);
+    await wait(340, tk);
+    W.wordOn = i;
+    Sound.pluck(PENTA[3 + i], 0.13);
+    Sound.drip(NOTE.D6 * (1 + i * 0.08), 0.05);
+    const from = W.mood, to = WORD_MOOD[i];
+    bg(tween(1100 * M, t => { W.mood = lerp(from, to, t); }, tk));
+    bg(tween(600, t => { W.glyph.words = Math.max(W.glyph.words, i + t); }, tk, ease.out));
+    await pCap;
+    await captionDone(tk);
+  }
+  W.wordOn = -1;
+}
+
+async function sFinale(tk) {
+  publish('sFinale');
+  progress(6);
+  setPaperMode(false);
+  bg(camTo(camView('finale'), 2800 * M, tk));
+  await tween(2200 * M, t => {
+    W.glyph.alpha = 1 - t;
+    W.veil = 0.74 * (1 - t);
+    W.mood = lerp(2, 0.15, t);
+  }, tk);
+  W.glyph = { ...W.glyph, alpha: 0, words: 0 };
+  Sound.bell(NOTE.D5, 0.09);
+
+  await caption('余韵', '明月松间照，清泉石上流——山睡了，泉还在轻轻地唱。', tk, 420);
+  await captionDone(tk);
+
+  hint('点一点水面激起涟漪，点一点松林唤起流萤');
+  mode('play');
+  setAction('再看一次', () => { Sound.init(); begin(); });
+  S.handler = {
+    down(p) {
+      if (p.y > POOL_Y - 30) {
+        spawnRipple(clamp(p.x, 260, 2180), clamp(p.y, POOL_Y + 4, POOL_Y + 120), 110, 0.6, 1900);
+        spawnSplash(clamp(p.x, 260, 2180), POOL_Y + 4, 12, 0.8);
+        Sound.drip(700 + rand() * 700, 0.11);
+        Sound.splash(0.4, 0.04, 2400);
+      } else if (p.y < 420) {
+        Sound.bell(NOTE.A5, 0.07);
+        spawnRipple(moonPoolX(), POOL_Y + 30, 130, 0.4, 2200);
+      } else {
+        Sound.wind();
+        Sound.pluck(PENTA[Math.floor(rand() * PENTA.length)], 0.09);
+        for (const f of W.flies) {
+          if (rand() > 0.55) { f.x = clamp(p.x + (rand() - 0.5) * 320, portrait ? 740 : 240, portrait ? 1250 : 2200); f.y = clamp(p.y + (rand() - 0.5) * 180, 470, 780); }
+        }
+        bg(tween(700, t => { W.flies.forEach(f => { f.a = Math.max(f.a, t); }); }, tk));
+      }
+      hint(null);
+    },
+  };
+  window.__quan.finished = true;
+  window.__quan.events.push('completed');
+  window.haqiHanziComplete();
+  for (;;) await frame(tk);
+}
+
+const SCENES = [sNight, sListen, sGush, sGlyph, sWrite, sWords, sFinale];
+
+async function begin() {
+  stopAll();
+  const tk = token = { dead: false };
+  capMinEnd = 0;
+  if (paused) setPaused(false);
+  resetWorld();
+  W.intro = false;
+  setPaperMode(false);
+  Object.assign(cam, camView('night'));
+  S.handler = null; S.demo = null; S.finish = null; mode(null); setAction(null); hint(null);
+  ui.demo.hidden = true; ui.demo.disabled = false; ui.cap.classList.remove('on');
+  rand = mulberry32(SEED);
+  S.interactions = [];
+  Sound.lastDrip = 0;
+  window.__quan.events = []; window.__quan.finished = false;
+  publish('sNight');
+  try { for (const sc of SCENES) await sc(tk); }
+  catch (e) { if (!(e instanceof Cancelled)) console.error(e); }
+}
+
+async function introPlay(tk) {
+  W.intro = true;
+  Object.assign(cam, camView('intro'));
+  for (;;) await frame(tk);
+}
+
+resetWorld();
+Object.assign(cam, camView('intro'));
+window.__quan = {
+  scene: 'intro', finished: false, events: [], interactions: [], state: W,
+  medians: QUAN.medians, strokes: QUAN.strokes, toScreen,
+  localToScreen(x, y) { return toScreen(GL.cx + (x - 50) * GL.s, GL.cy + (y - 50) * GL.s); },
+  strokePoints: KPTS, tracePoints: MLD,
+  get paused() { return paused; },
+  get muted() { return Sound.muted; },
+  completeCurrentStroke() { S.finish?.(); },
+};
+resize();
+render();
+addEventListener('resize', () => { resize(); render(); });
+requestAnimationFrame(loop);
+bg(introPlay(token = { dead: false }));
+
+$('#start').addEventListener('click', () => {
+  Sound.init();
+  $('#intro').classList.add('off');
+  document.body.classList.add('started');
+  begin();
+});
+$('#replay').addEventListener('click', () => {
+  Sound.init();
+  $('#intro').classList.add('off');
+  document.body.classList.add('started');
+  begin();
+});
+$('#mute').addEventListener('click', e => {
+  Sound.init();
+  Sound.setMuted(!Sound.muted);
+  const btn = e.currentTarget;
+  btn.setAttribute('aria-pressed', String(Sound.muted));
+  const zh = Sound.muted ? '开启声音' : '静音';
+  btn.textContent = window.haqiHanziUi ? window.haqiHanziUi(zh, btn) : zh;
+});
+function setPaused(v) {
+  paused = v;
+  last = null;
+  Sound.setSuspended(v);
+  const btn = $('#pause');
+  btn.setAttribute('aria-pressed', String(v));
+  const zh = v ? '继续' : '暂停';
+  btn.textContent = window.haqiHanziUi ? window.haqiHanziUi(zh, btn) : zh;
+}
+$('#pause').addEventListener('click', () => { Sound.init(); setPaused(!paused); });
+document.addEventListener('visibilitychange', () => {
+  visible = !document.hidden;
+  last = null;
+  Sound.setSuspended(!visible || paused);
+});
+addEventListener('pagehide', () => { stopAll(); void Sound.ctx?.close().catch(() => {}); }, { once: true });
+
+if (AUTO) {
+  $('#intro').classList.add('off');
+  document.body.classList.add('started');
+  begin();
+}
+})();
+</script>
+</body>
+</html>

@@ -5062,3 +5062,14 @@ home家园机会1→2、here2→3、please2→3、thank you3→4；总作者机�
 试玩入口：https://keepwork.com/api/raw/official/apps/MagicHaqi/release/Haqi_v1.html
 
 证据目录：`D:/paracraft-apps/output/haqi/king-wargod-20261112/`。本补记只更新发布与验收状态，不改变经济限制及未覆盖范围。
+
+## 2026-11-13：汉字「传」3D 夜驿剧场验收（未发布）
+
+- 新增 `hanzi/hanzi_chuan.html`：Three.js 双 canvas 剧场、七幕剧情、三次互动（拖灯接力 / 按住送书 / 六笔描红）、四种意境、余韵环绕缩放放灯。
+- **真实浏览器验收**：Edge headless + CDP 派发真实鼠标事件，29/29 项通过、0 运行时错误。覆盖启动与 WebGL、片头字形实际像素、三段拖拽点灯、按住蓄力与万家灯火、六笔逐笔推进、词意与余韵完成、环绕拖拽 yaw 0→1.92、滚轮缩放 0.89↔1.0、四种意境切换、暂停冻结虚拟时钟与继续、静音 aria-pressed、竖屏 390×844 DPR 封顶 2、连续两次重播状态归零、单 rAF 循环。证据 `tmp/chuan-qa/report-full.json` 与 16 张截图。
+- **本轮修复**：模块截断导致的全白页；实心灰楔光柱改自定义 shader 柔化；松林悬空；顶部提示与意境按钮重叠；片头字形暗底不可见；描红引导线早于输入就绪；`?fast` 未作用于 wait/tween；地平线硬边、远山黑墙、月轮叠在地面（天空穹顶收敛雾色 + 世界空间山脊带 + 恢复深度测试）；竖屏布局重排。
+- **Node 测试**：`battle_hanzi_story_catalog` 16/16、`battle_hanzi_authored_protocol` 46/46、其余汉字相关 62/62；`npm run test:battle` 1727/1728。唯一失败 `battle_earth` 政治地图 SHA256 为既有基线问题，剥离本次全部改动后单独复跑仍失败，与「传」无关。
+- **词表**：en/ja/ko 各新增 47 条，`locale:check` 三语 10959 条对齐、0 缺失 0 冗余、errors 0，英文译文零汉字；`missingEnglish: 258` 为既有基线，本次新增 0 项。
+- **2D 回退**（`--disable-webgl`）：4/4 通过、0 运行时错误；先探测 WebGL 可用性再决定是否创建 renderer，禁用时静默走 2D。回退构图本轮修复：下半屏异色矩形、远山与谷地硬边、月轮过大压品牌、孔明灯覆盖顶部 UI、引导线与元素错位。
+- **iframe 协议**：6/6 通过——ready 首发、片头无 written/completed、26 次 translate 请求、written 先于 completed、信封字段正确、双语字幕与 UI 替换实际落地。
+- **未覆盖**：未上传 CDN、未发布、未提交 git；真机移动端与真实音频输出未验证（headless 静音）。详见 [开发日志](devlog/devlog_2026-11-13.md) 与 [设计文档](../hanzi/docs/16_chuan.md)。

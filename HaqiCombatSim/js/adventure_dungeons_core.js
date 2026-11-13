@@ -1,5 +1,6 @@
 import {locationSnapshot,mapCoordinateVersion,migrateLocationCoordinates} from './adventure_coordinates_core.js';
 import {journeyDungeons,towerRecord,validateTowerRecords} from './adventure_dungeon_journeys_core.js';
+import {startDungeonChallenge,validateDungeonChallenges} from './dungeon_challenge_core.js';
 import {createRng,hashSeed} from './rng_core.js';
 import {dressDungeon,dungeonBiome} from './adventure_dungeon_scenery_core.js';
 // Original identities, formations and positions are exported by export_dungeons.py.
@@ -114,7 +115,7 @@ export function enterDungeon(save,content,id,{restart=false}={}){
     save.dungeonRuns??={};const runs=dungeonProgress(save);
     if(!dungeonFor(content,save.zone))save.dungeonReturn=locationSnapshot(save,content);
     else if(runs[save.zone])runs[save.zone].position={...save.position};
-    if(restart||!runs[id])runs[id]={cleared:[]};
+    if(restart||!runs[id]){runs[id]={cleared:[]};if(!save.coopRun)startDungeonChallenge(runs[id],d);}
     const layout=content.worldMaps[id];
     if(d.kind==='tower'){
         const floor=towerRecord(save,id).floor;
@@ -141,6 +142,7 @@ export function leaveDungeon(save,content){
 export function validateDungeons(save,content){
     if(save.cityFallback!==undefined){validateGeneratedCityRoute(save.cityFallback);assert(save.zone===generatedCityDungeonId(save.cityFallback),'自动城市返回记录无效');}
     validateTowerRecords(save,content);
+    validateDungeonChallenges(save,content);
     save.dungeonRuns??={};save.dungeonReturn??=null;
     assert(save.dungeonRuns&&typeof save.dungeonRuns==='object'&&!Array.isArray(save.dungeonRuns),'副本进度无效');
     const position=(p,id)=>{const info=id==='earth'?earthMapInfo(content):content.worldMapIndex.islands[id];return info&&Number.isFinite(p?.x)&&Number.isFinite(p?.y)&&p.x>=0&&p.y>=0&&p.x<=info.w&&p.y<=info.h;};

@@ -1,7 +1,8 @@
 import {HANZI_BATTLE_CARDS} from './hanzi_battle_core.js';
+import {adventureHonors} from './adventure_honors_core.js';
 // Transient presentation data only: never persisted or used to grant rewards.
 export function rewardSnapshot(save) {
-    return {hanziCards:[...(save.hanzi?.questCards||[])],xp:save.xp,level:save.level,inventory:{...save.inventory},cards:{...save.cards},pets:Object.keys(save.pets||{})};
+    return {honors:adventureHonors(save).filter(row=>row.earned).map(row=>row.id),hanziCards:[...(save.hanzi?.questCards||[])],xp:save.xp,level:save.level,inventory:{...save.inventory},cards:{...save.cards},pets:Object.keys(save.pets||{})};
 }
 export function rewardChanges(before,save,content) {
     const items=Object.entries(save.inventory).flatMap(([id,count])=>{
@@ -10,17 +11,23 @@ export function rewardChanges(before,save,content) {
     });
     const cards=Object.keys(save.cards).filter(key=>save.cards[key]>0&&!before.cards[key]).map(key=>({kind:'card',key,count:1,name:content.cards?.[key]?.name||content.cardLibrary?.find(row=>row.key===key)?.name||key}));
     const pets=Object.keys(save.pets||{}).filter(id=>!before.pets.includes(id)).map(id=>({kind:'pet',id,count:1,name:content.pets?.[save.pets[id].speciesId]?.name||save.pets[id].name||'新伙伴'}));
-    return {xp:Math.max(0,save.xp-before.xp),fromLevel:before.level,level:save.level>before.level?save.level:null,items:[...items,...cards,...pets,...(save.hanzi?.questCards||[]).filter(id=>!(before.hanziCards||[]).includes(id)).map(id=>({kind:'dictionary',id,count:1,name:'字卡 · '+HANZI_BATTLE_CARDS[id]}))]};
+    const honors=adventureHonors(save).filter(row=>row.earned&&!(before.honors||[]).includes(row.id)).map(row=>({kind:'honor',id:row.id,count:1,name:row.title,source:row.source}));
+    return {xp:Math.max(0,save.xp-before.xp),fromLevel:before.level,level:save.level>before.level?save.level:null,items:[...items,...cards,...pets,...(save.hanzi?.questCards||[]).filter(id=>!(before.hanziCards||[]).includes(id)).map(id=>({kind:'dictionary',id,count:1,name:'字卡 · '+HANZI_BATTLE_CARDS[id]})),...honors]};
 }
 
 // Compare the existing equipment panel values, without introducing stat formulas.
 // Returns {label,delta,unit} rows for the UI to format with fill('{label} +{delta}{unit}', row).
 export function equipmentGainLines(before,after){
+    return equipmentChangeLines(before,after).filter(row=>row.delta>0);
+}
+
+// Include tradeoffs when changing gear. A loss must never be called an upgrade.
+export function equipmentChangeLines(before,after){
     const previous=new Map(before.map(row=>[row.key,row.value]));
     const order=['fixed','hp','damagePct','resistPct','capacity','pip','gearScore'];
     const rank=row=>order.includes(row.key)?order.indexOf(row.key):order.length;
     return [...after].sort((a,b)=>rank(a)-rank(b)).flatMap(row=>{
         const delta=Math.round((row.value-(previous.get(row.key)??row.value))*100)/100;
-        return row.key!=='penetrationReceive'&&Number.isFinite(delta)&&delta>0?[{label:row.label,delta,unit:row.unit||''}]:[];
+        return row.key!=='penetrationReceive'&&Number.isFinite(delta)&&delta!==0?[{label:row.label,delta,unit:row.unit||''}]:[];
     });
 }

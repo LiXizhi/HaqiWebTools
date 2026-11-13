@@ -23,7 +23,9 @@ import {createIslandTerrainRasterizer} from './island_terrain_rasterizer.js';
 import {islandCompanionNavigation} from './island_companion_navigation.js';
 import {createScheduledTerrainCache} from './terrain_tile_scheduler.js';
 import {socialGesturePose,socialHeadAnchor} from './adventure_social_actions_core.js';
-import {npcHasActiveQuest} from './adventure_npc_core.js';
+import {npcHasActiveQuest,npcPurpose} from './adventure_npc_core.js';
+import {forestCommissionScene} from './forest_commission_core.js';
+import {drawForestCommissionSite} from './view_forest_scene.js';
 import {earthCityNpcMarker} from './adventure_earth_city_config_core.js';
 import {monsterScenePositions,stepMonsterWander,monsterTerritoryWarning,monsterSceneParams} from './adventure_monster_motion_core.js';
 import {drawMonsterTerritory} from './view_monster_territory.js';
@@ -48,6 +50,7 @@ import { createMotionTrail, motionStyle, drawMotionTrail, drawMotionAccessory } 
 import { createStarFollower } from './adventure_star_motion_core.js';
 import { drawMagicStar, starCompanionVisible } from './adventure_star.js';
 import { magicStarStatus } from './adventure_magic_star_core.js';
+import {activeAdventureHonor} from './adventure_honors_core.js';
 import { drawIslandWeather, stepWeatherFade } from './adventure_weather.js';
 import {createEarthEnvironmentPainter} from './adventure_earth_environment.js';
 import { alignCameraOrigin, clampCameraToWorld, createCameraZoom } from './adventure_camera_core.js';
@@ -298,6 +301,7 @@ export function createRenderer(canvas,assets) {
         let phaseTime=perf.enabled?performance.now():0;
         const mark=name=>{if(phaseTime){const now=performance.now();perf.record(world.isEarth?name:name.replace('earth-','island-'),now-phaseTime);phaseTime=now;}};
         const markerFor=markerCache.forState(save,assets.content,world);
+        const forestScene=!title&&!localSecond&&world.zone==='camp'?forestCommissionScene(save):null;
         streetCredit.style.display=world.dungeon?.scene.streetscape?.provenance?.kind==='osm-derived'?'block':'none';
         const {w,h,dpr}=size(graphics.low),t=time/1000,gestureAt=Date.now();bubbleTarget=null;greetingTarget=null;ctx.fillStyle=world.layout?.rules.terrain.ocean||OCEAN_COLOR;ctx.fillRect(0,0,w,h);
         cameraZoom.tick(time,reducedMotion.matches);
@@ -485,7 +489,10 @@ export function createRenderer(canvas,assets) {
             }
             if(o.kind==='landmark'){
                 if(world.languageQuestTarget?.kind==='landmark'&&world.languageQuestTarget.id===o.id)plate(ctx,'语言任务 · '+o.name,o.x,o.y-35,{...PLATE.place,text:'#fff1a3'});
-                if(o.dungeonId&&!o.cityDungeon)drawDungeonEntrance(ctx,o,t,reducedMotion.matches,assets.entranceArt);else if(o.cityHotspot&&!o.streetArt)drawCityHotspot(ctx,o);else if(!world.isEarth&&!o.cityDungeon&&!o.streetArt)drawSignpost(ctx,o.name,o.x,o.y);
+                if(o.forestSite){
+                    drawForestCommissionSite(ctx,assets,o,forestScene?.sites[o.id],(label,x,y,active)=>plate(ctx,label,x,y,active?{...PLATE.place,text:'#fff1a3',stroke:'#d9bd65'}:PLATE.place));
+                    if(forestScene?.sites[o.id]?.active)circleRune(ctx,o.x,o.y,32,reducedMotion.matches?0:t,'#e9d69a');
+                }else if(o.dungeonId&&!o.cityDungeon)drawDungeonEntrance(ctx,o,t,reducedMotion.matches,assets.entranceArt);else if(o.cityHotspot&&!o.streetArt)drawCityHotspot(ctx,o);else if(!world.isEarth&&!o.cityDungeon&&!o.streetArt)drawSignpost(ctx,o.name,o.x,o.y);
                 if(o.cityDungeon&&!world.isEarth){const art=cityEntranceAppearance(o.cityLevel,o.cityNodeEntrance);plate(ctx,o.name,o.x,o.y-art.h/2-17,{...PLATE.place,text:art.color});}
                 else if(!world.isEarth&&o.cityHotspot)plate(ctx,o.name,o.x,o.y+32);
             }
@@ -501,17 +508,23 @@ export function createRenderer(canvas,assets) {
                     ellipse(ctx,o.x,o.y-27,19,28,'#668b76');ellipse(ctx,o.x,o.y-65,14,16,'#efd6ad');
                 }
                 ctx.restore();
-                plate(ctx,o.name,o.x,o.y+19,PLATE.npc);
-                const marker=world.languageQuestTarget?.kind==='npc'&&world.languageQuestTarget.id===o.id?'!':o.earthNpc?earthCityNpcMarker(save,world.city,o.id):markerFor(o.id);
+                const purpose=npcPurpose(assets.content,o);
+                plate(ctx,purpose?`${tr(o.name)} · ${tr(purpose.role)}`:o.name,o.x,o.y+19,PLATE.npc);
+                const forestNpc=forestScene?.phase!=='done'&&forestScene?.goal.kind==='npc'&&forestScene.goal.id===o.id;
+                const marker=world.languageQuestTarget?.kind==='npc'&&world.languageQuestTarget.id===o.id?'!':o.earthNpc?earthCityNpcMarker(save,world.city,o.id):markerFor(o.id)||(forestNpc?(forestScene.phase==='report'?'?':'!'):null);
                 if(marker){text(ctx,marker,o.x,o.y-sh-8+Math.sin(t*3)*3,29,'#fff1a3');}
+                if(forestScene?.npcs[o.id]&&Math.hypot(o.x-save.position.x,o.y-save.position.y)<155)plate(ctx,forestScene.npcs[o.id],o.x,o.y-sh-35,PLATE.place);
             }
             if(o.kind==='mob') {
                 ctx.save();ctx.globalAlpha*=o.sceneState?.opacity??1;
                 const m=o.monster||assets.content.monsters[o.monsterId]||{name:'缺失怪物'};
                 monster(ctx,m,o.x,o.y,t,o.scale,o);
-                if(o.index===0)plate(ctx,tr(m.name)+(o.monster?` · ${m.level}级`:'')+(o.groupSize>1?` · ${tr(`${o.groupSize}只`)}`:'')+(o.blocked?.length?` · ${tr('待迁移')}`:''),o.x,o.y+18,PLATE.mob);
                 const q=currentQuest(save,assets.content),goal=q&&questProgress(save,q).find(g=>g.kind==='defeat'&&g.id===m.goalId&&g.value<g.count);
                 const trackedMob=(o.monsterIds||[o.monsterId]).some(id=>catalogTracksMonster(save,assets.content,assets.content.monsters[id]));
+                if(o.index===0){
+                    const purpose=o.blocked?.length?'待迁移':goal&&questState(save,q.id).accepted?'任务目标':trackedMob?'任务追踪':'练习战术';
+                    plate(ctx,tr(m.name)+(o.monster?` · ${m.level}级`:'')+(o.groupSize>1?` · ${tr(`${o.groupSize}只`)}`:'')+` · ${tr(purpose)}`,o.x,o.y+18,PLATE.mob);
+                }
                 if(o.mode==='warning'){
                     const progress=1-o.alertRemaining/o.alertDuration;
                     const pop=reducedMotion.matches?1:.8+Math.min(1,progress*6)*.2+Math.sin(progress*Math.PI*4)*.06;
@@ -581,7 +594,11 @@ export function createRenderer(canvas,assets) {
                     nameY=heroBottom+21;
                 }
                 if(star.front)drawMagicStar(ctx,star,assets,starLevel);
-                if(!title)plate(ctx,save.name,o.x,nameY,PLATE.hero);
+                if(!title){
+                    plate(ctx,save.name,o.x,nameY,PLATE.hero);
+                    const honor=(save.tacticsRecord||save.dungeonChallengeRecords)?activeAdventureHonor(save):null;
+                    if(honor)plate(ctx,'「'+honor.title+'」',o.x,nameY+21,PLATE.npc);
+                }
                 if(gesturePose){const head=socialHeadAnchor(o);text(ctx,gesturePose.icon,head.x,head.y+9,27,'#fff');}ctx.restore();
             }
             if(o.kind==='pet'){

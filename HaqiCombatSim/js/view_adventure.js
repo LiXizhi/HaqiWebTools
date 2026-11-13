@@ -1,3 +1,7 @@
+import {tacticsNextGoal} from './tactics_progress_core.js';
+import {forestCommissionAvailable,forestCommissionPhase,forestCommissionGoal,FOREST_NPCS} from './forest_commission_core.js';
+import {dungeonFirstReward} from './dungeon_first_rewards_core.js';
+import {readStamina,encounterStaminaCost} from './adventure_stamina_core.js';
 import {QUEST_REGIONS} from './adventure_quest_journal_core.js';
 import {recommendedLanguageQuest,withLanguageQuest} from './language_quest_core.js';
 import {createPetTraitBadges,traitUpgradeText} from './view_pet_traits.js';
@@ -19,11 +23,14 @@ import {dungeonFor} from './adventure_dungeons_core.js';
 import {heroPortrait} from './hero_renderer.js';
 import {openingJourney,openingJourneyActive,openingJourneyTarget,openingJourneyMilestones,openingCompanionEvent} from './opening_journey_core.js';
 import {renderNpcServices} from './view_adventure_npc.js';
-import {npcServices,npcHasActiveQuest} from './adventure_npc_core.js';
+import {npcServices,npcHasActiveQuest,npcPurpose} from './adventure_npc_core.js';
 import {renderGems} from './view_adventure_gems.js';
 import {renderRecharge} from './view_adventure_recharge.js';
 import {renderMembership} from './view_adventure_membership.js';
 import {createCloseButton} from './view_adventure_controls.js';
+import {tacticsFieldCue} from './tactics_field_battle_core.js';
+import {guidanceCard} from './view_adventure_guidance.js';
+import {tacticsReportLines,TACTICS_MILESTONES} from './battle_tactics_journal_core.js';
 import {createEntryEmblem} from './view_entry_brand.js';
 import {attachStatusTooltips} from './view_adventure_status_tooltip.js';
 
@@ -52,6 +59,8 @@ import { renderShop } from './view_adventure_shop.js';
 import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck,catalogStatSnapshot,teachingMode,beginnerTeaching } from './adventure_core.js';
 import {renderCompanionGuide} from './view_companion_guide.js';
 import {campDetourGoal,campDetour} from './camp_detour_core.js';
+import {dungeonEnemyIntentInfo} from './dungeon_tactics_core.js';
+import {dungeonChallengePreview} from './dungeon_challenge_core.js';
 import {openingEnemyIntentInfo} from './opening_training_core.js';
 import {catalogVisibleGoalRows,catalogQuestReady,catalogQuestsForNpc,catalogTalksForNpc,catalogQuestStatus,trackedQuestIds} from './adventure_catalog_quests_core.js';
 import * as U from './combat_unit_core.js';
@@ -500,6 +509,19 @@ function renderHudContents(root,model,cb) {
         if(entries.length)for(const entry of entries)appendTrackerQuest(tracker,entry,save,c,cb,teach);
         else tracker.append(el('h3','','新的魔法旅程'),el('p','',save.visitedTown?'你已完成第一章。和镇上的居民聊聊，或到郊外练习魔法吧。':'你通过了毕业考核！前往营地南边的传送阵，探索哈奇小镇。'),button('前往传送阵',cb.track,'track-button'));
     }
+    if(!model.localSecond&&!dungeon&&!openingJourneyActive(save)&&!campDetourGoal(save)){
+        const goal=tacticsNextGoal(save);
+        if(!goal.complete){
+            const link=button(goal.kind==='lesson'?'和茜茜打怪 · '+goal.done+'/'+goal.total:'实战委托 · '+goal.done+'/'+goal.total,()=>cb.panel('tactics-training'),'tracker-tactics');
+            link.title=goal.title+'：'+goal.body;
+            link.setAttribute('aria-label',tr('战术委托')+'：'+tr(goal.title));
+            tracker.append(el('div','tracker-tactics-goal',link,el('small','',goal.title)));
+        }
+    }
+    if(save.zone==='camp'&&!model.localSecond&&forestCommissionAvailable(save)&&!campDetourGoal(save)&&forestCommissionPhase(save)!=='done'){
+        const goal=forestCommissionGoal(save);
+        tracker.append(el('div','tracker-tactics-goal forest-tracker',button(forestCommissionPhase(save)==='offer'?'森林委托 · 营地急件':'森林委托 · '+goal.label,()=>cb.panel('forest-commission'),'tracker-tactics')));
+    }
     root.append(tracker);
     const nav=el('nav','game-nav');nav.setAttribute('aria-label','游戏菜单');
     for(const [id,label,key]of [['home','家园','home'],['deck','卡包','cards'],['inventory','背包','bag'],['pet','宠物','pet'],['shop','商店','shop']])nav.append(button([icon(key),el('span','',label)],()=>cb.panel(id),'nav-button'));
@@ -748,11 +770,14 @@ export function renderDialogue(root,model,dialog,cb) {
         const talk=pendingQuestTalk(save,q,npc.id);
         if(talk)choices.append(button(talk.label||'我想了解更多魔法',()=>cb.questTalk(q,talk),'primary'));
         if(q&&state.accepted&&!(ready&&q.endNpc===npc.id))choices.append(button(ready?'前往回报任务':'查看任务目标',()=>{cb.close();cb.track();},'secondary'));
-        const services=el('div','dialogue-service-choices');
-        if(npcServices(c,npc).length)services.append(button('查看商品与学习魔法',()=>cb.panel('npc-services',{npc}),'primary'));
-        if(npc.id===36203)services.append(button('查看装备与法杖',()=>cb.panel('inventory'),'secondary'));
-        if(npc.id===36202)services.append(button('看看我的宠物',()=>cb.panel('pet'),'secondary'));
-        if(npc.id===36205||npc.name==='法斯特船长')services.append(button('打开世界地图',()=>cb.panel('worldmap'),'secondary'));
+        const services=el('div','dialogue-service-choices'),purpose=npcPurpose(c,npc);
+        if(purpose){
+            const available=purpose.action!=='tactics'||typeof cb.tactics==='function';
+            content.append(guidanceCard({eyebrow:purpose.role,title:purpose.title,body:purpose.body,footnote:available?'':'请在单人冒险中和茜茜出发打怪。'}));
+            if(available)choices.append(button(purpose.label,()=>purpose.action==='tactics'?cb.tactics():cb.panel(purpose.panel,{npc}),'secondary'));
+        }
+        if(forestCommissionAvailable(save)&&[FOREST_NPCS.giver,FOREST_NPCS.receiver].includes(npc.id)&&!model.localSecond)choices.append(button(forestCommissionPhase(save)==='offer'?'营地急件：接取英语寻物委托':forestCommissionPhase(save)==='done'?'营地补给员：查看下一场挑战':'继续森林补给委托',()=>cb.panel('forest-commission'),'secondary'));
+        if(npcServices(c,npc).length&&purpose?.panel!=='npc-services')services.append(button('查看商品与学习魔法',()=>cb.panel('npc-services',{npc}),'secondary'));
         if(npc.worldObservation){
             services.append(button(npc.worldObservation.label,()=>cb.panel('earthmap'),'secondary'));
         }
@@ -805,7 +830,7 @@ function renderBattleContent(root,model,cb) {
     sound.title=model.soundEnabled?'关闭音效':'开启音效';
     sound.setAttribute('aria-label',sound.title);
     sound.setAttribute('aria-pressed',String(!!model.soundEnabled));
-    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.redMushroom?fill('红蘑菇赛场 · {near} 对 {far}',{near:battle.sides.near.length,far:battle.sides.far.length}).text:battle.monsterTemplates[0].name)),el('div','battle-heading-actions',sound,(()=>{const turn=el('span','badge');setText(turn,'第 {turn} 回合',{turn:battle.turn});return turn;})(),button('撤退',cb.retreat,'secondary small')));
+    const top=el('div','battle-heading',el('div','',el('p','eyebrow',battle.tacticsField?('借用烈火卡组 · '+battle.tacticsField.size+' 对 '+battle.tacticsField.size):'魔法对决'),el('h2','',battle.redMushroom?fill('红蘑菇赛场 · {near} 对 {far}',{near:battle.sides.near.length,far:battle.sides.far.length}).text:battle.monsterTemplates[0].name)),el('div','battle-heading-actions',sound,(()=>{const turn=el('span','badge');setText(turn,'第 {turn} 回合',{turn:battle.turn});return turn;})(),button('撤退',cb.retreat,'secondary small')));
     if(battle.redMushroom&&!model.localDuo&&!battle.finished){const timer=el('span','badge arena-countdown',animating?'施法中…':fill('选牌剩余 {seconds} 秒',{seconds:model.arenaCountdown??30}).text);timer.dataset.arenaCountdown='';root.append(timer);}
     const canvas=retainedCanvas||el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');bindBattleTargeting(canvas,cb.target);
     const blockedMessage=selected?castBlockedMessage(hero,battle.resolved.cards[selected.key],battle.resolved):'';
@@ -828,7 +853,7 @@ function renderBattleContent(root,model,cb) {
     togglePets.hidden=animating||battle.finished||!hero.petDeckSeq?.length;
     const toggleRunes=button(runeCardsOpen?'返回玩家卡':fill('符文卡（{count}）',{count:(model.runeHand||[]).reduce((total,row)=>total+row.count,0)}).text,cb.toggleRunes,'secondary');
     toggleRunes.setAttribute('aria-pressed',String(runeCardsOpen));
-    toggleRunes.hidden=animating||battle.finished||battle.redMushroom;
+    toggleRunes.hidden=animating||battle.finished||battle.redMushroom||!!battle.tacticsField;
     toggleRunes.disabled=!runeCardsOpen&&!model.runeHand?.length;
     const runePager=el('div','battle-hand-actions');
     runePager.hidden=!runeCardsOpen||runePages===1||animating||battle.finished;
@@ -873,14 +898,14 @@ function renderBattleContent(root,model,cb) {
         hand.append(node);
     }
     const pass=button('跳过本回合',cb.pass,'secondary');pass.disabled=animating||battle.finished;
-    if(cb.aiHintsToggle&&!battle.redMushroom){
+    if(cb.aiHintsToggle&&!battle.redMushroom&&!battle.tacticsField){
         const hintIcon=icon('pet');delete hintIcon.dataset.uiIcon;
         const toggle=button(hintIcon,cb.aiHintsToggle,'battle-sound battle-pet-hint-toggle');
         toggle.title=model.aiHintsMuted?'开启本场宠物提示':'关闭本场宠物提示';
         toggle.setAttribute('aria-label',toggle.title);toggle.setAttribute('aria-pressed',String(!model.aiHintsMuted));toggle.disabled=battle.finished;
         sound.parentNode.insertBefore(toggle,sound);
     }
-    root.battlePetHint=createBattlePetHint(model,{el,onDismiss:cb.aiHintDismiss});
+    root.battlePetHint=battle.tacticsField?null:createBattlePetHint(model,{el,onDismiss:cb.aiHintDismiss});
     if(root.battlePetHint)root.append(root.battlePetHint);
     const legalTargets=selected?validTargets(battle,hero,battle.resolved.cards[selected.key]):[];
     const targetEnemy=button('对敌方施法',()=>cb.target(legalTargets[0]?.id),'primary'),targetSelf=button(legalTargets[0]?.id===hero.id?'对自己施法':'对友方施法',()=>cb.target(legalTargets[0]?.id),'primary');
@@ -909,7 +934,7 @@ function renderBattleContent(root,model,cb) {
     top.firstChild.replaceChildren(foes.roster);
     top.classList.add('battle-roster-heading');bottom.classList.add('battle-roster-controls');
     const targets=el('div','battle-party-controls',allies.roster);
-    if(!battle.redMushroom&&battle.monsterTemplates.some(row=>row.speciesId)){
+    if(!battle.redMushroom&&!battle.tacticsField&&battle.monsterTemplates.some(row=>row.speciesId)){
         const catchStock=(model.runeHand||[]).filter(row=>battle.resolved.cards[row.key]?.type==='CatchPet').reduce((sum,row)=>sum+row.count,0);
         const capture=button(catchStock?fill('抓宠符文（{count}）',{count:catchStock}).text:'没有抓宠符文',()=>cb.openRunes?.(),'secondary');
         capture.disabled=animating||battle.finished||hero.hp<=0||!catchStock;
@@ -944,12 +969,13 @@ function renderBattleContent(root,model,cb) {
     }
     if(model.localBattleShared){bottom.querySelector('.battle-actions')?.remove();runePager.remove();hand.hidden=true;}
     root.append(top,canvas,status,...(model.localBattleShared?[]:[hand]),bottom);
-    const intent=openingEnemyIntentInfo(battle);
+    const intent=tacticsFieldCue(battle)||openingEnemyIntentInfo(battle)||dungeonEnemyIntentInfo(battle);
     if(intent&&!animating&&!battle.finished&&!model.localBattlePane){
-        const notice=el('aside','opening-enemy-intent intent-'+intent.kind,el('span','intent-symbol',intent.kind==='guard'?'◇':intent.kind==='charge'?'…':'!'),el('span','',el('small','','对手这一回合'),el('strong','',intent.label)));
-        notice.setAttribute('role','status');notice.setAttribute('aria-label','对手这一回合：'+intent.label);notice.title=intent.detail;top.append(notice);
+        const notice=el('aside','opening-enemy-intent intent-'+intent.kind,el('span','intent-symbol',intent.kind==='guard'?'◇':intent.kind==='charge'?'…':'!'),el('span','',el('small','',battle.tacticsField?'茜茜 · 边打边试':'对手这一回合'),el('strong','',intent.label)));
+        if(!battle.tacticsField){const details=el('details','intent-detail',el('summary','','查看行动分工'),el('p','',intent.detail));notice.append(details);notice.title=intent.detail;}
+        notice.setAttribute('role','status');notice.setAttribute('aria-label',intent.label);top.append(notice);
     }
-    renderCompanionGuide(root,model,cb,{battle:true});
+    if(!battle.tacticsField)renderCompanionGuide(root,model,cb,{battle:true});
     attachStatusTooltips(root,canvas);
     // The centred face passes left clicks to the arena; resolve its right click by bounds.
     root.oncontextmenu=e=>{
@@ -982,6 +1008,10 @@ function renderBattleContent(root,model,cb) {
     const log=el('details','battle-log',el('summary','','战斗记录'),el('div','',...battle.events.filter(e=>['cast','damage','heal','dot','hot','speak','fizzle','capture'].includes(e.type)).slice(-24).map(e=>el('p','',eventLabel(e,battle,assets)))));root.append(log);
     if(battle.finished&&!animating){
         const won=battle.winner==='near';
+        if(battle.tacticsField){
+            root.append(el('div','result-card',el('p','eyebrow',battle.tacticsField.size+' 对 '+battle.tacticsField.size+' · 实战'),el('h2','',won?'拦路怪被打退了！':'再准备一下，重新来！'),el('p','',won?'这次胜利会记入实战记录。':'本场不会扣角色生命和物品。'),button(won?'继续打下一组':'再打一次',cb.practiceNext,'primary'),button('返回森林',cb.finish,'secondary')));
+            return;
+        }
         const rewardLine=el('p','');
         if(battle.redMushroom){setText(rewardLine,battle.winner==null?'本场平局，战绩已更新。':'比赛结束，战绩已更新。');}
         else if(won){
@@ -990,6 +1020,18 @@ function renderBattleContent(root,model,cb) {
             setText(rewardLine,'获得 {xp} 经验 · {coins} 奇豆',{xp,coins});
         }else setText(rewardLine,'已保留你的物品与任务进度。');
         const result=el('div','result-card',el('p','eyebrow',won?'对决胜利':'继续加油'),el('h2','',won?'我们赢了！':'休息一下，再来挑战'),rewardLine,button(battle.redMushroom?'返回红蘑菇赛场':won?'收下奖励':'回到安全地点',cb.finish,'primary'));root.append(result);
+        if(!battle.redMushroom){
+            const challenge=save.dungeonRuns?.[save.zone]?.challenge&&dungeonChallengePreview(save,dungeonFor(assets.content,save.zone),dungeonProgress(save)?.[save.zone],save.pendingEncounter,battle);
+            if(challenge?.complete)result.insertBefore(guidanceCard({eyebrow:'整轮挑战完成',title:challenge.first?'首次通关实绩':challenge.newBest?'刷新个人最快记录':'又一次完成挑战',steps:['累计 '+challenge.turns+' 回合 · 期间失利 '+challenge.defeats+' 次'],footnote:'收下奖励后保存本轮实绩。可从副本入口回看，并从头挑战更少回合。',className:'battle-tactics-result'}),result.lastChild);
+            if(challenge?.complete&&!save.dungeonChallengeRecords?.[save.zone]?.firstRewarded){
+                const reward=dungeonFirstReward(assets.content,save.zone,save.school);
+                const exhausted=encounterStaminaCost(assets.content,save.pendingEncounter?.encounterId)>0&&readStamina(save,assets.content)<=0;
+                if(reward)result.insertBefore(guidanceCard({eyebrow:exhausted?'首通奖励待领取':'首通装备',title:reward.item.name,steps:[reward.purpose,reward.level+' 级可装备'],footnote:exhausted?'当前体力不足。本次会保存通关实绩；恢复体力后，再完整挑战一轮即可领取这件装备。':'点击收下奖励，将装备放入背包。打开背包可比较属性并穿戴。',className:'battle-tactics-result'}),result.lastChild);
+            }
+            const report=save.pendingEncounter?.tactics,lines=tacticsReportLines(report);
+            const first=won?TACTICS_MILESTONES.filter(row=>report?.[row.id]&&!save.tacticsRecord?.[row.id]):[];
+            if(lines.length)result.insertBefore(guidanceCard({eyebrow:'本场战术',title:first.length?'首次实绩 · '+first.map(row=>row.title).join('、'):'你的铺垫生效了',steps:lines,footnote:won?'收下奖励后，这场胜利的战术实绩会记入茜茜的战术手册。':'这次先看看哪些配合生效，再调整下一场的出牌。',className:'battle-tactics-result'}),result.lastChild);
+        }
         if(model.aiReview){
             const review=model.aiReview,p=review.presentation;
             result.querySelector('h2').textContent=p.headline;

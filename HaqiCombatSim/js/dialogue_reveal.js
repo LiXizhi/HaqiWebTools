@@ -6,7 +6,7 @@ function complete(row){row.animate=false;const pending=revealing.get(row.node);r
 // Learning chats reveal translations after the original; quest instructions may remain visible.
 export function createDialogueReveal({reduced=()=>globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches??true,stepMs=30,onUpdate=()=>{},showTranslationImmediately=false}={}){
     let timer=null,rows=[];
-    function finish(){const changed=rows.length>0;clearTimeout(timer);timer=null;for(const row of rows){if(row.animate)row.node.textContent=row.text;if(row.translation)row.translation.hidden=false;if(row.container)row.container.hidden=false;complete(row);}rows=[];if(changed)onUpdate();}
+    function finish(){const changed=rows.length>0;if(timer!=null)clearTimeout(timer);timer=null;for(const row of rows){if(row.animate)row.node.textContent=row.text;if(row.translation)row.translation.hidden=false;if(row.container)row.container.hidden=false;complete(row);}rows=[];if(changed)onUpdate();}
     function start(nodes){finish();rows=nodes.filter(Boolean).map(value=>value.node?value:{node:value}).map(({node,translation,container})=>({node,translation,container,text:node.textContent,chars:Array.from(node.textContent||''),animate:!node.childElementCount}));
         for(const row of rows){let resolve;const promise=new Promise(done=>resolve=done);revealing.set(row.node,{promise,resolve,finish});}
         if(reduced()){finish();return;}

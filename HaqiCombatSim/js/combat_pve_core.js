@@ -6,6 +6,7 @@ import {earthEncounter} from './adventure_earth_core.js';
 import {dailyBuffParams} from './language_daily_buff_core.js';
 import {applyDungeonLanguageBuff,dungeonLanguageParams} from './adventure_dungeon_language_core.js';
 import { SimpleBot } from './combat_policy_core.js';
+import {dungeonTacticsMonsters,dungeonTacticPick} from './dungeon_tactics_core.js';
 import {openingTrainingMonsters} from './opening_training_core.js';
 import {ReasoningBot} from './battle_ai/policy_core.js';
 import {appendThreat,advanceThreat,threatTarget} from './combat_threat_core.js';
@@ -168,6 +169,7 @@ function fromPool(a,u,pool) {
 // mob_server.lua L4759–5040: independent before/normal/after sequences, then HP genes, then pool.
 export function pickMonsterCard(a,u,phase='normal') {
     const memory=u.aiMemory,m=u.template,round=phase==='normal'?++memory.round:(phase==='before'?memory.round+1:memory.round);
+    if(m.dungeonTactic){if(phase!=='normal')return null;memory.lastHp=u.hp;return dungeonTacticPick(m,round,a.resolved.cards);}
     const suffix=phase==='before'?'-':phase==='after'?'+':'';
     const candidates=m.sequences.filter(rows=>rows.some(r=>String(r.round).endsWith(suffix) && (suffix || !/[+-]$/.test(r.round))));
     const indexKey=`sequence_${phase}`;
@@ -377,7 +379,7 @@ export function playPveRound(a,decision) {
 export function restorePveBattle(dataset,content,checkpoint) {
     const encounter=content.encounters.find(e=>e.id===checkpoint.encounterId)||earthEncounter(content,checkpoint.encounterId);
     if(!encounter&&!checkpoint.monster)throw new Error('存档中的战斗地点不存在');
-    const templates=openingTrainingMonsters(checkpoint.dungeonMonsterIds?checkpoint.dungeonMonsterIds.map(id=>content.monsters[id]):[checkpoint.monster||content.monsters[encounter.monsterId]],checkpoint);
+    const templates=dungeonTacticsMonsters(openingTrainingMonsters(checkpoint.dungeonMonsterIds?checkpoint.dungeonMonsterIds.map(id=>content.monsters[id]):[checkpoint.monster||content.monsters[encounter.monsterId]],checkpoint),checkpoint);
     const a=createPveBattle({dataset,wordCards:checkpoint.wordCards,localHumans:checkpoint.localHumans,player:checkpoint.player,monsters:stampBattleMonsters(templates,content,dataset),monsterSlots:checkpoint.dungeonMonsterSlots,seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,ownedPets:checkpoint.ownedPets||[],threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion,dispelRulesVersion:checkpoint.dispelRulesVersion,specialCardRulesVersion:checkpoint.specialCardRulesVersion,captureRulesVersion:checkpoint.captureRulesVersion,petTraitRulesVersion:checkpoint.petTraitRulesVersion,monsterTraits:checkpoint.monsterTraits,petTraitParams:checkpoint.petTraitParams,monsterStatsVersion:checkpoint.equipmentStatsVersion>=2?1:0,languageBuff:checkpoint.languageBuff,languageBuffLimits:checkpoint.dailyLanguageVersion===1?dailyBuffParams(content):dungeonLanguageParams(content)});
     a.replaying=true;for(const decision of checkpoint.decisions)playPveRound(a,decision);a.replaying=false;
     for(const [seq,row] of Object.entries(a.sides.near[0].wordCards||{}))if(a.sides.near[0].deckMap[seq]===1&&checkpoint.wordCards.activated.includes(row.id))activateWordCard(a.sides.near[0],Number(seq));

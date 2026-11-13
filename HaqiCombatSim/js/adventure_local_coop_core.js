@@ -103,6 +103,10 @@ export function settleLocalBattle(saves,formation,content,battle,pending,{retrea
         const near=battle.sides.near.filter(u=>u.id===human||u.id===`local-pet-${owner}`).map(u=>({...u,id:u.id===human?'hero':formation.slots.find(v=>v?.owner===owner&&v.kind==='pet')?.id}));
         const view={...battle,...resources,sides:{...battle.sides,near},unitsById:{...battle.unitsById,hero},captured:resources.captured,capturedTraits:resources.capturedTraits};
         s.pendingEncounter={...structuredClone(pending.base),runes:resources.runes,runeUsed:resources.runeUsed,petIds:near.filter(u=>u.speciesId).map(u=>u.id)};
+        if(pending.checkpoint?.tactics){
+            s.pendingEncounter.decisions=structuredClone(pending.checkpoint.decisions);
+            s.pendingEncounter.tactics=structuredClone(pending.checkpoint.tactics);
+        }
         const oldRuns=s.dungeonRuns,oldReturn=s.dungeonReturn;
         if(owner)Object.assign(s,structuredClone(leaderContext));
         if(retreat){settleParty(s,content,view,{retreat:true});applyAction(s,content,{type:'retreat'});}else settleEncounter(s,content,view,{now});

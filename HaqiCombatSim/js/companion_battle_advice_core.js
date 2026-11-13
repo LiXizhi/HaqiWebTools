@@ -4,6 +4,7 @@ import {openingEnemyIntentInfo} from './opening_training_core.js';
 import {canCast,isAlive,selectableCards} from './combat_unit_core.js';
 import {runeCardsInHand} from './combat_pve_core.js';
 import {castBlockedMessage} from './adventure_cast_feedback_core.js';
+import {cardTacticAdvice} from './battle_tactics_core.js';
 
 const handRows=battle=>[...selectableCards(battle.sides.near[0]),...runeCardsInHand(battle)];
 export function companionSelectedAdvice(battle,selected,discarded=[]){
@@ -22,7 +23,8 @@ export function companionSelectedAdvice(battle,selected,discarded=[]){
   return {text:practice?subject+'受伤了。先点亮起的头像，再完成英语互动。':'这张牌可以帮'+subject+'恢复生命。',blocked:false,practice,suggestedTargetId:injured.id};
  }
  if(hero.wordCards?.[selected.seq]&&!hero.wordCards[selected.seq].activated)return {text:'点亮着的目标，再完成英语互动，这张语言卡才能出招。',blocked:false,practice:true};
- return {text:card.type==='CatchPet'?'点亮着的怪物尝试捕捉；不是每次都能成功。':'牌选好了。现在点亮着的目标，才会出招。',blocked:false,practice:false};
+ const tactic=cardTacticAdvice(battle,hero,card,targets);
+ return {...tactic,text:tactic?.text||(card.type==='CatchPet'?'点亮着的怪物尝试捕捉；不是每次都能成功。':'牌选好了。现在点亮着的目标，才会出招。'),blocked:false,practice:false};
 }
 
 // Only reason about currently visible, legal cards. Never choose a move for the player.

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {GlobalRewardNotice} from '../js/view_global_reward.js';
-import {equipmentGainLines} from '../js/adventure_reward_feedback_core.js';
+import {equipmentGainLines,equipmentChangeLines} from '../js/adventure_reward_feedback_core.js';
 import {setTranslator} from '../js/locale_runtime.js';
 
 test('global rewards queue above UI and auto-hide without closing or focusing it',t=>{
@@ -58,4 +58,12 @@ test('equipment feedback puts the new card and useful gains before secondary sch
  const after=before.map(r=>({...r,value:r.value+1}));const original=JSON.stringify(after);
  assert.deepEqual(equipmentGainLines(before,after).slice(0,2).map(r=>r.label),['装备附加牌','最大生命']);
  assert.equal(JSON.stringify(after),original);
+});
+
+test('changing equipment reports gains and losses without mutating the comparison',()=>{
+    const before=[{key:'hp',value:200},{key:'damagePct',value:8},{key:'capacity',value:24}];
+    const after=[{key:'hp',label:'最大生命',value:180},{key:'damagePct',label:'本系攻击',value:10,unit:'%'},{key:'capacity',label:'卡包容量',value:24}];
+    assert.deepEqual(equipmentChangeLines(before,after),[{label:'最大生命',delta:-20,unit:''},{label:'本系攻击',delta:2,unit:'%'}]);
+    assert.deepEqual(equipmentGainLines(before,after),[{label:'本系攻击',delta:2,unit:'%'}]);
+    assert.equal(before[0].value,200);assert.equal(after[0].value,180);
 });

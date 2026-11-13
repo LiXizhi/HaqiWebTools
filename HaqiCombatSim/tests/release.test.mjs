@@ -186,8 +186,11 @@ test('release hashes all runtime data, is repeatable, and distinguishes previews
     }
 });
 
-test('verified release copies only its entry wrappers into sibling Maisi and apps checkouts', async () => {
+test('verified release copies only its entry wrappers into sibling Maisi and apps checkouts', async t => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'haqi-maisi-sync-'));
+    // Discovery must stay inside the fixture even on machines with real ancestor checkouts.
+    const exists = fs.existsSync;
+    t.mock.method(fs, 'existsSync', file => path.resolve(file).startsWith(path.resolve(root) + path.sep) && exists(file));
     try {
         const projectRoot = path.join(root, 'ParaEngine/paraworld/web/HaqiCombatSim');
         const releaseDir = path.join(projectRoot, 'release');

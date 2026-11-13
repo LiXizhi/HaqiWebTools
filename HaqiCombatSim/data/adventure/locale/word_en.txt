@@ -1395,3 +1395,6 @@
 房子||house,houses,housed,housing
 后面||behind
 脸||face,faces,faced,facing
+靴子||boot,boots
+便签||note,notes
+帐篷||tent,tents

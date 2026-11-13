@@ -22,7 +22,7 @@ export function createDungeonStory({root,getState,award,onDone,onLogin=()=>{},vo
     let session=null;
     const view=viewFactory(root,{login:()=>{const s=session;if(s&&valid(s))onLogin({dungeon:s.d,index:s.index});},start,finish,cancel,next,skip:()=>complete(),read,isRecording:()=>['connecting','recording'].includes(session?.phase)});
     const valid=s=>session===s&&!s.abort.signal.aborted&&getState().save===s.save&&getState().save.zone===s.d.id&&getState().owner===s.owner&&getState().role===s.role;
-    function timers(s){clearTimeout(s?.timer);}
+    function timers(s){if(s?.timer!=null)clearTimeout(s.timer);}
     function close(){const s=session;session=null;timers(s);s?.abort.abort();void speech.dispose();if(s)view.close();}
     function complete(){const s=session;if(!s)return;close();onDone(s.d);}
     function paint(message=''){
@@ -76,7 +76,7 @@ export function createDungeonStory({root,getState,award,onDone,onLogin=()=>{},vo
     async function read(row=null){
         const s=session;if(!s||!valid(s)||!s.owner||!s.practice||!['ready','waiting','failed','awarded','capped'].includes(s.phase))return;
         const selected=row&&s.d.story.includes(row)?row:s.row;
-        const previous=s.phase;clearTimeout(s.timer);
+        const previous=s.phase;if(s.timer!=null)clearTimeout(s.timer);
         const text=storyText(selected,s.locale);if(s.locale!=='zh-CN'&&text===selected.text)return;
         await speech.speak({speaker:selected.role==='player'?s.save:selected,text,locale:s.locale,signal:s.abort.signal,valid:()=>valid(s),
             onState:phase=>{s.phase=phase;paint('正在朗读…');},onError:error=>paint(error.message),onDone:()=>{s.phase=previous;paint();}});

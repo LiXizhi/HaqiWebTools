@@ -3,7 +3,10 @@ import {createPetInstance} from '../js/adventure_pet_interactions_core.js';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {installExpansion} from '../js/adventure_expansion_core.js';
-import {createAdventure,beginEncounter,playerSpec} from '../js/adventure_core.js';
+import {createAdventure,beginEncounter,playerSpec,parseSave} from '../js/adventure_core.js';
+import {useCard} from '../js/combat_cards_core.js';
+import {captureBattlePresentation} from '../js/view_battle_presentation.js';
+import {recordTacticsRound} from '../js/battle_tactics_journal_core.js';
 import {settleLocalBattle,createLocalFormation,moveLocalSeat,localParty,localHumanResources,createLocalReady,fitLocalCamera,constrainLocalPosition,wideEnough} from '../js/adventure_local_coop_core.js';
 import {restorePveBattle,playPveRound} from '../js/combat_pve_core.js';
 import {startRedMushroom,playRedMushroom,restoreRedMushroom} from '../js/adventure_red_mushroom_core.js';
@@ -89,6 +92,24 @@ test('local resources reject malformed checkpoints and settlement retry cannot r
     assert.deepEqual(settleLocalBattle(next,formation,content,b,pending,{now:2}),next);
     const retreated=settleLocalBattle(ss,formation,content,b,{base:cp,receipt:'local:retreat'},{retreat:true});
     assert.deepEqual(settleLocalBattle(retreated,formation,content,b,{base:cp,receipt:'local:retreat'},{retreat:true}),retreated);
+});
+
+test('a shared real combo belongs to both local roles and survives settlement retry and save parsing',()=>{
+    const cp=checkpoint(),ss=saves(),formation=createLocalFormation(['a','b'],ss),b=restorePveBattle(dataset,content,cp);
+    const actor=b.unitsById.hero,target=b.sides.far[0];
+    actor.charms=[Number(b.resolved.cards.Fire_FireDamageBlade.params.charms)];
+    target.wards=[{id:Number(b.resolved.cards.Fire_FireDamageTrap.params.wards)}];
+    actor.accuracy=100;
+    const playback=captureBattlePresentation(b,()=>useCard(b,actor,b.resolved.cards.Fire_SingleAttack_Level0_45,target));
+    cp.decisions.push({pass:true});recordTacticsRound(cp,b,playback);
+    assert.equal(cp.tactics.combo,1);assert.equal(cp.tactics.teamCombo,1);
+    b.finished=true;b.winner='near';
+    const pending={base:checkpoint(),checkpoint:cp,receipt:'local:tactics-receipt'},next=settleLocalBattle(ss,formation,content,b,pending,{now:1});
+    for(const save of next){
+        assert.equal(save.tacticsRecord.combo,1);assert.equal(save.tacticsRecord.teamCombo,1);
+        assert.deepEqual(parseSave(save,content).tacticsRecord,save.tacticsRecord);
+    }
+    assert.deepEqual(settleLocalBattle(next,formation,content,b,pending,{now:2}),next);
 });
 test('gathering is deterministic, daily deduplicated across roles, and splits odd proceeds without loss',()=>{
     const params=defaultParams('kids').adventure,config=read('adventure/gathering.json');

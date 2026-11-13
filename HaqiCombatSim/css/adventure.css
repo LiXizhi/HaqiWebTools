@@ -638,6 +638,11 @@
 .equipment-modal .modal-header .equipment-wallet{flex:1;justify-content:center;gap:24px;margin:0;padding:0;font-size:12px;white-space:nowrap}
 .equipment-profile{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
 .equipment-identity{min-width:0;text-align:left}
+.adventure-honor{display:inline-block;margin:4px 0;color:#77501c;font-weight:800;border:1px solid #bd9652;border-radius:12px;background:#fff2c7;padding:3px 10px}
+.adventure-honors{margin-top:8px;max-width:360px;text-align:left;font-size:12px}
+.adventure-honors summary{cursor:pointer;min-height:32px;display:list-item;padding:6px 2px;box-sizing:border-box;color:#345a43;font-weight:700}
+.adventure-honors p{margin:6px 0;line-height:1.6;overflow-wrap:anywhere}
+.adventure-honors .honor-earned{color:#52641c}
 .equipment-name-row{display:flex;align-items:center;gap:4px;min-width:0}
 .equipment-name-row h3{margin:0;min-width:0;overflow-wrap:anywhere}
 .haqi-app .equipment-edit{flex:none;margin:0;padding:0 2px;min-width:0;min-height:0;border:0;border-radius:0;background:transparent;box-shadow:none;color:#8a7350;font:inherit;font-size:14px;line-height:1;opacity:.72}
@@ -714,7 +719,7 @@
 @media(max-width:600px){
  .modal.quest-journal-modal{height:90dvh}
  .modal.quest-journal-modal .modal-body{padding:10px}
- .journal-layout{grid-template-columns:minmax(0,1fr);grid-template-rows:155px minmax(0,1fr);gap:10px}
+ .journal-layout{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(155px,35%) minmax(0,1fr);gap:10px}
  .journal-sidebar{padding:0;border-right:0;border-bottom:1px solid var(--line)}
  .journal-chapter{padding:2px 4px 7px}
  .journal-directory{padding:4px 0}
@@ -801,7 +806,7 @@
  .quest-journal-modal .modal-header h2{font-size:20px}
  .journal-filters{gap:4px;flex:1}
  .journal-filters select{width:0;flex:1;padding:6px 2px;font-size:12px}
- .journal-layout{grid-template-rows:minmax(170px,36%) minmax(0,1fr)}
+ .journal-layout{grid-template-rows:minmax(200px,38%) minmax(0,1fr)}
  .journal-entry-text{display:grid;gap:2px}
  .journal-pagination{padding:4px 0}
 }
@@ -1147,6 +1152,9 @@
 .companion-guide-card{max-height:calc(100dvh - 230px);overflow:auto}
 .battle-controls>.companion-guide.in-battle{position:relative;inset:auto;grid-column:1 / -1;justify-self:center;max-width:100%;z-index:1}
 .companion-guide.in-battle .companion-guide-toggle{min-height:40px;font-size:13px}
+.battle-controls>.companion-guide.in-battle .companion-guide-toggle{max-width:min(660px,calc(100vw - 28px));text-align:left;white-space:normal;gap:8px}
+.companion-guide.in-battle .companion-guide-preview{display:grid;gap:2px;line-height:1.4}
+.companion-guide.in-battle .companion-guide-preview small{font-size:11px;opacity:.8}
 .companion-guide.in-battle .companion-guide-toggle .pet-sheet{width:32px!important;height:32px!important}
 .companion-guide.in-battle.guide-expanded>.companion-guide-toggle{display:none}
 .battle-layer .battle-controls .companion-guide.in-battle .companion-guide-card{position:relative;inset:auto;width:min(660px,calc(100vw - 28px));max-height:none;display:grid;grid-template-columns:36px minmax(0,1fr) auto;align-items:center;gap:8px;padding:4px 38px 4px 4px;margin:0;color:var(--ink,#433824)}
@@ -1160,6 +1168,7 @@
 @media(max-width:600px){.battle-layer .battle-controls .companion-guide.in-battle .companion-guide-card{grid-template-columns:28px minmax(0,1fr);gap:3px 7px}.battle-layer .companion-guide.in-battle .companion-guide-card>button:not(.close-button){grid-column:2;grid-row:2;justify-self:start}.battle-layer .companion-guide.in-battle .companion-guide-speaker .pet-sheet{width:28px!important;height:28px!important}}
 @media(max-height:500px){.companion-guide.in-battle .companion-guide-card p{font-size:14px}.companion-guide.in-battle .companion-guide-card>button:not(.close-button){font-size:14px;min-height:40px}}
 @media(max-width:600px){.companion-guide{bottom:112px}.companion-guide.in-battle .companion-guide-toggle span{display:none}.companion-guide.in-battle .companion-guide-card{width:230px;bottom:64px}.companion-guide-toggle .pet-sheet{width:44px!important;height:44px!important}}
+@media(max-width:600px){.companion-guide.in-battle .companion-guide-toggle .companion-guide-preview{display:grid}.companion-guide.in-battle .companion-guide-preview>span{display:block}.companion-guide.in-battle .companion-guide-toggle{font-size:12px}}
 .opening-enemy-intent{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:min(540px,80vw);text-align:center;background:#fff5dc;color:#513c1a;border:1px solid #c5a15d;border-radius:12px;padding:9px 14px;font-size:15px;pointer-events:none}
 
 .opening-enemy-intent{display:flex;align-items:center;justify-content:center;gap:10px;width:max-content;max-width:min(420px,80vw);box-sizing:border-box;margin-top:8px;padding:8px 16px;}
@@ -1253,3 +1262,95 @@
  .companion-practice-layer .modal-body:has(.practice-recovery) .practice-recovery{grid-column:2;grid-row:2;align-self:end;text-align:center}
  .companion-practice-layer .modal-body:has(.practice-recovery)>.primary{grid-column:2;grid-row:3;align-self:start;justify-self:center;min-height:48px;width:100%;max-width:260px;font-size:14px;padding:12px 22px;white-space:normal}
 }
+.adventure-guidance{display:grid;gap:6px;padding:12px 14px;margin:10px 0;border:1px solid #b9cba4;border-radius:12px;background:linear-gradient(135deg,#fffbed,#edf4df);color:#314b32;min-width:0;overflow-wrap:anywhere}
+.adventure-guidance-eyebrow{font-size:11px;font-weight:700;letter-spacing:.04em;color:#607448}
+.adventure-guidance-title{font-size:15px;line-height:1.4}
+.adventure-guidance-body,.adventure-guidance p{margin:0;line-height:1.6;font-size:13px}
+.adventure-guidance-steps{margin:0;padding-left:1.4em;display:grid;gap:6px;font-size:13px;line-height:1.6}
+.adventure-guidance-footnote{font-size:12px;line-height:1.5;color:#59654f}
+.equipment-change-list{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;margin:0;font-size:13px;line-height:1.5}
+.equipment-change-list dd{margin:0;font-weight:700}.equipment-change-list .stat-gain{color:#287148}.equipment-change-list .stat-loss{color:#a04435}
+.reward-popup:has(.equipment-change-list){max-height:min(78dvh,620px);overflow-y:auto}
+.reward-popup>.adventure-guidance{grid-column:1/-1;margin:0}
+.reward-popup .adventure-guidance-title{font-size:15px}.reward-popup .adventure-guidance p{font-size:13px;font-weight:400}.reward-popup .adventure-guidance small{min-height:0}
+.tactics-lesson-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px}
+.tactics-lesson{display:grid;gap:10px;padding:16px;border:1px solid #becda9;border-radius:12px;background:#f4f5df}
+.tactics-lesson h3,.tactics-lesson p{margin:0}.tactics-lesson p{line-height:1.65}.tactics-lesson small{color:#596c48}
+.tactics-field{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0}
+.tactics-team h3{font-size:14px;margin:4px 0 8px}.tactics-units{display:grid;gap:8px}
+.tactics-unit{display:grid;gap:4px;min-height:72px;padding:10px;text-align:left;border:1px solid #a8b690;border-radius:10px;background:#f7f6e9;color:#30432e}
+.tactics-unit.acting{outline:3px solid #a87d24;outline-offset:1px}.tactics-unit small{font-size:12px;line-height:1.5}
+.tactics-unit.available{background:#edf4dd;border-color:#5a8040}.tactics-target-hint{font-weight:700;color:#3f6a34}.tactics-unit:focus-visible{outline:3px solid #4c783b;outline-offset:2px}
+.tactics-unit:disabled{opacity:1;cursor:default}.tactics-feedback{padding:10px 12px;background:#e6eed9;border-radius:8px;line-height:1.65;min-height:3em}
+.tactics-step{font-weight:700;color:#53652d}.tactics-actions{display:flex;flex-wrap:wrap;gap:10px}
+.tactics-cards{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:10px;overflow:visible!important}
+.tactics-cards .practice-card{width:100%;min-width:0}.tactics-cards canvas{max-width:100%;height:auto}
+@media(max-width:560px){.tactics-field{gap:8px}.tactics-unit{padding:8px;font-size:12px}.tactics-unit small{font-size:11px}.tactics-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Tactics receipts share the same paper and ink as NPC guidance. */
+.battle-layer .result-card{top:50%;box-sizing:border-box;max-height:calc(100dvh - 32px);overflow-y:auto}
+.result-card .battle-tactics-result{margin:14px 0;text-align:left}
+.result-card .battle-tactics-result .adventure-guidance-title{font-size:16px}
+.result-card .battle-tactics-result p,.result-card .battle-tactics-result li{font-size:12px}
+.opening-enemy-intent:has(.intent-detail){flex-wrap:wrap}
+.opening-enemy-intent .intent-detail{flex-basis:100%;pointer-events:auto;font-size:12px;line-height:1.5}
+.intent-detail summary{cursor:pointer;min-height:32px;display:flex;align-items:center;justify-content:center;color:#4b6539}
+.intent-detail p{margin:0;max-height:25dvh;overflow-y:auto;text-align:left}
+
+.tracker-tactics-goal{margin-top:10px;padding-top:8px;border-top:1px solid var(--line);display:grid;gap:3px}
+.tracker-tactics,.journal-tactics-link{min-height:36px;text-align:left;border:1px solid #a8b793;border-radius:8px;background:#f3f4df;color:#34513a;padding:6px 9px;font:inherit;cursor:pointer}
+.tracker-tactics-goal small{font-size:11px;color:#61715a;line-height:1.4}
+.journal-tactics-link{flex:none;margin:7px 0;font-size:12px}
+.tracker-tactics:focus-visible,.journal-tactics-link:focus-visible{outline:2px solid #846934;outline-offset:2px}
+/* Forest commissions: illustrated object scenes, with the same dialog chrome. */
+.forest-commission-modal{width:min(820px,calc(100vw - 24px));max-height:calc(100dvh - 32px);display:flex;flex-direction:column}
+.forest-commission-modal>.modal-header{flex:none}
+.forest-commission-modal>.modal-body{overflow:auto;overscroll-behavior:contain;min-height:0;padding:20px 24px 26px}
+.forest-progress{font-size:13px;letter-spacing:.06em;color:var(--muted,#776b58);margin:0 0 12px}
+.forest-speaker{display:flex;align-items:center;gap:16px;line-height:1.75;margin-bottom:16px}
+.forest-speaker>canvas{flex:none;max-width:68px}
+.forest-speaker>p{margin:0}
+.forest-clue{display:flex;gap:14px;align-items:center;justify-content:space-between;padding:14px 18px;border-radius:12px;background:#eee5cb;border:1px solid #c9b98e}
+.forest-english{font-size:clamp(18px,3vw,23px);font-weight:700;line-height:1.6;margin:0;color:#3b4c37}
+.forest-help{margin:10px 0 16px}
+.forest-help>summary{cursor:pointer;min-height:48px;display:flex;align-items:center;color:#536544;text-decoration:underline;text-underline-offset:4px}
+.forest-help>p{line-height:1.7;margin:0 0 14px}
+.forest-scene{position:relative;isolation:isolate;height:290px;overflow:hidden;border:1px solid #bbbe98;border-radius:16px;background:radial-gradient(ellipse at 50% 85%,#a5b77a 0,#c2cba3 46%,#e2dfc2 100%);margin:12px 0}
+.forest-tent-scene>.forest-illustration{position:absolute;left:50%;top:4px;transform:translateX(-50%);max-width:90%;object-fit:contain}
+.forest-commission-modal button{min-height:48px;touch-action:manipulation}
+.forest-object{position:absolute;bottom:12px;display:flex;align-items:center;justify-content:center;width:116px;height:124px;padding:4px;background:#eee6cbdd;border:2px solid #b8a77d;border-radius:12px;cursor:grab}
+.forest-object-hat{left:17%}.forest-object-boots{right:17%}
+.forest-object[aria-pressed=true]{border-color:#506b38;box-shadow:0 0 0 3px #506b3844;background:#fff9df}
+.forest-object>canvas{pointer-events:none;max-width:100%;object-fit:contain}
+.forest-commission-modal [data-scene-drag]{touch-action:none;user-select:none;-webkit-user-select:none}
+.forest-scene:has(.scene-drag-active){overflow:visible;z-index:2}
+.forest-scene .scene-drag-active{z-index:5;cursor:grabbing;transition:none;filter:drop-shadow(0 8px 8px #23351d55)}
+.forest-dropbag,.forest-pouch-item{padding:14px 18px;border:1px dashed #94865f;border-radius:12px;background:#f6f0de;display:flex;gap:14px;align-items:center;line-height:1.6}
+.forest-dropbag{flex-direction:column;align-items:flex-start;gap:4px}
+.forest-dropbag>span{font-size:14px}
+.forest-pouch-item p{margin:4px 0 0}
+.forest-note-scene{height:250px}
+.forest-note{position:absolute;left:calc(50% - 120px);top:50px;width:210px;min-height:145px!important;background:#faf0c9;border:1px solid #a89566;border-radius:4px;padding:14px;display:flex;flex-direction:column;gap:12px;justify-content:center;font-size:15px;font-weight:700;box-shadow:0 5px 12px #38472433}
+.forest-note[hidden]{display:none}
+.forest-note>span{font-family:serif;font-size:19px}
+.forest-rock{position:absolute;left:calc(50% - 110px);top:36px;width:220px;height:190px;border:0;background:transparent;cursor:grab;transition:transform .35s ease}
+.forest-rock>canvas{pointer-events:none;width:100%!important;height:100%!important;object-fit:contain}
+.forest-rock.moved{transform:translateX(180px) rotate(12deg);opacity:.75}
+.forest-rewards{margin:18px 0}.forest-rewards>h3{font-size:16px;margin-bottom:10px}
+.forest-reward{display:flex;align-items:center;gap:14px;padding:10px 14px;margin:8px 0;border:1px solid #c6b98e;border-radius:10px;background:#f8f0d8}
+.forest-reward p{margin:6px 0;font-size:14px;line-height:1.5}
+.forest-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.forest-actions>button{flex:1 1 180px}
+.forest-status:empty{display:none}
+.forest-scene.forest-handover{height:auto;min-height:220px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;padding:16px;align-items:center;justify-items:center}
+.forest-carried-object{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;width:min(100%,150px);min-height:170px;padding:12px 8px;border:2px solid #b8a77d;border-radius:12px;background:#faf0d4;cursor:grab;line-height:1.5}
+.forest-carried-object>canvas{pointer-events:none;max-width:100%;object-fit:contain}
+.forest-carried-note{font:700 16px/1.4 serif;overflow-wrap:anywhere}
+.forest-recipient{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:0;width:100%;min-height:180px;padding:8px;border:2px dashed #617747;border-radius:14px;background:#e4edcb99;text-align:center}
+.forest-recipient>canvas{max-width:100%;object-fit:contain}
+.forest-next-goal{font-size:19px;font-weight:700;margin-top:20px}
+.forest-level-note{border-left:3px solid #9d7b32;background:#efe4c4;padding:12px 16px;line-height:1.7}
+.forest-quest-pouch{padding:14px;border:1px solid #c6b98e;border-radius:12px;margin:10px 0 18px}
+.forest-quest-pouch h3{margin:0 0 10px}.forest-quest-pouch>button{margin-top:10px}
+.forest-tracker .tracker-tactics{white-space:normal;text-align:left;line-height:1.5}
+@media(max-width:520px){.forest-commission-modal{width:calc(100vw - 16px);max-height:calc(100dvh - 16px)}.forest-commission-modal>.modal-body{padding:14px}.forest-commission-modal>.modal-header h2{font-size:19px}.forest-clue{align-items:stretch;flex-direction:column;padding:12px;gap:8px}.forest-speaker{gap:10px;align-items:flex-start}.forest-speaker>canvas{max-width:52px;height:auto!important}.forest-scene{height:260px}.forest-object-hat{left:6%}.forest-object-boots{right:6%}.forest-note-scene{height:245px}.forest-rock.moved{transform:translateX(125px) rotate(12deg)}.forest-actions{flex-direction:column}.forest-actions>button{flex:auto;width:100%}.forest-dropbag,.forest-pouch-item{padding:12px}.forest-quest-pouch .forest-pouch-item{align-items:flex-start}}
+@media(prefers-reduced-motion:reduce){.forest-rock{transition:none}}

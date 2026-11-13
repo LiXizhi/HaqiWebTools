@@ -43,6 +43,17 @@ export function npcServices(content,npc) {
     if(!result.some(r=>r.kind==='shop')&&catalog.shops.some(r=>r.npcId===npc.id))result.push({kind:'shop',id:npc.id,label:'查看商品',gated:false});
     return result;
 }
+// Only describe actions that this client can actually open.
+export function npcPurpose(content,npc) {
+    const id=Number(npc.id),services=npcServices(content,npc);
+    if(id===36200)return {role:'巡逻搭档',title:'和我一起打退拦路怪',body:'我和你一起上！卡组先借给你，边打边试强化、陷阱和护盾。',action:'tactics',label:'和茜茜打怪 · 直接出战'};
+    if(id===36203)return {role:'装备顾问',title:'让新装备真正派上用场',body:'查看装备与法杖，比较生命、伤害、抗性和附加卡牌。穿戴后会显示实际属性变化。',panel:'inventory',label:'比较并穿戴装备'};
+    if(id===36202)return {role:'战宠伙伴',title:'安排下一位出战伙伴',body:'查看已有战宠、出战阵容和喂养状态。不同伙伴与卡牌，适合承担不同的战斗职责。',panel:'pet',label:'查看战宠与出战阵容'};
+    if(id===36205||npc.name==='法斯特船长')return {role:'旅行向导',title:'找到下一处冒险',body:'打开世界地图，查看可前往的岛屿与探索地点。',panel:'worldmap',label:'选择下一处目的地'};
+    if(services.some(row=>row.kind==='mentor'))return {role:'魔法导师',title:'为下一场战斗补充打法',body:'查看可学习的魔法与所需条件。先看卡牌效果，再决定用它来进攻、布置还是保护。',panel:'npc-services',label:'查看可学习的魔法'};
+    if(services.some(row=>row.kind==='shop'&&!row.gated))return {role:'商店',title:'看看这里能补充什么',body:'查看商品、价格与购买条件，再按当前需要选择。',panel:'npc-services',label:'查看商品与价格'};
+    return null;
+}
 export function npcOffers(content,npc) {
     const catalog=content.npcCatalog;
     return npcServices(content,npc).flatMap(service=>service.kind==='shop'

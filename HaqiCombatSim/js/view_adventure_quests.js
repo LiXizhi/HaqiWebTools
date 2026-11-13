@@ -1,3 +1,4 @@
+import {tacticsNextGoal} from './tactics_progress_core.js';
 import {HANZI_BATTLE_CARDS} from './hanzi_battle_core.js';
 import {QUEST_REGIONS,defaultJournalRegion,journalQuestStatus,filterJournalQuests,focusJournalQuest} from './adventure_quest_journal_core.js';
 import {catalogAcceptBlock,catalogVisibleGoalRows,trackedQuestIds} from './adventure_catalog_quests_core.js';
@@ -74,6 +75,11 @@ export function renderQuestJournal(body,model,cb,ui) {
     const counter=el('span','');
     const pager=el('div','journal-pagination');
     const sidebar=el('aside','journal-sidebar',el('div','journal-chapter',el('strong','','任务清单'),counter),list,pager);
+    if(!model.localSecond){
+        const goal=tacticsNextGoal(save),training=button('战术委托 · '+goal.done+'/'+goal.total,()=>cb.panel('tactics-training'),'journal-tactics-link');
+        training.title=tr(goal.title);training.setAttribute('aria-label',tr('战术委托')+'：'+tr(goal.title));
+        sidebar.insertBefore(training,list);
+    }
     const toolbar=el('div','journal-filters');
     function dropdown(name,values,onchange){const control=el('select','');control.setAttribute('aria-label',tr(name));for(const [value,label] of values){const option=el('option','',label);option.value=value;control.append(option);}control.addEventListener('change',()=>onchange(control.value));return control;}
     const region=dropdown('任务所在岛屿',[['','全部地区'],...Object.entries(QUEST_REGIONS)],value=>{filters.region=value;page=0;locate=false;renderList();});

@@ -445,12 +445,13 @@ function roadXZ(u) {
   return { x, z };
 }
 function groundY(x, z) {
-  // 驿道一带（z≈0）平缓便于人物行走；向深处平滑抬升成丘陵。
-  // 抬升曲线经计算保证：在任意俯仰角下地面都高过该处的视线，
-  // 于是地面自己遮住平面尽端，与同色天空无缝相接，永不出现水平硬边或黑带。
+  // 驿道一带（z≈0）平缓便于人物行走；向深处平滑抬升成丘陵，
+  // 但抬升幅度饱和在 2.0 以内 —— 始终低于所有机位高度，
+  // 因此地面尽端的轮廓永远落在真实地平线之下。该处地面已被雾完全染成雾色，
+  // 而天空在地平线以下同样恒等于雾色，两者同色相接，任何画幅都无水平硬边。
   const back = Math.max(0, (-z - 5) / 22);
-  const ridge = Math.pow(back, 1.3) * 1.5;
-  const roll = 0.1 * Math.sin(x * 0.4) * Math.cos(z * 0.35) + Math.min(1, back) * 0.45 * Math.sin(x * 0.11 + 1.2);
+  const ridge = 2.0 * (1 - Math.exp(-back * 0.55));
+  const roll = 0.1 * Math.sin(x * 0.4) * Math.cos(z * 0.35) + Math.min(1, back) * 0.4 * Math.sin(x * 0.11 + 1.2);
   return ridge + roll - 0.4;
 }
 // 共享的柔光贴图：灯晕、星点、流萤都用它，避免方形点与生硬边缘
@@ -677,9 +678,10 @@ function buildWorld() {
           // d.y = 0 即真实地平线；向上渐变到夜穹顶色，向下保持雾色
           float up = clamp(d.y, 0.0, 1.0);
           vec3 col = mix(uBot, uTop, pow(up, 0.55));
-          // 破晓暖光贴地平线之上，向下迅速归零，绝不越过地平线
-          float glow = exp(-pow(max(d.y, 0.0) * 5.2, 2.0)) * smoothstep(-0.02, 0.06, d.y);
-          col += uGlow * glow * (0.03 + 0.3 * uDawn);
+          // 破晓暖光在地平线处严格为 0（与雾色/地面同色），向上平滑绽放，
+          // 因此天空与地面在视线上无缝相接，任何画幅都不产生水平硬边。
+          float glow = smoothstep(0.0, 0.22, d.y) * exp(-pow(max(d.y - 0.2, 0.0) * 3.2, 2.0));
+          col += uGlow * glow * (0.05 + 0.36 * uDawn);
           // 极淡的高空冷辉，避免大片死黑
           col += vec3(0.012, 0.02, 0.035) * pow(up, 2.0);
           gl_FragColor = vec4(col, 1.0);
@@ -694,11 +696,11 @@ function buildWorld() {
 
   // 月轮与星点放在世界空间高处：环绕时它们与山谷保持正确的空间关系
   const glowTex = makeGlowTexture();
-  moonMesh = new THREE.Mesh(new THREE.CircleGeometry(3.6, 48), matMoon);
-  moonMesh.position.set(-22, 26, -74);
+  moonMesh = new THREE.Mesh(new THREE.CircleGeometry(2.5, 48), matMoon);
+  moonMesh.position.set(-30, 9.0, -66);
   moonMesh.renderOrder = -20;
   worldGroup.add(moonMesh);
-  const moonHalo = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.MeshBasicMaterial({
+  const moonHalo = new THREE.Mesh(new THREE.PlaneGeometry(21, 21), new THREE.MeshBasicMaterial({
     map: glowTex, color: '#cfe0f5', transparent: true, opacity: 0.24, blending: THREE.AdditiveBlending, depthWrite: false, fog: false,
   }));
   moonHalo.position.copy(moonMesh.position);
@@ -729,9 +731,9 @@ function buildWorld() {
   // 远山坐落在抬升后的丘陵之上（base 取该处地形高度），
   // 因此山脚被地面遮住，只见峰线浮在雾色之上，不会出现悬空黑块。
   const ridgeLayers = [
-    { z: -52, amp: 1.8, top: 5.4, seed: 11, fade: 0.42 },
-    { z: -78, amp: 2.6, top: 9.6, seed: 23, fade: 0.62 },
-    { z: -110, amp: 3.6, top: 15.5, seed: 37, fade: 0.8 },
+    { z: -52, amp: 1.4, top: 2.6, seed: 11, fade: 0.5 },
+    { z: -78, amp: 2.0, top: 4.6, seed: 23, fade: 0.68 },
+    { z: -110, amp: 2.8, top: 7.2, seed: 37, fade: 0.84 },
   ];
   const ridgeMats = [];
   ridgeLayers.forEach((layer, li) => {
@@ -1687,8 +1689,8 @@ function render3D() {
   });
   // 雾在近景之后才起效；远端距离小于地面尽端，
   // 于是地面在到达平面边缘之前就已完全等于雾色，与天空同色相接。
-  scene.fog.near = lerp(13, 17, W.dawn);
-  scene.fog.far = lerp(62, 74, W.dawn);
+  scene.fog.near = lerp(11, 14, W.dawn);
+  scene.fog.far = lerp(48, 58, W.dawn);
   matMoon.color.copy(moodColor('moon'));
   matMoon.opacity = 0.5 * (1 - W.dawn * 0.6);
   moonMesh.userData.halo.material.opacity = 0.26 * (1 - W.dawn * 0.7);
@@ -1772,7 +1774,7 @@ function render3D() {
     const col = i % 8, row = (i / 8) | 0;
     const lx = -9.5 + col * 2.7 + Math.sin(i * 2.3) * 1.1;
     const lz = -2.0 - row * 4.6 + Math.cos(i * 1.7) * 1.6;
-    const rise = 1.1 + k * (4.6 + row * 1.5);
+    const rise = 0.9 + k * (2.6 + row * 1.1);
     m.position.set(lx + Math.sin(t * 0.5 + i) * 0.35, rise + Math.sin(t * 0.8 + i) * 0.25, lz);
     const grow = Math.min(1, k * 3);
     m.scale.set(1, 1.3, 1).multiplyScalar(grow);

@@ -449,7 +449,7 @@ function groundY(x, z) {
   // 抬升曲线经计算保证：在任意俯仰角下地面都高过该处的视线，
   // 于是地面自己遮住平面尽端，与同色天空无缝相接，永不出现水平硬边或黑带。
   const back = Math.max(0, (-z - 5) / 22);
-  const ridge = Math.pow(back, 1.35) * 4.6;
+  const ridge = Math.pow(back, 1.3) * 1.5;
   const roll = 0.1 * Math.sin(x * 0.4) * Math.cos(z * 0.35) + Math.min(1, back) * 0.45 * Math.sin(x * 0.11 + 1.2);
   return ridge + roll - 0.4;
 }
@@ -590,7 +590,7 @@ function init3D() {
 function buildWorld() {
   scene = new THREE.Scene();
   scene.fog = new THREE.Fog('#0b1220', 16, 104);
-  camera = new THREE.PerspectiveCamera(40, innerWidth / Math.max(1, innerHeight), 0.1, 160);
+  camera = new THREE.PerspectiveCamera(40, innerWidth / Math.max(1, innerHeight), 0.1, 420);
   scene.add(worldGroup);
 
   ambientL = new THREE.HemisphereLight('#9fb4d8', '#0e1420', 0.85);
@@ -694,11 +694,11 @@ function buildWorld() {
 
   // 月轮与星点放在世界空间高处：环绕时它们与山谷保持正确的空间关系
   const glowTex = makeGlowTexture();
-  moonMesh = new THREE.Mesh(new THREE.CircleGeometry(5.2, 48), matMoon);
-  moonMesh.position.set(-34, 58, -118);
+  moonMesh = new THREE.Mesh(new THREE.CircleGeometry(3.6, 48), matMoon);
+  moonMesh.position.set(-22, 26, -74);
   moonMesh.renderOrder = -20;
   worldGroup.add(moonMesh);
-  const moonHalo = new THREE.Mesh(new THREE.PlaneGeometry(46, 46), new THREE.MeshBasicMaterial({
+  const moonHalo = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.MeshBasicMaterial({
     map: glowTex, color: '#cfe0f5', transparent: true, opacity: 0.24, blending: THREE.AdditiveBlending, depthWrite: false, fog: false,
   }));
   moonHalo.position.copy(moonMesh.position);
@@ -710,15 +710,15 @@ function buildWorld() {
   const starPos = new Float32Array(340 * 3);
   for (let i = 0; i < 340; i++) {
     const ang = (r() - 0.5) * 2.1;
-    const rad = 112 + r() * 26;
+    const rad = 76 + r() * 18;
     starPos[i * 3] = Math.sin(ang) * rad;
-    starPos[i * 3 + 1] = 40 + r() * 78;
+    starPos[i * 3 + 1] = 16 + r() * 44;
     starPos[i * 3 + 2] = -Math.cos(ang) * rad;
   }
   const starGeo = new THREE.BufferGeometry();
   starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
   starSys = new THREE.Points(starGeo, new THREE.PointsMaterial({
-    map: glowTex, color: '#cfe0f5', size: 1.5, transparent: true, opacity: 0.8,
+    map: glowTex, color: '#cfe0f5', size: 1.05, transparent: true, opacity: 0.8,
     blending: THREE.AdditiveBlending, depthWrite: false, fog: false, sizeAttenuation: true,
   }));
   starSys.renderOrder = -19;
@@ -729,9 +729,9 @@ function buildWorld() {
   // 远山坐落在抬升后的丘陵之上（base 取该处地形高度），
   // 因此山脚被地面遮住，只见峰线浮在雾色之上，不会出现悬空黑块。
   const ridgeLayers = [
-    { z: -46, amp: 2.2, top: 12.0, seed: 11, fade: 0.4 },
-    { z: -70, amp: 3.2, top: 22.0, seed: 23, fade: 0.6 },
-    { z: -100, amp: 4.4, top: 36.0, seed: 37, fade: 0.78 },
+    { z: -52, amp: 1.8, top: 5.4, seed: 11, fade: 0.42 },
+    { z: -78, amp: 2.6, top: 9.6, seed: 23, fade: 0.62 },
+    { z: -110, amp: 3.6, top: 15.5, seed: 37, fade: 0.8 },
   ];
   const ridgeMats = [];
   ridgeLayers.forEach((layer, li) => {
@@ -1685,9 +1685,10 @@ function render3D() {
     pm.uniforms.uColor.value.copy(moodColor('pine'));
     pm.uniforms.uFog.value.copy(fogC);
   });
-  // 雾在近景之后才起效，远端与天空地平线同色，地面尽端彻底溶掉
-  scene.fog.near = lerp(14, 18, W.dawn);
-  scene.fog.far = lerp(78, 92, W.dawn);
+  // 雾在近景之后才起效；远端距离小于地面尽端，
+  // 于是地面在到达平面边缘之前就已完全等于雾色，与天空同色相接。
+  scene.fog.near = lerp(13, 17, W.dawn);
+  scene.fog.far = lerp(62, 74, W.dawn);
   matMoon.color.copy(moodColor('moon'));
   matMoon.opacity = 0.5 * (1 - W.dawn * 0.6);
   moonMesh.userData.halo.material.opacity = 0.26 * (1 - W.dawn * 0.7);
@@ -1801,6 +1802,10 @@ function render3D() {
   camera.position.set(curCam3D.tx + dx * zoom, curCam3D.ty + dy * zoom, curCam3D.tz + dz * zoom);
   camera.lookAt(curCam3D.tx, curCam3D.ty, curCam3D.tz);
   worldGroup.updateMatrixWorld();
+  // 天空穹顶跟随相机平移（不跟随旋转），保证任何机位都被完整包裹，
+  // 渐变仍按真实视线方向计算，地平线位置恒定。
+  skyMesh.position.copy(camera.position);
+  skyMesh.updateMatrixWorld();
 
   renderer.render(scene, camera);
 }

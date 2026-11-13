@@ -2,7 +2,7 @@
 export function createDialogueVoiceSession(voice){
     let active=null;
     const live=op=>active===op&&!op.signal?.aborted&&op.valid();
-    function clear(op){clearTimeout(op?.timer);}
+    function clear(op){if(op?.timer!=null){clearTimeout(op.timer);op.timer=null;}}
     function dispose(){const op=active;active=null;clear(op);return voice.cancel();}
     async function finish(){
         const op=active;if(!op||!live(op))return;

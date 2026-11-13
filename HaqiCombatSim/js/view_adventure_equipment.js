@@ -1,4 +1,7 @@
 import {magicStarCombatLevel} from './adventure_magic_star_core.js';
+import {forestCommissionPouch} from './forest_commission_core.js';
+import {dungeonFirstRewardSources} from './dungeon_first_rewards_core.js';
+import {adventureHonors,activeAdventureHonor} from './adventure_honors_core.js';
 import {heroPortrait} from './hero_renderer.js';
 import { setText, fill, tr } from './locale_runtime.js';
 import {DetailDialog} from './view_detail_dialog.js';
@@ -34,13 +37,30 @@ export function renderEquipment(body,model,cb,ui) {
         const b=button(label,()=>{if(['upgrade','gems'].includes(id)&&cb.panel){cb.panel(id);return;}state.tab=id;state.slot=0;state.page=0;state.query='';state.item=null;state.guid=null;render();},`secondary ${state.tab===id?'active':''}`);
         b.setAttribute('aria-pressed',String(state.tab===id));tabs.append(b);
     }
-    body.append(tabs,shell);
+    body.append(tabs);
+    if(travel){
+        const items=forestCommissionPouch(save);
+        if(items.length){
+            const pouch=el('section','forest-quest-pouch',el('h3','','委托袋'));
+            for(const item of items)pouch.append(el('div','forest-pouch-item',item.artItem&&c.items[item.artItem]?.art?art(assets,c.items[item.artItem].art,48,56):'',el('div','',el('strong','',item.name),el('p','',item.description))));
+            if(cb.panel)pouch.append(button('查看森林委托',()=>cb.panel('forest-commission'),'secondary'));
+            body.append(pouch);
+        }
+    }
+    body.append(shell);
     const edit=button('✎',()=>openCustomize(edit),'equipment-edit');
     edit.setAttribute('aria-label',tr('修改名字和形象'));
     edit.title=edit.getAttribute('aria-label');
     edit.disabled=!!save.pendingEncounter;
     if(save.pendingEncounter)edit.title=tr('战斗中无法修改名字和形象');
     const identity=el('div','equipment-identity',el('div','equipment-name-row',el('h3','',save.name),edit),el('p','muted',fill(`{v0}学徒 · 等级 {v1}`,{v0:String(SCHOOL_NAMES[save.school]),v1:String(save.level)}).text));
+    const honor=activeAdventureHonor(save),honors=adventureHonors(save);
+    if(honor){const badge=el('p','adventure-honor',honor.title);badge.title=tr(honor.source);identity.append(badge);}
+    const honorList=el('details','adventure-honors'),honorSummary=el('summary','',`冒险荣誉 · ${honors.filter(row=>row.earned).length}/${honors.length}`);
+    honorList.append(honorSummary);
+    for(const row of honors)honorList.append(el('p',row.earned?'honor-earned':'muted',(row.earned?'已获得 · ':'待挑战 · ')+row.title+'：'+row.source));
+    honorList.append(el('p','muted','已获得的最高进度荣誉会展示在场景名牌上。'));
+    identity.append(honorList);
     function openCustomize(trigger){
         const draft={name:save.name,appearance:save.appearance==='girl'?'girl':'boy',headId:resolvedHeadId(save),bodyId:save.bodyId,customHead:save.customHead};
         const dialog=new DetailDialog(body,{el,title:'修改名字和形象',className:'equipment-item-dialog hero-customize-dialog'});
@@ -267,7 +287,8 @@ export function renderEquipment(body,model,cb,ui) {
             else if(!rune)detail.append(el('p','muted','旅途收藏 · 本章暂无主动使用功能'));
         }
         const quests=c.quests.filter(q=>q.rewards.some(group=>group.items.some(row=>row.id===item.id)));
-        if(quests.length)detail.append(el('p','equipment-source',fill(`获取途径：{v0}`,{v0:String(quests.map(q=>q.title).join('、'))}).text));
+        const sources=[...quests.map(q=>q.title),...dungeonFirstRewardSources(c,item.id,save.school)];
+        if(sources.length)detail.append(el('p','equipment-source',fill(`获取途径：{v0}`,{v0:sources.join('、')}).text));
     }
     paintList();
     return {openDetail};

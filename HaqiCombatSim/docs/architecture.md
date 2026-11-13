@@ -1,3 +1,68 @@
+## 2026-11-13 下午：森林委托、实物交互与英语证据
+
+```mermaid
+flowchart LR
+    Save[可选 forestCommission 云白名单字段] --> Core[forest_commission_core 阶段与现场访问校验]
+    Core --> World[真实建筑旁地标及NPC反馈]
+    Core --> View[view_forest_commission 实物寻物 递交 便签]
+    View --> Drag[adventure_scene_drag 指针阈值 取消 落点]
+    Drag --> Intent[动作意图]
+    Intent --> App[adventure_app 当前角色与会话]
+    App --> Tx[persistReward 克隆后变更及本地保存]
+    Tx --> Save
+    Core --> Preview[forest_commission_rewards_core 真实装备差值]
+    Preview --> View
+    View --> Class[借卡课堂 指定课程及返回委托]
+    Tx --> Receipt[明确选物的辅助阅读收据]
+    Receipt --> Learning[forest_commission_learning 身份检查和失败重试]
+    Learning --> WordTree[既有 WordTree 记录与持久化]
+    Battle[真实完整巡逻的新成绩] --> Core
+```
+
+纯核心仅依赖核心模块，不接触DOM、网络或随机数。任务靴和便签由阶段派生，不伪造正式物品；回礼才进入库存。奖励、阶段推进和学习收据先在存档副本上计算，保存成功后替换活动存档，避免写入失败吞掉递交或重复发奖。带学习记录的错误选择也增加存档revision，以供云冲突判断。
+
+世界场景通过 `forestCommissionScene` 和 `view_forest_scene` 使用同一状态显示实际物体、NPC短回应和目标牌；保留既有主线/语言标记优先级。同屏双人不接入这条单角色委托。`forest_commission_learning` 复用WordTree既有词表与练习记录，只提交有帮助的英语阅读，不增加掌握、听说或独立回忆实绩。异步回调核对活动角色；失败保留待提交收据，已提交事件用稳定ID防重。
+
+战术课堂会话新增可选 `returnTo: forest-commission`。指定课与普通入口共用同一保存/重试逻辑；未保存的已完成课堂优先保留，切换角色后的旧回调失效。精英副本备战通过 `dungeonEnemyIntel` 从加载后的真实敌阵派生波数、等级和最大生命，不复制一份可能过期的敌人统计。
+
+本轮新增模块未改变原版伤害公式或角色外观渲染。完整外观换装、中期正式四人路线与真人多人仍是独立待办。
+
+## 2026-11-13：战术学习、实战回执与副本追求
+
+```mermaid
+flowchart LR
+    NPC[茜茜 战术课堂] --> App[adventure_app 会话及角色身份检查]
+    App --> Lesson[tactics_training_core 借卡 实际战斗效果]
+    Lesson --> LessonSave[本地保存成功后 提交课堂记录]
+    HUD[追踪栏 战术委托] --> App
+    Battle[正式战斗 单人或同屏双人] --> Events[战斗表现事件]
+    Events --> Journal[battle_tactics_journal_core 消耗状态回执]
+    Journal --> Pending[pendingEncounter.tactics 跟随决策存档]
+    Pending --> Win[获胜并确认结算]
+    Win --> Record[tacticsRecord 真实组合实绩]
+    Win --> Challenge[dungeon_challenge_core 全程回合与失败记录]
+    Challenge --> Gear[dungeon_first_rewards_core 一次性首通装备]
+    Record --> Honor[adventure_honors_core 派生称号]
+    Challenge --> Honor
+    Honor --> Display[装备册与本人场景名牌]
+```
+
+课堂使用儿童版已有卡牌和实际效果结算；反例在副本状态上演示，未通过步骤不改写接受过的行动。课堂不消费正式卡牌、不发物品，不向正式实绩补记练习。`tactics_progress_core` 从已保存记录派生下一条委托。视图仅渲染和回调，角色切换、退出、保存、云同步仍由应用层负责。
+
+`battle_tactics_core` 在状态副本上计算当前卡牌能否触发已有强化/陷阱/护盾/虚弱；不消耗实际状态或战斗随机数。实绩只统计真实表现事件中的效果消耗与对应伤害，不用预测值代替战斗结果。同屏双人共享本场团队回执，分别通过原结算凭据提交，重复结算不重复增加。
+
+```mermaid
+flowchart LR
+    Enter[新开或重开精英副本] --> Version[pending 战术版本1与副本ID]
+    Version --> Roles[dungeon_tactics_core 强化 陷阱 护盾 虚弱分工]
+    Roles --> Replay[combat_pve_core 既有决策与随机数重放]
+    Roles --> Intent[下一回合计划提示]
+    Old[没有战术版本的旧战斗] --> Exported[原导出AI 保持旧重放]
+    Compare[装备预览与实际穿戴] --> Shared[view_adventure_guidance 共用提示和有符号属性对比]
+```
+
+三组精英敌阵为新增 Web 编排，不宣称是原版 Lua 行为。已有卡牌、物品和数值公式保持来源。挑战成绩仅覆盖新开完整流程；网络协作仍沿用原有进度规则，未混入个人挑战。记录字段均可缺省以兼容旧存档。首通装备按角色学派选用已有 Kids 物品，需最终战可获奖励，保存后只发一次；不自动穿戴。称号由持久化实绩推导，不写虚拟排名或虚构社交数据。
+
 ## 2026-11-12 下午：可选探索与交互提交
 
 ```mermaid

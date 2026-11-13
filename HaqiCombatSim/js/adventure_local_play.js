@@ -5,6 +5,7 @@ import {selectCompanionId} from './adventure_companion_core.js';
 import {assignedKeyboardAction,normalizePlayerInputs} from './player_input_core.js';
 import {createPlayerInput} from './player_input.js';
 import {captureBattlePresentation} from './view_battle_presentation.js';
+import {recordTacticsRound} from './battle_tactics_journal_core.js';
 import {nextBattlePointer} from './battle_pointer_core.js';
 import * as A from './adventure_core.js';
 import * as W from './adventure_world_core.js';
@@ -356,6 +357,7 @@ export function createLocalPlay(api){
             const previous=nextBattlePointer(nextBattle),hp=Object.fromEntries(Object.values(nextBattle.unitsById).map(u=>[u.id,u.hp])),aura=nextBattle.aura?{...nextBattle.aura}:null;
             const playback=captureBattlePresentation(nextBattle,()=>{if(nextMatch){playRedMushroom(nextMatch,joint);nextRecord.pending.replay=structuredClone(nextMatch.replay);}
             else {P.playPveRound(nextBattle,joint);nextRecord.pending.checkpoint.decisions.push(structuredClone(nextBattle.lastDecision));}});
+            if(!nextMatch)recordTacticsRound(nextRecord.pending.checkpoint,nextBattle,playback);
             await writeQueue;await db.write(loadedKey,nextRecord);record=nextRecord;match=nextMatch;
             api.enterBattle(nextBattle);api.presentLocal(playback,previous,hp,aura);
             battleUi.forEach(u=>{u.selected=null;u.discarded=[];});ready.reset(null);api.paintHud();

@@ -327,7 +327,7 @@
       "kind": "elite",
       "island": "town",
       "name": "宝库里的求救灯",
-      "recommendedLevel": 5,
+      "recommendedLevel": 12,
       "sourceId": "dungeon:HaqiTown_FireCavern",
       "partySize": 2,
       "story": [
@@ -407,7 +407,7 @@
       "kind": "elite",
       "island": "town",
       "name": "梦中遗落的羽毛",
-      "recommendedLevel": 7,
+      "recommendedLevel": 10,
       "sourceId": "dungeon:HaqiTown_YYsDream_S1",
       "partySize": 3,
       "story": [
@@ -567,7 +567,7 @@
       "kind": "elite",
       "island": "fire",
       "name": "金库失窃的风铃",
-      "recommendedLevel": 10,
+      "recommendedLevel": 15,
       "sourceId": "dungeon:FlamingPhoenixIsland_GoldenOgreTreasureHouse",
       "partySize": 3,
       "story": [
@@ -807,7 +807,7 @@
       "kind": "elite",
       "island": "ice",
       "name": "冰封的回信",
-      "recommendedLevel": 20,
+      "recommendedLevel": 28,
       "sourceId": "dungeon:Global_FrostRoarIsland_TreasureHouse",
       "partySize": 2,
       "story": [
@@ -887,7 +887,7 @@
       "kind": "elite",
       "island": "ice",
       "name": "风暴中心的罗盘",
-      "recommendedLevel": 22,
+      "recommendedLevel": 35,
       "sourceId": "dungeon:FrostRoarIsland_StormEye",
       "partySize": 4,
       "story": [
@@ -1047,7 +1047,7 @@
       "kind": "elite",
       "island": "desert",
       "name": "绿洲的最后一把钥匙",
-      "recommendedLevel": 30,
+      "recommendedLevel": 40,
       "sourceId": "dungeon:Global_AncientEgyptIsland_TreasureHouse",
       "partySize": 3,
       "story": [
@@ -1287,7 +1287,7 @@
       "kind": "elite",
       "island": "dark",
       "name": "沼泽中的航标",
-      "recommendedLevel": 40,
+      "recommendedLevel": 55,
       "sourceId": "dungeon:DarkForestIsland_MarshNest",
       "partySize": 4,
       "story": [
@@ -1367,7 +1367,7 @@
       "kind": "elite",
       "island": "dark",
       "name": "梦魇尽头的约定",
-      "recommendedLevel": 42,
+      "recommendedLevel": 55,
       "sourceId": "dungeon:HaqiTown_YYsDream_S4",
       "partySize": 2,
       "story": [

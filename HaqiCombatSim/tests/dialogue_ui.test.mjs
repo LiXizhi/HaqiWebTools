@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {bindDialogue} from '../js/view_adventure_dialogue.js';
 import fs from 'node:fs';
 import vm from 'node:vm';
+import {forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS} from '../js/forest_commission_core.js';
 
 test('Sissy starts hands-on practice without awarding talk or closing the practice panel',async()=>{
     const source=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
@@ -42,10 +43,11 @@ test('tracked NPC dialogue executes only one available quest choice and consumes
         const callbacks=Object.fromEntries(['startQuest','finishQuest','startCatalog','finishCatalog'].map(name=>[name,value=>calls.push([name,value.id])]));
         let bound=0;
         const context=vm.createContext({
+            forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS,
             el:element,art:()=>element('canvas'),npcCharacter:()=>null,npcHasActiveQuest:()=>false,fill:()=>({text:'NPC'}),islandName:()=>'',createCloseButton:()=>element('button'),
             currentQuest:()=>scenario.chapter,questState:()=>({accepted:!!scenario.accepted}),questReady:()=>!!scenario.ready,
             catalogStatSnapshot:()=>({}),catalogQuestsForNpc:()=>({accept:scenario.accept||[],claim:scenario.claim||[]}),
-            rewardsFor:()=>[],pendingQuestTalk:()=>null,catalogTalksForNpc:()=>[],npcServices:()=>['shop'],setText(){},
+            rewardsFor:()=>[],pendingQuestTalk:()=>null,catalogTalksForNpc:()=>[],npcPurpose:()=>null,npcServices:()=>['shop'],setText(){},
             button:(label,action)=>({...element('button'),click:action}),dialogueLearningLines:()=>[],bindDialogue:()=>bound++,
         });
         vm.runInContext(renderSource,context);

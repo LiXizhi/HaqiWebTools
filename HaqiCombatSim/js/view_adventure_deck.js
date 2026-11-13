@@ -55,9 +55,9 @@ export function renderDeckEditor(body,{assets,save,shopView,deckAnimationClock='
         }
         canvas.setAttribute('aria-hidden','true');return canvas;
     }
-    function closePreview(){clearTimeout(hoverTimer);detail.hidden=true;previewPinned=false;}
+    function closePreview(){if(hoverTimer!=null)clearTimeout(hoverTimer);detail.hidden=true;previewPinned=false;}
     function inspect(key,removable=false,anchor=null,pinned=true) {
-        clearTimeout(hoverTimer);previewPinned=pinned;
+        if(hoverTimer!=null)clearTimeout(hoverTimer);previewPinned=pinned;
         detail.dataset.previewMode=pinned?'click':'hover';
         detail.setAttribute('role',pinned?'dialog':'tooltip');
         detail.style.width='';detail.style.height='';
@@ -159,7 +159,7 @@ export function renderDeckEditor(body,{assets,save,shopView,deckAnimationClock='
     const dragGhost=el('div','bag-drag-ghost');dragGhost.hidden=true;dragGhost.setAttribute('aria-hidden','true');
     function bindCardGesture(node,key,removable=false,onClick=()=>inspect(key,removable,node)) {
         let timer=null,start=null,suppressClick=false,dragging=false,pointerId=null;
-        const cancel=()=>{clearTimeout(timer);timer=null;};
+        const cancel=()=>{if(timer!=null)clearTimeout(timer);timer=null;};
         const end=()=>{cancel();start=null;dragging=false;dragGhost.hidden=true;dragGhost.remove();slots.classList.remove('dragging');node.classList.remove('dragging');};
         node.onpointerdown=e=>{
             closePreview();

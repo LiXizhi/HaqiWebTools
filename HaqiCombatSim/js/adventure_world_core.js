@@ -1,4 +1,5 @@
 import {earthDecorationIsTree} from './adventure_earth_nature_core.js';
+import {forestCommissionSites} from './forest_commission_core.js';
 import {createPathQueue} from './path_queue_core.js';
 import {streetWalkable,streetSegmentWalkable} from './adventure_city_street_core.js';
 import {streetFindPath} from './adventure_city_navigation_core.js';
@@ -127,6 +128,7 @@ export function createWorld(zone,content,save=null) {
         world.landmarks=[...world.landmarks,...entrances];
         world.trees=world.trees.filter(t=>entrances.every(e=>distance(t,e)>110&&!sceneryCoversActor(t,{...e,label:e.name})));
     }
+    if(save)world.landmarks=[...world.landmarks,...forestCommissionSites(world,save,(x,y)=>walkable(world,x,y))];
     objectIndices.delete(world);
     // A redesigned island keeps valid local positions; stranded old coordinates return to its pier.
     if(zone==='hanzi'&&save?.zone===zone&&save?.position&&!walkable(world,save.position.x,save.position.y))save.position={...layout.spawn};

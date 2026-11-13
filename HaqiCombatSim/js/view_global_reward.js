@@ -38,6 +38,6 @@ export class GlobalRewardNotice {
         this.root.hidden=false;this.raise();
         this.timer=setTimeout(()=>{this.timer=null;this.next();},this.duration);
     }
-    reset(){clearTimeout(this.timer);this.timer=null;this.queue.length=0;try{this.root.hidePopover?.();}catch{}this.root.hidden=true;this.root.replaceChildren();}
+    reset(){if(this.timer!==null)clearTimeout(this.timer);this.timer=null;this.queue.length=0;try{this.root.hidePopover?.();}catch{}this.root.hidden=true;this.root.replaceChildren();}
     dispose(){this.reset();this.observer?.disconnect();this.root.remove();}
 }

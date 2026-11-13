@@ -16,6 +16,15 @@ test('unchanged restored state, repeat claims, consuming and equipping produce n
  assert.deepEqual(rewardChanges(before,s,content),{xp:0,fromLevel:1,level:null,items:[]});
  assert.deepEqual(rewardChanges(rewardSnapshot(s),s,content).items,[]);
 });
+test('new formal honors are announced once while restored achievements stay quiet',()=>{
+ const s=save();s.tacticsRecord={combo:1};const before=rewardSnapshot(s);
+ s.tacticsRecord.guardCombo=1;s.dungeonChallengeRecords={'journey:first-watch':{clears:1}};
+ const raw=JSON.stringify(s),event=rewardChanges(before,s,content);
+ assert.deepEqual(event.items.map(row=>[row.kind,row.id,row.name]),[['honor','guardCombo','守护有方'],['honor','journey:first-watch','晨光守望者']]);
+ assert.ok(event.items.every(row=>row.source&&row.count===1));
+ assert.equal(JSON.stringify(s),raw);
+ assert.deepEqual(rewardChanges(rewardSnapshot(s),s,content).items,[]);
+});
 import {createRewardFeedback,drawRewardEffect} from '../js/view_adventure_rewards.js';
 function rewardCanvas(){
  const stack=[],labels=[];
@@ -47,6 +56,22 @@ class NodeStub {
  replaceChildren(...children){this.children=children;}
  setAttribute(){}
 }
+test('honor receipts name the achievement instead of a backpack item and remain actionable',()=>{
+ const previous=globalThis.document;globalThis.document={createElement:()=>new NodeStub()};
+ try{
+  const root=new NodeStub(),seen=[],feedback=createRewardFeedback(root,{describe:()=>({label:'查看冒险荣誉',hint:'正式战斗达成，已收录到角色手册。'}),activate:row=>seen.push(row.id)});
+  const honor={kind:'honor',id:'combo',count:1,name:'战术学徒'};
+  feedback.push({items:[honor]});feedback.push({items:[honor]});
+  assert.equal(feedback.hasPendingItems,true);feedback.tick(100,true);
+  const [banner,popup]=root.children;
+  assert.deepEqual(banner.children.map(row=>row.textContent),['解锁称号 · 战术学徒']);
+  assert.deepEqual(popup.children.slice(0,3).map(row=>row.textContent),['解锁新称号','战术学徒','正式战斗达成，已收录到角色手册。']);
+  popup.children.find(row=>row.textContent==='查看冒险荣誉').onclick();
+  assert.deepEqual(seen,['combo']);assert.equal(feedback.hasPendingItems,false);
+  const {c,labels}=rewardCanvas();drawRewardEffect(c,0,0,{items:[honor],elapsed:0},true);
+  assert.ok(labels.includes('解锁新称号！'));
+ }finally{if(previous===undefined)delete globalThis.document;else globalThis.document=previous;}
+});
 test('idle, consumed, reset and delayed reward popups never leave an empty frame',()=>{
  const previous=globalThis.document;globalThis.document={createElement:()=>new NodeStub()};
  try{

@@ -1,10 +1,12 @@
 import { fill, setText, tr } from './locale_runtime.js';
+import {equipmentComparison} from './view_adventure_guidance.js';
 // DockTip.lua L630–687: bottom bag notification, equip apparel / inspect cards.
 const HOLD_MS=4800,STACK_LIMIT=8;
 function itemKey(item){
     if(item.kind==='dictionary')return `dictionary:${item.id}`;
     if(item.kind==='card')return `card:${item.key}`;
     if(item.kind==='pet')return `pet:${item.id}`;
+    if(item.kind==='honor')return `honor:${item.id}`;
     return `item:${item.id??item.name}`;
 }
 // A burst already waiting in the queue is one acquisition, not one tip per item.
@@ -16,7 +18,7 @@ function absorbReward(target,event){
     }
     for(const item of event.items||[]){
         const found=target.items.find(row=>itemKey(row)===itemKey(item));
-        if(found)found.count+=(item.count||0);
+        if(found){if(item.kind!=='honor')found.count+=(item.count||0);}
         else target.items.push({...item});
     }
 }
@@ -35,7 +37,7 @@ export function createRewardFeedback(root,{describe,activate,showBanner=true,onB
         const rows=[];
         if(event.level)rows.push(['升级了！ {from} → {to} 级',{from:event.fromLevel,to:event.level}]);
         if(event.xp)rows.push(['获得经验 +{xp}',{xp:event.xp}]);
-        for(const item of event.items.slice(0,STACK_LIMIT))rows.push(['{name} ×{count}',{name:item.name,count:item.count}]);
+        for(const item of event.items.slice(0,STACK_LIMIT))rows.push([item.kind==='honor'?'解锁称号 · {name}':'{name} ×{count}',{name:item.name,count:item.count}]);
         if(event.items.length>STACK_LIMIT)rows.push(['另获 {count} 种奖励',{count:event.items.length-STACK_LIMIT}]);
         banner.replaceChildren(...rows.map(([source,vars])=>{
             const node=document.createElement('div');node.className='reward-stack-row';
@@ -47,24 +49,26 @@ export function createRewardFeedback(root,{describe,activate,showBanner=true,onB
     }
     function paint(){
         popup.replaceChildren();
-        popup.setAttribute('aria-label',tr('新获得的物品'));
         const reward=active.items[0];if(!reward){popup.hidden=true;return;}popup.hidden=false;
+        popup.setAttribute('aria-label',tr(reward.kind==='honor'?'新获得的称号':'新获得的物品'));
         const info=describe(reward),heading=document.createElement('strong'),name=document.createElement('p'),hint=document.createElement('small');
-        setText(heading,reward.kind==='dictionary'?'获得汉字卡':reward.kind==='card'?'获得新卡牌':reward.gear?'获得新装备':'获得新物品');
-        setText(name,'{name} ×{count}',{name:info.name||reward.name,count:reward.count});
-        setText(hint,info.reason||(reward.kind==='dictionary'?'点击翻开这个字的故事':'已放入背包'));
+        setText(heading,reward.kind==='honor'?'解锁新称号':reward.kind==='dictionary'?'获得汉字卡':reward.kind==='card'?'获得新卡牌':reward.gear?'获得新装备':'获得新物品');
+        setText(name,reward.kind==='honor'?'{name}':'{name} ×{count}',{name:info.name||reward.name,count:reward.count});
+        setText(hint,info.reason||info.hint||(reward.kind==='dictionary'?'点击翻开这个字的故事':'已放入背包'));
         if(info.art)popup.append(info.art);
         const use=document.createElement('button');use.type='button';use.className='primary';use.disabled=!!info.reason;
         setText(use,info.label);
         use.onclick=()=>{if(activate(reward)!==false)next();};
         const skip=document.createElement('button');skip.type='button';skip.className='secondary';
-        if(active.items.length>1){setText(skip,'下一件（{count}）',{count:active.items.length-1});skip.title=tr('这件已放入背包，继续查看下一件奖励');}
+        if(active.items.length>1){setText(skip,'下一件（{count}）',{count:active.items.length-1});skip.title=tr(reward.kind==='honor'?'称号已解锁，继续查看下一件奖励':'这件已放入背包，继续查看下一件奖励');}
         else setText(skip,'稍后处理');
         skip.onclick=next;
-        popup.append(heading,name,hint,use,skip);
+        popup.append(heading,name,hint);
+        if(info.comparison)popup.append(equipmentComparison(info.comparison));
+        popup.append(use,skip);
     }
     function next(){active.items.shift();paint();}
-    function actionable(item){return item.kind==='dictionary'||item.gear||item.kind==='card'||item.kind==='pet';}
+    function actionable(item){return item.kind==='honor'||item.kind==='dictionary'||item.gear||item.kind==='card'||item.kind==='pet';}
     return {
         get hasPendingItems(){return !!active?.items.length||queue.some(event=>event.items.some(actionable));},
         push(event){if(event.xp||event.level||event.items.length)queue.push({...event,items:[...event.items]});},
@@ -108,7 +112,7 @@ export function drawRewardEffect(c,x,y,event,reduced=false) {
     for(let i=0;i<3;i++){const r=30+i*17+(reduced?0:Math.sin(t*3-i)*6);c.beginPath();c.ellipse(0,-4-i*7,r,r*.32,0,0,Math.PI*2);c.stroke();}
     if(!reduced)for(let i=0;i<24;i++){const a=i*2.399+t*.8,r=28+(i%5)*10,h=(t*65+i*17)%190;c.fillStyle=color;c.beginPath();c.arc(Math.cos(a)*r,-h,2+i%3,0,Math.PI*2);c.fill();}
     c.shadowBlur=5;c.font='bold 24px "Microsoft YaHei", sans-serif';c.textAlign='center';c.lineWidth=5;c.strokeStyle='#3e3921';c.fillStyle=level?'#fff0a4':'#b8ffed';
-    const label=level?fill('升到 {level} 级！',{level:event.level}).text:event.xp?fill('经验 +{xp}',{xp:event.xp}).text:tr('获得物品！'),dy=-112-(reduced?0:Math.min(t*10,25));
+    const label=level?fill('升到 {level} 级！',{level:event.level}).text:event.xp?fill('经验 +{xp}',{xp:event.xp}).text:event.items?.some(item=>item.kind==='honor')?tr('解锁新称号！'):tr('获得物品！'),dy=-112-(reduced?0:Math.min(t*10,25));
     c.strokeText(label,0,dy);c.fillText(label,0,dy);
     } finally {c.restore();}
 }

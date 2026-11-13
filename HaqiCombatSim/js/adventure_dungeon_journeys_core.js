@@ -1,4 +1,5 @@
 import {resolveParams} from './combat_params_core.js';
+import {dungeonTacticsProfile} from './dungeon_tactics_core.js';
 
 // Authored Web adventures use exported kids templates. No original Lua story is implied.
 export function journeyDungeons(worlds,config,monsters=null,params={}){
@@ -29,7 +30,12 @@ export function journeyDungeons(worlds,config,monsters=null,params={}){
             }
             return arena;
         });
-        return {...structuredClone(source),...structuredClone(entry),...(tower?{mapInfo:{w:1400,h:Math.max(1200,(entry.floors+2)*240+350),spawn:{x:350,y:350},initialSpawn:{x:350,y:350},retainPreviousPosition:true}}:{}),arenas,playable:true,warnings:[],loaded:!!monsters,bossArenaId:arenas.at(-1).id};
+        const dungeon={...structuredClone(source),...structuredClone(entry),...(tower?{mapInfo:{w:1400,h:Math.max(1200,(entry.floors+2)*240+350),spawn:{x:350,y:350},initialSpawn:{x:350,y:350},retainPreviousPosition:true}}:{}),arenas,playable:true,warnings:[],loaded:!!monsters,bossArenaId:arenas.at(-1).id};
+        // The authored tactical variant needs actual learned cards; keep this
+        // advice consistent in the index, entrance and confirmation views.
+        const profile=dungeonTacticsProfile(dungeon);
+        if(profile?.recommendedLevel)dungeon.recommendedLevel=profile.recommendedLevel;
+        return dungeon;
     });
 }
 
@@ -46,6 +52,17 @@ export function journeyParty(save,dungeon,party){
     const size=dungeon.kind==='elite'?dungeon.partySize:Math.max(1,Math.min(4,party.length));
     if(party.length<size)throw Error(`本次挑战需要${size}个出战单位，请先安排宠物或邀请伙伴`);
     return party.slice(0,size);
+}
+// Read the actual selected waves, rather than suggesting that an entrance
+// label describes the boss. This is information only; it never scales enemies.
+export function dungeonEnemyIntel(dungeon,monsters){
+    if(dungeon?.kind!=='elite'||!dungeon.loaded||!monsters)return null;
+    const units=(dungeon.arenas||[]).flatMap(arena=>(arena.monsterIds||[]).map(id=>monsters[id]));
+    if(!units.length||units.some(unit=>!unit||!Number.isFinite(unit.level)||!Number.isFinite(unit.hp)))return null;
+    const toughest=units.reduce((a,b)=>a.hp>=b.hp?a:b);
+    return {minLevel:Math.min(...units.map(unit=>unit.level)),maxLevel:Math.max(...units.map(unit=>unit.level)),
+        maxHp:toughest.hp,toughest:toughest.name,waves:dungeon.arenas.length,
+        maxEnemies:Math.max(...dungeon.arenas.map(arena=>arena.monsterIds.length))};
 }
 export function journeyRewardPets(save,dungeon,party){
     if(save.coopRun)return [];

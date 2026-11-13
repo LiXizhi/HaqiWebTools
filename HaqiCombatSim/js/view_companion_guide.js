@@ -16,12 +16,13 @@ export function renderCompanionGuide(root,model,cb,{battle=false}={}){
  dock.setAttribute('aria-label','抱抱龙随行助手');
  const paint=()=>{
   dock.replaceChildren();
-  const toggle=button([petPortrait(model.assets,id,0,56),el('span','','抱抱龙 · 带我玩')],()=>{root.guideOpen=!root.guideOpen;paint();},'companion-guide-toggle');
+  const guide=battle?battleGuide(root,model):companionWorldGuide(model.save,model.assets.content,{languageTasks:model.languageTasks?.rows});
+  const caption=battle?el('span','companion-guide-preview',el('small','','抱抱龙 · 战术提示'),el('span','',guide.text)):el('span','','抱抱龙 · 带我玩');
+  const toggle=button([petPortrait(model.assets,id,0,56),caption],()=>{root.guideOpen=!root.guideOpen;paint();},'companion-guide-toggle');
   toggle.setAttribute('aria-label','抱抱龙 · 带我玩');toggle.title='抱抱龙 · 带我玩';
   toggle.setAttribute('aria-expanded',String(!!root.guideOpen));dock.append(toggle);
   dock.classList.toggle('guide-expanded',!!root.guideOpen);
   if(!root.guideOpen)return;
-  const guide=battle?battleGuide(root,model):companionWorldGuide(model.save,model.assets.content,{languageTasks:model.languageTasks?.rows});
   const box=el('section','companion-guide-card',el('div','companion-guide-speaker',petPortrait(model.assets,id,0,battle?36:88),el('strong','','抱抱龙')));
   box.append(createCloseButton(()=>{root.guideOpen=false;paint();dock.querySelector('button')?.focus({preventScroll:true});},'收起抱抱龙引导'));
   const text=el('p','',guide.text);text.setAttribute('role','status');box.append(text);

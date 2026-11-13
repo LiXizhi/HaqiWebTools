@@ -1,4 +1,9 @@
+import {dungeonTacticsProfile} from './dungeon_tactics_core.js';
 import {validateTreeClaims} from './language_tree_rewards_core.js';
+import {validateTacticsTraining} from './tactics_training_core.js';
+import {validateTacticsRecords,settleTacticsRecord} from './battle_tactics_journal_core.js';
+import {settleDungeonChallenge} from './dungeon_challenge_core.js';
+import {grantDungeonFirstReward} from './dungeon_first_rewards_core.js';
 import {mapCoordinateVersion,migrateSaveCoordinates} from './adventure_coordinates_core.js';
 import {hanziBattleSpec,validateHanziBattleSpec} from './hanzi_battle_core.js';
 import {grantHanziQuestCard} from './hanzi_core.js';
@@ -27,6 +32,7 @@ import {equipmentSetStats,dragonTotemStage,progressionStatEntry,chooseDragonTote
 import {customizeHero} from './adventure_hero_customize_core.js';
 import {applyOpeningJourney,openingJourneyActive,openingJourneyWon,validateOpeningJourney,openingTrainingCredit} from './opening_journey_core.js';
 import {applyCampDetour,validateCampDetour} from './camp_detour_core.js';
+import {applyForestCommission,validateForestCommission} from './forest_commission_core.js';
 import {applyCompanionWordplay,validateCompanionWordplay} from './companion_wordplay_core.js';
 import {OPENING_TRAINING_IDS} from './opening_training_core.js';
 import {publicPhotoHead} from './photo_head_core.js';
@@ -386,6 +392,7 @@ function applyAdventureAction(save, content, action, access={}) {
     switch (action.type) {
     case 'companion-wordplay': {const result=applyCompanionWordplay(save,content,action);if(result.accepted)save.revision++;return result;}
     case 'camp-detour': {const result=applyCampDetour(save,content,action,access);if(result.changed===false)return result;notice=result.message;break;}
+    case 'forest-commission': {const result=applyForestCommission(save,content,action,access);if(result.changed===false)return result;notice=result.message;break;}
     case 'language-complete': {const result=recordLearningCompletion(save,content,action.completion,access);save.revision++;return result;}
     case 'npc-purchase': purchaseNpcOffer(save,content,action,access);break;
     case 'fish': {const result=castFishing(save,content,action,createRng(hashSeed(`${save.revision}:fish:${action.netId}`)));save.revision++;return {...result,changed:true};}
@@ -594,6 +601,7 @@ export function beginEncounter(save,content,encounterId,access={}) {
     save.pendingEncounter = { id: `${save.seed}:${serial}`, encounterId,
         seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 2, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1, dispelRulesVersion:1, specialCardRulesVersion:1, captureRulesVersion:1 };
     if(save.openingJourney?.version===1&&save.zone==='camp'&&OPENING_TRAINING_IDS.includes(encounterId))save.pendingEncounter.openingTrainingVersion=3;
+    if(dungeonTacticsProfile(dungeon))Object.assign(save.pendingEncounter,{dungeonTacticsVersion:1,dungeonTacticsId:dungeon.id});
     if(encounter.monsterIds){const formation=journeyEnemyFormation(encounter,dungeon,initialParty);save.pendingEncounter.dungeonMonsterIds=[...formation.ids];save.pendingEncounter.dungeonMonsterSlots=[...formation.slots];}
     if(content.pets){
         const checkpoint=save.pendingEncounter,params=petTraitParams(content);
@@ -702,15 +710,21 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
         for(const member of save.coopRun.members)relationshipEvents.push({id:`dungeon:${save.coopRun.relationshipRunId||pending.id}:${member.profile.id}`,peer:member.profile,kind:'dungeon',at:now,reason:'共同通关副本'});
     }
     if(save.coopRun){save.coopRun.battles??=[];save.coopRun.battles.push({checkpoint:clone(pending),winner:battle.winner,turns:battle.turn});}
+    const challenge=settleDungeonChallenge(save,dungeonFor(content,save.zone),dungeonProgress(save)[save.zone],pending,battle);
+    const firstReward=grantDungeonFirstReward(save,content,save.zone,{complete:!!challenge,rewarded:battle.winner==='near'&&!insufficientStamina});
+    const tacticsMilestones=settleTacticsRecord(save,pending,battle);
     save.rewardedEncounters.push(pending.id); save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); migrateBagRules(save,content); migrateDefaultPocket(save,content); syncEquipmentInstances(save,content); save.revision++;
-    return {settled:true,insufficientStamina,staminaSpent,relationshipEvents};
+    return {settled:true,insufficientStamina,staminaSpent,relationshipEvents,tacticsMilestones,challenge,firstReward};
 }
 export function parseSave(raw,content) {
     const s = typeof raw === 'string' ? JSON.parse(raw) : clone(raw);
     if(s?.schemaVersion===1){s.schemaVersion=SAVE_VERSION;if(content.pets){Pets.initializePets(s,content);if(s.pet&&content.pets.legacy_gululu)Pets.addPet(s,content,'legacy_gululu',s.pet.xp);}}
     assert(s && s.schemaVersion === SAVE_VERSION && s.contentVersion === content.contentVersion,'存档版本不兼容');
     validateOpeningJourney(s);
+    validateTacticsTraining(s);
+    validateTacticsRecords(s);
     validateCampDetour(s);
+    validateForestCommission(s);
     validateCompanionWordplay(s);
     normalizeLocaleSave(s);
     validateHanziProgress(s.hanzi);
@@ -772,6 +786,7 @@ export function parseSave(raw,content) {
     dungeonLanguageBuff(s,content);
     if (s.pendingEncounter) {
         assert(s.pendingEncounter.openingTrainingVersion===undefined||([1,2,3].includes(s.pendingEncounter.openingTrainingVersion)&&s.openingJourney?.version===1&&s.zone==='camp'&&OPENING_TRAINING_IDS.includes(s.pendingEncounter.encounterId)),'新手训练版本无效');
+        assert(s.pendingEncounter.dungeonTacticsVersion===undefined?s.pendingEncounter.dungeonTacticsId===undefined:s.pendingEncounter.dungeonTacticsVersion===1&&s.pendingEncounter.dungeonTacticsId===s.zone&&!!dungeonTacticsProfile(dungeonFor(content,s.zone)),'副本战术版本无效');
         assert(s.pendingEncounter.dailyLanguageVersion===undefined||s.pendingEncounter.dailyLanguageVersion===1,'语言加成版本无效');
         if(s.pendingEncounter.player?.hanziBattle)validateHanziBattleSpec(s.pendingEncounter.player.hanziBattle);
         for(const unit of s.pendingEncounter.party||[])if(unit.hanziBattle)validateHanziBattleSpec(unit.hanziBattle);

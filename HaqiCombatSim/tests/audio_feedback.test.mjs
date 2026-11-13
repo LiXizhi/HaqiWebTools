@@ -15,10 +15,16 @@ test('audio decoded after disposal cannot become live',async()=>{
 });
 function audio(){return {paused:true,volume:0,plays:0,play(){this.plays++;this.paused=false;return Promise.resolve();},pause(){this.paused=true;}};}
 test('music fades in, ducks spoken dialogue and immediately pauses on hide/mute',async t=>{
- t.mock.timers.enable({apis:['setInterval']});const element=audio(),music=createBackgroundMusic('original.ogg',{audioFactory:()=>element});
- await music.play();for(let i=0;i<30;i++)t.mock.timers.tick(30);assert.equal(element.volume,.18);assert.equal(element.loop,true);
- const release=acquireAudioActivity();for(let i=0;i<30;i++)t.mock.timers.tick(30);assert.equal(element.volume,.036);
- release();for(let i=0;i<30;i++)t.mock.timers.tick(30);assert.equal(element.volume,.18);
+ // Node 20.11 MockTimers cannot reliably cancel an interval inside its callback.
+ // A bounded interval clock keeps this test deterministic on the supported runtime.
+ const intervals=new Map();let serial=0;
+ t.mock.method(globalThis,'setInterval',fn=>{const id=++serial;intervals.set(id,fn);return id;});
+ t.mock.method(globalThis,'clearInterval',id=>intervals.delete(id));
+ const tick=()=>{for(let i=0;i<30;i++)for(const [id,fn]of [...intervals])if(intervals.has(id))fn();};
+ const element=audio(),music=createBackgroundMusic('original.ogg',{audioFactory:()=>element});
+ await music.play();tick();assert.equal(element.volume,.18);assert.equal(element.loop,true);
+ const release=acquireAudioActivity();tick();assert.equal(element.volume,.036);
+ release();tick();assert.equal(element.volume,.18);
  music.pause();assert.equal(element.paused,true);assert.equal(element.volume,0);music.dispose();
 });
 test('autoplay rejection retries only on another gesture and late play cannot undo pause',async()=>{

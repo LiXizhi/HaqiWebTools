@@ -70,7 +70,7 @@ body.started #controls{opacity:1;pointer-events:auto}
   text-shadow:0 1px 12px rgba(0,0,0,.8)}
 #capText .ch{animation:inkIn 1.1s ease-out both;animation-delay:calc(var(--i) * 65ms + 100ms)}
 .haqi-sub-trans{display:block;margin-top:4px;font-family:Georgia,"Times New Roman",system-ui,sans-serif;font-size:clamp(13px,1.8vh,17px);line-height:1.45;color:#b3bfd2;letter-spacing:.02em}
-@keyframes inkIn{from{opacity:0;color:transparent;text-shadow:0 0 14px rgba(255,179,71,.9)}50%{opacity:1}to{color:var(--paper);text-shadow:0 1px 12px rgba(0,0,0,.8)}}
+@keyframes inkIn{from{opacity:0;color:var(--paper);text-shadow:0 0 16px rgba(255,179,71,.95)}45%{opacity:1}to{opacity:1;color:var(--paper);text-shadow:0 1px 12px rgba(0,0,0,.8)}}
 @keyframes sealIn{from{opacity:0;letter-spacing:.9em;filter:blur(4px)}to{opacity:1;letter-spacing:.42em;filter:none}}
 
 .actions{margin-top:12px;display:flex;justify-content:center;gap:12px;pointer-events:auto;min-height:38px}
@@ -399,7 +399,35 @@ let roadMesh = null, trailMesh = null, trailIndexCount = 0;
 let courierGroup = null, courierLamp = null, horseGroup = null, horseLegs = [];
 let houseInst = null, roofInst = null, winInst = null, villageData = [];
 let beaconMesh = null, particleSys = null, starSys = null, moonMesh = null, skyMesh = null, horizonMesh = null;
-const worldGroup = new THREE.Group();
+// 全部依赖 THREE 的对象都延迟到库就绪后创建，模块顶层不得触碰 THREE。
+let worldGroup = null;
+let threePromise = null, threeState = 'pending';
+function webglAvailable() {
+  try {
+    const probe = document.createElement('canvas');
+    const gl = probe.getContext('webgl2') || probe.getContext('webgl');
+    if (!gl) return false;
+    gl.getExtension('WEBGL_lose_context')?.loseContext();
+    return true;
+  } catch { return false; }
+}
+function loadThree() {
+  if (threePromise) return threePromise;
+  threePromise = new Promise(resolve => {
+    let done = false;
+    const finish = mod => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      if (mod && typeof mod.Group === 'function') { THREE = mod; threeState = 'ready'; }
+      else threeState = 'failed';
+      resolve(threeState === 'ready');
+    };
+    const timer = setTimeout(() => finish(null), 6000);
+    import(THREE_CDN).then(finish, () => finish(null));
+  });
+  return threePromise;
+}
 
 const MOODS = [
   { name: '夜驿', skyTop: '#060a14', skyBot: '#101a2e', fog: '#0b1220', ground: '#1a2233', pine: '#132029', ray: '#ffb347', moon: '#cfe0f5', star: 1 },
@@ -417,10 +445,12 @@ function roadXZ(u) {
   return { x, z };
 }
 function groundY(x, z) {
-  // 谷地整体低于相机，远处也不抬升成墙；地平线由雾与远山剪影自然衔接。
-  const back = Math.max(0, (-z - 4) / 14);
-  const ridge = Math.min(1.15, Math.pow(back, 1.5) * 0.5);
-  const roll = 0.1 * Math.sin(x * 0.4) * Math.cos(z * 0.35);
+  // 驿道一带（z≈0）平缓便于人物行走；向深处平滑抬升成丘陵。
+  // 抬升曲线经计算保证：在任意俯仰角下地面都高过该处的视线，
+  // 于是地面自己遮住平面尽端，与同色天空无缝相接，永不出现水平硬边或黑带。
+  const back = Math.max(0, (-z - 5) / 22);
+  const ridge = Math.pow(back, 1.35) * 4.6;
+  const roll = 0.1 * Math.sin(x * 0.4) * Math.cos(z * 0.35) + Math.min(1, back) * 0.45 * Math.sin(x * 0.11 + 1.2);
   return ridge + roll - 0.4;
 }
 // 共享的柔光贴图：灯晕、星点、流萤都用它，避免方形点与生硬边缘
@@ -522,16 +552,16 @@ function createHorse() {
 }
 
 function init3D() {
-  // 先探测 WebGL 可用性：不可用时静默走 2D 保底，不让 Three.js 往控制台抛错误。
-  try {
-    const probe = document.createElement('canvas');
-    const gl = probe.getContext('webgl2') || probe.getContext('webgl');
-    if (!gl) { renderer = null; glCanvas.style.display = 'none'; return; }
-    gl.getExtension('WEBGL_lose_context')?.loseContext();
-  } catch {
-    renderer = null; glCanvas.style.display = 'none'; return;
+  // THREE 尚未就绪或 WebGL 不可用时静默走 2D 保底，绝不抛错、绝不阻塞首页。
+  if (!THREE || !webglAvailable()) {
+    renderer = null;
+    glCanvas.style.display = 'none';
+    return;
   }
   try {
+    worldGroup = new THREE.Group();
+    _projV = new THREE.Vector3();
+    _cA = new THREE.Color(); _cB = new THREE.Color(); _dummy = new THREE.Object3D();
     renderer = new THREE.WebGLRenderer({ canvas: glCanvas, antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.shadowMap.enabled = true;
@@ -545,6 +575,19 @@ function init3D() {
     return;
   }
 
+  try { buildWorld(); }
+  catch {
+    renderer = null; scene = null; camera = null; worldGroup = null;
+    stations = []; stationLights = []; godRays = []; skyLamps = [];
+    horseLegs = []; villageData = [];
+    glCanvas.style.display = 'none';
+    return;
+  }
+  glCanvas.style.display = '';
+  resize();
+}
+
+function buildWorld() {
   scene = new THREE.Scene();
   scene.fog = new THREE.Fog('#0b1220', 16, 104);
   camera = new THREE.PerspectiveCamera(40, innerWidth / Math.max(1, innerHeight), 0.1, 160);
@@ -597,9 +640,10 @@ function init3D() {
       varying vec2 vUv; varying vec3 vN; varying vec3 vV;
       void main(){
         float edge = abs(dot(normalize(vN), normalize(vV)));
-        float shaft = smoothstep(0.0, 0.5, vUv.y) * (1.0 - smoothstep(0.86, 1.0, vUv.y));
-        float band = 0.82 + 0.18 * sin(vUv.x * 18.0 + uTime * 0.6);
-        float a = uOpacity * shaft * pow(edge, 1.6) * band;
+        // 底端（vUv.y=0）先淡入再向上淡出，两端都不留硬切口
+        float shaft = smoothstep(0.0, 0.34, vUv.y) * (1.0 - smoothstep(0.55, 1.0, vUv.y));
+        float band = 0.86 + 0.14 * sin(vUv.x * 14.0 + uTime * 0.5);
+        float a = uOpacity * shaft * pow(edge, 2.4) * band;
         if (a < 0.002) discard;
         gl_FragColor = vec4(uColor * a, a);
         #include <tonemapping_fragment>
@@ -613,115 +657,151 @@ function init3D() {
   matSkyLamp = new THREE.MeshBasicMaterial({ color: '#ffb347', transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false });
   matFlame = new THREE.MeshBasicMaterial({ color: '#ff6b35', transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false });
 
-  // 天空穹顶：上下异色渐变，随意境与破晓实时混色，取代空洞的纯色背景
+  // 天空穹顶：以「真实视线的竖直分量」而非球面参数做渐变，
+  // 因此地平线在任意俯仰角、任意画幅下都严格落在同一条视线上，
+  // 且该处颜色恒等于雾色 —— 地面尽端与天空天然同色，永无水平硬边。
   skyMesh = new THREE.Mesh(
-    new THREE.SphereGeometry(120, 32, 20),
+    new THREE.SphereGeometry(150, 40, 24),
     new THREE.ShaderMaterial({
-      side: THREE.BackSide, depthWrite: false, fog: false,
-      uniforms: { uTop: { value: new THREE.Color('#060a14') }, uBot: { value: new THREE.Color('#101a2e') }, uGlow: { value: new THREE.Color('#ffb347') }, uDawn: { value: 0 } },
-      vertexShader: `varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+      side: THREE.BackSide, depthWrite: false, depthTest: false, fog: false,
+      uniforms: {
+        uTop: { value: new THREE.Color('#060a14') }, uBot: { value: new THREE.Color('#0b1220') },
+        uGlow: { value: new THREE.Color('#ffb347') }, uDawn: { value: 0 },
+      },
+      vertexShader: `varying vec3 vW; void main(){ vW = (modelMatrix * vec4(position,1.0)).xyz; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
       fragmentShader: `
         uniform vec3 uTop; uniform vec3 uBot; uniform vec3 uGlow; uniform float uDawn;
-        varying vec3 vP;
+        varying vec3 vW;
         void main(){
-          vec3 d = normalize(vP);
-          float h = clamp(d.y * 0.5 + 0.5, 0.0, 1.0);
-          // 下半球统一收敛到雾色，与地面尽端无缝相接，任何画幅都不出现地平线硬边
-          vec3 col = mix(uBot, uTop, pow(smoothstep(0.5, 1.0, h), 0.8));
-          // 破晓暖光只出现在地平线之上并平滑起落，地平线处严格等于雾色，
-          // 与远处地面、远山剪影同色相接，任何画幅都不产生水平硬边。
-          float horizon = exp(-pow((h - 0.8) * 3.2, 2.0)) * smoothstep(0.5, 0.72, h);
-          col += uGlow * horizon * (0.02 + 0.07 * uDawn);
+          vec3 d = normalize(vW - cameraPosition);
+          // d.y = 0 即真实地平线；向上渐变到夜穹顶色，向下保持雾色
+          float up = clamp(d.y, 0.0, 1.0);
+          vec3 col = mix(uBot, uTop, pow(up, 0.55));
+          // 破晓暖光贴地平线之上，向下迅速归零，绝不越过地平线
+          float glow = exp(-pow(max(d.y, 0.0) * 5.2, 2.0)) * smoothstep(-0.02, 0.06, d.y);
+          col += uGlow * glow * (0.03 + 0.3 * uDawn);
+          // 极淡的高空冷辉，避免大片死黑
+          col += vec3(0.012, 0.02, 0.035) * pow(up, 2.0);
           gl_FragColor = vec4(col, 1.0);
           #include <tonemapping_fragment>
           #include <colorspace_fragment>
         }`,
     })
   );
-  skyMesh.renderOrder = -10;
+  skyMesh.renderOrder = -100;
+  skyMesh.frustumCulled = false;
   scene.add(skyMesh);
 
-  // 背景层：天空、月轮、星点、远山都挂在相机上，任何视角与画幅都不会出现地平线硬边
+  // 月轮与星点放在世界空间高处：环绕时它们与山谷保持正确的空间关系
   const glowTex = makeGlowTexture();
-  const skyLayer = new THREE.Group();
-  camera.add(skyLayer);
-  scene.add(camera);
-
-  moonMesh = new THREE.Mesh(new THREE.CircleGeometry(2.05, 48), matMoon);
-  moonMesh.position.set(-9.2, 8.4, -46);
-  moonMesh.renderOrder = -8;
-  skyLayer.add(moonMesh);
-  const moonHalo = new THREE.Mesh(new THREE.PlaneGeometry(13, 13), new THREE.MeshBasicMaterial({
-    map: glowTex, color: '#cfe0f5', transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending, depthWrite: false, fog: false,
+  moonMesh = new THREE.Mesh(new THREE.CircleGeometry(5.2, 48), matMoon);
+  moonMesh.position.set(-34, 58, -118);
+  moonMesh.renderOrder = -20;
+  worldGroup.add(moonMesh);
+  const moonHalo = new THREE.Mesh(new THREE.PlaneGeometry(46, 46), new THREE.MeshBasicMaterial({
+    map: glowTex, color: '#cfe0f5', transparent: true, opacity: 0.24, blending: THREE.AdditiveBlending, depthWrite: false, fog: false,
   }));
   moonHalo.position.copy(moonMesh.position);
-  moonHalo.renderOrder = -9;
-  skyLayer.add(moonHalo);
+  moonHalo.renderOrder = -21;
+  worldGroup.add(moonHalo);
   moonMesh.userData.halo = moonHalo;
 
   const r = mulberry32(707);
-  const starPos = new Float32Array(300 * 3);
-  for (let i = 0; i < 300; i++) {
-    starPos[i * 3] = (r() - 0.5) * 62;
-    starPos[i * 3 + 1] = 7 + r() * 20;
-    starPos[i * 3 + 2] = -44 - r() * 8;
+  const starPos = new Float32Array(340 * 3);
+  for (let i = 0; i < 340; i++) {
+    const ang = (r() - 0.5) * 2.1;
+    const rad = 112 + r() * 26;
+    starPos[i * 3] = Math.sin(ang) * rad;
+    starPos[i * 3 + 1] = 40 + r() * 78;
+    starPos[i * 3 + 2] = -Math.cos(ang) * rad;
   }
   const starGeo = new THREE.BufferGeometry();
   starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
   starSys = new THREE.Points(starGeo, new THREE.PointsMaterial({
-    map: glowTex, color: '#cfe0f5', size: 0.5, transparent: true, opacity: 0.8,
+    map: glowTex, color: '#cfe0f5', size: 1.5, transparent: true, opacity: 0.8,
     blending: THREE.AdditiveBlending, depthWrite: false, fog: false, sizeAttenuation: true,
   }));
-  starSys.renderOrder = -7;
-  skyLayer.add(starSys);
+  starSys.renderOrder = -19;
+  worldGroup.add(starSys);
 
-  horizonMesh = skyLayer;
-
-  // 三层世界空间山脊：底缘埋在地表之下由深度测试裁掉，峰线受线性雾衰减，
-  // 因此只见柔和起伏的远山轮廓，不会出现横贯画面的色块或平面尽端硬边。
+  // 三层远山：自定义 shader 按「到相机的距离」混入雾色，
+  // 越远越接近天空色，山脚完全溶进雾里，只留柔和起伏的峰线。
+  // 远山坐落在抬升后的丘陵之上（base 取该处地形高度），
+  // 因此山脚被地面遮住，只见峰线浮在雾色之上，不会出现悬空黑块。
   const ridgeLayers = [
-    { z: -42, color: '#1b2637', base: -14, amp: 1.5, top: 3.0, seed: 11 },
-    { z: -58, color: '#16202f', base: -14, amp: 2.1, top: 5.6, seed: 23 },
-    { z: -76, color: '#121a27', base: -14, amp: 2.6, top: 8.4, seed: 37 },
+    { z: -46, amp: 2.2, top: 12.0, seed: 11, fade: 0.4 },
+    { z: -70, amp: 3.2, top: 22.0, seed: 23, fade: 0.6 },
+    { z: -100, amp: 4.4, top: 36.0, seed: 37, fade: 0.78 },
   ];
   const ridgeMats = [];
   ridgeLayers.forEach((layer, li) => {
-    const pm = new THREE.MeshBasicMaterial({ color: layer.color, fog: true });
+    const footY = groundY(0, layer.z) - 1.2;
+    const pm = new THREE.ShaderMaterial({
+      fog: false, transparent: false,
+      uniforms: {
+        uColor: { value: new THREE.Color('#1b2637') }, uFog: { value: new THREE.Color('#0b1220') },
+        uFade: { value: layer.fade }, uBase: { value: footY }, uTopY: { value: layer.top + layer.amp },
+      },
+      vertexShader: `
+        varying float vDist; varying float vY;
+        void main(){
+          vec4 wp = modelMatrix * vec4(position, 1.0);
+          vY = wp.y;
+          vDist = length(wp.xyz - cameraPosition);
+          gl_Position = projectionMatrix * viewMatrix * wp;
+        }`,
+      fragmentShader: `
+        uniform vec3 uColor; uniform vec3 uFog; uniform float uFade; uniform float uBase; uniform float uTopY;
+        varying float vDist; varying float vY;
+        void main(){
+          // 山脚（低处）额外溶入雾色，峰线保留轮廓，形成空气透视
+          float low = 1.0 - smoothstep(uBase, uTopY, vY);
+          float f = clamp(uFade + low * 0.55, 0.0, 1.0);
+          vec3 col = mix(uColor, uFog, f);
+          gl_FragColor = vec4(col, 1.0);
+          #include <tonemapping_fragment>
+          #include <colorspace_fragment>
+        }`,
+    });
     ridgeMats.push(pm);
     const rr = mulberry32(layer.seed);
-    const N = 64, RW = 300;
+    const N = 96, RW = 420;
     const pos = new Float32Array((N + 1) * 2 * 3);
     const idx = [];
     let h = layer.top;
     for (let i = 0; i <= N; i++) {
       const x = -RW / 2 + (RW * i) / N;
       h += (rr() - 0.5) * layer.amp;
-      h = clamp(h, layer.top - layer.amp * 1.5, layer.top + layer.amp * 1.5);
-      const peak = h + Math.sin(i * 0.55 + li * 1.3) * layer.amp * 0.4;
+      h = clamp(h, layer.top - layer.amp * 1.4, layer.top + layer.amp * 1.4);
+      const peak = h + Math.sin(i * 0.42 + li * 1.3) * layer.amp * 0.5 + Math.sin(i * 0.13) * layer.amp * 0.7;
       pos[i * 6] = x; pos[i * 6 + 1] = peak; pos[i * 6 + 2] = layer.z;
-      pos[i * 6 + 3] = x; pos[i * 6 + 4] = layer.base; pos[i * 6 + 5] = layer.z;
+      pos[i * 6 + 3] = x; pos[i * 6 + 4] = footY; pos[i * 6 + 5] = layer.z;
       if (i < N) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
     }
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     geo.setIndex(idx);
-    worldGroup.add(new THREE.Mesh(geo, pm));
+    const mesh = new THREE.Mesh(geo, pm);
+    mesh.renderOrder = -10 + li;
+    worldGroup.add(mesh);
   });
   skyMesh.userData.ridgeMats = ridgeMats;
 
-  // 山谷地貌
-  const groundGeo = new THREE.PlaneGeometry(420, 340, 120, 96);
+  // 山谷地貌：驿道一带平缓，向远处缓缓抬升成丘陵，
+  // 抬升幅度足以在任意俯仰角遮住平面尽端，配合雾色实现无缝地平线。
+  const groundGeo = new THREE.PlaneGeometry(520, 460, 132, 116);
   groundGeo.rotateX(-Math.PI / 2);
   const gp = groundGeo.attributes.position;
   for (let i = 0; i < gp.count; i++) {
     const vx = gp.getX(i), vz = gp.getZ(i);
-    gp.setY(i, groundY(vx, vz - 90));
+    gp.setY(i, groundY(vx, vz - 150));
   }
   groundGeo.computeVertexNormals();
   const groundMesh = new THREE.Mesh(groundGeo, matGround);
-  groundMesh.position.z = -90;
+  groundMesh.position.z = -150;
   groundMesh.receiveShadow = true;
   worldGroup.add(groundMesh);
+  horizonMesh = groundMesh;
 
   // 驿道石径与随接力生长的暖金光轨
   const SEG = 140;
@@ -838,11 +918,12 @@ function init3D() {
   trunkInst.instanceMatrix.needsUpdate = true;
   worldGroup.add(pineInst, trunkInst);
 
-  // 体积光柱（God Rays）：自月色斜落，边缘与首尾都柔化
-  for (const [rx, rz, rotZ, sc] of [[-8.2, -1.4, 0.22, 1], [-2.6, -2.0, 0.13, 0.82], [3.2, -1.6, -0.17, 0.9], [9.0, -2.4, -0.26, 1.08]]) {
-    const mesh = new THREE.Mesh(new THREE.ConeGeometry(2.1, 17, 20, 1, true), matRay);
-    mesh.position.set(rx, 7.4, rz);
-    mesh.rotation.z = rotZ; mesh.rotation.x = -0.08;
+  // 体积光柱（God Rays）：细而长的斜射光隙，边缘与首尾都柔化，
+  // 顶端隐入夜空、底端消散在驿道上方，绝不成为横贯画面的实心楔形。
+  for (const [rx, rz, rotZ, sc] of [[-9.4, -6.4, 0.2, 0.62], [-3.4, -7.2, 0.12, 0.5], [3.8, -6.8, -0.15, 0.55], [9.6, -7.6, -0.24, 0.68]]) {
+    const mesh = new THREE.Mesh(new THREE.ConeGeometry(1.5, 20, 20, 1, true), matRay);
+    mesh.position.set(rx, 9.2, rz);
+    mesh.rotation.z = rotZ; mesh.rotation.x = -0.06;
     mesh.scale.set(sc, 1, sc);
     mesh.renderOrder = 4;
     worldGroup.add(mesh);
@@ -902,9 +983,9 @@ function setCam(c) {
 }
 function toWorld(cx, cy) { return { x: (cx - SW / 2) / CV.k + CV.x, y: (cy - CV.cy) / CV.k + CV.y }; }
 function toScreen(x, y) { return { x: (x - CV.x) * CV.k + SW / 2, y: (y - CV.y) * CV.k + CV.cy }; }
-const _projV = new THREE.Vector3();
+let _projV = null;
 function world3DToScreen(vx, vy, vz) {
-  if (!camera) return toScreen(820 + vx * 62, 560 - vy * 62);
+  if (!camera || !_projV || !worldGroup) return fbProject(vx, vy);
   _projV.set(vx, vy, vz);
   _projV.applyMatrix4(worldGroup.matrixWorld);
   _projV.project(camera);
@@ -1581,7 +1662,7 @@ function drawInteractiveGuides() {
 }
 
 /* ---------- Three.js 每帧状态：意境混色、驿灯接力、驿马奔驰、万家灯火 ---------- */
-const _cA = new THREE.Color(), _cB = new THREE.Color(), _dummy = new THREE.Object3D();
+let _cA = null, _cB = null, _dummy = null;
 function moodColor(key) {
   const mood = MOODS[W.mood] || MOODS[0];
   return _cA.set(mood[key]).lerp(_cB.set(DAWN[key]), clamp(W.dawn));
@@ -1600,22 +1681,23 @@ function render3D() {
   skyMesh.material.uniforms.uGlow.value.copy(moodColor('ray'));
   skyMesh.material.uniforms.uDawn.value = clamp(W.dawn);
   const fogC = moodColor('fog').clone();
-  skyMesh.userData.ridgeMats.forEach((pm, i) => {
-    pm.color.copy(moodColor('pine')).lerp(fogC, 0.45 + i * 0.18);
+  skyMesh.userData.ridgeMats.forEach(pm => {
+    pm.uniforms.uColor.value.copy(moodColor('pine'));
+    pm.uniforms.uFog.value.copy(fogC);
   });
-  scene.fog.near = lerp(10, 13, W.dawn);
-  scene.fog.far = lerp(46, 54, W.dawn);
+  // 雾在近景之后才起效，远端与天空地平线同色，地面尽端彻底溶掉
+  scene.fog.near = lerp(14, 18, W.dawn);
+  scene.fog.far = lerp(78, 92, W.dawn);
   matMoon.color.copy(moodColor('moon'));
-  matMoon.opacity = 0.42 * (1 - W.dawn * 0.6);
-  moonMesh.userData.halo.material.opacity = 0.3 * (1 - W.dawn * 0.7);
+  matMoon.opacity = 0.5 * (1 - W.dawn * 0.6);
+  moonMesh.userData.halo.material.opacity = 0.26 * (1 - W.dawn * 0.7);
   moonMesh.userData.halo.material.color.copy(moodColor('moon'));
-  // 月轮与光晕挂在相机背景层，随画幅自适应位置，避免被顶部 UI 压住
-  moonMesh.position.x = portrait ? -4.2 : -8.6;
-  moonMesh.position.y = portrait ? 13.6 : 12.4;
-  moonMesh.userData.halo.position.copy(moonMesh.position);
+  // 月轮与光晕始终正对相机（世界空间位置固定，环绕时空间关系正确）
+  moonMesh.quaternion.copy(camera.quaternion);
+  moonMesh.userData.halo.quaternion.copy(camera.quaternion);
   starSys.material.opacity = 0.85 * lerp(mood.star, DAWN.star, clamp(W.dawn));
   matRay.uniforms.uColor.value.copy(moodColor('ray'));
-  matRay.uniforms.uOpacity.value = W.rays3D * (0.5 + 0.12 * Math.sin(t * 1.3));
+  matRay.uniforms.uOpacity.value = W.rays3D * (0.2 + 0.05 * Math.sin(t * 1.3));
   matRay.uniforms.uTime.value = t;
   matTrail.color.copy(moodColor('ray'));
   matTrail.opacity = 0.55 + 0.3 * W.trailGlow;
@@ -1679,17 +1761,22 @@ function render3D() {
   beaconMesh.scale.set(bs, bs * (1 + 0.12 * Math.sin(t * 7)), bs);
   beaconL.intensity = W.beacon * 5.5;
 
-  // 余韵孔明灯
+  // 余韵孔明灯：从谷地升起，散布在驿道上空的中景高度，
+  // 不堆到画面顶端遮挡 UI，越远越小，形成有纵深的灯河。
   for (let i = 0; i < skyLamps.length; i++) {
     const m = skyLamps[i];
     const k = clamp(W.lamps * 24 - i);
     m.visible = k > 0.01;
     if (!m.visible) continue;
-    const lx = -8 + (i % 8) * 2.4 + Math.sin(i * 2.3) * 1.2;
-    m.position.set(lx + Math.sin(t * 0.5 + i) * 0.4, 0.6 + k * 9 + Math.sin(t * 0.8 + i) * 0.3, -1.5 + Math.cos(i * 1.7) * 2.2);
-    m.scale.set(1, 1.3, 1).multiplyScalar(Math.min(1, k * 3));
-    m.userData.halo.lookAt(camera.position);
-    m.userData.halo.scale.setScalar(1 / Math.max(0.05, Math.min(1, k * 3)));
+    const col = i % 8, row = (i / 8) | 0;
+    const lx = -9.5 + col * 2.7 + Math.sin(i * 2.3) * 1.1;
+    const lz = -2.0 - row * 4.6 + Math.cos(i * 1.7) * 1.6;
+    const rise = 1.1 + k * (4.6 + row * 1.5);
+    m.position.set(lx + Math.sin(t * 0.5 + i) * 0.35, rise + Math.sin(t * 0.8 + i) * 0.25, lz);
+    const grow = Math.min(1, k * 3);
+    m.scale.set(1, 1.3, 1).multiplyScalar(grow);
+    m.userData.halo.quaternion.copy(camera.quaternion);
+    m.userData.halo.scale.setScalar(1 / Math.max(0.05, grow));
   }
 
   // 夜雾流萤
@@ -2400,8 +2487,10 @@ async function introPlay(tk) {
   }
 }
 
-init3D();
+// 首帧一律先以 2D 起跑：首页永远立即可见、可交互；
+// Three.js 到位且 WebGL 可用后，再无缝升级为 3D 剧场，剧情与状态不受影响。
 resetWorld();
+init3D();
 Object.assign(curCam3D, CAM3D.intro);
 window.__chuan = {
   scene: 'intro', finished: false, interactions: [], state: W,
@@ -2417,6 +2506,13 @@ addEventListener('resize', () => { resize(); updateView(); placeIntro(); });
 requestAnimationFrame(loop);
 requestAnimationFrame(() => { updateView(); placeIntro(); });
 bg(introPlay(intro.tk));
+
+// 后台加载 Three.js：成功则升级为 3D，超时或失败则保持已可运行的 2D 夜驿。
+loadThree().then(ok => {
+  if (!ok || renderer) return;
+  init3D();
+  if (renderer) { updateView(); placeIntro(); }
+});
 
 $('#start').addEventListener('click', () => {
   Sound.init(); Sound.pad();

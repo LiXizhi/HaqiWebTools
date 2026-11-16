@@ -2164,6 +2164,80 @@
         }
       },
       "layer": "terrain"
+    },
+    "forestQuest": {
+      "local": "assets/adventure/environment/forest-quest-props-6fb99500c4c8.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/environment/20261116/forest-quest-props-6fb99500c4c8.webp",
+      "width": 802,
+      "height": 294,
+      "size": 81686,
+      "sha256": "6fb99500c4c84a118295005a95e9224fd578f2884cfff1ed2041f58b81d0e67b",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "55de2d5cf6498bdb72edd069da885011668d46902590ab9c9accec0171bef243",
+        "width": 2172,
+        "height": 724
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 90
+      },
+      "frames": {
+        "satchel": {
+          "rect": [
+            12,
+            12,
+            262,
+            270
+          ],
+          "anchor": [
+            0.5,
+            1
+          ],
+          "sourceRect": [
+            64,
+            34,
+            632,
+            651
+          ]
+        },
+        "routeNote": {
+          "rect": [
+            286,
+            12,
+            297,
+            270
+          ],
+          "anchor": [
+            0.5,
+            1
+          ],
+          "sourceRect": [
+            789,
+            92,
+            636,
+            578
+          ]
+        },
+        "patrolLantern": {
+          "rect": [
+            595,
+            12,
+            195,
+            270
+          ],
+          "anchor": [
+            0.5,
+            1
+          ],
+          "sourceRect": [
+            1597,
+            31,
+            472,
+            652
+          ]
+        }
+      }
     }
   }
 }

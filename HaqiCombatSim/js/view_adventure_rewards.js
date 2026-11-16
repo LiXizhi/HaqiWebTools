@@ -50,21 +50,26 @@ export function createRewardFeedback(root,{describe,activate,showBanner=true,onB
     function paint(){
         popup.replaceChildren();
         const reward=active.items[0];if(!reward){popup.hidden=true;return;}popup.hidden=false;
+        popup.classList.remove('reward-enter');void popup.offsetWidth;popup.classList.add('reward-enter');
         popup.setAttribute('aria-label',tr(reward.kind==='honor'?'新获得的称号':'新获得的物品'));
         const info=describe(reward),heading=document.createElement('strong'),name=document.createElement('p'),hint=document.createElement('small');
-        setText(heading,reward.kind==='honor'?'解锁新称号':reward.kind==='dictionary'?'获得汉字卡':reward.kind==='card'?'获得新卡牌':reward.gear?'获得新装备':'获得新物品');
-        setText(name,reward.kind==='honor'?'{name}':'{name} ×{count}',{name:info.name||reward.name,count:reward.count});
-        setText(hint,info.reason||info.hint||(reward.kind==='dictionary'?'点击翻开这个字的故事':'已放入背包'));
+        setText(heading,reward.kind==='honor'?'解锁新称号':reward.kind==='pet'?'新伙伴加入':reward.kind==='dictionary'?'获得汉字卡':reward.kind==='card'?'获得新卡牌':reward.gear?'获得新装备':'获得新物品');
+        setText(name,reward.kind==='honor'||!reward.count||reward.count===1?'{name}':'{name} ×{count}',{name:info.name||reward.name,count:reward.count});
+        setText(hint,info.reason||info.hint||(reward.kind==='dictionary'?'翻开看看吧':'已放入背包'));
         if(info.art)popup.append(info.art);
         const use=document.createElement('button');use.type='button';use.className='primary';use.disabled=!!info.reason;
         setText(use,info.label);
         use.onclick=()=>{if(activate(reward)!==false)next();};
         const skip=document.createElement('button');skip.type='button';skip.className='secondary';
         if(active.items.length>1){setText(skip,'下一件（{count}）',{count:active.items.length-1});skip.title=tr(reward.kind==='honor'?'称号已解锁，继续查看下一件奖励':'这件已放入背包，继续查看下一件奖励');}
-        else setText(skip,'稍后处理');
+        else setText(skip,'收下');
         skip.onclick=next;
         popup.append(heading,name,hint);
-        if(info.comparison)popup.append(equipmentComparison(info.comparison));
+        if(info.comparison){
+            const details=document.createElement('details'),summary=document.createElement('summary');
+            details.className='reward-equipment-details';setText(summary,'装备变化');
+            details.append(summary,equipmentComparison(info.comparison));popup.append(details);
+        }
         popup.append(use,skip);
     }
     function next(){active.items.shift();paint();}

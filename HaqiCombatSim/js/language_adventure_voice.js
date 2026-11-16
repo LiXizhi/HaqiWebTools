@@ -130,7 +130,9 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
             // HelloLearner/js/speech.js: synthesize MP3 without autoPlay, then
             // await actual playback. Finishing synthesis is not finishing speech.
             sdk.speech?.resumeSharedAudioEngine?.();
-            const voiceType=character?selectDialogueVoice(character,sdk.speech?.getSupportedVoices?.()):getSettings().voiceType;
+            const savedVoice=getSettings().voiceType;
+            const speaker=character||{sex:savedVoice?.includes('_female_')?'female':'male'};
+            const voiceType=character||/^(?:ko|ja)(?:[-_]|$)/i.test(locale)?selectDialogueVoice(speaker,sdk.speech?.getSupportedVoices?.(),locale):savedVoice;
             const config={audioFormat:'mp3',autoPlay:false,enableSubtitle:false,speechRate:-8,...(voiceType?{voiceType}:{})};
             const key=JSON.stringify([text,locale,config]);
             let stream=null,audio=null,finishPlayback=null,release=null;

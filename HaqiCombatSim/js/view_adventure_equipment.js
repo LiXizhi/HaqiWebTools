@@ -1,4 +1,5 @@
 import {magicStarCombatLevel} from './adventure_magic_star_core.js';
+import {consumeEquipmentRequest} from './adventure_shop_navigation_core.js';
 import {forestCommissionPouch} from './forest_commission_core.js';
 import {dungeonFirstRewardSources} from './dungeon_first_rewards_core.js';
 import {adventureHonors,activeAdventureHonor} from './adventure_honors_core.js';
@@ -167,7 +168,7 @@ export function renderEquipment(body,model,cb,ui) {
     const inspector=new ItemDetails(body,model,ui);
     const {dialog,footer}=inspector;
     inspector.body.replaceWith(detail);inspector.body=detail;
-    function openDetail(item){cb.learningEvent?.('item-selected',{itemId:item.id});paintDetail(item);inspector.open();}
+    function openDetail(item,trigger){cb.learningEvent?.('item-selected',{itemId:item.id});paintDetail(item);inspector.open(trigger);}
 
 
     function render(){
@@ -178,6 +179,7 @@ export function renderEquipment(body,model,cb,ui) {
     }
     function paintList(){
         const items=owned.filter(item=>showingMounts?isMountItem(item):(travel?!isGear(item):isGear(item))&&(!state.slot||(travel?travelCategory(item)===state.slot:(FILTERS.find(([id])=>id===state.slot)?.[2]||[state.slot]).includes(item.slot))));
+        const requested=consumeEquipmentRequest(state,items,PAGE_SIZE);
         const pages=Math.max(1,Math.ceil(items.length/PAGE_SIZE));
         state.page=Math.max(0,Math.min(state.page||0,pages-1));
         grid.replaceChildren();pager.replaceChildren();
@@ -206,6 +208,7 @@ export function renderEquipment(body,model,cb,ui) {
         pager.append(previous,el('span','',`${state.page+1} / ${pages}`),next);
         if(!items.length&&!travel)grid.append(el('p','equipment-empty-list',state.slot?'这个分类还没有物品。':'还没有装备，完成导师任务可以获得。'));
         teachPointer(teachButton,save,c);
+        return requested;
     }
     function paintDetail(item){
         detail.replaceChildren();footer.replaceChildren();if(!item){detail.append(el('p','muted','选择一件物品，查看属性、穿戴条件和获取途径。'));return;}
@@ -290,6 +293,7 @@ export function renderEquipment(body,model,cb,ui) {
         const sources=[...quests.map(q=>q.title),...dungeonFirstRewardSources(c,item.id,save.school)];
         if(sources.length)detail.append(el('p','equipment-source',fill(`获取途径：{v0}`,{v0:sources.join('、')}).text));
     }
-    paintList();
+    const requested=paintList();
+    if(requested)openDetail(requested,grid.querySelector('.equipment-item.selected'));
     return {openDetail};
 }

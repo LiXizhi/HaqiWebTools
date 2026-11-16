@@ -14,10 +14,14 @@ export function gameSoundRecipe(name){
         teleport:[tone(260,1040,.42,0,.09,.05)],splash:[tone(260,100,.26,0,.07,.35)],
         catch:chime([660,880,1100],.16),feed:[tone(320,480,.12),tone(480,600,.12,.13)],
         friendship:chime([660,830,990],.16),adopt:chime([523,784,1047],.22),
+        petJoin:[...chime([523,659,784,1047],.28).map((cue,i)=>({...cue,delay:i*.19,gain:.1})),tone(523,523,.65,.8,.045),tone(659,659,.65,.8,.045),tone(1047,1047,.7,.8,.07),tone(1568,2093,.28,1.12,.035)],
+        petHello:chime([784,1047,1319],.12),
+        stone:[tone(160,80,.15,0,.07,.2),tone(880,1175,.18,.14,.06)],
+        pickup:chime([659,988],.12),paper:[tone(480,660,.09,0,.045,.12)],
     };
     const cues=recipes[name];
     if(!cues)return null;
-    return {cues,priority:['victory','defeat','level','quest','capture','adopt'].includes(name)?3:['reward','catch','friendship','purchase'].includes(name)?2:['click','open','close','select','discard'].includes(name)?0:1};
+    return {cues,priority:['victory','defeat','level','quest','capture','adopt','petJoin'].includes(name)?3:['reward','catch','friendship','purchase'].includes(name)?2:['click','open','close','select','discard'].includes(name)?0:1};
 }
 export function rewardSound(event,action=''){
     if(event.level)return 'level';

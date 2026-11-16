@@ -2,9 +2,8 @@ import {canEquip,deckLimits} from './adventure_core.js';
 import {FOOD_ID,foodInfo,petParams,productPrice} from './adventure_pets_core.js';
 
 export function adventureShopSelection(save,content){
- const chapter=content.quests||[];
- const active=save.zone==='camp'&&!save.graduated&&chapter.length>0&&!chapter.every(q=>save.quests?.[q.id]?.claimed);
- if(!active)return {active:false,rows:[]};
+ // Preparation follows the character's needs on every island, including after
+ // graduation. The full catalog remains available alongside these suggestions.
  const rows=[],advice=shopGuidance(save,content);
  if(advice.panel==='pet')rows.push(advice);
  else{

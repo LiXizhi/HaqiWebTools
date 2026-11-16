@@ -485,7 +485,7 @@
       "replacement": [
         {
           "npcId": 36211,
-          "text": "这个对手会先开护盾。和咕噜噜配合，试试怎么破盾。",
+          "text": "它会开盾，跟抱抱龙找机会！",
           "buttons": [
             {
               "action": "doaccept",
@@ -944,7 +944,7 @@
       "replacement": [
         {
           "npcId": 36211,
-          "text": "强化成功了！出奇蛋中的小伙伴已经加入你的旅程，去宠物面板看看吧。",
+          "text": "强化成功！送你一位新伙伴。",
           "buttons": [
             {
               "action": "dofinished",
@@ -2574,7 +2574,7 @@
       "startDialog": [
         {
           "npcId": 36211,
-          "text": "它会开护盾。和咕噜噜一起找机会。",
+          "text": "它会开盾，跟抱抱龙找机会！",
           "buttons": [
             {
               "action": "doaccept",
@@ -2888,7 +2888,7 @@
       "endDialog": [
         {
           "npcId": 36211,
-          "text": "强化成功！新伙伴也加入了，去宠物面板看看。",
+          "text": "强化成功！送你一位新伙伴。",
           "buttons": [
             {
               "action": "dofinished",

@@ -4,14 +4,15 @@ import {shopGuidance,adventureShopSelection} from '../js/adventure_shop_guidance
 const fresh=()=>({level:1,school:'fire',defaultPocketVersion:1,inventory:{100:25},cards:{},equipment:{},pets:{dragon:{hunger:100}},petFoodSlots:[]});
 const content=()=>({schools:{fire:1},items:{11:{id:11,kind:1,slot:24,stats:{167:14,170:2}}},shop:[{id:'food',itemId:990001,kind:'supply',level:1},{id:'bag',itemId:11,kind:'gear',slot:24,level:1}],balanceParams:{version:'kids'}});
 function learnCards(s,c,count){c.cardLibrary=Array.from({length:count},(_,i)=>({key:'card'+i,supported:true}));s.cards=Object.fromEntries(c.cardLibrary.map(row=>[row.key,1]));}
-test('camp beginners get only immediate needs; complete chapter and other islands retain full catalog',()=>{
+test('preparation remains available after graduation and on other islands without inventing needs',()=>{
  const s=fresh(),c=content();s.zone='camp';c.quests=Array.from({length:14},(_,i)=>({id:i}));
  assert.deepEqual(adventureShopSelection(s,c).rows,[]);
  s.pets.dragon.hunger=5;assert.deepEqual(adventureShopSelection(s,c).rows.map(r=>r.productId),['food']);
  s.petFoodSlots=[{itemId:990001,count:1}];assert.equal(adventureShopSelection(s,c).rows[0].owned,true);assert.equal(adventureShopSelection(s,c).rows[0].productId,undefined);
  learnCards(s,c,6);assert.equal(adventureShopSelection(s,c).rows.length,2);
- s.quests=Object.fromEntries(c.quests.map(q=>[q.id,{claimed:true}]));assert.equal(adventureShopSelection(s,c).active,false);
- s.quests={};s.zone='town';assert.equal(adventureShopSelection(s,c).active,false);
+ const needs=adventureShopSelection(s,c).rows;
+ s.quests=Object.fromEntries(c.quests.map(q=>[q.id,{claimed:true}]));s.graduated=true;assert.equal(adventureShopSelection(s,c).active,true);assert.deepEqual(adventureShopSelection(s,c).rows,needs);
+ s.quests={};s.zone='town';assert.equal(adventureShopSelection(s,c).active,true);assert.deepEqual(adventureShopSelection(s,c).rows,needs);
 });
 test('capacity pressure gets one useful bag goal with real shortfall and no mutations',()=>{
  const s=fresh(),c=content();learnCards(s,c,6);const before=structuredClone({s,c});

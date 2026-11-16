@@ -177,12 +177,19 @@ test('deck defaults to learned cards and stages learning points until save',t=>{
     A.applyAction(s,c,action);assert.ok(s.cards[key]);assert.equal(trainingPoints(s,c),0);
 });
 
-test('bag selector stages real equipment and five-copy decks until save, shop opens bag category',()=>{
+test('bag selector stages real equipment and five-copy decks; navigation uses owned upgrades before shopping',()=>{
     const {content:c,dataset}=expanded(),s=A.createAdventure(c);
     s.xp=c.progression.xpThresholds[29];A.syncProgression(s,c);s.inventory[24014]=1;
     const h=domHelpers(),body=h.el('section'),shopView={};let action,panel;
-    renderDeckEditor(body,{save:s,shopView,assets:{content:c,dataset,effects:{cards:{}},skillArt:{}}},{action:value=>action=value,panel:value=>panel=value},h);
+    const model={save:s,shopView,assets:{content:c,dataset,effects:{cards:{}},skillArt:{}}};
+    const callbacks={action:value=>action=value,panel:(kind,options)=>panel={kind,options}};
+    renderDeckEditor(body,model,callbacks,h);
     const all=node=>[node,...(node?.children||[]).flatMap(child=>typeof child==='object'?all(child):[])];
+    const beforeNavigation=copy(s);
+    all(body).find(node=>node.tag==='button'&&node.children[0]==='装备已有卡包').onclick();
+    assert.deepEqual(panel,{kind:'equipment',options:{}});
+    assert.equal(action,undefined,'opening owned equipment must not issue a purchase');
+    assert.deepEqual(s,beforeNavigation,'navigation must not spend or equip');
     const selectBag=id=>all(body).find(node=>node.dataset?.bagItemId===String(id)).onclick();
     selectBag(24014);
     const recommend=all(body).find(node=>node.tag==='button'&&node.children[0]==='推荐');recommend.onclick();
@@ -193,8 +200,14 @@ test('bag selector stages real equipment and five-copy decks until save, shop op
     assert.ok(!all(body).some(node=>node.tag==='select'||node.className==='bag-add'));
     assert.equal(all(body).find(node=>node.className==='bag-status').hidden,true);
     A.applyAction(s,c,action);assert.equal(s.equipment[24],24014);
-    all(body).find(node=>node.tag==='button'&&node.children[0]==='购买卡包').onclick();
-    assert.equal(panel,'shop');assert.equal(shopView.category,'bag');
+    const equippedBody=h.el('section');
+    renderDeckEditor(equippedBody,model,callbacks,h);
+    assert.ok(!all(equippedBody).some(node=>node.tag==='button'&&node.children[0]==='装备已有卡包'));
+    const savedAction=action,afterEquip=copy(s);
+    all(equippedBody).find(node=>node.tag==='button'&&node.children[0]==='查看可用卡包').onclick();
+    assert.equal(panel.kind,'shop');assert.equal(panel.options.category,'bag');assert.equal(panel.options.mode,'catalog');
+    assert.equal(action,savedAction,'opening the catalog must not issue a purchase');
+    assert.deepEqual(s,afterEquip);
 });
 test('all six schools are searchable; verified cross-school learning spends points and persists',()=>{
     const {content:c,dataset}=expanded(),s=A.createAdventure(c);

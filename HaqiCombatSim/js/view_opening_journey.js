@@ -8,7 +8,7 @@ export function renderOpeningJourney(root,model,cb){
  const state=openingJourney(model.save);
  root.replaceChildren();root.className='overlay visible opening-conversation-layer';
  const modal=el('section','modal opening-journey-modal opening-character-dialogue');modal.dataset.phase=state.phase;modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');
- const title=state.phase==='offer'?'抱抱龙发现了什么？':state.phase==='rescue'?'新伙伴：咕噜噜':state.phase==='done'?'初战告捷':'第一次搭档';
+ const title=state.phase==='showcase'?'新伙伴！':state.phase==='offer'?'抱抱龙发现了什么？':state.phase==='rescue'?'新伙伴：咕噜噜':state.phase==='done'?'初战告捷':'第一次搭档';
  modal.setAttribute('aria-label',title);
  const body=el('div','modal-body');
  const actions=el('div','cloud-actions');
@@ -65,16 +65,18 @@ export function renderOpeningJourney(root,model,cb){
   action('放入宠物背包',{step:'rescue',join:false});
  }else if(state.phase==='showcase'){
   const joined=model.save.formation.includes(state.petId);
-  say(joined?'你来出牌，我会自动帮忙！':'咕噜噜在宠物背包里，加入队伍就能一起战斗。');
+  body.append(el('p','opening-pet-award','咕噜噜'));
+  portrait.setAttribute('aria-label','咕噜噜 · 棉花啾兔');
+  say(joined?'以后，我陪你冒险！':'让我加入队伍吧！');
   if(!joined)action('加入队伍',{step:'join'},true);
-  else actions.append(button('去试试新搭档',cb.go,'primary'));
-  actions.append(button('查看伙伴',cb.pets,'secondary'));
+  else actions.append(button('带它出发',cb.go,'primary'));
  }else if(state.phase==='done'){
   say('抱抱龙想和你玩口令，试试用英语指挥它！');
   actions.append(button('和伙伴玩口令',cb.wordplay,'primary'),button('先去找青龙',cb.continue,'secondary'));
  }
- body.append(actions,details);
- modal.append(el('header','modal-header',el('h2','',speaker),createCloseButton(cb.close)),body);
+ body.append(actions);
+ if(state.phase!=='showcase')body.append(details);
+ modal.append(el('header','modal-header',el('h2','',state.phase==='showcase'?title:speaker),createCloseButton(cb.close)),body);
  root.append(modal);
  modal.addEventListener('keydown',event=>{
   event.stopPropagation();
@@ -87,4 +89,32 @@ export function renderOpeningJourney(root,model,cb){
  });
  // Focus a deliberate action, without automatically activating it.
  modal.querySelector('.primary')?.focus({preventScroll:true});
+}
+
+// Used after the companion has been saved, including a restored showcase.
+export function playOpeningPetWelcome(root){
+ const modal=root.querySelector('.opening-journey-modal[data-phase="showcase"]');
+ if(!modal)return false;
+ modal.classList.add('is-celebrating');
+ return true;
+}
+
+// Non-English chapter rewards use the same welcome as the opening story.
+export function renderPetWelcome(root,model,petId,cb,{line='以后，我陪你冒险！',actionLabel='带它出发'}={}){
+ const pet=model.save.pets[petId],name=pet.speciesId===OPENING_PET?'咕噜噜':pet.name||model.assets.content.pets[pet.speciesId]?.name||'新伙伴';
+ root.replaceChildren();root.className='overlay visible opening-conversation-layer';
+ const modal=el('section','modal opening-journey-modal opening-character-dialogue');
+ modal.dataset.phase='showcase';modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label','新伙伴！');
+ const portrait=petPortrait(model.assets,pet.speciesId,pet.appearanceStage||0,260);portrait.setAttribute('aria-label',name);
+ modal.append(el('header','modal-header',el('h2','','新伙伴！'),createCloseButton(cb.close)),el('aside','opening-speaker',portrait),
+  el('div','modal-body',el('p','opening-pet-award',name),el('p','opening-spoken-line',line),el('div','cloud-actions',button(actionLabel,cb.go,'primary'))));
+ modal.addEventListener('keydown',event=>{
+  event.stopPropagation();
+  if(event.key==='Escape'){event.preventDefault();cb.close();return;}
+  if(event.key!=='Tab')return;
+  const controls=[...modal.querySelectorAll('button:not(:disabled)')],first=controls[0],last=controls.at(-1);
+  if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus();}
+  else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
+ });
+ root.append(modal);modal.querySelector('.primary')?.focus({preventScroll:true});
 }

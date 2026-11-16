@@ -31,12 +31,12 @@
     <div id="hud"></div>
     <div id="battle-layer"></div>
     <div id="overlay"></div>
-    <div id="entry"><section id="boot-loading" class="boot-loading" aria-busy="true" hidden>
+    <div id="entry"><section id="boot-loading" class="boot-loading" aria-busy="true">
       <div id="load-brand"></div>
-      <h1 id="load-title"></h1><p id="load-chapter" class="boot-chapter"></p>
+      <h1 id="load-title">魔法哈奇</h1><p id="load-chapter" class="boot-chapter">初心之旅</p>
       <div class="boot-transfer">
-        <p id="load-caption" class="boot-caption"></p>
-        <p id="load-status" class="boot-status" role="status"></p>
+        <p id="load-caption" class="boot-caption">加载中…</p>
+        <p id="load-status" class="boot-status" role="status">准备出发…</p>
         <progress id="load-progress" max="1"></progress>
         <p id="load-detail" class="boot-detail"></p>
       </div>
@@ -45,6 +45,20 @@
     <div id="toast" role="status" aria-live="polite"></div>
   </main>
   <noscript>请开启 JavaScript 后开始冒险。</noscript>
-  <script type="module" src="js/adventure_boot.js"></script>
+  <script id="adventure-module" type="module" src="js/adventure_boot.js"></script>
+  <script>
+    (() => {
+      const showBootError = message => {
+        const card = document.getElementById('boot-loading');
+        if (!card) return;
+        card.setAttribute('aria-busy', 'false');
+        document.getElementById('load-caption').textContent = '暂时无法出发';
+        document.getElementById('load-status').textContent = message;
+        document.getElementById('load-progress').hidden = true;
+      };
+      if (location.protocol === 'file:') showBootError('请通过游戏预览入口打开。');
+      else document.getElementById('adventure-module').addEventListener('error', () => showBootError('加载失败，请刷新重试。'));
+    })();
+  </script>
 </body>
 </html>

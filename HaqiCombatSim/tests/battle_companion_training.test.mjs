@@ -143,3 +143,19 @@ test('strategy bubbles only describe a real consumed effect in new training',()=
  assert.equal(openingStrategyCue(battle,{...event,id:999}),null);
  battle.monsterTemplates[0].openingTrainingVersion=2;assert.equal(openingStrategyCue(battle,event),null);
 });
+
+
+test('world advice gives only the next unfinished objective and never repeats the story description',()=>{
+ const save=A.createAdventure(content,{starter:'dragon_green',school:'fire',seed:1});
+ delete save.openingJourney;save.zone='camp';
+ const quest={id:'short-guide',name:'营地切磋',startNpc:36211,endNpc:36211,description:'这是一段很长的任务背景。'.repeat(8),goals:[{kind:'talk',id:36201,count:1},{kind:'defeat',id:'guide-enemy',count:3}]};
+ const local={...content,quests:[quest],monsters:{guide:{goalId:'guide-enemy',name:'侦查兵'}}};
+ save.quests={[quest.id]:{accepted:true,claimed:false,progress:{}}};
+ let before=JSON.stringify(save),guide=companionWorldGuide(save,local);
+ assert.equal(guide.text,'和莫尼聊聊。');assert.equal(guide.track,quest.id);assert.equal(JSON.stringify(save),before);
+ save.quests[quest.id].progress={'talk:36201':1,'defeat:guide-enemy':1};
+ before=JSON.stringify(save);guide=companionWorldGuide(save,local);
+ assert.equal(guide.text,'再击败2只侦查兵。');assert.equal(JSON.stringify(save),before);
+ save.quests[quest.id].progress['defeat:guide-enemy']=3;
+ assert.match(companionWorldGuide(save,local).text,/领奖/);
+});

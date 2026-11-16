@@ -57,19 +57,19 @@ test('battle advice translates full sentences, card and target names in all UI l
   for(const language of ['en','ja','ko']){
    const table=parseLocaleFile(fs.readFileSync(new URL(`../data/adventure/locale/${language}.txt`,import.meta.url),'utf8'));
    setTranslator(text=>table[text]||text);
-   for(const [seq,petCardsOpen,pattern]of [[0,false,'可以试试「{card}」，目标选{target}。'],[10000,false,'打开“使用宠物卡”，试试「{card}」，目标选{target}。'],[10000,true,'可以试试宠物卡「{card}」，目标选{target}。']]){
+   for(const [seq,petCardsOpen,pattern]of [[0,false,'「{card}」选{target}。'],[10000,false,'试试宠物卡「{card}」。'],[10000,true,'「{card}」选{target}。']]){
     const bubble=createBattlePetHint({...model,petCardsOpen,aiHint:{action:{seq,key:'trap',targetId:'enemy'}}},{el});
     const text=bubble.children[0].textContent;
     assert.equal(text,fill(pattern,{card:'烈火陷阱',target:'小米粒'}).text);
-    assert.ok(text.includes(table['烈火陷阱']));assert.ok(text.includes(table['小米粒']));
+    assert.ok(text.includes(table['烈火陷阱']));if(pattern.includes('{target}'))assert.ok(text.includes(table['小米粒']));
     assert.equal(bubble.children[0].dataset.zh,fill(pattern,{card:'烈火陷阱',target:'小米粒'}).zh);
     assert.equal(bubble.attributes['aria-label'],fill('{message} 点击收起提示',{message:text}).text);
     if(language==='en')assert.doesNotMatch(text,/[\u3400-\u9fff]/u);
    }
    const pass=createBattlePetHint({...model,aiHint:{action:{pass:true}}},{el});
-   assert.equal(pass.children[0].textContent,table['先攒点魔力，等机会再出手。']);
+   assert.equal(pass.children[0].textContent,table['先攒魔力，等机会。']);
    const discard=createBattlePetHint({...model,aiHint:{action:{pass:true,discardSeqs:[0]}}},{el});
-   assert.equal(discard.children[0].textContent,fill('可以弃掉「{card}」，找找需要的牌。',{card:'烈火陷阱'}).text);
+   assert.equal(discard.children[0].textContent,fill('弃掉「{card}」，换张牌。',{card:'烈火陷阱'}).text);
   }
  }finally{setTranslator(null);}
 });
@@ -84,8 +84,8 @@ test('pet speech is passive plain text, suppressed while choosing or muted',()=>
  const message=m=>createBattlePetHint(m,{el})?.children[0].children[0];
  hero.petDeckSeq=['hit'];hero.petDeckMap=[1];
  const petModel={...model,aiHint:{action:{seq:10000,key:'hit',targetId:'enemy'}}};
- assert.match(message(petModel),/打开“使用宠物卡”/);
- assert.match(message({...petModel,petCardsOpen:true}),/可以试试宠物卡/);
+ assert.equal(message(petModel),'试试宠物卡「烈火魔光」。');
+ assert.equal(message({...petModel,petCardsOpen:true}),'「烈火魔光」选侦察兵。');
  hero.petDeckMap[0]=-2;assert.equal(message(petModel),undefined);
  assert.equal(message({...model,discarded:[0]}),undefined);
  hero.deckMap[0]=0;assert.equal(message(model),undefined);
@@ -94,10 +94,10 @@ test('pet speech is passive plain text, suppressed while choosing or muted',()=>
  model.battle.resolved.cards.hit.pipcost=0;enemy.hp=0;assert.equal(message(model),undefined);enemy.hp=100;
  assert.equal(message({...model,aiHint:{action:{seq:0,key:'wrong',targetId:'enemy'}}}),undefined);
 
- assert.equal(bubble.children[0].children[0],'可以试试「烈火魔光」，目标选侦察兵。');
+ assert.equal(bubble.children[0].children[0],'「烈火魔光」选侦察兵。');
  assert.equal(createBattlePetHint({...model,selected:{key:'hit'}},{el}),null);
  assert.equal(createBattlePetHint({...model,aiHintsMuted:true},{el}),null);
- assert.equal(createBattlePetHint({...model,aiHint:{action:{pass:true}}},{el}).children[0].children[0],'先攒点魔力，等机会再出手。');
+ assert.equal(createBattlePetHint({...model,aiHint:{action:{pass:true}}},{el}).children[0].children[0],'先攒魔力，等机会。');
 });
 import {updateBattlePetHint} from '../js/view_battle_pet_hint.js';
 

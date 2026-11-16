@@ -168,9 +168,12 @@ export function petAction(save,content,action,access={}){
   const item=content.shop.find(x=>x.id===action.productId);check(item,'商品不存在');check(!item.retired,'捕获晶球已停售，请使用抓宠符文');check(!item.isInternalTest,'内测道具不对外出售');check(!item.vipOnly||access.keepworkVip===true,'该商品仅限会员购买。请登录会员账号后重试。');check(save.level>=item.level,'等级尚未解锁');
   check(item.kind!=='pet'||!Object.values(ownedPetRecords(save)).some(p=>p.speciesId===item.petId),'已经拥有这只宠物');const cost=productPrice(item,content);
   const currency=item.kind==='mount'?item.currency:100;
+  check([100,984].includes(currency),'商品货币无效');check(Number.isSafeInteger(cost)&&cost>=0,'商品价格无效');
+  check(item.kind!=='mount'||!(save.inventory[item.itemId]>0),'已经拥有这只坐骑');
   check(!action.paidByTest,'语言课程仅发放限额奖励，请使用货币购买');
   const count=action.count??1;check(Number.isSafeInteger(count)&&count>0&&count<=999&&(count===1||!!foodInfo(content,item.itemId)),'购买数量无效');
   check(item.kind==='pet'||Number.isSafeInteger((save.inventory[item.itemId]||0)+count),'物品数量无效');
+  check(Number.isSafeInteger(cost*count),'商品总价无效');
   check((save.inventory[currency]||0)>=cost*count,currency===984?'魔豆不足':'奇豆不足');save.inventory[currency]-=cost*count;
   if(item.kind==='pet')addPet(save,content,item.petId);else save.inventory[item.itemId]=(save.inventory[item.itemId]||0)+count;
   save.transactions.push({id:save.transactions.length+1,productId:item.id,cost:cost*count,count,paidByTest:false});break;

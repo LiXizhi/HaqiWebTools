@@ -11761,6 +11761,19 @@ Word · 回忆拼写||Word · Recall Spelling
 先问问领地看守者，考核对手有什么本领。||Ask the territory guard about your next opponent.
 对手会吸血。收好新卡包，准备应战！||Your foe drains life. Take this deck bag and prepare!
 它攻击时会吸血，别给它慢慢恢复的机会。||Its attacks drain life. Do not let it recover.
+
+# js/view_battle_pet_hint.js — short battle prompts
+弃掉「{card}」，换张牌。||Discard “{card}” for a new card.
+先攒魔力，等机会。||Save magic for now.
+「{card}」选{target}。||Choose {target} for “{card}”.
+试试「{card}」。||Try “{card}”.
+试试宠物卡「{card}」。||Try pet card “{card}”.
+它会开盾，跟抱抱龙找机会！||It has a shield. Team up with Baobao Dragon!
+强化成功！送你一位新伙伴。||Upgrade complete! Meet your new friend.
+
+跟我去见青龙！||Come meet Qinglong!
+
+一起出发||Let's go!
 奶奶的燕子风筝||Grandma’s swallow kite
 递线||Pass the spool
 放飞||Let it fly

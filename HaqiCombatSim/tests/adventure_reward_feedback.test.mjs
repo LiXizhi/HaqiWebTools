@@ -148,7 +148,7 @@ test('a tall simultaneous burst stays one banner and keeps equip prompts',()=>{
   assert.equal(rows[0],'物品0 ×1');
   assert.equal(rows.at(-1),'另获 2 种奖励');
   assert.equal(root.children[1].hidden,false);
-  assert.equal(root.children[1].children.find(node=>node.textContent?.includes('物品9')).textContent,'物品9 ×1');
+  assert.equal(root.children[1].children.find(node=>node.textContent?.includes('物品9')).textContent,'物品9');
  }finally{if(previous===undefined)delete globalThis.document;else globalThis.document=previous;}
 });
 test('overlay pauses effects and later rewards are not blocked by an unhandled item',()=>{

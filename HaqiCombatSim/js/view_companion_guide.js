@@ -32,9 +32,9 @@ export function renderCompanionGuide(root,model,cb,{battle=false}={}){
    if(guide.panel)cb.panel(guide.panel);else cb.track(guide.track);
   },'primary'));
   if(!battle){
-   if(campDetourGoal(model.save))box.append(button('先去做主线',()=>cb.track('camp-detour-pause'),'secondary'));
-   else if(campDetourAvailable(model.save)&&campDetour(model.save)?.step!==3)box.append(button(campDetour(model.save)?'继续找歌声':'我想去营地探索',()=>cb.track('camp-detour-start'),'secondary'));
-   if(!campDetourGoal(model.save))box.append(button('我想看看我的伙伴',()=>{root.guideOpen=false;paint();cb.panel('pet');},'secondary'));
+   if(campDetourGoal(model.save))box.append(button('继续主线',()=>cb.track('camp-detour-pause'),'secondary'));
+   else if(campDetourAvailable(model.save)&&campDetour(model.save)?.step!==3)box.append(button(campDetour(model.save)?'继续寻宝':'营地寻宝',()=>cb.track('camp-detour-start'),'secondary'));
+   if(!campDetourGoal(model.save))box.append(button('我的伙伴',()=>{root.guideOpen=false;paint();cb.panel('pet');},'secondary'));
   }
   dock.append(box);
  };
@@ -42,8 +42,8 @@ export function renderCompanionGuide(root,model,cb,{battle=false}={}){
 }
 function battleGuide(root,model){
  const b=model.battle;
- if(b.finished)return {text:b.winner==='near'?'我们赢了！先收下奖励，再看看下一步。':'这次没成功也没关系。回去调整卡牌，我们再试。',label:'指给我看',help:()=>focus(root.querySelector('.result-card button'))};
- if(model.animating)return {text:'先看看这一招的效果，我陪你等它结束。'};
+ if(b.finished)return {text:b.winner==='near'?'赢啦！收下奖励吧。':'调整卡牌，再来一次！',label:'指给我看',help:()=>focus(root.querySelector('.result-card button'))};
+ if(model.animating)return {text:'看，这一招出手了！'};
  if(model.selected){
   const advice=companionSelectedAdvice(b,model.selected,model.discarded);
   if(advice.wait)return {text:advice.text,label:'找到跳过按钮',help:()=>focus([...root.querySelectorAll('button')].find(n=>n.textContent==='跳过本回合'))};
@@ -53,7 +53,7 @@ function battleGuide(root,model){
  const cards=[...root.querySelectorAll('.hand-card:not(.unavailable) .card-select:not(:disabled)')];
  const advice=companionBattleAdvice(b,cards.map(card=>Number(card.closest('.hand-card').dataset.seq)),model.assets.dataset.cards);
  const petCards=[...root.querySelectorAll('.battle-hand-actions button')].find(node=>!node.hidden&&!node.disabled&&/^使用宠物卡/.test(node.textContent));
- if(advice.kind!=='wait'&&!cards.length&&petCards)return {text:'手里的牌暂时用不了，抱抱龙还有宠物卡。打开看看？',label:'看看宠物卡',help:()=>petCards.click()};
+ if(advice.kind!=='wait'&&!cards.length&&petCards)return {text:'试试抱抱龙的宠物卡。',label:'看看宠物卡',help:()=>petCards.click()};
  const suggested=cards.filter(card=>advice.seqs.includes(Number(card.closest('.hand-card').dataset.seq)));
  return {text:advice.text,label:suggested.length?(advice.kind==='practice'?'看看语言卡':advice.kind==='capture'?'看看抓宠符文':'指给我看'):'找到跳过按钮',help:()=>{
   if(suggested.length){for(const card of suggested)card.classList.add('companion-guide-highlight');

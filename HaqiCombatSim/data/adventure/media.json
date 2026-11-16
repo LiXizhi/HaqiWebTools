@@ -1159,10 +1159,30 @@
       "local": "assets/adventure/webp/sprites.webp",
       "sha256": "d60a6e029b8323d114a0a0211826c69ece0110fa44f2f7bf85373393eddd1b51",
       "frames": {
-        "0": [0, 0, 176, 164],
-        "1": [176, 0, 145, 164],
-        "2": [321, 0, 160, 166],
-        "3": [481, 0, 161, 166]
+        "0": [
+          0,
+          0,
+          176,
+          164
+        ],
+        "1": [
+          176,
+          0,
+          145,
+          164
+        ],
+        "2": [
+          321,
+          0,
+          160,
+          166
+        ],
+        "3": [
+          481,
+          0,
+          161,
+          166
+        ]
       },
       "size": 184046,
       "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/d60a6e029b8323d114a0a0211826c69ece0110fa44f2f7bf85373393eddd1b51.webp",
@@ -1214,6 +1234,36 @@
       "height": 568,
       "encoder": "Pillow 11.3.0; WebP quality 75; alpha preserved; max 200000 bytes",
       "provenance": "Generated summon atlas, 2026-09-17; card-inspired 2D adaptation"
+    },
+    "audio/haqi/ariesregionbgmusics/area_forest.ogg": {
+      "local": "assets/adventure/cdn/2ef9d2f36ba4f46fc846718fee4b973c.ogg",
+      "sha256": "cb026e1ad7db511e36e628680aa02af0fbccd9d6f4987e7a29aa044fb6e294e7",
+      "size": 1212082,
+      "cdn": "https://cdn.keepwork.com/update61/assetdownload/update/audio/haqi/ariesregionbgmusics/area_forest.ogg.p,2ef9d2f36ba4f46fc846718fee4b973c,1212082",
+      "optional": true,
+      "sourceEntry": "audio/haqi/ariesregionbgmusics/area_forest.ogg.p,2ef9d2f36ba4f46fc846718fee4b973c,1212082",
+      "sourceSha256": "cb026e1ad7db511e36e628680aa02af0fbccd9d6f4987e7a29aa044fb6e294e7",
+      "sourceBytes": 1212082
+    },
+    "audio/haqi/ariesregionbgmusics/area_snow.ogg": {
+      "local": "assets/adventure/cdn/4be17152ace91177df6a660fbfb0dd43.ogg",
+      "sha256": "7ad8212af6f3e525872394595febdf81839ed302a580c2db23c7c0659982de21",
+      "size": 1451679,
+      "cdn": "https://cdn.keepwork.com/update61/assetdownload/update/audio/haqi/ariesregionbgmusics/area_snow.ogg.p,4be17152ace91177df6a660fbfb0dd43,1451679",
+      "optional": true,
+      "sourceEntry": "audio/haqi/ariesregionbgmusics/area_snow.ogg.p,4be17152ace91177df6a660fbfb0dd43,1451679",
+      "sourceSha256": "7ad8212af6f3e525872394595febdf81839ed302a580c2db23c7c0659982de21",
+      "sourceBytes": 1451679
+    },
+    "audio/haqi/ariesregionbgmusics/combat_teen_common_trialversion.ogg": {
+      "local": "assets/adventure/cdn/e10099c08d7937eade689464b4310adc.ogg",
+      "sha256": "99ef1c2bb6a1aeaf9c2c5116eb691c60de658eb8d1a6c7399b25465619554141",
+      "size": 2069946,
+      "cdn": "https://cdn.keepwork.com/update61/assetdownload/update/audio/haqi/ariesregionbgmusics/combat_teen_common_trialversion.ogg.p,e10099c08d7937eade689464b4310adc,2069946",
+      "optional": true,
+      "sourceEntry": "audio/haqi/ariesregionbgmusics/combat_teen_common_trialversion.ogg.p,e10099c08d7937eade689464b4310adc,2069946",
+      "sourceSha256": "99ef1c2bb6a1aeaf9c2c5116eb691c60de658eb8d1a6c7399b25465619554141",
+      "sourceBytes": 2069946
     }
   }
 }

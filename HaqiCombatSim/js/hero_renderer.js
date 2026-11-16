@@ -193,12 +193,10 @@ export class HeroRenderer {
         const mountImage=appearance.mount&&this.images.get('mount:'+appearance.mount.id);
         if(pose.mount&&!mountImage)return {ready:false};
         const drawMount=()=>{const m=pose.mount;const art=appearance.mount.art||mountImage,cw=art.width/(art.columns||2),ch=art.height/(art.rows||2);sheet(mountImage,[m.cell%2*cw,Math.floor(m.cell/2)*ch,cw,ch],m);};
-        ctx.save();ctx.translate(x,y);
-        if(pose.mount&&mountImage)drawMount();
-        sheet(split?bodyImage:source,crop,bodyRect);
-        let headRect=null;
+        let headRect=null,headFrame=null;
         if(split&&!options.bodyOnly){
             const h=heads.frames[headFrameIndex(heads.directionCount,pose.rider.cell,head)],s=frame.headHeight*ratio/h.height;
+            headFrame=h;
             // Side-facing profiles can refine the shared relative-turn compensation.
             // Values are body-atlas pixels, scaled with the body rather than the head art.
             const turn=heads.directionCount===4?0:Math.abs(((head-BODY_TO_HEAD[pose.rider.cell])%16+24)%16-8);
@@ -206,6 +204,24 @@ export class HeroRenderer {
             const drop=(side&&this.manifest.sideHeadTurnDrop?.[appearance.gender])||this.manifest.headTurnDrop||[0,0,0];
             const turnDrop=heads.directionCount===4?0:drop[Math.min(turn,drop.length-1)]||0;
             headRect={x:neck[0]-h.neck[0]*s,y:neck[1]-h.neck[1]*s+turnDrop*ratio,w:h.crop[2]*s,h:h.crop[3]*s};
+        }
+        // Fit the complete character, including hair above its neck, in UI portraits.
+        // Keep world and mounted placements on their original geometry.
+        let portraitBounds=null;
+        ctx.save();ctx.translate(x,y);
+        if(options.portraitFrame&&!pose.mount){
+            const target=options.portraitFrame,pad=target.padding??8;
+            const left=Math.min(bodyRect.x,headRect?.x??bodyRect.x),top=Math.min(bodyRect.y,headRect?.y??bodyRect.y);
+            const right=Math.max(bodyRect.x+bodyRect.w,headRect?headRect.x+headRect.w:0),bottom=Math.max(bodyRect.y+bodyRect.h,headRect?headRect.y+headRect.h:0);
+            const scale=Math.min((target.w-pad*2)/(right-left),(target.h-pad*2)/(bottom-top));
+            const tx=(target.w-(right-left)*scale)/2-left*scale,ty=target.h-pad-bottom*scale;
+            ctx.translate(tx,ty);ctx.scale(scale,scale);
+            portraitBounds={x:left*scale+tx,y:top*scale+ty,w:(right-left)*scale,h:(bottom-top)*scale};
+        }
+        if(pose.mount&&mountImage)drawMount();
+        sheet(split?bodyImage:source,crop,bodyRect);
+        if(headRect){
+            const h=headFrame;
             const breath=options.breath||headBreath(options.time||0,options.phase||0,options.reducedMotion||original);
             // Pivot at the attachment point; sub-pixel breathing stays inside neck overlap.
             ctx.save();ctx.translate(neck[0]+breath.x*r.w/78,neck[1]+breath.y*r.w/78);if(breath.angle)ctx.rotate(breath.angle);
@@ -225,7 +241,7 @@ export class HeroRenderer {
             const cross=(p,color)=>{ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(p[0]-5,p[1]);ctx.lineTo(p[0]+5,p[1]);ctx.moveTo(p[0],p[1]-5);ctx.lineTo(p[0],p[1]+5);ctx.stroke();};
             cross(neck,'#ffcc73');if(pose.seat)cross(pose.seat,'#ff6687');
         }
-        ctx.restore();return {ready:true,split,walkFrame:walking?step:null,pose,bodyRect,headRect,neck,seat:pose.seat};
+        ctx.restore();return {ready:true,split,walkFrame:walking?step:null,pose,bodyRect,headRect,portraitBounds,neck,seat:pose.seat};
     }
     drawSave(ctx,save,x,y,time=0,moving=false,scale=1,options={}) {
         const appearance=this.appearance(save,options);this.ensure(appearance);
@@ -273,7 +289,7 @@ export class HeroRenderer {
 export function heroPortrait(assets,save,w=90,h=95,{facing=0,mounted=false,...options}={}){
     if(!assets.hero){const canvas=document.createElement('canvas');canvas.width=w*2;canvas.height=h*2;assets.tile?.(canvas.getContext('2d'),'sprites',(save.appearance==='girl'?12:8)+facing,0,0,w*2,h*2);return canvas;}
     const appearance=assets.hero.appearance(save,{mounted});
-    const framing=appearance.mount?{x:w,y:h*1.65,size:w}:{x:0,y:0,bodyRect:{x:0,y:0,w:w*2,h:h*2}};
+    const framing=appearance.mount?{x:w,y:h*1.65,size:w}:{x:0,y:0,bodyRect:{x:0,y:0,w:w*2,h:h*2},portraitFrame:{w:w*2,h:h*2,padding:10},lookAround:false};
     const view=assets.hero.createView(appearance,{width:w*2,height:h*2,...framing,facing,animate:true,...options});
     view.node.className='art';view.node.style.width=w+'px';view.node.style.height=h+'px';view.ready.catch(()=>{});return view.node;
 }

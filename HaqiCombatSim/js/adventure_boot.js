@@ -19,6 +19,8 @@ export function readBootLocale(storage) {
 }
 
 export async function bootAdventure() {
+    const card = document.getElementById('boot-loading');
+    try {
     let preferences;
     try { preferences = readBootLocale(localStorage); }
     catch { preferences = normalizeLocaleSave({}); }
@@ -26,7 +28,6 @@ export async function bootAdventure() {
     configureLocale(preferences);
     document.documentElement.lang = preferences.locale;
     document.title = tr('魔法哈奇 · 初心之旅');
-    const card = document.getElementById('boot-loading');
     document.getElementById('load-brand').replaceChildren(createEntryEmblem('boot-emblem'));
     setText(document.getElementById('load-title'), '魔法哈奇');
     setText(document.getElementById('load-chapter'), '初心之旅');
@@ -36,7 +37,8 @@ export async function bootAdventure() {
     document.getElementById('load-progress').setAttribute('aria-label', tr('正在准备游戏资源'));
     if(new URLSearchParams(location.search).get('product')==='hanzi'){document.title='字有魔法 · Hanzi Magic';document.getElementById('load-title').textContent=preferences.locale==='en'?'Hanzi Magic':'字有魔法';document.getElementById('load-chapter').textContent=preferences.locale==='en'?'Island of living words':'文字会醒来的地方';document.getElementById('load-note').textContent=preferences.locale==='en'?'Speak, write, and collect your magic.':'说出它，写出它，把魔法珍藏成卡。';}
     card.hidden = false;
-    try { await import('./adventure_app.js'); }
+    await import('./adventure_app.js');
+    }
     catch (error) {
         console.error('冒险启动失败：',error);
         card.setAttribute('aria-busy', 'false');

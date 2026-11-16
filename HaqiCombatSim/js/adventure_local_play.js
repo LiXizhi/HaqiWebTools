@@ -1,4 +1,6 @@
 import {drawGatheringProgress} from './view_gathering_progress.js';
+import {shopNavigationState,equipmentNavigationState} from './adventure_shop_navigation_core.js';
+import {createShopRefreshQueue,paintShopPreservingFocus} from './adventure_shop_refresh_core.js';
 import {migrateCampDrops,locationSnapshot} from './adventure_coordinates_core.js';
 import {startWorldOnFoot} from './adventure_mounts_core.js';
 import {selectCompanionId} from './adventure_companion_core.js';
@@ -49,6 +51,12 @@ export function createLocalPlay(api){
     const aiBattle=new BattleAIClient();
     const followMotion=createLocalFollowMotion();
     const panels=[null,null],dialogs=[null,null],roots=[el('div','local-personal local-left'),el('div','local-personal local-right')];
+    const actionPending=[0,0];
+    const shopRefresh=createShopRefreshQueue({
+        isOpen:owner=>!!session&&panels[owner]==='shop',
+        isBlocked:owner=>state().stage!=='world'||!!state().battle||!!actionPending[owner]||!!roots[owner].querySelector('dialog[open]'),
+        paint:owner=>paintShopPreservingFocus(roots[owner],()=>paintPanel(owner))
+    });
     const peerControl=createLocalPeerControl(()=>openPeerActions(1));
     function setFollowing(owner,value){
         following[owner]=value;paths[owner]=[];mouseTargets[owner]=null;pressed[owner].clear();
@@ -207,7 +215,7 @@ export function createLocalPlay(api){
         if(identity!==store.owner||saves()[owner]!==current)throw Error('角色已切换');
         const next=store.loadPet(current,id,roleId);Object.assign(current.pets,next.pets);return current.pets[id];
     }
-    function close(owner){void voices[owner].cancel();roots[owner].disposeDialogue?.();roots[owner].replaceChildren();roots[owner].className=`local-personal local-${owner?'right':'left'}`;panels[owner]=null;dialogs[owner]=null;pressed[owner].clear();paths[owner]=[];if(formationDrag?.owner===owner)formationDrag=null;delete ui[owner].seat;}
+    function close(owner){shopRefresh.clear(owner);void voices[owner].cancel();roots[owner].disposeDialogue?.();roots[owner].replaceChildren();roots[owner].className=`local-personal local-${owner?'right':'left'}`;panels[owner]=null;dialogs[owner]=null;pressed[owner].clear();paths[owner]=[];if(formationDrag?.owner===owner)formationDrag=null;delete ui[owner].seat;}
     function closeAll(){close(0);close(1);formationDrag=null;}
     async function start(first,second,{controller}={}){
         if(!wideEnough(innerWidth,innerHeight))throw Error('双人模式需要至少800×480的游戏显示区域');
@@ -251,8 +259,14 @@ export function createLocalPlay(api){
     function panelModel(owner){
         const m=api.model();return {...m,save:panels[owner]==='pet'?petPanelSave(owner):saves()[owner],petView:ui[owner].petView||=( {}),equipmentView:ui[owner].equipmentView||={tab:'gear',slot:0,query:'',item:null,guid:null},shopView:ui[owner].shopView||={category:'pet',query:'',school:'',slot:'',ownership:'',page:0},strengtheningView:ui[owner].strengtheningView||={},gemView:ui[owner].gemView||={},serviceNpc:ui[owner].npc,npcServiceView:ui[owner].npcServiceView||={query:'',page:0,kind:'',category:''}};
     }
-    function repaint(){for(let i=0;i<2;i++)if(panels[i]&&panels[i]!=='arena')paintPanel(i);}
+    function flushShopRefresh(){
+        shopRefresh.flush();
+    }
+    function refreshShops(){for(let owner=0;owner<2;owner++)shopRefresh.request(owner);flushShopRefresh();}
+    function repaint(){for(let i=0;i<2;i++)if(panels[i]&&panels[i]!=='arena'){if(panels[i]==='shop')shopRefresh.request(i);else paintPanel(i);}flushShopRefresh();}
     function action(owner,value){return safe(async()=>{
+        actionPending[owner]++;
+        try{
         if(state().battle||busy)throw Error('请先结束当前战斗或保存');
         if(value.type==='formation'){
             const s=petPanelSave(owner),id=value.slots.find((id,i)=>id&&s.formation[i]!==id);
@@ -260,7 +274,17 @@ export function createLocalPlay(api){
             else {const pet=session.formation.slots.find(u=>u?.kind==='pet'&&u.owner===owner);if(pet&&!value.slots.includes(pet.id)){session.formation.slots=session.formation.slots.map(u=>u===pet?null:u);await saveFormation();}}
             return;
         }
-        const next=structuredClone(saves());A.applyAction(next[owner],state().assets.content,value);storeSaves(next);repaint();api.paintHud();
+        let access={};
+        const product=value.type==='buy'&&state().assets.content.shop.find(item=>item.id===value.productId);
+        if(product?.vipOnly){
+            const targetSession=session,targetStore=state().store,target=saves()[owner];
+            const membership=await api.refreshMembership();
+            if(session!==targetSession||state().store!==targetStore||saves()[owner]!==target||state().stage!=='world'||state().battle||busy)throw Error('角色或游戏状态已变化，请重新操作。');
+            if(membership.status==='guest')throw Error('请先登录会员账号，再使用会员权益。');
+            access={keepworkVip:membership.isVip,expiresAt:membership.expiresAt,now:Date.now()};
+        }
+        const next=structuredClone(saves());A.applyAction(next[owner],state().assets.content,value,access);storeSaves(next);repaint();api.paintHud();return true;
+        }finally{actionPending[owner]--;}
     });}
     async function saveFormation(){validateLocalFormation(session.formation,session.ids,saves());record.formations[session.ids.join(':')]=structuredClone(session.formation);await queueWrite();repaint();}
     function paintFormation(owner){
@@ -297,9 +321,16 @@ export function createLocalPlay(api){
         const head=roots[owner].querySelector('.modal-header');if(head)head.prepend(el('span','local-owner',`玩家${owner+1} · ${saves()[owner].name}`));
     }
     function openPanel(owner,kind,options={}){
-        if(state().stage!=='world')return;close(owner);panels[owner]=kind;ui[owner].npc=options.npc||ui[owner].npc;paintPanel(owner);
+        if(state().stage!=='world')return;
+        if(kind==='membership'||kind==='recharge'){api.openAccountPanel(kind,options);return;}
+        close(owner);panels[owner]=kind;ui[owner].npc=options.npc||ui[owner].npc;
+        if(kind==='shop')ui[owner].shopView=shopNavigationState(ui[owner].shopView,options);
+        if(kind==='inventory'||kind==='equipment')Object.assign(ui[owner].equipmentView||={},equipmentNavigationState(options,saves()[owner],state().assets.content));
+        if(kind==='pet')(ui[owner].petView||={}).tab=options.tab==='mount'?'mount':'follow';
+        paintPanel(owner);
+        if(kind==='shop')void safe(()=>api.refreshMembership());
     }
-    function openPersonal(kind){if(!session||!personal.has(kind))return false;openPanel(0,kind);if(['inventory','equipment','pet'].includes(kind))openPanel(1,kind);return true;}
+    function openPersonal(kind,options={}){if(!session||!personal.has(kind))return false;openPanel(0,kind,options);if(['inventory','equipment','pet'].includes(kind))openPanel(1,kind,options);return true;}
     function talk(owner,npc){
         if(owner===0)void voices[1].cancel();
         close(owner);dialogs[owner]={npcId:npc.id,npc};paintTalk(owner);
@@ -528,6 +559,7 @@ export function createLocalPlay(api){
     }
     const input=createPlayerInput({settings:()=>state().settings,enabled:owner=>!document.hidden&&(!!session||owner===0)&&(!session||wideEnough(innerWidth,innerHeight)),dispatch:(owner,e)=>control(owner,e.action,e.down,e.repeat)});
     function tick(now,dt){
+        flushShopRefresh();
         const {save,world,stage,renderer}=state();
         if(session){
             if(stage==='world')syncWorld();
@@ -641,7 +673,7 @@ export function createLocalPlay(api){
             c.fillStyle='#fff8d0';c.fillText('+1',p.x,p.y-32-t*28);c.globalAlpha=1;
         }
     }
-    return {start:async(...args)=>{try{await start(...args);}catch(error){companion.stop();session=null;closeAll();document.body.classList.remove('local-duo');throw error;}},leave,ensure,syncWorld,partyFor,beginBattle,paintBattle,storeSaves,tick,key,closeAll,openPersonal,openPanel,arenaLobby,pollInput:now=>input.poll(now),navigateGlobal:(root,action)=>navigate(0,action,root),
+    return {start:async(...args)=>{try{await start(...args);}catch(error){companion.stop();session=null;closeAll();document.body.classList.remove('local-duo');throw error;}},leave,ensure,syncWorld,partyFor,beginBattle,paintBattle,storeSaves,tick,key,closeAll,openPersonal,openPanel,refreshShops,arenaLobby,pollInput:now=>input.poll(now),navigateGlobal:(root,action)=>navigate(0,action,root),
         get gatheringPets(){return petJobs.filter(Boolean).map(job=>({pet:job.pet,position:job.position,moving:!!job.path.length,phase:performance.now()/200,facing:1}));},
         get active(){return !!session;},get paused(){return !!session&&!wideEnough(innerWidth,innerHeight);},get second(){return session?.second;},get busy(){return busy;},
         toggleMount(owner){if(!session||state().battle)return;const save=saves()[owner];save.mountHidden=!save.mountHidden;storeSaves();api.paintHud();},

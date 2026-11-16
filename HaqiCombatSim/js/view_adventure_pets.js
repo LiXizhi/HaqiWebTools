@@ -111,7 +111,7 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
  const open=async id=>{
   if(!save.pets[id]&&cb.loadPet)await cb.loadPet(id);if(!save.pets[id])return;
   state.selected=id;
-  showPetDetails(assets,id,petPortrait,{el,button,spellFace},{save,localRoot:body.closest('.local-personal'),action:cb.action,shop:()=>cb.panel('shop',{category:'supply',subcategory:1}),tile});
+  showPetDetails(assets,id,petPortrait,{el,button,spellFace},{save,localRoot:body.closest('.local-personal'),action:cb.action,shop:()=>cb.panel('shop',{category:'supply',subcategory:1,productId:'supply:990001',mode:'catalog'}),tile});
  };
  let mountDetails;
  const openMount=(item,trigger)=>{

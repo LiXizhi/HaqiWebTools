@@ -94,3 +94,21 @@ test('ongoing damage advice follows cast-time charms and wards applied after cas
  assert.ok(boosted.first>plain.first);assert.ok(boosted.second>plain.second);
  assert.ok(shielded.first<plain.first);assert.equal(shielded.second,plain.second);
 });
+
+
+test('companion gives one short tactical cue while retaining detailed rules',()=>{
+ const b=start(),actor=b.sides.near[0],R=b.resolved;
+ for(const key of ['Fire_FireDamageBlade','Fire_FireDamageTrap','Ice_GlobalShield','Death_AreaDamageWeakness','Storm_AreaDamageTrap','Balance_AreaGlobalShield_Pandora_01','Fire_AreaDOTAttack_Level5']){
+  const advice=cardTacticAdvice(b,actor,R.cards[key]);
+  assert.ok(advice.shortText.length<=32,key);
+  assert.ok(advice.text.length>advice.shortText.length,key);
+ }
+ for(const options of [{},{boost:true},{trap:true},{shield:true},{weaken:true},{boost:true,shield:true}]){
+  const {actor,target,card}=setup(b,options),before=JSON.stringify(b);
+  const advice=cardTacticAdvice(b,actor,card,[target]);
+  assert.ok(advice.shortText.length<=32);
+  if(options.shield)assert.match(advice.shortText,/有盾.*减伤/);
+  else if(options.weaken)assert.match(advice.shortText,/虚弱.*减伤/);
+  assert.equal(JSON.stringify(b),before);
+ }
+});

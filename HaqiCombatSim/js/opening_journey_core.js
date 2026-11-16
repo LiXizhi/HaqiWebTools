@@ -79,13 +79,13 @@ export function openingJourneyTarget(save){
  const state=openingJourney(save);
  if(!state||state.phase==='done')return null;
  const rows={
-  offer:[36211,'和青龙说话，看看抱抱龙发现了什么。'],
-  guide:[36201,'去找莫尼，问清那只小家伙在哪。'],
-  route:[36201,'和莫尼商量，怎么帮咕噜噜解围。'],
+  offer:[36211,'去找青龙。'],
+  guide:[36201,'去莫尼身边看看。'],
+  route:[36201,'帮咕噜噜进营地。'],
   explain:[36201,'向莫尼说明：We are friends.'],
-  challenge:['fire-scout','挑战烈火侦查兵，帮咕噜噜解围。'],
+  challenge:['fire-scout','挑战烈火侦查兵。'],
   rescue:[36201,'邀请咕噜噜一起走。'],
-  showcase:['ice-scout','带咕噜噜挑战寒冰侦查兵，试试新搭档。']
+  showcase:['ice-scout','和咕噜噜挑战寒冰侦查兵。']
  };
  const [id,objective]=rows[state.phase];
  return {id,kind:typeof id==='number'?'npc':'encounter',objective};

@@ -287,3 +287,22 @@
 .forest-ui .companion-wordplay .modal-header{min-height:25px;padding-bottom:0;}
 .forest-ui .companion-wordplay .modal-header h2{font-size:14px;color:#68714c;}
 .forest-ui .companion-wordplay .wordplay-intent{margin:2px 0 8px;}
+
+/* First companion: a full reveal, with one clear way forward. */
+.forest-ui .opening-conversation-layer:has(.opening-journey-modal[data-phase="showcase"]){justify-content:center;align-items:center;padding:20px;background:radial-gradient(ellipse at 50% 45%,#f9df8b36,#102821bd 76%);}
+.forest-ui .opening-character-dialogue.opening-journey-modal[data-phase="showcase"]{display:flex;flex-direction:column;align-items:center;gap:0;width:min(460px,100%);max-height:calc(100dvh - 40px);padding:26px 30px 30px;overflow:auto;text-align:center;}
+.forest-ui .opening-character-dialogue[data-phase="showcase"]::before{inset:0;border-width:30px;border-image-width:30px;}
+.forest-ui .opening-character-dialogue[data-phase="showcase"] .modal-header{order:0;align-self:stretch;justify-content:center;min-height:0;padding:0 28px 4px;}
+.forest-ui .opening-character-dialogue[data-phase="showcase"] .modal-header h2{font-size:26px;padding:4px 14px;}
+.forest-ui .opening-character-dialogue[data-phase="showcase"] .opening-speaker{position:relative;order:1;left:auto;top:auto;bottom:auto;width:260px;height:260px;max-width:75vw;flex:none;justify-content:center;align-items:center;margin:0;}
+.forest-ui .opening-character-dialogue[data-phase="showcase"] .opening-speaker .pet-sheet{width:260px!important;height:260px!important;margin:0;}
+.forest-ui .opening-character-dialogue[data-phase="showcase"] .modal-body{order:2;align-self:stretch;padding:0;max-height:none;overflow:visible;}
+.forest-ui .opening-character-dialogue[data-phase="showcase"] .modal-body>.opening-pet-award{font-size:32px;line-height:1.2;margin:0 0 8px;}
+.forest-ui .opening-character-dialogue[data-phase="showcase"] .modal-body>.opening-spoken-line{font-size:17px;line-height:1.4;margin:0 0 18px;}
+.forest-ui .opening-character-dialogue[data-phase="showcase"] .cloud-actions{display:flex;justify-content:center;}
+.forest-ui .opening-character-dialogue[data-phase="showcase"] .cloud-actions>button{width:100%;max-width:300px;min-height:54px;font-size:18px;}
+@media(max-height:650px){
+ .forest-ui .opening-character-dialogue.opening-journey-modal[data-phase="showcase"]{padding:16px 24px 22px;}
+ .forest-ui .opening-character-dialogue[data-phase="showcase"] .opening-speaker{width:190px;height:190px;}
+ .forest-ui .opening-character-dialogue[data-phase="showcase"] .opening-speaker .pet-sheet{width:190px!important;height:190px!important;}
+}

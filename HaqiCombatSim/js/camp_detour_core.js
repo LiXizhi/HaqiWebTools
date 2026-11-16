@@ -8,9 +8,9 @@ export function campDetourAvailable(save){return save.zone==='camp'&&save.openin
 export function campDetourGoal(save){
  const s=campDetour(save);if(!campDetourAvailable(save)||!s||s.paused||s.step>=3)return null;
  return {id:CAMP_DETOUR_STOPS[s.step],kind:'camp-toy',text:[
-  '抱抱龙听到了歌声，去碰一碰发光蘑菇。',
-  '风铃接住了歌声，去轻轻碰一下。',
-  `声音藏在晶簇里，再敲 ${3-s.crystals} 下。`
+  '碰一碰发光蘑菇。',
+  '去碰响风铃。',
+  `再敲 ${3-s.crystals} 下晶簇。`
  ][s.step]};
 }
 export function applyCampDetour(save,content,action,{campToy}={}){
@@ -34,7 +34,7 @@ export function applyCampDetour(save,content,action,{campToy}={}){
   save.inventory[CAMP_DETOUR_RUNE]=(save.inventory[CAMP_DETOUR_RUNE]||0)+1;
  }
  s.step++;
- return {message:[null,'歌声往风铃那边去了！','晶簇也亮了，里面藏着什么？','找到抓宠符文了！野外遇到喜欢的伙伴，可以试着抓住它。'][s.step],completed:s.step===3};
+ return {message:[null,'歌声往风铃那边去了！','晶簇也亮了，里面藏着什么？','找到抓宠符文啦！试着抓新伙伴吧。'][s.step],completed:s.step===3};
 }
 export function validateCampDetour(save){
  const s=campDetour(save);if(s===null)return;

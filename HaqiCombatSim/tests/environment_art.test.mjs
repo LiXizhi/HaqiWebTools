@@ -22,7 +22,7 @@ test('environment atlases retain alpha, provenance and bounded nonoverlapping cr
         }
         assert.ok(row.cdn.startsWith('https://cdn.keepwork.com/'));assert.match(row.source.sha256,/^[a-f0-9]{64}$/);
         const frames=Object.values(row.frames);
-        assert.equal(frames.length,['trees','campTrees'].includes(id)||tiled?4:6);
+        assert.equal(frames.length,id==='forestQuest'?3:['trees','campTrees'].includes(id)||tiled?4:6);
         for(const [i,f] of frames.entries()){
             const [x,y,w,h]=f.rect;assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=row.width&&y+h<=row.height);
             for(const next of frames.slice(i+1)){const [nx,ny,nw,nh]=next.rect;assert.ok(x+w<=nx||nx+nw<=x||y+h<=ny||ny+nh<=y);}

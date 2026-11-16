@@ -1340,6 +1340,9 @@
 .forest-reward p{margin:6px 0;font-size:14px;line-height:1.5}
 .forest-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 .forest-actions>button{flex:1 1 180px}
+.forest-commission-modal>.forest-actions{flex:none;margin:0;padding:12px 24px 18px;border-top:1px solid #c6b98e;background:#f5eed8}
+.forest-reward-details>summary{cursor:pointer;padding:8px 0;font-size:14px;color:#536544}
+@media(max-width:520px){.forest-commission-modal>.forest-actions{padding:10px 14px 14px;gap:8px}}
 .forest-status:empty{display:none}
 .forest-scene.forest-handover{height:auto;min-height:220px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;padding:16px;align-items:center;justify-items:center}
 .forest-carried-object{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;width:min(100%,150px);min-height:170px;padding:12px 8px;border:2px solid #b8a77d;border-radius:12px;background:#faf0d4;cursor:grab;line-height:1.5}
@@ -1354,3 +1357,34 @@
 .forest-tracker .tracker-tactics{white-space:normal;text-align:left;line-height:1.5}
 @media(max-width:520px){.forest-commission-modal{width:calc(100vw - 16px);max-height:calc(100dvh - 16px)}.forest-commission-modal>.modal-body{padding:14px}.forest-commission-modal>.modal-header h2{font-size:19px}.forest-clue{align-items:stretch;flex-direction:column;padding:12px;gap:8px}.forest-speaker{gap:10px;align-items:flex-start}.forest-speaker>canvas{max-width:52px;height:auto!important}.forest-scene{height:260px}.forest-object-hat{left:6%}.forest-object-boots{right:6%}.forest-note-scene{height:245px}.forest-rock.moved{transform:translateX(125px) rotate(12deg)}.forest-actions{flex-direction:column}.forest-actions>button{flex:auto;width:100%}.forest-dropbag,.forest-pouch-item{padding:12px}.forest-quest-pouch .forest-pouch-item{align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){.forest-rock{transition:none}}
+
+/* Forest props are painted atlas assets; interaction stays touch friendly. */
+.forest-dropbag{flex-direction:row;align-items:center;gap:16px;min-height:104px;padding:8px 16px}
+.forest-dropbag p{margin:5px 0 0}.forest-dropbag .forest-illustration{flex:none}
+.forest-status:empty{display:none}
+.forest-note{top:24px;left:calc(50% - 105px);width:210px;min-height:210px;padding:0;background:transparent;border:0;box-shadow:none}
+.forest-note .forest-illustration{display:block;max-width:100%;margin:auto}
+.forest-note span{font-size:14px;font-weight:600;line-height:1.4;background:#f8edcf;border-radius:12px;padding:3px 12px}
+.forest-note:not([hidden]){animation:forest-find .32s ease-out both}
+.forest-commission-modal .forest-carried-object{cursor:grab}
+.forest-commission-modal .forest-carried-object:active{cursor:grabbing}
+@keyframes forest-find{from{opacity:0;transform:translateY(12px) scale(.9)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.forest-note:not([hidden]){animation:none}}
+
+/* A first companion gets one deliberate entrance, after its save commits. */
+.forest-ui .opening-character-dialogue .modal-body>.opening-pet-award{font-size:clamp(26px,4vw,34px);font-weight:800;line-height:1.25;color:#775127;letter-spacing:.08em;margin:0 0 14px;text-shadow:0 2px #fff9df}
+.forest-ui .opening-conversation-layer:has(.opening-journey-modal[data-phase="showcase"]){background:radial-gradient(ellipse at 28% 68%,#ffe6a12e,transparent 48%),linear-gradient(180deg,#152e241a 20%,#152e2459 70%,#1028219c)}
+.forest-ui .opening-journey-modal[data-phase="showcase"] .opening-speaker{isolation:isolate;filter:drop-shadow(0 12px 24px #e7c25e66)}
+.opening-journey-modal[data-phase="showcase"] .opening-speaker::before{content:"";position:absolute;z-index:-1;pointer-events:none;left:50%;bottom:0;width:150%;aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle,#fffad6b3 0,#ffdf8c59 30%,#ffdf8c1a 48%,transparent 67%)}
+.opening-journey-modal[data-phase="showcase"] .opening-speaker::after{content:"";position:absolute;z-index:-1;pointer-events:none;inset:-12% -22% 0;background:radial-gradient(circle at 16% 30%,#fff7d6 0 2px,transparent 3px),radial-gradient(circle at 82% 24%,#ffe58d 0 3px,transparent 4px),radial-gradient(circle at 8% 63%,#ffe58d 0 3px,transparent 4px),radial-gradient(circle at 91% 61%,#fff7d6 0 2px,transparent 3px),radial-gradient(circle at 34% 6%,#fff7d6 0 2px,transparent 3px),radial-gradient(circle at 68% 85%,#ffe58d 0 2px,transparent 3px);opacity:.8}
+.opening-journey-modal.is-celebrating{animation:companion-welcome-panel .55s cubic-bezier(.16,1,.3,1) both}
+.opening-journey-modal.is-celebrating .opening-speaker{animation:companion-welcome-pop 1.35s cubic-bezier(.16,1,.3,1) both}
+.opening-journey-modal.is-celebrating .opening-pet-award{animation:companion-welcome-title .65s .55s both}
+.opening-journey-modal.is-celebrating .opening-speaker::before{animation:companion-welcome-glow 1.5s ease-out both}
+.opening-journey-modal.is-celebrating .opening-speaker::after{animation:companion-welcome-sparks 1.8s ease-out both}
+@keyframes companion-welcome-panel{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes companion-welcome-pop{0%{opacity:0;transform:translateY(30px) scale(.3)}34%{opacity:1;transform:translateY(-20px) scale(1.14)}55%{transform:translateY(0) scale(.96)}76%{transform:translateY(-8px) scale(1.04)}100%{transform:none}}
+@keyframes companion-welcome-title{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes companion-welcome-glow{0%{opacity:0;transform:translateX(-50%) scale(.35)}35%{opacity:1;transform:translateX(-50%) scale(1.15)}100%{opacity:1;transform:translateX(-50%) scale(1)}}
+@keyframes companion-welcome-sparks{0%{opacity:0;transform:translateY(20px) scale(.4)}30%{opacity:1}100%{opacity:.8;transform:none}}
+@media(prefers-reduced-motion:reduce){.opening-journey-modal.is-celebrating,.opening-journey-modal.is-celebrating .opening-speaker,.opening-journey-modal.is-celebrating .opening-pet-award,.opening-journey-modal.is-celebrating .opening-speaker::before,.opening-journey-modal.is-celebrating .opening-speaker::after{animation:none}}

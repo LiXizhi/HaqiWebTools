@@ -1,5 +1,6 @@
 import {HANZI_BATTLE_CARDS} from './hanzi_battle_core.js';
 import {adventureHonors} from './adventure_honors_core.js';
+import {STARTERS} from './adventure_pets_core.js';
 // Transient presentation data only: never persisted or used to grant rewards.
 export function rewardSnapshot(save) {
     return {honors:adventureHonors(save).filter(row=>row.earned).map(row=>row.id),hanziCards:[...(save.hanzi?.questCards||[])],xp:save.xp,level:save.level,inventory:{...save.inventory},cards:{...save.cards},pets:Object.keys(save.pets||{})};
@@ -13,6 +14,13 @@ export function rewardChanges(before,save,content) {
     const pets=Object.keys(save.pets||{}).filter(id=>!before.pets.includes(id)).map(id=>({kind:'pet',id,count:1,name:content.pets?.[save.pets[id].speciesId]?.name||save.pets[id].name||'新伙伴'}));
     const honors=adventureHonors(save).filter(row=>row.earned&&!(before.honors||[]).includes(row.id)).map(row=>({kind:'honor',id:row.id,count:1,name:row.title,source:row.source}));
     return {xp:Math.max(0,save.xp-before.xp),fromLevel:before.level,level:save.level>before.level?save.level:null,items:[...items,...cards,...pets,...(save.hanzi?.questCards||[]).filter(id=>!(before.hanziCards||[]).includes(id)).map(id=>({kind:'dictionary',id,count:1,name:'字卡 · '+HANZI_BATTLE_CARDS[id]})),...honors]};
+}
+
+// The chosen starter is already present before a player's first earned companion.
+// Derive this from the saved roster so reloads and repeated claims stay quiet.
+export function firstCompanionReward(before,save,event){
+    if(before.pets.some(id=>!STARTERS.includes(save.pets[id]?.speciesId)))return null;
+    return event.items.find(item=>item.kind==='pet'&&!STARTERS.includes(save.pets[item.id]?.speciesId))||null;
 }
 
 // Compare the existing equipment panel values, without introducing stat formulas.

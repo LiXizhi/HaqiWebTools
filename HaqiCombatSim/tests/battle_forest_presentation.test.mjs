@@ -66,7 +66,7 @@ test('a cancelled gesture, a second finger and a drop outside the pouch cannot t
 });
 
 test('a cancelled rock drag leaves the note hidden; a deliberate drag reveals it',()=>{
- const ui=render('note'),note=ui.find('巡逻路线便签'),rock=ui.object('挪开石头');
+ const ui=render('note'),note=ui.object('拾取巡逻路线便签'),rock=ui.object('挪开石头');
  const e=(x,y)=>({pointerId:1,clientX:x,clientY:y,preventDefault(){}});
  rock.events.pointerdown(e(50,50));rock.events.pointermove(e(100,50));rock.events.pointercancel(e(100,50));
  assert.equal(note.hidden,true);assert.deepEqual(ui.calls,[]);
@@ -75,7 +75,7 @@ test('a cancelled rock drag leaves the note hidden; a deliberate drag reveals it
 });
 
 test('the hidden note is revealed deliberately before it can be picked up',()=>{
- const ui=render('note'),note=ui.find('巡逻路线便签'),rock=ui.object('挪开石头');
+ const ui=render('note'),note=ui.object('拾取巡逻路线便签'),rock=ui.object('挪开石头');
  assert.equal(note.hidden,true);assert.deepEqual(ui.calls,[]);
  rock.click();assert.equal(note.hidden,false);assert.equal(rock.disabled,true);assert.equal(ui.document.activeElement,note);
  note.click();assert.deepEqual(ui.calls,[{step:'take-note',revealed:true}]);
@@ -100,8 +100,8 @@ test('the patrol report identifies the actual school cloak before the player cla
 test('carried quest objects can be handed to the recipient without a dialog answer gate',()=>{
  const e=(x,y,id=1)=>({pointerId:id,pointerType:'touch',clientX:x,clientY:y,preventDefault(){}});
  for(const [phase,label,step]of [['delivery','递出待送达的巡逻靴','deliver'],['briefing','递出巡逻路线便签','brief'],['report','递出巡逻路线便签','report']]){
+  const clicked=render(phase);clicked.object(label).click();assert.deepEqual(clicked.calls,[{step}],phase+' click hands in the item');
   const ui=render(phase),carried=ui.object(label);assert.ok(carried,phase);assert.ok(ui.object('茜茜收取物品的位置'));
-  carried.click();assert.deepEqual(ui.calls,[],phase+' selection cannot hand in an item');
   carried.events.pointerdown(e(50,100));carried.events.pointermove(e(50,350));carried.events.pointercancel(e(50,350));assert.deepEqual(ui.calls,[]);
   carried.events.pointerdown(e(50,100));carried.events.pointermove(e(250,350));carried.events.pointerup(e(250,350));assert.deepEqual(ui.calls,[]);
   carried.events.pointerdown(e(50,100));carried.events.pointermove(e(50,350));carried.events.pointerup(e(50,350));assert.deepEqual(ui.calls,[{step}],phase);
@@ -126,18 +126,18 @@ test('the route note starts one real monster fight without theory exercises',()=
 
 test('a low-level patrol gives a mainline route while a prepared character can choose the dungeon',()=>{
  const low=render('patrol',{level:4});
- const primary=low.all.find(n=>n.className==='primary');assert.equal(primary.textContent,'继续主线升级');
+ const primary=low.all.find(n=>n.className==='primary');assert.equal(primary.textContent,'去升级');
  primary.click();assert.deepEqual(low.calls,['mainline']);
- assert.ok(low.all.some(n=>n.textContent.includes('便签和委托进度会保留')));
- const ready=render('patrol',{level:5});assert.equal(ready.find('继续主线升级'),undefined);
+ assert.ok(low.all.some(n=>n.textContent.includes('进度会保留')));
+ const ready=render('patrol',{level:5});assert.equal(ready.find('去升级'),undefined);
  ready.all.find(n=>n.className==='primary').click();assert.deepEqual(ready.calls,['patrol']);
 });
 
 test('after reporting, the next goal leads through mainline level six to the owned-party challenge',()=>{
  const low=render('done',{level:5});
  low.all.find(n=>n.className==='primary').click();assert.deepEqual(low.calls,['mainline']);
- low.find('准备下一场2对2挑战').click();assert.deepEqual(low.calls,['mainline','nextChallenge']);
- const ready=render('done',{level:6});assert.equal(ready.find('继续主线升到6级'),undefined);
+ low.find('挑战走失的火种').click();assert.deepEqual(low.calls,['mainline','nextChallenge']);
+ const ready=render('done',{level:6});assert.equal(ready.find('升到6级'),undefined);
  ready.all.find(n=>n.className==='primary').click();assert.deepEqual(ready.calls,['nextChallenge']);
- assert.ok(ready.all.some(n=>n.textContent.includes('已有伙伴')));
+ assert.ok(ready.all.some(n=>n.textContent.includes('带伙伴')));
 });

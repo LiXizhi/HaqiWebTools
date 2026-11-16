@@ -3,6 +3,7 @@ import {recommendAdventureDeck} from './battle_ai/adventure_adapter_core.js';
 import {teachPointer} from './view_teaching.js';
 import {deckLimits,deckCardCopies,syncDeckLayouts,equipmentBlockReason,playerSpec,availableCardLessons,SCHOOL_NAMES} from './adventure_core.js';
 import {skillLearningStatus,trainingPoints} from './adventure_learning_core.js';
+import {shopGuidance} from './adventure_shop_guidance_core.js';
 import {setText, tr,fill} from './locale_runtime.js';
 const SCHOOL_LABELS={...SCHOOL_NAMES,balance:'平衡'};
 const PAGE_SIZE=36;
@@ -304,8 +305,10 @@ export function renderDeckEditor(body,{assets,save,shopView,deckAnimationClock='
         equipmentPanel);
     const collection=el('section','bag-collection',el('div','bag-section-bar',el('strong','','法术牌库'),search,toggle),filters,
         library,el('div','bag-pager',countLabel,points,previous,next,saveButton));
-    const shop=button('购买卡包',()=>{if(shopView)Object.assign(shopView,{category:'bag',subcategory:0,selected:null,query:'',school:'',slot:'',ownership:'',level:'',page:0});cb.panel('shop');},'secondary');
-    shop.title='前往商店购买卡包；当前修改需先保存';
+    const bagAdvice=shopGuidance({...save,pets:{}},content);
+    const hasBag=!!bagAdvice.productId&&bagAdvice.owned;
+    const shop=button(hasBag?'装备已有卡包':'查看可用卡包',()=>cb.panel(hasBag?'equipment':'shop',hasBag?{}:{category:'bag',productId:bagAdvice.productId,mode:'catalog'}),'secondary');
+    shop.title=hasBag?'背包里已有更合适的卡包；当前配卡修改需先保存':'查看符合当前等级与学系的卡包；当前配卡修改需先保存';
     body.append(el('div','bag-toolbar',tabs,shop),el('div','bag-workspace',bag,collection),status,detail);
     const shell=body.closest?.('.modal'),closeButton=shell?.querySelector?.('.close-button');
     if(closeButton?.onclick){

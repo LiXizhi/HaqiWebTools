@@ -12,7 +12,7 @@ function start(id){const s=A.createAdventure(content,{starter:'dragon_green',sch
 test('attack-only hand never recommends unavailable protection, healing or buffs',()=>{
  const b=start('fire-scout'),seqs=castableCards(b,b.sides.near[0]).map(h=>h.seq),before=JSON.stringify(b);
  const advice=companionBattleAdvice(b,seqs,dataset.cards);
- assert.match(advice.text,/攻击牌/);assert.doesNotMatch(advice.text,/准备增益|防御|治疗/);
+ assert.match(advice.text,/攻击牌|进攻/);assert.doesNotMatch(advice.text,/准备增益|防御|治疗/);
  assert.ok(advice.seqs.length);assert.equal(JSON.stringify(b),before);
  b.monsterTemplates[0].id='storm-scout';b.turn=3;
  assert.match(companionBattleAdvice(b,seqs).text,/重击/);assert.doesNotMatch(companionBattleAdvice(b,seqs).text,/治疗|防御/);
@@ -33,9 +33,9 @@ test('setup advice matches the school of an available attack',()=>{
  hero.deckSeq=['Ice_SingleAttack_Level0_45','Ice_IceDamageBlade','Fire_FireDamageBlade'];hero.deckMap=[1,1,1];
  hero.wordCards={};hero.pips={normal:7,power:0};
  const advice=companionBattleAdvice(b,[0,1,2],dataset.cards);
- assert.deepEqual(advice.seqs,[1]);assert.match(advice.text,/准备下一击/);
+ assert.deepEqual(advice.seqs,[1]);assert.match(advice.text,/强化下一击/);
  const wrongSchool=companionBattleAdvice(b,[0,2],dataset.cards);
- assert.deepEqual(wrongSchool.seqs,[0]);assert.doesNotMatch(wrongSchool.text,/准备下一击/);
+ assert.deepEqual(wrongSchool.seqs,[0]);assert.doesNotMatch(wrongSchool.text,/强化下一击/);
 });
 
 test('cooldown and mana block casts while language activation remains a distinct action',()=>{
@@ -100,4 +100,18 @@ test('an already active blade is not promoted as a new setup advantage',()=>{
  for(const ally of b.sides.near)ally.charms=ids.slice();
  const advice=companionBattleAdvice(b,[0,1]);
  assert.deepEqual(advice.seqs,[0]);assert.doesNotMatch(advice.text,/准备下一击/);
+});
+
+
+test('selected damage and status cards stay concise and keep legal targets',()=>{
+ const b=start('fire-scout'),hero=b.sides.near[0];
+ const keys=['Fire_SingleAttack_Level0_45','Fire_FireDamageBlade','Fire_FireDamageTrap','Ice_GlobalShield','Fire_AreaDOTAttack_Level5'];
+ hero.deckSeq=keys;hero.deckMap=keys.map(()=>1);hero.wordCards={};hero.pips={normal:7,power:0};hero.cooldowns={};
+ const before=JSON.stringify(b);
+ for(const [seq,key]of keys.entries()){
+  const advice=companionSelectedAdvice(b,{seq,key});
+  assert.equal(advice.blocked,false,key);assert.ok(advice.text.length<=32,key);
+  assert.doesNotMatch(advice.text,/结算|每段伤害发生|分别触发和消耗/);
+ }
+ assert.equal(JSON.stringify(b),before);
 });

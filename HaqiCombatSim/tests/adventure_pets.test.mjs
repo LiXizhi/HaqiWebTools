@@ -47,9 +47,9 @@ test('version two cloud battles survive added threat defaults without accepting 
  assert.throws(()=>A.parseSave(missing,c),/养成参数/);
 });
 test('legacy gululu reuses a four-stage catalog appearance without replacing its identity or lessons',()=>{
- const legacy=c.pets.legacy_gululu,template=catalog.pets.shanhaijing_xuangui_gugu;
+ const legacy=c.pets.legacy_gululu,template=catalog.pets.pixel_bunny_marshmallow;
  assert.deepEqual(legacy.art,template.art);
- assert.notEqual(legacy.art,c.pets.shanhaijing_xuangui_gugu.art);
+ assert.notEqual(legacy.art,c.pets.pixel_bunny_marshmallow.art);
  assert.equal(legacy.art.rows,4);assert.equal(legacy.art.cols,4);
  assert.equal(legacy.id,'legacy_gululu');assert.equal(legacy.sourceId,'legacy_gululu');
  assert.equal(legacy.name,c.pet.name);assert.equal(legacy.school,'life');assert.equal(legacy.legacy,true);

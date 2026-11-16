@@ -29,3 +29,32 @@ test('reusable SDK sessions carry each speaker voice instead of saved global fem
  assert.match(calls[0].voiceType,/male_tiancaitongsheng/);assert.match(calls[1].voiceType,/male_jieshuo/);assert.match(calls[2].voiceType,/_female_/);assert.match(calls[3].voiceType,/_male_/);assert.match(calls[4].voiceType,/_female_/);
  }finally{await voice.cancel();globalThis.Audio=oldAudio;}
 });
+
+test('Korean selects native voices even when the SDK catalog only lists Chinese voices',()=>{
+ const supported=[{id:'zh_female_cancan_mars_bigtts'}];
+ assert.equal(selectDialogueVoice({sex:'male'},supported,'ko-KR'),'ko_male_bv545_uranus_bigtts');
+ assert.equal(selectDialogueVoice({sex:'female'},supported,'ko'),'ko_female_bv546_uranus_bigtts');
+ assert.match(selectDialogueVoice({sex:'male'},undefined,'en-US'),/^zh_male_/);
+});
+
+test('Japanese selects native male and female voices instead of Chinese catalog voices',()=>{
+ const supported=[{id:'zh_female_cancan_mars_bigtts'}];
+ assert.equal(selectDialogueVoice({sex:'male'},supported,'ja-JP'),'ja_male_bv524_uranus_bigtts');
+ assert.equal(selectDialogueVoice({sex:'female'},supported,'ja'),'ja_female_bv522_uranus_bigtts');
+});
+
+test('Japanese playback uses native voices with and without a character',async()=>{
+ const calls=[],oldAudio=globalThis.Audio;globalThis.Audio=class{play(){queueMicrotask(()=>this.onended());return Promise.resolve();}pause(){}};
+ const voice=createLearningVoice({getSettings:()=>({voiceType:'zh_female_cancan_mars_bigtts'}),load:async()=>({speech:{getSupportedVoices:()=>[{id:'zh_female_cancan_mars_bigtts'}]},speechRTC:{createSession(options){return {synthesize:async()=>{calls.push(options);return {audioUrl:'blob:japanese-test'};},stop:async()=>{}};}}})});
+ try{const signal=new AbortController().signal;await voice.speak('こんにちは','ja-JP',signal,{sex:'male',age:68});await voice.speak('はじめまして','ja',signal);
+ assert.equal(calls[0].voiceType,'ja_male_bv524_uranus_bigtts');assert.equal(calls[1].voiceType,'ja_female_bv522_uranus_bigtts');
+ }finally{await voice.cancel();globalThis.Audio=oldAudio;}
+});
+
+test('Korean playback overrides the saved Chinese voice with and without an NPC',async()=>{
+ const calls=[],oldAudio=globalThis.Audio;globalThis.Audio=class{play(){queueMicrotask(()=>this.onended());return Promise.resolve();}pause(){}};
+ const voice=createLearningVoice({getSettings:()=>({voiceType:'zh_female_cancan_mars_bigtts'}),load:async()=>({speech:{getSupportedVoices:()=>[{id:'zh_female_cancan_mars_bigtts'}]},speechRTC:{createSession(options){return {synthesize:async()=>{calls.push(options);return {audioUrl:'blob:korean-test'};},stop:async()=>{}};}}})});
+ try{const signal=new AbortController().signal;await voice.speak('안녕하세요','ko-KR',signal,{sex:'male',age:68});await voice.speak('반가워요','ko',signal);
+ assert.equal(calls[0].voiceType,'ko_male_bv545_uranus_bigtts');assert.equal(calls[1].voiceType,'ko_female_bv546_uranus_bigtts');
+ }finally{await voice.cancel();globalThis.Audio=oldAudio;}
+});

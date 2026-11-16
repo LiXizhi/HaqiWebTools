@@ -31,12 +31,12 @@ export function createBattlePetHint(model,{el,onDismiss}){
     const target=model.battle.unitsById[action.targetId]?.name;
     const dropped=(action.discardSeqs||[]).map(seq=>model.assets.dataset.cards[model.battle.sides.near[0].deckSeq[seq]]?.name).filter(Boolean);
     const pattern=action.pass
-        ?(dropped.length?'可以弃掉「{card}」，找找需要的牌。':'先攒点魔力，等机会再出手。')
+        ?(dropped.length?'弃掉「{card}」，换张牌。':'先攒魔力，等机会。')
         :!cardName?null:petCard
             ?model.petCardsOpen
-                ?(target?'可以试试宠物卡「{card}」，目标选{target}。':'可以试试宠物卡「{card}」。')
-                :(target?'打开“使用宠物卡”，试试「{card}」，目标选{target}。':'打开“使用宠物卡”，试试「{card}」。')
-            :(target?'可以试试「{card}」，目标选{target}。':'可以试试「{card}」。');
+                ?(target?'「{card}」选{target}。':'试试「{card}」。')
+                :'试试宠物卡「{card}」。'
+            :(target?'「{card}」选{target}。':'试试「{card}」。');
     if(!pattern)return null;
     const vars={card:action.pass?dropped[0]:cardName,target};
     const text=el('p','');setText(text,pattern,vars);

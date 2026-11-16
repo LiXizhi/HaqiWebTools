@@ -1,6 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {createAudioSamples} from '../js/audio_samples.js';
-import {createBackgroundMusic} from '../js/background_music.js';
+import {backgroundMusicId,createBackgroundMusic} from '../js/background_music.js';
 import {acquireAudioActivity} from '../js/audio_activity.js';
 test('sample cache bounds downloads, deduplicates unlocks and ignores bad/oversized audio',async()=>{
  let fetches=0,active=0,maximum=0;
@@ -31,4 +31,22 @@ test('autoplay rejection retries only on another gesture and late play cannot un
  const element=audio();element.play=function(){this.plays++;return Promise.reject(Error('not allowed'));};const music=createBackgroundMusic('original.ogg',{audioFactory:()=>element});
  await music.play();assert.equal(element.plays,1);await music.play();assert.equal(element.plays,2);
  let finish;element.play=function(){return new Promise(r=>finish=()=>{this.paused=false;r();});};const pending=music.play();music.pause();finish();await pending;assert.equal(element.paused,true);music.dispose();
+});
+
+test('original music follows world and combat without changing the title theme',()=>{
+ assert.match(backgroundMusicId('battle','ice','town.ogg'),/combat_teen_common_trialversion/);
+ assert.match(backgroundMusicId('world','camp','town.ogg'),/area_forest/);
+ assert.match(backgroundMusicId('world','dark','town.ogg'),/area_forest/);
+ assert.match(backgroundMusicId('world','ice','town.ogg'),/area_snow/);
+ assert.equal(backgroundMusicId('title','ice','town.ogg'),'town.ogg');
+ assert.equal(backgroundMusicId('world','town','town.ogg'),'town.ogg');
+});
+test('switching tracks retires late playback and does not restart the same loop',async()=>{
+ const elements=[];let finish;
+ const music=createBackgroundMusic('forest.ogg',{audioFactory:src=>{const a=audio();a.src=src;elements.push(a);return a;}});
+ elements[0].play=function(){return new Promise(r=>finish=()=>{this.paused=false;r();});};
+ const old=music.play();assert.equal(music.setTrack('snow.ogg'),true);await music.play();
+ assert.equal(elements[0].paused,true);assert.equal(music.element.src,'snow.ogg');assert.equal(music.setTrack('snow.ogg'),false);
+ finish();await old;assert.equal(elements[0].paused,true);assert.equal(music.element.paused,false);assert.equal(elements.length,2);
+ music.pause();music.setTrack('battle.ogg');assert.equal(music.element.paused,true);music.dispose();
 });

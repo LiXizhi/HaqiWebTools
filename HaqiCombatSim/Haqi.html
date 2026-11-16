@@ -57,7 +57,7 @@
         document.getElementById('load-progress').hidden = true;
       };
       if (location.protocol === 'file:') showBootError('请通过游戏预览入口打开。');
-      else document.getElementById('adventure-module').addEventListener('error', () => showBootError('加载失败，请刷新重试。'));
+      else (document.getElementById('adventure-module') || document.querySelector('script[type="module"][src]'))?.addEventListener('error', () => showBootError('加载失败，请刷新重试。'));
     })();
   </script>
 </body>

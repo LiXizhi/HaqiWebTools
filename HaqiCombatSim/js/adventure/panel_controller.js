@@ -198,11 +198,11 @@ export function createPanelController(options) {
             const { journeyId, journeyRestart } = dungeon.getState();
             renderDungeonJourney(
                 nodes.overlay,
-                { ...model(), dungeon: dungeonFor(ctx.assets.content, journeyId) },
+                { ...model(), dungeon: dungeonFor(ctx.assets.content, journeyId), restart: journeyRestart },
                 {
                     close,
                     party: () => openPanel('pet'),
-                    prepare: () => safely(() => void dungeon.loadAndEnterDungeon(journeyId, journeyRestart)),
+                    prepare: (restart = false) => safely(() => void dungeon.loadAndEnterDungeon(journeyId, restart || journeyRestart)),
                     claim: floor =>
                         safely(() => {
                             const nowCtx = getContext();

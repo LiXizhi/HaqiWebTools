@@ -10,8 +10,8 @@ export function renderLearningMode(body,model,cb,{el,button}) {
     const statusRewards=speechRewardStatus(model.save,model.assets?.content),buffs=dailyBuffs(model.save);
     const count=el('strong','speech-count',String(statusRewards.count));
     const hero=el('div','speech-hero',el('div','speech-seal',count,el('small','','今日语言学习')),el('div','speech-heading',el('h3','','学习有礼'),el('p','','每天学一点，冒险多一点力量。'),el('small','','找居民聊聊，或到字典完成今日任务。')));
-    const events=model.save.dailyLanguageBuff?.day===localBuffDay()?model.save.dailyLanguageBuff.events||[]:[],zh=events.filter(id=>id.startsWith('dictionary:zh:')).length,en=events.filter(id=>id.startsWith('dictionary:en:')).length;
-    hero.append(el('small','',`口语 ${Math.max(0,statusRewards.count-zh-en)} · 中文 ${zh} · 英文 ${en}`));
+    const events=model.save.dailyLanguageBuff?.day===localBuffDay()?model.save.dailyLanguageBuff.events||[]:[],counts=['zh','en','ja','ko'].map(language=>events.filter(id=>id.startsWith(`dictionary:${language}:`)).length);
+    hero.append(el('small','',`口语 ${Math.max(0,statusRewards.count-counts.reduce((a,b)=>a+b,0))} · 中文 ${counts[0]} · 英文 ${counts[1]} · 日文 ${counts[2]} · 韩文 ${counts[3]}`));
     const stats=el('div','speech-stats');
     for(const [key,value] of Object.entries(buffs))stats.append(el('div','speech-stat',el('span','',DAILY_BUFF_NAMES[key]),el('strong','',`+${value}%`)));
     const next=statusRewards.rewards.find(r=>!r.claimed),progress=el('progress','speech-progress');
@@ -33,11 +33,11 @@ export function renderLearningMode(body,model,cb,{el,button}) {
     const rules=el('details','speech-rules',el('summary','','玩法与奖励规则'),el('p','','每次有效口语或字典答题增加 1% 属性，生命、攻击、防御各最多 +10%；叠满后增加超级魔力生成率，最多 +10%。'),el('p','','口语交流、剧情跟读或字典练习通过后计数；仅浏览、听示范不计数。奇豆可买宠物口粮，仙豆可强化装备。'),el('p','','每天本机时间 00:00 重置，每档奖励限领一次。加成与学习进度仅保存在本机当前角色；换地图仍有效，新战斗生效。领取记录随角色保存。'));
     body.append(el('div','learning-scroll',el('section','speech-adventure',hero,stats,el('div','speech-track',hint,progress),rewards,rules)));
     const display=document.createElement('select'),target=document.createElement('select');
-    for(const l of localeChoices()){display.add(new Option(l.name,l.id));target.add(new Option(l.name+(!['en','zh-CN'].includes(l.id)?tr('（营地课程尚未开放）'):''),l.id));}
+    for(const l of localeChoices()){display.add(new Option(l.name,l.id));target.add(new Option(l.name+(!['en','zh-CN','ja','ko'].includes(l.id)?tr('（课程尚未开放）'):''),l.id));}
     display.value=draft.locale;target.value=draft.target;display.setAttribute('aria-label',tr('母语'));target.setAttribute('aria-label',tr('第二语言'));
     const status=el('p','settings-note');
     const apply=button(model.save.languageLearning.enabled?'保存设置':'开启双语学习',()=>cb.applyLearningMode({...draft,target:target.value,locale:display.value,native:draft.native!==target.value?draft.native:display.value!==target.value?display.value:target.value==='en'?'zh-CN':'en'}),'primary');
-    function refresh(){const supported=['en','zh-CN'].includes(target.value);apply.disabled=!supported;status.hidden=supported;if(!supported)setText(status,'该语言的营地课程尚未开放。');}
+    function refresh(){const supported=['en','zh-CN','ja','ko'].includes(target.value);apply.disabled=!supported;status.hidden=supported;if(!supported)setText(status,'该语言的课程尚未开放。');}
     display.onchange=()=>{draft.locale=display.value;if(!draft.selectionConfirmed)draft.native=display.value;if(!picked)target.value=display.value==='en'?'zh-CN':'en';refresh();};
     target.onchange=()=>{picked=true;refresh();};
     const actions=el('div','learning-dock-actions',apply);

@@ -10,9 +10,9 @@ export const STARTER_ROOM_HINT='把毯子拖到窗边或角落，看看抱抱龙
 
 export function starterLampExercise(item){
  return {
-  ...item,en:'lamp',
-  sentences:{...item.sentences,en:['Can I have a lamp?','Can I have a bedside lamp?']},
-  practiceWords:{...item.practiceWords,en:['lamp']}
+  ...item,en:'lamp',zh:'灯',ja:'ランプ',ko:'램프',
+  sentences:{...item.sentences,en:['Can I have a lamp?','Can I have a bedside lamp?'],zh:['可以给我一盏灯吗？','我想要一盏灯。']},
+  practiceWords:{...item.practiceWords,en:['lamp'],zh:['台灯']}
  };
 }
 

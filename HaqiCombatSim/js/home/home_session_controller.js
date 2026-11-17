@@ -15,6 +15,7 @@ import { createPlayerInput } from '../player_input.js';
 import { homeDuoStep, homeDuoCamera, homeDuoScale } from '../home_local_core.js';
 import { createIslandSceneLoadingView } from '../view_island_scene_loading.js';
 import { stepHomeWalk, findHomePath } from '../home_walk_core.js';
+import { homeItemLanguage, homeWishLine } from '../home_language_core.js';
 import {
  requiresReading,
  homeObjectInteractive,
@@ -27,6 +28,7 @@ import {
  initializeHomeResidents,
  homeResidentPets,
  petWish,
+ summonSentences,
 } from '../home_core.js';
 import { homeObjects, applyHomeAction } from '../home_actions_core.js';
 import { createHomeStore } from '../home_store.js';
@@ -308,7 +310,7 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
   return !!home&&homeCapacity(home).used===0&&pets.length>0&&catalog.items.some(item=>item.id==='blanket');
  }
  function canRequestStarterLamp(){
-  if(home?.id!==STARTER_ROOM_ID||lang()!=='en')return false;
+  if(home?.id!==STARTER_ROOM_ID)return false;
   const objects=currentObjects(),blanket=objects.find(obj=>obj.id===STARTER_BLANKET_ID);
   return !!blanket&&(blanket.x!==4||blanket.y!==3)&&!objects.some(obj=>obj.itemId==='bedside-lamp');
  }
@@ -318,18 +320,19 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
    if(!point)throw Error('先挪出一点空间，再添灯。');
    select('bedside-lamp');
    Object.assign(selection,{spellPosition:point,starterLamp:true});
-   status='用英语要一盏灯，拿到后就能照亮小屋。';
+   status='用当前学习语言要一盏灯，拿到后就能照亮小屋。';
    emit();
    view.openSummon();
  }
  function currentPetWish(petId,expanded=false){
   if(home?.id===STARTER_ROOM_ID){
    if(!canRequestStarterLamp())return null;
-   return {petId,itemId:'bedside-lamp',starterLamp:true,text:'Can I have a lamp?',translation:'可以给我一盏灯吗？',expanded,until:Date.now()+22000};
+   const item=starterLampExercise(catalog.items.find(i=>i.id==='bedside-lamp'));
+   return {petId,itemId:'bedside-lamp',language:lang(),starterLamp:true,text:lang()==='en'?'Can I have a lamp?':summonSentences(item,lang())[2]||summonSentences(item,lang())[0],translation:lang()==='zh'?'Can I have a lamp?':'可以给我一盏灯吗？',expanded,until:Date.now()+22000};
   }
-  return {petId,...petWish(petId,round++,catalog.items,lang()),expanded,until:Date.now()+22000};
+  return {petId,language:lang(),...petWish(petId,round++,catalog.items,lang()),expanded,until:Date.now()+22000};
  }
- function emit(){if(valid())view.render({languageAnchors:languageGame.positionAnchors(),languageCount:languageGame.countOverlay(),languageChoices:languageGame.choiceIds(),history:editHistory.state(),showRoofs,hero,secondHero:duo()?secondHero:null,secondSave:getContext().secondSave,pointerOwner:pointerOwner(),destination,heroSave:getContext().save,build,home,homes,guests,catalog,practiceItems:TEMPLATE_PRACTICE,objects:currentObjects(),pets,petBag,camera,scale,status,selection,preview,candidates,quiet,wish,translation,unsaved:!!pending,starterBlanket:canPlaceStarterBlanket(),starterLamp:canRequestStarterLamp(),blockedPetId:petCtrl.blockedPetId(),lang:lang(),assetMode});}
+ function emit(){if(wish&&wish.language!==lang())wish=currentPetWish(wish.petId,wish.expanded);if(valid())view.render({languageAnchors:languageGame.positionAnchors(),languageCount:languageGame.countOverlay(),languageChoices:languageGame.choiceIds(),history:editHistory.state(),showRoofs,hero,secondHero:duo()?secondHero:null,secondSave:getContext().secondSave,pointerOwner:pointerOwner(),destination,heroSave:getContext().save,build,home,homes,guests,catalog,practiceItems:TEMPLATE_PRACTICE,objects:currentObjects(),pets,petBag,camera,scale,status,selection,preview,candidates,quiet,wish,translation,unsaved:!!pending,starterBlanket:canPlaceStarterBlanket(),starterLamp:canRequestStarterLamp(),blockedPetId:petCtrl.blockedPetId(),lang:lang(),assetMode});}
  function error(e){if(!valid())return;status=pending?'未保存：本机存储写入失败，请重试保存。':e.message||'操作未完成，请重试';emit();}
  async function refresh(){check();if(!remote)throw Error('请在冒险中登录 Keepwork 后再打开家园');status='正在读取云端目录…';emit();await remote.list(true);await list();}
  async function list(){check();const local=await store.list();check();let index=directories.get(scope);if(remote&&!index){try{index=await remote.list();}catch(e){status=`本地家园已加载；${e.message}`;}}
@@ -386,7 +389,6 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
   const item=catalog.items.find(i=>i.id===itemId);
   if(item)status=requiresReading(item)?'读出或输入上方任意句子即可建造':'点击或拖动摆放，可连续创建；按 R 旋转。';
   else if(itemId?.startsWith('template-'))status='读出或输入上方任意句子即可建造';
-  if(!['zh','en'].includes(lang()))status='目录咒语尚未收录此语言；可用情境练习与宠物对话，已有物品仍可摆放。';
   view.setInput('');view.setSpeechFeedback(null);
   emit();
  }
@@ -533,7 +535,7 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
    const available=near.filter(p=>!p.activity&&selection?.petId!==p.id&&!petCtrl.isVisitingPet(p.id)),pet=available.length?available[petTurn++%available.length]:null;
    if(pet){const facility=currentObjects().find(o=>{const b=footprint(o,catalog.items);return b.item.activity&&pet.x>=b.x&&pet.x<b.x+b.w&&pet.y>=b.y&&p.y<b.y+b.h&&!pets.some(other=>other.targetId===o.id&&other.until>now);});
     if(facility){pet.activity=catalog.items.find(i=>i.id===facility.itemId).activity;pet.targetId=facility.id;pet.until=now+10000;}
-    if(['zh','en'].includes(lang())&&!quiet&&(!wish||now>wish.until)&&!(home.id===STARTER_ROOM_ID&&(build||selection))){wish=currentPetWish(pet.id);translation=false;}
+    if(['zh','en','ja','ko'].includes(lang())&&!quiet&&(!wish||now>wish.until)&&!(home.id===STARTER_ROOM_ID&&(build||selection))){wish=currentPetWish(pet.id);translation=false;}
    }
   }
   emit();

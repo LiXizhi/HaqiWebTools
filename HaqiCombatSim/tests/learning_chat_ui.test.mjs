@@ -83,7 +83,7 @@ test('English UI never translates Chinese teaching text; translation toggle work
     const done={...state,done:true,received:10,reward:{currency:100},messages:[{role:'user',text:'Hello',feedback:'答对了 · +10 奇豆'}]};
     view.render(done);
     const chatLog=nodes().find(n=>n.className==='camp-chat-log');
-    const choices=chatLog.querySelectorAll('button').filter(n=>['Yes','No'].includes(n.textContent));
+    const choices=chatLog.querySelectorAll('button').filter(n=>['好','不了'].includes(n.textContent));
     assert.equal(choices.length,2);choices[0].onclick();choices[1].onclick();assert.equal(yesCount,1);assert.equal(noCount,1);
     assert.equal(nodes().some(n=>n.className==='camp-chat-completed-actions'),false);
     assert.equal(nodes().some(n=>n.className==='camp-chat-reward-summary'||n.className==='camp-chat-celebration'),false);
@@ -91,7 +91,7 @@ test('English UI never translates Chinese teaching text; translation toggle work
     assert.equal(view.root.hidden,false);
     assert.equal(nodes().find(n=>n.className==='camp-chat-input').hidden,false);
     assert.equal(nodes().find(n=>n.className==='camp-chat-actions').hidden,false);
-    assert.ok(nodes().some(n=>n.tag==='button'&&n.textContent==='No'));
+    assert.ok(nodes().some(n=>n.tag==='button'&&n.textContent==='不了'));
     assert.equal(nodes().find(n=>n.tag==='button'&&n.textContent==='发送').disabled,false);
     view.close();
     view.render({...done,received:0});
@@ -99,7 +99,7 @@ test('English UI never translates Chinese teaching text; translation toggle work
     assert.equal(view.root.hidden,false);
     assert.equal(nodes().find(n=>n.className==='camp-chat-input').hidden,false);
     assert.equal(nodes().find(n=>n.className==='camp-chat-actions').hidden,false);
-    assert.ok(nodes().some(n=>n.tag==='button'&&n.textContent==='No'));
+    assert.ok(nodes().some(n=>n.tag==='button'&&n.textContent==='不了'));
     assert.equal(nodes().find(n=>n.tag==='button'&&n.textContent==='发送').disabled,false);
     view.close();
     view.render({...state,mode:'free',loginRequired:true,ready:false,remaining:null,hintLevel:0});
@@ -121,7 +121,7 @@ test('English UI never translates Chinese teaching text; translation toggle work
     assert.equal(view.root.hidden,false);
     assert.equal(nodes().find(n=>n.className==='camp-chat-input').hidden,false);
     assert.equal(nodes().find(n=>n.className==='camp-chat-actions').hidden,false);
-    assert.ok(nodes().some(n=>n.tag==='button'&&n.textContent==='No'));
+    assert.ok(nodes().some(n=>n.tag==='button'&&n.textContent==='不了'));
     assert.equal(nodes().find(n=>n.tag==='button'&&n.textContent==='发送').disabled,false);
     view.close();
 });

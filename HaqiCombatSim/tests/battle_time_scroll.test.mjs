@@ -99,3 +99,11 @@ test('real shared chat opts out of coins, awards verified speech once across reo
     chat.close();chat.open(profile,story,null,{greeted:true});await say(story.turns[0].answer.en);assert.equal(rewards.length,3);
     voice.finish=()=>new Promise(resolve=>{finish=resolve;});await callbacks.start();const waiting=callbacks.finish();chat.close();finish(story.turns[1].answer.en);await waiting;assert.equal(rewards.length,3);
 });
+
+test('time scroll accepts selected Japanese and Korean and exposes guarded lesson preparation',()=>{
+ for(const language of ['ja','ko']){const h=harness();h.state.save.languageLearning.target=language;h.cb.onPractice(data.stations[0]);assert.ok(h.chat());assert.equal(h.chat().getState().save.languageLearning.target,language);assert.equal(typeof h.chat().voice.judge,'function');assert.throws(()=>h.chat().voice.judge([]),/登录/);assert.equal(h.log.length,0);h.scroll.close();}
+});
+
+test('Japanese and Korean time story completion preserves language and cannot reward replay',()=>{
+ for(const locale of ['ja','ko']){const save=createAdventure(content);save.languageLearning={...save.languageLearning,enabled:true,target:locale};const c=completion();c.locale=locale;c.story.proof=c.story.proof.map(p=>({...p,quote:locale==='ja'?'地図を見せてください。':'지도를 보여 주세요.'}));T.completeTimeStory(save,data,c);assert.equal(save.languageAdventure.stories[locale][c.story.id].completed,1);assert.equal(save.languageAdventure.stories.en,undefined);const revision=save.revision;T.completeTimeStory(save,data,c);assert.equal(save.revision,revision);save.languageLearning.target='en';assert.throws(()=>T.completeTimeStory(save,data,c),/场景已变化/);}
+});

@@ -1,15 +1,16 @@
-import {el, button, art} from './views/adventure/primitives.js';
+import {el,button,art} from './views/adventure/primitives.js';
 import {bindSceneDrag,pointInsideElement} from './adventure_scene_drag.js';
 import {equipmentComparison} from './view_adventure_guidance.js';
 import {forestCommissionRewardPreviews} from './forest_commission_rewards_core.js';
 import {createCloseButton} from './ui/controls.js';
 import {watchTreeText} from './language_tree_capture.js';
+import {forestCommissionLesson,forestLabelMatches,forestLabelWritten} from './forest_commission_language_core.js';
 import {forestCommissionPhase,forestCommissionGoal,forestCommissionPouch,forestCommissionRewards,forestCommissionScene,FOREST_SITES,FOREST_NPCS} from './forest_commission_core.js';
 
 // A scene interaction dispatches intent. Inventory, distance, order and rewards
 // are checked by the core and persisted by the controller before this repaints.
 export function renderForestCommission(root,model,cb){
- const {save,assets}=model,phase=forestCommissionPhase(save),goal=forestCommissionGoal(save);
+ const {save,assets}=model,phase=forestCommissionPhase(save),goal=forestCommissionGoal(save),lesson=forestCommissionLesson(save);
  root.replaceChildren();root.className='overlay visible forest-commission-layer';
  const modal=el('section','modal forest-commission-modal');modal.dataset.phase=phase;
  modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label','森林委托：失踪的巡逻补给');
@@ -22,13 +23,31 @@ export function renderForestCommission(root,model,cb){
  const npc=assets.content.npcs[[ 'offer','boots'].includes(phase)?FOREST_NPCS.giver:FOREST_NPCS.receiver];
  const say=text=>body.append(el('div','forest-speaker',npc?.portrait?art(assets,npc.portrait,68,86):'',el('p','',text)));
  const act=(label,value,primary=true)=>actions.append(button(label,()=>cb.action(value),primary?'primary':'secondary'));
- const english=(line,help)=>{
-  const text=el('p','forest-english',line);text.lang='en';
+ const clue=(phase,help)=>{
+  const line=lesson.clues[phase],text=el('p','forest-english',line);text.lang=lesson.language;
   const support=el('details','forest-help');support.append(el('summary','','看提示'),el('p','',help));
-  body.append(el('div','forest-clue',text,button('听线索',()=>cb.listen(line),'secondary')),support);
-  watchTreeText(text,{source:'forest-commission',label:'营地补给委托',locale:'en',text:line});
+  body.append(el('div','forest-clue',text,button('听线索',()=>cb.listen(line,lesson.language),'secondary')),support);
+  watchTreeText(text,{source:'forest-commission',label:'营地补给委托',locale:lesson.language,text:line});
  };
  const go=(label='带我去')=>actions.append(button(label,cb.go,'primary'));
+ const labelObject=(word,name)=>{
+  if(!model.nearby)return;
+  if(forestLabelWritten(save,word)){body.append(el('p','forest-status',`已写好标签：${lesson.words[word]}`));return;}
+  const box=el('details','forest-help'),summary=el('summary','',`给${name}写${lesson.name}标签（可选）`);
+  const field=el('input');field.type='text';field.maxLength=24;field.autocomplete='off';field.spellcheck=false;field.lang=lesson.language;field.setAttribute('aria-label',`${name}的${lesson.name}标签`);
+  const hint=el('details','forest-help');hint.append(el('summary','',`看${lesson.name}标签`),el('p','',lesson.words[word]));
+  let attempts=0,assisted=false;
+  hint.addEventListener('toggle',()=>{if(hint.open)assisted=true;});
+  const write=()=>{
+   attempts=Math.min(attempts+1,999);assisted=assisted||hint.open===true;
+   const text=field.value;
+   if(!forestLabelMatches(save,word,text)){status.textContent=`标签还没写对。可以看看${lesson.name}提示，再试一次；也可以直接递交物品。`;field.focus();return;}
+   cb.sound?.('paper');cb.action({step:'label',word,text,learning:{at:Date.now(),attempts,assisted}});
+  };
+  field.addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.isComposing&&event.keyCode!==229){event.preventDefault();event.stopPropagation();write();}});
+  const label=el('label','',`看着物品，试着写出${name}的${lesson.name}名称：`,field);
+  box.append(summary,label,hint,button('写到标签上',write,'secondary'),el('p','','标签会记录到词树。也可以直接递交物品。'));body.append(box);
+ };
  const handover=(step)=>{
   const item=forestCommissionPouch(save)[0];if(!item||!model.nearby)return;
   const scene=el('div','forest-scene forest-handover');
@@ -62,7 +81,7 @@ export function renderForestCommission(root,model,cb){
   if(model.nearby)act('接下补给单',{step:'accept'});else go('去找莫尼');
  }else if(phase==='boots'){
   say('看看补给单，把对的物品装进袋子。');
-  english('Find the boots beside the tent. Leave the hat.','boots 靴子；hat 帽子。找帐篷旁的靴子。');
+  clue('boots',`${lesson.words.boots} 靴子；${lesson.words.hat} 帽子。找帐篷旁的靴子。`);
   if(model.nearby){
    const scene=el('div','forest-scene forest-tent-scene');scene.setAttribute('aria-label','帐篷旁的补给物品');
    const backdrop=illustration(assets,'buildingArt','camp','tent',400,250);scene.append(backdrop);
@@ -81,11 +100,12 @@ export function renderForestCommission(root,model,cb){
   }else go('带我去补给帐篷');
  }else if(phase==='delivery'){
   say('找到了！把靴子交给茜茜。');
-  english('Bring the boots to Sissy.','把靴子带给茜茜，换取回礼。');
+  clue('delivery','把补给带给茜茜，换取回礼。');
+  labelObject('boots','靴子');
   handover('deliver');rewards('deliver');if(model.nearby)act('交付靴子',{step:'deliver'});else go('去找茜茜');
  }else if(phase==='note'){
   say('靴子归你啦！再找找石头后面的路线便签。');
-  english('The note is behind the rock. Move the rock.','note 便签；rock 石头。挪开石头看看。');
+  clue('note',`${lesson.words.note} 便签。挪开石头看看。`);
   if(model.nearby){
    const scene=el('div','forest-scene forest-note-scene'),note=button('',()=>cb.action({step:'take-note',revealed:true}),'forest-note');note.setAttribute('aria-label','拾取巡逻路线便签');note.lang='zh-CN';note.hidden=true;
    note.append(illustration(assets,'environmentArt','forestQuest','routeNote',210,188),el('span','','拿起便签'));
@@ -98,8 +118,9 @@ export function renderForestCommission(root,model,cb){
   }else go('去路线桌找便签');
   actions.append(button('穿上新靴子',cb.equipment,'secondary'));
  }else if(phase==='briefing'){
+  labelObject('note','便签');
   say('一起行动，集中攻击。和我练一场，就能去巡逻啦！');
-  handover('brief');english('Keep together. Focus on one enemy.','一起行动，集中攻击同一个敌人。');
+  handover('brief');clue('briefing','一起行动，集中攻击同一个敌人。');
   if(model.nearby)act('确认路线',{step:'brief'});else go('拿便签给茜茜');
   actions.append(button('和茜茜打怪',cb.training,'secondary'));
  }else if(phase==='patrol'){
@@ -122,7 +143,7 @@ export function renderForestCommission(root,model,cb){
  modal.addEventListener('keydown',event=>{
   event.stopPropagation();if(event.key==='Escape'){event.preventDefault();cb.close();return;}
   if(event.key!=='Tab')return;
-  const controls=[...modal.querySelectorAll('button:not(:disabled),summary')].filter(n=>!n.hidden&&n.getClientRects().length);
+  const controls=[...modal.querySelectorAll('button:not(:disabled),input:not(:disabled),summary')].filter(n=>!n.hidden&&n.getClientRects().length);
   const first=controls[0],last=controls.at(-1);
   if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus();}
   else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}

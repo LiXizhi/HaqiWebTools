@@ -52,7 +52,11 @@ test('ASR normalization is language specific, accepts contractions/numbers, reje
  assert.ok(matchesSpeech('我有2个！',['我有二个。'],'zh-CN'));
  assert.ok(!matchesSpeech('I am not ready',['I am ready'],'en'));
  assert.ok(!matchesSpeech('你好',['Hello'],'en'));
- assert.ok(!matchesSpeech('你好',['你好'],'ja'));
+ assert.ok(matchesSpeech('こんにちは！',['こんにちは。'],'ja'));
+ assert.ok(matchesSpeech('안녕하세요!',['안녕하세요.'],'ko'));
+ assert.ok(!matchesSpeech('Hello',['こんにちは'],'ja'));
+ assert.ok(!matchesSpeech('Hello',['안녕하세요'],'ko'));
+ assert.ok(matchesSpeech('水',['水'],'ja'));
 });
 test('seeded selection filters context, locale, and binding without global randomness',()=>{
  const options={event:'npc',source:'camp:5:36205',locale:'en',seed:42};

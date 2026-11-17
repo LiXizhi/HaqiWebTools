@@ -1,3 +1,4 @@
+import {prologueScriptForTarget} from './prologue_target_language_core.js';
 // prologue_app.js — interactive cinematic prologue 《失落的光》, mounted inside Haqi.html.
 // Lazily imported by adventure_app.js (Haqi.html?prologue, the title-screen button, or a new player's
 // first visit). Shares the already loaded assets, renderer, locale and sound; needs no login and writes
@@ -36,7 +37,8 @@ export async function mountPrologue(host,ctx){
     layer.append(stageNode,loading);host.append(layer);
 
     const read=createJsonReader();
-    const [script,artManifest,words]=await Promise.all([read('data/prologue/script.json'),read('data/prologue/art.json'),read('data/adventure/dictionary/word-cards.json')]);
+    const [sourceScript,artManifest,words]=await Promise.all([read('data/prologue/script.json'),read('data/prologue/art.json'),read('data/adventure/dictionary/word-cards.json')]);
+    const script=prologueScriptForTarget(sourceScript,pair.target);
     validateScript(script,{artIds:new Set(Object.keys(artManifest.entries||{}))});
 
     const cinema=createCinema(stageNode,{manifest:artManifest,mode:assets.mode,reducedMotion});
@@ -90,13 +92,13 @@ export async function mountPrologue(host,ctx){
             targetLang:pair.target,
             reducedMotion:reducedMotion(),
         });
-        if(readAloud)speak(text.primary);
+        if(readAloud)speak(['ja','ko'].includes(pair.target)?text.secondary:text.primary,['ja','ko'].includes(pair.target)?pair.target:pair.native);
         await advance(beatAutoSeconds({type:'line',text:line.text},pair),{progress:value=>dialog.setProgress(value)});
         guard(e);narration?.stop();
     }
-    function speak(text){
+    function speak(text,lang=pair.native){
         if(!narration)return;
-        narration.speak({text,key:text,lang:pair.native,enabled:true,playing:true}).catch(()=>{});
+        narration.speak({text,key:text,lang,enabled:true,playing:true}).catch(()=>{});
     }
 
     const stage=createPrologueStage({
@@ -142,7 +144,7 @@ export async function mountPrologue(host,ctx){
         layer.setAttribute('aria-label',CHROME.brand[pair.native]);
     }
     langBtn.onclick=async()=>{
-        pair=languagePair(pair.native==='en'?'zh-CN':'en',null);paintChrome();
+        pair=languagePair(pair.native==='en'?'zh-CN':'en',['ja','ko'].includes(pair.target)?pair.target:null);paintChrome();
         try{await onLocaleChange(pair.native,pair.target);}catch{}
         if(current?.beat.type==='line')say(current.beat).catch(()=>{});
     };

@@ -49,7 +49,11 @@ export function journeyEnemyFormation(encounter,dungeon,party){
 export function journeyParty(save,dungeon,party){
     if(!dungeon?.kind||!party)return party;
     // Towers follow the lineup already chosen in the party room or pet formation.
-    const size=dungeon.kind==='elite'?dungeon.partySize:Math.max(1,Math.min(4,party.length));
+    // New patrols may keep one selected companion. In-flight legacy battles
+    // retain their original solo party so deterministic replays still load.
+    const companionSlots=dungeonTacticsProfile(dungeon)?.companionSlots;
+    const withCompanion=companionSlots&&(!save.pendingEncounter||save.pendingEncounter.journeyPartyVersion===1);
+    const size=dungeon.kind==='elite'?(withCompanion?Math.min(companionSlots,party.length):dungeon.partySize):Math.max(1,Math.min(4,party.length));
     if(party.length<size)throw Error(`本次挑战需要${size}个出战单位，请先安排宠物或邀请伙伴`);
     return party.slice(0,size);
 }

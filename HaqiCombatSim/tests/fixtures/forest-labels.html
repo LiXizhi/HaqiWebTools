@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><title>森林物品多语言验收</title>
+<link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_dialogue.css">
+<style>body{background:#35564a}nav{position:fixed;top:8px;left:8px;z-index:99999;background:#fff7df;padding:8px;max-width:95%}</style></head>
+<body class="haqi-app"><nav><label>验收场景 <select aria-label="验收场景"><option value="boots">找靴子</option><option value="delivery">送靴子</option><option value="note">找便签</option><option value="briefing">交便签</option></select></label> <label>第二语言 <select aria-label="第二语言"><option value="en">英语</option><option value="ja">日语</option><option value="ko">韩语</option><option value="zh-CN">中文</option></select></label> · 仅内存，不修改玩家存档 <output id="receipt" aria-live="polite"></output></nav><div id="root"></div>
+<script type="module">
+import {loadResources} from './js/adventure_assets.js';
+import {createAdventure} from './js/adventure_core.js';
+import {applyForestCommission,forestCommissionGoal} from './js/forest_commission_core.js?qa=20261117-language';
+import {renderForestCommission} from './js/view_forest_commission.js?qa=20261117-language';
+import {createSpellSound} from './js/spell_sound.js';
+import {createAudioSamples} from './js/audio_samples.js';
+const assets=await loadResources(),root=document.querySelector('#root'),select=document.querySelector('[aria-label="验收场景"]'),language=document.querySelector('[aria-label="第二语言"]'),receipt=document.querySelector('#receipt');
+const sound=createSpellSound({defaultEnabled:true,persistPreferences:false,samples:createAudioSamples()});
+let save;
+function reset(){save=createAdventure(assets.content,{name:'标签界面验收'});save.openingJourney={phase:'done'};save.zone='camp';save.languageLearning={...save.languageLearning,target:language.value};save.forestCommission={version:1,phase:select.value};receipt.textContent='';show();}
+function show(){renderForestCommission(root,{save,assets,nearby:true},{close:()=>root.replaceChildren(),listen:(line,lang)=>{receipt.textContent='听力请求 '+lang+'：'+line;},sound:name=>{void sound.unlock();sound.play(name);},action:value=>{try{const goal=forestCommissionGoal(save);applyForestCommission(save,assets.content,value,{forestTarget:{id:goal.id,kind:goal.kind,...save.position}});receipt.textContent='标签回执 '+(save.forestCommission.labelPractice||[]).map(p=>p.language||'en').join('、')+'；阶段 '+save.forestCommission.phase;show();}catch(error){receipt.textContent=error.message;}},equipment:()=>{},training:()=>{},patrol:()=>{},go:()=>{}});}
+document.addEventListener('pointerdown',()=>void sound.unlock());select.onchange=reset;language.onchange=()=>{save.languageLearning.target=language.value;receipt.textContent='第二语言已切换，保留当前物品与进度';show();};reset();
+</script></body></html>

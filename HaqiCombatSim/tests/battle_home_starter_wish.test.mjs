@@ -2,13 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
+import {starterLampExercise} from '../js/home_starter_room_core.js';
 import {bindHomeSceneInputForTest} from './helpers/home_scene_input_harness.mjs';
 const source=readFileSync(new URL('../js/home/home_session_controller.js',import.meta.url),'utf8');
 const wishSource=source.slice(source.indexOf(' function currentPetWish('),source.indexOf(' function emit(){'));
 
 test('starter-room wishes only ask for the same lamp exercise, and stop after its use is fulfilled',()=>{
  let ready=true,random=0;
- const context={home:{id:'starter-room-v1'},STARTER_ROOM_ID:'starter-room-v1',canRequestStarterLamp:()=>ready,petWish:()=>{random++;return {itemId:'greenhouse'};},catalog:{items:[]},lang:()=> 'en',round:0};
+ const context={starterLampExercise,home:{id:'starter-room-v1'},STARTER_ROOM_ID:'starter-room-v1',canRequestStarterLamp:()=>ready,petWish:()=>{random++;return {itemId:'greenhouse'};},catalog:{items:[{id:'bedside-lamp',sentences:{},practiceWords:{}}]},lang:()=> 'en',round:0};
  vm.runInNewContext(wishSource,context);
  const wish=context.currentPetWish('pet1');assert.equal(wish.itemId,'bedside-lamp');assert.equal(wish.text,'Can I have a lamp?');assert.equal(wish.starterLamp,true);assert.equal(wish.expanded,false);assert.equal(random,0);
  ready=false;assert.equal(context.currentPetWish('pet1',true),null);assert.equal(random,0);

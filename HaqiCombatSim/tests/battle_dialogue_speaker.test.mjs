@@ -58,3 +58,4 @@ test('Korean playback overrides the saved Chinese voice with and without an NPC'
  assert.equal(calls[0].voiceType,'ko_male_bv545_uranus_bigtts');assert.equal(calls[1].voiceType,'ko_female_bv546_uranus_bigtts');
  }finally{await voice.cancel();globalThis.Audio=oldAudio;}
 });
+

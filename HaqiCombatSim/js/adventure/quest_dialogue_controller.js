@@ -402,6 +402,12 @@ export function createQuestDialogueController({
     function track(questId, options = {}) {
         const ctx = getContext();
         if (ctx.stage !== 'world') return;
+        if (questId === 'dungeon-next') {
+            if (!dungeonFor(ctx.assets.content, ctx.save.zone)) return;
+            const next = ctx.world?.encounters?.find(encounter => !encounter.hidden && !encounter.blocked?.length);
+            if (next) walkTo({ ...next, kind: 'encounter' }, true);
+            return;
+        }
         if (questId === 'camp-detour') {
             opening.trackCampDetour();
             return;

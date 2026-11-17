@@ -1,3 +1,4 @@
+import {homeItemLanguage,homeLearningSentences} from './home_language_core.js';
 import {validHomeDrawing,HOME_DRAWING_ITEMS} from './home_drawing_core.js';
 import {compareDungeonSpeech} from './dungeon_speech_core.js';
 import {isRoofDecoration,roofAt,buildingBounds,buildingGridBounds,buildingConflict,replacementFor,validBuildingProperties,buildingItem,buildingSlotKind,isEdgeLike} from './home_building_core.js';
@@ -118,6 +119,7 @@ const normalize=s=>String(s).normalize('NFKC').toLowerCase().replace(/[.,!?。�
 function oneEdit(a,b){if(Math.abs(a.length-b.length)>1)return false;let i=0,j=0,edits=0;while(i<a.length&&j<b.length){if(a[i]===b[j]){i++;j++;continue;}if(++edits>1)return false;if(a.length>=b.length)i++;if(b.length>=a.length)j++;}return edits+(a.length-i)+(b.length-j)<=1;}
 export const requiresReading=item=>item?.requiresReading!==false;
 export function summonSentences(item,lang='en',color=''){
+ if(['ja','ko'].includes(lang))return homeLearningSentences(item,lang,color);
  if(!['en','zh'].includes(lang))return [];
  const noun=lang==='en'?[color,item.en].filter(Boolean).join(' '):`${COLORS[color]||''}${item.zh}`;
  const article=item.article==='some'?'some':/^[aeiou]/.test(noun)?'an':'a';
@@ -147,7 +149,8 @@ function effectiveSpellAccuracy(result,locale){
 // The third completed, nonempty recording may unlock a selected item without
 // claiming that its unmatched vocabulary was correctly practised.
 export function matchHomeSpell(text,catalog,lang='en',selection=null,{input='text',speechAttempts=0}={}){
- const locale=lang==='en'?'en':'zh-CN';
+ const locale=lang==='zh'?'zh-CN':lang;
+ if((lang==='ja'&&!/[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}]/u.test(text))||(lang==='ko'&&!/[\p{Script=Hangul}]/u.test(text)))return {candidates:[],feedback:null,error:'请使用当前学习语言完成句子。'};
  if(!String(text||'').match(/[\p{L}\p{N}]/u))return {candidates:[],feedback:null,error:'没有听清，请读出或输入一句召唤咒语。'};
  const candidates=[];let feedback=null;
  for(const item of catalog){
@@ -159,7 +162,7 @@ export function matchHomeSpell(text,catalog,lang='en',selection=null,{input='tex
     const parts=res.accuracy>0?res.parts.map(p=>p.missing&&isSimplePart(p.text,locale)?{...p,missing:false}:p):res.parts;
     return {...res,parts,effectiveAccuracy:effectiveSpellAccuracy(res,locale),lineIndex};
    }).sort((a,b)=>b.effectiveAccuracy-a.effectiveAccuracy||b.accuracy-a.accuracy||a.lineIndex-b.lineIndex);
-   const best=rows[0];
+   const best=rows[0];if(!best)continue;
    if(!feedback||best.effectiveAccuracy>feedback.effectiveAccuracy||(best.effectiveAccuracy===feedback.effectiveAccuracy&&best.accuracy>feedback.accuracy))feedback=best;
    const passAccuracy=selection?.itemId?HOME_SPELL_PASS_ACCURACY:1;
    if(best.effectiveAccuracy>=passAccuracy||(input==='speech'&&speechAttempts>=3&&selection?.itemId))candidates.push({itemId:item.id,color});
@@ -241,7 +244,7 @@ export function initializeHomeResidents(saved,records,seed){
  return residents;
 }
 export function homeResidentPets(records,residents){return Object.values(records).filter(p=>Object.hasOwn(residents,p.id));}
-export function petWish(petId,round,catalog,lang='en'){const rng=createRng(hashSeed(`${petId}:${round}`)),item=rng.pick(catalog.filter(i=>i.activity));return {itemId:item.id,text:lang==='en'?`I want ${/^[aeiou]/.test(item.en)?'an':'a'} ${item.en}.`:`我想要一个${item.zh}。`,translation:lang==='en'?`我想要一个${item.zh}。`:`I want ${/^[aeiou]/.test(item.en)?'an':'a'} ${item.en}.`};}
+export function petWish(petId,round,catalog,lang='en'){const rng=createRng(hashSeed(`${petId}:${round}`)),item=rng.pick(catalog.filter(i=>i.activity&&(!['ja','ko'].includes(lang)||homeItemLanguage(i,lang))));if(['ja','ko'].includes(lang))return {itemId:item.id,text:homeLearningSentences(item,lang)[1],translation:`我想要一个${item.zh}。`};return {itemId:item.id,text:lang==='en'?`I want ${/^[aeiou]/.test(item.en)?'an':'a'} ${item.en}.`:`我想要一个${item.zh}。`,translation:lang==='en'?`我想要一个${item.zh}。`:`I want ${/^[aeiou]/.test(item.en)?'an':'a'} ${item.en}.`};}
 export function validHomeLabel(value){return value===undefined||typeof value==='string'&&value.length<=60&&!/[\p{Cc}\p{Cf}]/u.test(value);}
 export function validateHomePart(kind,value,catalog){
  if(!value||typeof value!=='object'||Array.isArray(value))throw Error('家园文件无效');

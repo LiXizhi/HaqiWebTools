@@ -257,10 +257,6 @@ export function createEarthController({
             toast('请先在双语学习中选择目标语言。');
             return;
         }
-        if (!['en', 'zh-CN'].includes(ctx.save.languageLearning.target)) {
-            toast('这个城市的课程目前支持中文和英语。');
-            return;
-        }
         const current = ctx.save;
         const role = ctx.roleStorage;
         await Promise.resolve();

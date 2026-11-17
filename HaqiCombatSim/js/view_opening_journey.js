@@ -1,11 +1,12 @@
-import {el, button, art} from './views/adventure/primitives.js';
+import {learningLesson} from './learning_language_core.js';
+import {el,button,art} from './views/adventure/primitives.js';
 import {guidePet} from './companion_guide_core.js';
 import {createCloseButton} from './ui/controls.js';
 import {petPortrait} from './view_adventure_pets.js';
 import {OPENING_PET,openingJourney,openingJourneyMilestones,openingFriendAnswer} from './opening_journey_core.js';
 
 export function renderOpeningJourney(root,model,cb){
- const state=openingJourney(model.save);
+ const state=openingJourney(model.save),lesson=learningLesson(model.save);
  root.replaceChildren();root.className='overlay visible opening-conversation-layer';
  const modal=el('section','modal opening-journey-modal opening-character-dialogue');modal.dataset.phase=state.phase;modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');
  const title=state.phase==='showcase'?'新伙伴！':state.phase==='offer'?'抱抱龙发现了什么？':state.phase==='rescue'?'新伙伴：咕噜噜':state.phase==='done'?'初战告捷':'第一次搭档';
@@ -36,17 +37,18 @@ export function renderOpeningJourney(root,model,cb){
  }else if(state.phase==='explain'){
   say('它是和你们一起的吗？');
   body.append(el('div','opening-replies',
-   button('We are friends. · 我们是朋友',()=>cb.action({step:'explain',text:'We are friends.',choice:true}),'primary'),
+   button(`${lesson.friend} · 我们是朋友`,()=>cb.action({step:'explain',text:lesson.friend,language:lesson.language,choice:true}),'primary'),
    button('听示范',cb.listen,'secondary')));
-  const form=el('form',''),input=el('input','name-input'),feedback=el('p','muted','也可写 We\'re friends.');
+  const form=el('form',''),input=el('input','name-input'),feedback=el('p','muted',`用${lesson.name}写一句，也可以先听示范。`);
+  input.lang=lesson.language;let composing=false;input.oncompositionstart=()=>composing=true;input.oncompositionend=()=>composing=false;
   input.setAttribute('aria-label','告诉莫尼我们是朋友');input.autocomplete='off';input.maxLength=100;
   input.setAttribute('aria-describedby','opening-answer-feedback');
   feedback.id='opening-answer-feedback';feedback.setAttribute('role','status');
   const submit=el('button','primary','告诉莫尼');submit.type='submit';
   form.append(input,submit,feedback);form.onsubmit=e=>{
-   e.preventDefault();
-   const answer=openingFriendAnswer(input.value);
-   if(!answer.accepted||cb.action({step:'explain',text:input.value})===false){
+   e.preventDefault();if(composing||e.isComposing)return;
+   const answer=openingFriendAnswer(input.value,lesson.language);
+   if(!answer.accepted||cb.action({step:'explain',text:input.value,language:lesson.language})===false){
     feedback.textContent=answer.accepted?'这次进度还没保存好，请重试。':answer.message;
     input.setAttribute('aria-invalid','true');input.focus();
    }
@@ -71,7 +73,7 @@ export function renderOpeningJourney(root,model,cb){
   if(!joined)action('加入队伍',{step:'join'},true);
   else actions.append(button('带它出发',cb.go,'primary'));
  }else if(state.phase==='done'){
-  say('抱抱龙想和你玩口令，试试用英语指挥它！');
+  say(`抱抱龙想和你玩口令，试试用${lesson.name}指挥它！`);
   actions.append(button('和伙伴玩口令',cb.wordplay,'primary'),button('先去找青龙',cb.continue,'secondary'));
  }
  body.append(actions);

@@ -1,0 +1,24 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><title>新手行动美术验收</title><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"></head>
+<body class="haqi-app"><main id="root">正在加载；仅使用内存角色，不读写用户存档。</main><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import * as A from '../../js/adventure_core.js';
+import * as P from '../../js/combat_pve_core.js';
+import {openingTrainingMonsters} from '../../js/opening_training_core.js';
+import {renderBattle,updateBattlePetHint} from '../../js/view_adventure.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+const root=document.querySelector('#root');
+try{
+ const assets=await loadResources(),save=A.createAdventure(assets.content,{name:'巡夜验收',school:'ice',seed:23});
+ const query=new URLSearchParams(location.search),id=['fire-scout','ice-scout','storm-scout','life-scout'].includes(query.get('opponent'))?query.get('opponent'):'fire-scout';
+ save.xp=assets.content.progression.xpThresholds[9];A.syncProgression(save,assets.content);save.deck=A.recommendedDeck(save,assets.content);
+ const monsters=openingTrainingMonsters([assets.content.monsters[id]],{openingTrainingVersion:3,encounterId:id});
+ const battle=P.createPveBattle({dataset:assets.dataset,player:A.playerSpec(save,assets.content),monsters,seed:23,threatRulesVersion:5}),renderer=createRenderer(document.createElement('canvas'),assets);
+ const previewTurn=Number(query.get('turn'));if(Number.isInteger(previewTurn)&&previewTurn>=1&&previewTurn<=14)battle.turn=previewTurn;
+ let selected=null,discarded=[];
+ const step=action=>{P.playPveRound(battle,{...action,discardSeqs:discarded});selected=null;discarded=[];paint();};
+ const paint=()=>renderBattle(root,{assets,save,battle,selected,discarded,animating:false,soundEnabled:false},{sound(){},pass:()=>step({pass:true}),select:pick=>{selected=pick;paint();},reselect:()=>{selected=null;paint();},target:id=>selected&&step({...selected,targetId:id}),discard:seq=>{discarded.push(seq);selected=null;paint();},toggleRunes(){},togglePetCards(){},swipePlay:pick=>{selected=pick;paint();},retreat:()=>{root.textContent='已退出；未保存角色。';},finish:()=>{root.textContent='本波验收结束；未保存角色。';}});
+ await assets.warmBattle(battle);paint();
+ const frame=time=>{const canvas=root.querySelector('#battle-canvas');if(canvas){canvas.battlePositions=renderer.renderBattle(canvas,battle,save,time);updateBattlePetHint(root,battle,save,assets.content,canvas);}requestAnimationFrame(frame);};
+ requestAnimationFrame(frame);document.documentElement.dataset.fixtureReady='1';
+}catch(error){root.textContent=error.stack;}
+</script></body></html>

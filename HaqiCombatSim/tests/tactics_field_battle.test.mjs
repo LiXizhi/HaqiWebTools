@@ -40,6 +40,22 @@ test('attacking immediately and passing are legal and never reset the fight to a
  assert.equal(typeof tacticsFieldCue(s.battle).label,'string');
 });
 
+test('passing throughout a four-person practice cannot let the loan allies win alone',()=>{
+ for(const seed of [1,23,91]){
+  const s=session('squad',seed);
+  for(let turn=0;turn<100&&!s.battle.finished;turn++)round(s,{pass:true});
+  assert.equal(s.battle.finished,true,'seed '+seed);
+  assert.equal(s.battle.winner,'far','seed '+seed);
+  const save={};assert.equal(recordTacticsFieldVictory(save,s.battle),false);
+  assert.equal(save.tacticsTraining,undefined);
+  const replay=s.create();for(const decision of s.decisions){
+   const result=playTacticsFieldRound({battle:replay,decisions:[],create:s.create},decision);
+   assert.equal(result.error,null);
+  }
+  assert.equal(JSON.stringify(replay),JSON.stringify(s.battle));
+ }
+});
+
 test('a real failed round restores prior state, AI choices and subsequent damage',()=>{
  const s=session('guard',91);round(s,{pass:true});const before=JSON.stringify(s.battle),history=JSON.stringify(s.decisions);
  const failed=playTacticsFieldRound(s,{card:'not-a-card',target:'mob0',aiVersion:1});

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import * as forest from '../js/forest_commission_core.js';
+import * as forestLanguage from '../js/forest_commission_language_core.js';
 import {bindSceneDrag,pointInsideElement} from '../js/adventure_scene_drag.js';
 const source=fs.readFileSync(new URL('../js/view_forest_commission.js',import.meta.url),'utf8');
 const content=JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json',import.meta.url)));
@@ -19,7 +20,7 @@ function render(phase,{nearby=true,level=1}={}){
    querySelector(selector){return this.querySelectorAll(selector)[0]||null;}};
   n.classList={add:cls=>n.className+=' '+cls,remove:cls=>n.className=n.className.split(' ').filter(c=>c!==cls).join(' ')};all.push(n);return n;
  }
- const context=vm.createContext({document,Date:{now:()=>1234},watchTreeText:()=>{},...forest,bindSceneDrag,pointInsideElement,forestCommissionRewardPreviews:(save,c,step)=>forest.forestCommissionRewards(save,c,step).map(row=>({...row,changes:[]})),equipmentComparison:()=>el('section','equipment-comparison'),el,button:(label,action,cls='')=>Object.assign(el('button',cls,label),{click:action}),
+ const context=vm.createContext({document,Date:{now:()=>1234},watchTreeText:()=>{},...forest,...forestLanguage,bindSceneDrag,pointInsideElement,forestCommissionRewardPreviews:(save,c,step)=>forest.forestCommissionRewards(save,c,step).map(row=>({...row,changes:[]})),equipmentComparison:()=>el('section','equipment-comparison'),el,button:(label,action,cls='')=>Object.assign(el('button',cls,label),{click:action}),
   art:(assets,value)=>Object.assign(el('canvas'),{drawnArt:value}),createCloseButton:click=>Object.assign(el('button','close-button'),{click})});
  vm.runInContext(source.replace(/^import .*;\r?\n/gm,'').replace('export function','function'),context);
  const save={school:'fire',level,inventory:{},...(phase==='offer'?{}:{forestCommission:{version:1,phase:phase==='report'?'patrol':phase,...(['patrol','report','done'].includes(phase)?{clearBaseline:0}:{})}})};

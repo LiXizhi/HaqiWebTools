@@ -69,7 +69,7 @@ export function createPetScene({isFriend=()=>false,getState,commit,toast,sound=(
         get now(){return now();},
         get food(){return food&&{...food.anchor};},
         get effects(){return effects;},
-        get pets(){const {save,content}=getState();return [...actors.values()].map(a=>{const pet=save.pets[a.id]||save.petWorld[a.id]||visitors.get(a.id);return {...a,pet,scale:petDisplayScale(pet,content)};});},
+        get pets(){const {save,content}=getState();return [...actors.values()].flatMap(a=>{const pet=save.pets[a.id]||save.petWorld[a.id]||visitors.get(a.id);return pet?[{...a,pet,scale:petDisplayScale(pet,content)}]:[];});},
         get babies(){return Object.values(getState().save?.petWorld||{}).filter(p=>p.ownerId===null&&p.birth.zone===getState().world?.zone);},
         dialogue(owner,action='greet',settle=true){const {save,content}=getState(),host=selectCompanionId(save,content),other=npcPetId(owner),a=actors.get(host),b=actors.get(other);if(a&&b&&distance(a.position,b.position)<=petInteractionParams(content).encounterDistance){if(settle)ownerActions.set(other,action);if(startMeeting(settle?'dialogue':'gesture',host,[other]))meeting.action=action;}},
         feed(id){

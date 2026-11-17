@@ -42,10 +42,10 @@ export function validateScript(script,{artIds=null}={}){
     return script;
 }
 
-/** UI language and the second language shown under it. v1 pairs zh-CN and en. */
+/** UI language and the second language shown under it. Narrative UI stays Chinese/English; learning follows the selected target. */
 export function languagePair(native,second){
     const n=native==='en'?'en':'zh-CN';
-    const t=LOCALES.includes(second)&&second!==n?second:(n==='en'?'zh-CN':'en');
+    const t=['zh-CN','en','ja','ko'].includes(second)&&second!==n?second:(n==='en'?'zh-CN':'en');
     return {native:n,target:t};
 }
 /** Both lines of a bilingual text, native first. */
@@ -58,7 +58,7 @@ export function prologueRequested(search){
     const q=new URLSearchParams(search||'');
     if(!q.has('prologue'))return null;
     const lang=q.get('lang'),second=q.get('second'),scene=q.get('scene');
-    return {lang:LOCALES.includes(lang)?lang:null,second:LOCALES.includes(second)?second:null,scene:scene&&/^[a-z0-9-]{1,40}$/.test(scene)?scene:null};
+    return {lang:LOCALES.includes(lang)?lang:null,second:['zh-CN','en','ja','ko'].includes(second)?second:null,scene:scene&&/^[a-z0-9-]{1,40}$/.test(scene)?scene:null};
 }
 
 /** Reading time for auto-continue: brisk enough for fast pacing, long enough to read or tap through. */

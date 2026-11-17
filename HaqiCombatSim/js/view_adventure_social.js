@@ -38,7 +38,7 @@ export function renderSocial(root,state,kind,cb){
             const select=el('select','social-compose');select.setAttribute('aria-label','收件人');select.append(el('option','','请选择好友'));for(const f of state.friends){const o=el('option','',f.name);o.value=f.userId;select.append(o);}select.value=state.recipient||'';select.onchange=()=>cb.draft('recipient',select.value);
             const subject=el('input','social-compose');subject.placeholder='标题';subject.maxLength=100;subject.value=state.subject||'';subject.oninput=()=>cb.draft('subject',subject.value);
             const text=el('textarea','social-compose');text.placeholder='给朋友写几句话吧';text.maxLength=2000;text.value=state.mailDraft||'';text.oninput=()=>cb.draft('mailDraft',text.value);
-            const send=button('发送邮件',()=>cb.sendMail(select.value,subject.value,text.value),'primary');send.disabled=!!state.busy;body.append(select,subject,text,button('翻译成英文草稿',()=>cb.polish('mailDraft','en'),'secondary'),button('润色中文草稿',()=>cb.polish('mailDraft','zh'),'secondary'),el('p','muted','AI 生成草稿，可修改后自行发送。'),send);
+            const send=button('发送邮件',()=>cb.sendMail(select.value,subject.value,text.value),'primary');send.disabled=!!state.busy;body.append(select,subject,text,button('翻译成'+languageName(state.learningTarget)+'草稿',()=>cb.polish('mailDraft','target'),'secondary'),button('润色中文草稿',()=>cb.polish('mailDraft','zh'),'secondary'),el('p','muted','AI 生成草稿，可修改后自行发送。'),send);
         }else{
             for(const m of state.mails)body.append(button(`${m.read?'':'未读 · '}${m.title}`,()=>cb.readMail(m.id),'social-mail-row secondary'));
             if(!state.mails.length)body.append(el('p','','暂无来信。'));

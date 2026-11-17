@@ -50,3 +50,4 @@ test('monster practice uses the full battle HUD with normal cards, targeting, re
   assert.equal(next,1);assert.equal(finished,1);
  }
 });
+

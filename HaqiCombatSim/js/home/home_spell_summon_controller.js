@@ -3,6 +3,7 @@ import { compareDungeonSpeech } from '../dungeon_speech_core.js';
 import { TEMPLATE_PRACTICE } from '../home_building_templates_core.js';
 import { recordHomePractice } from '../home_practice.js';
 import { chunkKey, matchHomeSpell, canPlace, footprint } from '../home_core.js';
+import { homeItemLanguage } from '../home_language_core.js';
 import { starterLampExercise, matchStarterLampRequest } from '../home_starter_room_core.js';
 
 export function createHomeSpellSummonController({
@@ -43,11 +44,18 @@ export function createHomeSpellSummonController({
    const item = catalog.items.find(item => item.id === selection.itemId);
    return matchStarterLampRequest(text, item, selection, options);
   }
-  return matchHomeSpell(text, [...catalog.items, ...TEMPLATE_PRACTICE], lang(), selection?.id ? null : selection, options);
+  return matchHomeSpell(
+   text,
+   [...catalog.items, ...TEMPLATE_PRACTICE].map(item =>
+    selection?.starterLamp && item.id === selection.itemId ? starterLampExercise(item) : item,
+   ),
+   lang(),
+   selection?.id ? null : selection,
+   options,
+  );
  }
 
  async function summon(text, input) {
-  if (!['zh', 'en'].includes(lang())) throw Error('目录咒语尚未收录此语言，请使用家园情境练习；已有物品仍可摆放。');
   if (getBusy()) throw Error('正在召唤，请稍候');
   check();
   const home = getHome(),
@@ -77,18 +85,18 @@ export function createHomeSpellSummonController({
   const home = getHome(),
    selection = getSelection(),
    candidates = getCandidates();
-  if (!attempt || home?.id !== attempt.homeId || selection !== attempt.selection) throw Error('召唤已过期，请重新说一句');
+  if (!attempt || home?.id !== attempt.homeId || selection !== attempt.selection || lang() !== attempt.language) throw Error('召唤已过期，请重新说一句');
   if (!candidates.some(c => c.itemId === candidate.itemId && c.color === candidate.color)) throw Error('请重新完成召唤句子');
   if (getBusy()) return;
   setBusy(true);
   try {
    const view = getView();
    const original = [...catalog.items, ...TEMPLATE_PRACTICE].find(i => i.id === candidate.itemId);
-   const starterLamp = selection?.starterLamp === true && attempt.language === 'en';
+   const starterLamp = selection?.starterLamp === true;
    const item = starterLamp ? starterLampExercise(original) : original;
-   attempt.practiceValid =
-    compareDungeonSpeech(attempt.text, item[attempt.language === 'en' ? 'en' : 'zh'], attempt.language === 'en' ? 'en' : 'zh-CN')
-     .accuracy === 1;
+   attempt.practiceValid = ['ja', 'ko'].includes(attempt.language)
+    ? attempt.text.normalize('NFKC').replace(/\s+/g, '').includes(homeItemLanguage(item, attempt.language).normalize('NFKC').replace(/\s+/g, ''))
+    : compareDungeonSpeech(attempt.text, item[attempt.language === 'en' ? 'en' : 'zh'], attempt.language === 'en' ? 'en' : 'zh-CN').accuracy === 1;
    const template = TEMPLATE_PRACTICE.find(i => i.id === candidate.itemId);
    if (template) {
     const placedAt = await placeTemplate(template.templateId, attempt);

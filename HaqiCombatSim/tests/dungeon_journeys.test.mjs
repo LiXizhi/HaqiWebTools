@@ -1,6 +1,7 @@
 import {directCacheStore} from './helpers/direct_cache_store.js';
 import {forestCommissionPhase,forestCommissionPouch,FOREST_NPCS,FOREST_SITES} from '../js/forest_commission_core.js';
 import {dungeonTacticsMonsters,dungeonEnemyIntentInfo,dungeonTacticsPreparation} from '../js/dungeon_tactics_core.js';
+import {companionBattleAdvice} from '../js/companion_battle_advice_core.js';
 import {SimpleBot} from '../js/combat_policy_core.js';
 import {tickCare,STARTERS,addPet,petParams,partySpecs,petXpLevel,petMaxHp,recommendedPetDeck} from '../js/adventure_pets_core.js';
 import {initializePetWorld} from '../js/adventure_pet_world_core.js';
@@ -15,7 +16,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 import {installDungeonIndex,installDungeons,enterDungeon,leaveDungeon} from '../js/adventure_dungeons_core.js';
-import {claimTowerReward,towerRecord,journeyParty,dungeonEnemyIntel} from '../js/adventure_dungeon_journeys_core.js';
+import {claimTowerReward,towerRecord,journeyParty,journeyRewardPets,dungeonEnemyIntel} from '../js/adventure_dungeon_journeys_core.js';
 import {startCoopRun} from '../js/adventure_coop_core.js';
 import {makeSocialSnapshot} from '../js/adventure_social_core.js';
 import {presetDeck} from '../js/combat_presets_core.js';
@@ -70,6 +71,38 @@ test('tactical entry advice distinguishes borrowed, learned and equipped cards',
  assert.ok(ready.lines.some(line=>line.includes('离开副本')&&line.includes('继续已有进度')));
  assert.equal(ready.lines.some(line=>line.includes('食物恢复生命')),false);
  assert.equal(dungeonTacticsPreparation(save,content,tower),null);
+});
+
+test('patrol preparation includes usable equipment cards without treating unequipped gear as ready',()=>{
+ const dungeon=content.dungeons.find(d=>d.id==='journey:first-watch'),save=A.createAdventure(content,{school:'fire'});
+ save.xp=content.progression.xpThresholds[4];A.syncProgression(save,content);
+ const key='Fire_FireDamageTrap',item=content.items[1250];
+ assert.ok(item);save.inventory[item.id]=1;save.equipment[item.slot]=item.id;save.deck=save.deck.filter(row=>row.key!==key);
+ assert.ok(A.canEquip(save,item,content));
+ const ready=dungeonTacticsPreparation(save,content,dungeon,A.playerSpec(save,content));
+ assert.ok(ready.lines.some(line=>line.includes('陷阱由当前装备附带')));
+ assert.equal(ready.lines.some(line=>line.startsWith('陷阱')&&line.includes('尚未装入')),false);
+ delete save.equipment[item.slot];
+ const absent=dungeonTacticsPreparation(save,content,dungeon,A.playerSpec(save,content));
+ assert.ok(absent.lines.some(line=>line.startsWith('陷阱')&&line.includes('尚未装入')));
+});
+
+test('new patrol keeps one selected companion and restores both new and legacy solo checkpoints',()=>{
+ const dungeon=content.dungeons.find(d=>d.id==='journey:first-watch'),save=A.createAdventure(content,{school:'fire',seed:23});
+ save.xp=content.progression.xpThresholds[4];A.syncProgression(save,content);save.deck=A.recommendedDeck(save,content);
+ const pet=addPet(save,content,STARTERS[1]);save.formation[1]=save.petInstanceVersion===1?pet.id:pet.speciesId;
+ const lineup=partySpecs(save,content,A.playerSpec(save,content));assert.ok(lineup.length>=2);
+ assert.equal(journeyParty(save,dungeon,[lineup[0]]).length,1);
+ assert.equal(journeyParty(save,dungeon,[...lineup,{id:'extra'}]).length,2);
+ enterDungeon(save,content,dungeon.id);A.beginEncounter(save,content,dungeon.arenas[0].id);
+ assert.equal(save.pendingEncounter.journeyPartyVersion,1);assert.equal(save.pendingEncounter.party.length,2);
+ const restored=checkedProgress(save,content,dataset).battle;assert.equal(restored.sides.near.length,2);
+ assert.ok(A.parseSave(save,content));
+ const legacy=structuredClone(save);delete legacy.pendingEncounter.journeyPartyVersion;
+ legacy.pendingEncounter.party=legacy.pendingEncounter.party.slice(0,1);
+ legacy.pendingEncounter.petIds=journeyRewardPets(legacy,dungeon,legacy.pendingEncounter.party);
+ assert.ok(A.parseSave(legacy,content));assert.equal(checkedProgress(legacy,content,dataset).battle.sides.near.length,1);
+ const invalid=structuredClone(save);invalid.pendingEncounter.journeyPartyVersion=2;assert.throws(()=>A.parseSave(invalid,content),/阵容版本/);
 });
 
 test('real tactical clear can rest outside, resume progress and earn the first-clear item',()=>{
@@ -184,7 +217,7 @@ test('exhausted final win keeps the first-clear gear claim available for a rewar
 test('new tactical dungeon checkpoint replays while legacy checkpoints keep exported AI',()=>{
  const d=content.dungeons.find(d=>d.id==='journey:first-watch'),s=A.createAdventure(content);
  enterDungeon(s,content,d.id);A.beginEncounter(s,content,d.arenas[0].id);
- assert.equal(s.pendingEncounter.dungeonTacticsVersion,1);
+ assert.equal(s.pendingEncounter.dungeonTacticsVersion,2);
  const b=P.restorePveBattle(dataset,content,s.pendingEncounter);
  assert.match(dungeonEnemyIntentInfo(b).label,/强化/);
  const legacy=structuredClone(s.pendingEncounter);delete legacy.dungeonTacticsVersion;delete legacy.dungeonTacticsId;
@@ -197,6 +230,64 @@ test('new tactical dungeon checkpoint replays while legacy checkpoints keep expo
  const forged=structuredClone(s);forged.pendingEncounter.dungeonTacticsId='journey:lost-spark';
  assert.throws(()=>A.parseSave(forged,content),/副本战术/);
 });
+test('four new patrol waves apply distinct effects and repeat their advertised sequence',()=>{
+ const d=content.dungeons.find(d=>d.id==='journey:first-watch'),s=A.createAdventure(content);
+ const expected=[['强化','攻击'],['护盾','攻击','攻击'],['虚弱','攻击','攻击'],['强化','陷阱','攻击']];
+ const before=JSON.stringify(d.arenas.map(a=>a.monsterIds.map(id=>content.monsters[id])));
+ for(const [i,arena]of d.arenas.entries()){
+  const monsters=dungeonTacticsMonsters(arena.monsterIds.map(id=>content.monsters[id]),{dungeonTacticsVersion:2,dungeonTacticsId:d.id,encounterId:arena.id});
+  const b=P.createPveBattle({dataset,player:A.playerSpec(s,content),monsters,seed:18,threatRulesVersion:5});
+  b.resolved.fairPlay={...b.resolved.fairPlay,forceAccuracy:100};
+  // Nonlethal effect fixture, not a difficulty or victory assessment.
+  const hero=b.sides.near[0],enemy=b.sides.far[0];hero.hp=hero.maxHp=10000;hero.deckMap={};hero.hand=[];
+  for(let round=0;round<3;round++){
+   const action=expected[i][round%expected[i].length],intent=dungeonEnemyIntentInfo(b);assert.equal(intent.label,action);
+   assert.ok(dataset.cards[intent.cardKey]);assert.equal(intent.nextLabel,expected[i][(round+1)%expected[i].length]);
+   assert.match(intent.detail,/下一回合/);
+   if(i===1&&round===0)assert.equal(intent.kind,'guard');
+   const hp=hero.hp;P.playPveRound(b,{pass:true});
+   if(action==='攻击')assert.ok(hero.hp<hp,'announced attack must damage the player');
+   else assert.equal(hero.hp,hp,'setup does not secretly attack');
+   if(round===0){
+    if(i===0||i===3)assert.ok(enemy.charms.length>0,'blade really applied');
+    if(i===1)assert.ok(enemy.wards.length>0,'shield really applied');
+    if(i===2)assert.ok(hero.charms.length>0,'weakness really applied');
+   }
+   if(i===3&&round===1){assert.ok(hero.wards.length>0,'trap really applied');assert.ok(enemy.charms.length>0,'blade held for the third round');}
+   if(i===3&&round===2){assert.equal(enemy.charms.filter(Boolean).length,0);assert.equal(hero.wards.filter(w=>w.id>0).length,0);}
+  }
+ }
+ assert.equal(JSON.stringify(d.arenas.map(a=>a.monsterIds.map(id=>content.monsters[id]))),before);
+});
+
+test('version-one patrol saves retain their original AI and version-two rejects forged waves',()=>{
+ const d=content.dungeons.find(d=>d.id==='journey:first-watch'),s=A.createAdventure(content);
+ enterDungeon(s,content,d.id);A.beginEncounter(s,content,d.arenas[0].id);
+ const old=structuredClone(s);old.pendingEncounter.dungeonTacticsVersion=1;
+ assert.ok(A.parseSave(old,content));
+ const oldBattle=P.restorePveBattle(dataset,content,old.pendingEncounter);
+ P.playPveRound(oldBattle,{pass:true});old.pendingEncounter.decisions.push(oldBattle.lastDecision);
+ assert.deepEqual(checkedProgress(old,content,dataset).battle.sides.far.map(u=>[u.hp,u.charms,u.wards]),oldBattle.sides.far.map(u=>[u.hp,u.charms,u.wards]));
+ const forged=structuredClone(s);forged.pendingEncounter.encounterId=d.id+':floor-99';
+ assert.throws(()=>A.parseSave(forged,content),/副本战术|战斗/);
+ const other=structuredClone(s);other.zone='journey:lost-spark';other.pendingEncounter.dungeonTacticsId=other.zone;
+ assert.throws(()=>A.parseSave(other,content));
+});
+
+test('patrol companion reads the wave intent but only suggests visible legal cards',()=>{
+ const d=content.dungeons.find(d=>d.id==='journey:first-watch'),s=A.createAdventure(content,{school:'ice'});
+ s.xp=content.progression.xpThresholds[4];A.syncProgression(s,content);
+ enterDungeon(s,content,d.id);A.beginEncounter(s,content,d.arenas[0].id);
+ const b=P.restorePveBattle(dataset,content,s.pendingEncounter),hero=b.sides.near[0];
+ hero.deckSeq=['Ice_SingleAttack_Level0_45','Ice_IceDamageBlade','Ice_GlobalShield'];hero.deckMap=[1,1,1];
+ hero.wordCards={};hero.pips={normal:7,power:0};hero.cooldowns={};
+ assert.deepEqual(companionBattleAdvice(b,[0,1,2],dataset.cards).seqs,[1]);
+ b.turn=2;
+ assert.deepEqual(companionBattleAdvice(b,[0,1,2],dataset.cards).seqs,[2]);
+ assert.deepEqual(companionBattleAdvice(b,[0],dataset.cards).seqs,[0]);
+ assert.deepEqual(companionBattleAdvice(b,[],dataset.cards).seqs,[]);
+});
+
 test('every tactical wave finishes with actual pet formations, including gene-only DOT attackers',()=>{
  for(const id of ['journey:first-watch','journey:lost-spark','journey:ember-night']){
   const d=content.dungeons.find(row=>row.id===id),s=A.createAdventure(content,{school:'fire',seed:23});

@@ -3,6 +3,7 @@ import { chunkKey, footprint } from '../home_core.js';
 import { findHomePath, stepHomeWalk } from '../home_walk_core.js';
 import { buildingItem, obstruction } from '../home_building_core.js';
 import { ownedPetRecords } from '../adventure_pet_files_core.js';
+import { homeItemLanguage, homeWishLine } from '../home_language_core.js';
 import { starterBlanketReaction } from '../home_starter_room_core.js';
 
 export function createHomePetController(bridge) {
@@ -157,7 +158,7 @@ export function createHomePetController(bridge) {
   if(action.type==='summon'){wish.phase='place';key='HOME-PLACE';}
   else if(action.type==='use'){key='HOME-USE';wish.phase='done';}
   else if(['place','move'].includes(action.type)){const object=action.object||currentObjects().find(o=>o.id===action.id),pet=pets.find(p=>p.id===wish.petId);if(!object||!pet||Math.hypot(object.x-pet.x,object.y-pet.y)>5)return;key='HOME-READY';wish.phase='done';}
-  if(!key)return;const line=locale=>(catalog.dialogue?.[key]?.[locale]||'').replace('{item}',item[locale==='en'?'en':'zh']).replace('{action}',catalog.activityWords?.[item.activity]?.[locale]||'');wish={...wish,text:line(language),translation:line(other),until:Date.now()+18000};translation=false;
+  if(!key)return;const line=locale=>(homeWishLine(key,item,locale)||(catalog.dialogue?.[key]?.[locale]||'')).replace('{item}',homeItemLanguage(item,locale)).replace('{action}',catalog.activityWords?.[item.activity]?.[locale]||'');wish={...wish,language,text:line(language),translation:line(other),until:Date.now()+18000};translation=false;
  }
  async function movePet(id,p){check();if(!parts[`chunk:${chunkKey(p.x,p.y)}`])throw Error('土地尚未加载，请重试加载后安置宠物');const target=currentObjects().findLast(o=>{const b=footprint(o,catalog.items);return b.item.activity&&p.x>=b.x&&p.x<b.x+b.w&&p.y>=b.y&&p.y<b.y+b.h;});
   if(target&&pets.some(pet=>pet.id!==id&&pet.targetId===target.id&&pet.until>Date.now()))throw Error('这个设施已有宠物在使用');

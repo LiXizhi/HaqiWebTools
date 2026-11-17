@@ -35,7 +35,7 @@ export async function loadLearningOptions(signal=new AbortController().signal) {
     const sdk=await sdkReady(signal);
     return {models:sdk.aiGenerators?.getModels?.('chat')||[],voices:sdk.speech?.getSupportedVoices?.()||[]};
 }
-export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
+export function createLearningVoice({load=sdkReady,getSettings=()=>({}),asrFinishTimeoutMs=8000,cleanupTimeoutMs=1000}={}) {
     let current=null,playback=null,epoch=0,cleanup=Promise.resolve(),playbackCleanup=Promise.resolve(),sessionRtc=null,sessionToken=null;
     const sessions=new Map();
     function reusableSession(sdk,config){
@@ -43,6 +43,9 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
         const key=JSON.stringify(config);
         if(!sessions.has(key))sessions.set(key,sdk.speechRTC.createSession(config));
         return sessions.get(key);
+    }
+    function forgetSession(stream){
+        for(const [key,value] of sessions)if(value===stream)sessions.delete(key);
     }
     function dispose(old){
         if(!old)return cleanup;
@@ -53,9 +56,24 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
         old.processor?.disconnect();old.source?.disconnect();
         old.stream?.off?.('asr',old.onAsr);old.stream?.off?.('asrError',old.onError);
         old.disposal=cleanup=(async()=>{
-            await old.context?.close().catch(()=>{});
-            try{await old.startTask;if(old.started&&!old.finishing)old.finishing=old.stream.finishASR();await old.finishing;}catch{for(const [key,stream] of sessions)if(stream===old.stream)sessions.delete(key);}
-            await old.stream?.stop({finish:false,closeConnection:false}).catch(()=>{});
+            // A stuck SDK finish/start must not trap cancel(), the timeout UI,
+            // or the next recording. Retire that session before allowing retry.
+            let retired=!!old.failed;
+            const finish=async()=>{
+                await old.startTask;
+                if(retired)return;
+                if(old.started&&!old.finishing)old.finishing=old.stream.finishASR();
+                await old.finishing;
+            };
+            try{
+                await deadline(Promise.all([
+                    Promise.resolve().then(()=>old.context?.close()),
+                    retired?Promise.resolve():finish(),
+                ]),cleanupTimeoutMs);
+            }catch{retired=true;}
+            if(retired)forgetSession(old.stream);
+            try{await deadline(Promise.resolve().then(()=>old.stream?.stop({finish:false,closeConnection:retired})),cleanupTimeoutMs);}
+            catch{forgetSession(old.stream);}
         })();
         return old.disposal;
     }
@@ -100,7 +118,7 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
                 };
                 state.source.connect(state.processor);state.processor.connect(state.context.destination);
                 return true;
-            }catch(error){await dispose(state);throw error;}
+            }catch(error){state.failed=true;await dispose(state);throw error;}
             finally{if(current!==state)signal.removeEventListener('abort',abort);}
         },
         async finish(){
@@ -108,7 +126,7 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
             state.media?.getTracks().forEach(t=>t.stop());state.processor?.disconnect();state.source?.disconnect();
             try{
                 state.finishing=state.stream.finishASR();
-                await deadline(state.finishing,32000,state.abort.signal);
+                await deadline(state.finishing,asrFinishTimeoutMs,state.abort.signal);
                 if(state.error)throw state.error;
                 if(!state.text.trim())throw Error('没有听清，请重新说一遍');
                 if(state.onAudio&&state.samples){
@@ -118,7 +136,7 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
                 }
                 if(current===state&&!state.abort.signal.aborted&&!state.reported){state.reported=true;reportSpeakingPractice(state.reportKey);}
                 return state.text.trim().slice(0,2000);
-            }finally{await dispose(state);}
+            }catch(error){state.failed=true;throw error;}finally{await dispose(state);}
         },
         async speak(text,locale,signal,character,{playbackRate=1,onPlaying=null}={}){
             if(current)throw Error('请先结束录音');
@@ -138,7 +156,11 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
             let stream=null,audio=null,finishPlayback=null,release=null;
             const request=new AbortController(),releaseAudio=acquireAudioActivity();
             let stopTask;
-            const stop=()=>{if(stopTask)return stopTask;releaseAudio();request.abort();audio?.pause();finishPlayback?.();return stopTask=(async()=>{await stream?.cancel?.().catch(()=>{});await stream?.stop({finish:false,closeConnection:false}).catch(()=>{});})();};
+            const stop=()=>{if(stopTask)return stopTask;releaseAudio();request.abort();audio?.pause();finishPlayback?.();return stopTask=(async()=>{
+                let retired=false;
+                try{await deadline(Promise.resolve().then(()=>stream?.cancel?.()),cleanupTimeoutMs);}catch{retired=true;forgetSession(stream);}
+                try{await deadline(Promise.resolve().then(()=>stream?.stop({finish:false,closeConnection:retired})),cleanupTimeoutMs);}catch{forgetSession(stream);}
+            })();};
             signal.addEventListener('abort',stop,{once:true});
             const active={stop};playback=active;
             try{

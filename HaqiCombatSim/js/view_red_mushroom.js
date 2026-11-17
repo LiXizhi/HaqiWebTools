@@ -31,7 +31,7 @@ export function renderRedMushroom(box,body,state,cb){
             const b=button('',()=>cb.arenaMode(n),'arena-mode');b.disabled=state.busy;
             b.append(el('strong','',fill(`{v0} 对 {v1}`,{v0:String(n),v1:String(n)}).text),el('span','',modes[n-1]),el('small','',n===1?'主角单人出战':fill(`主角 + {v0} 位宠物或伙伴`,{v0:String(n-1)}).text));cards.append(b);
         }
-        body.append(cards,el('div','arena-rules',el('h4','','赛场小贴士'),el('p','','每日首场对手较温和，后续按近期战绩匹配实力。胜负取决于你的配卡与出牌。'),el('p','','满血入场，不消耗物品、精力或饥饿。伙伴与对手均由 AI 操控；每轮限时30秒选牌，超时跳过；最后5秒有声音提醒。'),el('p','muted','卡包打空或回合耗尽时，剩余生命比例高的一方获胜，相同则平局。')));
+        body.append(cards,el('div','arena-rules',el('h4','','赛场小贴士'),el('p','','每日首场对手较温和，后续按近期战绩匹配实力。胜负取决于你的配卡与出牌。'),el('p','','满血入场，不消耗物品、精力或饥饿。伙伴与对手均由 AI 操控；每轮限时30秒选牌，超时跳过；最后5秒有声音提醒。'),el('p','muted','卡包打空或回合耗尽时，按剩余生命比例判胜。全程未出牌最多平局。')));
         return;
     }
     const n=state.arenaMode,bench=state.arenaBench||[];

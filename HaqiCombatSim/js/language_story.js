@@ -1,3 +1,5 @@
+import {prepareStoryLanguage,storyHasLanguage} from './story_language.js';
+import {learningLesson} from './learning_language_core.js';
 import {compareDungeonSpeech} from './dungeon_speech_core.js';
 import {fill} from './locale_runtime.js';
 import {selectStory,storyReward} from './language_encounter_core.js';
@@ -10,7 +12,7 @@ export function createStoryChat({practiceOnly=false,allowedZone='camp',onClosed=
     const valid=s=>session===s&&!s.abort.signal.aborted&&getState().stage!=='battle'&&getState().role===s.role&&getState().identity===s.identity&&getState().save.zone===allowedZone&&getState().save.languageLearning.enabled&&getState().save.languageLearning.target===s.locale;
     const paint=()=>{if(session)view.render(session);};
     function close(){const old=session;session=null;clearTimeout(old?.timer);old?.abort.abort();recordTask=null;void voice.cancel();view.close();if(old)onClosed();}
-    function open(profile,story,portrait,options={}){
+    async function open(profile,story,portrait,options={}){
         close();const current=getState();if(current.stage==='battle')return;
         if(!practiceOnly&&story.mode!=='challenge'&&current.save.languageAdventure?.stories?.[current.save.languageLearning.target]?.[story.id]?.completed){
             const next=selectStory(profile,current.save);
@@ -18,17 +20,25 @@ export function createStoryChat({practiceOnly=false,allowedZone='camp',onClosed=
             else {onFreeTalk(profile,{learningContinuation:true});return;}
         }
         session={practiceOnly,profile,story,portrait,locale:current.save.languageLearning.target,showChinese:current.save.languageLearning.showChinese!==false,role:current.role,identity:current.identity,abort:new AbortController(),operation:0,index:0,messages:[],proof:[],progressiveHints:!practiceOnly,hintLevel:practiceOnly&&story.mode!=='challenge'?3:0,hintsUsed:practiceOnly&&story.mode!=='challenge',busy:false,recording:false,done:false,phase:'ready',attemptId:crypto.randomUUID(),status:''};
+        session.sourceStory=story;session.glossLocale=current.save.languageLearning.native||'zh-CN';
         session.reward=practiceOnly?null:storyReward(current.save,current.content,story,Date.now());
         session.memento=current.save.languageAdventure?.stories?.[session.locale]?.[story.id]||null;
+        const s=session;
+        if(!storyHasLanguage(story,s.locale)){
+            s.busy=true;s.phase='preparing';s.hintLevel=0;s.status='正在准备'+learningLesson(s.locale).name+'课程…';paint();
+            try{s.story=await prepareStoryLanguage(story,s.locale,voice,s.abort.signal);if(!valid(s))return;story=s.story;s.busy=false;s.phase='ready';s.status='';s.hintLevel=practiceOnly&&story.mode!=='challenge'?3:0;}
+            catch(error){if(valid(s)){s.busy=false;s.phase='ready';s.loadError=true;s.status=error.message+'。请点“重试准备课程”。';paint();}return;}
+        }
+        if(!valid(s))return;
         session.messages.push({role:'npc',text:story.turns[0].question});
         paint();
         if(!options.greeted)void speak(story.turns[0].question[session.locale]);
     }
     function challenge(){const s=session;if(!s?.done||s.busy||s.recording||(s.story.mode||'basic')!=='basic')return;open(s.profile,{...s.story,mode:'challenge'},s.portrait);}
 
-    function continueFree(text=''){const s=session;if(!s)return;return onFreeTalk(s.profile,{learningContinuation:true,initialText:text,lessonMessages:s.messages.map(row=>({...row,role:row.role==='user'?'user':'assistant',text:typeof row.text==='string'?row.text:row.text[s.locale]}))});}
-    function next(){const s=session;if(!s||s.busy||s.recording)return;const stories=s.profile.stories;open(s.profile,stories[(stories.findIndex(x=>x.id===s.story.id)+1)%stories.length],s.portrait);}
-    function hint(){if(!session)return;session.hintLevel=session.progressiveHints?(session.hintLevel===0?1:session.hintLevel===1?3:0):(session.hintLevel?0:3);if(session.hintLevel)session.hintsUsed=true;paint();}
+    function continueFree(text=''){const s=session;if(!s||(s.busy&&s.phase!=='judging')||s.loadError||!valid(s))return;return onFreeTalk(s.profile,{learningContinuation:true,initialText:text,lessonMessages:s.messages.map(row=>({...row,role:row.role==='user'?'user':'assistant',text:typeof row.text==='string'?row.text:row.text[s.locale]}))});}
+    function next(){const s=session;if(!s||s.busy||s.recording)return;if(s.loadError){void open(s.profile,s.sourceStory,s.portrait);return;}const stories=s.profile.stories;open(s.profile,stories[(stories.findIndex(x=>x.id===s.story.id)+1)%stories.length],s.portrait);}
+    function hint(){if(!session||session.busy||session.loadError)return;session.hintLevel=session.progressiveHints?(session.hintLevel===0?1:session.hintLevel===1?3:0):(session.hintLevel?0:3);if(session.hintLevel)session.hintsUsed=true;paint();}
     function chinese(){if(!session)return;try{const value=!session.showChinese;saveSettings({showChinese:value});session.showChinese=value;paint();}catch(error){session.status=error.message;paint();}}
     async function readLine(s,text,role='npc'){
         if(s.suspended){s.status='';return;}
@@ -36,14 +46,14 @@ export function createStoryChat({practiceOnly=false,allowedZone='camp',onClosed=
         try{await voice.speak(text,s.locale,s.abort.signal,role==='user'?getState().save:s.profile);if(valid(s))s.status='';}
         catch(error){if(valid(s))s.status=error.message;}
     }
-    async function speak(text,role='npc'){const s=session;if(!s||s.busy||s.recording)return;s.busy=true;await readLine(s,text,role);if(valid(s)){s.busy=false;s.phase='ready';paint();}}
+    async function speak(text,role='npc'){const s=session;if(!s||s.busy||s.recording||s.loadError)return;s.busy=true;await readLine(s,text,role);if(valid(s)){s.busy=false;s.phase='ready';paint();}}
     function suspend(){
         const s=session;if(!s)return;s.suspended=true;
         if(s.recording||s.phase==='connecting')void cancel();
         else if(s.phase==='speaking')void voice.cancel();
     }
     async function start(){
-        const s=session;if(!s||s.busy||s.recording)return;
+        const s=session;if(!s||s.busy||s.recording||s.loadError)return;
         const operation=++s.operation;
         s.busy=true;s.phase='connecting';s.release=false;s.cancelled=false;s.status='';paint();
         const task=(async()=>{try{await voice.start(s.abort.signal,{onPartial:text=>{if(!valid(s)||s.cancelled||operation!==s.operation||s.done)return;const turn=s.story.turns[s.index];if(s.practice?.id!==turn.id)s.practice=createLineAttempt(turn,Date.now(),getState().content);s.practice.feedback=compareDungeonSpeech(text,turn.answer[s.locale],s.locale);paint();}});if(!valid(s)||s.cancelled||operation!==s.operation)return;
@@ -72,11 +82,11 @@ export function createStoryChat({practiceOnly=false,allowedZone='camp',onClosed=
             const candidates=[turn.answer[s.locale],...(turn.variants?.[s.locale]||[])];
             const expected=candidates.reduce((best,line)=>compareDungeonSpeech(transcript,line,s.locale).accuracy>compareDungeonSpeech(transcript,best,s.locale).accuracy?line:best);
             const passed=finishLineAttempt(s.practice,transcript,expected,s.locale);
-            if(!passed){s.status=s.locale==='en'?'这句还没接上。可以改一改，或点提示看看。':'Not quite yet. Try again, or open a hint.';paint();return;}
+            if(!passed){s.status='这句还没接上。可以改一改，或点提示看看。';paint();return;}
             // Attempts update the existing reading prompt; only a passed answer enters history.
             const userMessage={role:'user',text:transcript,label:input==='text'?'文字回答':'语音回答'};s.messages.push(userMessage);
             const outcome={quote:transcript};
-            if(transcript.toLowerCase().replace(/[.,!?]/g,'').trim()===turn.answer[s.locale].toLowerCase().replace(/[.,!?]/g,'').trim())userMessage.translation=turn.answer[s.locale==='en'?'zh-CN':'en'];
+            if(transcript.toLowerCase().replace(/[.,!?]/g,'').trim()===turn.answer[s.locale].toLowerCase().replace(/[.,!?]/g,'').trim())userMessage.translation=turn.answer[s.glossLocale];
             userMessage.feedback='答对了';
             if(input==='speech'&&!s.memento?.completed){s.learningReward=onSpeech(practiceOnly?`${s.locale}:${s.story.id}:${turn.id}`:`${s.attemptId}:${turn.id}`)||null;s.learningRewardMessage=s.learningReward?'':'本次未新增学习加成';if(s.learningReward?.key)userMessage.learningReward={...s.learningReward};}
             s.proof.push({turnId:turn.id,quote:outcome.quote,hinted:s.hintLevel>0,input});
@@ -91,7 +101,7 @@ export function createStoryChat({practiceOnly=false,allowedZone='camp',onClosed=
         }catch(error){if(valid(s)){s.status=error.message+' 请重新回答再试一次。';if(s.proof.length>s.index)s.proof.pop();}}
     }
     async function help(text){
-        const s=session;if(!s||s.busy||s.recording||!text.trim())return;
+        const s=session;if(!s||s.busy||s.recording||s.loadError||!text.trim())return;
         if(s.done){return continueFree(text.trim().slice(0,500));}
         s.busy=true;s.phase='judging';
         try{await answer(s,text.trim().slice(0,500),'text');}

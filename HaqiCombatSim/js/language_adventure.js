@@ -1,3 +1,4 @@
+import {learningLesson} from './learning_language_core.js';
 import {nearbyLearningNpc,selectStory,eligibleStories} from './language_encounter_core.js';
 import {fill} from './locale_runtime.js';
 import {createJsonReader} from './runtime_data.js';
@@ -82,7 +83,6 @@ export function createLanguageAdventure({onSpeech=()=>{},onFreeTalk=null,getStat
         try{
             await ready();
             if(ticket!==opening||getState().role!==role||getState().identity!==identity||getState().save.languageLearning.native!==native||getState().save.languageLearning.target!==locale||!available(getState()))return;
-            if(!catalog.languages[locale]?.content||!Object.keys(catalog.dictionaries[locale]||{}).length){notify('该语言的营地课程尚未提供');return;}
             const source=npc?.instanceId||npc?.id||invitation?.target?.npcId||invitation?.source||'companion';
             const profiles=catalog.profiles||[];
             const profile=profiles.find(p=>p.id===source||String(p.npcId)===String(source));
@@ -93,6 +93,7 @@ export function createLanguageAdventure({onSpeech=()=>{},onFreeTalk=null,getStat
                 const portrait=profile.portrait?assetUrl(profile.portrait,assetMode(globalThis.location?.hostname||'',globalThis.location?.search||'')):null;
                 chat.open({...profile,stories:eligibleStories(profile,current.save)},story,portrait,{greeted:options.greeted});return;
             }
+            if(!catalog.languages[locale]?.content||!Object.keys(catalog.dictionaries[locale]||{}).length){notify('该语言的营地课程尚未提供');return;}
             session={speaker:npc||companionSpeaker(current),abort:new AbortController(),role,identity:current.identity,locale,native:current.save.languageLearning.native,source,name:npc?.name||`${companionName(current)} · 营地语言冒险`,slots:{},context:invitation?.context||{},status:'',log:[]};
             for(const lang of Object.keys(catalog.languages))session.slots[lang]=learningSlots(current.save,current.content,lang,invitation?.context?.itemId,catalog);
             session.context={...session.context,zone:current.save.zone,selectedItem:session.slots[locale],npcId:npc?.instanceId||null,npcName:npc?.name||null};
@@ -179,7 +180,7 @@ export function createLanguageAdventure({onSpeech=()=>{},onFreeTalk=null,getStat
         invitation={event,source,context,target:storyTarget(context,source)};cooldown.lastAt=Date.now();cooldown.sources[source]=cooldown.lastAt;
         if(!invitation.target)invitation=null;
         inviteLabel=bubbleLabel(current);
-        if(invitation&&current.save.languageLearning.autoSpeak&&['en','zh-CN'].includes(current.save.languageLearning.target)){const a=new AbortController();const locale=current.save.languageLearning.target;void voice.speak(locale==='en'?'Shall we talk?':'我们聊聊好吗？',locale,a.signal,companionSpeaker(current)).catch(()=>{});}
+        if(invitation&&current.save.languageLearning.autoSpeak&&['en','zh-CN','ja','ko'].includes(current.save.languageLearning.target)){const a=new AbortController();const locale=current.save.languageLearning.target;void voice.speak(learningLesson(locale).invite,locale,a.signal,companionSpeaker(current)).catch(()=>{});}
     }
     async function prepare(npc){
         const ticket=opening,current=getState(),role=current.role,identity=current.identity,locale=current.save?.languageLearning.target;
@@ -187,7 +188,7 @@ export function createLanguageAdventure({onSpeech=()=>{},onFreeTalk=null,getStat
         const now=getState();
         if(ticket!==opening||!available(now)||now.role!==role||now.identity!==identity||now.save.languageLearning.target!==locale)return null;
         const profile=catalog.profiles?.find(p=>p.id===npc.instanceId||(!npc.instanceId&&String(p.npcId)===String(npc.id)));
-        if(!profile||!catalog.languages[locale]?.content)return null;
+        if(!profile||!['en','zh-CN','ja','ko'].includes(locale))return null;
         const story=selectStory(profile,now.save);
         return story?{npc,story,profile,ticket,role,identity,locale,native:now.save.languageLearning.native}:null;
     }
@@ -195,8 +196,8 @@ export function createLanguageAdventure({onSpeech=()=>{},onFreeTalk=null,getStat
     function greet(p,now){
         if(!preparedValid(p))return;
         const current=getState(),abort=new AbortController(),line=p.story.turns[0].question;
-        greeting={...p,abort,until:now+learningParams(current.content).greetingMs,text:line[p.locale],translation:current.save.languageLearning.showChinese!==false?line[p.locale==='en'?'zh-CN':'en']:''};
-        {const active=greeting;active.speaking=true;void voice.speak(line[p.locale],p.locale,abort.signal,p.profile).then(()=>{if(!abort.signal.aborted)active.spoken=true;}).catch(()=>{}).finally(()=>{active.speaking=false;});}
+        greeting={...p,abort,until:now+learningParams(current.content).greetingMs,text:line[p.locale]||learningLesson(p.locale).welcome,translation:current.save.languageLearning.showChinese!==false?line[p.native]||'':''};
+        {const active=greeting;active.speaking=true;void voice.speak(active.text,p.locale,abort.signal,p.profile).then(()=>{if(!abort.signal.aborted&&line[p.locale])active.spoken=true;}).catch(()=>{}).finally(()=>{active.speaking=false;});}
         inviteLabel=null;
     }
     function enterGreeting(){const g=greeting;if(!g||!preparedValid(g))return;greeting=null;g.abort.abort();void open(g.npc,{prepared:g,greeted:!!g.spoken});}
@@ -206,7 +207,7 @@ export function createLanguageAdventure({onSpeech=()=>{},onFreeTalk=null,getStat
         if(session&&!valid(session))close();
         if(!available(current)||current.stage!=='world'||current.busy||session||chat?.active||greeting){invitation=null;inviteLabel=null;return;}
         if(!catalog){void ready().catch(()=>{});return;}
-        if(!catalog.languages[current.save.languageLearning.target]?.content){invitation=null;inviteLabel=null;return;}
+        if(!['en','zh-CN','ja','ko'].includes(current.save.languageLearning.target)){invitation=null;inviteLabel=null;return;}
         const npcs=current.npcs||(current.near?.kind==='npc'?[current.near]:[]);
         const near=nearbyLearningNpc(npcs,catalog.profiles||[],current.save,current.content,invitation?.target?.instanceId);
         invitation=near?{source:near.instanceId||near.id,target:{npcId:near.id,instanceId:near.instanceId,name:near.name,position:{x:near.x,y:near.y}}}:null;

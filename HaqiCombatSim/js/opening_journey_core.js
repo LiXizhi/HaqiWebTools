@@ -1,3 +1,4 @@
+import {LEARNING_LANGUAGES,learningLanguage,learningLesson,normalizeLearningAnswer} from './learning_language_core.js';
 import {addPet} from './adventure_pets_core.js';
 import {ownedPetRecords} from './adventure_pet_files_core.js';
 
@@ -37,13 +38,10 @@ export function openingJourneyMilestones(save){
   {label:'和搭档赢得一次挑战',complete:state.phase==='done'}
  ];
 }
-export function openingFriendAnswer(text){
- const normalized=String(text||'').toLowerCase().replace(/’/g,"'").replace(/[.,!?，。！？]/gu,'').replace(/\s+/g,' ').trim();
- // This is an introduction, not an exact-sentence dictation. Keep a bounded set
- // so negations, questions and unrelated sentences cannot grant practice credit.
- const introduction=normalized.replace(/^yes /,'');
- const accepted=['we are friends',"we're friends",'he is my friend',"he's my friend",'she is my friend',"she's my friend",'it is my friend',"it's my friend",'this is my friend','he is our friend',"he's our friend",'we are his friends'].includes(introduction);
- const message=!normalized?'告诉莫尼你们是朋友，也可以先听示范。':/\b(not|no|enemies)\b/.test(normalized)?'这句还没说明你们是朋友。试试：We are friends.':/^(we are|we're) friend$/.test(introduction)?'说“我们是朋友”，friend 要加 s：We are friends.':'可以说 We are friends.，或 He is my friend.';
+export function openingFriendAnswer(text,language='en'){
+ const lesson=learningLesson(language),normalized=normalizeLearningAnswer(text,language),introduction=language==='en'?normalized.replace(/^yes[,，]?\s+/,''):normalized;
+ const accepted=String(text||'').length<=100&&lesson.friends.some(line=>normalizeLearningAnswer(line,language)===introduction);
+ const message=language==='en'&&/^(we are|we're) friend$/.test(introduction)?'说“我们是朋友”，friend 要加 s：We are friends.':`用${lesson.name}告诉莫尼你们是朋友。可以说：${lesson.friend}`;
  return {accepted,message:accepted?'莫尼明白了。咕噜噜可以进来了。':message};
 }
 export function openingJourneyScene(save,npc){
@@ -72,7 +70,7 @@ export function validateOpeningJourney(save){
  assert(state.petId===undefined||typeof state.petId==='string'&&state.petId.length<=200,'新手伙伴记录无效');
  if(state.practice){
   const event=state.practice;
-  assert(typeof event.id==='string'&&event.id.length>0&&event.id.length<=100&&event.input==='text'&&event.language==='en'&&event.itemId==='opening-friend'&&Number.isFinite(event.at)&&event.at>=0,'新手语言记录无效');
+  assert(typeof event.id==='string'&&event.id.length>0&&event.id.length<=100&&event.input==='text'&&LEARNING_LANGUAGES.includes(event.language)&&event.itemId==='opening-friend'&&Number.isFinite(event.at)&&event.at>=0,'新手语言记录无效');
  }
 }
 export function openingJourneyTarget(save){
@@ -82,7 +80,7 @@ export function openingJourneyTarget(save){
   offer:[36211,'去找青龙。'],
   guide:[36201,'去莫尼身边看看。'],
   route:[36201,'帮咕噜噜进营地。'],
-  explain:[36201,'向莫尼说明：We are friends.'],
+  explain:[36201,`向莫尼说明：${learningLesson(save).friend}`],
   challenge:['fire-scout','挑战烈火侦查兵。'],
   rescue:[36201,'邀请咕噜噜一起走。'],
   showcase:['ice-scout','和咕噜噜挑战寒冰侦查兵。']
@@ -115,12 +113,13 @@ export function applyOpeningJourney(save,content,action){
  case 'explain':{
   assert(state.phase==='explain','先和莫尼商量办法');
   const text=String(action.text||'').trim();
-  const answer=openingFriendAnswer(text);
+  const language=learningLanguage(save);assert(action.language===undefined||action.language===language,'学习语言已切换，请按当前提示再说一次');
+  const answer=openingFriendAnswer(text,language);
   assert(answer.accepted,answer.message);
   assert(typeof action.receipt==='string'&&action.receipt.length<=100,'练习记录无效');
   assert(Number.isFinite(action.at)&&action.at>=0,'练习时间无效');
   // Choosing a supplied reply advances the story, but is not evidence of typed/spoken recall.
-  if(!action.choice)state.practice={id:action.receipt,input:'text',itemId:'opening-friend',language:'en',at:action.at};
+  if(!action.choice)state.practice={id:action.receipt,input:'text',itemId:'opening-friend',language,at:action.at};
   state.phase='rescue';break;
  }
  case 'rescue':{

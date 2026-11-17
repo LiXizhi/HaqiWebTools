@@ -372,7 +372,7 @@ export function createRoleTitleController({
                         const target = secondLocaleFor(native);
                         next.locale = native;
                         next.languageLearning = { ...next.languageLearning, native, target, selectionConfirmed: true };
-                        if (target === 'en' && native !== target) next.openingJourney = { version: 1, phase: 'offer' };
+                        if (['en', 'zh-CN', 'ja', 'ko'].includes(target) && native !== target) next.openingJourney = { version: 1, phase: 'offer' };
                         const id = nowCtx.roleStore.create(next, { isVip: accountIsVip() });
                         await activateRole(id);
                         await syncRoles();

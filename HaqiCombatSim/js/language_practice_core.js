@@ -28,6 +28,8 @@ export function recordEffectivePractice(state,event,index){
  state.practiceReceipts[event.id]=true;
  recordHomeReview(state,event,ids);
  for(const id of ids){const w=state.words[id];if(!w)continue;w.practiceCount=(w.practiceCount||0)+1;w.lastPractice={id:event.id,input:event.input,source:event.source||'home',at:event.at};
+  // Keep the scene's recall evidence without changing practice or mastery rules.
+  if(typeof event.assisted==='boolean'&&Number.isSafeInteger(event.attempts)&&event.attempts>=1){w.lastPractice.assisted=event.assisted;w.lastPractice.attempts=event.attempts;}
   if(!['basic','know'].includes(w.mark)&&w.practiceCount-(w.practiceBaseline||0)>=BASIC_PRACTICE_THRESHOLD){w.mark='basic';w.basicSource='effective-practice';w.basicAt=event.at;}
  }
  return true;

@@ -275,6 +275,7 @@ export function createDungeonController({
                   || journeyPetParty(next, latest.assets.content, A.playerSpec(next, latest.assets.content));
             if (d.kind === 'tower') next.dungeonMode = Math.max(1, Math.min(4, party?.length || 1));
             journeyParty(next, d, party);
+            const freshStory = restart || !(next.coopRun?.runs || next.dungeonRuns)?.[id];
             enterDungeon(next, latest.assets.content, id, { restart });
             delete latest.save.dungeonLanguageBuff;
             Object.assign(latest.save, next);
@@ -282,7 +283,7 @@ export function createDungeonController({
             queueCloudSave();
             if (fromParty) close();
             const after = getContext();
-            if (d.kind && d.story?.length && after.save === target && after.roleEpoch === epoch && after.save.zone === id) {
+            if (freshStory && d.kind && d.story?.length && after.save === target && after.roleEpoch === epoch && after.save.zone === id) {
                 after.renderer.render(after.world, after.save, performance.now(), { socialActors: social.actors });
                 after.setPanel('dungeon-story');
                 nodes.hud.hidden = true;

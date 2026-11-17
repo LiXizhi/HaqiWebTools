@@ -2,19 +2,20 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
+import {learningLanguage} from '../js/learning_language_core.js';
 import {wordplayGoal,wordplayAnswer,wordplayReaction,applyCompanionWordplay} from '../js/companion_wordplay_core.js';
 const source=fs.readFileSync(new URL('../js/companion_wordplay.js',import.meta.url),'utf8').replace(/^import .*;\r?\n/gm,'').replace('export function','function');
 const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
-function setup(){
- let save={zone:'camp',openingJourney:{phase:'done'}},active=true,cb,frame,commits=0,drains=0,done=0,closed=0,cancelled=0,failSave=false;
+function setup(language='en'){
+ let save={zone:'camp',languageLearning:{target:language},openingJourney:{phase:'done'}},active=true,cb,frame,commits=0,drains=0,done=0,closed=0,cancelled=0,failSave=false;
  const start=deferred(),finish=deferred(),speak=deferred();
- const voice={start:()=>start.promise,finish:()=>finish.promise,speak:()=>speak.promise,cancel:()=>{cancelled++;}};
- const context=vm.createContext({wordplayGoal,wordplayAnswer,wordplayReaction,AbortController,crypto,Date});vm.runInContext(source,context);
+ const spoken=[];const voice={start:()=>start.promise,finish:()=>finish.promise,speak:(text,locale)=>{spoken.push({text,locale});return speak.promise;},cancel:()=>{cancelled++;}};
+ const context=vm.createContext({learningLanguage,wordplayGoal,wordplayAnswer,wordplayReaction,AbortController,crypto,Date});vm.runInContext(source,context);
  const session=context.openCompanionWordplay({root:{},getState:()=>({save,active}),voice,
  viewFactory:(_root,callbacks)=>{cb=callbacks;return {render:m=>frame=m,dispose(){}};},
  commit:action=>{if(failSave)throw Error('storage failed');const next=structuredClone(save),result=applyCompanionWordplay(next,{},action);save=next;commits++;return result;},
  drain:()=>drains++,onDone:()=>done++,onClose:()=>closed++});
- return {cb,session,start,finish,speak,get save(){return save;},get frame(){return frame;},get commits(){return commits;},get drains(){return drains;},get done(){return done;},set active(v){active=v;},set failSave(v){failSave=v;}};
+ return {cb,session,start,finish,speak,spoken,get save(){return save;},get frame(){return frame;},get commits(){return commits;},get drains(){return drains;},get done(){return done;},set active(v){active=v;},set failSave(v){failSave=v;}};
 }
 test('wrong text and save failure cannot advance; retry commits one learning receipt',()=>{
  const t=setup();t.cb.submit('jump');assert.equal(t.commits,0);assert.equal(t.drains,0);
@@ -46,4 +47,16 @@ test('other valid commands animate without advancing or claiming practice',()=>{
  const t=setup();t.cb.submit('Jump!');assert.equal(t.frame.reaction,'jump');const id=t.frame.reactionId;assert.equal(t.frame.phase,'ready');assert.equal(t.commits,0);assert.equal(t.drains,0);
  t.cb.submit('Jump!');assert.ok(t.frame.reactionId>id);t.cb.submit('garbage');assert.equal(t.frame.reaction,null);assert.equal(t.commits,0);
  t.cb.submit('hello');assert.equal(t.commits,1);assert.equal(t.frame.reaction,null);
+});
+
+test('Japanese practice demo and accepted answers use the selected language',async()=>{
+ const t=setup('ja'),demo=t.cb.listen();assert.deepEqual(t.spoken,[{text:'こんにちは！',locale:'ja'}]);t.speak.resolve();await demo;
+ t.cb.submit('Hello!');assert.equal(t.commits,0);t.cb.submit('こんにちは！');assert.equal(t.commits,1);
+});
+test('recognition timeout returns to ready and permits a typed answer without another recording',async()=>{
+ const t=setup('ja'),starting=t.cb.startRecording();t.start.resolve();await starting;
+ const finishing=t.cb.finishRecording();assert.equal(t.frame.phase,'checking');
+ t.finish.reject(Error('语音服务超时，请重试'));await finishing;
+ assert.equal(t.frame.phase,'ready');assert.match(t.frame.message,/超时/);assert.equal(t.commits,0);
+ t.cb.submit('こんにちは！');assert.equal(t.commits,1);
 });

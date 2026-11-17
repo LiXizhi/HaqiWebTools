@@ -37,7 +37,8 @@ export function createTacticsFieldBattle(dataset,content,{lessonId='focus',seed=
    const supporting=lesson.id==='guard'&&i>0&&round%3!==0;
    rows.push(entry(round,charge||supporting?BLADE:heavy?HEAVY:ATTACK,charge?'下回合我要出重招！':heavy?'接招！':''));
   }
-  const hp=lesson.size===4?190:i===0?220:140;
+  // Four-person fights need the hero's damage as well as the three loan allies.
+  const hp=lesson.size===4?280:i===0?220:140;
   return {...structuredClone(template),name:i===0?lesson.title:'林边小怪 '+(i+1),level:5,hp,maxHp:hp,attributes:{},genes:[],sequences:[rows],pool:[{key:ATTACK,weight:1}],xp:0,coins:0};
  });
  const battle=createPveBattle({dataset,player:hero,party,monsters,seed});
@@ -69,16 +70,16 @@ export function tacticsFieldCue(battle){
  const charm=(u,sign)=>u.charms.some(id=>Math.sign(Number(battle.resolved.charms[id]?.boost_damage))===sign);
  const id=battle.tacticsField.id;
  const ready=key=>selectableCards(hero).some(h=>h.key===key)&&canCast(hero,battle.resolved.cards[key],battle.resolved);
- let label;
- if(id==='guard'&&battle.unitsById.mob0.hp>0&&battle.turn%3===1&&ready(SHIELD))label='烈火怪要蓄力了：给自己加护盾，挡它下一回合的重击。';
- else if(id==='guard'&&battle.unitsById.mob0.hp>0&&battle.turn%3===2&&ready(WEAK))label='重击要来了：给烈火怪挂虚弱，降低它的伤害。';
- else if(ward(target,-1)&&ready(ATTACK))label=target.name+'有盾：先用小攻击消耗护盾。';
- else if(hero.hp<hero.maxHp/3&&ready(HEAL))label='生命不多了：用治疗恢复，也可以请茜茜帮忙。';
- else if(charm(hero,1)&&ward(target,1)&&(ready(ATTACK)||ready(HEAVY)))label='强化和陷阱都在：用烈火攻击打'+target.name+'！';
- else if(charm(hero,1)&&ready(TRAP)&&!ward(target,1))label='身上已有强化：给'+target.name+'挂烈火陷阱，再攻击它。';
- else if(ready(BLADE)&&!charm(hero,1))label='先把烈火强化给自己，让下一次烈火攻击更强。';
- else label='选手里能用的攻击，和茜茜一起打退'+target.name+'。';
- return {kind:'attack',label};
+ const cue=(label,cardKey)=>({kind:'attack',label,cardKey});
+ if(id==='guard'&&battle.unitsById.mob0.hp>0&&battle.turn%3===1&&ready(SHIELD))return cue('烈火怪要蓄力了：给自己加护盾，挡它下一回合的重击。',SHIELD);
+ else if(id==='guard'&&battle.unitsById.mob0.hp>0&&battle.turn%3===2&&ready(WEAK))return cue('重击要来了：给烈火怪挂虚弱，降低它的伤害。',WEAK);
+ else if(ward(target,-1)&&ready(ATTACK))return cue(target.name+'有盾：先用小攻击消耗护盾。',ATTACK);
+ else if(hero.hp<hero.maxHp/3&&ready(HEAL))return cue('生命不多了：用治疗恢复，也可以请茜茜帮忙。',HEAL);
+ else if(charm(hero,1)&&ward(target,1)&&(ready(ATTACK)||ready(HEAVY)))return cue('强化和陷阱都在：用烈火攻击打'+target.name+'！',ready(ATTACK)?ATTACK:HEAVY);
+ else if(charm(hero,1)&&ready(TRAP)&&!ward(target,1))return cue('身上已有强化：给'+target.name+'挂烈火陷阱，再攻击它。',TRAP);
+ else if(ready(BLADE)&&!charm(hero,1))return cue('先把烈火强化给自己，让下一次烈火攻击更强。',BLADE);
+ else return cue('选手里能用的攻击，和茜茜一起打退'+target.name+'。',ready(ATTACK)?ATTACK:ready(HEAVY)?HEAVY:undefined);
+
 }
 
 export function recordTacticsFieldVictory(save,battle){

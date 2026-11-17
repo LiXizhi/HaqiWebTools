@@ -355,12 +355,23 @@ function renderBattleContent(root, model, cb) {
     }
     root.append(top, canvas, status, ...(model.localBattleShared ? [] : [hand]), bottom);
     if (intent && !animating && !battle.finished && !model.localBattlePane) {
-        const notice = el(
-            'aside',
-            'opening-enemy-intent intent-' + intent.kind,
-            el('span', 'intent-symbol', intent.kind === 'guard' ? '◇' : intent.kind === 'charge' ? '…' : '!'),
-            el('span', '', el('small', '', battle.tacticsField ? '茜茜 · 边打边试' : '对手这一回合'), el('strong', '', intent.label)),
-        );
+        const base = model.assets?.effects?.cards?.[intent.cardKey]?.base;
+        let icon = null;
+        if (base && model.assets?.skillArt) {
+            icon = el('canvas', 'intent-art');
+            icon.width = icon.height = 96;
+            icon.setAttribute('aria-hidden', 'true');
+            const context = icon.getContext('2d');
+            const paint = () => {
+                context.clearRect(0, 0, 96, 96);
+                model.assets.skillArt.drawSubject(context, base, 0, 0, 96, 96);
+            };
+            paint();
+            model.assets.skillArt.ensure(base).then(paint).catch(() => {});
+        }
+        const caption = el('span', '', el('small', '', battle.tacticsField ? '茜茜 · 边打边试' : '对手这一回合'), el('strong', '', intent.label));
+        if (intent.nextLabel) caption.append(el('small', '', '下回合：' + intent.nextLabel));
+        const notice = el('aside', 'opening-enemy-intent intent-' + intent.kind, ...(icon ? [icon] : []), caption);
         if (!battle.tacticsField) {
             const details = el('details', 'intent-detail', el('summary', '', '查看行动分工'), el('p', '', intent.detail));
             notice.append(details);
@@ -370,7 +381,7 @@ function renderBattleContent(root, model, cb) {
         notice.setAttribute('aria-label', intent.label);
         top.append(notice);
     }
-    if (!battle.tacticsField) renderCompanionGuide(root, model, cb, { battle: true });
+    if (!battle.tacticsField && !model.aiHintsMuted) renderCompanionGuide(root, model, cb, { battle: true });
     attachStatusTooltips(root, canvas);
     root.oncontextmenu = e => {
         if (petCardsOpen || runeCardsOpen || animating || battle.finished || e.pointerType === 'touch' || !matchMedia('(pointer:fine)').matches) return;

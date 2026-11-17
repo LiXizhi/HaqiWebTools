@@ -460,7 +460,8 @@ export function createHomeView(root, cb) {
         const summonTarget = summonItem && next.selection.starterLamp ? starterLampExercise(summonItem) : summonItem;
         input.placeholder =
             (summonTarget ? summonSentences(summonTarget, next.lang, next.selection?.color)[0] : '') ||
-            (next.lang === 'en' ? 'I want a chair.' : '我想要一把椅子。');
+            ({ en: 'I want a chair.', zh: '我想要一把椅子。', ja: '椅子が欲しいです。', ko: '의자 하나가 갖고 싶어요.' }[next.lang] || '');
+        input.lang = next.lang === 'zh' ? 'zh-CN' : next.lang;
         tools.lastChild.setAttribute('aria-pressed', String(next.quiet));
 
         const nextExample = JSON.stringify([next.selection?.itemId, next.selection?.color, next.selection?.starterLamp, next.lang]);
@@ -488,6 +489,7 @@ export function createHomeView(root, cb) {
         const key = JSON.stringify([
             category.value,
             petMode,
+            next.lang,
             (next.petBag || next.pets)?.map(p => [p.id, p.name, p.stage, p.art, p.activity]),
             next.selection?.itemId,
             next.selection?.color,

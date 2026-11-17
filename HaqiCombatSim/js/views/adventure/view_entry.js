@@ -33,7 +33,7 @@ export function createEntryFooter(){
     return isChineseSystem()?el('footer','entry-license',ONLINE_GAME_LICENSE):null;
 }
 export function createEntryIntro({owner,login,cloud,locale,secondLocale,setLocale,setSecondLocale}={}) {
-    const intro=el('div','entry-intro',createEntryEmblem(),el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','带上抱抱龙，认识营地里的伙伴。\n帮它们解决麻烦，用简单英语交流，再一起挑战魔法对手。'),el('div','entry-tags',...['宠物相伴','结识朋友','双语冒险'].map(label=>el('span','badge',label))));
+    const intro=el('div','entry-intro',createEntryEmblem(),el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','带上抱抱龙，认识营地里的伙伴。\n帮它们解决麻烦，用你选择的语言交流，再一起挑战魔法对手。'),el('div','entry-tags',...['宠物相伴','结识朋友','双语冒险'].map(label=>el('span','badge',label))));
     if(new URLSearchParams(globalThis.location?.search||'').get('product')==='hanzi'){
         const en=locale==='en';intro.querySelector('.eyebrow').textContent=en?'HANZI MAGIC · CHAPTER ONE':'字源岛 · 第一章';intro.querySelector('.game-title').textContent=en?'Hanzi Magic':'字有魔法';intro.querySelector('.chapter-title').textContent=en?'Island of living words':'文字会醒来的地方';intro.querySelector('.entry-description').textContent=en?'Speak a character to awaken its magic. Write it to give it shape. Use recently practiced words as battle cards.':'说出汉字，唤醒力量。写出汉字，赋予形状。练习之后，在战斗中读写激活文字卡。';intro.querySelector('.entry-tags').replaceChildren(...(en?['Discover','Write & speak','Battle']:['探索字义','说字写字','文字战斗']).map(label=>el('span','badge',label)));
     }

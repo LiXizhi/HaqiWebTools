@@ -3,6 +3,7 @@ import {BUILDING_TEMPLATES,buildingTemplateObjects} from '../home_building_templ
 import {requiresReading,summonSentences,COLORS,homeInteractiveKind} from '../home_core.js';
 import {starterLampExercise} from '../home_starter_room_core.js';
 import {tr} from '../locale_runtime.js';
+import {homeItemLanguage} from '../home_language_core.js';
 import {drawHomeObject} from './view_home_object_art.js';
 import {drawBuilding} from '../view_home_building.js';
 import {el,button,activities,COLOR_HEX,INTERACTIVE_BADGES,CATEGORY_PRIORITY,DEFAULT_SUMMON_TIP} from './view_home_modals.js';
@@ -107,6 +108,7 @@ export function renderHomeCatalogSidebar({next,category,petMode,tabs,side,catPil
   }
  }
  for(const item of rows){
+  const targetName=homeItemLanguage(item,next.lang)||item.zh;
   const variants=[{color:''}];
   for(const v of variants){
    const isSelected=next.selection?.itemId===item.id&&(next.selection?.color||'')===v.color;
@@ -115,7 +117,7 @@ export function renderHomeCatalogSidebar({next,category,petMode,tabs,side,catPil
     else cb.practice(item.id,v.color);
    },'home-item'+(isSelected?' is-selected':''));
    card.setAttribute('aria-label',`${COLORS[v.color]||''}${item.zh}`);
-   card.title=`${COLORS[v.color]||''}${item.zh} · ${item.en}`;
+   card.title=`${COLORS[v.color]||''}${item.zh} · ${targetName}`;
    card.homeItem={itemId:item.id,color:v.color,fromInventory:false};
    card.draggable=false;
    const thumb=el('canvas','home-item-thumb');
@@ -126,7 +128,7 @@ export function renderHomeCatalogSidebar({next,category,petMode,tabs,side,catPil
    }
    drawHomeObject(thumb.getContext('2d'),item,{color:v.color},10,12,100,68,artImg,0,true);
    const meta=el('div','home-item-meta');
-   meta.append(el('strong','',`${COLORS[v.color]||''}${item.zh}`),el('small','',isSelected?tr(!requiresReading(item)?'直接摆放 · R旋转':'念咒语召唤'):item.en));
+   meta.append(el('strong','',`${COLORS[v.color]||''}${item.zh}`),el('small','',isSelected?tr(!requiresReading(item)?'直接摆放 · R旋转':'念咒语召唤'):targetName));
    const kind=homeInteractiveKind(item.id);
    if(kind||item.activity){
     const badge=el('span','home-item-badge',tr(INTERACTIVE_BADGES[kind]||activities[item.activity]||'可互动'));

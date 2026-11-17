@@ -1,3 +1,4 @@
+import {learningLesson} from './learning_language_core.js';
 import {fill,tr} from './locale_runtime.js';
 import { battleGoal, testDurationMs } from './language_learning_core.js';
 import { textFor, speakText, localeChoices } from './locale.js';
@@ -17,7 +18,7 @@ export function languageSettings(body, model, cb, { el, button }) {
         section.append(
             ui.field('母语', pairRow('native', learning, cb, { el, button })),
             ui.field('目标语言', pairRow('target', learning, cb, { el, button })),
-            el('p', 'muted settings-note', '营地课程支持中文和英语。其他语言课程尚未提供。录音只在点击后开启。'),
+            el('p', 'muted settings-note', '任务和练习跟随所选目标语言。录音只在点击后开启。'),
             ui.toggle({ icon: '🔉', label: '语音陪伴', hint: '朗读对话与示范回答。' }, !!learning.autoSpeak, () => cb.setLearning({ ...learning, autoSpeak: !learning.autoSpeak })),
             ui.toggle({ icon: '', label: '自动朗读对话', hint: '打开对话或切换下一句时，自动朗读第二语言。' }, learning.autoReadDialogue !== false, () => cb.setLearning({ ...learning, autoReadDialogue: learning.autoReadDialogue === false })),
             ui.toggle({ icon: '📖', label: '双语释义', hint: '对话中同时显示另一种语言的意思。' }, learning.showChinese !== false, () => cb.setLearning({ ...learning, showChinese: learning.showChinese === false })),
@@ -46,7 +47,7 @@ export function languageSettings(body, model, cb, { el, button }) {
             preview.disabled=true;const voice=createLearningVoice({getSettings:()=>({voiceType:voiceSelect.value})}),abort=new AbortController();
             const observer=new MutationObserver(()=>{if(!settings.isConnected){abort.abort();void voice.cancel();observer.disconnect();}});
             observer.observe(document.body,{childList:true,subtree:true});
-            try{await voice.speak(learning.target==='en'?'Hello! Welcome to the Magic Camp.':'你好！欢迎来到魔法营地。',learning.target,abort.signal,voiceSelect.value?undefined:model.save);}
+            try{await voice.speak(learningLesson(learning.target).welcome,learning.target,abort.signal,voiceSelect.value?undefined:model.save);}
             catch(error){if(settings.isConnected)status.textContent=error.message;}finally{observer.disconnect();await voice.cancel();preview.disabled=false;}
         },'secondary');
         settings.append(refresh,preview,button('保存模型和音色',()=>cb.setLearning({...learning,model:modelSelect.value,voiceType:voiceSelect.value}),'primary'),status);

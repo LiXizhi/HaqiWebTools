@@ -55,6 +55,24 @@ test('short starter decks use visible vitality adjudication and the replay prese
     assert.equal(match.arena.events.at(-1).type,'arena_adjudication');
     assert.deepEqual(restoreRedMushroom(dataset,match.replay).adjudication,match.adjudication);
 });
+
+for(const seed of [1,23,91])test(`4v4 all-pass cannot win against first-game opponents; exact replay (${seed})`,()=>{
+    const match=startRedMushroom(dataset,arenaSeats(save,content,dataset,allies,4),4,seed,{first:true,scale:.65});
+    while(!match.arena.finished)playRedMushroom(match,{pass:true});
+    assert.equal(match.arena.winner,null);
+    assert.equal(match.arena.events.at(-1).type,'arena_no_participation');
+    const restored=restoreRedMushroom(dataset,JSON.parse(JSON.stringify(match.replay)));
+    assert.equal(restored.arena.winner,null);assert.deepEqual(restored.arena.events,match.arena.events);
+});
+
+test('old all-pass battle reports retain their original verdict',()=>{
+    const match=startRedMushroom(dataset,arenaSeats(save,content,dataset,allies,4),4,1,{first:true,scale:.65});
+    delete match.replay.participationRulesVersion;
+    while(!match.arena.finished)playRedMushroom(match,{pass:true});
+    assert.equal(match.arena.winner,'near');
+    const restored=restoreRedMushroom(dataset,match.replay);
+    assert.equal(restored.arena.winner,'near');assert.deepEqual(restored.arena.events,match.arena.events);
+});
 test('first game is gentle once per local day; repeated settlement is idempotent; interruption consumes first game',()=>{
     let r=emptyArenaRecord();assert.equal(arenaDifficulty(r,'2026-09-30',1).first,true);
     r=beginArenaRecord(r,{id:'one',day:'2026-09-30',mode:2});

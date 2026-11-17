@@ -1,10 +1,11 @@
 import {castableCards,validTargets} from './combat_arena_core.js';
 import {isAttackCard,isHealCard} from './combat_cards_core.js';
 import {openingEnemyIntentInfo} from './opening_training_core.js';
+import {dungeonEnemyIntentInfo} from './dungeon_tactics_core.js';
 import {canCast,isAlive,selectableCards} from './combat_unit_core.js';
 import {runeCardsInHand} from './combat_pve_core.js';
 import {castBlockedMessage} from './adventure_cast_feedback_core.js';
-import {cardTacticAdvice} from './battle_tactics_core.js';
+import {attackTacticEffects,cardTacticAdvice} from './battle_tactics_core.js';
 
 const handRows=battle=>[...selectableCards(battle.sides.near[0]),...runeCardsInHand(battle)];
 export function companionSelectedAdvice(battle,selected,discarded=[]){
@@ -20,9 +21,9 @@ export function companionSelectedAdvice(battle,selected,discarded=[]){
   if(!injured)return {text:'生命都满了，先留着治疗牌。',blocked:false,practice:false,reconsider:true};
   const practice=!!hero.wordCards?.[selected.seq]&&!hero.wordCards[selected.seq].activated;
   const subject=injured.id===hero.id?'你':'伙伴';
-  return {text:practice?subject+'受伤了。点亮起的头像，完成英语互动。':'这张牌可以帮'+subject+'恢复生命。',blocked:false,practice,suggestedTargetId:injured.id};
+  return {text:practice?subject+'受伤了。点亮起的头像，完成语言互动。':'这张牌可以帮'+subject+'恢复生命。',blocked:false,practice,suggestedTargetId:injured.id};
  }
- if(hero.wordCards?.[selected.seq]&&!hero.wordCards[selected.seq].activated)return {text:'点亮起的目标，完成英语互动。',blocked:false,practice:true};
+ if(hero.wordCards?.[selected.seq]&&!hero.wordCards[selected.seq].activated)return {text:'点亮起的目标，完成语言互动。',blocked:false,practice:true};
  const tactic=cardTacticAdvice(battle,hero,card,targets);
  return {...tactic,text:tactic?.shortText||(card.type==='CatchPet'?'点怪物试着捕捉，可能会失败。':'点亮起的目标出招。'),blocked:false,practice:false};
 }
@@ -42,15 +43,17 @@ export function companionBattleAdvice(battle,visibleSeqs,names={}){
  const trap=choices.find(h=>h.card.type==='Wards'&&addsEffect(h,'wards'));
  const protection=choices.find(h=>/^(Absorb|AreaAbsorb)$/.test(h.card.type)||h.card.type==='Wards'&&hasEffect(h.card,'wards',e=>Number(e?.boost_damage)<0));
  const heal=choices.find(h=>isHealCard(h.card)&&validTargets(battle,hero,h.card).some(u=>u.hp<u.maxHp));
- const intent=openingEnemyIntentInfo(battle),name=h=>names[h.key]?.name||h.card.name||'这张牌';
+ const intent=openingEnemyIntentInfo(battle)||dungeonEnemyIntentInfo(battle),name=h=>names[h.key]?.name||h.card.name||'这张牌';
  if(!choices.length&&practice)return {kind:'practice',text:'试试语言卡：点目标，再完成互动。',seqs:[practice.seq]};
  if(!choices.length)return {text:'这页的牌用不了，换页或跳过。',seqs:[]};
  const capture=choices.find(h=>h.card.type==='CatchPet');
  if(capture)return {kind:'capture',text:'试试抓宠符文，可能会失败哦。',seqs:[capture.seq]};
- if(intent?.kind==='guard'&&attacks.length>1){
-  const light=[...attacks].sort((a,b)=>Number(a.card.pipcost)-Number(b.card.pipcost))[0];
+ const shielded=attacks.filter(h=>validTargets(battle,hero,h.card).some(target=>attackTacticEffects(battle,hero,target,h.card)?.effects.some(e=>e.kind==='ward'&&e.boost<0)));
+ if(shielded.length){
+  const light=[...shielded].sort((a,b)=>Number(a.card.pipcost)-Number(b.card.pipcost))[0];
   return {text:'先用低消耗的「'+name(light)+'」试探护盾。',seqs:[light.seq]};
  }
+ if(intent?.kind==='guard'&&attacks.length)return {text:'对手准备加盾，出手后留意它身上的状态。',seqs:attacks.map(h=>h.seq)};
  if(intent?.kind==='heavy'&&(heal||protection)){
   const h=heal||protection;return {text:'重击要来了。「'+name(h)+'」能帮忙。',seqs:[h.seq]};
  }

@@ -23,6 +23,7 @@ import { campDetourGoal } from '../camp_detour_core.js';
 import { persistReward } from '../adventure_reward_persistence.js';
 import { createLearningVoice } from '../audio/language_adventure_voice.js';
 import { recordWordPractice } from '../language_course.js';
+import { learningLesson, learningPracticeLanguage } from '../learning_language_core.js';
 import { renderCompanionPractice as defaultRenderCompanionPractice } from '../views/adventure/view_panel_modal.js';
 import * as W from '../adventure_world_core.js';
 
@@ -182,15 +183,15 @@ export function createOpeningController({
             return epoch === nowCtx.roleEpoch && owner === nowCtx.roleStore.owner && role === nowCtx.roleStore.catalog.activeId;
         };
         const task = (async () => {
-            const { recordHomePractice } = await import('../home_practice.js');
             while (valid()) {
                 const nowCtx = getContext();
                 const event = nowCtx.save.openingJourney?.wordplay?.practices?.[0];
                 if (!event) break;
-                const recorded = await recordHomePractice(
-                    { ...event, item: { en: event.word, practiceWords: { en: [event.word] } }, source: 'companion-wordplay' },
+                const result = await recordWordPractice(
+                    { ...event, language: learningPracticeLanguage(event.language), words: [event.word], source: 'companion-wordplay' },
                     valid,
                 );
+                const recorded = result?.persisted;
                 if (!recorded || !valid()) break;
                 const next = structuredClone(getContext().save);
                 const events = next.openingJourney.wordplay.practices;
@@ -303,7 +304,7 @@ export function createOpeningController({
         const ctx = getContext();
         const current = ctx.save;
         const role = ctx.roleStore.catalog.activeId;
-        if (!current?.forestCommission?.practice || forestPracticeTask) return;
+        if ((!current?.forestCommission?.practice && !current?.forestCommission?.labelPractice?.length) || forestPracticeTask) return;
         const valid = () => {
             const nowCtx = getContext();
             return nowCtx.save === current && nowCtx.roleStore.catalog.activeId === role;
@@ -324,7 +325,9 @@ export function createOpeningController({
         } finally {
             forestPracticeTask = null;
             const nowCtx = getContext();
-            if (nowCtx.save !== current && nowCtx.save?.forestCommission?.practice) void drainForestPractice();
+            if (nowCtx.save !== current && (nowCtx.save?.forestCommission?.practice || nowCtx.save?.forestCommission?.labelPractice?.length)) {
+                void drainForestPractice();
+            }
         }
     }
 
@@ -347,12 +350,12 @@ export function createOpeningController({
             {
                 close,
                 sound: name => spellSound.play(name),
-                listen: line =>
+                listen: (line, language) =>
                     safely(async () => {
                         openingSpeech?.abort();
                         const controller = new AbortController();
                         openingSpeech = controller;
-                        await dialogueVoice().speak(line, 'en', controller.signal);
+                        await dialogueVoice().speak(line, language, controller.signal);
                     }),
                 go: () => {
                     if (getContext().save.zone !== 'camp') {
@@ -387,9 +390,12 @@ export function createOpeningController({
             return nowCtx.save === current && nowCtx.roleStore.catalog.activeId === role;
         };
         try {
-            const { recordHomePractice } = await import('../home_practice.js');
             if (!valid()) return;
-            const recorded = await recordHomePractice({ ...event, item: { en: 'friends', practiceWords: { en: ['friend'] } } }, valid);
+            const result = await recordWordPractice(
+                { ...event, language: learningPracticeLanguage(event.language), words: [learningLesson(event.language).friendWord], source: 'opening-friend' },
+                valid,
+            );
+            const recorded = result?.persisted;
             if (!recorded || !valid()) return;
             delete current.openingJourney.practice;
             persist();
@@ -442,7 +448,8 @@ export function createOpeningController({
                     openingSpeech?.abort();
                     const controller = new AbortController();
                     openingSpeech = controller;
-                    await dialogueVoice().speak('We are friends.', 'en', controller.signal);
+                    const lesson = learningLesson(getContext().save);
+                    await dialogueVoice().speak(lesson.friend, lesson.language, controller.signal);
                 }),
             go: () => {
                 if (leave()) routeOpening();

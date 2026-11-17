@@ -2,12 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
+import {learningLesson} from '../js/learning_language_core.js';
 const source=fs.readFileSync(new URL('../js/view_companion_wordplay.js',import.meta.url),'utf8');
 function fixture(){
  const nodes=[];let resets=0,mics=0;
  function el(tag,className='',...children){const node={tag,className,children,dataset:{},attributes:{},value:'',hidden:false,disabled:false,classList:{add(){}},setAttribute(k,v){this.attributes[k]=v;},append(...items){this.children.push(...items);},replaceChildren(...items){this.children=items;},addEventListener(){},removeEventListener(){},remove(){this.removed=true;},focus(){this.focused=true;},getClientRects(){return this.hidden?[]:[{}];}};nodes.push(node);return node;}
  const button=(label,click,cls)=>Object.assign(el('button',cls,label),{click}),calls=[];
- const context=vm.createContext({el,button,petPortrait:()=>el('div','pet-sheet'),heroPortrait:()=>el('canvas'),guidePet:()=>1,createCloseButton:fn=>button('',fn,'close-button'),createDialogueMicrophone:(_button,actions)=>{mics++;return {node:button('',actions.start,'mic'),reset:()=>resets++,update({disabled}){this.node.disabled=disabled;}};}});
+ const context=vm.createContext({learningLesson,el,button,petPortrait:()=>el('div','pet-sheet'),heroPortrait:()=>el('canvas'),guidePet:()=>1,createCloseButton:fn=>button('',fn,'close-button'),createDialogueMicrophone:(_button,actions)=>{mics++;return {node:button('',actions.start,'mic'),reset:()=>resets++,update({disabled}){this.node.disabled=disabled;}};}});
  vm.runInContext(source.slice(source.indexOf('const ROUNDS=')).replace('export function','function'),context);
  const root=el('div'),cb=Object.fromEntries(['listen','startRecording','finishRecording','cancelRecording','next','done','close'].map(k=>[k,()=>calls.push(k)]));cb.submit=text=>calls.push(['submit',text]);
  const view=context.createCompanionWordplay(root,cb),model={assets:{content:{}},save:{},petId:1,step:0,phase:'ready'};
@@ -50,4 +51,25 @@ test('another valid command performs an action without completing the current go
  ui.view.render({...ui.model,reaction:'jump',reactionId:1,phase:'ready'});assert.equal(reads,0);
  ui.view.render({...ui.model,reaction:'jump',reactionId:2,phase:'ready'});assert.equal(reads,1);
  assert.equal(stage.className,'wordplay-stage responded response-jump');assert.equal(ui.find('primary wordplay-next').hidden,true);
+});
+
+test('wordplay rerender switches every command and input language while retaining progress',()=>{
+ const ui=fixture(),input=ui.view.input;
+ for(const language of ['ja','ko'])for(let step=0;step<3;step++){
+  const lesson=learningLesson(language);
+  ui.view.render({...ui.model,save:{languageLearning:{target:language}},step});
+  assert.equal(ui.view.input,input);assert.equal(input.lang,language);
+  assert.equal(ui.find('secondary wordplay-example').textContent,'听示范 · '+lesson.rounds[step][1]);
+  assert.deepEqual(ui.calls,[],'render never submits or grants progress');
+ }
+});
+test('waiting for ASR offers a visible cancel-to-type action and unlocks input on recovery',()=>{
+ const ui=fixture(),cancel=ui.find('secondary wordplay-cancel');
+ assert.equal(cancel.hidden,true);
+ ui.view.render({...ui.model,phase:'checking'});
+ assert.equal(cancel.hidden,false);assert.equal(ui.view.input.disabled,true);
+ assert.match(ui.find('wordplay-status').textContent,/8 秒/);
+ cancel.click();assert.deepEqual(ui.calls,['cancelRecording']);assert.equal(ui.view.input.focused,true);
+ ui.view.render({...ui.model,phase:'ready',message:'语音服务超时，请重试'});
+ assert.equal(ui.view.input.disabled,false);assert.equal(cancel.hidden,true);
 });

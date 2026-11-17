@@ -1,3 +1,4 @@
+import {learningLesson} from './learning_language_core.js';
 import {partitionGuidedMessages} from './dialogue_turns_core.js';
 import {createDialogueReveal} from './dialogue_reveal.js';
 import {createBilingualDialogue,renderSpeechWords} from './view_bilingual_dialogue.js';
@@ -68,7 +69,7 @@ export function createLearningChatView(cb){
     const footer=el('footer','camp-chat-footer'),status=el('p','camp-chat-status');status.setAttribute('role','status');
     const form=el('form','camp-chat-input');form.hidden=true;
     const input=el('input');input.placeholder=tr('输入你的回答，答对即可继续');input.maxLength=500;input.setAttribute('aria-label',tr('文字回答'));
-    const send=button('发送',()=>{if(needsRecovery(state)){cb.retry?.();return;}const text=input.value.trim();if(text)cb.help(text);});form.onsubmit=e=>{e.preventDefault();send.click();};const inputBox=el('div','camp-chat-input-box');inputBox.append(input);form.append(inputBox,send);input.oninput=()=>cb.draft?.(input.value);
+    const send=button('发送',()=>{if(needsRecovery(state)){cb.retry?.();return;}const text=input.value.trim();if(text)cb.help(text);});let composing=false;input.oncompositionstart=()=>composing=true;input.oncompositionend=()=>composing=false;form.onsubmit=e=>{e.preventDefault();if(!composing&&!e.isComposing)send.click();};const inputBox=el('div','camp-chat-input-box');inputBox.append(input);form.append(inputBox,send);input.oninput=()=>cb.draft?.(input.value);
     function needsRecovery(s){return s?.mode==='free'&&s.retryable&&(!s.ready||s.giftReply||!s.draft?.trim());}
     const actions=el('div','camp-chat-actions');
     const typing=button('打字回答',()=>{form.hidden=!form.hidden;typing.textContent=tr(form.hidden?'打字回答':'收起输入');if(!form.hidden)input.focus();},'secondary');
@@ -147,7 +148,7 @@ export function createLearningChatView(cb){
             contextDetails.hidden=!!s.taskScene;if(s.mode==='free')aside.append(contextDetails);
             const free=s.mode==='free';more.hidden=!free;inputBox.classList.toggle('has-more',free);if(!free)setMore(false);
             room.setAttribute('aria-label',free?'跨文化自由对话':'营地双语对话');
-            change.hidden=free||s.practiceOnly;freeTalk.hidden=free||s.done||!cb.free||s.practiceOnly;freeTalk.disabled=s.busy||s.recording;details.hidden=!free;gift.hidden=!free||!s.canGift;upgrade.hidden=!free||s.vip;
+            input.lang=s.locale;change.textContent=tr(s.loadError?'重试准备课程':'换个话题');change.hidden=free||(s.practiceOnly&&!s.loadError);freeTalk.hidden=free||s.done||!cb.free||s.practiceOnly;freeTalk.disabled=s.busy||s.recording;details.hidden=!free;gift.hidden=!free||!s.canGift;upgrade.hidden=!free||s.vip;
             details.disabled=gift.disabled=s.busy||s.recording||!s.ready;
             if(free){form.hidden=false;input.placeholder=tr('用彼此理解的语言交流');input.maxLength=2000;if(document.activeElement!==input||s.draft==='')input.value=s.draft||'';}
             progress.textContent=free?(s.loginRequired?'登录后可使用 AI 对话':s.vip?'会员自由对话':s.remaining==null?'正在核验额度':fill(`今日剩余 {v0}/2 次`,{v0:String(s.remaining)}).text):s.done?tr('交流完成'):fill('第 {turn} / {total} 轮',{turn:s.index+1,total:s.story.turns.length}).text;
@@ -165,16 +166,16 @@ export function createLearningChatView(cb){
                 log.append(...exchange.current.map(row=>message(row,s)));
                 if(s.taskScene&&s.story.context)log.prepend(el('p','camp-chat-scene-context',s.story.context));
                 if(s.done&&!free&&!s.practiceOnly&&!s.taskScene){
-                    const invitation=message({role:'npc',text:{en:'Would you like to keep chatting?','zh-CN':'还想继续聊聊吗？'}},s);
+                    const lesson=learningLesson(s.locale),invitation=message({role:'npc',text:{[s.locale]:lesson.invite,...(s.locale!==s.glossLocale?{[s.glossLocale||'zh-CN']:'还想继续聊聊吗？'}:{})}},s);
                     const choices=el('div','camp-chat-continue');
                     const yes=button('Yes',()=>cb.free?.(),'secondary small'),no=button('No',cb.close,'secondary small');
-                    yes.textContent='Yes';no.textContent='No';choices.append(yes,no);invitation.append(choices);log.append(invitation);
+                    yes.textContent=lesson.yes;no.textContent=lesson.no;choices.append(yes,no);invitation.append(choices);log.append(invitation);
                 }
                 if(!s.done&&(s.hintLevel||(!free&&!s.progressiveHints))){hintRow.className=`camp-chat-message ${free?'is-npc':'is-player'} camp-chat-prompt`;hintAvatar.textContent=free?s.profile.name.slice(0,1):tr('我');log.append(hintRow);}
                 log.scrollTop=log.scrollHeight;}
             for(const replay of log.querySelectorAll('button'))if(!replay.className.includes('camp-chat-replay'))replay.disabled=s.busy||s.recording;
             for(const line of lineViews)line.setDisabled(s.busy||s.recording);
-            hint.hidden=!!(s.done||(free?!s.hintLevel:!s.story.turns[s.index]?.answer||(s.progressiveHints&&!s.hintLevel)));
+            hint.hidden=!!(s.done||s.busy||s.loadError||(!free&&!s.story.turns[s.index]?.answer?.[s.locale])||(free?!s.hintLevel:!s.story.turns[s.index]?.answer||(s.progressiveHints&&!s.hintLevel)));
             hint.classList.toggle('is-compact',!free&&!s.hintLevel);
             hints.textContent=tr(s.progressiveHints&&s.hintLevel===1?'显示示范':s.hintLevel?'收起提示':'显示提示');hints.setAttribute('aria-expanded',String(!!s.hintLevel&&!s.done));
             // Wrong answers keep the typed text for editing; a new turn starts empty.
@@ -185,7 +186,7 @@ export function createLearningChatView(cb){
             if(!hint.hidden&&free){hint.replaceChildren(el('p','',s.hintText||'正在生成提示…'));}
             if(!hint.hidden&&!free&&(logChanged||fresh)){const turn=s.story.turns[s.index];hint.replaceChildren();
                 if(s.hintLevel)hint.append(el('p','',turn.hint));
-                const pattern=s.taskScene?turn.answer[s.locale]:s.locale==='en'?turn.pattern.replace(/\{\w+\}/g,'…'):turn.answer['zh-CN'],answer=turn.answer[s.locale];
+                const pattern=s.taskScene?turn.answer[s.locale]:s.locale==='en'?turn.pattern.replace(/\{\w+\}/g,'…'):turn.answer[s.locale],answer=turn.answer[s.locale];
                 const same=pattern.toLowerCase().replace(/[.,!?。！？，]/g,'').trim().replace(/\s+/g,' ')===answer.toLowerCase().replace(/[.,!?。！？，]/g,'').trim().replace(/\s+/g,' ');
                 if(s.hintLevel&&!same&&(!s.progressiveHints||s.hintLevel>=3))hint.append(el('p','camp-chat-original',pattern));
                 if(!s.progressiveHints||s.hintLevel>=3){
@@ -226,6 +227,7 @@ export function createLearningChatView(cb){
             loginNotice.hidden=!(free&&s.loginRequired);loginButton.disabled=s.busy;
             if(s.loginRequired){form.hidden=true;log.hidden=true;}else log.hidden=false;
             actions.hidden=!!s.loginRequired;hints.hidden=!!s.done;
+            if(s.loadError){mic.disabled=true;microphone.update({phase:'ready',disabled:true});send.disabled=true;hints.disabled=true;input.disabled=true;}else input.disabled=!!s.busy;
             if(s.done){form.hidden=false;input.placeholder=tr('想聊些什么？');}
             if(s.practiceOnly){room.setAttribute('aria-label','时光旅人双语对话');settings.hidden=true;if(s.done){form.hidden=true;actions.hidden=true;}}else settings.hidden=false;
             sceneNext.hidden=!s.taskScene||!s.done;

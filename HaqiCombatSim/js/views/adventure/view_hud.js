@@ -377,10 +377,11 @@ function renderHudContents(root, model, cb) {
         tracker.replaceChildren(
             el('div', 'tracker-top', el('span', 'eyebrow', '副本探索'), el('span', 'chapter-count', `清怪 ${cleared} / ${dungeon.arenas.length}`)),
             el('h3', '', dungeon.name),
-            el('p', '', cleared === dungeon.arenas.length ? 'Boss 已击败，可以退出副本。' : remaining ? '沿道路前进，遇到怪物自动开始战斗。' : '前路暂未开放，可以退出副本。'),
+            el('p', '', cleared === dungeon.arenas.length ? '营地已清理完毕，可以退出副本。' : remaining ? `下一站：第 ${cleared + 1} 处营地。沿道路前进，接近怪物后开始战斗。` : '前路暂未开放，可以退出副本。'),
             el('p', 'muted', '副本中不会自动回血，请用现有生命通关。'),
-            button('退出副本', () => cb.leaveDungeon?.(), 'track-button'),
         );
+        if (remaining) tracker.append(button('前往下一处营地', () => cb.track('dungeon-next'), 'track-button'));
+        tracker.append(button('退出副本', () => cb.leaveDungeon?.(), 'track-button'));
     } else {
         const { entries, teachAllow } = vm.payload;
         const teach = { allow: teachAllow };

@@ -30,12 +30,12 @@ export function createTimeScroll({root,data,city,assets,getState,persist,award,o
     function practice(station){
         if(!valid())return;const settings=save().languageLearning;
         if(!settings?.enabled){view.message('先在城市的双语学习中选择目标语言，即可练习。现在仍可阅读和寻找线索。');return;}
-        if(!['en','zh-CN'].includes(settings.target)){view.message('时光旅人目前支持中文与英语练习，可以继续阅读和探索。');return;}
+        if(!['en','zh-CN','ja','ko'].includes(settings.target)){view.message('请先选择可用的目标语言，再开始练习。');return;}
         direction=0;target=x;pending=null;
         if(!chat){
             const voice=voiceFactory({getSettings:()=>save().languageLearning});
             // Read/type remain available to guests. SDK speech requires an online role.
-            const guardedVoice={cancel:()=>voice.cancel(),finish:()=>voice.finish(),speak:(...args)=>{if(!getState().online)throw Error('登录并使用云端角色后可听示范；现在仍可文字练习。');return voice.speak(...args);},start:(...args)=>{if(!getState().online)throw Error('登录并使用云端角色后可录音；现在仍可文字练习。');return voice.start(...args);}};
+            const guardedVoice={judge:(...args)=>{if(!getState().online)throw Error('登录并使用云端角色后可准备所选语言课程；现在仍可阅读和探索。');return voice.judge(...args);},cancel:()=>voice.cancel(),finish:()=>voice.finish(),speak:(...args)=>{if(!getState().online)throw Error('登录并使用云端角色后可听示范；现在仍可文字练习。');return voice.speak(...args);},start:(...args)=>{if(!getState().online)throw Error('登录并使用云端角色后可录音；现在仍可文字练习。');return voice.start(...args);}};
             chat=chatFactory({practiceOnly:true,allowedZone:zone,voice:guardedVoice,
                 viewFactory:callbacks=>{chatView=chatViewFactory(callbacks);return chatView;},
                 getState:()=>({save:save(),content:assets.content,role:getState().role,identity:getState().owner,stage:valid()?'world':'battle'}),

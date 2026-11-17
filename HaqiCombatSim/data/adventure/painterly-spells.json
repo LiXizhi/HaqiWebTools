@@ -1,0 +1,393 @@
+{
+  "version": 1,
+  "sheets": {
+    "fire": {
+      "local": "assets/adventure/painterly-spells/fire-v1-79ee28867fba.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/painterly-spells/20261117/fire-v1-79ee28867fba.webp",
+      "sha256": "79ee28867fbab34298fb9d26b3d49b0cf0c5324a6412b4bc018d8e54a6d6ea05",
+      "size": 99578,
+      "width": 960,
+      "height": 540
+    },
+    "ice": {
+      "local": "assets/adventure/painterly-spells/ice-v1-ae871689eb82.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/painterly-spells/20261117/ice-v1-ae871689eb82.webp",
+      "sha256": "ae871689eb82d5d0fc689708614a5222140da02b163f212f735560ddcac4f0e5",
+      "size": 92690,
+      "width": 960,
+      "height": 540
+    },
+    "storm": {
+      "local": "assets/adventure/painterly-spells/storm-v1-82c944fa3335.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/painterly-spells/20261117/storm-v1-82c944fa3335.webp",
+      "sha256": "82c944fa333553ee2b99f8734b789b95a742880af4c8c2d3a6382884121d5625",
+      "size": 98700,
+      "width": 960,
+      "height": 540
+    },
+    "life": {
+      "local": "assets/adventure/painterly-spells/life-v1-4b0023366de0.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/painterly-spells/20261117/life-v1-4b0023366de0.webp",
+      "sha256": "4b0023366de08a0717d017edeeb3098adfbf31f86b41e26632343a0f7ab97910",
+      "size": 94180,
+      "width": 960,
+      "height": 540
+    },
+    "death": {
+      "local": "assets/adventure/painterly-spells/death-v1-551c5482e793.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/painterly-spells/20261117/death-v1-551c5482e793.webp",
+      "sha256": "551c5482e793abf5d91b7b3cf5eb0f0514094d8e73db72ba5a850d5b7396e3ac",
+      "size": 95742,
+      "width": 960,
+      "height": 540
+    }
+  },
+  "bases": {
+    "Fire_SingleAttack_Level1": {
+      "name": "火焰爆",
+      "school": "fire",
+      "sheet": "fire",
+      "style": "comet",
+      "palette": [
+        "#ff8a30",
+        "#fff1a5",
+        "#e54d47"
+      ],
+      "release": [
+        12,
+        59,
+        296,
+        152
+      ],
+      "impact": [
+        13,
+        282,
+        294,
+        246
+      ]
+    },
+    "Fire_SingleAttackWithDOT_Level2": {
+      "name": "火神之怒",
+      "school": "fire",
+      "sheet": "fire",
+      "style": "meteor",
+      "palette": [
+        "#ff8a30",
+        "#fff1a5",
+        "#e54d47"
+      ],
+      "release": [
+        332,
+        35,
+        296,
+        199
+      ],
+      "impact": [
+        332,
+        293,
+        296,
+        223
+      ]
+    },
+    "Fire_AreaAttack_Level4": {
+      "name": "星火袭空",
+      "school": "fire",
+      "sheet": "fire",
+      "style": "nova",
+      "palette": [
+        "#ff8a30",
+        "#fff1a5",
+        "#e54d47"
+      ],
+      "release": [
+        652,
+        63,
+        296,
+        144
+      ],
+      "impact": [
+        652,
+        313,
+        296,
+        183
+      ]
+    },
+    "Ice_SingleAttack_Level1": {
+      "name": "冰霜破",
+      "school": "ice",
+      "sheet": "ice",
+      "style": "comet",
+      "palette": [
+        "#65d6ff",
+        "#efffff",
+        "#9293ef"
+      ],
+      "release": [
+        12,
+        37,
+        296,
+        195
+      ],
+      "impact": [
+        12,
+        283,
+        296,
+        243
+      ],
+      "releaseRotation": 0.6
+    },
+    "Ice_SingleAttack_Level2": {
+      "name": "陨落冰石",
+      "school": "ice",
+      "sheet": "ice",
+      "style": "icefall",
+      "palette": [
+        "#65d6ff",
+        "#efffff",
+        "#9293ef"
+      ],
+      "release": [
+        332,
+        68,
+        296,
+        134
+      ],
+      "impact": [
+        332,
+        282,
+        296,
+        246
+      ]
+    },
+    "Ice_AreaAttack_Level4": {
+      "name": "破地冰钻",
+      "school": "ice",
+      "sheet": "ice",
+      "style": "icecrown",
+      "palette": [
+        "#65d6ff",
+        "#efffff",
+        "#9293ef"
+      ],
+      "release": [
+        655,
+        12,
+        290,
+        246
+      ],
+      "impact": [
+        652,
+        298,
+        296,
+        214
+      ]
+    },
+    "Storm_SingleAttack_Level1": {
+      "name": "疾电术",
+      "school": "storm",
+      "sheet": "storm",
+      "style": "lightning",
+      "palette": [
+        "#a887f2",
+        "#fff1a0",
+        "#e9bd52"
+      ],
+      "release": [
+        12,
+        61,
+        296,
+        147
+      ],
+      "impact": [
+        12,
+        285,
+        296,
+        240
+      ]
+    },
+    "Storm_SingleAttack_Level2": {
+      "name": "金灵遁空",
+      "school": "storm",
+      "sheet": "storm",
+      "style": "orb",
+      "palette": [
+        "#a887f2",
+        "#fff1a0",
+        "#e9bd52"
+      ],
+      "release": [
+        332,
+        46,
+        296,
+        178
+      ],
+      "impact": [
+        334,
+        282,
+        292,
+        246
+      ]
+    },
+    "Storm_SingleAttack_Level6": {
+      "name": "旋风爆击",
+      "school": "storm",
+      "sheet": "storm",
+      "style": "cyclone",
+      "palette": [
+        "#a887f2",
+        "#fff1a0",
+        "#e9bd52"
+      ],
+      "release": [
+        717,
+        12,
+        165,
+        246
+      ],
+      "impact": [
+        652,
+        286,
+        296,
+        237
+      ]
+    },
+    "Life_SingleAttack_Level1": {
+      "name": "生灵光弧",
+      "school": "life",
+      "sheet": "life",
+      "style": "leaf",
+      "palette": [
+        "#82cf50",
+        "#fff3a9",
+        "#32a879"
+      ],
+      "release": [
+        12,
+        42,
+        296,
+        185
+      ],
+      "impact": [
+        12,
+        285,
+        296,
+        240
+      ]
+    },
+    "Life_SingleAttack_Level2": {
+      "name": "灵木刺阵",
+      "school": "life",
+      "sheet": "life",
+      "style": "vines",
+      "palette": [
+        "#82cf50",
+        "#fff3a9",
+        "#32a879"
+      ],
+      "release": [
+        378,
+        12,
+        203,
+        246
+      ],
+      "impact": [
+        332,
+        291,
+        296,
+        227
+      ]
+    },
+    "Life_SingleHealWithHOT_Level1": {
+      "name": "生生不息",
+      "school": "life",
+      "sheet": "life",
+      "style": "heal",
+      "palette": [
+        "#82cf50",
+        "#fff3a9",
+        "#32a879"
+      ],
+      "release": [
+        724,
+        12,
+        151,
+        246
+      ],
+      "impact": [
+        656,
+        282,
+        288,
+        246
+      ]
+    },
+    "Death_SingleAttackWithDOT_Level4": {
+      "name": "死亡毒",
+      "school": "death",
+      "sheet": "death",
+      "style": "ghost",
+      "palette": [
+        "#9c78da",
+        "#c6ffe9",
+        "#58bda3"
+      ],
+      "release": [
+        12,
+        60,
+        296,
+        150
+      ],
+      "impact": [
+        26,
+        282,
+        267,
+        246
+      ]
+    },
+    "Death_SingleAttack_Level1": {
+      "name": "暗灵之咒",
+      "school": "death",
+      "sheet": "death",
+      "style": "seal",
+      "palette": [
+        "#9c78da",
+        "#c6ffe9",
+        "#58bda3"
+      ],
+      "release": [
+        392,
+        12,
+        176,
+        246
+      ],
+      "impact": [
+        346,
+        282,
+        268,
+        246
+      ]
+    },
+    "Death_SingleAttackWithLifeTap_Level4": {
+      "name": "回光返照",
+      "school": "death",
+      "sheet": "death",
+      "style": "drain",
+      "palette": [
+        "#9c78da",
+        "#c6ffe9",
+        "#58bda3"
+      ],
+      "release": [
+        652,
+        78,
+        296,
+        113
+      ],
+      "impact": [
+        660,
+        282,
+        280,
+        246
+      ]
+    }
+  }
+}

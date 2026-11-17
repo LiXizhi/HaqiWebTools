@@ -143,3 +143,7 @@ test('stationary companion completes actual dwell and collects all resource unit
     assert.equal(collections,3);assert.equal(record.bags.partner[node.itemId],3);
     assert.equal(planner.choose({now:20000,position:near,leader,candidates:[]}),null);
 });
+
+test('offline companion uses Japanese and Korean with native aid for local commands',()=>{
+ for(const [language,command,script]of [['ja','ついてきて',/[ぁ-んァ-ン]/],['ko','따라와',/[가-힣]/]]){assert.equal(companionIntent(command),'follow');const reply=localCompanionReply({language,native:'zh-CN',goal:'idle'},command);assert.match(reply.reply,script);assert.match(reply.translation,/跟着/);assert.doesNotMatch(reply.reply,/follow|gather/i);}
+});

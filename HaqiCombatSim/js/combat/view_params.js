@@ -1,10 +1,10 @@
 // view_params.js — 数值面板：全局常量 / 各系系数 / 单卡覆盖 / diff / 导入导出。
-import { state, setParams, updateParams, resetParams, subscribe } from './state.js';
-import { SCHOOLS, defaultParams, diffParams, serializeParams, parseParams, cloneParams } from './combat_params_core.js';
-import { baseMaxHp } from './combat_formulas_core.js';
-import { SCHOOL_NAMES, SCHOOL_COLORS, defaultLevel } from './combat_presets_core.js';
-import { isSupportedType } from './combat_cards_core.js';
-import { h, clear, numberInput, download, readFileText, toast, fmt, debounce } from './utils.js';
+import { state, setParams, updateParams, resetParams, subscribe } from '../state.js';
+import { SCHOOLS, defaultParams, diffParams, serializeParams, parseParams, cloneParams } from '../combat_params_core.js';
+import { baseMaxHp } from '../combat_formulas_core.js';
+import { SCHOOL_NAMES, SCHOOL_COLORS, defaultLevel } from '../combat_presets_core.js';
+import { isSupportedType } from '../combat_cards_core.js';
+import { h, clear, numberInput, download, readFileText, toast, fmt, debounce } from '../utils.js';
 
 const GLOBAL_DESC = {
     maxPips: '能量上限（player_server.lua L58/L173）',

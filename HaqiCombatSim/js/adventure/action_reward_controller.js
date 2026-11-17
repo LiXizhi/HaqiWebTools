@@ -6,7 +6,7 @@ import {npcOffers} from '../adventure_npc_core.js';
 import {ownedPetRecords} from '../adventure_pet_files_core.js';
 import {rewardSnapshot,rewardChanges,firstCompanionReward,equipmentChangeLines} from '../adventure_reward_feedback_core.js';
 import {persistReward} from '../adventure_reward_persistence.js';
-import {rewardSound} from '../game_sound_core.js';
+import {rewardSound} from '../audio/game_sound_core.js';
 import {fill} from '../locale_runtime.js';
 import {openingJourney} from '../opening_journey_core.js';
 import {createRewardFeedback} from '../view_adventure_rewards.js';

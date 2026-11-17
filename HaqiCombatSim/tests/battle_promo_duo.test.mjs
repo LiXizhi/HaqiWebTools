@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 import {createAdventure} from '../js/adventure_core.js';
 import {prepareDebugEdit} from '../js/adventure_debug_core.js';
-import {createPromoDuoBattle,samplePromoDuoMotion} from '../js/promo_duo_core.js';
+import {createPromoDuoBattle,samplePromoDuoMotion} from '../js/promo/promo_duo_core.js';
 import {cardsInHand} from '../js/combat_unit_core.js';
 import {restorePveBattle} from '../js/combat_pve_core.js';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../data/'+p,import.meta.url)));

@@ -1,4 +1,4 @@
-import {createLearningVoice} from './language_adventure_voice.js';
+import {createLearningVoice} from './audio/language_adventure_voice.js';
 import {DIALOGUE_MAPPING_PROMPT_VERSION,dialogueMappingPrompt,parseDialogueMapping} from './dialogue_mapping_core.js';
 
 export function createMappingStore({databaseName='haqi-dialogue-mapping-v2'}={}){

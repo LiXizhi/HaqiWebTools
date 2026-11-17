@@ -7,7 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadDataset } from '../js/data_core.js';
 import { defaultParams, resolveParams, parseParams, SCHOOLS } from '../js/combat_params_core.js';
-import { buildJobs, runJob, aggregateMatrix, aggregateGlobal, mergeStats } from '../js/sim_batch_core.js';
+import { buildJobs, runJob, aggregateMatrix, aggregateGlobal, mergeStats } from '../js/combat/sim_batch_core.js';
 import { defaultLevel } from '../js/combat_presets_core.js';
 import { parseRunBatchArgs, resolveFromRoot, RUN_BATCH_USAGE } from './lib/run_batch_args.mjs';
 

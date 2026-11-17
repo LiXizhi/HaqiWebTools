@@ -1,5 +1,5 @@
-import {createArena,startCombat,playTurn,castableCards} from './combat_arena_core.js';
-import {resolveParams} from './combat_params_core.js';
+import {createArena,startCombat,playTurn,castableCards} from '../combat_arena_core.js';
+import {resolveParams} from '../combat_params_core.js';
 
 // A staged teaching match. Decks and decisions are presets; all effects use real kids cards.
 export function createPromoTactics(dataset,params,seed=531){

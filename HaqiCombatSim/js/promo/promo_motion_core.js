@@ -1,4 +1,4 @@
-import {followPath,findPath,WALK_SPEED} from './adventure_world_core.js';
+import {followPath,findPath,WALK_SPEED} from '../adventure_world_core.js';
 
 // NPCs are intentionally traversable in the game. Filming keeps sprite space
 // along the entire route, including the final standing pose.

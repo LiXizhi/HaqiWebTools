@@ -2,8 +2,8 @@
 // Lazily imported by adventure_app.js (Haqi.html?prologue, the title-screen button, or a new player's
 // first visit). Shares the already loaded assets, renderer, locale and sound; needs no login and writes
 // no save. Story text lives only in data/prologue/script.json.
-import {createJsonReader} from './runtime_data.js';
-import {createCloseButton} from './ui/controls.js';
+import {createJsonReader} from '../runtime_data.js';
+import {createCloseButton} from '../ui/controls.js';
 import {validateScript,languagePair,bilingual,beatAutoSeconds,createRunner} from './prologue_script_core.js';
 import {wordCardRow} from './prologue_battle_core.js';
 import {createCinema} from './prologue_cinema.js';
@@ -149,7 +149,7 @@ export async function mountPrologue(host,ctx){
     readBtn.onclick=async()=>{
         readAloud=!readAloud;readBtn.setAttribute('aria-pressed',String(readAloud));
         if(readAloud&&!narration){
-            try{const {createPromoNarration}=await import('./promo_narration.js');narration=createPromoNarration({onError:()=>{status.textContent=CHROME.readFail[pair.native];}});}
+            try{const {createPromoNarration}=await import('../promo/promo_narration.js');narration=createPromoNarration({onError:()=>{status.textContent=CHROME.readFail[pair.native];}});}
             catch{status.textContent=CHROME.readFail[pair.native];readAloud=false;readBtn.setAttribute('aria-pressed','false');}
         }
         if(!readAloud)narration?.stop();

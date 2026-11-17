@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {parseDialogueJson,dialogueReplyPreview} from '../js/dialogue_json_core.js';
-import {createLearningVoice} from '../js/language_adventure_voice.js';
+import {createLearningVoice} from '../js/audio/language_adventure_voice.js';
 
 test('model JSON tolerates fences and trailing explanations while respecting strings and nested objects',()=>{
     const result={reply:'Hello "friend"! {keep chatting} \\ path',translation:'你好',learning:{worthy:true,quote:'Hello'},rows:[{text:'}'}]};

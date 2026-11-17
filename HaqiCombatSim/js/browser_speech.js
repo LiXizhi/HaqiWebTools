@@ -1,4 +1,4 @@
-import {acquireAudioActivity} from './audio_activity.js';
+import {acquireAudioActivity} from './audio/audio_activity.js';
 let release=null;
 export function cancelBrowserSpeech(){
     globalThis.speechSynthesis?.cancel();release?.();release=null;

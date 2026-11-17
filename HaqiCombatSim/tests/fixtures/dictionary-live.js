@@ -2,7 +2,7 @@ import {createTeachingEvaluation} from './dictionary-live-evaluation.js';
 import {createDictionary} from '../../js/adventure_dictionary.js';
 import {emptyDictionary} from '../../js/dictionary_core.js';
 import {loadKeepwork} from '../../js/adventure_cloud.js';
-import {createLearningVoice} from '../../js/language_adventure_voice.js';
+import {createLearningVoice} from '../../js/audio/language_adventure_voice.js';
 const status=document.querySelector('#status'),root=document.querySelector('#overlay'),buttons=[...document.querySelectorAll('main button')];
 let state=null,dictionary=null,sdk=null,unsubscribe=null,authRevision=0;const rows=new Map();
 const evaluation=createTeachingEvaluation(document.querySelector('main'),()=>state);

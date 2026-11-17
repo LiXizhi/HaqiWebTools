@@ -14,7 +14,7 @@ import {loadWordLexicon} from './word_lexicon.js';
 import {wordLanguage,wordTreeKey} from './word_lexicon_core.js';
 import {languageTreeContext,languageTreeStore} from './language_tree_capture.js';
 import {recordWordPractice} from './language_course.js';
-import {createLearningVoice} from './language_adventure_voice.js';
+import {createLearningVoice} from './audio/language_adventure_voice.js';
 import {createLanguagePracticeView} from './view_language_practice.js';
 import {createLanguageSceneIntro} from './view_language_scene_intro.js';
 import {loadAuthoredHomeGames} from './home_authored_game.js';

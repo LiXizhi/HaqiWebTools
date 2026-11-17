@@ -30,7 +30,7 @@ export function createPrologueController({ getContext, secondLocaleFor, toast })
         prologueRun = (async () => {
             try {
                 if (lang && lang !== displayLocale()) await setPrologueLocale(native, target);
-                const { mountPrologue } = await import('../prologue_app.js');
+                const { mountPrologue } = await import('../prologue/prologue_app.js');
                 const { assets, renderer, spellSound } = getContext();
                 const handle = await mountPrologue(document.body, {
                     assets,

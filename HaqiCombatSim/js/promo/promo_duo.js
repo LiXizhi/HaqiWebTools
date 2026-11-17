@@ -1,11 +1,11 @@
-import {el} from './views/adventure/primitives.js';
-import {renderHud} from './views/adventure/view_hud.js';
-import {renderBattle} from './views/adventure/view_battle_layer.js';
-import {renderRoles} from './view_adventure_roles.js';
-import {createCompanionChatView} from './view_companion_chat.js';
-import {createLocalPeerControl} from './view_local_peer_controls.js';
+import {el} from '../views/adventure/primitives.js';
+import {renderHud} from '../views/adventure/view_hud.js';
+import {renderBattle} from '../views/adventure/view_battle_layer.js';
+import {renderRoles} from '../view_adventure_roles.js';
+import {createCompanionChatView} from '../view_companion_chat.js';
+import {createLocalPeerControl} from '../view_local_peer_controls.js';
 import {createPromoDuoBattle,samplePromoDuoMotion} from './promo_duo_core.js';
-import {presentationEventDurationMs,presentationEventProgress,samplePresentationClock} from './battle_presentation_core.js';
+import {presentationEventDurationMs,presentationEventProgress,samplePresentationClock} from '../battle_presentation_core.js';
 
 // Only the film's input script and saves are staged. All visible panels are production views.
 export async function createPromoDuo({assets,save,second,world,origin,path,nodes,renderer,model,callbacks,locale,check,aimPointer}){

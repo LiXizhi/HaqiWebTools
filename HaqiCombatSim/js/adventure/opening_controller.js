@@ -21,7 +21,7 @@ import {
 import { openCompanionWordplay } from '../companion_wordplay.js';
 import { campDetourGoal } from '../camp_detour_core.js';
 import { persistReward } from '../adventure_reward_persistence.js';
-import { createLearningVoice } from '../language_adventure_voice.js';
+import { createLearningVoice } from '../audio/language_adventure_voice.js';
 import { recordWordPractice } from '../language_course.js';
 import { renderCompanionPractice as defaultRenderCompanionPractice } from '../views/adventure/view_panel_modal.js';
 import * as W from '../adventure_world_core.js';

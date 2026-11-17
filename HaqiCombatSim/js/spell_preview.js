@@ -5,7 +5,7 @@ import { createSpellEffects } from './spell_effects.js';
 import { drawAnimatedActor } from './actor_animation.js';
 import { PREVIEW_HIT_DURATION_MS, previewTargetAction } from './actor_animation_core.js';
 import { loadSpellArt } from './spell_art.js';
-import { createSpellSound } from './spell_sound.js';
+import { createSpellSound } from './audio/spell_sound.js';
 import { effectDuration,spellEffect,validateSpellEffects } from './spell_effects_core.js';
 const $=id=>document.getElementById(id),canvas=$('preview'),ctx=canvas.getContext('2d');
 const names={ice:'寒冰',fire:'烈火',storm:'风暴',life:'生命',death:'死亡',balance:'通用'};

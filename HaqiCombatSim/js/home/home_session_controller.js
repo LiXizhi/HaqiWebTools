@@ -32,7 +32,7 @@ import { homeObjects, applyHomeAction } from '../home_actions_core.js';
 import { createHomeStore } from '../home_store.js';
 import { createHomeCloud } from '../home_cloud.js';
 import { createHomeView } from './view_home_scene.js';
-import { createLearningVoice } from '../language_adventure_voice.js';
+import { createLearningVoice } from '../audio/language_adventure_voice.js';
 import { ownedPetRecords } from '../adventure_pet_files_core.js';
 import { hashSeed } from '../rng_core.js';
 import {

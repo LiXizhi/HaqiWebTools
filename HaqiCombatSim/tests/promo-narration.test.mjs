@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createPromoNarration} from '../js/promo_narration.js';
+import {createPromoNarration} from '../js/promo/promo_narration.js';
 const state={text:'欢迎来到深圳',key:'earth',lang:'zh-CN',playing:true};
 function fixture({play=async()=>{}}={}){const configs=[],requests=[],sounds=[],revoked=[],errors=[],voices=[{id:'a',name:'声音甲',language:'zh-CN'},{id:'b',name:'声音乙',language:'en'}];let stops=0;const sdk={speech:{getSupportedVoices:()=>voices},speechRTC:{createSession(config){configs.push(config);return{synthesize(text){return new Promise(resolve=>requests.push({text,resolve}));},async interrupt(){stops++;}};}}};const n=createPromoNarration({load:async()=>sdk,makeAudio:url=>{const a={url,play,pause(){a.paused=true;},removeAttribute(){},load(){}};sounds.push(a);return a;},revoke:u=>revoked.push(u),onError:e=>errors.push(e)});return{n,configs,requests,sounds,revoked,errors,voices,get stops(){return stops;}};}
 const flush=async()=>{for(let i=0;i<8;i++)await Promise.resolve();};

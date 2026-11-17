@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {resolvePromoEdition,compileFilm,locateShot,filmText,srtFor,frameDelta,captionAt,narrationLimitedTime} from '../js/promo_timeline_core.js';
-import {samplePromoMotion,planPromoPath,samplePromoZoom} from '../js/promo_motion_core.js';
+import {resolvePromoEdition,compileFilm,locateShot,filmText,srtFor,frameDelta,captionAt,narrationLimitedTime} from '../js/promo/promo_timeline_core.js';
+import {samplePromoMotion,planPromoPath,samplePromoZoom} from '../js/promo/promo_motion_core.js';
 import {presentationEventDurationMs,samplePresentationClock} from '../js/battle_presentation_core.js';
 import {WALK_SPEED} from '../js/adventure_world_core.js';
 const effects={cards:{bolt:{base:'bolt',name:'火弹',variant:{rank:'normal',level:0}}},bases:{bolt:{duration:1800,scale:1,kind:'bolt',count:8}},palettes:{fire:['#f00','#faa','#800']},variantAuras:{normal:{color:null,rings:0}},summons:{}};

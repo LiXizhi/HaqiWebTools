@@ -64,7 +64,7 @@ export default defineConfig(async ({ command }) => {
             enforce: 'pre',
             transform(code, id) {
                 const workers = [
-                    ['js/sim_pool.js', './sim_worker.js', "new Worker(new URL('./sim_worker.js', import.meta.url), { type: 'module' })"],
+                    ['js/combat/sim_pool.js', './sim_worker.js', "new Worker(new URL('./sim_worker.js', import.meta.url), { type: 'module' })"],
                     ['js/battle_ai/client.js', './worker.js', "new Worker(new URL('./worker.js',import.meta.url),{type:'module'})"],
                 ];
                 const normalizeId = value => process.platform === 'win32'

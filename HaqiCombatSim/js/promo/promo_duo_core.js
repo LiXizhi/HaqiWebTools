@@ -1,10 +1,10 @@
-import {WALK_SPEED,distance} from './adventure_world_core.js';
+import {WALK_SPEED,distance} from '../adventure_world_core.js';
 import {samplePromoMotion} from './promo_motion_core.js';
-import {beginEncounter,availableCardLessons,applyAction} from './adventure_core.js';
-import {createLocalFormation,localParty,localHumanResources,createLocalReady} from './adventure_local_coop_core.js';
-import {restorePveBattle,playPveRound} from './combat_pve_core.js';
-import {prepareDebugEdit} from './adventure_debug_core.js';
-import {castableCards,validTargets} from './combat_arena_core.js';
+import {beginEncounter,availableCardLessons,applyAction} from '../adventure_core.js';
+import {createLocalFormation,localParty,localHumanResources,createLocalReady} from '../adventure_local_coop_core.js';
+import {restorePveBattle,playPveRound} from '../combat_pve_core.js';
+import {prepareDebugEdit} from '../adventure_debug_core.js';
+import {castableCards,validTargets} from '../combat_arena_core.js';
 
 // Isolated film saves; party, hand draws and joint decisions follow production rules.
 export function createPromoDuoBattle(dataset,content,saves){

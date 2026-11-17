@@ -2,7 +2,7 @@ import {timeScrollParams,TIME_SCROLL_DEFAULT,validateTimeScrollReference,validat
 import {createTimeScrollView} from './view_adventure_time_scroll.js';
 import {createStoryChat} from './language_story.js';
 import {createLearningChatView} from './view_learning_chat.js';
-import {createLearningVoice} from './language_adventure_voice.js';
+import {createLearningVoice} from './audio/language_adventure_voice.js';
 
 const contentCache=new Map();
 export async function loadTimeScroll(city,{signal,fetcher=fetch,base=typeof document!=='undefined'?document.baseURI:import.meta.url.replace(/js\/[^/]*$/,'')}={}){

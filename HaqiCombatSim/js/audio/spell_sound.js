@@ -1,4 +1,4 @@
-import {createRng,hashSeed} from './rng_core.js';
+import {createRng,hashSeed} from '../rng_core.js';
 import {spellSoundCues,crossedSoundCues} from './spell_sound_core.js';
 import {gameSoundRecipe} from './game_sound_core.js';
 import {audioActivityActive,subscribeAudioActivity} from './audio_activity.js';

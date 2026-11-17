@@ -1,4 +1,4 @@
-import {loadKeepwork} from './adventure_cloud.js';
+import {loadKeepwork} from '../adventure_cloud.js';
 async function loadSpeech(){const sdk=await loadKeepwork();await sdk.loadAIChat();return sdk;}
 // Same SDK voice catalogue and SpeechRTC synthesis path as AIChat read-aloud.
 export function createPromoNarration({load=loadSpeech,makeAudio=url=>new Audio(url),revoke=url=>URL.revokeObjectURL(url),onError=()=>{},onState=()=>{}}={}){

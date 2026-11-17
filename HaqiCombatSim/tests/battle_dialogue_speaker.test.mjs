@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {dialogueSpeaker,selectDialogueVoice} from '../js/dialogue_speaker_core.js';
-import {createLearningVoice} from '../js/language_adventure_voice.js';
+import {createLearningVoice} from '../js/audio/language_adventure_voice.js';
 import {projectRuntimeData} from '../scripts/package_runtime_data.mjs';
 import {installNpcCatalog} from '../js/adventure_npc_core.js';
 const read=name=>JSON.parse(fs.readFileSync(new URL(`../data/adventure/${name}.json`,import.meta.url)));

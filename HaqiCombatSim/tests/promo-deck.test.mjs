@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import * as A from '../js/adventure_core.js';
 import {installExpansion} from '../js/adventure_expansion_core.js';
-import {preparePromoDeck,PROMO_STRATEGY_KEYS} from '../js/promo_deck_core.js';
+import {preparePromoDeck,PROMO_STRATEGY_KEYS} from '../js/promo/promo_deck_core.js';
 const read=n=>JSON.parse(fs.readFileSync(new URL('../data/'+n+'.json',import.meta.url)));
 test('promo equips a legal larger deck and shows real strategy cards across schools without mutating the original',()=>{
  const content=read('adventure/chapter'),dataset=read('adventure/combat');

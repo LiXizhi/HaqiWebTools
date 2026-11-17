@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {awardPromoLearning,promoAnswer} from '../js/promo_learning.js';
+import {awardPromoLearning,promoAnswer} from '../js/promo/promo_learning.js';
 import {dailyBuffs} from '../js/language_daily_buff_core.js';
 
 test('宣传片只为真实评价确认且原句包含的英文证据授予加成，不重复发放',()=>{

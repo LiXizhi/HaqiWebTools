@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {spellSoundCues,crossedSoundCues} from '../js/spell_sound_core.js';
-import {createSpellSound} from '../js/spell_sound.js';
+import {spellSoundCues,crossedSoundCues} from '../js/audio/spell_sound_core.js';
+import {createSpellSound} from '../js/audio/spell_sound.js';
 const config=JSON.parse(fs.readFileSync(new URL('../data/adventure/spell-effects.json',import.meta.url)));
 const cards=JSON.parse(fs.readFileSync(new URL('../data/kids/cards.json',import.meta.url)));
 

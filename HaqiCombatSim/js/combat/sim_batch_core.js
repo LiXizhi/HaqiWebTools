@@ -1,10 +1,10 @@
 // sim_batch_core.js — 批量模拟：任务生成、单任务执行、统计聚合（纯逻辑，Worker 与 Node 共用）。
-import { createArena, runToEnd } from './combat_arena_core.js';
-import { createPolicy } from './combat_policy_core.js';
-import { unitSpec, matchupMatrix, MODES } from './combat_presets_core.js';
-import { SCHOOLS } from './combat_params_core.js';
-import { hashSeed } from './rng_core.js';
-import {coordinateTeam} from './battle_ai/policy_core.js';
+import { createArena, runToEnd } from '../combat_arena_core.js';
+import { createPolicy } from '../combat_policy_core.js';
+import { unitSpec, matchupMatrix, MODES } from '../combat_presets_core.js';
+import { SCHOOLS } from '../combat_params_core.js';
+import { hashSeed } from '../rng_core.js';
+import {coordinateTeam} from '../battle_ai/policy_core.js';
 
 /**
  * 生成任务列表：每个 matchup 一个 job（可再按 chunk 拆分给多个 worker）

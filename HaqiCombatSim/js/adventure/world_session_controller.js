@@ -8,7 +8,7 @@ import {tickCare,mergeOwnedPetSpecies} from '../adventure_pets_core.js';
 import {initializePetWorld} from '../adventure_pet_world_core.js';
 import {SOCIAL_DEFAULTS} from '../adventure_social_core.js';
 import {timeScrollCity} from '../adventure_time_scroll_core.js';
-import {backgroundMusicId,createBackgroundMusic} from '../background_music.js';
+import {backgroundMusicId,createBackgroundMusic} from '../audio/background_music.js';
 import {enforceLearningMode} from '../learning_mode_policy.js';
 import {loadLocaleFiles,configureLocale,hasLocale} from '../locale.js';
 import {openingJourney} from '../opening_journey_core.js';

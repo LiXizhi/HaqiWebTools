@@ -1,5 +1,5 @@
 // Presentation-only sound recipes, independent of the battle RNG and browser IO.
-import {spellEffect} from './spell_effects_core.js';
+import {spellEffect} from '../spell_effects_core.js';
 const schools={ice:[880,'sine',2600],fire:[130,'triangle',900],storm:[190,'sawtooth',1800],life:[660,'sine',3200],death:[95,'triangle',550],balance:[440,'sine',1600]};
 // Crystal / flame / thunder / life / shadow: short envelopes retain each school's identity.
 const impactProfiles={ice:[1.5,.72,.07,.22],fire:[.7,.2,.32,.42],storm:[1,.16,.4,.2],life:[1.25,1.6,.015,.3],death:[.55,.18,.14,.4],balance:[.9,.5,.08,.28]};

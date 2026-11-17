@@ -16,7 +16,7 @@ import {
   beatAutoSeconds,
   createRunner,
   SCHOOL_IDS,
-} from '../js/prologue_script_core.js';
+} from '../js/prologue/prologue_script_core.js';
 import {
   MASTERS_SEED,
   FINALE_SEED,
@@ -29,7 +29,7 @@ import {
   wordCardInHand,
   createFinaleArena,
   finaleResolve,
-} from '../js/prologue_battle_core.js';
+} from '../js/prologue/prologue_battle_core.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const readJsonSync = rel => JSON.parse(fs.readFileSync(path.join(root, rel), 'utf8'));
@@ -44,7 +44,7 @@ const speakerNames = Object.fromEntries(
 );
 
 test('序章 *_core.js 保持纯净，不引用 document / window / fetch', () => {
-  for (const rel of ['js/prologue_script_core.js', 'js/prologue_battle_core.js']) {
+  for (const rel of ['js/prologue/prologue_script_core.js', 'js/prologue/prologue_battle_core.js']) {
     const source = fs.readFileSync(path.join(root, rel), 'utf8');
     assert.equal(/\b(document|window|fetch)\b/.test(source), false, `${rel} 不得引用浏览器全局对象`);
   }

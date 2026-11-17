@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {createAudioSamples} from '../js/audio_samples.js';
-import {backgroundMusicId,createBackgroundMusic} from '../js/background_music.js';
-import {acquireAudioActivity} from '../js/audio_activity.js';
+import {createAudioSamples} from '../js/audio/audio_samples.js';
+import {backgroundMusicId,createBackgroundMusic} from '../js/audio/background_music.js';
+import {acquireAudioActivity} from '../js/audio/audio_activity.js';
 test('sample cache bounds downloads, deduplicates unlocks and ignores bad/oversized audio',async()=>{
  let fetches=0,active=0,maximum=0;
  const assets=Object.fromEntries(['click_003','open_001','close_001','chop'].map(id=>[id,{cdn:'https://cdn.keepwork.com/'+id}]));

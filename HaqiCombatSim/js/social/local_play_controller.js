@@ -10,7 +10,7 @@ import {
 } from '../adventure_local_coop_core.js';
 import { normalizeLocalKeys, localKeyAction } from '../local_controls_core.js';
 import { createLocalStore } from '../adventure_local_store.js';
-import { createLearningVoice } from '../language_adventure_voice.js';
+import { createLearningVoice } from '../audio/language_adventure_voice.js';
 import { createLocalPeerControl } from '../view_local_peer_controls.js';
 import { SOCIAL_DEFAULTS } from '../adventure_social_core.js';
 import { createLocalFollowMotion } from '../adventure_local_follow_core.js';

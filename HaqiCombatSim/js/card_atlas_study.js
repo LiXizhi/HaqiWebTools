@@ -2,7 +2,7 @@ import {assetMode,assetUrl} from './adventure_media_core.js';
 import {loadSkillArt} from './skill_art.js';
 import {createSpellEffects} from './spell_effects.js';
 import {skillFrame} from './skill_art_core.js';
-import {createSpellSound} from './spell_sound.js';
+import {createSpellSound} from './audio/spell_sound.js';
 import {drawAnimatedActor} from './actor_animation.js';
 import {HIT_DURATION_MS} from './actor_animation_core.js';
 import {expectedBaseDamage} from './combat_cards_core.js';

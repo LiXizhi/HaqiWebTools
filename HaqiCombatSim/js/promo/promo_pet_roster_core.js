@@ -1,4 +1,4 @@
-import {addPet,petParams} from './adventure_pets_core.js';
+import {addPet,petParams} from '../adventure_pets_core.js';
 
 // Disposable trailer collection. Growth uses the same XP thresholds as the game.
 export function preparePromoPets(save,content){

@@ -2,9 +2,9 @@ import {fill,tr} from './locale_runtime.js';
 import { battleGoal, testDurationMs } from './language_learning_core.js';
 import { textFor, speakText, localeChoices } from './locale.js';
 import { recognitionLanguage } from './language_learning.js';
-import {loadLearningOptions,createLearningVoice} from './language_adventure_voice.js';
+import {loadLearningOptions,createLearningVoice} from './audio/language_adventure_voice.js';
 import { createSettingsControls } from './view_settings_controls.js';
-import {acquireAudioActivity} from './audio_activity.js';
+import {acquireAudioActivity} from './audio/audio_activity.js';
 let learningOptions={models:[],voices:[]};
 
 export function languageSettings(body, model, cb, { el, button }) {

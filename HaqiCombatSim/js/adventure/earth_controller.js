@@ -17,7 +17,7 @@ import * as A from '../adventure_core.js';
 import * as W from '../adventure_world_core.js';
 import { dungeonFor } from '../adventure_dungeons_core.js';
 import { persistReward } from '../adventure_reward_persistence.js';
-import { createLearningVoice } from '../language_adventure_voice.js';
+import { createLearningVoice } from '../audio/language_adventure_voice.js';
 import { createStoryChat } from '../language_story.js';
 
 export function routeWorldPortal(portal, target, { travelEarth, close, setAtlasPortalFocus, setPanel, openEarthMap, openPanel }) {

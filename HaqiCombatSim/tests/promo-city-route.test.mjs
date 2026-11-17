@@ -5,7 +5,7 @@ import {generatedCityRoute,generateCityDungeon} from '../js/adventure_city_gener
 import {createAdventure} from '../js/adventure_core.js';
 import {installCityDungeons,enterCityDungeon,leaveCityDungeon} from '../js/adventure_city_dungeons_core.js';
 import {createWorld,findPath,clearTeleportSpot,WALK_SPEED} from '../js/adventure_world_core.js';
-import {planPromoCityApproach,planPromoRoadLeg,samplePromoRoad} from '../js/promo_city_route_core.js';
+import {planPromoCityApproach,planPromoRoadLeg,samplePromoRoad} from '../js/promo/promo_city_route_core.js';
 const a={x:1000,y:1000},b={x:1000,y:1800},c={x:1800,y:1800};
 const world={w:4000,h:4000,layout:{route:[a,b,c]},paths:[{a,b,width:80},{a:b,b:c,width:80}],encounters:[],trees:[],buildings:[]};
 test('开始走路及拐点的浮点时间余量不会误报碰撞',()=>{

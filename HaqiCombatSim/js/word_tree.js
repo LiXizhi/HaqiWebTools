@@ -1,5 +1,5 @@
 import {emptyLanguageTree} from './language_tree_core.js';
-import {createLearningVoice} from './language_adventure_voice.js';
+import {createLearningVoice} from './audio/language_adventure_voice.js';
 import {treeGloss} from './language_tree_gloss_core.js';
 import {wordTreeGlossary} from './word_tree_gloss_core.js';
 import {createLanguageTreeSession} from './language_tree_session.js';

@@ -13,7 +13,7 @@ import {
     presentationEffectDuration,
 } from '../battle_presentation_core.js';
 import { presentedEnvironment } from '../spell_environment_core.js';
-import { battleEventSound } from '../game_sound_core.js';
+import { battleEventSound } from '../audio/game_sound_core.js';
 import { cardsInHand, selectableCards, PET_CARD_SEQ_BASE } from '../combat_unit_core.js';
 import { validTargets } from '../combat_arena_core.js';
 import { resolveHandSwipe } from '../adventure_hand_core.js';
@@ -22,7 +22,7 @@ import { openingStrategyCue } from '../opening_training_core.js';
 import { openingCompanionEvent } from '../opening_journey_core.js';
 import { playTacticsFieldRound } from '../tactics_field_battle_core.js';
 import { rewardSnapshot } from '../adventure_reward_feedback_core.js';
-import { createLearningVoice } from '../language_adventure_voice.js';
+import { createLearningVoice } from '../audio/language_adventure_voice.js';
 import { displayLocale, textFor } from '../locale.js';
 import * as A from '../adventure_core.js';
 import * as P from '../combat_pve_core.js';

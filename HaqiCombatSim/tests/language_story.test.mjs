@@ -5,7 +5,7 @@ import {createStoryChat} from '../js/language_story.js';
 import {storySpeechResult} from '../js/language_story_core.js';
 import {recordLearningCompletion,validateLearningSave} from '../js/language_adventure_core.js';
 import {normalizeLocaleSave} from '../js/locale_core.js';
-import {createLearningVoice} from '../js/language_adventure_voice.js';
+import {createLearningVoice} from '../js/audio/language_adventure_voice.js';
 import {bindChatMicrophone} from '../js/view_learning_chat.js';
 const flush=()=>new Promise(r=>setImmediate(r));
 const read=p=>JSON.parse(fs.readFileSync(new URL('../'+p,import.meta.url)));

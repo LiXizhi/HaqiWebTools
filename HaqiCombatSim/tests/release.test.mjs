@@ -78,7 +78,7 @@ test('apps publication does not gate on unrelated source edits or unpublished co
 
 test('CDN release inlines both Workers including Windows path casing variants', async () => {
     const plugin = (await viteConfig({ command: 'build' })).plugins.find(plugin => plugin.name === 'inline-cdn-worker');
-    for (const file of ['js/sim_pool.js', 'js/battle_ai/client.js']) {
+    for (const file of ['js/combat/sim_pool.js', 'js/battle_ai/client.js']) {
         const url = new URL(`../${file}`, import.meta.url);
         const source = fs.readFileSync(url, 'utf8');
         const id = fileURLToPath(url).replaceAll('\\', '/');
@@ -89,7 +89,7 @@ test('CDN release inlines both Workers including Windows path casing variants', 
             assert.match(result.code, /\?worker&inline/);
             assert.match(result.code, /new InlineCdnWorker\(\)/);
             assert.doesNotMatch(result.code, /new Worker\(new URL/);
-            if (file === 'js/sim_pool.js') assert.match(result.code, /new Worker\(this.workerUrl/);
+            if (file === 'js/combat/sim_pool.js') assert.match(result.code, /new Worker\(this.workerUrl/);
         }
         assert.throws(() => plugin.transform.call({ error(message) { throw Error(message); } }, '', id), /constructor not found/);
     }

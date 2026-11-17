@@ -3,7 +3,7 @@ import {waitForDialogueReveal,finishDialogueReveal} from './dialogue_reveal.js';
 import {renderDialogueMapping} from './view_dialogue_mapping.js';
 import {tr} from './locale_runtime.js';
 import {createDialogueWordLearning} from './dialogue_word_learning.js';
-import {createLearningVoice} from './language_adventure_voice.js';
+import {createLearningVoice} from './audio/language_adventure_voice.js';
 import {supplementWordMapping,matchWordText} from './word_lexicon_core.js';
 import {showDialogueWordMark} from './view_word_mark.js';
 

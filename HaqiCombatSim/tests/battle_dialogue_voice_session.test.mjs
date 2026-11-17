@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createDialogueVoiceSession} from '../js/dialogue_voice_session.js';
+import {createDialogueVoiceSession} from '../js/audio/dialogue_voice_session.js';
 function harness(overrides={}){
  const events=[],received=[];const voice={start:async()=>{},finish:async()=>'hello',cancel:async()=>{},speak:async()=>{},...overrides};
  const audio=createDialogueVoiceSession(voice),options={valid:()=>true,maxMs:20000,onState:s=>events.push(s),onText:t=>received.push(t),onError:e=>events.push(e.message),onCancel:()=>events.push('cancelled'),onDone:()=>events.push('done')};

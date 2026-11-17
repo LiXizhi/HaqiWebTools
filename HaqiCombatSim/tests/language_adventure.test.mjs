@@ -7,7 +7,7 @@ import {renderLearningTemplate,selectLesson,triggerAllowed,learningParams,matche
 import {loadLearningCatalog,createLanguageAdventure,learningSlots} from '../js/language_adventure.js';
 import {createAdventure,applyAction,parseSave} from '../js/adventure_core.js';
 import {persistReward} from '../js/adventure_reward_persistence.js';
-import {pcm16,createLearningVoice} from '../js/language_adventure_voice.js';
+import {pcm16,createLearningVoice} from '../js/audio/language_adventure_voice.js';
 
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const content=JSON.parse(read('data/adventure/chapter.json'));

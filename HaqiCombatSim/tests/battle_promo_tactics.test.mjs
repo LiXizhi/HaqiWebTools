@@ -2,7 +2,7 @@ import test from 'node:test';
 import {cardsInHand} from '../js/combat_unit_core.js';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {createPromoTactics} from '../js/promo_tactics_core.js';
+import {createPromoTactics} from '../js/promo/promo_tactics_core.js';
 import {defaultParams} from '../js/combat_params_core.js';
 const dataset=JSON.parse(fs.readFileSync(new URL('../data/adventure/combat.json',import.meta.url)));
 dataset.cards=JSON.parse(fs.readFileSync(new URL('../data/kids/cards.json',import.meta.url)));

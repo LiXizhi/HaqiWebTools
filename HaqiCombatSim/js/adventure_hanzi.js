@@ -2,8 +2,8 @@ import {hanziBattleDescription} from './hanzi_battle_core.js';
 import {resolveParams} from './combat_params_core.js';
 import {createHanziProgress,completeHanziAttempt,compareHanziWriting,speechMatches,equipHanziEffect,equipHanziBattleCard,validateHanziContent} from './hanzi_core.js';
 import {createHanziView} from './view_hanzi.js';
-import {createLearningVoice} from './language_adventure_voice.js';
-import {createDialogueVoiceSession} from './dialogue_voice_session.js';
+import {createLearningVoice} from './audio/language_adventure_voice.js';
+import {createDialogueVoiceSession} from './audio/dialogue_voice_session.js';
 import {heroPortrait} from './hero_renderer.js';
 import {createHanziPresentation} from './hanzi_presentation.js';
 

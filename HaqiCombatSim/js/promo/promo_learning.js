@@ -1,8 +1,8 @@
-import {dialogueMappingPrompt,parseDialogueMapping} from './dialogue_mapping_core.js';
-import {createDialogueMapper} from './dialogue_mapping.js';
-import {createLearningVoice} from './language_adventure_voice.js';
-import {awardDailySpeech} from './language_daily_buff_core.js';
-import {targetLanguageText} from './language_adventure_core.js';
+import {dialogueMappingPrompt,parseDialogueMapping} from '../dialogue_mapping_core.js';
+import {createDialogueMapper} from '../dialogue_mapping.js';
+import {createLearningVoice} from '../audio/language_adventure_voice.js';
+import {awardDailySpeech} from '../language_daily_buff_core.js';
+import {targetLanguageText} from '../language_adventure_core.js';
 
 // Only fixed demo sentences leave the stage. No player history or saves are read.
 const cache=new Map();

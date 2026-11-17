@@ -1,11 +1,11 @@
 // prologue_battle_core.js — battles for the prologue 《失落的光》.
 // Pure rules: real kids cards through combat_arena_core; no DOM. Unit HP and startup pips are
 // unit configuration (like monster templates); card numbers and formulas are never changed.
-import {createArena,startCombat,playTurn,castableCards,validTargets} from './combat_arena_core.js';
-import {defaultParams,resolveParams} from './combat_params_core.js';
-import {SimpleBot} from './combat_policy_core.js';
-import {installWordCards,prepareWordHand} from './word_cards_core.js';
-import {isAlive,cardsInHand,prepareCard} from './combat_unit_core.js';
+import {createArena,startCombat,playTurn,castableCards,validTargets} from '../combat_arena_core.js';
+import {defaultParams,resolveParams} from '../combat_params_core.js';
+import {SimpleBot} from '../combat_policy_core.js';
+import {installWordCards,prepareWordHand} from '../word_cards_core.js';
+import {isAlive,cardsInHand,prepareCard} from '../combat_unit_core.js';
 
 export const SCHOOLS=['fire','ice','storm','life','death'];
 const CAP={fire:'Fire',ice:'Ice',storm:'Storm',life:'Life',death:'Death'};

@@ -7,7 +7,7 @@ import {createAdventure} from '../../js/adventure_core.js';
 import {renderDialogue} from '../../js/views/adventure/view_npc_dialogue.js';
 import {loadUiArt} from '../../js/adventure_ui_art.js';
 import {loadLocaleFiles,configureLocale} from '../../js/locale.js';
-import {createLearningVoice} from '../../js/language_adventure_voice.js';
+import {createLearningVoice} from '../../js/audio/language_adventure_voice.js';
 const content=await (await fetch('../../data/adventure/chapter.json')).json();
 await loadUiArt('cdn',async path=>(await fetch('../../'+path)).json());
 const save=createAdventure(content),assets={content,draw:()=>false},root=document.querySelector('#root');

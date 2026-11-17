@@ -1,5 +1,5 @@
-import * as A from './adventure_core.js';
-import {prepareDebugEdit} from './adventure_debug_core.js';
+import * as A from '../adventure_core.js';
+import {prepareDebugEdit} from '../adventure_debug_core.js';
 
 export const PROMO_STRATEGY_KEYS=['Fire_FireDamageBlade','Fire_FireDamageTrap','Ice_ReflectionShield','Fire_AreaAccuracyWeakness','Fire_SingleAttackWithDOT_Level3'];
 // Only the isolated film character receives this collection. All cards and limits come from kids data.

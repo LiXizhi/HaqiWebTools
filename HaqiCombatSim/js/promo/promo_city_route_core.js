@@ -1,4 +1,4 @@
-import {distance,findPath,followPath,WALK_SPEED,walkable,clearSegment} from './adventure_world_core.js';
+import {distance,findPath,followPath,WALK_SPEED,walkable,clearSegment} from '../adventure_world_core.js';
 
 const length=(start,path)=>path.reduce((sum,p,i)=>sum+distance(p,path[i-1]||start),0);
 // Connect two real destinations through the loaded road graph, including endpoint spurs.

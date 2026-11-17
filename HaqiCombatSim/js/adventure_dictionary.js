@@ -8,7 +8,7 @@ import {loadDictionary} from './dictionary_loader.js';
 import {compareHanziWriting} from './hanzi_core.js';
 import {dailyBuffs,localBuffDay} from './language_daily_buff_core.js';
 import {createDictionaryStore} from './dictionary_store.js';
-import {createLearningVoice} from './language_adventure_voice.js';
+import {createLearningVoice} from './audio/language_adventure_voice.js';
 import {createDictionaryView} from './view_dictionary.js';
 import {loadWordLexicon} from './word_lexicon.js';
 

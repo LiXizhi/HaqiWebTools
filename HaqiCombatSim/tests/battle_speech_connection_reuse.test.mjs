@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createLearningVoice} from '../js/language_adventure_voice.js';
+import {createLearningVoice} from '../js/audio/language_adventure_voice.js';
 
 function sdkMock(){
     const sessions=[];

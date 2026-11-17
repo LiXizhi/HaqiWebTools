@@ -9,7 +9,7 @@ import {createWordCardDialogue} from './view_word_card_dialogue.js';
 import {compareDungeonSpeech} from './dungeon_speech_core.js';
 import {resolveParams} from './combat_params_core.js';
 import {wordReadingMatches} from './word_cards_core.js';
-import {createLearningVoice} from './language_adventure_voice.js';
+import {createLearningVoice} from './audio/language_adventure_voice.js';
 import {createHanziWriting} from './view_hanzi_writing.js';
 import {createCardFace} from './view_adventure_card.js';
 import {drawHanziGlyph} from './hanzi_animation.js';

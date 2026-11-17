@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 
-const source=fs.readFileSync(new URL('../js/prologue_app.js',import.meta.url),'utf8');
+const source=fs.readFileSync(new URL('../js/prologue/prologue_app.js',import.meta.url),'utf8');
 test('序章手动等待、开启自动播放、关闭后重新计时及手动继续',async()=>{
     let tick,time=0;
     const context=vm.createContext({

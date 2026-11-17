@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-import {createLearningVoice} from '../js/language_adventure_voice.js';
+import {createLearningVoice} from '../js/audio/language_adventure_voice.js';
 import {selectDialogueVoice} from '../js/dialogue_speaker_core.js';
 import {npcHasActiveQuest} from '../js/adventure_npc_core.js';
 import {tr} from '../js/locale_runtime.js';

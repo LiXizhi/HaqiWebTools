@@ -1,27 +1,27 @@
 import {planPromoRoadLeg,samplePromoRoad} from './promo_city_route_core.js';
 import {preparePromoPets} from './promo_pet_roster_core.js';
 // Trailer-only controller. Production views and rules, with a disposable in-memory role.
-import * as A from './adventure_core.js';
-import {generatedCityRoute} from './adventure_city_generated_core.js';
-import {streetArtResources} from './adventure_city_art_core.js';
-import {addPet,FOOD_ID} from './adventure_pets_core.js';
-import {syncEquipmentInstances} from './adventure_equipment_instances_core.js';
-import {upgradeLevels} from './adventure_upgrade_core.js';
-import {isGem,gemCompatibility} from './adventure_gems_core.js';
-import {renderHaqiAtlas} from './view_haqi_atlas.js';
-import {renderEarthAtlas} from './view_adventure_earth.js';
-import {createEarthService} from './adventure_earth.js';
-import {loadHaqiAtlas} from './haqi_atlas_data.js';
-import {renderSocial} from './view_adventure_social.js';
-import {heroPortrait} from './hero_renderer.js';
-import {arenaSeats,arenaBenchPets,emptyArenaRecord} from './adventure_red_mushroom_core.js';
-import {createJsonReader} from './runtime_data.js';
-import {installCityDungeons,enterCityDungeon,leaveCityDungeon,cityDungeonState,cityActionStatus,applyCityInteraction} from './adventure_city_dungeons_core.js';
-import {renderCityInteraction} from './view_city_dungeon.js';
-import {createSceneFishing} from './view_adventure_scene_fishing.js';
-import {el, button} from './views/adventure/primitives.js';
-import {fishingSpot} from './adventure_fishing_spot_core.js';
-import {createWorld,findPath,WALK_SPEED,walkable,distance} from './adventure_world_core.js';
+import * as A from '../adventure_core.js';
+import {generatedCityRoute} from '../adventure_city_generated_core.js';
+import {streetArtResources} from '../adventure_city_art_core.js';
+import {addPet,FOOD_ID} from '../adventure_pets_core.js';
+import {syncEquipmentInstances} from '../adventure_equipment_instances_core.js';
+import {upgradeLevels} from '../adventure_upgrade_core.js';
+import {isGem,gemCompatibility} from '../adventure_gems_core.js';
+import {renderHaqiAtlas} from '../view_haqi_atlas.js';
+import {renderEarthAtlas} from '../view_adventure_earth.js';
+import {createEarthService} from '../adventure_earth.js';
+import {loadHaqiAtlas} from '../haqi_atlas_data.js';
+import {renderSocial} from '../view_adventure_social.js';
+import {heroPortrait} from '../hero_renderer.js';
+import {arenaSeats,arenaBenchPets,emptyArenaRecord} from '../adventure_red_mushroom_core.js';
+import {createJsonReader} from '../runtime_data.js';
+import {installCityDungeons,enterCityDungeon,leaveCityDungeon,cityDungeonState,cityActionStatus,applyCityInteraction} from '../adventure_city_dungeons_core.js';
+import {renderCityInteraction} from '../view_city_dungeon.js';
+import {createSceneFishing} from '../view_adventure_scene_fishing.js';
+import {el, button} from '../views/adventure/primitives.js';
+import {fishingSpot} from '../adventure_fishing_spot_core.js';
+import {createWorld,findPath,WALK_SPEED,walkable,distance} from '../adventure_world_core.js';
 import {samplePromoMotion} from './promo_motion_core.js';
 
 export function createPromoFeatures({assets,getSave,model,panel,root,check,scene,world,renderer,viewState,filmArena,filmSkills,aimPointer}){

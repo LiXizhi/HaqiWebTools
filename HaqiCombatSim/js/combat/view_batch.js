@@ -1,10 +1,10 @@
 // view_batch.js — 批量模拟页：配置 → Worker 池 → 热力图 / 汇总 / 卡牌统计 / 导出。
-import { state, setSetting } from './state.js';
-import { SCHOOLS, diffParams, defaultParams } from './combat_params_core.js';
+import { state, setSetting } from '../state.js';
+import { SCHOOLS, diffParams, defaultParams } from '../combat_params_core.js';
 import { buildJobs, aggregateMatrix, aggregateGlobal, mergeStats } from './sim_batch_core.js';
 import { SimPool } from './sim_pool.js';
-import { SCHOOL_NAMES, SCHOOL_COLORS, MODES, defaultLevel } from './combat_presets_core.js';
-import { h, clear, select, numberInput, pct, fmt, winColor, download, toast } from './utils.js';
+import { SCHOOL_NAMES, SCHOOL_COLORS, MODES, defaultLevel } from '../combat_presets_core.js';
+import { h, clear, select, numberInput, pct, fmt, winColor, download, toast } from '../utils.js';
 
 let pool = null;
 

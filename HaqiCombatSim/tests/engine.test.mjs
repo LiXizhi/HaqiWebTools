@@ -10,8 +10,8 @@ import { createArena, runToEnd, startCombat, advanceTurn, castableCards, snapsho
 import { cardsInHand, clampDeck, deckCounts, isDeckExhausted, deckSize } from '../js/combat_unit_core.js';
 import { createPolicy } from '../js/combat_policy_core.js';
 import { unitSpec, presetDeck, matchupMatrix, SCHOOL_NAMES } from '../js/combat_presets_core.js';
-import { buildJobs, runJob, mergeStats, aggregateMatrix, aggregateGlobal, wilson } from '../js/sim_batch_core.js';
-import { tuneProportional } from '../js/sim_tuner_core.js';
+import { buildJobs, runJob, mergeStats, aggregateMatrix, aggregateGlobal, wilson } from '../js/combat/sim_batch_core.js';
+import { tuneProportional } from '../js/combat/sim_tuner_core.js';
 import { buildPrompt, parseParamPatch, heuristicAdvice } from '../js/llm_advisor.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');

@@ -17,7 +17,7 @@ import {ownedPetRecords} from './adventure_pet_files_core.js';
 import {presetDeck} from './combat_presets_core.js';
 import {createRng,hashSeed} from './rng_core.js';
 import {playerSpec} from './adventure_core.js';
-import {createLearningVoice} from './language_adventure_voice.js';
+import {createLearningVoice} from './audio/language_adventure_voice.js';
 import {heroPortrait} from './hero_renderer.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
 import {renderSocial} from './view_adventure_social.js';

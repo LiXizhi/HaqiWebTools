@@ -2,7 +2,7 @@ import {loadLanguageCourses} from './language_course.js';
 import {coursePosition,completeCourseStep,courseInteractionMatches,courseAnswerFeedback} from './language_course_core.js';
 import {languageTreeContext,languageTreeStore} from './language_tree_capture.js';
 import {wordLanguage,wordTreeKey,migrateWordLexicon,seedWordLexicon} from './word_lexicon_core.js';
-import {createLearningVoice} from './language_adventure_voice.js';
+import {createLearningVoice} from './audio/language_adventure_voice.js';
 import {createLearningChatView} from './view_learning_chat.js';
 import {learningParams} from './language_adventure_core.js';
 import {fill} from './locale_runtime.js';

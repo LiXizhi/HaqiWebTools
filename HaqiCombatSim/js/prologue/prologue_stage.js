@@ -1,16 +1,16 @@
-import {withBattlePointer} from './battle_pointer_core.js';
+import {withBattlePointer} from '../battle_pointer_core.js';
 // prologue_stage.js — interactive beats of the prologue: battles on the real battle view and renderer,
 // the embedded 光 writing story, the card forge, and catching the spark.
-import {art} from './views/adventure/primitives.js';
-import {renderBattle,eventLabel} from './views/adventure/view_battle_layer.js';
-import * as A from './adventure_core.js';
-import {heroPortrait} from './hero_renderer.js';
-import {createCloseButton} from './ui/controls.js';
-import {validTargets} from './combat_arena_core.js';
-import {presentationEventDurationMs,presentationEventProgress,samplePresentationClock} from './battle_presentation_core.js';
-import {connectHanziAnimation} from './hanzi_animation_bridge.js';
-import {textFor} from './locale.js';
-import {speakBrowserText} from './browser_speech.js';
+import {art} from '../views/adventure/primitives.js';
+import {renderBattle,eventLabel} from '../views/adventure/view_battle_layer.js';
+import * as A from '../adventure_core.js';
+import {heroPortrait} from '../hero_renderer.js';
+import {createCloseButton} from '../ui/controls.js';
+import {validTargets} from '../combat_arena_core.js';
+import {presentationEventDurationMs,presentationEventProgress,samplePresentationClock} from '../battle_presentation_core.js';
+import {connectHanziAnimation} from '../hanzi_animation_bridge.js';
+import {textFor} from '../locale.js';
+import {speakBrowserText} from '../browser_speech.js';
 import {
     createMastersArena,
     wizardAttackHand,
@@ -22,7 +22,7 @@ import {
     MASTER_SPEAKER_ID,
 } from './prologue_battle_core.js';
 
-const HANZI_PAGE=new URL('../hanzi/hanzi_guang.html',import.meta.url).href;
+const HANZI_PAGE=new URL('../../hanzi/hanzi_guang.html',import.meta.url).href;
 const QINGLONG_PORTRAIT='texture/aries/penote/npcs/qinglong_32bits.png';
 const CHILD_LOOK={school:'balance',appearance:'boy',bodyId:'male1',headId:'classic-boy'};
 // Display-only monster art bindings; engine units stay non-mob.

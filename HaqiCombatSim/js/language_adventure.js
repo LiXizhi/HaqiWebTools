@@ -3,7 +3,7 @@ import {fill} from './locale_runtime.js';
 import {createJsonReader} from './runtime_data.js';
 import {parseLocaleFile} from './locale_core.js';
 import {renderLearningTemplate,courseAvailable,selectLesson,triggerAllowed,learningParams,matchesSpeech,evaluateEvidence,rewardStatus} from './language_adventure_core.js';
-import {createLearningVoice} from './language_adventure_voice.js';
+import {createLearningVoice} from './audio/language_adventure_voice.js';
 import {createLearningView} from './view_language_adventure.js';
 import {createStoryChat} from './language_story.js';
 import {assetMode,assetUrl} from './adventure_media_core.js';

@@ -1,10 +1,10 @@
-import {parseDialogueJson,dialogueReplyPreview} from './dialogue_json_core.js';
-import {selectDialogueVoice} from './dialogue_speaker_core.js';
-import {cancelBrowserSpeech} from './browser_speech.js';
+import {parseDialogueJson,dialogueReplyPreview} from '../dialogue_json_core.js';
+import {selectDialogueVoice} from '../dialogue_speaker_core.js';
+import {cancelBrowserSpeech} from '../browser_speech.js';
 import {acquireAudioActivity} from './audio_activity.js';
-import {captureLearningReportKey,reportSpeakingPractice} from './learning_report.js';
+import {captureLearningReportKey,reportSpeakingPractice} from '../learning_report.js';
 // Keepwork IO only. Microphone audio/transcripts are not persisted; completed TTS may be cached.
-import {loadKeepwork} from './adventure_cloud.js';
+import {loadKeepwork} from '../adventure_cloud.js';
 import {cachedLearningAudio,rememberLearningAudio} from './learning_audio_cache.js';
 
 function deadline(promise, ms, signal) {

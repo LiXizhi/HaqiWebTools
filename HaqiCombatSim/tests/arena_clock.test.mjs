@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createArenaClock} from '../js/adventure_arena_clock.js';
-import {gameSoundRecipe} from '../js/game_sound_core.js';
+import {gameSoundRecipe} from '../js/audio/game_sound_core.js';
 function harness(){
     let now=0,id=0,expired=0;const tasks=new Map(),seconds=[];
     const clock=createArenaClock({now:()=>now,schedule:fn=>{tasks.set(++id,fn);return id;},cancel:id=>tasks.delete(id),onSecond:s=>seconds.push(s),onExpire:()=>expired++});

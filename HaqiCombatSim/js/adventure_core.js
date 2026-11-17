@@ -1,4 +1,4 @@
-import {dungeonTacticsProfile} from './dungeon_tactics_core.js';
+import {dungeonTacticsProfile,dungeonTacticsVersion,validDungeonTacticsCheckpoint} from './dungeon_tactics_core.js';
 import {validateTreeClaims} from './language_tree_rewards_core.js';
 import {validateTacticsTraining} from './tactics_training_core.js';
 import {validateTacticsRecords,settleTacticsRecord} from './battle_tactics_journal_core.js';
@@ -601,7 +601,8 @@ export function beginEncounter(save,content,encounterId,access={}) {
     save.pendingEncounter = { id: `${save.seed}:${serial}`, encounterId,
         seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 2, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1, dispelRulesVersion:1, specialCardRulesVersion:1, captureRulesVersion:1 };
     if(save.openingJourney?.version===1&&save.zone==='camp'&&OPENING_TRAINING_IDS.includes(encounterId))save.pendingEncounter.openingTrainingVersion=3;
-    if(dungeonTacticsProfile(dungeon))Object.assign(save.pendingEncounter,{dungeonTacticsVersion:1,dungeonTacticsId:dungeon.id});
+    if(dungeonTacticsProfile(dungeon))Object.assign(save.pendingEncounter,{dungeonTacticsVersion:dungeonTacticsVersion(dungeon),dungeonTacticsId:dungeon.id});
+    if(dungeonTacticsProfile(dungeon)?.companionSlots)save.pendingEncounter.journeyPartyVersion=1;
     if(encounter.monsterIds){const formation=journeyEnemyFormation(encounter,dungeon,initialParty);save.pendingEncounter.dungeonMonsterIds=[...formation.ids];save.pendingEncounter.dungeonMonsterSlots=[...formation.slots];}
     if(content.pets){
         const checkpoint=save.pendingEncounter,params=petTraitParams(content);
@@ -786,7 +787,7 @@ export function parseSave(raw,content) {
     dungeonLanguageBuff(s,content);
     if (s.pendingEncounter) {
         assert(s.pendingEncounter.openingTrainingVersion===undefined||([1,2,3].includes(s.pendingEncounter.openingTrainingVersion)&&s.openingJourney?.version===1&&s.zone==='camp'&&OPENING_TRAINING_IDS.includes(s.pendingEncounter.encounterId)),'新手训练版本无效');
-        assert(s.pendingEncounter.dungeonTacticsVersion===undefined?s.pendingEncounter.dungeonTacticsId===undefined:s.pendingEncounter.dungeonTacticsVersion===1&&s.pendingEncounter.dungeonTacticsId===s.zone&&!!dungeonTacticsProfile(dungeonFor(content,s.zone)),'副本战术版本无效');
+        assert((s.pendingEncounter.dungeonTacticsVersion===undefined||s.pendingEncounter.dungeonTacticsId===s.zone)&&validDungeonTacticsCheckpoint(s.pendingEncounter,dungeonFor(content,s.zone)),'副本战术版本无效');
         assert(s.pendingEncounter.dailyLanguageVersion===undefined||s.pendingEncounter.dailyLanguageVersion===1,'语言加成版本无效');
         if(s.pendingEncounter.player?.hanziBattle)validateHanziBattleSpec(s.pendingEncounter.player.hanziBattle);
         for(const unit of s.pendingEncounter.party||[])if(unit.hanziBattle)validateHanziBattleSpec(unit.hanziBattle);
@@ -813,6 +814,7 @@ export function parseSave(raw,content) {
     if (s.pet) assert(s.pet.itemId === content.pet.itemId && Number.isSafeInteger(s.pet.xp) && s.pet.xp >= 0 && s.pet.xp <= content.pet.levels.max_exp && s.pet.level === petLevel(s.pet.xp,content),'存档宠物无效');
     const petContent=content.pets?Pets.migratePetDeckRules(s,content):content;
     if(s.pendingEncounter){
+        assert(s.pendingEncounter.journeyPartyVersion===undefined||(s.pendingEncounter.journeyPartyVersion===1&&!!dungeonTacticsProfile(dungeonFor(content,s.zone))?.companionSlots),'存档巡夜阵容版本无效');
         const encounter=content.encounters.find(e=>e.id===s.pendingEncounter.encounterId);
         assert(JSON.stringify(s.pendingEncounter.dungeonMonsterIds)===JSON.stringify(journeyEnemyFormation(encounter,dungeonFor(content,s.zone),s.pendingEncounter.party).ids)&&JSON.stringify(s.pendingEncounter.dungeonMonsterSlots)===JSON.stringify(journeyEnemyFormation(encounter,dungeonFor(content,s.zone),s.pendingEncounter.party).slots),'副本阵容记录无效');
         assert(!encounter?.blocked?.length&&!dungeonProgress(s)?.[s.zone]?.cleared.includes(encounter?.id),'副本战斗记录无效');

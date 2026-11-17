@@ -1174,9 +1174,7 @@
 .opening-enemy-intent{display:flex;align-items:center;justify-content:center;gap:10px;width:max-content;max-width:min(420px,80vw);box-sizing:border-box;margin-top:8px;padding:8px 16px;}
 .opening-enemy-intent small{display:block;font-size:12px;font-weight:400;line-height:1.4;color:#706341;}
 .opening-enemy-intent strong{display:block;font-size:16px;line-height:1.4;}
-.opening-enemy-intent .intent-symbol{display:grid;place-items:center;width:32px;height:32px;flex-shrink:0;border:2px solid currentColor;border-radius:50%;font-size:23px;font-weight:700;color:#8d491d;}
-.opening-enemy-intent.intent-charge .intent-symbol{color:#695195;}
-.opening-enemy-intent.intent-guard .intent-symbol{color:#357690;}
+.opening-enemy-intent .intent-art{width:48px;height:48px;flex-shrink:0;}
 .opening-enemy-intent.intent-heavy{border:2px solid #a44b35;background:#fff0df;}
 
  .battle-target-instruction{margin:0;padding:4px 10px;border-radius:12px;background:#fff7dfed;color:#425332;font-size:15px;line-height:1.4;text-align:center;pointer-events:none;max-width:min(340px,82vw);}

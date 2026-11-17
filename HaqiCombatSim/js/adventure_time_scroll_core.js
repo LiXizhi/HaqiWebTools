@@ -68,7 +68,7 @@ export function resumeTimePosition(save,city,data){
 // The existing story schema is shared across cities and contains no transcripts.
 export function completeTimeStory(save,data,completion){
     const story=data.stations.find(s=>s.story?.id===completion.story?.id)?.story;
-    assert(story&&['en','zh-CN'].includes(completion.locale)&&save.languageLearning?.enabled&&save.languageLearning.target===completion.locale,'时光学习场景已变化');
+    assert(story&&['en','zh-CN','ja','ko'].includes(completion.locale)&&save.languageLearning?.enabled&&save.languageLearning.target===completion.locale,'时光学习场景已变化');
     assert(completion.score===100&&completion.answered&&Number.isSafeInteger(completion.now)&&completion.now>=0,'时光对话尚未完成');
     assert(JSON.stringify(completion.story.turnIds)===JSON.stringify(story.turns.map(t=>t.id))&&completion.story.proof?.length===3&&completion.story.proof.every((p,i)=>p.turnId===story.turns[i].id&&['text','speech'].includes(p.input)&&typeof p.quote==='string'&&p.quote.trim()),'时光对话凭据无效');
     save.languageAdventure??={version:1,progress:{}};save.languageAdventure.stories??={};

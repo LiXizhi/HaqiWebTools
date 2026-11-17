@@ -1,3 +1,4 @@
+import {prologueLight} from './prologue_target_language.js';
 import {withBattlePointer} from './battle_pointer_core.js';
 // prologue_stage.js — interactive beats of the prologue: battles on the real battle view and renderer,
 // the embedded 光 writing story, the card forge, and catching the spark.
@@ -31,20 +32,20 @@ const DISPLAY_MOBS={
 };
 const SCHOOL_PROMPTS={
     fire:{
-        battle1:{'zh-CN':'选择一张烈火系的卡牌。','en':'Choose a Fire school card.'},
-        battle2:{'zh-CN':'选择一张烈火系的卡牌，或打出「光」之文字卡。','en':'Choose a Fire school card, or play the "Light" word card.'},
+        battle1:{'zh-CN':'选择一张烈火系的卡牌。','en':'Choose a Fire school card.',ja:'炎のカードを一枚選ぼう。',ko:'불꽃 계열 카드를 한 장 골라 줘.'},
+        battle2:{'zh-CN':'选择一张烈火系的卡牌，或打出「光」之文字卡。','en':'Choose a Fire school card, or play the "Light" word card.',ja:'炎のカードか「光」の言葉カードを選ぼう。',ko:'불꽃 계열 카드나 빛 글자 카드를 골라 줘.'},
     },
     ice:{
         battle1:{'zh-CN':'选择一张寒冰系的卡牌。','en':'Choose an Ice school card.'},
         battle2:{'zh-CN':'选择一张寒冰系的卡牌，或打出「光」之文字卡。','en':'Choose an Ice school card, or play the "Light" word card.'},
     },
     storm:{
-        battle1:{'zh-CN':'选择一张风暴系的卡牌。','en':'Choose a Storm school card.'},
-        battle2:{'zh-CN':'选择一张风暴系的卡牌，或打出「光」之文字卡。','en':'Choose a Storm school card, or play the "Light" word card.'},
+        battle1:{'zh-CN':'选择一张风暴系的卡牌。','en':'Choose a Storm school card.',ja:'嵐のカードを一枚選ぼう。',ko:'폭풍 계열 카드를 한 장 골라 줘.'},
+        battle2:{'zh-CN':'选择一张风暴系的卡牌，或打出「光」之文字卡。','en':'Choose a Storm school card, or play the "Light" word card.',ja:'嵐のカードか「光」の言葉カードを選ぼう。',ko:'폭풍 계열 카드나 빛 글자 카드를 골라 줘.'},
     },
     life:{
-        battle1:{'zh-CN':'选择一张生命系的卡牌。','en':'Choose a Life school card.'},
-        battle2:{'zh-CN':'选择一张生命系的卡牌，或打出「光」之文字卡。','en':'Choose a Life school card, or play the "Light" word card.'},
+        battle1:{'zh-CN':'选择一张生命系的卡牌。','en':'Choose a Life school card.',ja:'命のカードを一枚選ぼう。',ko:'생명 계열 카드를 한 장 골라 줘.'},
+        battle2:{'zh-CN':'选择一张生命系的卡牌，或打出「光」之文字卡。','en':'Choose a Life school card, or play the "Light" word card.',ja:'命のカードか「光」の言葉カードを選ぼう。',ko:'생명 계열 카드나 빛 글자 카드를 골라 줘.'},
     },
 };
 const UI={
@@ -307,12 +308,17 @@ export function createPrologueStage({root,assets,renderer,spellSound,speakers,ar
         return {picks:Object.fromEntries(Object.entries(picks).map(([k,v])=>[k,v.key])),winner:arena.winner,turn:arena.turn,usedWord};
     }
     function flashWord(pair){
-        const flash=make('div','pl-word-flash');flash.append(make('strong','','光'));if(pair.native==='en'||pair.target==='en')flash.append(make('small','','light'));
+        const flash=make('div','pl-word-flash');flash.append(make('strong','',prologueLight(pair.target).word));flash.append(make('small','',prologueLight(pair.target).reading));
         root.append(flash);setTimeout(()=>flash.remove(),1800);
     }
 
-    function hanzi(beat){
+    async function hanzi(beat){
         const pair=getPair();
+        if(['ja','ko'].includes(pair.target)){
+            const light=prologueLight(pair.target);
+            showPrompt({speaker:'qinglong',text:{'zh-CN':(pair.target==='ja'?'日语':'韩语')+'里的“光”：'+light.word+'（'+light.reading+'）。听一遍，再点继续。',en:'Listen to the word for light, then tap to continue.',ja:'光（ひかり）。'+light.sentence,ko:'빛. '+light.sentence}});
+            speakBrowserText(light.sentence,light.lang);await wait(0);hideDialog();return {written:false};
+        }
         return new Promise(resolve=>{
             const holder=make('section','pl-hanzi');
             const iframe=make('iframe');iframe.title='光';iframe.sandbox='allow-scripts allow-same-origin';iframe.referrerPolicy='no-referrer';iframe.src=HANZI_PAGE;iframe.setAttribute('allow','autoplay');
@@ -334,8 +340,9 @@ export function createPrologueStage({root,assets,renderer,spellSound,speakers,ar
         const wrap=make('section','pl-forge');
         const card=make('div','pl-card');
         const face=make('div','pl-card-face');
-        face.append(make('div','pl-card-glyph',reveal.glyph));
-        if(pair.target==='en'){const eq=make('div','pl-card-eq');eq.append(make('span','',reveal.glyph),make('em','','='),make('span','pl-card-word',reveal.word));face.append(eq);}
+        const light=prologueLight(pair.target);face.append(make('div','pl-card-glyph',['ja','ko'].includes(pair.target)?light.word:reveal.glyph));
+        if(['ja','ko'].includes(pair.target))face.append(make('div','pl-card-word',light.reading));
+        else if(pair.target==='en'){const eq=make('div','pl-card-eq');eq.append(make('span','',reveal.glyph),make('em','','='),make('span','pl-card-word',reveal.word));face.append(eq);}
         else face.append(make('div','pl-card-pinyin',reveal.pinyin));
         face.append(make('h3','',row.title),make('p','',pair.native==='zh-CN'?row.readText||row.description:(row.readTranslation||row.description)));
         if(pair.native==='zh-CN'&&row.readTranslation)face.append(make('p','pl-card-sub',row.readTranslation));
@@ -344,7 +351,8 @@ export function createPrologueStage({root,assets,renderer,spellSound,speakers,ar
         wrap.append(make('p','pl-forge-label',ui('newCard')),card);
         layer.append(wrap);
         requestAnimationFrame(()=>wrap.classList.add('shown'));
-        if(pair.target==='en')setTimeout(()=>speakBrowserText(reveal.word,'en-US'),700);
+        if(['ja','ko'].includes(pair.target))setTimeout(()=>speakBrowserText(light.sentence,light.lang),700);
+        else if(pair.target==='en')setTimeout(()=>speakBrowserText(reveal.word,'en-US'),700);
         else setTimeout(()=>speakBrowserText(reveal.glyph,'zh-CN'),700);
         await wait(3.6);
         wrap.classList.add('leaving');setTimeout(()=>wrap.remove(),500);

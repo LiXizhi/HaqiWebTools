@@ -18,6 +18,7 @@ import {presetDeck} from './combat_presets_core.js';
 import {createRng,hashSeed} from './rng_core.js';
 import {playerSpec} from './adventure_core.js';
 import {createLearningVoice} from './language_adventure_voice.js';
+import {createSocialDraftEditor} from './social_draft.js';
 import {heroPortrait} from './hero_renderer.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
 import {renderSocial} from './view_adventure_social.js';
@@ -100,7 +101,8 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
         const speciesId=record.speciesId||key;if(!assets.content.pets[speciesId]?.art)return null;
         return {id:record.id||key,key,speciesId,stage:petAppearanceStage(record,assets.content)};
     }
-    const state=()=>{const lobby=arenaLobby();return {...client.state,...ui,dungeonMode:getState().save?.dungeonMode||1,lineupCount:lineupCount(),arenaSeats:lobby.seats,arenaBench:lobby.bench,followPet:followPetCard(),scenePlayers:scenePlayers(),team:teamMembers(),teamCapacity:teamCapacity(),localSecond:getState().localSecond,owner:getOwner(),hero:heroCard(),partyDungeon:partyDungeon(),coopCapable:coopCapable(),coopActive:!!getState().save?.coopRun,coopReport:getState().save?.coopRun?.battles||[],rankReady:!!config?.gameId};};
+    const draftEditor=createSocialDraftEditor({voice,getContext:()=>({save:getState().save,owner:getOwner(),roleId:getState().roleId}),read:key=>ui[key],write:(key,value)=>{ui[key]=value;}});
+    const state=()=>{const lobby=arenaLobby();return {...client.state,...ui,learningTarget:languageId(getState().save?.languageLearning?.target),dungeonMode:getState().save?.dungeonMode||1,lineupCount:lineupCount(),arenaSeats:lobby.seats,arenaBench:lobby.bench,followPet:followPetCard(),scenePlayers:scenePlayers(),team:teamMembers(),teamCapacity:teamCapacity(),localSecond:getState().localSecond,owner:getOwner(),hero:heroCard(),partyDungeon:partyDungeon(),coopCapable:coopCapable(),coopActive:!!getState().save?.coopRun,coopReport:getState().save?.coopRun?.battles||[],rankReady:!!config?.gameId};};
     const language=value=>languageId(value)==='zh-CN'?'zh':languageId(value);
     function clearJoinTimers(){for(let i=0;i<3;i++){if(joinTimers[i]!=null){cancel(joinTimers[i]);joinTimers[i]=null;}ui.openSlots[i]=false;}}
     function setAllies(list){ui.allies=[list[0]||null,list[1]||null,list[2]||null];}
@@ -265,7 +267,7 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
         },
         playArena(decision){if(!ui.pvp?.entered)throw Error('请先进入赛场');playRedMushroom(ui.pvp,decision);finishArena();},
         leaveArena(){arenaArrivals.stop();readyClock.stop();finishArena(true);ui.pvp=null;ui.arenaStep='team';onChange();},
-        async enter(){const {save,world}=getState(),next=JSON.stringify([getOwner()||'guest',getState().roleId||save?.seed]);if(context!==next){arenaArrivals.stop();readyClock.stop();finishArena(true);arenaKey=next;epoch++;friendsReady=false;gesture=null;lastGesture=-Infinity;actionTicket++;client.reset();cachedCandidates=[];lastRefresh=0;publishPending=!!getOwner();ui.busy=false;clearJoinTimers();setAllies([]);ui.partyDungeonId=null;ui.partyRestart=false;ui.pickingDungeon=false;ui.pvp=null;ui.arenaStep='mode';ui.arenaAllies=[null,null,null];ui.arenaRecord=emptyArenaRecord();ui.dialogue=null;ui.mailDetail=null;ui.mailDraft='';ui.subject='';ui.messages=[];ui.chatTab='scene';context=next;try{ui.publicVisible=localStorage.getItem(`haqi.social.visible.${getOwner()}`)!=='false';}catch{ui.publicVisible=true;}}
+        async enter(){const {save,world}=getState(),next=JSON.stringify([getOwner()||'guest',getState().roleId||save?.seed]);if(context!==next){draftEditor.cancel();arenaArrivals.stop();readyClock.stop();finishArena(true);arenaKey=next;epoch++;friendsReady=false;gesture=null;lastGesture=-Infinity;actionTicket++;client.reset();cachedCandidates=[];lastRefresh=0;publishPending=!!getOwner();ui.busy=false;clearJoinTimers();setAllies([]);ui.partyDungeonId=null;ui.partyRestart=false;ui.pickingDungeon=false;ui.pvp=null;ui.arenaStep='mode';ui.arenaAllies=[null,null,null];ui.arenaRecord=emptyArenaRecord();ui.dialogue=null;ui.mailDetail=null;ui.mailDraft='';ui.subject='';ui.messages=[];ui.chatTab='scene';context=next;try{ui.publicVisible=localStorage.getItem(`haqi.social.visible.${getOwner()}`)!=='false';}catch{ui.publicVisible=true;}}
             const token=epoch;await ready();await localArena.prepare([arenaKey]);if(token!==epoch||getState().world!==world)return;ui.arenaRecord=localArena.get(arenaKey)||emptyArenaRecord();if(ui.arenaRecord.active&&!ui.pvp)saveArena(finishArenaRecord(ui.arenaRecord,ui.arenaRecord.active.id,'loss',arenaRules()));installRoster();if(getOwner()&&Date.now()-lastRefresh>60000)void run(refresh);
         },
         get gesture(){return gesture?.world===getState().world&&gesture.until>Date.now()?gesture:null;},
@@ -288,7 +290,7 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
         settled(battle,result){const {save}=getState();if(!save.coopRun||battle.winner!=='near')return;
             save.socialChallenges={...save.socialChallenges};for(const m of save.coopRun.members)if(m.profile.kind==='account')save.socialChallenges[m.profile.userId]=Date.now();onPersist();for(const event of result?.relationshipEvents||[])onRelationshipActivity(event);onRelationshipActivity({flushOnly:true});
         },
-        close(){actionTicket++;rememberChat();ui.chatPeer=null;ui.messages=[];dialogueAbort?.abort();ui.dialogue=null;ui.pickingDungeon=false;},
+        close(){draftEditor.cancel();actionTicket++;rememberChat();ui.chatPeer=null;ui.messages=[];dialogueAbort?.abort();ui.dialogue=null;ui.pickingDungeon=false;},
         paint(root,kind){renderSocial(root,state(),kind,{
             gesture:performGesture,invite:p=>{try{teamAdd(p);onClose();}catch(e){toast(e.message);}},
             close:onClose,open:onOpen,login:onLogin,friends:()=>{ui.mailTab='friends';onOpen('mail');},profile:p=>api.select(p),
@@ -302,7 +304,7 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
             chatTab:key=>{const next=key==='friends'?'friends':'scene';ui.chatTab=next;onChange();if(next==='friends')loadFriendsTab();},
             teleportPlayer,cardName:key=>getState().assets.content.cardLibrary?.find(c=>c.key===key)?.name||'魔法卡牌',refresh:()=>run(async()=>{if(ui.chatTab==='friends')await client.refreshFriends();else await refresh();}),refreshPvp:()=>run(refreshPvp),draft:(key,value)=>{ui[key]=value;},mailTab:key=>{ui.mailTab=key;onChange();},compose,
             apply:(id,accept)=>run(()=>client.processApply(id,accept)),readMail:id=>run(async()=>{ui.mailDetail=await client.readMail(id);}),
-            polish:(key,target)=>run(async()=>{const source=ui[key]||'';if(!source.trim())throw Error('请先填写草稿');const result=await voice.judge([{role:'system',content:`Rewrite the user's message in ${target==='en'?'natural simple English':'natural simple Chinese'}. Preserve meaning. Return JSON {"reply":"editable draft","completed":[]}. Do not send anything.`},{role:'user',content:source}],new AbortController().signal);if(ui[key]===source)ui[key]=result.reply||source;}),
+            polish:(key,target)=>run(()=>draftEditor.translate(key,target)),
             sendMail:(id,subject,text)=>run(async()=>{const friend=client.state.friends.find(f=>f.userId===id);if(!friend)throw Error('请选择好友');await client.sendMail(friend,subject||'岛上的问候',text);ui.mailDraft='';ui.subject='';toast('邮件已发送');}),
             recruitFriend:f=>run(async()=>{const p=await client.publicRead(f.username);if(!p)throw Error('好友尚无可用的公开名片');snapshotUnit(p,getState().assets.dataset,'check',1);teamAdd(p);}),
             friend:p=>run(()=>requestFriend(p)),team:(p,add)=>{try{team(p,add);}catch(e){toast(e.message);}},

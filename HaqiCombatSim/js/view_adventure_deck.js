@@ -1,3 +1,4 @@
+import {createCampDeckCoach} from './camp_deck_coach_core.js';
 import {createCloseButton} from './view_adventure_controls.js';
 import {recommendAdventureDeck} from './battle_ai/adventure_adapter_core.js';
 import {teachPointer} from './view_teaching.js';
@@ -35,6 +36,11 @@ export function renderDeckEditor(body,{assets,save,shopView,deckAnimationClock='
     layouts[active].deck=save.deck.map(row=>({...row}));
     const tabs=el('div','bag-tabs'),slots=el('div','bag-slots'),library=el('div','bag-library'),detail=el('div','bag-detail');
     detail.hidden=true;detail.setAttribute('role','dialog');detail.setAttribute('aria-label','卡牌预览');
+    const coach=createCampDeckCoach(save,content,assets.dataset);
+    const coachFeedback=coach?el('p','bag-hint'):null;
+    const coachPanel=coach?el('section','bag-equipment',el('strong','',coach.name+' · 考核准备'),el('p','',coach.prompt),coachFeedback,
+        el('details','',el('summary','','看提示'),el('p','bag-hint','加入适合自己学系的陷阱卡，再加入一张护盾卡。陷阱增强对应学系的后续攻击；护盾保护自己或伙伴。保存后，在考核中试用。'))):null;
+    if(coach){coachPanel.setAttribute('aria-label','考核配卡提示');coachPanel.querySelector?.('p')?.setAttribute('lang',coach.language);coachFeedback.setAttribute('lang',coach.language);coachFeedback.setAttribute('role','status');}
     const status=el('span','bag-status');status.setAttribute('aria-live','polite');status.hidden=true;
     const counter=el('strong','');
     const total=()=>layouts[active].deck.reduce((n,row)=>n+row.count,0);
@@ -261,6 +267,7 @@ export function renderDeckEditor(body,{assets,save,shopView,deckAnimationClock='
         return placed(lesson.key)<cap;
     }
     function paintCards(){
+        if(coach)coachFeedback.textContent=coach.evaluate(layouts[active].deck).feedback;
         setText(counter,'{used}/{capacity} 张 · 单卡最多 {each}',{used:total(),capacity:limits.capacity,each:limits.eachCapacity});slots.replaceChildren();
         for(const row of layouts[active].deck)for(let i=0;i<row.count;i++){
             const card=cards[row.key],slot=button(subject(card),()=>{},'bag-slot');
@@ -300,7 +307,7 @@ export function renderDeckEditor(body,{assets,save,shopView,deckAnimationClock='
     setText(equipmentSummary,'装备附卡 {count} 张 · 不占卡位',{count:equipment.children.length});
     const equipmentPanel=el('details','bag-equipment',equipmentSummary,equipment);
     equipmentPanel.open=true;
-    const bag=el('section','bag-main',el('div','bag-section-bar',counter,button('推荐',()=>{const recommendation=recommendAdventureDeck({...draftSave(),deck:layouts[active].deck},content,assets.dataset);layouts[active].deck=recommendation.deck;mark();paintCards();say('已按当前拥有的卡牌与卡包容量生成推荐，保存后生效。');},'secondary')),slots,
+    const bag=el('section','bag-main',...(coachPanel?[coachPanel]:[]),el('div','bag-section-bar',counter,button('推荐',()=>{const recommendation=recommendAdventureDeck({...draftSave(),deck:layouts[active].deck},content,assets.dataset);layouts[active].deck=recommendation.deck;mark();paintCards();say('已按当前拥有的卡牌与卡包容量生成推荐，保存后生效。');},'secondary')),slots,
         el('p','bag-hint','拖出移除；长按 / 右键查看详情'),
         equipmentPanel);
     const collection=el('section','bag-collection',el('div','bag-section-bar',el('strong','','法术牌库'),search,toggle),filters,

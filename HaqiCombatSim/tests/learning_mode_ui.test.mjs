@@ -22,10 +22,10 @@ test('opening and editing mode settings never mutates the save until explicit ap
     assert.deepEqual(save,before);assert.equal(h.applied,null);
     h.apply.onclick();assert.equal(h.applied.locale,'en');assert.equal(h.applied.target,'zh-CN');assert.equal(h.applied.native,'en');
 });
-test('an explicit target is not overwritten by display changes; unsupported courses cannot enable',t=>{
+test('an explicit target is not overwritten by display changes; Japanese and Korean can enable',t=>{
     const h=setup(t,{locale:'zh-CN',languageLearning:{enabled:false,target:'en',native:'zh-CN',selectionConfirmed:false}});
     h.target.value='zh-CN';h.target.onchange();h.display.value='ja';h.display.onchange();assert.equal(h.target.value,'zh-CN');
-    h.target.value='ja';h.target.onchange();assert.equal(h.apply.disabled,true);
+    for(const language of ['ja','ko']){h.target.value=language;h.target.onchange();assert.equal(h.apply.disabled,false);h.apply.onclick();assert.equal(h.applied.target,language);assert.ok(!h.target.children.find(o=>o.value===language).text.includes('尚未开放'));}h.target.value='fr';h.target.onchange();assert.equal(h.apply.disabled,true);
     h.target.value='en';h.target.onchange();assert.equal(h.apply.disabled,false);
 });
 test('saved preferences survive reopening; changing target resolves auxiliary language collision',t=>{

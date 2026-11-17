@@ -165,7 +165,7 @@ test('第三幕与第四幕 4v2 再战：四位大师每人持有3张代表技�
   assert.equal(wordCardRow(dictionary.cards, 'zh-CN').id, 'zh:guang');
   assert.equal(wordCardRow(dictionary.cards, 'en').id, 'en:sun');
 
-  for (const targetLang of ['zh-CN', 'en']) {
+  for (const targetLang of ['zh-CN', 'en', 'ja', 'ko']) {
     const wordCard = wordCardRow(dictionary.cards, targetLang);
     const arena = createFinaleArena(dataset, params, {
       names: speakerNames,

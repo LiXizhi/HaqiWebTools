@@ -76,7 +76,7 @@ export function startRedMushroom(dataset,seats,mode,seed,difficulty,params=defau
         delete opponent.profileId;delete opponent.opponentMountId;delete opponent.dailyLanguageBuff;
         return opponent;
     });
-    const replay={version:local?4:3,...(local?{localHumanIds:near.filter(u=>!u.speciesId&&Number.isInteger(u.localOwner)).sort((a,b)=>a.localOwner-b.localOwner).map(u=>u.id)}:{}),specialCardRulesVersion:1,dataHash:socialDataHash(dataset),mode,seed,params:structuredClone(params),difficulty:structuredClone(difficulty),near,far,actions:[]};
+    const replay={version:local?4:3,...(local?{localHumanIds:near.filter(u=>!u.speciesId&&Number.isInteger(u.localOwner)).sort((a,b)=>a.localOwner-b.localOwner).map(u=>u.id)}:{}),specialCardRulesVersion:1,participationRulesVersion:1,dataHash:socialDataHash(dataset),mode,seed,params:structuredClone(params),difficulty:structuredClone(difficulty),near,far,actions:[]};
     return createMatch(dataset,replay);
 }
 function createMatch(dataset,replay){
@@ -118,11 +118,18 @@ export function playRedMushroom(state,decision,{recorded=null}={}){
         state.adjudication={near,far};
         a.events.push({type:'arena_adjudication',turn:a.turn,winner:a.winner,near,far});
     }
+    // AI teammates may finish a match on their own. New matches require a human
+    // card choice to award a win; absent version keeps existing replays unchanged.
+    if(a.finished&&a.winner==='near'&&state.replay.participationRulesVersion===1){
+        const participated=[...state.replay.actions,entry].some(({decision:pick})=>a.localHumanIds?a.localHumanIds.some(id=>pick.humanDecisions[id].pass!==true):pick.pass!==true);
+        if(!participated){a.winner=null;a.events.push({type:'arena_no_participation',turn:a.turn,winner:null});}
+    }
     if(recorded)check(recorded.turns.length===entry.turns.length,'战报行动数量无效');
     state.replay.actions.push(entry);return state;
 }
 export function restoreRedMushroom(dataset,replay){
     check([3,4].includes(replay?.version)&&replay.dataHash===socialDataHash(dataset)&&ARENA_MODES.includes(replay.mode)&&replay.near?.length===replay.mode&&replay.far?.length===replay.mode&&Array.isArray(replay.actions)&&replay.actions.length<=200,'赛场战报版本不兼容');
+    check(replay.participationRulesVersion===undefined||replay.participationRulesVersion===1,'赛场参与规则版本不兼容');
     if(replay.version===4)check(replay.localHumanIds?.length===2&&new Set(replay.localHumanIds).size===2&&replay.localHumanIds.every(id=>replay.near.some(u=>u.id===id&&!u.speciesId)),'双人战报操控位无效');
     const state=createMatch(dataset,{...structuredClone(replay),actions:[]});
     for(const entry of replay.actions)playRedMushroom(state,entry.decision,{recorded:entry});

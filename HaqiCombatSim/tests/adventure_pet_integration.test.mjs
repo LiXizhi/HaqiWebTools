@@ -62,6 +62,17 @@ function sceneHarness(isFriend=()=>true,navigation){
     return {scene,state,notices,meetings,get save(){return save;},advance:ms=>{at+=ms;}};
 }
 
+test('pet scene hides an unloaded record before the next movement tick, then renders it when restored',()=>{
+    const h=sceneHarness();h.scene.step(0);
+    const id=h.save.formation[0],pet=h.save.pets[id];
+    assert.ok(h.scene.pets.some(actor=>actor.id===id));
+    delete h.save.pets[id];
+    assert.equal(h.scene.pets.some(actor=>actor.id===id),false);
+    assert.ok(h.scene.pets.every(actor=>actor.pet&&Number.isFinite(actor.scale)));
+    h.save.pets[id]=pet;
+    assert.equal(h.scene.pets.find(actor=>actor.id===id).pet,pet);
+});
+
 test('asynchronous proximity meetings preserve arrivals and discard leaving, moved and locked actors',async()=>{
     for(const action of ['arrive','leave','move','lock','dialogue']){
         const jobs=[],navigation={options:()=>({}),findMeeting(world,participants,owners,content,valid){return new Promise(resolve=>jobs.push({world,participants,owners,content,valid,resolve}));}};

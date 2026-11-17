@@ -1,3 +1,4 @@
+import {prologueLight} from './prologue_target_language.js';
 // prologue_battle_core.js — battles for the prologue 《失落的光》.
 // Pure rules: real kids cards through combat_arena_core; no DOM. Unit HP and startup pips are
 // unit configuration (like monster templates); card numbers and formulas are never changed.
@@ -161,6 +162,7 @@ export function finaleDeck(school){
 export function wordCardRow(rows,target){
     const id=target==='zh-CN'?'zh:guang':'en:sun';
     const row=rows.find(r=>r.id===id);if(!row)throw Error(`缺少文字卡：${id}`);
+    if(['ja','ko'].includes(target)){const light=prologueLight(target);return {...row,id:target+':light',language:target,entryId:'light',title:light.sentence,readText:light.sentence,readTranslation:light.translation};}
     return row;
 }
 /** Act 4: 4v2 rematch — the four masters vs two Shadow Imps, with each wizard holding their 3 showcase skills + the forged 光 word card. */

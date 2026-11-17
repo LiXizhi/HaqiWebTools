@@ -1,0 +1,49 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {applyForestCommission,validateForestCommission,forestCommissionGoal,forestCommissionPouch} from '../js/forest_commission_core.js';
+import {forestCommissionLesson,forestLabelWritten,forestLabelMatches} from '../js/forest_commission_language_core.js';
+import {flushForestCommissionPractice} from '../js/forest_commission_learning.js';
+import {parseWordLexicon,buildWordIndex,canonicalWord} from '../js/word_lexicon_core.js';
+const access={forestTarget:{id:36200,kind:'npc',x:0,y:0}};
+const fresh=(target,phase='delivery')=>({zone:'camp',position:{x:0,y:0},languageLearning:{target},forestCommission:{version:1,phase}});
+const label=(save,word,text)=>applyForestCommission(save,{}, {step:'label',word,text,learning:{at:20,attempts:1,assisted:false}},access);
+for(const language of ['en','ja','ko','zh-CN'])test(language+' uses one language for clues, accepted answers and lexical receipts',async()=>{
+ const save=fresh(language),lesson=forestCommissionLesson(save),events=[];
+ assert.equal(forestCommissionGoal(fresh(language,'boots')).hint,lesson.clues.boots);
+ assert.ok(forestCommissionPouch(fresh(language,'briefing'))[0].description.startsWith(lesson.clues.briefing));
+ if(language!=='en')assert.throws(()=>label(save,'boots','boots'),/标签还没写对/);
+ label(save,'boots',lesson.words.boots);validateForestCommission(save);
+ assert.equal(forestLabelWritten(save,'boots'),true);
+ assert.equal(label(save,'boots',lesson.words.boots).changed,false);
+ save.forestCommission.phase='briefing';label(save,'note',lesson.words.note);validateForestCommission(save);
+ await flushForestCommissionPractice(save,{valid:()=>true,persist:()=>true,record:async e=>{events.push(e);return {persisted:true};}});
+ assert.deepEqual(events.map(e=>[e.language,e.words,e.input]),[['zh-CN'===language?'zh':language,[lesson.words.boots],'text'],['zh-CN'===language?'zh':language,[lesson.words.note],'text']]);
+ const code=language==='zh-CN'?'zh':language,index=buildWordIndex(parseWordLexicon(fs.readFileSync(new URL('../data/adventure/locale/word_'+code+'.txt',import.meta.url),'utf8'),code));
+ for(const word of Object.values(lesson.words))assert.ok(canonicalWord(index,word),`${language}: ${word} must resolve to a real lexicon entry`);
+});
+test('switching target preserves progress and rewards while keeping completed labels and queued evidence separate',async()=>{
+ const save=fresh('en');label(save,'boots','boot');const legacy=structuredClone(save.forestCommission.labelPractice[0]);
+ save.languageLearning.target='ja';assert.equal(forestLabelWritten(save,'boots'),false);label(save,'boots','ブーツ');
+ save.languageLearning.target='ko';assert.equal(forestLabelWritten(save,'boots'),false);label(save,'boots','부츠');
+ assert.equal(save.forestCommission.phase,'delivery');assert.deepEqual(save.forestCommission.labels,['boots']);
+ validateForestCommission(save);const events=[];
+ await flushForestCommissionPractice(save,{valid:()=>true,persist:()=>true,record:async e=>{events.push(e);return {persisted:true};}});
+ assert.deepEqual(events.map(e=>e.language),['en','ja','ko']);assert.equal(events[0].id,legacy.id);
+ assert.equal(new Set(events.map(e=>e.id)).size,3);assert.equal(save.inventory,undefined);
+ save.languageLearning.target='ja';assert.equal(forestLabelWritten(save,'boots'),true);assert.equal(label(save,'boots','ブーツ').changed,false);
+});
+test('a delayed reading receipt stays in the language actually read, even after switching target',async()=>{
+ const save=fresh('ja','boots');const site={forestTarget:{id:'forest-supplies-tent',kind:'landmark',x:0,y:0}};
+ applyForestCommission(save,{}, {step:'take-boots',object:'boots',learning:{at:20,attempts:1}},site);validateForestCommission(save);
+ save.languageLearning.target='ko';let event;
+ await flushForestCommissionPractice(save,{valid:()=>true,persist:()=>true,record:async e=>{event=e;return {persisted:true};}});
+ assert.equal(event.language,'ja');assert.deepEqual(event.words,['ブーツ']);assert.equal(event.assisted,true);assert.equal(event.input,'read');
+});
+test('input supports Japanese width variants and rejects wrong-language answers and invalid receipt languages',()=>{
+ assert.equal(forestLabelMatches(fresh('ja'),'boots',' ﾌﾞｰﾂ '),true);
+ assert.equal(forestLabelMatches(fresh('ko'),'note','쪽지'),true);
+ assert.equal(forestLabelMatches(fresh('ja'),'boots','부츠'),false);
+ const save=fresh('ja');label(save,'boots','ブーツ');save.forestCommission.labelPractice[0].language='xx';
+ assert.throws(()=>validateForestCommission(save),/标签练习记录无效/);
+});

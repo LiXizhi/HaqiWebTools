@@ -65,19 +65,22 @@ export function createCompanionPlanner(seed,params=companionParams()){
 }
 export function companionIntent(text){
     const value=text.trim().replace(/[。.!！?？]+$/,'').toLowerCase();
-    if(/^(跟着我|跟我走|跟上我|别乱走|follow me|stay close|come with me)$/.test(value))return 'follow';
-    if(/^(停下|别走|等我|等等我|待在这里|原地等我|stop|wait|wait for me|stay here)$/.test(value))return 'stay';
-    if(/^(去采集|采集吧|帮我采集|收集物品|继续|继续探索|自由行动|gather|collect|go gather|keep going|explore)$/.test(value))return 'auto';
-    if(/^(安静|请安静|quiet|be quiet|stop talking)$/.test(value))return 'quiet';
+    if(/^(跟着我|跟我走|跟上我|别乱走|follow me|stay close|come with me|ついてきて|ついて来て|따라와|따라와 줘)$/.test(value))return 'follow';
+    if(/^(停下|别走|等我|等等我|待在这里|原地等我|stop|wait|wait for me|stay here|待って|ここで待って|기다려|여기서 기다려)$/.test(value))return 'stay';
+    if(/^(去采集|采集吧|帮我采集|收集物品|继续|继续探索|自由行动|gather|collect|go gather|keep going|explore|集めて|採集して|모아 줘|채집해 줘)$/.test(value))return 'auto';
+    if(/^(安静|请安静|quiet|be quiet|stop talking|静かにして|조용히 해 줘)$/.test(value))return 'quiet';
     return null;
 }
 export function localCompanionReply(snapshot,text=''){
-    const intent=companionIntent(text),kind=snapshot.goal,english=snapshot.language==='en';
-    if(!['en','zh-CN'].includes(snapshot.language))return null;
+    const intent=companionIntent(text),kind=snapshot.goal;
+    if(!['en','zh-CN','ja','ko'].includes(snapshot.language))return null;
     const pairs={follow:['好，我会跟着你，先不去采集。','Okay, I will follow you and leave gathering for later.'],stay:['好，我先停在这里。你走远时，我会跟上。','Okay, I will wait here. If you go far, I will catch up.'],auto:['好，我会收集附近安全的物品，没有合适的就在你身边等。','Okay, I will gather nearby where it is safe, then wait close to you.'],quiet:['好，我安静陪着你。','Okay, I will keep you company quietly.'],gather:['我在采集附近的资源，会先把这里采完。','I am gathering nearby. I will finish this spot first.'],pickup:['我去捡附近的掉落物，捡完就回来。','I will pick up the nearby drop, then come back.'],smelt:['我在把采集物冶炼成掉落物，稍等一下。','I am smelting what I gathered. Just a moment.'],idle:['我先在你身边等，想收集东西时叫我就好。','I will wait close to you. Tell me when you want to gather.'],hello:['我在。想一起收集东西，还是边走边聊？','I am here. Shall we gather together or talk as we walk?'],unknown:['我在听。自由对话暂时不可用，现在只能回应简单指令。','I am listening. Free conversation is unavailable right now, but I can respond to simple requests.']};
     const query=/做什么|干什么|在忙|what.*doing|what.*plan|怎么办|what next/i.test(text);
     const key=intent||(!text||query?(kind in pairs?kind:'idle'):/^(你好|嗨|hello|hi|hey)[！!。.]?$/i.test(text.trim())?'hello':'unknown');
-    const row=pairs[key];return {reply:row[english?1:0],translation:snapshot.native===snapshot.language?'':row[snapshot.native==='en'?1:0],goalId:null,summary:null};
+    const ja={follow:'わかった。ついていくよ。採集はあとにしよう。',stay:'わかった。ここで待つね。遠くへ行ったら追いかけるよ。',auto:'近くの安全な場所で集めるね。終わったらそばで待つよ。',quiet:'静かにそばにいるね。',gather:'近くの資源を集めているよ。ここを先に終わらせるね。',pickup:'近くに落ちた物を拾って、すぐ戻るね。',smelt:'集めた素材を加工しているよ。少し待ってね。',idle:'そばで待つね。何か集めたいときは呼んでね。',hello:'ここにいるよ。一緒に集める？それとも歩きながら話す？',unknown:'聞いているよ。今は簡単なお願いにだけ答えられるんだ。'};
+    const ko={follow:'알겠어. 따라갈게. 채집은 나중에 하자.',stay:'알겠어. 여기서 기다릴게. 멀리 가면 따라갈게.',auto:'가까운 안전한 곳에서 모을게. 끝나면 네 곁에서 기다릴게.',quiet:'조용히 곁에 있을게.',gather:'근처의 자원을 모으고 있어. 여기를 먼저 끝낼게.',pickup:'근처에 떨어진 물건을 줍고 돌아올게.',smelt:'모은 재료를 가공하고 있어. 조금만 기다려 줘.',idle:'네 곁에서 기다릴게. 모으고 싶을 때 불러 줘.',hello:'여기 있어. 같이 모을까, 아니면 걸으면서 이야기할까?',unknown:'듣고 있어. 지금은 간단한 부탁에만 답할 수 있어.'};
+    const row=pairs[key],line=language=>language==='ja'?ja[key]:language==='ko'?ko[key]:row[language==='en'?1:0];
+    return {reply:line(snapshot.language),translation:snapshot.native===snapshot.language?'':line(snapshot.native),goalId:null,summary:null};
 }
 export function legalCompanionDecision(battle,id,action){
     const unit=battle.unitsById[id];if(!unit||unit.hp<=0||unit.freezeRounds>0||unit.stunned)return {pass:true};

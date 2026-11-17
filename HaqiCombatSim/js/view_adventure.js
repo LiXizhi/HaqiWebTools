@@ -156,7 +156,7 @@ export function createEntryFooter(){
     return isChineseSystem()?el('footer','entry-license',ONLINE_GAME_LICENSE):null;
 }
 export function createEntryIntro({owner,login,cloud,locale,secondLocale,setLocale,setSecondLocale}={}) {
-    const intro=el('div','entry-intro',createEntryEmblem(),el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','带上抱抱龙，认识营地里的伙伴。\n帮它们解决麻烦，用简单英语交流，再一起挑战魔法对手。'),el('div','entry-tags',...['宠物相伴','结识朋友','双语冒险'].map(label=>el('span','badge',label))));
+    const intro=el('div','entry-intro',createEntryEmblem(),el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','带上抱抱龙，认识营地里的伙伴。\n帮它们解决麻烦，用你选择的语言交流，再一起挑战魔法对手。'),el('div','entry-tags',...['宠物相伴','结识朋友','双语冒险'].map(label=>el('span','badge',label))));
     if(new URLSearchParams(globalThis.location?.search||'').get('product')==='hanzi'){
         const en=locale==='en';intro.querySelector('.eyebrow').textContent=en?'HANZI MAGIC · CHAPTER ONE':'字源岛 · 第一章';intro.querySelector('.game-title').textContent=en?'Hanzi Magic':'字有魔法';intro.querySelector('.chapter-title').textContent=en?'Island of living words':'文字会醒来的地方';intro.querySelector('.entry-description').textContent=en?'Speak a character to awaken its magic. Write it to give it shape. Use recently practiced words as battle cards.':'说出汉字，唤醒力量。写出汉字，赋予形状。练习之后，在战斗中读写激活文字卡。';intro.querySelector('.entry-tags').replaceChildren(...(en?['Discover','Write & speak','Battle']:['探索字义','说字写字','文字战斗']).map(label=>el('span','badge',label)));
     }
@@ -499,7 +499,9 @@ function renderHudContents(root,model,cb) {
         tracker.replaceChildren(el('h3','',side?.name||chapter?.name||'与世界同行'),el('p','',side?.description||step?.name||(chapter?'本章完成。和伙伴继续探索吧。':'靠近居民，了解这座城市的故事。')));
     }else if(dungeon){
         const cleared=dungeonProgress(save)?.[save.zone]?.cleared.length||0,remaining=dungeon.arenas.filter(a=>!a.blocked.length&&!dungeonProgress(save)?.[save.zone]?.cleared.includes(a.id)).length;
-        tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`清怪 ${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，可以退出副本。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可以退出副本。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button('退出副本',()=>cb.leaveDungeon?.(),'track-button'));
+        tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`清怪 ${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'营地已清理完毕，可以退出副本。':remaining?`下一站：第 ${cleared+1} 处营地。沿道路前进，接近怪物后开始战斗。`:'前路暂未开放，可以退出副本。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'));
+        if(remaining)tracker.append(button('前往下一处营地',()=>cb.track('dungeon-next'),'track-button'));
+        tracker.append(button('退出副本',()=>cb.leaveDungeon?.(),'track-button'));
     }else{
         const languageQuest=save.zone==='camp'&&openingJourney(save)?null:recommendedLanguageQuest(save,c,model.languageTasks?.rows||[],catalogStatSnapshot(save,c));
         const entries=withLanguageQuest(trackerEntries(save,c),languageQuest);
@@ -776,7 +778,7 @@ export function renderDialogue(root,model,dialog,cb) {
             content.append(guidanceCard({eyebrow:purpose.role,title:purpose.title,body:purpose.body,footnote:available?'':'请在单人冒险中和茜茜出发打怪。'}));
             if(available)choices.append(button(purpose.label,()=>purpose.action==='tactics'?cb.tactics():cb.panel(purpose.panel,{npc}),'secondary'));
         }
-        if(forestCommissionAvailable(save)&&[FOREST_NPCS.giver,FOREST_NPCS.receiver].includes(npc.id)&&!model.localSecond)choices.append(button(forestCommissionPhase(save)==='offer'?'营地急件：接取英语寻物委托':forestCommissionPhase(save)==='done'?'营地补给员：查看下一场挑战':'继续森林补给委托',()=>cb.panel('forest-commission'),'secondary'));
+        if(forestCommissionAvailable(save)&&[FOREST_NPCS.giver,FOREST_NPCS.receiver].includes(npc.id)&&!model.localSecond)choices.append(button(forestCommissionPhase(save)==='offer'?'营地急件：接取寻物委托':forestCommissionPhase(save)==='done'?'营地补给员：查看下一场挑战':'继续森林补给委托',()=>cb.panel('forest-commission'),'secondary'));
         if(npcServices(c,npc).length&&purpose?.panel!=='npc-services')services.append(button('查看商品与学习魔法',()=>cb.panel('npc-services',{npc}),'secondary'));
         if(npc.worldObservation){
             services.append(button(npc.worldObservation.label,()=>cb.panel('earthmap'),'secondary'));
@@ -971,11 +973,20 @@ function renderBattleContent(root,model,cb) {
     root.append(top,canvas,status,...(model.localBattleShared?[]:[hand]),bottom);
     const intent=tacticsFieldCue(battle)||openingEnemyIntentInfo(battle)||dungeonEnemyIntentInfo(battle);
     if(intent&&!animating&&!battle.finished&&!model.localBattlePane){
-        const notice=el('aside','opening-enemy-intent intent-'+intent.kind,el('span','intent-symbol',intent.kind==='guard'?'◇':intent.kind==='charge'?'…':'!'),el('span','',el('small','',battle.tacticsField?'茜茜 · 边打边试':'对手这一回合'),el('strong','',intent.label)));
+        const base=model.assets.effects.cards[intent.cardKey]?.base;
+        let icon=null;
+        if(base){
+            icon=el('canvas','intent-art');icon.width=icon.height=96;icon.setAttribute('aria-hidden','true');
+            const context=icon.getContext('2d'),paint=()=>{context.clearRect(0,0,96,96);model.assets.skillArt.drawSubject(context,base,0,0,96,96);};
+            paint();model.assets.skillArt.ensure(base).then(paint).catch(()=>{});
+        }
+        const caption=el('span','',el('small','',battle.tacticsField?'茜茜 · 边打边试':'对手这一回合'),el('strong','',intent.label));
+        if(intent.nextLabel)caption.append(el('small','','下回合：'+intent.nextLabel));
+        const notice=el('aside','opening-enemy-intent intent-'+intent.kind,...(icon?[icon]:[]),caption);
         if(!battle.tacticsField){const details=el('details','intent-detail',el('summary','','查看行动分工'),el('p','',intent.detail));notice.append(details);notice.title=intent.detail;}
         notice.setAttribute('role','status');notice.setAttribute('aria-label',intent.label);top.append(notice);
     }
-    if(!battle.tacticsField)renderCompanionGuide(root,model,cb,{battle:true});
+    if(!battle.tacticsField&&!model.aiHintsMuted)renderCompanionGuide(root,model,cb,{battle:true});
     attachStatusTooltips(root,canvas);
     // The centred face passes left clicks to the arena; resolve its right click by bounds.
     root.oncontextmenu=e=>{

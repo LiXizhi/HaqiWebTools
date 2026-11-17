@@ -21,11 +21,22 @@ test('hidden pages and exhausted hand do not produce phantom suggestions',()=>{
  const b=start('ice-scout');assert.deepEqual(companionBattleAdvice(b,[]).seqs,[]);
  const one=castableCards(b,b.sides.near[0])[0];assert.deepEqual(companionBattleAdvice(b,[one.seq]).seqs,[one.seq]);
 });
-test('shield advice points only to a currently legal attack and retains player choice',()=>{
+test('a planned shield is not described as an already active shield',()=>{
  const b=start('ice-scout'),choices=castableCards(b,b.sides.near[0]);
  const advice=companionBattleAdvice(b,choices.map(h=>h.seq),dataset.cards);
- assert.match(advice.text,/试探/);assert.ok(advice.seqs.every(seq=>choices.some(c=>c.seq===seq)));
+ assert.match(advice.text,/准备加盾/);assert.doesNotMatch(advice.text,/试探/);assert.ok(advice.seqs.every(seq=>choices.some(c=>c.seq===seq)));
  assert.doesNotMatch(advice.text,/Ice_/);
+});
+
+test('shield advice uses only active wards matching a legal attack without consuming them',()=>{
+ const b=start('fire-scout'),hero=b.sides.near[0],foe=b.sides.far[0];
+ hero.deckSeq=['Fire_SingleAttack_Level0_45','Ice_SingleAttack_Level0_45'];hero.deckMap=[1,1];hero.wordCards={};hero.pips={normal:7,power:0};
+ const shield=Object.entries(b.resolved.wards).find(([,e])=>Number(e.boost_damage)<0&&String(e.school).toLowerCase()==='fire');assert.ok(shield);
+ foe.wards=[{id:Number(shield[0])}];
+ const before=JSON.stringify(b),advice=companionBattleAdvice(b,[0,1]);
+ assert.match(advice.text,/试探护盾/);assert.deepEqual(advice.seqs,[0]);assert.equal(JSON.stringify(b),before);
+ assert.doesNotMatch(companionBattleAdvice(b,[1]).text,/试探护盾/);
+ foe.wards=[];assert.doesNotMatch(companionBattleAdvice(b,[0,1]).text,/试探护盾/);
 });
 
 test('setup advice matches the school of an available attack',()=>{

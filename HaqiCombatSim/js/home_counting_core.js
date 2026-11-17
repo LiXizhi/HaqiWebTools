@@ -29,7 +29,7 @@ export function homeCountCurrent(snapshot,objects,catalog){
 }
 export function homeCountAnswer(game,text,input){
  // ASR may output a digit for a correctly spoken number. Typed digits do not
- // demonstrate the English spelling and are deliberately not accepted.
- const spoken=input==='speech'?String(text).replace(new RegExp(`\\b${game.count.amount}\\b`,'g'),HOME_COUNT_WORDS[game.count.amount-1]):text;
+ // demonstrate spelling in the selected language and are deliberately not accepted.
+ const spoken=input==='speech'?String(text).replace(new RegExp(`\\b${game.count.amount}\\b`,'g'),game.count.spokenNumber||HOME_COUNT_WORDS[game.count.amount-1]):text;
  return [game,...(game.alternatives||[])].some(row=>wordReadingMatches(spoken,row.answer));
 }

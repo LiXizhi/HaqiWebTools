@@ -18,6 +18,7 @@ import {loadHeroLibrary} from './hero_renderer.js';
 import {loadEnvironmentArt} from './adventure_environment_art.js';
 import {fetchJson} from './runtime_data.js';
 import {tr} from './locale_runtime.js';
+import {homeItemLanguage} from './home_language_core.js';
 import {petIdleLift} from './view_adventure_pet_mood.js';
 import {homeHeldPointerTarget} from './home_walk_core.js';
 import {homeSceneHit} from './home_pointer_core.js';
@@ -729,7 +730,8 @@ export function createHomeView(root,cb){
   if(next.transcript!==undefined&&document.activeElement!==input)input.value=next.transcript;
   const summonItem=next.selection?.itemId&&!next.selection.id?[...next.catalog.items,...(next.practiceItems||[])].find(item=>item.id===next.selection.itemId):null;
   const summonTarget=summonItem&&next.selection.starterLamp?starterLampExercise(summonItem):summonItem;
-  input.placeholder=(summonTarget?summonSentences(summonTarget,next.lang,next.selection?.color)[0]:'')||(next.lang==='en'?'I want a chair.':'我想要一把椅子。');
+  input.placeholder=(summonTarget?summonSentences(summonTarget,next.lang,next.selection?.color)[0]:'')||({en:'I want a chair.',zh:'我想要一把椅子。',ja:'椅子が欲しいです。',ko:'의자 하나가 갖고 싶어요.'}[next.lang]||'');
+  input.lang=next.lang==='zh'?'zh-CN':next.lang;
   tools.lastChild.setAttribute('aria-pressed',String(next.quiet));
 
   const nextExample=JSON.stringify([next.selection?.itemId,next.selection?.color,next.selection?.starterLamp,next.lang]);
@@ -781,7 +783,7 @@ export function createHomeView(root,cb){
    choice.append(button(item.zh,()=>run(()=>cb.choose(candidate))));
   }
 
-  const key=JSON.stringify([category.value,petMode,(next.petBag||next.pets)?.map(p=>[p.id,p.name,p.stage,p.art,p.activity]),next.selection?.itemId,next.selection?.color]);
+  const key=JSON.stringify([category.value,petMode,next.lang,(next.petBag||next.pets)?.map(p=>[p.id,p.name,p.stage,p.art,p.activity]),next.selection?.itemId,next.selection?.color]);
   if(catalogDrag||key===signature)return;
   signature=key;
   tabs.textContent=tr(petMode?'家园宠物背包':'户外与家园设施');
@@ -842,6 +844,7 @@ export function createHomeView(root,cb){
    }
   }
   for(const item of rows){
+   const targetName=homeItemLanguage(item,next.lang)||item.zh;
    const variants=[{color:''}];
    for(const v of variants){
     const isSelected=next.selection?.itemId===item.id&&(next.selection?.color||'')===v.color;
@@ -850,7 +853,7 @@ export function createHomeView(root,cb){
      else cb.practice(item.id,v.color);
     },'home-item'+(isSelected?' is-selected':''));
     card.setAttribute('aria-label',`${COLORS[v.color]||''}${item.zh}`);
-    card.title=`${COLORS[v.color]||''}${item.zh} · ${item.en}`;
+    card.title=`${COLORS[v.color]||''}${item.zh} · ${targetName}`;
     card.homeItem={itemId:item.id,color:v.color,fromInventory:false};
     card.draggable=false;
     const thumb=el('canvas','home-item-thumb');
@@ -861,7 +864,7 @@ export function createHomeView(root,cb){
     }
     drawHomeObject(thumb.getContext('2d'),item,{color:v.color},10,12,100,68,artImg,0,true);
     const meta=el('div','home-item-meta');
-    meta.append(el('strong','',`${COLORS[v.color]||''}${item.zh}`),el('small','',isSelected?tr(!requiresReading(item)?'直接摆放 · R旋转':'念咒语召唤'):item.en));
+    meta.append(el('strong','',`${COLORS[v.color]||''}${item.zh}`),el('small','',isSelected?tr(!requiresReading(item)?'直接摆放 · R旋转':'念咒语召唤'):targetName));
     const kind=homeInteractiveKind(item.id);
     if(kind||item.activity){
      const badge=el('span','home-item-badge',tr(INTERACTIVE_BADGES[kind]||activities[item.activity]||'可互动'));

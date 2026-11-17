@@ -1,3 +1,4 @@
+import {learningLesson,learningPracticeLanguage} from './learning_language_core.js';
 import {campArrivalPet,pendingCompanionWelcome} from './adventure_arrival_core.js';
 import {createHudRenderGuard} from './hud_render_guard.js';
 import {shopNavigationState,equipmentNavigationState} from './adventure_shop_navigation_core.js';
@@ -217,7 +218,6 @@ async function travelEarth(geo){
 }
 async function practiceEarth(npc,learning){
     if(!save.languageLearning.enabled){toast('请先在双语学习中选择目标语言。');return;}
-    if(!['en','zh-CN'].includes(save.languageLearning.target)){toast('这个城市的课程目前支持中文和英语。');return;}
     const current=save,role=roleStorage;
     const {createStoryChat}=await import('./language_story.js');if(current!==save||role!==roleStorage)return;
     close();
@@ -637,7 +637,7 @@ function paintPanel() {
     if(panel==='companion-wordplay')return;
     if(panel==='companion-practice'){paintCompanionPractice();return;}
     if(panel==='dungeon-story')return;
-    if(panel==='dungeon-journey'){renderDungeonJourney(nodes.overlay,{...model(),dungeon:dungeonFor(assets.content,journeyId)},{close,party:()=>openPanel('pet'),prepare:()=>safely(()=>{void loadAndEnterDungeon(journeyId,journeyRestart);}),claim:floor=>safely(()=>{const next=structuredClone(save),coins=claimTowerReward(next,assets.content,journeyId,floor);saveLocal(next,roleStorage);Object.assign(save,next);queueCloudSave();paintHud();paintPanel();toast(`已领取 ${coins} 奇豆`);})});return;}
+    if(panel==='dungeon-journey'){renderDungeonJourney(nodes.overlay,{...model(),dungeon:dungeonFor(assets.content,journeyId),restart:journeyRestart},{close,party:()=>openPanel('pet'),prepare:(restart=false)=>safely(()=>{void loadAndEnterDungeon(journeyId,restart||journeyRestart);}),claim:floor=>safely(()=>{const next=structuredClone(save),coins=claimTowerReward(next,assets.content,journeyId,floor);saveLocal(next,roleStorage);Object.assign(save,next);queueCloudSave();paintHud();paintPanel();toast(`已领取 ${coins} 奇豆`);})});return;}
     if(panel==='dungeons'){renderDungeons(nodes.overlay,model(),{close:()=>{if(islandSocial.state().pickingDungeon){islandSocial.cancelDungeonPick();openPanel('social-party');return;}close();},enter:loadAndEnterDungeon,leave:exitDungeon,pick:id=>{try{pickDungeonLobby(id);}catch(e){toast(e.message);}},lobby:(id,restart=false)=>{try{pickDungeonLobby(id,restart);}catch(e){toast(e.message);}}});return;}
     if(!panel)return;
     const equipment=['equipment','inventory','shop','pet'].includes(panel);
@@ -1096,7 +1096,7 @@ function paintCreation() {
             const native=displayLocale(),target=secondLocaleFor(native);
             next.locale=native;
             next.languageLearning={...next.languageLearning,native,target,selectionConfirmed:true};
-            if(target==='en'&&native!==target)next.openingJourney={version:1,phase:'offer'};
+            if(['en','zh-CN','ja','ko'].includes(target)&&native!==target)next.openingJourney={version:1,phase:'offer'};
             const id=roleStore.create(next,{isVip:accountIsVip()});await activateRole(id);
             await syncRoles();
         })
@@ -1256,9 +1256,10 @@ async function loadAndEnterDungeon(id,restart=false){
         const party=localPlay.active?localPlay.partyFor(next):journeyCoopParty(next,A.playerSpec(next,assets.content))||journeyPetParty(next,assets.content,A.playerSpec(next,assets.content));
         if(d.kind==='tower')next.dungeonMode=Math.max(1,Math.min(4,party?.length||1));
         journeyParty(next,d,party);
+        const freshStory=restart||!(next.coopRun?.runs||next.dungeonRuns)?.[id];
         enterDungeon(next,assets.content,id,{restart});delete save.dungeonLanguageBuff;Object.assign(save,next);await enterWorld(save);queueCloudSave();
         if(fromParty)close();
-        if(d.kind&&d.story?.length&&save===target&&epoch===roleEpoch&&save.zone===id){
+        if(freshStory&&d.kind&&d.story?.length&&save===target&&epoch===roleEpoch&&save.zone===id){
             renderer.render(world,save,performance.now(),{socialActors:islandSocial.actors});
             panel='dungeon-story';nodes.hud.hidden=true;dungeonStory.open(d);
         }
@@ -1403,10 +1404,11 @@ async function drainWordplayPractice(){
     const epoch=roleEpoch,owner=roleStore.owner,role=roleStore.catalog.activeId;
     const valid=()=>epoch===roleEpoch&&owner===roleStore.owner&&role===roleStore.catalog.activeId;
     const task=(async()=>{
-        const {recordHomePractice}=await import('./home_practice.js');
+        const {recordWordPractice}=await import('./language_course.js');
         while(valid()){
             const event=save.openingJourney?.wordplay?.practices?.[0];if(!event)break;
-            const recorded=await recordHomePractice({...event,item:{en:event.word,practiceWords:{en:[event.word]}},source:'companion-wordplay'},valid);
+            const result=await recordWordPractice({...event,language:learningPracticeLanguage(event.language),words:[event.word],source:'companion-wordplay'},valid);
+            const recorded=result?.persisted;
             if(!recorded||!valid())break;
             const next=structuredClone(save),events=next.openingJourney.wordplay.practices;
             next.openingJourney.wordplay.practices=events.filter(row=>row.id!==event.id);
@@ -1453,7 +1455,7 @@ function paintForestCommission(){
     }
     const target=forestTarget(),nearby=save.zone==='camp'&&target&&Math.hypot(save.position.x-target.x,save.position.y-target.y)<=110;
     renderForestCommission(nodes.overlay,{...model(),nearby},{close,sound:name=>spellSound.play(name),
-        listen:line=>safely(async()=>{openingSpeech?.abort();const controller=new AbortController();openingSpeech=controller;await dialogueVoice.speak(line,'en',controller.signal);}),
+        listen:(line,language)=>safely(async()=>{openingSpeech?.abort();const controller=new AbortController();openingSpeech=controller;await dialogueVoice.speak(line,language,controller.signal);}),
         go:()=>{if(save.zone!=='camp'){openPanel('worldmap');toast('先回营地，再找茜茜继续委托。');return;}if(!target){toast('委托地点暂未就绪，请重新进入营地。');return;}walkTo(target,true);},
         action:value=>performAction({type:'forest-commission',...value},{forestTarget:target}),
         equipment:()=>openPanel('equipment'),training:lesson=>openTacticsTraining({lesson,returnTo:'forest-commission'}),patrol:()=>openJourney(FOREST_PATROL_DUNGEON),nextChallenge:()=>openJourney('journey:lost-spark'),mainline:()=>track()
@@ -1462,14 +1464,14 @@ function paintForestCommission(){
 let forestPracticeTask=null;
 async function drainForestPractice(){
     const current=save,role=roleStore.catalog.activeId;
-    if(!current?.forestCommission?.practice||forestPracticeTask)return;
+    if((!current?.forestCommission?.practice&&!current?.forestCommission?.labelPractice?.length)||forestPracticeTask)return;
     const valid=()=>save===current&&roleStore.catalog.activeId===role;
     forestPracticeTask=current;
     try{
         const [{recordWordPractice},{flushForestCommissionPractice}]=await Promise.all([import('./language_course.js'),import('./forest_commission_learning.js')]);
         await flushForestCommissionPractice(current,{record:recordWordPractice,valid,persist:()=>{persist();return !storageWarning;}});
     }catch(error){if(valid())toast('选物记录暂未保存，稍后会重试；补给和奖励会保留。');}
-    finally{forestPracticeTask=null;if(save!==current&&save?.forestCommission?.practice)void drainForestPractice();}
+    finally{forestPracticeTask=null;if(save!==current&&(save?.forestCommission?.practice||save?.forestCommission?.labelPractice?.length))void drainForestPractice();}
 }
 function paintOpeningJourney(){
     if(panel!=='opening-journey'||!openingJourney(save)){close();return;}
@@ -1490,7 +1492,7 @@ function paintOpeningJourney(){
         pets:()=>{if(leave())openPanel('pet');},
         listen:()=>safely(async()=>{
             openingSpeech?.abort();const controller=new AbortController();openingSpeech=controller;
-            await dialogueVoice.speak('We are friends.','en',controller.signal);
+            const lesson=learningLesson(save);await dialogueVoice.speak(lesson.friend,lesson.language,controller.signal);
         }),
         go:()=>{if(leave())trackOpeningJourney();},
         action:value=>{
@@ -1511,9 +1513,10 @@ async function drainOpeningPractice(){
     if(!event)return;
     const valid=()=>save===current&&roleStore.catalog.activeId===role;
     try{
-        const {recordHomePractice}=await import('./home_practice.js');
+        const {recordWordPractice}=await import('./language_course.js');
         if(!valid())return;
-        const recorded=await recordHomePractice({...event,item:{en:'friends',practiceWords:{en:['friend']}}},valid);
+        const result=await recordWordPractice({...event,language:learningPracticeLanguage(event.language),words:[learningLesson(event.language).friendWord],source:'opening-friend'},valid);
+        const recorded=result?.persisted;
         if(!recorded||!valid())return;
         delete current.openingJourney.practice;persist();
         if(storageWarning)current.openingJourney.practice=event;
@@ -1689,6 +1692,12 @@ function trackCatalog(id) {
 }
 function track(questId, options={}) {
     if(stage!=='world')return;
+    if(questId==='dungeon-next'){
+        if(!dungeonFor(assets.content,save.zone))return;
+        const next=world.encounters.find(encounter=>!encounter.hidden&&!encounter.blocked?.length);
+        if(next)walkTo({...next,kind:'encounter'},true);
+        return;
+    }
     if(questId==='camp-detour'){trackCampDetour();return;}
     if(questId==='camp-detour-start'){if(performAction({type:'camp-detour',step:'start'})!==false)trackCampDetour();return;}
     if(questId==='camp-detour-pause'){performAction({type:'camp-detour',step:'pause'});return;}

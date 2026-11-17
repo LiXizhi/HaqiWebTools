@@ -7,37 +7,74 @@ export function backgroundMusicId(stage,zone,defaultId){
     if(stage==='world'&&['camp','dark'].includes(zone))return MUSIC_ROOT+'area_forest.ogg';
     return defaultId;
 }
-// Original Haqi loops. Dialogue ducks music; visibility/user preference pauses it.
-// Autoplay rejection is retried by the next real gesture, not a timer.
+// Keep a small set of original loops so short battles do not restart the forest.
+// Only the current loop and its fading predecessor may be audible. A blocked
+// incoming play keeps the predecessor until the next real gesture can retry.
 export function createBackgroundMusic(url,{audioFactory=src=>new Audio(src),onError=()=>{}}={}){
-    let audio,track=null,wanted=false,pending=null,timer=null,disposed=false,reported=false,base=.18;
+    const loops=new Map();
+    let current,outgoing=null,track=null,wanted=false,timer=null,disposed=false,base=.18;
     function clearFade(){if(timer!=null)clearInterval(timer);timer=null;}
+    function stop(entry){if(entry){entry.audio.pause();entry.audio.volume=0;}}
     function fade(){
         clearFade();if(disposed)return;
-        const target=wanted?(audioActivityActive()?base*.2:base):0;
-        if(!wanted&&audio.paused){audio.volume=0;return;}
-        timer=setInterval(()=>{const next=audio.volume+(target-audio.volume)*.22;audio.volume=Math.abs(target-next)<.003?target:next;if(audio.volume===target){clearFade();if(!wanted)audio.pause();}},30);
+        const level=wanted?(audioActivityActive()?base*.2:base):0;
+        const ready=!current.audio.paused&&!current.pending;
+        const targets=[[current,ready?level:0],[outgoing,ready?0:level]].filter(([entry])=>entry);
+        if(targets.every(([entry,target])=>entry.audio.volume===target)){
+            if(outgoing&&ready){stop(outgoing);outgoing=null;}
+            return;
+        }
+        timer=setInterval(()=>{
+            let settled=true;
+            for(const [entry,target]of targets){
+                const next=entry.audio.volume+(target-entry.audio.volume)*.22;
+                entry.audio.volume=Math.abs(target-next)<.003?target:next;
+                if(entry.audio.volume!==target)settled=false;
+            }
+            if(settled){clearFade();if(outgoing&&ready){stop(outgoing);outgoing=null;}}
+        },30);
     }
     function setTrack(next){
         if(disposed||next===track)return false;
-        clearFade();if(audio){audio.pause();audio.onerror=null;}
-        track=next;pending=null;reported=false;audio=audioFactory(next);audio.loop=true;audio.preload='none';audio.volume=0;
-        audio.onerror=()=>{if(!reported){reported=true;onError();}};
+        clearFade();
+        let incoming=loops.get(next);
+        if(!incoming){
+            const audio=audioFactory(next);audio.loop=true;audio.preload='none';audio.volume=0;
+            incoming={audio,pending:null,reported:false};
+            audio.onerror=()=>{if(current===incoming&&!incoming.reported){incoming.reported=true;onError();}};
+            loops.set(next,incoming);
+        }
+        if(outgoing&&outgoing!==incoming)stop(outgoing);
+        outgoing=wanted&&current&&!current.audio.paused&&current.audio.volume>0?current:null;
+        if(current&&!outgoing)stop(current);
+        current=incoming;track=next;
+        if(!wanted)stop(current);
+        // Four original scene themes are enough; do not retain arbitrary URLs.
+        for(const [id,entry]of loops){
+            if(loops.size<=4)break;
+            if(entry===current||entry===outgoing)continue;
+            stop(entry);entry.audio.onerror=null;loops.delete(id);
+        }
+        fade();
         return true;
     }
     setTrack(url);
     const unsubscribe=subscribeAudioActivity(fade);
     return{
-        get paused(){return audio.paused;},get element(){return audio;},setTrack,
+        get paused(){return current.audio.paused;},get element(){return current.audio;},setTrack,
         play(){
             if(disposed)return Promise.resolve();wanted=true;fade();
-            if(!audio.paused||pending)return pending||Promise.resolve();
-            const playing=audio;
-            const request=playing.play().catch(()=>{}).finally(()=>{if(pending===request)pending=null;if(disposed||!wanted||playing!==audio)playing.pause();});
-            pending=request;return request;
+            const entry=current;
+            if(!entry.audio.paused||entry.pending)return entry.pending||Promise.resolve();
+            const request=entry.audio.play().catch(()=>{}).finally(()=>{
+                if(entry.pending===request)entry.pending=null;
+                if(disposed||!wanted||(entry!==current&&entry!==outgoing))stop(entry);
+                if(!disposed)fade();
+            });
+            entry.pending=request;return request;
         },
-        pause(){wanted=false;clearFade();audio.pause();audio.volume=0;},
+        pause(){wanted=false;clearFade();for(const entry of loops.values())stop(entry);outgoing=null;},
         setVolume(value){if(Number.isFinite(value)){base=Math.max(0,Math.min(.35,value));fade();}},
-        dispose(){disposed=true;wanted=false;clearFade();unsubscribe();audio.pause();audio.onerror=null;},
+        dispose(){disposed=true;wanted=false;clearFade();unsubscribe();for(const entry of loops.values()){stop(entry);entry.audio.onerror=null;}loops.clear();outgoing=null;},
     };
 }

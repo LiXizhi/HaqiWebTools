@@ -1,3 +1,4 @@
+import {learningLanguage} from './learning_language_core.js';
 import {createCompanionWordplay} from './view_companion_wordplay.js';
 import {wordplayGoal,wordplayAnswer,wordplayReaction} from './companion_wordplay_core.js';
 
@@ -5,21 +6,22 @@ import {wordplayGoal,wordplayAnswer,wordplayReaction} from './companion_wordplay
 export function openCompanionWordplay({root,getState,commit,voice,onClose,onDone,drain=()=>{},viewFactory=createCompanionWordplay}){
  let dead=false,phase='ready',message='',transcript='',token=0,finishRequested=false,doneRequested=false,reaction=null,reactionId=0;
  let controller=new AbortController(),shownStep=wordplayGoal(getState().save)?.step??3;
- const current=()=>!dead&&getState().active;
+ const language=learningLanguage(getState().save);
+ const current=()=>!dead&&getState().active&&learningLanguage(getState().save)===language;
  const paint=()=>{if(current())view.render({...getState(),step:shownStep,phase,message,transcript,reaction,reactionId,completed:shownStep>=3});};
  function fail(error){if(!current())return;phase='ready';message=error?.message||'没听清，可以再说一次，也可以输入。';paint();}
  function submit(text,input='text',expectedStep=shownStep){
   if(!current()||phase==='success'||expectedStep!==shownStep)return false;
-  const answer=wordplayAnswer(expectedStep,text);
+  const answer=wordplayAnswer(expectedStep,text,language);
   transcript=String(text||'').slice(0,200);
   if(!answer.accepted){
-   const response=wordplayReaction(text);reaction=response?.action||null;
+   const response=wordplayReaction(text,language);reaction=response?.action||null;
    if(response){reactionId++;message=({greet:'它也向你打招呼啦！',jump:'它跳起来了！',come:'它跑过来了！'}[reaction])+wordplayGoal(getState().save).prompt+'。';}
    else message=answer.message;
    phase='ready';paint();return false;
   }
   try{
-   const result=commit({type:'companion-wordplay',step:'answer',expectedStep,text:transcript,input,receipt:crypto.randomUUID(),at:Date.now()});
+   const result=commit({type:'companion-wordplay',step:'answer',expectedStep,language,text:transcript,input,receipt:crypto.randomUUID(),at:Date.now()});
    if(result===false||result?.accepted===false)throw Error(result?.message||'进度还没保存好，点一次发送重试。');
    token++;finishRequested=false;void voice.cancel();reaction=null;phase='success';message='';paint();void drain();return true;
   }catch(error){fail(error);return false;}
@@ -43,7 +45,7 @@ export function openCompanionWordplay({root,getState,commit,voice,onClose,onDone
   if(!current()||phase!=='ready')return;
   const goal=wordplayGoal(getState().save);if(!goal)return;
   const ticket=++token,step=shownStep;message='';
-  try{await voice.speak(goal.example,'en',controller.signal);}
+  try{await voice.speak(goal.example,language,controller.signal);}
   catch(error){if(current()&&ticket===token&&phase==='ready'&&shownStep===step)fail(error);}
  }
  function finish(){if(!current()||doneRequested)return;doneRequested=true;onDone();}

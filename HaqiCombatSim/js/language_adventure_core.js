@@ -45,9 +45,9 @@ export function normalizeSpeech(text, locale) {
         s=s.replace(/\b\d+\b/g,x=>Number(x)<=999999999999?englishNumber(Number(x)):x).replace(/\b(hundred|thousand|million) and\b/g,'$1');
     } else if (locale === 'zh-CN') {
         s=s.replace(/[零〇一二两三四五六七八九十百千万亿]+/g,chineseNumber);
-    } else return ''; // Add explicit rules with new learning languages.
+    } else if(locale!=='ja'&&locale!=='ko')return ''; // Only supported learning languages.
     s=s.replace(/[\p{P}\p{S}]/gu,' ').replace(/\s+/g,' ').trim();
-    return locale==='zh-CN'?s.replaceAll(' ',''):s;
+    return ['zh-CN','ja','ko'].includes(locale)?s.replaceAll(' ',''):s;
 }
 export function matchesSpeech(text, answers, locale) {
     const normalized=normalizeSpeech(text,locale);
@@ -56,6 +56,8 @@ export function matchesSpeech(text, answers, locale) {
 export function targetLanguageText(text, locale, properNames=[]) {
     let value=String(text||'');
     for(const name of properNames.filter(x=>typeof x==='string'&&x.trim()))value=value.replaceAll(name,' ');
+    if(locale==='ja')return /[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}]/u.test(value)&&!/[\p{Script=Hangul}]/u.test(value);
+    if(locale==='ko')return /[\p{Script=Hangul}]/u.test(value);
     if(locale==='en')return /[a-z]{2}/i.test(value)&&!/[\u3400-\u9fff]/u.test(value);
     if(locale==='zh-CN')return /[\u3400-\u9fff]/u.test(value);
     return false;

@@ -167,7 +167,7 @@ export function createDictionary({root,getState,onClose,onBuff,onRewards,onLegac
             if(example&&!s.accepted&&(s.review||(language==='en'&&s.phase==='recall')))await hint();
             if(!same(s)||revision!==(s.speechRevision||0))return;
             const teacherExample=tutorText&&s.tutorTranscript?.filter(turn=>turn.role==='teacher').flatMap(tutorReplyExamples).find(item=>item.example===tutorText);
-            await voice.speak(tutorText??(example?s.entry.example:s.entry.text),teacherExample?.language==='en'?'en':language==='zh'?'zh-CN':'en',s.abort.signal,undefined,{playbackRate:speechRate,onPlaying:()=>{if(same(s)&&s.speaking&&revision===(s.speechRevision||0))view.speechState?.(true,tutorText,'playing');}});
+            await voice.speak(tutorText??(example?s.entry.example:s.entry.text),teacherExample?.language||(language==='zh'?'zh-CN':language),s.abort.signal,undefined,{playbackRate:speechRate,onPlaying:()=>{if(same(s)&&s.speaking&&revision===(s.speechRevision||0))view.speechState?.(true,tutorText,'playing');}});
         }catch{if(same(s)&&revision===(s.speechRevision||0))failure='发音暂不可用，可以继续完成文字练习。';}
         finally{if(same(s)&&revision===(s.speechRevision||0)){s.speaking=false;view.speechState?.(false);if(failure&&!(tutorText&&view.tutorSpeechError?.(tutorText,failure))&&!view.speechError?.(failure))view.message(failure);}}
     }
@@ -241,7 +241,7 @@ export function createDictionary({root,getState,onClose,onBuff,onRewards,onLegac
                     if(activePass===pass&&same(s)&&s.tutorBusy&&s.tutorAbort===request&&!request.signal.aborted&&revision===(s.tutorRevision||0)&&typeof text==='string'&&text.trim())view.tutorPreview?.(text.slice(0,650));
                 }});
                 if(!same(s)||request.signal.aborted||revision!==(s.tutorRevision||0))return;
-                try{reply=validateTutorReply(typeof raw==='string'?parseDialogueJson(raw):raw,s.entry,{allowEnglishExample:requestsEnglishExample(question,history)});break;}
+                try{reply=validateTutorReply(typeof raw==='string'?parseDialogueJson(raw):raw,s.entry,{language,allowEnglishExample:requestsEnglishExample(question,history)});break;}
                 catch(error){
                     if(pass===1)throw error;
                     activePass=-1;view.tutorRepairing?.();

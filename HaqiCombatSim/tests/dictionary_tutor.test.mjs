@@ -275,3 +275,7 @@ test('English teaching context survives short followups but stops at a new topic
  assert.equal(requestsEnglishExample('再简单一点',[...history,{role:'learner',text:'月有几笔？'},{role:'teacher',text:'4笔。'}]),false);
  assert.equal(requestsEnglishExample('再举个例子'),false);
 });
+
+test('Japanese kanji and Korean examples remain in the selected language with Chinese glosses',()=>{
+ for(const [language,text,example] of [['ja','水','水をください。'],['ko','물','물을 주세요.']]){const entry={id:'water',text},reply={entryId:'water',reply:'这是请求水的说法。',example,translation:'请给我水。',question:''};assert.equal(validateTutorReply(reply,entry,{language}).example,example);assert.throws(()=>validateTutorReply({...reply,example:'Give me water.'},entry,{language}),/所选语言/);assert.throws(()=>validateTutorReply({...reply,translation:''},entry,{language}),/中文解释/);assert.match(tutorMessages(entry,language,[],'举个例子')[0].content,new RegExp('当前学习目标为'+(language==='ja'?'日语':'韩语')));}
+});

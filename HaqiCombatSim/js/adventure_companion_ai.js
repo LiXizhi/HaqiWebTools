@@ -78,7 +78,7 @@ export function createCompanionAI(api,{store=createLocalStore({name:'haqi-compan
             await store.update(quotaKey,row=>reserveCompanionQuota(row,{now:Date.now(),id,proactive,params}));reserved=true;if(!live(ticket)){await store.update(quotaKey,row=>releaseCompanionQuota(row,id));return;}
             const reply=validateCompanionReply(await voice.judge(companionMessages(config.skillMarkdown,context,memory,text||'Offer a brief, natural observation about our current shared activity. Ask at most one question.'),abort.signal,{maxTokens:params.modelTokens}),context.candidates||[],params);
             if(!live(ticket))return;
-            if(['en','zh-CN'].includes(context.language)&&!targetLanguageText(reply.reply,context.language,[context.player,context.partner]))throw Error('伙伴回复语言不符合当前设置，请再试一次。');
+            if(['en','zh-CN','ja','ko'].includes(context.language)&&!targetLanguageText(reply.reply,context.language,[context.player,context.partner]))throw Error('伙伴回复语言不符合当前设置，请再试一次。');
             if(reply.summary!==null)memory.summary=reply.summary;
             if(reply.goalId&&!proactive)api.prefer(reply.goalId);
             say(reply.reply,context.language===context.native?'':reply.translation,context.language);if(proactive)unanswered++;

@@ -5,7 +5,7 @@ import {dictionaryEntryStatus,dictionaryDailyProgress,dictionarySpellingClue} fr
 import {searchDictionary,suggestDictionaryWords,suggestDictionaryForm,normalizeDictionarySearch} from './dictionary_search_core.js';
 import {createDictionaryTutor} from './view_dictionary_tutor.js';
 import {spellingScaffold,exampleTutorQuestion,formTutorQuestion} from './dictionary_tutor_core.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {createHanziWriting} from './view_hanzi_writing.js';
 import {connectHanziAnimation} from './hanzi_animation_bridge.js';
 import {displayLocale,learningPair,textFor} from './locale.js';

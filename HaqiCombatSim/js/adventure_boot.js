@@ -1,7 +1,7 @@
 import { configureLocale, loadLocaleFiles } from './locale.js';
 import { localeIdsToLoad, normalizeLocaleSave, isLocaleId } from './locale_core.js';
 import { setText, tr } from './locale_runtime.js';
-import { createEntryEmblem } from './view_entry_brand.js';
+import { createEntryEmblem } from './ui/entry_brand.js';
 
 // Read only language preferences; full save validation remains in the app.
 // The local display-language choice (homepage or settings) outranks the role save,

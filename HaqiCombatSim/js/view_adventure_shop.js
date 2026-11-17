@@ -9,7 +9,7 @@ import { canEquip, equipmentBlockReason, SCHOOL_NAMES } from './adventure_core.j
 import { productPrice,foodInfo } from './adventure_pets_core.js';
 import { petPortrait } from './view_adventure_pets.js';
 import { showPetDetails } from './view_adventure_pet_details.js';
-import { createCloseButton } from './view_adventure_controls.js';
+import { createCloseButton } from './ui/controls.js';
 import { shopGuidance,adventureShopSelection } from './adventure_shop_guidance_core.js';
 
 // Layout: HaqiShop.kids1.html (account/preview, two tab rows, 3 × 3 goods).

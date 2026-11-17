@@ -1,4 +1,4 @@
-import {renderDialogue} from './view_adventure.js';
+import {renderDialogue} from './views/adventure/view_npc_dialogue.js';
 
 // Use the ordinary island dialogue, before mounting the language practice UI.
 export function createLanguageSceneIntro(root,model,{step,actor,proceed,close}){

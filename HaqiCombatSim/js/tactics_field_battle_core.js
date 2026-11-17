@@ -1,5 +1,4 @@
 import {createPveBattle,playPveRound} from './combat_pve_core.js';
-import {captureBattlePresentation} from './view_battle_presentation.js';
 import {selectableCards,canCast} from './combat_unit_core.js';
 
 const ATTACK='Fire_SingleAttack_Level0_45',HEAVY='Fire_SingleAttack_Level6_low_level';
@@ -49,9 +48,10 @@ export function createTacticsFieldBattle(dataset,content,{lessonId='focus',seed=
 }
 
 // Replay also restores random rolls and AI choices after a failed round.
-export function playTacticsFieldRound({battle,decisions,create},decision){
+export function playTacticsFieldRound({battle,decisions,create},decision,capturePresentation=null){
  try{
-  const playback=captureBattlePresentation(battle,()=>playPveRound(battle,decision));
+  const resolve=()=>playPveRound(battle,decision);
+  const playback=capturePresentation?capturePresentation(battle,resolve):(resolve(),null);
   decisions.push(structuredClone(battle.lastDecision||decision));
   return {battle,playback,error:null};
  }catch(error){

@@ -4,7 +4,7 @@
 import {loadResources} from '../../js/adventure_assets.js';
 import * as A from '../../js/adventure_core.js';
 import {syncEquipmentInstances} from '../../js/adventure_equipment_instances_core.js';
-import {renderPanel} from '../../js/view_adventure.js';
+import {renderPanel} from '../../js/views/adventure/view_panel_modal.js';
 const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
 const assets=await loadResources(),c=assets.content,save=A.createAdventure(c,{name:'宝石验收'});
 save.xp=c.progression.xpThresholds[19];A.syncProgression(save,c);

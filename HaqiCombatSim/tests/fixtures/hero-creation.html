@@ -1,9 +1,9 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><base href="../../"><meta name="viewport" content="width=device-width,initial-scale=1"><title>主角形象选择预览</title><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><style>body{background:#244b42;min-height:100dvh}#result{position:relative;color:white;padding:20px}#result canvas{max-width:100%}</style></head><body class="haqi-app"><div id="entry"></div><div id="result" role="status">正在加载；此页不读写玩家存档。</div><script type="module">
 import {loadResources} from '../../js/adventure_assets.js';
-import {renderEntry} from '../../js/view_adventure.js';
+import {renderEntry} from '../../js/views/adventure/view_entry.js';
 import {createAdventure,parseSave,playerSpec} from '../../js/adventure_core.js';
 import {createWorld} from '../../js/adventure_world_core.js';
-import {createRenderer} from '../../js/adventure_renderer.js';
+import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
 import {createPveBattle} from '../../js/combat_pve_core.js';
 import {createCreationPreview,tutorialCards} from '../../js/adventure_creation_preview.js';
 import {createHeroDraft} from '../../js/hero_body_core.js';

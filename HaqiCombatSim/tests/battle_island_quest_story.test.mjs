@@ -51,26 +51,40 @@ test('talk entry is available only for unfinished accepted talk goals',()=>{
     assert.equal(catalogTalksForNpc(save,content,talk.npcId).length,0);
 });
 
+import { createQuestDialogueController } from '../js/adventure/quest_dialogue_controller.js';
+
 test('real controller delays accept, reward and talk actions until final reply; closing cancels',async()=>{
-    const app=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
-    const code=app.slice(app.indexOf('function paintDialogue(){'),app.indexOf('function interact(target)'));
     let callbacks;const actions=[];
-    const context=vm.createContext({refreshWordGoals(){},dialog:{npcId:30517},dialogDone:null,assets:{content:{}},save:{},nodes:{overlay:{}},model:()=>({}),
-        V:{renderDialogue:(a,b,c,cb)=>{callbacks=cb;}},close:()=>{context.dialog=null;context.dialogDone=null;},mapDialogue(){},dialogueVoice:{speak(){}},
-        A:{applyAction:(s,c,a)=>{actions.push(a);return {};},currentQuest:()=>null},toast(){},paintHud(){},persist(){},queueCloudSave(){},
-        finishTrackedDialogue:()=>false,rewardSnapshot:()=>({}),showRewards(){},islandSocial:{activity(){}},petScene:{dialogue(){}},
-        missingRewardPets:()=>[],loadPet(){},safely:f=>f(),openPanel(){},travel(){},track(){}});
-    vm.runInContext(code,context);context.paintDialogue();
+    let dialog={npcId:30517},dialogDone=null;
+    const ctrl=createQuestDialogueController({
+        nodes:{overlay:{}},
+        getContext:()=>({dialog,dialogDone,assets:{content:{quests:[]}},save:{},setDialog:v=>{dialog=v;},setDialogDone:v=>{dialogDone=v;}}),
+        model:()=>({}),
+        renderDialogue:(a,b,c,cb)=>{callbacks=cb;},
+        applyAction:(s,c,a)=>{actions.push(a);return {};},
+        close:()=>{dialog=null;dialogDone=null;},
+        dialogueVoice:{speak(){}},
+        toast(){},paintHud(){},persist(){},queueCloudSave(){},
+        showRewards(){},
+        islandSocial:()=>({activity(){}}),
+        petScene:()=>({dialogue(){}}),
+        missingRewardPets:()=>[],loadPet(){},
+        safely:f=>f(),
+        openPanel(){},travel(){},
+        opening:{},wordLearning:{refreshWordGoals(){}},rewardFeedback:{hasPendingItems:false},
+        languageAdventure:{open(){}},
+    });
+    ctrl.paintDialogue();
     const quest=runtime.quests.find(q=>q.id===61076);
     for(const [key,type,lines] of [['startCatalog','accept-catalog',quest.startDialog],['finishCatalog','claim-catalog',quest.endDialog]]){
-        actions.length=0;context.dialog={npcId:quest.startNpc};callbacks[key](quest);
+        actions.length=0;dialog={npcId:quest.startNpc};callbacks[key](quest);
         assert.equal(actions.length,0);
-        for(let i=0;i<lines.length-1;i++){await context.nextDialogue();assert.equal(actions.length,0);}
-        await context.nextDialogue();assert.equal(actions.length,1);assert.equal(actions[0].type,type);
+        for(let i=0;i<lines.length-1;i++){await ctrl.nextDialogue();assert.equal(actions.length,0);}
+        await ctrl.nextDialogue();assert.equal(actions.length,1);assert.equal(actions[0].type,type);
     }
-    actions.length=0;context.dialog={npcId:quest.startNpc};callbacks.startCatalog(quest);context.close();await context.nextDialogue();assert.equal(actions.length,0);
-    const q=runtime.quests.find(q=>q.talks.length),talk=q.talks[0];context.dialog={npcId:talk.npcId};context.startQuestTalk(talk,true);
+    actions.length=0;dialog={npcId:quest.startNpc};callbacks.startCatalog(quest);dialog=null;dialogDone=null;await ctrl.nextDialogue();assert.equal(actions.length,0);
+    const q=runtime.quests.find(q=>q.talks.length),talk=q.talks[0];dialog={npcId:talk.npcId};ctrl.startQuestTalk(talk,true);
     assert.equal(actions.length,0);
-    for(let i=0;i<talk.dialog.length;i++)await context.nextDialogue();
+    for(let i=0;i<talk.dialog.length;i++)await ctrl.nextDialogue();
     assert.equal(actions[0].type,'talk');assert.equal(actions[0].npcId,talk.npcId);
 });

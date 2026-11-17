@@ -12,7 +12,7 @@ import { onLargeIsland, riverBlocks, sceneryCoversActor, separateBuilding } from
 import {encounterCoolingDown} from './adventure_encounter_cooldown_core.js';
 import {defaultParams,resolveParams} from './combat_params_core.js';
 import {earthWalkable,earthNearest} from './adventure_earth_core.js';
-import {createCityDungeonWorld,dungeonFor,dungeonProgress} from './adventure_city_dungeons_core.js';
+import {createCityDungeonWorld,dungeonFor,dungeonProgress} from './adventure_city_dungeon_world_core.js';
 const interactionDefaults=defaultParams('kids').adventure;
 export const WALK_SPEED = 210;
 export function updateEncounterVisibility(world,save,now) {

@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-CN"><meta charset="utf-8"><base href="/"><meta name="viewport" content="width=device-width,initial-scale=1"><title>怪物战斗美术验收</title><style>body{background:#173c43;color:#fff;font:14px sans-serif;margin:12px}canvas{width:100%;height:300px}#gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}#gallery canvas{height:130px}figure{margin:0;text-align:center;background:#244b50;border-radius:8px}figcaption{padding:8px}</style><h1>原版怪物战斗美术验收</h1><p id="status">加载中</p><canvas id="battle"></canvas><div id="gallery"></div><script type="module">
 import {loadResources} from '../../js/adventure_assets.js';
-import {createRenderer} from '../../js/adventure_renderer.js';
+import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
 import {createAdventure,playerSpec} from '../../js/adventure_core.js';
 import {createPveBattle} from '../../js/combat_pve_core.js';
 const read=async n=>(await fetch('../../data/adventure/'+n+'.json')).json();

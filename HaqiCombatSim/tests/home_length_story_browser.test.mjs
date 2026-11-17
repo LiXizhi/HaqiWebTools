@@ -22,7 +22,7 @@ test('length story labels the actual selected pen when multiple correct objects 
   const tap=async(x,y)=>{const p=point(x,y);await page.mouse.click(p.x,p.y);};
   const drag=async(x,y,u,v)=>{const a=point(x,y),b=point(u,v);await page.mouse.move(a.x,a.y);await page.mouse.down();await page.mouse.move(b.x,b.y,{steps:12});await page.mouse.up();};
   const tapObject=async id=>{
-   const p=await page.evaluate(async id=>{const {homeObjectVisualBounds}=await import('/js/view_home_art.js'),{footprint}=await import('/js/home_core.js');const {items}=await (await fetch('/data/adventure/home/catalog.json')).json(),o=(await worldLearning.schoolObjects())[id],b=footprint(o,items),v=homeObjectVisualBounds(items.find(i=>i.id===o.itemId),o,o.x*40,o.y*40,b.w*40,b.h*40);return {x:v.x+v.w/2,y:v.y+v.h/2};},id);
+   const p=await page.evaluate(async id=>{const {homeObjectVisualBounds}=await import('/js/home/view_home_object_art.js'),{footprint}=await import('/js/home_core.js');const {items}=await (await fetch('/data/adventure/home/catalog.json')).json(),o=(await worldLearning.schoolObjects())[id],b=footprint(o,items),v=homeObjectVisualBounds(items.find(i=>i.id===o.itemId),o,o.x*40,o.y*40,b.w*40,b.h*40);return {x:v.x+v.w/2,y:v.y+v.h/2};},id);
    await page.mouse.click(canvas.x+canvas.width/2+p.x,canvas.y+canvas.height/2+p.y);
   };
   const label=async text=>{await page.getByRole('button',{name:'给物品写标签',exact:true}).click();await page.getByRole('textbox',{name:'作品标签'}).fill(text);await page.getByRole('button',{name:'保存标签',exact:true}).click();};

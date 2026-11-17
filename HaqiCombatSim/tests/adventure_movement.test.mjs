@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { bindTouchMovement } from '../js/view_adventure_movement.js';
-import { createRenderer } from '../js/adventure_renderer.js';
+import {createRenderer} from '../js/adventure/renderer/scene_renderer.js';
 
 function setup() {
     const surface=new EventTarget(),captures=new Set(),values=[],zooms=[],taps=[];

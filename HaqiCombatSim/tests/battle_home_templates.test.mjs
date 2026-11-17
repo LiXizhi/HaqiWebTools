@@ -15,7 +15,7 @@ for(const style of ['wood','stone'])test(style+' template is an atomic reading-b
  applyHomeAction(parts,{type:'recall',id:wall.id},catalog);assert.deepEqual(parts.inventory,{});
 });
 test('hidden connected roof groups skip drawing and hits before dynamic fallback',()=>{
- const source=fs.readFileSync(new URL('../js/view_home.js',import.meta.url),'utf8');
+ const source=fs.readFileSync(new URL('../js/home/view_home_canvas_renderer.js',import.meta.url),'utf8');
  assert.match(source,/function drawGroup\(g\)\{\s*if\(g.roof&&hiddenRoofs.has\(g.section\)\)return;/);
  assert.doesNotMatch(source,/hiddenRoofs.has\(g.section\)\?\.2/);
 });

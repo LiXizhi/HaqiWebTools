@@ -4,7 +4,7 @@
 import {loadResources} from '../../js/adventure_assets.js';
 import * as A from '../../js/adventure_core.js';
 import {syncEquipmentInstances,findEquipmentInstance} from '../../js/adventure_equipment_instances_core.js';
-import {renderPanel} from '../../js/view_adventure.js';
+import {renderPanel} from '../../js/views/adventure/view_panel_modal.js';
 // Isolated, in-memory fixture. Never reads or writes user storage.
 // Base URL preserves production fetch paths for resources and local-mode archives.
 const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);

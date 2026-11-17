@@ -1,7 +1,7 @@
-import {el,button} from './view_adventure.js';
+import {el,button} from './ui/dom.js';
 import {companionBattleAdvice,companionSelectedAdvice} from './companion_battle_advice_core.js';
 import {petPortrait} from './view_adventure_pets.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {companionWorldGuide,guidePet} from './companion_guide_core.js';
 import {campDetourAvailable,campDetour,campDetourGoal} from './camp_detour_core.js';
 

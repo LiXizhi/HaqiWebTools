@@ -7,7 +7,7 @@ import {createSpellSound} from '../../js/spell_sound.js';
 import {acquireAudioActivity} from '../../js/audio_activity.js';
 import {loadResources} from '../../js/adventure_assets.js';
 import {createAdventure} from '../../js/adventure_core.js';
-import {renderPanel,settingsView} from '../../js/view_adventure.js';
+import {renderPanel, settingsView} from '../../js/views/adventure/view_panel_modal.js';
 // Real settings view with an in-memory character; no player storage is read or written.
 const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
 const params=new URLSearchParams(location.search);

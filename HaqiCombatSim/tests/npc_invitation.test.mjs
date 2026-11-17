@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import {npcHasActiveQuest} from '../js/adventure_npc_core.js';
 
-const renderer=fs.readFileSync(new URL('../js/adventure_renderer.js',import.meta.url),'utf8');
+const renderer=fs.readFileSync(new URL('../js/adventure/renderer/scene_renderer.js',import.meta.url),'utf8');
 const start=renderer.indexOf('        const invitedNpc=');
 const invitation=renderer.slice(start,renderer.indexOf('        if(!world.portal.hidden)',start));
 test('NPC invitation follows the selected instance with no follower pet and stays above its portrait',()=>{

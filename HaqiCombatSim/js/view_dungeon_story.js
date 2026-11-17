@@ -2,7 +2,7 @@ import {watchTreeText} from './language_tree_capture.js';
 import {waitForDialogueReveal} from './dialogue_reveal.js';
 import {createDialogueReveal} from './dialogue_reveal.js';
 import {createBilingualDialogue} from './view_bilingual_dialogue.js';
-import {el,button} from './view_adventure.js';
+import {el, button} from './views/adventure/primitives.js';
 import {bindChatMicrophone,createDialogueMicrophone} from './view_dialogue_microphone.js';
 import {heroHeadPortrait} from './hero_renderer.js';
 import {bossPortrait} from './view_adventure_dungeons.js';

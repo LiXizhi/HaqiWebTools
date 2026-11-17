@@ -4,7 +4,8 @@
 import {loadResources} from '../../js/adventure_assets.js';
 import {createAdventure,applyAction} from '../../js/adventure_core.js';
 import {tickCheckin} from '../../js/adventure_checkin_core.js';
-import {renderHud,renderPanel} from '../../js/view_adventure.js';
+import {renderHud} from '../../js/views/adventure/view_hud.js';
+import {renderPanel} from '../../js/views/adventure/view_panel_modal.js';
 // Isolated test identity, never reads or writes a real account or save.
 const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
 const assets=await loadResources(),save=createAdventure(assets.content,{name:'小哈奇'});

@@ -1,4 +1,4 @@
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {fill, setText, tr} from './locale_runtime.js';
 // Island navigation UI: controller owns movement and all save changes.
 export function renderLocalMap(root,world,save,callbacks,socialActors=[]){

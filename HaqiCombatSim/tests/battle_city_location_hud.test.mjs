@@ -7,15 +7,13 @@ import {createAdventure} from '../js/adventure_core.js';
 import {installCityDungeons,enterCityDungeon} from '../js/adventure_city_dungeons_core.js';
 import {generateCityDungeon,generatedCityRoute} from '../js/adventure_city_generated_core.js';
 import {createWorld} from '../js/adventure_world_core.js';
+import { updateLocationLabel } from '../js/adventure/world_interaction_controller.js';
 const read=file=>JSON.parse(fs.readFileSync(new URL('../'+file,import.meta.url),'utf8'));
-// Execute the actual frame HUD branch: the isolated city fixture does not run
-// adventure_app's frame, and therefore missed this integration regression.
-const source=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
-const update=source.split('\n').find(line=>line.includes("querySelector('.location-label small')"));
 function run(world,position,label){
-    const calls=[];
-    vm.runInNewContext(update,{world,save:{position},regionAt,nodes:{hud:{querySelector:()=>label}},setText:(node,name)=>{calls.push(name);node.dataset.zh=name;}});
-    return calls;
+    const before=label?.dataset?.zh;
+    updateLocationLabel(world,{position},{querySelector:()=>label});
+    if(label&&label.dataset.zh!==before)return [label.textContent];
+    return [];
 }
 test('real authored and generated city worlds update the frame HUD without an island region',()=>{
     const content=read('data/adventure/chapter.json');content.worldMaps={camp:read(content.worldMapIndex.islands.camp.file)};content.dungeons=[];

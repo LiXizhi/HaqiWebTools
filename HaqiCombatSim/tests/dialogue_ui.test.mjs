@@ -4,29 +4,43 @@ import {bindDialogue} from '../js/view_adventure_dialogue.js';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import {forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS} from '../js/forest_commission_core.js';
+import {createQuestDialogueController} from '../js/adventure/quest_dialogue_controller.js';
 
 test('Sissy starts hands-on practice without awarding talk or closing the practice panel',async()=>{
-    const source=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
-    const start=source.slice(source.indexOf('function startQuestTalk('),source.indexOf('function startLines('));
-    const next=source.slice(source.indexOf('async function nextDialogue('),source.indexOf('function openCompanionPractice('));
     let opened=0,talks=0,result,closed=0,saved=0;
-    const context=vm.createContext({save:{},assets:{content:{}},A:{currentQuest:()=>({id:63001}),applyAction:()=>talks++},
-        startLines:(_lines,_label,done)=>{result=done();},openCompanionPractice:()=>opened++,
-        dialog:{npcId:36200,lines:[{}],index:0},dialogDone:()=> 'practice',
-        missingRewardPets:()=>[],loadPet(){},safely:fn=>fn(),toast(){},petScene:{dialogue(){}},
-        persist:()=>saved++,queueCloudSave(){},paintHud(){},finishTrackedDialogue:()=>closed++,close:()=>closed++
+    const state={
+        save:{},assets:{content:{}},
+        dialog:{npcId:36200,lines:[{}],index:0},
+        dialogDone:()=>'practice',
+        setDialogDone:next=>{state.dialogDone=next;},
+    };
+    const controller=createQuestDialogueController({
+        nodes:{overlay:{}},
+        getContext:()=>state,
+        close:()=>closed++,
+        persist:()=>saved++,
+        queueCloudSave(){},
+        paintHud(){},
+        missingRewardPets:()=>[],
+        loadPet(){},
+        safely:fn=>fn(),
+        toast(){},
+        opening:{openCompanionPractice:()=>opened++},
+        petScene:()=>({dialogue(){}}),
+        currentQuestFn:()=>({id:63001}),
+        applyAction:()=>talks++,
+        onStartLines:(_lines,_label,done)=>{result=done();},
     });
-    vm.runInContext(start+next,context);
-    context.startQuestTalk({npcId:36200,dialog:[{}]});
+    controller.startQuestTalk({npcId:36200,dialog:[{}]});
     assert.equal(opened,1);assert.equal(talks,0);assert.equal(result,'practice');
-    await context.nextDialogue();assert.equal(closed,0);assert.equal(saved,0);
-    context.startQuestTalk({npcId:36201,dialog:[{}]});assert.equal(talks,1);
-    context.startQuestTalk({npcId:36200,dialog:[{}]},true);assert.equal(talks,2);
+    await controller.nextDialogue();assert.equal(closed,0);assert.equal(saved,0);
+    controller.startQuestTalk({npcId:36201,dialog:[{}]});assert.equal(talks,1);
+    controller.startQuestTalk({npcId:36200,dialog:[{}]},true);assert.equal(talks,2);
 });
 
 test('tracked NPC dialogue executes only one available quest choice and consumes intent',()=>{
-    const source=fs.readFileSync(new URL('../js/view_adventure.js',import.meta.url),'utf8');
-    const renderSource=source.slice(source.indexOf('export function renderDialogue('),source.indexOf('export function renderBattle(')).replace('export function','function');
+    const source=fs.readFileSync(new URL('../js/views/adventure/view_npc_dialogue.js',import.meta.url),'utf8');
+    const renderSource=source.slice(source.indexOf('export function renderDialogue(')).replace('export function','function');
     const quest={id:1,title:'Quest',startNpc:10,endNpc:10};
     const npc={id:10,name:'NPC',zone:'camp',description:'Default greeting'};
     const element=(tag,cls,...children)=>({tag,children,dataset:{},textContent:'text',classList:{toggle(){},add(){}},style:{setProperty(){}},setAttribute(){},append(...items){this.children.push(...items);},replaceChildren(...items){this.children=items;},querySelector(){return element('button');}});
@@ -62,13 +76,11 @@ test('tracked NPC dialogue executes only one available quest choice and consumes
             assert.equal(bound,1);
         }
     }
-    const controller=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
-    assert.match(controller,/dialog=\{npcId:target.id,npc:target,questDialogue:target.questDialogue===true,fromQuestTracking:target.questDialogue===true\}/);
+    const controller=fs.readFileSync(new URL('../js/adventure/scene_navigation_controller.js',import.meta.url),'utf8');
+    assert.match(controller,/questDialogue:\s*target\.questDialogue\s*===\s*true,\s*fromQuestTracking:\s*target\.questDialogue\s*===\s*true/);
 });
 
 test('tracking dialogue closes after success and follows only the sole updated tracker entry',async()=>{
-    const source=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
-    const controller=source.slice(source.indexOf('function finishTrackedDialogue()'),source.indexOf('function interact(target)'));
     for(const scenario of [
         {name:'accept and follow objective',tracked:true,ids:[1],expected:1},
         {name:'claim does not auto-travel to an unaccepted next chapter',tracked:true,ids:[],chapter:2,advance:'reward'},
@@ -85,19 +97,38 @@ test('tracking dialogue closes after success and follows only the sole updated t
         const calls=[],quest={id:1,startNpc:10,endNpc:10,title:'Quest'},save={ids:[]};
         let callbacks;
         const update=()=>{save.ids=scenario.ids;return scenario.advance;};
-        const context=vm.createContext({
-            dialog:{npcId:10,fromQuestTracking:!!scenario.tracked,questDialogue:false,lines:[{}],index:0},dialogDone:update,
-            save,assets:{content:{quests:[quest,{id:2}]}},trackedQuestIds:state=>state.ids,
+        const state={
+            dialog:{npcId:10,fromQuestTracking:!!scenario.tracked,questDialogue:false,lines:[{}],index:0},
+            dialogDone:update,
+            save,
+            assets:{content:{quests:[quest,{id:2}]}},
+            setDialog:next=>{state.dialog=next;},
+            setDialogDone:next=>{state.dialogDone=next;},
+        };
+        const controller=createQuestDialogueController({
+            nodes:{overlay:{}},
+            getContext:()=>state,
+            model:()=>({}),
+            close:()=>{calls.push('close');state.dialog=null;},
+            persist(){},queueCloudSave(){},paintHud(){},
+            missingRewardPets:()=>[],loadPet(){},
+            safely:callback=>callback(),
+            openPanel(){},travel(){},toast(){},showRewards(){},
+            wordLearning:{refreshWordGoals(){}},
             rewardFeedback:{hasPendingItems:!!scenario.rewards},
-            A:{currentQuest:()=>scenario.chapter?{id:scenario.chapter}:null,applyAction:()=>{update();return {}; }},
-            close:()=>{calls.push('close');context.dialog=null;},track:(id,options)=>{assert.equal(context.dialog,null);assert.equal(options.pin,false);calls.push(id);},
-            persist(){},queueCloudSave(){},paintHud(){},refreshWordGoals(){},petScene:{dialogue(){}},missingRewardPets:()=>[],loadPet(){},safely:callback=>callback(),
-            nodes:{overlay:{}},model:()=>({}),V:{renderDialogue:(_root,_model,_dialog,cb)=>{callbacks=cb;calls.push('render');}},
-            mapDialogue(){},dialogueVoice:{},openPanel(){},travel(){},toast(){},rewardSnapshot(){},showRewards(){},islandSocial:{activity(){}},
+            opening:{},
+            languageAdventure:{},
+            islandSocial:()=>({activity(){}}),
+            petScene:()=>({dialogue(){}}),
+            dialogueVoice:{},
+            renderDialogue:(_root,_model,_dialog,cb)=>{callbacks=cb;calls.push('render');},
+            applyAction:()=>{update();return {};},
+            currentQuestFn:()=>scenario.chapter?{id:scenario.chapter}:null,
+            trackedQuestIdsFn:s=>s.ids,
+            onTrack:(id,options)=>{assert.equal(state.dialog,null);assert.equal(options.pin,false);calls.push(id);},
         });
-        vm.runInContext(controller,context);
-        if(scenario.catalog){context.paintDialogue();calls.length=0;callbacks[scenario.catalog](quest);await Promise.resolve();}
-        else await context.nextDialogue();
+        if(scenario.catalog){controller.paintDialogue();calls.length=0;callbacks[scenario.catalog](quest);await Promise.resolve();}
+        else await controller.nextDialogue();
         assert.deepEqual(calls,scenario.tracked?['close',...(scenario.expected?[scenario.expected]:[])]:['render'],scenario.name);
     }
 });

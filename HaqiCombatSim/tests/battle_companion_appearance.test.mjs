@@ -22,7 +22,7 @@ for(const mode of ['local','cdn'])test(`practice and first-pet welcome share the
   art:()=>el('canvas'),spellFace:()=>el('div'),spellHint:()=>'',createCloseButton:()=>el('button')});
  const portrait=source('view_adventure_pets.js');
  vm.runInContext(portrait.slice(portrait.indexOf('export function petPortrait('),portrait.indexOf('export function starterPicker(')).replace('export function','function'),context);
- const practice=source('view_adventure.js');
+ const practice=source('views/adventure/view_panel_modal.js');
  vm.runInContext(practice.slice(practice.indexOf('export function renderCompanionPractice('),practice.indexOf('export function renderPanel(')).replace('export function','function'),context);
  const welcome=source('view_opening_journey.js');
  vm.runInContext(welcome.slice(welcome.indexOf('export function')).replaceAll('export function','function'),context);

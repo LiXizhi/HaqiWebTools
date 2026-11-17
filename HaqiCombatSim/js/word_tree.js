@@ -1,4 +1,5 @@
 import {emptyLanguageTree} from './language_tree_core.js';
+import {createLearningVoice} from './language_adventure_voice.js';
 import {treeGloss} from './language_tree_gloss_core.js';
 import {wordTreeGlossary} from './word_tree_gloss_core.js';
 import {createLanguageTreeSession} from './language_tree_session.js';
@@ -50,7 +51,7 @@ function addPronunciation(text){
  const heading=popup.querySelector('h2'),row=el('div');row.className='tree-word-heading';heading.replaceWith(row);row.append(heading);
  const read=createWordPronounceButton(text);row.append(read);
  read.onclick=async()=>{stopSpeech();const abort=new AbortController();speechAbort=abort;read.disabled=true;read.setAttribute('aria-busy','true');try{
-  if(!speech){const {createLearningVoice}=await import('./language_adventure_voice.js');speech??=createLearningVoice();}
+  if(!speech)speech=createLearningVoice();
   if(abort.signal.aborted)return;await speech.speak(text,{zh:'zh-CN',en:'en-US',ja:'ja-JP',ko:'ko-KR'}[options.data?.language]||'en-US',abort.signal);
  }catch(error){if(!abort.signal.aborted)message(error.message||'朗读暂时不可用');}finally{read.disabled=false;read.removeAttribute('aria-busy');}};
 }

@@ -1,4 +1,6 @@
-import * as V from './view_adventure.js';
+import {el} from './views/adventure/primitives.js';
+import {renderHud} from './views/adventure/view_hud.js';
+import {renderBattle} from './views/adventure/view_battle_layer.js';
 import {renderRoles} from './view_adventure_roles.js';
 import {createCompanionChatView} from './view_companion_chat.js';
 import {createLocalPeerControl} from './view_local_peer_controls.js';
@@ -15,7 +17,7 @@ export async function createPromoDuo({assets,save,second,world,origin,path,nodes
     chat.root.hidden=true;
     const peer=createLocalPeerControl(()=>{});
     const paintHud=()=>{
-        V.renderHud(hud,{...model(),localSecond:second},callbacks);
+        renderHud(hud,{...model(),localSecond:second},callbacks);
         chat.root.hidden=false;chat.render({active:true,ai:controller==='ai',name:second.name,memory:{messages:[],events:[]}});
         peer.render(hud.querySelector('.local-secondary-toolbar'),true);
     };
@@ -27,7 +29,7 @@ export async function createPromoDuo({assets,save,second,world,origin,path,nodes
     function paintBattle(battle=round.battle,animating=false){
         root.className='battle-layer visible local-battle';
         let container=root.querySelector('#local-battle-panels');
-        if(!container){root.replaceChildren(V.el('div','local-battle-shared'));container=V.el('div','local-battle-panels');container.id='local-battle-panels';container.append(V.el('div','local-battle-half'),V.el('div','local-battle-half'));root.append(container);}
+        if(!container){root.replaceChildren(el('div','local-battle-shared'));container=el('div','local-battle-panels');container.id='local-battle-panels';container.append(el('div','local-battle-half'),el('div','local-battle-half'));root.append(container);}
         const shared=root.querySelector('.local-battle-shared');
         const views=round.ids.map((id,owner)=>{
             const waiting=!!round.ready.choices[id]&&!animating;
@@ -41,8 +43,8 @@ export async function createPromoDuo({assets,save,second,world,origin,path,nodes
             },cancelReady:()=>{round.ready.cancel(id);paintBattle();}};
             return [{...model(),save:saves[owner],battle,controlledUnitId:id,localDuo:true,localBattlePane:true,localBattleOwner:owner,localBattleWaiting:waiting,localBattleFooter:shared,selected:selected[owner],discarded:[],runeHand:[],animating,aiHintsMuted:true},cb];
         });
-        V.renderBattle(shared,{...views[activeOwner][0],localBattlePane:false,localBattleShared:true,selected:round.ready.choices[round.ids[activeOwner]]?null:selected[activeOwner]},views[activeOwner][1]);shared.classList.add('local-battle-shared');shared.querySelector('.battle-pet-hint-toggle')?.remove();
-        views.forEach((view,owner)=>{const pane=container.children[owner];V.renderBattle(pane,...view);pane.classList.add('local-battle-half');pane.classList.toggle('local-ready',!!round.ready.choices[round.ids[owner]]&&!battle.finished&&!animating);pane.querySelector('.battle-chat')?.remove();});
+        renderBattle(shared,{...views[activeOwner][0],localBattlePane:false,localBattleShared:true,selected:round.ready.choices[round.ids[activeOwner]]?null:selected[activeOwner]},views[activeOwner][1]);shared.classList.add('local-battle-shared');shared.querySelector('.battle-pet-hint-toggle')?.remove();
+        views.forEach((view,owner)=>{const pane=container.children[owner];renderBattle(pane,...view);pane.classList.add('local-battle-half');pane.classList.toggle('local-ready',!!round.ready.choices[round.ids[owner]]&&!battle.finished&&!animating);pane.querySelector('.battle-chat')?.remove();});
     }
     function click(node,time){check(!!node,'正式双人UI操作控件存在');aimPointer(node,time-.18);node.click();}
     roles();

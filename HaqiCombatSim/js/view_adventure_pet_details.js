@@ -3,7 +3,7 @@ import {applyPetTraitStats,petTraitParams,petHungerMultiplier} from './adventure
 import {powerPipChanceByLevel} from './combat_formulas_core.js';
 import {fill,tr} from './locale_runtime.js';
 import {petDisplayScale} from './adventure_pet_interactions_core.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import { petParams, STAGE_NAMES, petAppearanceStage, petCapacity, petMaxHp, FOOD_ID, nutritionStock } from './adventure_pets_core.js';
 import { createCardFace } from './view_adventure_card.js';
 import { createPetEvolution } from './view_adventure_pet_status.js';

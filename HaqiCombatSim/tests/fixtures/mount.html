@@ -5,9 +5,9 @@
 import {loadResources} from '../../js/adventure_assets.js';
 import * as A from '../../js/adventure_core.js';
 import {createWorld} from '../../js/adventure_world_core.js';
-import {createRenderer} from '../../js/adventure_renderer.js';
+import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
 import {restorePveBattle} from '../../js/combat_pve_core.js';
-import {renderPanel} from '../../js/view_adventure.js';
+import {renderPanel} from '../../js/views/adventure/view_panel_modal.js';
 // In-memory fixture: never reads or writes the player's local or cloud save.
 const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
 const assets=await loadResources();

@@ -1,4 +1,4 @@
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {recommendAdventureDeck} from './battle_ai/adventure_adapter_core.js';
 import {teachPointer} from './view_teaching.js';
 import {deckLimits,deckCardCopies,syncDeckLayouts,equipmentBlockReason,playerSpec,availableCardLessons,SCHOOL_NAMES} from './adventure_core.js';

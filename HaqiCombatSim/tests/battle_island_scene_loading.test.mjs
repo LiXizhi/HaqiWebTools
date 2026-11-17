@@ -93,14 +93,37 @@ test('returning from battle to the same warm world does not block again',async()
     f.gate.update(f.world,f.save,2,false);assert.equal(f.gate.update(f.world,f.save,3),false);assert.equal(f.starts,1);
 });
 
+import { createWorldInteractionController } from '../js/adventure/world_interaction_controller.js';
+
 test('the real app frame skips gamepad, movement and scene drawing while entry is blocked',()=>{
-    const source=readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
-    const frame=source.slice(source.indexOf('function frame(now) {'),source.indexOf('// Opt-in, local diagnostics.'));
+    const originalDoc=globalThis.document,originalRaf=globalThis.requestAnimationFrame;
     const forbidden=()=>assert.fail('world work ran behind loading');
-    const context=vm.createContext({wordPractice:{active:false},hanziAnimationActive:()=>false,stage:'world',document:{hidden:false},panel:null,dialog:null,keys:new Set(),joystick:{x:0,y:0},heldPointer:null,localPlay:{paused:false,pollInput:forbidden},hanziIsland:null,dictionary:null,perf:{enabled:false,frame(){}},world:{},save:{position:{x:1,y:2}},renderer:{render:forbidden,pauseFrameMeter(){}},sceneLoading:{update:()=>true},requestAnimationFrame(){},lastFrame:0,lastCare:0,islandSocial:{step:forbidden},petScene:{step:forbidden},adaptiveGraphics:{suspend(){}}});
-    vm.runInContext(frame+'\nframe(5000);',context);
-    assert.equal(context.lastFrame,5000);assert.equal(context.lastCare,5000);assert.equal(context.petScene.lastFrame,5000);
-    assert.equal(context.save.position.x,1);assert.equal(context.save.position.y,2);
+    let lastFrame=0,lastCare=0;
+    const social={step:forbidden},pet={step:forbidden},save={position:{x:1,y:2}};
+    globalThis.document={hidden:false,body:{append(){}}};
+    globalThis.requestAnimationFrame=()=>{};
+    try{
+        const ctrl=createWorldInteractionController({
+            nodes:{},
+            getContext:()=>({
+                stage:'world',panel:null,dialog:null,keys:new Set(),joystick:{x:0,y:0},heldPointer:null,
+                world:{},save,renderer:{render:forbidden,pauseFrameMeter(){}},
+                setLastFrame:v=>{lastFrame=v;},
+                setLastCare:v=>{lastCare=v;},
+            }),
+            heroNavigation:{cancel(){}},
+            localPlay:()=>({paused:false,pollInput:forbidden}),
+            wordLearning:{wordPractice:{active:false}},
+            islandSocial:()=>social,
+            petScene:()=>pet,
+            sceneLoading:{update:()=>true},
+            adaptiveGraphics:{suspend(){}},
+            perf:{enabled:false,frame(){}},
+        });
+        ctrl.frame(5000);
+        assert.equal(lastFrame,5000);assert.equal(lastCare,5000);assert.equal(pet.lastFrame,5000);
+        assert.equal(save.position.x,1);assert.equal(save.position.y,2);
+    }finally{globalThis.document=originalDoc;globalThis.requestAnimationFrame=originalRaf;}
 });
 
  test('returning from a home with released terrain prepares the same world again',async()=>{

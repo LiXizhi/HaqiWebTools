@@ -1,4 +1,4 @@
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {timeStationIndex,visibleTimeStations,timeScrollEnd,timeDiscoveries,timeDiscoveryKey} from './adventure_time_scroll_core.js';
 import {dailyBuffDescription} from './language_daily_buff_core.js';
 import {createTimeScenery} from './view_time_scenery.js';

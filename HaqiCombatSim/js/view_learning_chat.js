@@ -6,7 +6,7 @@ import {playerGloss} from './character_relationship_core.js';
 import {createDialogueMicrophone,createDialogueMicProgress} from './view_dialogue_microphone.js';
 export {bindChatMicrophone} from './view_dialogue_microphone.js';
 import {tr,fill} from './locale_runtime.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 
 const el=(tag,cls='',text)=>{const n=document.createElement(tag);n.className=cls;if(text!==undefined)n.textContent=['camp-chat-original','camp-chat-translation'].includes(cls)?text:tr(text);return n;};
 const button=(text,run,cls='secondary')=>{const n=el('button',cls,text);n.type='button';n.onclick=run;return n;};

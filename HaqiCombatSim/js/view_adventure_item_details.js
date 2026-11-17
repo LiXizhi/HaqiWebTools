@@ -1,5 +1,5 @@
 import { fill, setText, tr } from './locale_runtime.js';
-import {DetailDialog} from './view_detail_dialog.js';
+import {DetailDialog} from './ui/detail_dialog.js';
 import {signedAttribute,unsupportedEquipmentStats} from './adventure_equipment_core.js';
 import {runeObtainLines,runeStatus} from './adventure_runes_core.js';
 import {equipmentAttributes,equipmentCards,EQUIPMENT_SLOTS} from './adventure_equipment_core.js';

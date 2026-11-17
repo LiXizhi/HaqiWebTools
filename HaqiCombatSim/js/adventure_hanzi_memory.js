@@ -2,7 +2,7 @@ import {learningQuestMatches} from './learning_quest_core.js';
 import {memoryParams,memoryQuest,createMemoryNodes,advanceMemoryChant,releaseMemoryNodes} from './hanzi_memory_core.js';
 import {walkable,distance} from './adventure_world_core.js';
 import {inMonsterTerritory} from './adventure_monster_motion_core.js';
-import {loadDictionary} from './adventure_dictionary.js';
+import {loadDictionary} from './dictionary_loader.js';
 import {createDictionaryStore} from './dictionary_store.js';
 import {loadMemoryArt} from './hanzi_memory_art.js';
 export function createHanziMemory({root,getState,persist,show,close,toast,practice,load=loadDictionary,storage=createDictionaryStore()}){

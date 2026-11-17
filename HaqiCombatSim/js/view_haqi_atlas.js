@@ -1,7 +1,7 @@
 import {loadHaqiAtlas} from './haqi_atlas_data.js';
 import {assetUrl} from './adventure_media_core.js';
 import {ISLANDS,travelStatus} from './adventure_world_map_core.js';
-import {createCloseButton,createWorldMapSwitch} from './view_adventure_controls.js';
+import {createCloseButton,createWorldMapSwitch} from './ui/controls.js';
 import {setText,tr,fill} from './locale_runtime.js';
 import {atlasStripLimits,constrainAtlasStrip,atlasBounds,fitAtlas,atlasPoint,atlasInverse,zoomAtlas,islandAtlasPoint,islandLocalPoint,islandDetailOpacity,pickAtlasIsland,pickAtlasPortal,atlasCoastContains,atlasOceanTiles,atlasSeaDecorations,atlasPortalSize} from './haqi_atlas_core.js';
 

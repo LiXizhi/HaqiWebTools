@@ -1,4 +1,4 @@
-import {createCloseButton,restoreVisibleFocus} from './view_adventure_controls.js';
+import {createCloseButton,restoreVisibleFocus} from './ui/controls.js';
 import {createDialogueMicrophone} from './view_dialogue_microphone.js';
 
 const el=(tag,text='')=>{const n=document.createElement(tag);n.textContent=text;return n;};

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createAdventure,catalogStatSnapshot} from '../js/adventure_core.js';
-import {questMarker} from '../js/adventure_renderer.js';
+import {questMarker} from '../js/adventure/renderer/primitives.js';
 import {createQuestMarkerCache} from '../js/adventure_quest_marker_cache_core.js';
 
 function fixture(){

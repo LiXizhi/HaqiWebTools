@@ -3,6 +3,7 @@ import {waitForDialogueReveal,finishDialogueReveal} from './dialogue_reveal.js';
 import {renderDialogueMapping} from './view_dialogue_mapping.js';
 import {tr} from './locale_runtime.js';
 import {createDialogueWordLearning} from './dialogue_word_learning.js';
+import {createLearningVoice} from './language_adventure_voice.js';
 import {supplementWordMapping,matchWordText} from './word_lexicon_core.js';
 import {showDialogueWordMark} from './view_word_mark.js';
 
@@ -29,7 +30,7 @@ export function createBilingualDialogue({button,mapWords,createWordLearning=crea
         let mapping;
         const update=()=>{if(listen)listen.disabled=disabled;if(mapping)mapping.disabled=disabled||busy||mapped;for(const n of container.querySelectorAll?.('.dialogue-learning-word')||[])if(n.className.split(' ').includes('dialogue-learning-word'))n.disabled=disabled;};
         async function openWord(id,surface){if(disabled||disposed||!learner?.valid())return;closeWord();let entry=learner.index.entries.get(id);if(!entry){const translated=currentResult?.[1]?.find(p=>p.wordId===id);entry={text:id,meaning:translated?.text||'释义待补充'};}
-            closeWord=showDialogueWordMark({entry,surface,language:learner.language,onRead:async(word,language)=>{wordAbort?.abort();wordAbort=new AbortController();if(!wordVoice){const {createLearningVoice}=await import('./language_adventure_voice.js');wordVoice=createLearningVoice();}if(disposed||!learner.valid())return;await wordVoice.speak(word,{zh:'zh-CN',en:'en-US',ja:'ja-JP',ko:'ko-KR'}[language],wordAbort.signal);},onMark:async mark=>{if(disposed||!learner.valid())return;const r=await learner.mark(id,mark);if(!disposed&&learner.valid())showLocal();return r;},onClose:()=>{wordAbort?.abort();void wordVoice?.cancel();}});
+            closeWord=showDialogueWordMark({entry,surface,language:learner.language,onRead:async(word,language)=>{wordAbort?.abort();wordAbort=new AbortController();if(!wordVoice)wordVoice=createLearningVoice();if(disposed||!learner.valid())return;await wordVoice.speak(word,{zh:'zh-CN',en:'en-US',ja:'ja-JP',ko:'ko-KR'}[language],wordAbort.signal);},onMark:async mark=>{if(disposed||!learner.valid())return;const r=await learner.mark(id,mark);if(!disposed&&learner.valid())showLocal();return r;},onClose:()=>{wordAbort?.abort();void wordVoice?.cancel();}});
         }
         let currentResult=null;
         function show(result){currentResult=result;links();links=renderDialogueMapping(container,[originalLabel,glossLabel],result,{onWord:learner?openWord:null});mappingLabel(mapped?'已连线':'模型连线');update();}

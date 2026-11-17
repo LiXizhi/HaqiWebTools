@@ -1,6 +1,6 @@
-import {DetailDialog} from './view_detail_dialog.js';
+import {DetailDialog} from './ui/detail_dialog.js';
 import {ItemDetails} from './view_adventure_item_details.js';
-import {el,button} from './view_adventure.js';
+import {el, button} from './views/adventure/primitives.js';
 import {giftEligibility} from './character_relationship_core.js';
 
 export function createCharacterDetails(parent,{getModel,onGift,onHistory,onList,onSelect}){

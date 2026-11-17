@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 
 test('island loading prepares the existing fallback once before walking, with scene isolation',()=>{
-    const source=fs.readFileSync(new URL('../js/adventure_renderer.js',import.meta.url),'utf8');
+    const source=fs.readFileSync(new URL('../js/adventure/renderer/scene_renderer.js',import.meta.url),'utf8');
     const prepare=source.slice(source.indexOf('    function prepareScene('),source.indexOf('    let zoomUntil='));
     const ground=source.slice(source.indexOf('    function ground('),source.indexOf('    function shadow('));
     const events=[],contexts=[];

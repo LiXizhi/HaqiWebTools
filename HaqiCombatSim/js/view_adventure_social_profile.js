@@ -1,6 +1,6 @@
 import {fill} from './locale_runtime.js';
 import {languageName} from './character_relationship_core.js';
-import {el,button} from './view_adventure.js';
+import {el, button} from './views/adventure/primitives.js';
 import {drawSchoolIcon} from './card_renderer.js';
 import {petPortrait} from './view_adventure_pets.js';
 import {selectSocialPetId} from './adventure_companion_core.js';

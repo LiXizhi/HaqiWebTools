@@ -210,14 +210,21 @@ for(const previous of ['fire',null,'missing'])test(`earth to Haqi focuses and hi
     await withMap(({stage,canvas,pointer,view,root,flushFrames})=>{const before=view.getState().camera;stage.onpointerdown(pointer(1,450,300));stage.onpointermove(pointer(1,510,400));stage.onpointerup(pointer(1,510,400));assert.equal(view.getState().camera.y,0);assert.ok(view.getState().camera.x<before.x);root.querySelector('.haqi-atlas-navigation').children[2].onclick();flushFrames();assert.ok(view.getState().camera.x>before.x);});
  });
 
+import { routeWorldPortal } from '../js/adventure/earth_controller.js';
+
 test('configured Haqi vortices dispatch Earth travel while return portals only browse',()=>{
-    const source=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
-    const body=source.slice(source.indexOf('function browseWorldPortal('),source.indexOf('const earthPlaces='));
     const events=[];
-    const route=new Function('travelEarth','close','openEarthMap','openPanel',`let atlasPortalFocus=null,panel=null;${body};return browseWorldPortal;`)(geo=>events.push(['travel',geo]),()=>events.push(['close']),geo=>events.push(['map',geo]),panel=>events.push(['panel',panel]));
-    route(art.portals[0],'earth');assert.deepEqual(events,[['travel',art.portals[0].earth]]);
-    events.length=0;route(art.portals[1],'haqi');assert.deepEqual(events,[['panel','worldmap']]);
-    events.length=0;route({...art.portals[0],travel:false},'earth');assert.deepEqual(events,[['close'],['map',{...art.portals[0].earth,portalFocus:true}]]);
+    const deps={
+        travelEarth:geo=>events.push(['travel',geo]),
+        close:()=>events.push(['close']),
+        setAtlasPortalFocus:()=>{},
+        setPanel:()=>{},
+        openEarthMap:geo=>events.push(['map',geo]),
+        openPanel:panel=>events.push(['panel',panel]),
+    };
+    routeWorldPortal(art.portals[0],'earth',deps);assert.deepEqual(events,[['travel',art.portals[0].earth]]);
+    events.length=0;routeWorldPortal(art.portals[1],'haqi',deps);assert.deepEqual(events,[['panel','worldmap']]);
+    events.length=0;routeWorldPortal({...art.portals[0],travel:false},'earth',deps);assert.deepEqual(events,[['close'],['map',{...art.portals[0].earth,portalFocus:true}]]);
 });
 
 test('arrow images animate movement and a new map gesture cancels the animation',async()=>{

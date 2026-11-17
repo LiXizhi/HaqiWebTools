@@ -1,6 +1,6 @@
 import {dungeonProgress} from './adventure_coop_core.js';
-import {el,button} from './view_adventure.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {el, button} from './views/adventure/primitives.js';
+import {createCloseButton} from './ui/controls.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
 import {dungeonStaminaHint} from './adventure_stamina_core.js';
 import {monsterArtBinding} from './adventure_monster_art_core.js';

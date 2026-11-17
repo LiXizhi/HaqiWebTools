@@ -1,3 +1,23 @@
+## 架构图
+
+> 2026-11-17 前端架构模块化整理：主入口、控制器、Presenter、纯视图与无环 `*_core.js` 分层边界如下（由 `tests/architecture_boundaries.test.mjs` 守卫）。
+
+```mermaid
+flowchart TB
+    Entry["HTML 入口 (Haqi / HaqiCombatSim / HomeBuildingDemo / HaqiPromo)"] --> App["装配层 (adventure_app / app / promo_app)"]
+    App --> BusSvc["共享总线与服务 (adventure/app_bus · app_services · session_state 切片)"]
+    App --> Ctrl["领域控制器 (adventure/* · home/* · social/*)"]
+    Ctrl --> Pres["视图模型派生 (adventure/presenters/hud_view_model · battle_view_model)"]
+    Pres --> View["纯视图与共享 UI (views/adventure/* · home/view_home_* · combat/view_sim_* · ui/*)"]
+    Ctrl --> Renderer["画布渲染 (adventure/renderer/* · home/view_home_canvas_*)"]
+    Ctrl --> Core["纯规则核心 (*_core.js · 无 DOM/网络/存储 · 零循环依赖)"]
+    Pres --> Core
+```
+
+- **纯核心层（`*_core.js`）**：只允许导入其他 `*_core.js`，禁止引用 `document`/`fetch`/`localStorage`/`indexedDB`。`adventure_city_dungeon_world_core.js`、`adventure_pet_rules_core.js`、`combat_card_targeting_core.js`、`adventure_deck_core.js` 保持向下单向依赖，全仓核心层零循环依赖。
+- **应用装配与控制器（`js/adventure/`、`js/home/`、`js/social/`）**：`session_state.js` 按 `session` / `world` / `battle` / `ui` 切片组织状态并保留扁平访问兼容；`app_services.js` 与 `app_bus.js` 收敛持久化和导航反馈；`panel_controller.js` 拆出 `hud_controller.js` 与 `debug_edit_controller.js`；`battle_controller.js` 拆出 `battle_advisor_bridge.js` 并统一兼容懒引用与直传对象。
+- **Presenter 与纯视图（`js/adventure/presenters/`、`js/views/adventure/`、`js/ui/`、`js/home/`）**：`hud_view_model.js` 与 `battle_view_model.js` 负责从 `*_core.js` 派生展示模型；`view_home_scene_chrome.js` 剥离家园外围工具栏和轮盘 DOM；已移除旧根目录兼容壳（`view_adventure.js`、`view_adventure_controls.js`、`view_detail_dialog.js`、`adventure_renderer.js`、`view_home_art.js`）与未使用的 `index.js` barrel。
+
 ## 2026-11-13 反馈修正：普通 PvE 实战替代分步课堂
 
 NPC/森林便签 → adventure_app.openTacticsTraining → tactics_field_battle_core 借用编队与真实敌阵 → 原 PvE 引擎/普通战斗视图 → 胜利后本地原子保存 fieldWins → 可继续下一组或返回森林。每回合一句战局提示，不强制出牌顺序；借用角色不共享正式角色生命、物品或 pendingEncounter。旧课堂面板不再导入冒险视图，兼容数据保留但不计实战胜利。以下流程图中的旧“借卡课堂”节点现由此真实战斗链路代替。

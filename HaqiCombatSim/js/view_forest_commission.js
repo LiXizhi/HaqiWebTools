@@ -1,8 +1,8 @@
-import {el,button,art} from './view_adventure.js';
+import {el, button, art} from './views/adventure/primitives.js';
 import {bindSceneDrag,pointInsideElement} from './adventure_scene_drag.js';
 import {equipmentComparison} from './view_adventure_guidance.js';
 import {forestCommissionRewardPreviews} from './forest_commission_rewards_core.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {watchTreeText} from './language_tree_capture.js';
 import {forestCommissionPhase,forestCommissionGoal,forestCommissionPouch,forestCommissionRewards,forestCommissionScene,FOREST_SITES,FOREST_NPCS} from './forest_commission_core.js';
 

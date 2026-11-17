@@ -1,5 +1,5 @@
 import {showHanziAnimation} from './view_hanzi_animation.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {createHanziWriting} from './view_hanzi_writing.js';
 import {tr} from './locale_runtime.js';
 const el=(tag,cls='',text='')=>{const n=document.createElement(tag);n.className=cls;n.textContent=tr(text);return n;};

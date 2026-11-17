@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {collectHomeWorldTrees,paintHomeTreeShadows,drawHomeWorldTree} from '../js/view_home_art.js';
+import {collectHomeWorldTrees, paintHomeTreeShadows, drawHomeWorldTree} from '../js/home/view_home_world_terrain.js';
 import {paintStaticShadows} from '../js/adventure_shadows.js';
 function recorder(){const calls=[];return {calls,c:new Proxy({}, {get:(_,key)=>(...args)=>{calls.push([key,...args]);if(key==='createRadialGradient')return {addColorStop:(...args)=>calls.push(['stop',...args])};},set:()=>true})};}
 test('home terrain bakes the exact outdoor soft shadows, including negative tiles',()=>{

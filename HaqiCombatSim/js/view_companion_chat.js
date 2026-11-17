@@ -1,4 +1,4 @@
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {createDialogueMicrophone} from './view_dialogue_microphone.js';
 import {tr,fill} from './locale_runtime.js';
 const el=(tag,cls,text='')=>{const n=document.createElement(tag);n.className=cls;n.textContent=tr(text);return n;};

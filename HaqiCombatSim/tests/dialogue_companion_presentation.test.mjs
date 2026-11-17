@@ -4,8 +4,8 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import {forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS} from '../js/forest_commission_core.js';
 
-const source=fs.readFileSync(new URL('../js/view_adventure.js',import.meta.url),'utf8');
-const render=source.slice(source.indexOf('export function renderDialogue('),source.indexOf('export function renderBattle(')).replace('export function','function');
+const source=fs.readFileSync(new URL('../js/views/adventure/view_npc_dialogue.js',import.meta.url),'utf8');
+const render=source.slice(source.indexOf('export function renderDialogue(')).replace('export function','function');
 function setup({quest=null,index=0,sequence=false,purpose=null,tacticsAvailable=true}={}){
  const find=(node,predicate)=>{for(const child of node.children||[]){if(child&&typeof child==='object'){if(predicate(child))return child;const result=find(child,predicate);if(result)return result;}}return null;};
  function el(tag,cls='',...children){return {tag,className:cls,children,dataset:{},textContent:typeof children[0]==='string'?children[0]:'',style:{setProperty(){}},classList:{toggle(){},add(){}},setAttribute(){},append(...nodes){this.children.push(...nodes);},replaceChildren(...nodes){this.children=nodes;},querySelector(selector){return find(this,n=>selector==='button.primary'?n.tag==='button'&&n.className==='primary':selector==='button'?n.tag==='button':selector==='.dialogue-text'?n.className==='dialogue-text':false);}};}

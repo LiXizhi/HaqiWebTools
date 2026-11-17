@@ -1,6 +1,6 @@
-import {el,button,art} from './view_adventure.js';
+import {el, button, art} from './views/adventure/primitives.js';
 import {guidePet} from './companion_guide_core.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {petPortrait} from './view_adventure_pets.js';
 import {OPENING_PET,openingJourney,openingJourneyMilestones,openingFriendAnswer} from './opening_journey_core.js';
 

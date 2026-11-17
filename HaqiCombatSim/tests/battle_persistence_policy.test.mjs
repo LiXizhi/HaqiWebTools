@@ -62,13 +62,19 @@ test('unchanged explicit commits retain the last successful core snapshot on lat
     assert.throws(()=>f.store.commitRoles({[row.id]:next}),/其他页面/);
     assert.equal(f.store.checkpoint(),before);
 });
+import {storeLocalDuoSaves} from '../js/social/local_play_world.js';
+
 test('duo runtime path preserves the second player return point without replacing either live save',()=>{
-    const source=readFileSync(new URL('../js/adventure_local_play.js',import.meta.url),'utf8');
-    const fn=source.slice(source.indexOf('    function storeSaves('),source.indexOf('    async function loadPet('));
     const first={zone:'camp',position:{x:1,y:2}},second={zone:'camp',position:{x:3,y:4}};
     let captured;
-    const context=vm.createContext({saves:()=>[first,second],ids:()=>['one','two'],state:()=>({store:{saveRuntime:updates=>captured=updates,commitRoles:()=>assert.fail('full commit during movement')}}),session:{returnTo:{zone:'forest',position:{x:8,y:9}}},api:{replaceSave:()=>assert.fail('replaced live save')}});
-    vm.runInContext(fn+'\nstoreSaves(undefined,{runtimeOnly:true});',context);
+    storeLocalDuoSaves({
+        store:{saveRuntime:updates=>captured=updates,commitRoles:()=>assert.fail('full commit during movement')},
+        saves:()=>[first,second],
+        ids:()=>['one','two'],
+        session:{returnTo:{zone:'forest',position:{x:8,y:9}}},
+        api:{replaceSave:()=>assert.fail('replaced live save')},
+        runtimeOnly:true,
+    });
     assert.equal(captured.one,first);assert.equal(captured.two.zone,'forest');assert.equal(captured.two.position.x,8);assert.equal(second.position.x,3);
 });
 test('care requests a core save only when auto feeding consumes food and grants growth',()=>{

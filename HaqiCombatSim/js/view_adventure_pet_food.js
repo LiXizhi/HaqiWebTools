@@ -1,5 +1,5 @@
 import {fill,tr,setText} from './locale_runtime.js';
-import {DetailDialog} from './view_detail_dialog.js';
+import {DetailDialog} from './ui/detail_dialog.js';
 import {FOOD_ID,foodInfo,hungryPets} from './adventure_pets_core.js';
 
 // Manual feeding accepts any non-full owned pet; auto-feeding keeps its threshold.

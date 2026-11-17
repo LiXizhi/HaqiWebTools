@@ -3,7 +3,7 @@ import {validatePetGrowth} from './adventure_pet_traits_core.js';
 import {createRng,hashSeed} from './rng_core.js';
 import {mapCoordinateVersion} from './adventure_coordinates_core.js';
 import {defaultParams,resolveParams} from './combat_params_core.js';
-import {petParams,petXpLevel,recommendedPetDeck,validatePetDeck} from './adventure_pets_core.js';
+import {petParams,petXpLevel,recommendedPetDeck,validatePetDeck} from './adventure_pet_rules_core.js';
 import {petInteractionParams} from './adventure_pet_meeting_core.js';
 export {petInteractionParams};
 

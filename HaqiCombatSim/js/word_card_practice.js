@@ -1,7 +1,7 @@
 import {recordWordPractice} from './language_course.js';
 import {loadWordLexicon} from './word_lexicon.js';
 import {canonicalWord} from './word_lexicon_core.js';
-import {loadDictionary} from './adventure_dictionary.js';
+import {loadDictionary} from './dictionary_loader.js';
 import {createDictionaryStore} from './dictionary_store.js';
 import {recordDictionaryAttempt,completeDictionary,normalizeSpelling} from './dictionary_core.js';
 import {compareHanziWriting} from './hanzi_core.js';
@@ -13,7 +13,7 @@ import {createLearningVoice} from './language_adventure_voice.js';
 import {createHanziWriting} from './view_hanzi_writing.js';
 import {createCardFace} from './view_adventure_card.js';
 import {drawHanziGlyph} from './hanzi_animation.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 
 const el=(tag,text='')=>{const n=document.createElement(tag);n.textContent=text;return n;};
 export function createWordCardPractice({getState,onSaved,onPause=()=>{},storage=createDictionaryStore(),load=loadDictionary,voice=createLearningVoice({getSettings:()=>getState().save.languageLearning})}){

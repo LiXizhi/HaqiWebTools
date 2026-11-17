@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
-const source=readFileSync(new URL('../js/home_app.js',import.meta.url),'utf8');
-const view=readFileSync(new URL('../js/view_home.js',import.meta.url),'utf8');
+import {bindHomeSceneInputForTest} from './helpers/home_scene_input_harness.mjs';
+const source=readFileSync(new URL('../js/home/home_session_controller.js',import.meta.url),'utf8');
 const wishSource=source.slice(source.indexOf(' function currentPetWish('),source.indexOf(' function emit(){'));
 
 test('starter-room wishes only ask for the same lamp exercise, and stop after its use is fulfilled',()=>{
@@ -23,8 +23,17 @@ test('deliberately helping a starter wish uses the real starter lamp request pat
 });
 
 test('pointerup movement without a pointermove event drops a pet and never opens its wish',()=>{
- const handler=view.slice(view.indexOf('  canvas.onpointerup=e=>{'),view.indexOf('  const cancelPointer='));
  const calls=[],canvas={hasPointerCapture:()=>false,getBoundingClientRect:()=>({width:800,height:600})};
- const context={canvas,eraseStroke:null,paintStroke:null,gesture:{id:1,moved:false,start:{sx:100,sy:100},hit:{kind:'pet',id:'p1'}},position:()=>({sx:140,sy:100}),run:fn=>fn(),document:{elementFromPoint:()=>canvas},body:{dataset:{}},side:{contains:()=>false},dock:{children:[null,null,{contains:()=>false}]},petDragPoint:()=>({x:400,y:300}),model:{camera:{x:0,y:0},scale:40},cb:{drop:()=>calls.push('drop'),tap:()=>calls.push('tap')}};
- vm.runInNewContext(handler,context);canvas.onpointerup({pointerId:1,clientX:140,clientY:100});assert.deepEqual(calls,['drop']);
+ bindHomeSceneInputForTest({
+  canvas,
+  body:{dataset:{}},
+  side:{contains:()=>false},
+  dock:{children:[null,null,{contains:()=>false}]},
+  doc:{elementFromPoint:()=>canvas},
+  state:{model:{camera:{x:0,y:0},scale:40},gesture:{id:1,moved:false,start:{sx:100,sy:100},hit:{kind:'pet',id:'p1'}},paintStroke:null,eraseStroke:null},
+  position:()=>({sx:140,sy:100}),
+  petDragPoint:()=>({x:400,y:300}),
+  cb:{drop:()=>calls.push('drop'),tap:()=>calls.push('tap')},
+ });
+ canvas.onpointerup({pointerId:1,clientX:140,clientY:100});assert.deepEqual(calls,['drop']);
 });

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { createRenderer } from '../js/adventure_renderer.js';
+import {createRenderer} from '../js/adventure/renderer/scene_renderer.js';
 
 test('follower stays visible while its sheet is unavailable, independently of riding', () => {
     const keys=['matchMedia','window','document'];

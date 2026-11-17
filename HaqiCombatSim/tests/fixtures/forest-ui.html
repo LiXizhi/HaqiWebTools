@@ -1,7 +1,7 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><title>森林界面长文字验收</title><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_dialogue.css"><style>body{background:#42614b}nav{position:fixed;z-index:1000;top:8px;left:8px;right:8px;display:flex;gap:8px;flex-wrap:wrap;background:#fff8e8;padding:8px}nav select{max-width:100%}#case-info{width:100%;color:#36513d;font-size:12px}</style></head><body class="haqi-app"><nav><select aria-label="对白用例"></select><button id="prev">上一条用例</button><button id="next">下一条用例</button><span id="case-info">内存测试，不修改玩家存档</span></nav><div id="root"></div><script type="module">
 import {loadResources} from './js/adventure_assets.js';
 import {createAdventure} from './js/adventure_core.js';
-import {renderDialogue} from './js/view_adventure.js';
+import {renderDialogue} from './js/views/adventure/view_npc_dialogue.js';
 const assets=await loadResources(),save=createAdventure(assets.content,{name:'界面排版验收'}),root=document.querySelector('#root');
 save.languageLearning.enabled=false;
 const cases=[];

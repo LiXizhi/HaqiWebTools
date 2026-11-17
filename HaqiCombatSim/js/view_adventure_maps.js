@@ -1,6 +1,6 @@
 import {renderLocalMap} from './view_adventure_local_map.js';
 import {setText,tr} from './locale_runtime.js';
-import {createWorldMapSwitch} from './view_adventure_controls.js';
+import {createWorldMapSwitch} from './ui/controls.js';
 import {renderHaqiAtlas} from './view_haqi_atlas.js';
 
 // One map window; controller determines the initial view for each entry point.

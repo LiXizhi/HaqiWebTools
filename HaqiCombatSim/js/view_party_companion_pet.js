@@ -1,4 +1,4 @@
-import {el} from './view_adventure.js';
+import {el} from './views/adventure/primitives.js';
 import {petPortrait} from './view_adventure_pets.js';
 import {selectSocialPetId} from './adventure_companion_core.js';
 

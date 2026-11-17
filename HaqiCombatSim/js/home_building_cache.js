@@ -2,7 +2,7 @@ import {buildingFloorAO} from './home_building_ao_core.js';
 import {isEdge,buildingWallFeet,isRoofDecoration,buildingConnections,buildingConnectionMask,buildingItem,buildingBounds,roofSections} from './home_building_core.js';
 import {buildingVisualBounds,drawBuilding} from './view_home_building.js';
 import {homeInteractiveKind} from './home_core.js';
-import {drawHomeObject,homeObjectVisualBounds,homeObjectSurfaceLift} from './view_home_art.js';
+import {drawHomeObject,homeObjectVisualBounds,homeObjectSurfaceLift} from './home/view_home_object_art.js';
 const LIMIT=32*1024*1024;
 const overlap=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
 const close=bitmap=>{if(bitmap?.close)bitmap.close();else if(bitmap)bitmap.width=bitmap.height=0;};

@@ -11,8 +11,9 @@ import {loadResources} from '../../js/adventure_assets.js';
 import * as A from '../../js/adventure_core.js';
 import * as W from '../../js/adventure_world_core.js';
 import * as P from '../../js/combat_pve_core.js';
-import * as V from '../../js/view_adventure.js';
-import {createRenderer} from '../../js/adventure_renderer.js';
+import {renderHud} from '../../js/views/adventure/view_hud.js';
+import {renderBattle} from '../../js/views/adventure/view_battle_layer.js';
+import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
 import {enterDungeon,leaveDungeon,dungeonFor} from '../../js/adventure_dungeons_core.js';
 import {renderDungeons} from '../../js/view_adventure_dungeons.js';
 const $=id=>document.getElementById(id);
@@ -23,7 +24,7 @@ let world=W.createWorld(save.zone,assets.content,save),battle=null,path=[],desti
 const model=()=>({assets,save,now:Date.now(),battle,selected:null,discarded:[]});
 const story=createDungeonStory({root:$('overlay'),getState:()=>({save,assets,sceneCanvas:$('world')}),award:id=>awardDungeonLine(save,assets.content,id),onDone:()=>{$('hud').hidden=false;hud();}});
 const close=()=>{story.close();$('hud').hidden=false;$('overlay').replaceChildren();$('overlay').className='overlay';$('world').focus();};
-function hud(){V.renderHud($('hud'),model(),{panel:catalog,membership:catalog,cloud:catalog,track:()=>{destination={...(world.encounters[0]||world.portal),kind:world.encounters.length>0?"encounter":"portal"};path=W.findPath(world,save.position,destination);},interact});}
+function hud(){renderHud($('hud'),model(),{panel:catalog,membership:catalog,cloud:catalog,track:()=>{destination={...(world.encounters[0]||world.portal),kind:world.encounters.length>0?"encounter":"portal"};path=W.findPath(world,save.position,destination);},interact});}
 async function enter(id,restart=false){
     await assets.dungeons.load(id);
     if(new URLSearchParams(location.search).has('party')&&!save.coopRun){
@@ -45,7 +46,7 @@ if(target?.kind==='portal'){if(dungeonFor(assets.content,save.zone))exit();retur
 if(target?.kind!=='encounter')return;
 try{A.beginEncounter(save,assets.content,target.id);battle=P.restorePveBattle(assets.dataset,assets.content,save.pendingEncounter);$('hud').hidden=true;paintBattle();}catch(e){$('toast').textContent=e.message;}
 }
-function paintBattle(){V.renderBattle($('battle-layer'),model(),{pass:()=>{P.playPveRound(battle,{pass:true});A.recordDecision(save,{pass:true},battle);paintBattle();},retreat:()=>{A.settleParty(save,assets.content,battle,{retreat:true});A.applyAction(save,assets.content,{type:'retreat'});endBattle();},finish:()=>{A.settleEncounter(save,assets.content,battle);endBattle();},sound(){},toggleRunes(){},togglePetCards(){},select(){},discard(){},target(){},reselect(){},swipePlay(){}});}
+function paintBattle(){renderBattle($('battle-layer'),model(),{pass:()=>{P.playPveRound(battle,{pass:true});A.recordDecision(save,{pass:true},battle);paintBattle();},retreat:()=>{A.settleParty(save,assets.content,battle,{retreat:true});A.applyAction(save,assets.content,{type:'retreat'});endBattle();},finish:()=>{A.settleEncounter(save,assets.content,battle);endBattle();},sound(){},toggleRunes(){},togglePetCards(){},select(){},discard(){},target(){},reselect(){},swipePlay(){}});}
 function endBattle(){battle=null;$('battle-layer').replaceChildren();$('battle-layer').className='';$('hud').hidden=false;world=W.createWorld(save.zone,assets.content,save);hud();}
 $('world').onclick=e=>{if(battle||story.active)return;const r=$('world').getBoundingClientRect(),p=renderer.screenToWorld(e.clientX-r.left,e.clientY-r.top);destination=[...world.landmarks.map(e=>({...e,kind:'landmark'})),...world.encounters.map(e=>({...e,kind:'encounter'})),...(world.entrancePortal?[{...world.entrancePortal,kind:'portal'}]:[]),{...world.portal,kind:'portal'}].filter(e=>!e.hidden).find(e=>Math.abs(e.x-p.x)<65&&p.y>e.y-95&&p.y<e.y+35);path=W.findPath(world,save.position,destination||p);};
 document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});

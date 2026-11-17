@@ -1,6 +1,6 @@
-import {el,button} from './view_adventure.js';
+import {el, button} from './views/adventure/primitives.js';
 import {tr,fill} from './locale_runtime.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {towerRecord,towerRewardSteps,towerRewardAmount,dungeonEnemyIntel} from './adventure_dungeon_journeys_core.js';
 import {dungeonTacticsProfile,dungeonTacticsPreparation} from './dungeon_tactics_core.js';
 import {dungeonChallengeLines} from './dungeon_challenge_core.js';

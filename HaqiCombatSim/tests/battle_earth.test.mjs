@@ -28,7 +28,7 @@ import {restorePveBattle,playPveRound} from '../js/combat_pve_core.js';
 import {SimpleBot} from '../js/combat_policy_core.js';
 import {installDungeons,enterDungeon,leaveDungeon} from '../js/adventure_dungeons_core.js';
 import {packageRuntimeData} from '../scripts/package_runtime_data.mjs';
-import {createWorldMapSwitch} from '../js/view_adventure_controls.js';
+import {createWorldMapSwitch} from '../js/ui/controls.js';
 import {renderEarthLocalMap} from '../js/view_adventure_earth_local_map.js';
 import {layoutEarthMapLabels} from '../js/earth_map_labels_core.js';
 import {recordLearningCompletion} from '../js/language_adventure_core.js';

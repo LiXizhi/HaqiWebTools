@@ -16,10 +16,13 @@ import {loadResources} from './adventure_assets.js';
 import * as A from './adventure_core.js';
 import * as W from './adventure_world_core.js';
 import * as P from './combat_pve_core.js';
-import * as V from './view_adventure.js';
+import {renderEntry} from './views/adventure/view_entry.js';
+import {renderHud} from './views/adventure/view_hud.js';
+import {renderPanel,settingsView} from './views/adventure/view_panel_modal.js';
+import {renderBattle} from './views/adventure/view_battle_layer.js';
 import {SimpleBot} from './combat_policy_core.js';
 import {prepareDebugEdit} from './adventure_debug_core.js';
-import {createRenderer} from './adventure_renderer.js';
+import {createRenderer} from './adventure/renderer/scene_renderer.js';
 import {createCreationPreview,tutorialCards} from './adventure_creation_preview.js';
 import {renderCloud} from './view_adventure_cloud.js';
 import {renderSocial} from './view_adventure_social.js';
@@ -91,13 +94,13 @@ function paintSpeech(elapsed){
 function check(ok,message){if(!ok)throw Error(message);checks.push(message);}
 function model(battle=null){return {assets,save,battle,selected:null,discarded:[],animating:false,membership:{},...viewState,displayLocale:locale,social:null,deckAnimationClock:'manual'};}
 function clear(){duo?.dispose();duo=null;nodes.overlay.deckPreview?.clearAddition();speech.clear();speechRoot.replaceChildren();speechSlot=-1;arrivalAt=null;$('hud').replaceChildren();preview.stop();previewPaused=false;learning.close();for(const node of Object.values(nodes)){node.disposeDialogue?.();node.disposeHandGesture?.();node.disposeStatusTooltips?.();node.battleLayoutObserver?.disconnect();node.replaceChildren();node.className='';}nodes.entry.hidden=true;}
-async function scene(){world=W.createWorld(save.zone,assets.content,save);if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};save.position=W.clearTeleportSpot(world,save.position.x,save.position.y,world.encounters,120)||save.position;origin={...save.position};await assets.warmScenery(world);path=['world','island','mount'].includes(shot.scene)?planPromoPath(world,origin):[];actorTime=0;actorProfiles=[{id:'promo-anna',name:locale==='en'?'Anna':'安娜',native:'en',target:'zh',school:'ice',appearance:'girl',level:3},{id:'promo-maple',name:locale==='en'?'Maple':'小枫',native:'zh',target:'en',school:'fire',appearance:'boy',level:3},{id:'promo-lily',name:locale==='en'?'Lily':'莉莉',native:'en',target:'zh',school:'life',appearance:'girl',level:4},{id:'promo-noah',name:locale==='en'?'Noah':'诺亚',native:'zh',target:'en',school:'storm',appearance:'boy',level:4}];if(world.isEarth||world.isCityDungeon)actorProfiles=[];resetActors();await assets.warmActors(world,save,actors);check(true,'场景角色图片已就绪');if(!['create','skills'].includes(shot.scene))V.renderHud($('hud'),model(),callbacks);check(!!world.layout,`地图可渲染：${save.zone}`);}
+async function scene(){world=W.createWorld(save.zone,assets.content,save);if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};save.position=W.clearTeleportSpot(world,save.position.x,save.position.y,world.encounters,120)||save.position;origin={...save.position};await assets.warmScenery(world);path=['world','island','mount'].includes(shot.scene)?planPromoPath(world,origin):[];actorTime=0;actorProfiles=[{id:'promo-anna',name:locale==='en'?'Anna':'安娜',native:'en',target:'zh',school:'ice',appearance:'girl',level:3},{id:'promo-maple',name:locale==='en'?'Maple':'小枫',native:'zh',target:'en',school:'fire',appearance:'boy',level:3},{id:'promo-lily',name:locale==='en'?'Lily':'莉莉',native:'en',target:'zh',school:'life',appearance:'girl',level:4},{id:'promo-noah',name:locale==='en'?'Noah':'诺亚',native:'zh',target:'en',school:'storm',appearance:'boy',level:4}];if(world.isEarth||world.isCityDungeon)actorProfiles=[];resetActors();await assets.warmActors(world,save,actors);check(true,'场景角色图片已就绪');if(!['create','skills'].includes(shot.scene))renderHud($('hud'),model(),callbacks);check(!!world.layout,`地图可渲染：${save.zone}`);}
 function creation(step=1,school='fire',changes={}){
     preview.stop();previewPaused=false;nodes.entry.hidden=false;draft={name:locale==='en'?'Star':'小星',appearance:'girl',starter:'dragon_green',...draft,...changes,step,school};
-    V.renderEntry(nodes.entry,assets,null,{...callbacks,login:null,cloud:null,locale,secondLocale:targetLocale,setLocale:noop,setSecondLocale:noop,draft,previewChoices:s=>tutorialCards(assets,s),preview:(...args)=>preview.play(...args),stopPreview:()=>preview.stop(),pausePreview:()=>preview.togglePause()});
+    renderEntry(nodes.entry,assets,null,{...callbacks,login:null,cloud:null,locale,secondLocale:targetLocale,setLocale:noop,setSecondLocale:noop,draft,previewChoices:s=>tutorialCards(assets,s),preview:(...args)=>preview.play(...args),stopPreview:()=>preview.stop(),pausePreview:()=>preview.togglePause()});
     check(!!nodes.entry.querySelector('form'),'角色创建表单已显示');
 }
-function panel(kind){activePanel=kind;V.renderPanel(nodes.overlay,kind,model(),{...callbacks,action:value=>{const result=value.type==='pet-feed'&&petInteraction?(petInteraction.feed(value.petId),{ok:true}):A.applyAction(save,assets.content,value);check(true,`正式操作：${value.type}`);if(!['deck','upgrade','gems'].includes(activePanel))panel(activePanel);return result;},panel:kind=>panel(kind),close:noop});check(!!nodes.overlay.querySelector('.modal'),`${kind} 窗口已显示`);}
+function panel(kind){activePanel=kind;renderPanel(nodes.overlay,kind,model(),{...callbacks,action:value=>{const result=value.type==='pet-feed'&&petInteraction?(petInteraction.feed(value.petId),{ok:true}):A.applyAction(save,assets.content,value);check(true,`正式操作：${value.type}`);if(!['deck','upgrade','gems'].includes(activePanel))panel(activePanel);return result;},panel:kind=>panel(kind),close:noop});check(!!nodes.overlay.querySelector('.modal'),`${kind} 窗口已显示`);}
 function friends(){renderSocial(nodes.overlay,social,'mail',{...callbacks,apply:()=>{social.applies=[];social.friends=[{name:locale==='en'?'Luna (demo companion)':'小月（演示伙伴）',userId:'promo-friend'}];friends();},recruitFriend:()=>features.action({name:'friend-team'})});}
 function paintChat(){learning.render(chatState);const prompt=learning.root.querySelector('.camp-chat-prompt');if(prompt)prompt.style.display=chatState.index===1?'none':'';}
 function digest(b){return JSON.stringify([b.winner,b.turn,Object.values(b.unitsById).map(u=>[u.id,u.hp]),b.events]);}
@@ -160,7 +163,7 @@ async function prepare(next,seed){
     petInteraction=null;petClock=0;petStepped=0;petShared=false;
     features?.dispose();for(const dialog of document.querySelectorAll('dialog')){dialog.close();dialog.remove();}
     clear();pointerMotion=null;for(const node of [deckPointer,deckRing])node.hidden=true;deckClickAt=null;deckShowcase=null;sceneSeed=seed;shot=next;checks=[];frames=[];tactics=null;path=[];draft=null;lastBattleFrame=-1;
-    V.settingsView.tab='journey';activePanel=null;viewState={equipmentView:{tab:'gear',slot:0,item:null,query:''},petView:{tab:'follow',selected:null},shopView:{category:'pet',page:0,query:''},strengtheningView:{filter:0,page:0},gemView:{mode:'mount',step:'equipment',filter:0,page:0,runes:[null,null,null],removeIds:[]}};
+    settingsView.tab='journey';activePanel=null;viewState={equipmentView:{tab:'gear',slot:0,item:null,query:''},petView:{tab:'follow',selected:null},shopView:{category:'pet',page:0,query:''},strengtheningView:{filter:0,page:0},gemView:{mode:'mount',step:'equipment',filter:0,page:0,runes:[null,null,null],removeIds:[]}};
     save=A.createAdventure(assets.content,{name:locale==='en'?'Star':'小星',appearance:'girl',seed});
     save.languageLearning={...save.languageLearning,enabled:true,native:locale,target:targetLocale};
     if(!['create','account','skills','world','learning','battle'].includes(shot.scene))save=prepareDebugEdit(save,assets.content,{level:15}).save;
@@ -297,8 +300,8 @@ function tick(elapsed){
     if(frames.length){
         const played=samplePresentationClock(frames,elapsed-battleStart),f=frames[played.index];
         const changed=played.index!==lastBattleFrame;
-        const cb=f.choice?{...callbacks,select:card=>{check(card.seq===f.choice.seq&&card.key===f.choice.key,'通过正式手牌按钮选中教学卡牌');V.renderBattle(nodes.battle,{...model(f.arena),selected:card},cb);},target:id=>check(id===f.choice.targetId,'通过正式战场点击选择施法目标')}:callbacks;
-        if(changed){V.renderBattle(nodes.battle,{...model(f.arena),selected:f.phase==='select'?null:f.selected||null,animating:!!tactics&&!!f.event},cb);if(f.phase==='select')nodes.battle.querySelector(`.hand-card[data-seq="${f.choice.seq}"] .card-select`)?.click();lastBattleFrame=played.index;check(!!$('battle-canvas')||f.arena.finished,'战斗界面可渲染');}
+        const cb=f.choice?{...callbacks,select:card=>{check(card.seq===f.choice.seq&&card.key===f.choice.key,'通过正式手牌按钮选中教学卡牌');renderBattle(nodes.battle,{...model(f.arena),selected:card},cb);},target:id=>check(id===f.choice.targetId,'通过正式战场点击选择施法目标')}:callbacks;
+        if(changed){renderBattle(nodes.battle,{...model(f.arena),selected:f.phase==='select'?null:f.selected||null,animating:!!tactics&&!!f.event},cb);if(f.phase==='select')nodes.battle.querySelector(`.hand-card[data-seq="${f.choice.seq}"] .card-select`)?.click();lastBattleFrame=played.index;check(!!$('battle-canvas')||f.arena.finished,'战斗界面可渲染');}
         const canvas=$('battle-canvas');if(canvas)renderer.renderBattle(canvas,f.arena,save,elapsed*1000,{event:f.event,progress:played.progress,hp:f.hp,showSupportPet:!!tactics});
         if(f.phase){
             const hand=[...nodes.battle.querySelectorAll('.hand-card')],chosen=hand.find(n=>Number(n.dataset.seq)===f.choice.seq);

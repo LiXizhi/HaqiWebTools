@@ -34,15 +34,23 @@ test('new successful edits clear redo; empty edits do not; session reset and his
  history.record(delta);history.record(delta);history.finish(true);history.finish(true);assert.equal(history.state().canUndo,false);
  history.clear();assert.deepEqual(history.state(),{canUndo:false,canRedo:false});
 });
+import {createHomeEditKeyHandler} from '../js/home/view_home_scene_input.js';
 test('editing shortcuts support control and command while preserving text fields, dialogs and repeat safety',()=>{
- const source=readFileSync(new URL('../js/view_home.js',import.meta.url),'utf8');
- const handler=source.slice(source.indexOf(' const editKey='),source.indexOf(" window.addEventListener('keydown',editKey)"));
- const calls=[],state={model:{home:{},build:true},modal:{querySelector:()=>false},cancelScenePointer:()=>{},run:fn=>fn(),cb:{undo:()=>calls.push('undo'),redo:()=>calls.push('redo')},render:()=>{},showGrid:false};
- vm.runInNewContext(handler+';globalThis.key=editKey;',state);
+ const calls=[];
+ const editKey=createHomeEditKeyHandler({
+  modal:{querySelector:()=>false},
+  getModel:()=>({home:{},build:true}),
+  cancelScenePointer:()=>{},
+  run:fn=>fn(),
+  cb:{undo:()=>calls.push('undo'),redo:()=>calls.push('redo')},
+  onToggleGrid:()=>{},
+ });
  const event=(key,extra={})=>({key,ctrlKey:true,preventDefault(){},stopPropagation(){},target:{closest:()=>false},...extra});
- state.key(event('z'));state.key(event('y'));state.key(event('Z',{ctrlKey:false,metaKey:true,shiftKey:true}));
+ editKey(event('z'));editKey(event('y'));editKey(event('Z',{ctrlKey:false,metaKey:true,shiftKey:true}));
  assert.deepEqual(calls,['undo','redo','redo']);
- state.key(event('z',{repeat:true}));state.key(event('z',{target:{closest:()=>true}}));state.modal.querySelector=()=>true;state.key(event('z'));
+ editKey(event('z',{repeat:true}));editKey(event('z',{target:{closest:()=>true}}));
+ const openModalKey=createHomeEditKeyHandler({modal:{querySelector:()=>true},getModel:()=>({home:{},build:true}),cancelScenePointer:()=>{},run:fn=>fn(),cb:{undo:()=>calls.push('undo'),redo:()=>calls.push('redo')},onToggleGrid:()=>{}});
+ openModalKey(event('z'));
  assert.equal(calls.length,3);
 });
 test('restoring a solid object cannot trap a character and leaves the original scene untouched',()=>{

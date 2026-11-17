@@ -1,29 +1,44 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import vm from 'node:vm';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 import {createAdventure,parseSave} from '../js/adventure_core.js';
 import {SimpleBot} from '../js/combat_policy_core.js';
-import {TACTICS_FIELD_ENCOUNTERS,createTacticsFieldBattle,nextTacticsFieldId,recordTacticsFieldVictory,playTacticsFieldRound} from '../js/tactics_field_battle_core.js';
+import {playTacticsFieldRound} from '../js/tactics_field_battle_core.js';
+import {createOpeningController} from '../js/adventure/opening_controller.js';
 
 const read=f=>JSON.parse(fs.readFileSync(new URL('../data/'+f,import.meta.url)));
 const {content,dataset}=installExpansion(...['adventure/chapter.json','adventure/combat.json','adventure/pets.json','adventure/shop-candidates.json','kids/cards.json','kids/charms.json'].map(read));
-const app=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
-const source=app.slice(app.indexOf('let tacticsPractice=null;'),app.indexOf('function openCompanionPractice(){'));
 
 function harness(){
  let stored,writes=0,cloud=0,fail=false;
- const ctx={structuredClone,TACTICS_FIELD_ENCOUNTERS,createTacticsFieldBattle,nextTacticsFieldId,recordTacticsFieldVictory,
+ const ctx={
   stage:'world',panel:null,roleEpoch:1,save:createAdventure(content,{school:'fire',seed:23}),
   assets:{content,dataset},roleStorage:{},path:[],destination:null,nodes:{hud:{}},battle:null,
   selected:null,discarded:[],animation:null,petCardsOpen:false,runeCardsOpen:false,
+  setSave:next=>{ctx.save=next;},
+  setPanel:next=>{ctx.panel=next;},
+  setBattle:next=>{ctx.battle=next;},
+  setStage:next=>{ctx.stage=next;},
+  setSelected:next=>{ctx.selected=next;},
+  setDiscarded:next=>{ctx.discarded=next;},
+  setAnimation:next=>{ctx.animation=next;},
+  setPetCardsOpen:next=>{ctx.petCardsOpen=next;},
+  setRuneCardsOpen:next=>{ctx.runeCardsOpen=next;},
+  clearMovementInput:()=>{ctx.path=[];ctx.destination=null;},
+ };
+ const opening=createOpeningController({
+  nodes:ctx.nodes,
+  getContext:()=>ctx,
+  close:()=>{ctx.panel=null;},
+  openPanel:kind=>{ctx.panel=kind;},
+  enterWorld:async()=>{ctx.stage='world';},
   saveLocal:next=>{if(fail)throw Error('storage unavailable');stored=JSON.stringify(next);writes++;},
-  queueCloudSave:()=>cloud++,paintBattle(){},stopBattleChatVoice(){}};
- ctx.close=()=>{ctx.panel=null;};ctx.openPanel=kind=>{ctx.panel=kind;};
- ctx.enterWorld=async()=>{ctx.stage='world';};
- vm.createContext(ctx);vm.runInContext(source,ctx);
- const state=()=>vm.runInContext('tacticsPractice',ctx);
+  queueCloudSave:()=>cloud++,
+  paintBattle(){},
+  stopBattleChatVoice(){},
+ });
+ const state=()=>opening.getTacticsPractice();
  function win(){
   for(let i=0;i<40&&!ctx.battle.finished;i++){
    const result=playTacticsFieldRound({...state(),battle:ctx.battle},{...new SimpleBot().pick(ctx.battle,ctx.battle.sides.near[0]),aiVersion:1});
@@ -31,7 +46,7 @@ function harness(){
   }
   assert.equal(ctx.battle.winner,'near');
  }
- return {ctx,state,win,open:options=>ctx.openTacticsTraining(options),finish:options=>ctx.finishTacticsFight(options),
+ return {ctx,state,win,open:options=>opening.openTacticsTraining(options),finish:options=>opening.finishTacticsFight(options),
   fail:v=>{fail=v;},stored:()=>stored,writes:()=>writes,cloud:()=>cloud};
 }
 

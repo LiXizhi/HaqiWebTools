@@ -9,13 +9,13 @@ import {npcHasActiveQuest} from '../js/adventure_npc_core.js';
 import {tr} from '../js/locale_runtime.js';
 import {forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS} from '../js/forest_commission_core.js';
 
+import { createQuestDialogueController } from '../js/adventure/quest_dialogue_controller.js';
+
 // Exercise the actual task-dialogue renderer and app callback, not just the
 // separate course/free-chat controllers. This is the NPC speech-button path.
 test('task dialogue forwards Azure Dragon and each subsequent speaker to SDK synthesis',async()=>{
- const source=fs.readFileSync(new URL('../js/view_adventure.js',import.meta.url),'utf8');
- const renderSource=source.slice(source.indexOf('export function renderDialogue('),source.indexOf('export function renderBattle(')).replace('export function','function');
- const app=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
- const controller=app.slice(app.indexOf('function finishTrackedDialogue()'),app.indexOf('function interact(target)'));
+ const source=fs.readFileSync(new URL('../js/views/adventure/view_npc_dialogue.js',import.meta.url),'utf8');
+ const renderSource=source.slice(source.indexOf('export function renderDialogue(')).replace('export function','function');
  const chapter=JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json',import.meta.url)));
  const calls=[],oldAudio=globalThis.Audio;
  globalThis.Audio=class{play(){queueMicrotask(()=>this.onended());return Promise.resolve();}pause(){}};
@@ -28,13 +28,19 @@ test('task dialogue forwards Azure Dragon and each subsequent speaker to SDK syn
   dialogueLearningLines:()=>[{text:'I am Azure Dragon.',locale:'en'}],bindDialogue:(_root,_box,_text,_hint,_button,options)=>{readAloud=options.readAloud;}});
  vm.runInContext(renderSource,view);
  const model={assets:{content:chapter},save:{languageLearning:{enabled:true,target:'en'}}};
- const context=vm.createContext({dialog:{npcId:36211},nodes:{overlay:element()},model:()=>model,V:{renderDialogue:view.renderDialogue},dialogueVoice:voice,
-  close(){},mapDialogue(){},openPanel(){},track(){},travel(){}});
- vm.runInContext(controller,context);
+ let currentDialog={npcId:36211};
+ const ctrl=createQuestDialogueController({
+  nodes:{overlay:element()},
+  getContext:()=>({dialog:currentDialog,save:model.save,assets:model.assets}),
+  model:()=>model,
+  renderDialogue:view.renderDialogue,
+  dialogueVoice:voice,
+  close(){},openPanel(){},travel(){},opening:{},languageAdventure:{open(){}},
+ });
  try{
   // Initial resident greeting, then quest lines with changing NPC IDs.
   for(const dialog of [{npcId:36211},{npcId:36211,lines:[{npcId:36211,text:'Hello'},{npcId:36209,text:'Hello'}],index:0,finishLabel:'完成'},{npcId:36211,lines:[{npcId:36211,text:'Hello'},{npcId:36209,text:'Hello'}],index:1,finishLabel:'完成'}]){
-   context.dialog=dialog;context.paintDialogue();await readAloud('Hello','en',new AbortController().signal);
+   currentDialog=dialog;ctrl.paintDialogue();await readAloud('Hello','en',new AbortController().signal);
    const npc=chapter.npcs[dialog.lines?.[dialog.index]?.npcId||dialog.npcId];assert.equal(calls.at(-1).config.voiceType,selectDialogueVoice(npc));
   }
   assert.match(calls[0].config.voiceType,/_male_/);assert.match(calls[1].config.voiceType,/_male_/);assert.match(calls[2].config.voiceType,/_female_/);

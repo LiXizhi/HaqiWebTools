@@ -1,4 +1,4 @@
-import {DetailDialog} from './view_detail_dialog.js';
+import {DetailDialog} from './ui/detail_dialog.js';
 export function openBuildingProperties(parent,{el,button,obj,item,save}){
  const dialog=new DetailDialog(parent,{el,title:'物品属性',className:'equipment-item-dialog'}),form=el('form','home-building-properties');
  const defaults=item.building?.obstruction||{enabled:item.layer==='solid',width:item.size[0],depth:item.size[1],offsetX:0,offsetY:0};

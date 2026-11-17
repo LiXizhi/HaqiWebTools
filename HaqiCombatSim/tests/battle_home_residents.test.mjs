@@ -20,7 +20,7 @@ test('recalling all pets survives serialization, reorder and newly acquired pets
  restored.p9={x:1,y:2};assert.deepEqual(homeResidentPets(records,restored),[records.p9]);
  assert.throws(()=>validateHomePart('residents',{$selection:{version:2}},[]));
 });
-const app=readFileSync(new URL('../js/home_app.js',import.meta.url),'utf8');
+const app=readFileSync(new URL('../js/home/home_pet_controller.js',import.meta.url),'utf8');
 function fixture(){
  let data=initializeHomeResidents({},records,42),fail=false;
  const context={check(){},home:{id:'h'},pending:null,mutation:Promise.resolve(),parts:{residents:data},pets:homeResidentPets(records,data),wish:{petId:'p0'},selection:null,preview:null,status:'',catalog:{items:[]},getContext:()=>({save:{}}),ownedPetRecords:()=>records,showRetry(){},emit(){},wishFeedback(){},roster(){context.pets=homeResidentPets(records,context.parts.residents);},store:{async mutate(id,keys,fn){if(fail)throw Error('disk');const copy=structuredClone(data);fn({}, {residents:copy});data=copy;return {home:{id},data:{residents:copy}};}}};
@@ -35,12 +35,22 @@ test('controller drag in and recall update residents only after saving, clear wi
  fail(false);const retry=c.pending;c.pending=null;await retry();assert.equal(c.pets.some(p=>p.id==='p9'),false);
  await assert.rejects(c.savePetPlacement('not-owned',{x:0,y:0}),/背包/);
 });
-const view=readFileSync(new URL('../js/view_home.js',import.meta.url),'utf8');
+import {bindHomeSceneInputForTest} from './helpers/home_scene_input_harness.mjs';
 test('scene pointer release recalls onto the open backpack or dock and otherwise places the pet',()=>{
- const handler=view.slice(view.indexOf('  canvas.onpointerup=e=>{'),view.indexOf('  const cancelPointer='));
  for(const target of ['bag','dock','ground']){
-  const calls=[],context={eraseStroke:null,paintStroke:null,canvas:{hasPointerCapture:()=>false,getBoundingClientRect:()=>({width:800,height:600})},gesture:{id:1,moved:true,hit:{kind:'pet',id:'p0'}},position:()=>({}),run:fn=>fn(),document:{elementFromPoint:()=>target},body:{dataset:{drawer:'pets'}},side:{contains:t=>t==='bag'},dock:{children:[null,null,{contains:t=>t==='dock'}]},petDragPoint:()=>({x:400,y:300}),model:{camera:{x:0,y:0},scale:40},cb:{recallPet:id=>calls.push(['recall',id]),drop:hit=>calls.push(['place',hit.id])}};
-  vm.runInNewContext(handler,context);context.canvas.onpointerup({pointerId:1,clientX:20,clientY:30});
+  const calls=[],canvas={hasPointerCapture:()=>false,getBoundingClientRect:()=>({width:800,height:600})};
+  bindHomeSceneInputForTest({
+   canvas,
+   body:{dataset:{drawer:'pets'}},
+   side:{contains:t=>t==='bag'},
+   dock:{children:[null,null,{contains:t=>t==='dock'}]},
+   doc:{elementFromPoint:()=>target},
+   state:{model:{camera:{x:0,y:0},scale:40},gesture:{id:1,moved:true,hit:{kind:'pet',id:'p0'}},paintStroke:null,eraseStroke:null},
+   position:()=>({}),
+   petDragPoint:()=>({x:400,y:300}),
+   cb:{recallPet:id=>calls.push(['recall',id]),drop:hit=>calls.push(['place',hit.id])},
+  });
+  canvas.onpointerup({pointerId:1,clientX:20,clientY:30});
   assert.deepEqual(calls,[[target==='ground'?'place':'recall','p0']]);
  }
 });

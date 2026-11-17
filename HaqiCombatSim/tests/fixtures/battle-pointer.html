@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-CN"><meta charset="utf-8"><base href="/"><meta name="viewport" content="width=device-width,initial-scale=1"><title>战斗指针验收</title><style>body{margin:0;background:#173c43;color:#fff;font:14px sans-serif}canvas{width:100%;height:420px}p{padding:12px}#roster{display:flex;flex-wrap:wrap}.combatant-status{max-width:180px}.combatant-school{width:24px;height:24px}.combatant-effects{max-height:36px;overflow:hidden}</style><p>只读内存预览：先转向，再施法；循环展示玩家和三只怪物，回合结束转回玩家并等待选牌。</p><canvas id="battle"></canvas><div id="roster"></div><script type="module">
 import {loadResources} from '../../js/adventure_assets.js';
-import {createRenderer} from '../../js/adventure_renderer.js';
+import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
 import {createAdventure,playerSpec} from '../../js/adventure_core.js';
 import {createPveBattle} from '../../js/combat_pve_core.js';
 

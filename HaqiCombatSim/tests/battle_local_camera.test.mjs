@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createRenderer} from '../js/adventure_renderer.js';
+import {createRenderer} from '../js/adventure/renderer/scene_renderer.js';
 
 test('player two following uses the exact solo camera and releases back to the shared camera',()=>{
     const keys=['matchMedia','window','document'],originals=keys.map(key=>Object.getOwnPropertyDescriptor(globalThis,key));

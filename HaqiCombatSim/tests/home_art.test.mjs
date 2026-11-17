@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 import {validateMedia} from '../scripts/lib/asset_decode.mjs';
-import {drawHomeObject,HOME_FURNITURE_SCALE,HOME_GROUND_SCALE} from '../js/view_home_art.js';
+import {drawHomeObject, HOME_FURNITURE_SCALE, HOME_GROUND_SCALE} from '../js/home/view_home_object_art.js';
 
 const catalog=JSON.parse(fs.readFileSync(new URL('../data/adventure/home/catalog.json',import.meta.url))).items;
 const manifest=JSON.parse(fs.readFileSync(new URL('../data/adventure/home/home-art.json',import.meta.url)));
@@ -74,7 +74,7 @@ test('draw returns the visible sprite bounds for build-mode picking',()=>{
  assert.deepEqual(bounds,{x:120+call[5],y:220+call[6],w:call[7],h:call[8]});
 });
 
-import {homeObjectVisualBounds} from '../js/view_home_art.js';
+import {homeObjectVisualBounds} from '../js/home/view_home_object_art.js';
 test('cached legacy hit bounds match live sprite drawing exactly',()=>{
  const ctx=new Proxy({}, {get:()=>()=>{}});
  for(const item of catalog.filter(i=>!i.building&&!i.roofDecoration))for(const rotation of [0,1]){

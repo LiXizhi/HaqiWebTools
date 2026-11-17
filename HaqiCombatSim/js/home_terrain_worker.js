@@ -1,4 +1,4 @@
-import {paintHomeWorldTerrain} from './view_home_art.js';
+import {paintHomeWorldTerrain} from './home/view_home_world_terrain.js';
 let world=null,manifest=null,images={},patterns=new Map();
 self.onmessage=({data})=>{
     if(data.type==='scene'){

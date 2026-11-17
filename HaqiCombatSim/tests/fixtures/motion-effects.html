@@ -5,7 +5,7 @@
 import {loadResources} from '/js/adventure_assets.js';
 import {createAdventure} from '/js/adventure_core.js';
 import {createWorld} from '/js/adventure_world_core.js';
-import {createRenderer} from '/js/adventure_renderer.js';
+import {createRenderer} from '/js/adventure/renderer/scene_renderer.js';
 const $=id=>document.getElementById(id);
 try{
  const assets=await loadResources(),save=createAdventure(assets.content,{name:'移动特效预览'}),world=createWorld(save.zone,assets.content,save),renderer=createRenderer($('world'),assets);

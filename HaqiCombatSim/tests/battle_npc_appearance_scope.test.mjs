@@ -3,12 +3,13 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import {npcCharacter} from '../js/adventure_city_people_core.js';
+import {resolveConversationPortrait} from '../js/adventure/conversation_learning_controller.js';
 import {createInteractionFeedback} from '../js/interaction_feedback.js';
 import {fill,tr,setText} from '../js/locale_runtime.js';
 const source=file=>fs.readFileSync(new URL('../js/'+file,import.meta.url),'utf8');
 
 test('actual scene NPC branch preserves original dragon art and limits generated outfits to city dungeons',()=>{
-    const s=source('adventure_renderer.js'),start=s.indexOf("if(o.kind==='npc') {"),end=s.indexOf("if(o.kind==='mob')",start),code=s.slice(start,end);
+    const s=source('adventure/renderer/scene_renderer.js'),start=s.indexOf("if(o.kind==='npc') {"),end=s.indexOf("if(o.kind==='mob')",start),code=s.slice(start,end);
     const draws=[],avatars=[];
     const context={npcPurpose:()=>null,npcCharacter,o:{kind:'npc',id:36211,name:'青龙',zone:'camp',portrait:{id:'dragon'},x:100,y:200},world:{isCityDungeon:false},assets:{hero:{},content:{},draw:(...args)=>{draws.push(args);return true;}},ctx:{},t:0,save:{},stats:()=>({}),shadow(){},avatar:(...args)=>avatars.push(args),plate(){},PLATE:{npc:{}},markerFor:()=>null,earthCityNpcMarker:()=>null,text(){},ellipse(){},Math};
     Object.assign(context,{forestScene:null,interactionFeedback:createInteractionFeedback(),time:0,graphics:{low:false}});
@@ -19,9 +20,11 @@ test('actual scene NPC branch preserves original dragon art and limits generated
 });
 
 test('actual free-chat portrait callback keeps island and Earth surface art',()=>{
-    const s=source('adventure_app.js'),line=s.split('\n').find(l=>l.includes('getPortrait:source=>')),callback=line.trim().replace(/^getPortrait:/,'').replace(/,$/,'');
     const portraits=[],outfits=[],assets={content:{npcs:{36211:{id:36211,zone:'camp',portrait:{id:'dragon'}}}},hero:{}};
-    const getPortrait=vm.runInNewContext('('+callback+')',{npcCharacter,assets,V:{art:(...args)=>{portraits.push(args);return'original';}},heroPortrait:(...args)=>{outfits.push(args);return'outfit';}});
+    const getPortrait=src=>resolveConversationPortrait(assets,src,{
+        artFn:(...args)=>{portraits.push(args);return 'original';},
+        heroPortraitFn:(...args)=>{outfits.push(args);return 'outfit';},
+    });
     assert.equal(getPortrait({kind:'npc',id:36211}),'original');
     assert.equal(getPortrait({kind:'npc',id:991000,zone:'earth',portrait:'earth-old'}),'original');
     assert.equal(getPortrait({kind:'npc',id:991001,zone:'city:sample:default',portrait:'city-old'}),'outfit');

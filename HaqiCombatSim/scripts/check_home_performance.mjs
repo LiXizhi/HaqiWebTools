@@ -17,7 +17,7 @@ for(const width of [1280,390]){
  await page.screenshot({path:`${out}/home-terrain-${width}.png`});
  const result=await page.evaluate(async()=>{
   const {createHomeTerrainCache}=await import('/js/home_terrain_cache.js');
-  const {paintHomeWorldTerrain}=await import('/js/view_home_art.js');
+  const {paintHomeWorldTerrain}=await import('/js/home/view_home_world_terrain.js');
   const canvas=document.createElement('canvas');canvas.width=canvas.height=512;const c=canvas.getContext('2d');
   const cache=createHomeTerrainCache(),rect={x:-512,y:-512,w:500,h:500};c.translate(512,512);
   let missing=1,start=performance.now();while(missing&&performance.now()-start<15000){missing=cache.draw(c,73,rect,null,null,1);await new Promise(r=>setTimeout(r,20));}

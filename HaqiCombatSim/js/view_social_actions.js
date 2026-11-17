@@ -1,5 +1,5 @@
 import {tr,fill} from './locale_runtime.js';
-import {el,button} from './view_adventure.js';
+import {el, button} from './views/adventure/primitives.js';
 import {socialActionOptions} from './adventure_social_actions_core.js';
 
 export function socialActionsHeading(state){

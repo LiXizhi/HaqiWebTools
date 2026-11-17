@@ -6,7 +6,7 @@
 import {loadResources} from '../../js/adventure_assets.js';
 import {createWorld} from '../../js/adventure_world_core.js';
 import {createAdventure} from '../../js/adventure_core.js';
-import {createRenderer} from '../../js/adventure_renderer.js';
+import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
 try {
  const assets=await loadResources(),save=createAdventure(assets.content),renderer=createRenderer(document.querySelector('#world'),assets);
  const params=new URLSearchParams(location.search);

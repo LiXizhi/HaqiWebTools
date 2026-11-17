@@ -1,7 +1,7 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>语言字典 · 隔离验证</title><link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/dictionary.css"><style>body{margin:0;background:#315c49}#qa{position:fixed;bottom:0;z-index:99;background:white;padding:4px}#overlay{position:fixed;inset:0}</style></head><body class="haqi-app"><div id="overlay" class="overlay visible"></div><output id="qa">加成 0</output><script type="module">
 import {createDictionary} from '../../js/adventure_dictionary.js';
 import {createDictionaryStore} from '../../js/dictionary_store.js';
-import {restoreVisibleFocus} from '../../js/view_adventure_controls.js';
+import {restoreVisibleFocus} from '../../js/ui/controls.js';
 const q=new URLSearchParams(location.search),state={owner:(q.has('crossLanguage')||q.has('contextRetry')||q.has('modelFailure')||q.has('pendingTutor')||q.has('recordLifecycle')||q.has('tutorFormatRepair')||q.has('tutorRecovery')||q.has('tutorFormatting')||q.has('streamingTutor'))?'fixture-model':null,role:q.get('role')||'fixture',stage:'world',content:{},save:{seed:3,languageLearning:{}}};
 const launcher=q.has('focusReturn')?document.createElement('button'):null;if(launcher){launcher.className='dictionary-launch';launcher.textContent='打开字典';document.body.prepend(launcher);launcher.focus();}
 let finishAudio,tutorCalls=0;

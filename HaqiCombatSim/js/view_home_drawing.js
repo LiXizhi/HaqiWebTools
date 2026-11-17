@@ -1,4 +1,4 @@
-import {DetailDialog} from './view_detail_dialog.js';
+import {DetailDialog} from './ui/detail_dialog.js';
 import {HOME_DRAWING_COLORS} from './home_drawing_core.js';
 import {paintHomeDrawing} from './view_home_drawing_art.js';
 export function openHomeDrawing(parent,{el,button,obj,homeId,save}){

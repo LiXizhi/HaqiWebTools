@@ -6,7 +6,7 @@ import {createAdventure,catalogStatSnapshot} from '../../js/adventure_core.js';
 import * as A from '../../js/adventure_core.js';
 import {installCatalogQuests,catalogQuestReady} from '../../js/adventure_catalog_quests_core.js';
 import {installFishing} from '../../js/adventure_fishing_core.js';
-import {renderPanel} from '../../js/view_adventure.js';
+import {renderPanel} from '../../js/views/adventure/view_panel_modal.js';
 import {createQuestJournalLoader} from '../../js/adventure_quest_journal.js';
 import {loadUiArt} from '../../js/adventure_ui_art.js';
 const read=async url=>(await fetch(new URL('../../'+url,location.href))).json();

@@ -5,34 +5,43 @@ import vm from 'node:vm';
 import * as A from '../js/adventure_core.js';
 import * as W from '../js/adventure_world_core.js';
 import {persistReward} from '../js/adventure_reward_persistence.js';
-import {forestCommissionAvailable,forestCommissionGoal,forestCommissionSites,forestCommissionPhase,FOREST_NPCS,FOREST_SITES,FOREST_PATROL_DUNGEON} from '../js/forest_commission_core.js';
+import {forestCommissionPhase,FOREST_NPCS,FOREST_SITES,FOREST_PATROL_DUNGEON} from '../js/forest_commission_core.js';
+import {createOpeningController} from '../js/adventure/opening_controller.js';
 
 const read=file=>JSON.parse(fs.readFileSync(new URL('../data/'+file,import.meta.url)));
 const content=read('adventure/chapter.json');
 content.worldMaps={camp:read('adventure/maps/camp.json')};
-const app=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
-const source=app.slice(app.indexOf('function forestTarget(){'),app.indexOf('let forestPracticeTask=null;'));
 
 function harness(){
  let callbacks,view,written,fail=false;
  const calls=[],errors=[];
- const ctx={Math,A,W,forestCommissionAvailable,forestCommissionGoal,forestCommissionSites,FOREST_PATROL_DUNGEON,
-  save:A.createAdventure(content,{school:'fire',seed:23}),panel:'forest-commission',nodes:{overlay:{}},
-  drainForestPractice(){},close(){ctx.panel=null;},toast:line=>calls.push({toast:line}),
-  renderForestCommission(_root,model,cb){view=model;callbacks=cb;},
-  model:()=>({save:ctx.save,assets:{content}}),
-  walkTo:(target,interact)=>calls.push({walk:target,interact}),
-  openPanel:panel=>calls.push({panel}),openTacticsTraining:options=>calls.push({training:options}),
-  openJourney:id=>calls.push({journey:id}),track:()=>calls.push({mainline:true})};
+ const ctx={
+  save:A.createAdventure(content,{school:'fire',seed:23}),
+  panel:'forest-commission',
+  world:null,
+ };
  ctx.world=W.createWorld('camp',content,ctx.save);
  const storage={getItem(){return written||null;},setItem(key,value){if(fail)throw Error('quota');if(!key.endsWith('.updated'))written=value;}};
- ctx.performAction=(action,access)=>{
-  try{const result=persistReward(ctx.save,content,action,access,storage);ctx.save=result.save;ctx.paintForestCommission();return result.result;}
-  catch(error){errors.push(error);return false;}
- };
- vm.createContext(ctx);vm.runInContext(source,ctx);
- const paint=()=>{ctx.paintForestCommission();return callbacks;};
- const arrive=()=>{const target=ctx.forestTarget();assert.ok(target);ctx.save.position={x:target.x,y:target.y};return paint();};
+ const ctrl=createOpeningController({
+  nodes:{overlay:{}},
+  getContext:()=>({save:ctx.save,world:ctx.world,panel:ctx.panel,assets:{content},roleStore:{catalog:{activeId:'r1'}},setPanel:next=>{ctx.panel=next;}}),
+  model:()=>({save:ctx.save,assets:{content}}),
+  close:()=>{ctx.panel=null;},
+  openPanel:panel=>calls.push({panel}),
+  onOpenTacticsTraining:options=>calls.push({training:options}),
+  openJourney:id=>calls.push({journey:id}),
+  walkTo:(target,interact)=>calls.push({walk:target,interact}),
+  track:()=>calls.push({mainline:true}),
+  toast:line=>calls.push({toast:line}),
+  spellSound:{play(){}},
+  renderForestCommissionView:(_root,model,cb)=>{view=model;callbacks=cb;},
+  performAction:(action,access)=>{
+   try{const result=persistReward(ctx.save,content,action,access,storage);ctx.save=result.save;ctrl.paintForestCommission();return result.result;}
+   catch(error){errors.push(error);return false;}
+  },
+ });
+ const paint=()=>{ctrl.paintForestCommission();return callbacks;};
+ const arrive=()=>{const target=ctrl.forestTarget();assert.ok(target);ctx.save.position={x:target.x,y:target.y};return paint();};
  return {ctx,calls,errors,paint,arrive,cb:()=>callbacks,view:()=>view,stored:()=>written,fail:value=>{fail=value;}};
 }
 

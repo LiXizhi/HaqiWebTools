@@ -20,7 +20,7 @@ test('length comparison uses rendered pencil and pen lengths and preserves pract
   const input=page.getByRole('textbox',{name:'输入回答'});await input.fill('The '+word+' '+item+'.');await page.getByRole('button',{name:'回答',exact:true}).click();
   const canvas=await page.locator('.home-canvas').boundingBox();
   const points=await page.evaluate(async()=>{
-   const {homeObjectVisualBounds}=await import('/js/view_home_art.js'),{footprint}=await import('/js/home_core.js');
+   const {homeObjectVisualBounds}=await import('/js/home/view_home_object_art.js'),{footprint}=await import('/js/home_core.js');
    const {items}=await (await fetch('/data/adventure/home/catalog.json')).json(),objects=await worldLearning.schoolObjects();
    return Object.fromEntries(Object.values(objects).filter(o=>o.itemId).map(o=>{const b=footprint(o,items),v=homeObjectVisualBounds(items.find(i=>i.id===o.itemId),o,o.x*40,o.y*40,b.w*40,b.h*40);return [o.id,{x:v.x+v.w/2,y:v.y+v.h/2}];}));
   });

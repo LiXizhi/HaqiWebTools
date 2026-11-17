@@ -1,4 +1,4 @@
-import {DetailDialog} from './view_detail_dialog.js';
+import {DetailDialog} from './ui/detail_dialog.js';
 
 export function openHomeLabel(parent,{el,button,obj,homeId,save,practice=null}){
  const dialog=new DetailDialog(parent,{el,title:'给作品写标签',className:'equipment-item-dialog'});

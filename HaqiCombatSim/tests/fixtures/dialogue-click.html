@@ -4,7 +4,7 @@
 <body class="haqi-app storybook-ui"><div id="root" class="overlay dialogue-layer rpg-dialogue-layer visible"><section class="dialogue-box rpg-dialogue"><div class="dialogue-content"><p class="eyebrow">魔法营地</p><h2>霸王虎坐骑</h2><p class="dialogue-text">让我带你享受风驰电掣的感觉吧！</p><div class="dialogue-choices"><button class="primary">查看商品与学习魔法</button><button class="text-button">下次再聊</button></div><p class="dialogue-hint"></p></div></div></div>
 <script type="module">
 import {bindDialogue} from '../../js/view_adventure_dialogue.js';
-import {createCloseButton} from '../../js/view_adventure_controls.js';
+import {createCloseButton} from '../../js/ui/controls.js';
 const root=document.querySelector('#root'),box=root.querySelector('section');
 const log=[];
 const close=()=>{log.push('close');root.disposeDialogue?.();root.hidden=true;};

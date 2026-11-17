@@ -1,4 +1,4 @@
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {tr} from './locale_runtime.js';
 // View-only: the controller supplies action availability and all intent callbacks.
 export function renderCityInteraction(root,{dungeon,hotspot,actions,state,showChinese=true},{close,apply,practice,read,toggleChinese}){

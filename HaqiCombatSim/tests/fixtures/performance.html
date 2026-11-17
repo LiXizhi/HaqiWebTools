@@ -8,7 +8,7 @@ import {createScheduledTerrainCache} from '../../js/terrain_tile_scheduler.js';
 import {createWorld,movePosition} from '../../js/adventure_world_core.js';
 import {createAdventure,beginEncounter,applyAction} from '../../js/adventure_core.js';
 import {loadResources} from '../../js/adventure_assets.js';
-import {createRenderer} from '../../js/adventure_renderer.js';
+import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
 import {restorePveBattle} from '../../js/combat_pve_core.js';
 const base=document.createElement('base');base.href=new URL('../../',location.href);document.head.append(base);
 const output=document.querySelector('#result'),canvas=document.querySelector('#world'),c=canvas.getContext('2d');

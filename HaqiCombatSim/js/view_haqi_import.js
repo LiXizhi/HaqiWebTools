@@ -1,4 +1,4 @@
-import { createCloseButton } from './view_adventure_controls.js';
+import { createCloseButton } from './ui/controls.js';
 import {setText,fill} from './locale_runtime.js';
 
 export function renderOriginalImport(root, state, callbacks) {

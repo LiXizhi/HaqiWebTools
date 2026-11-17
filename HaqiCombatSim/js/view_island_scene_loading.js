@@ -1,5 +1,5 @@
 import {loadJourneyArtwork} from './loading_art.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {setText} from './locale_runtime.js';
 import {petAppearanceStage} from './adventure_pets_core.js';
 import {selectCompanionId} from './adventure_companion_core.js';

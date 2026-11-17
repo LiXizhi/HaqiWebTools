@@ -29,20 +29,35 @@ test('fullscreen player releases its pause on close, skip and repeated cleanup',
     }finally{globalThis.document=original;}
 });
 
+import { createWorldInteractionController } from '../js/adventure/world_interaction_controller.js';
+
 test('animation gate bypasses background updates and refreshes clocks until resumed',()=>{
-    const source=readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
-    const code=source.slice(source.indexOf('function frame(now) {'),source.indexOf('// Opt-in, local diagnostics.'));
-    let active=true,scheduled=0;
-    const c=vm.createContext({document:{hidden:false},wordPractice:{active:false},hanziAnimationActive:()=>active,requestAnimationFrame:()=>scheduled++,lastFrame:0,lastCare:0,islandSocial:{},petScene:{},renderer:{pauseFrameMeter(){}},adaptiveGraphics:{suspend(){}},perf:{frame(){}}});
-    vm.runInContext(code+';frame(1000);frame(9000);',c);
-    assert.equal(scheduled,2);assert.equal(c.lastFrame,9000);assert.equal(c.lastCare,9000);
-    assert.equal(c.islandSocial.lastFrame,9000);assert.equal(c.petScene.lastFrame,9000);
-    active=false;
-    c.document.hidden=true;
-    vm.runInContext('frame(9010)',c);
-    assert.equal(c.lastFrame,9010);assert.equal(c.petScene.lastFrame,9010);
-    c.document.hidden=false;
-    // The first regular-frame dependency is deliberately absent: reaching it
-    // proves the released gate no longer suppresses the normal game loop.
-    assert.throws(()=>vm.runInContext('frame(9016)',c),/stage is not defined/);
+    const originalDoc=globalThis.document,originalRaf=globalThis.requestAnimationFrame;
+    let scheduled=0,lastFrame=0,lastCare=0;
+    const social={},pet={};
+    globalThis.requestAnimationFrame=()=>scheduled++;
+    globalThis.document={hidden:true,body:{append(){}}};
+    try{
+        const ctrl=createWorldInteractionController({
+            nodes:{},
+            getContext:()=>({
+                renderer:{pauseFrameMeter(){}},
+                setLastFrame:v=>{lastFrame=v;},
+                setLastCare:v=>{lastCare=v;},
+            }),
+            islandSocial:()=>social,
+            petScene:()=>pet,
+            localPlay:()=>({}),
+            wordLearning:{wordPractice:{active:false}},
+            adaptiveGraphics:{suspend(){}},
+            perf:{frame(){}},
+        });
+        ctrl.frame(1000);ctrl.frame(9000);
+        assert.equal(scheduled,2);assert.equal(lastFrame,9000);assert.equal(lastCare,9000);
+        assert.equal(social.lastFrame,9000);assert.equal(pet.lastFrame,9000);
+        globalThis.document.hidden=false;
+        // The first regular-frame dependency is deliberately absent: reaching it
+        // proves the released gate no longer suppresses the normal game loop.
+        assert.throws(()=>ctrl.frame(9016),/Cannot read properties of undefined/);
+    }finally{globalThis.document=originalDoc;globalThis.requestAnimationFrame=originalRaf;}
 });

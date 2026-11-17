@@ -5,7 +5,7 @@ import {loadResources} from '../../js/adventure_assets.js';
 import {createAdventure} from '../../js/adventure_core.js';
 import {createRoleStore} from '../../js/adventure_roles.js';
 import {persistReward} from '../../js/adventure_reward_persistence.js';
-import {renderPanel} from '../../js/view_adventure.js';
+import {renderPanel} from '../../js/views/adventure/view_panel_modal.js';
 const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
 const assets=await loadResources();
 // Separate namespace; never touches the user's role cache or real account.

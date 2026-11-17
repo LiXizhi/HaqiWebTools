@@ -19,7 +19,7 @@ import {createJsonReader} from './runtime_data.js';
 import {installCityDungeons,enterCityDungeon,leaveCityDungeon,cityDungeonState,cityActionStatus,applyCityInteraction} from './adventure_city_dungeons_core.js';
 import {renderCityInteraction} from './view_city_dungeon.js';
 import {createSceneFishing} from './view_adventure_scene_fishing.js';
-import {el,button} from './view_adventure.js';
+import {el, button} from './views/adventure/primitives.js';
 import {fishingSpot} from './adventure_fishing_spot_core.js';
 import {createWorld,findPath,WALK_SPEED,walkable,distance} from './adventure_world_core.js';
 import {samplePromoMotion} from './promo_motion_core.js';

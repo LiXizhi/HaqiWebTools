@@ -1,4 +1,4 @@
-import {DetailDialog} from './view_detail_dialog.js';
+import {DetailDialog} from './ui/detail_dialog.js';
 import {tr} from './locale_runtime.js';
 const el=(tag,className='',...children)=>{const n=document.createElement(tag);n.className=className;n.append(...children);return n;};
 // Open the window immediately; SDK, worker and account IO remain lazy.

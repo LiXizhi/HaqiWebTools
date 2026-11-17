@@ -29,25 +29,35 @@ test('all five starting schools have usable rehearsal cards and isolated health'
  assert.equal(JSON.stringify(dataset),before);
 });
 
+import { createOpeningController } from '../js/adventure/opening_controller.js';
+
 test('completion retries a failed save once and ignores closed or stale practice callbacks',()=>{
- const source=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
- const paint=source.slice(source.indexOf('function paintCompanionPractice('),source.indexOf('let encounterStarting='));
  for(const stale of [null,'closed','role','save']){
-  const save={id:'original'},session={save,epoch:1,lesson:{done:true}};
+  let save={id:'original'},panel='companion-practice',roleEpoch=1;
+  const session={save,epoch:1,lesson:{done:true}};
   let callbacks,writes=0,tracked=0,fail=true;
-  const context=vm.createContext({companionPractice:session,save,roleEpoch:1,panel:'companion-practice',stage:'world',roleStorage:{},assets:{content:{}},nodes:{overlay:{}},model:()=>({}),
-   V:{renderCompanionPractice:(_root,_model,_lesson,cb)=>{callbacks=cb;}},safely:fn=>{try{return fn();}catch{return false;}},
-   persistReward:()=>{writes++;if(fail)throw Error('storage full');return {save:{id:'committed'}};},storageWarning:false,
-   close:()=>{context.panel=null;context.companionPractice=null;},petScene:{dialogue(){}},queueCloudSave(){},paintHud(){},track:()=>tracked++
+  const ctrl=createOpeningController({
+   nodes:{overlay:{}},
+   getContext:()=>({save,roleEpoch,panel,stage:'world',roleStorage:{},assets:{content:{}},setSave:next=>{save=next;},setStorageWarning:()=>{},setPanel:next=>{panel=next;}}),
+   model:()=>({}),
+   renderCompanionPractice:(_root,_model,_lesson,cb)=>{callbacks=cb;},
+   safely:fn=>{try{return fn();}catch{return false;}},
+   persistRewardFn:()=>{writes++;if(fail)throw Error('storage full');return {save:{id:'committed'}};},
+   close:()=>{panel=null;ctrl.setCompanionPractice(null);},
+   petScene:()=>({dialogue(){}}),
+   queueCloudSave(){},
+   paintHud(){},
+   track:()=>tracked++,
   });
-  vm.runInContext(paint,context);context.paintCompanionPractice();
-  if(stale==='closed')context.panel=null;
-  if(stale==='role')context.roleEpoch=2;
-  if(stale==='save')context.save={id:'other'};
+  ctrl.setCompanionPractice(session);
+  ctrl.paintCompanionPractice();
+  if(stale==='closed')panel=null;
+  if(stale==='role')roleEpoch=2;
+  if(stale==='save')save={id:'other'};
   callbacks.complete();
   if(stale){assert.equal(writes,0,stale);continue;}
-  assert.equal(context.save,save);assert.equal(context.companionPractice,session);assert.equal(tracked,0);
+  assert.equal(save.id,'original');assert.equal(ctrl.getCompanionPractice(),session);assert.equal(tracked,0);
   fail=false;callbacks.complete();callbacks.complete();
-  assert.equal(writes,2);assert.equal(context.save.id,'committed');assert.equal(tracked,1);assert.equal(context.companionPractice,null);
+  assert.equal(writes,2);assert.equal(save.id,'committed');assert.equal(tracked,1);assert.equal(ctrl.getCompanionPractice(),null);
  }
 });

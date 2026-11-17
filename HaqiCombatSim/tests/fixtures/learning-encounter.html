@@ -11,7 +11,7 @@ if(params.has('phone')){
     document.querySelector('main').replaceChildren(Object.assign(document.createElement('iframe'),{id:'phone',src:'tests/fixtures/learning-encounter.html'+(params.has('live')?'?live=1':'')}));
 }else{
     const [{loadResources},{createAdventure},{createWorld,findPath,followPath,distance,WALK_SPEED},{createRenderer},{createLanguageAdventure},{recordLearningCompletion,learningParams},{renderLearningMode},V,{loadKeepwork}]=await Promise.all([
-        import('./js/adventure_assets.js'),import('./js/adventure_core.js'),import('./js/adventure_world_core.js'),import('./js/adventure_renderer.js'),import('./js/language_adventure.js'),import('./js/language_adventure_core.js'),import('./js/view_learning_mode.js'),import('./js/view_adventure.js'),import('./js/adventure_cloud.js')]);
+        import('./js/adventure_assets.js'),import('./js/adventure_core.js'),import('./js/adventure_world_core.js'),import('./js/adventure/renderer/scene_renderer.js'),import('./js/language_adventure.js'),import('./js/language_adventure_core.js'),import('./js/view_learning_mode.js'),import('./js/views/adventure/primitives.js'),import('./js/adventure_cloud.js')]);
     const assets=await loadResources(()=>{}),save=createAdventure(assets.content),world=createWorld(save.zone,assets.content,save),canvas=document.getElementById('scene'),renderer=createRenderer(canvas,assets);
     save.languageLearning={...save.languageLearning,enabled:true,selectionConfirmed:true};
     const state={save,content:assets.content,npcs:world.npcs,stage:'world',role:'fixture',identity:'fixture'},status=document.getElementById('status'),controls=document.getElementById('controls'),mode=document.getElementById('mode');

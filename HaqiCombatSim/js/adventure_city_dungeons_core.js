@@ -1,7 +1,8 @@
 // Authored city nodes, scene interactions and durable progress. No browser IO.
 import {mapCoordinateVersion,migrateLocationCoordinates} from './adventure_coordinates_core.js';
-import {resolveParams} from './combat_params_core.js';
-import {validateStreetscape,safeStreetPosition} from './adventure_city_street_core.js';
+import {validateStreetscape} from './adventure_city_street_core.js';
+import {dungeonFor,dungeonProgress,cityDungeonState,cityBattleReady,createCityDungeonWorld} from './adventure_city_dungeon_world_core.js';
+export {dungeonFor,dungeonProgress,cityDungeonState,cityBattleReady,createCityDungeonWorld};
 const assert=(ok,message)=>{if(!ok)throw Error(message);};
 export const isCityDungeonId=id=>typeof id==='string'&&id.startsWith('city:');
 export const generatedCityId=row=>`generated-${String(row.id)}`;
@@ -11,15 +12,12 @@ export function validateGeneratedCityRoute(row){
     if(!row||!/^[-a-zA-Z0-9_]{1,60}$/.test(String(row.id))||typeof row.name!=='string'||!row.name||row.name.length>100||!Number.isFinite(row.lon)||Math.abs(row.lon)>180||!Number.isFinite(row.lat)||Math.abs(row.lat)>90||!Number.isInteger(row.challengeLevel)||row.challengeLevel<1||row.challengeLevel>60||!Number.isInteger(row.partySize)||row.partySize<1||row.partySize>4)throw Error('自动城市入口记录无效');
     return row;
 }
-export function dungeonFor(content,id){return content.dungeons?.find(d=>d.id===id);}
-export function dungeonProgress(save){return save?.coopRun?.runs||save?.dungeonRuns||{};}
 export function cityEntranceAppearance(level,node=false){
     const known=Number.isInteger(level)&&level>=1&&level<=5,tier=known?level:5;
     const colors=['#efc45a','#bb8aeb','#62bde9','#70bc81','#94b4b0'];
     const w=node?46:64-(tier-1)*4;
     return {tier,color:colors[tier-1],w,h:w*138/240,rings:known?6-tier:1};
 }
-export const cityDungeonState=(save,cityId,id)=>save.earthCityProgress?.cities?.[cityId]?.dungeons?.[id]||{version:1,done:[],items:{},cleared:[]};
 function storeState(save,cityId,id,state){
     save.earthCityProgress??={version:1,cities:{}};
     const city=save.earthCityProgress.cities[cityId]??={chapters:{},quests:{}};
@@ -42,10 +40,6 @@ export function applyCityInteraction(save,dungeon,actionId){
     for(const [id,n]of Object.entries(action.give||{}))next.items[id]=(next.items[id]||0)+n;
     next.done.push(action.id);storeState(save,dungeon.cityId,dungeon.id,next);save.revision++;
     return {changed:true,message:action.reply};
-}
-export function cityBattleReady(save,dungeon,encounterId){
-    const encounter=dungeon.scene.encounters.find(row=>row.id===encounterId),state=cityDungeonState(save,dungeon.cityId,dungeon.id);
-    return !!encounter&&!state.cleared.includes(encounterId)&&(encounter.requires||[]).every(id=>state.done.includes(id));
 }
 export function recordCityBattleWin(save,dungeon,encounterId){
     assert(cityBattleReady(save,dungeon,encounterId),'城市战斗条件无效');
@@ -120,15 +114,6 @@ export function installCityDungeons(content,city){
         content.encounters=[...content.encounters.filter(e=>e.zone!==entry.id),...scene.encounters.map(e=>({...e,zone:entry.id,monsterIds:e.monsterIds||[e.monsterId],monsterSlots:e.monsterSlots||[0],blocked:[],staminaCost:0}))];
     }
     content.earthCities={...content.earthCities,[city.id]:city};return entries;
-}
-export function createCityDungeonWorld(content,save,dungeon){
-    const layout=content.worldMaps[dungeon.id],city=content.earthCities[dungeon.cityId],scene=dungeon.scene;
-    const params=resolveParams({version:'kids'},content.balanceParams||{});
-    const npcs=scene.npcs.map(row=>({...city.npcs.find(n=>n.id===row.id),...row,zone:dungeon.id,cityId:city.id,cityDungeonNpc:true,cityHotspot:scene.hotspots.find(h=>h.npcId===row.id)?.id,hidden:false}));
-    const state=cityDungeonState(save,city.id,dungeon.id);
-    if(scene.streetscape&&save.zone===dungeon.id)save.position=safeStreetPosition(scene,save.position);
-    save.dungeonRuns??={};save.dungeonRuns[dungeon.id]={cleared:[...state.cleared]};
-    return {zone:dungeon.id,isDungeon:true,isCityDungeon:true,city,dungeon,w:layout.w,h:layout.h,layout,center:layout.spawn,interactionParams:params.adventure,monsterSceneParams:params.monsterScene,npcs,encounters:content.encounters.filter(e=>e.zone===dungeon.id&&cityBattleReady(save,dungeon,e.id)).map(e=>({...e})),landmarks:layout.landmarks.map(mark=>({...mark,cityDone:scene.actions.some(a=>a.hotspot===mark.cityHotspot)&&scene.actions.filter(a=>a.hotspot===mark.cityHotspot).every(a=>state.done.includes(a.id))})),buildings:scene.buildings||[],paths:[],trees:[],decorations:[],portal:{id:'portal',...layout.portal,name:dungeon.nodeId?'返回来时地点':'返回现实世界',hidden:false}};
 }
 export function enterCityDungeon(save,content,id){
     const d=content.dungeons.find(d=>d.id===id);assert(d?.kind==='city','城市副本尚未加载');

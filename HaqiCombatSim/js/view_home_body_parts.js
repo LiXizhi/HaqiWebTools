@@ -1,4 +1,4 @@
-import {DetailDialog} from './view_detail_dialog.js';
+import {DetailDialog} from './ui/detail_dialog.js';
 import {createRng,hashSeed} from './rng_core.js';
 
 // Presentation only. The caller owns the request, valid object identity and receipt.

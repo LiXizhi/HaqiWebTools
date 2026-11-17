@@ -5,15 +5,31 @@ import vm from 'node:vm';
 import {createJsonReader} from '../js/runtime_data.js';
 import {loadEnvironmentArt} from '../js/adventure_environment_art.js';
 import {createScheduledTerrainCache} from '../js/terrain_tile_scheduler.js';
-const source=readFileSync(new URL('../js/view_home.js',import.meta.url),'utf8');
-const method=source.slice(source.indexOf('  async prepare('),source.indexOf('  openSummon:'));
+import {createHomeAtlasLoader,prepareHomeScene} from '../js/home/view_home_scene_input.js';
+const canvasSource=readFileSync(new URL('../js/home/view_home_canvas_renderer.js',import.meta.url),'utf8');
 function fixture({decode=async()=>{}}={}){
- const image={src:'furniture',decode},state={dead:false,terrainMissing:Infinity,model:{objects:[{itemId:'chair'}],catalog:{items:[{id:'chair',art:{cdn:'furniture'}}]},pets:[]},images:new Map([['furniture',image]]),imageFor:()=>image,ensureWorldAtlases:async()=>{},performance:{now:()=>0},setTimeout:fn=>{state.tick=fn;}};
- const view=vm.runInNewContext('({'+method+'})',state);return {view,state};
+ const image={src:'furniture',decode};
+ const state={dead:false,terrainMissing:Infinity,model:{objects:[{itemId:'chair'}],catalog:{items:[{id:'chair',art:{cdn:'furniture'}}]},pets:[]},images:new Map([['furniture',image]])};
+ const view={
+  prepare(options={}){
+   return prepareHomeScene({
+    ensureWorldAtlases:async()=>{},
+    getModel:()=>state.model,
+    imageFor:()=>image,
+    images:state.images,
+    isDead:()=>state.dead,
+    resetTerrainMissing:()=>{state.terrainMissing=Infinity;},
+    getTerrainMissing:()=>state.terrainMissing,
+    wait:()=>new Promise(resolve=>{state.tick=resolve;}),
+    ...options,
+   });
+  },
+ };
+ return {view,state};
 }
 const flush=()=>new Promise(setImmediate);
 test('home camera zoom reuses baked terrain and keeps building raster density stable',()=>{
- const draw=source.slice(source.indexOf('  const worldRect={'),source.indexOf('  const sections=buildings.sections()'));
+ const draw=canvasSource.slice(canvasSource.indexOf('  const worldRect={'),canvasSource.indexOf('  const sections=buildings.sections()'));
  for(const ratio of [1,1.5,2]){
   const callbacks=new Map(),world={unbounded:true,layout:{}};
   const painted=new Set();let id=0;
@@ -52,13 +68,15 @@ test('home atlas entry uses the release pack and retries a failed download',asyn
   return {ok:!fail,status:503,json:async()=>({schemaVersion:1,files})};
  }});
  const loaded=[];
- const context={fetchJson,model:{assetMode:'cdn'},dead:false,terrain:{clear(){}},loadEnvironmentArt:async(...args)=>{
-  const art=await loadEnvironmentArt(...args);
-  art.ensure=async key=>{assert.ok(art.manifest.atlases[key].cdn);loaded.push(key);};
-  return art;
- }};
- const start=source.indexOf(' let worldAtlasesPromise='),end=source.indexOf(' function ensureFallbackHero()');
- const load=vm.runInNewContext(source.slice(start,end)+';ensureWorldAtlases',context);
+ const load=createHomeAtlasLoader({
+  getAssetMode:()=>'cdn',
+  fetchJson,
+  loadEnvironmentArt:async(...args)=>{
+   const art=await loadEnvironmentArt(...args);
+   art.ensure=async key=>{assert.ok(art.manifest.atlases[key].cdn);loaded.push(key);};
+   return art;
+  },
+ });
  await assert.rejects(load(),/503/);
  fail=false;await load();await load();
  assert.deepEqual(calls,['data/adventure.json','data/adventure.json']);
@@ -81,7 +99,7 @@ test('leaving home during preparation rejects stale completion',async()=>{
 });
 
 test('home releases all scene raster caches and backing canvases while retaining world state',()=>{
- const renderer=readFileSync(new URL('../js/adventure_renderer.js',import.meta.url),'utf8');
+ const renderer=readFileSync(new URL('../js/adventure/renderer/scene_renderer.js',import.meta.url),'utf8');
  const start=renderer.indexOf('    function releaseScene()');
  const release=renderer.slice(start,renderer.indexOf('    return {',start));
  const calls=[],backing={width:1024,height:1024},overview={width:560,height:560};

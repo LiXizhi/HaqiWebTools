@@ -2,13 +2,10 @@
   "localeDir": "data/adventure/locale",
   "base": "en.txt",
   "files": [
-    "js/view_adventure.js",
     "js/view_language_learning.js",
     "js/view_haqi_import.js",
-    "js/view_detail_dialog.js",
     "js/card_renderer.js",
     "js/card_description_core.js",
-    "js/adventure_renderer.js",
     "js/adventure_app.js",
     "js/locale.js",
     "js/adventure_core.js",
@@ -35,9 +32,7 @@
     "js/view_dialogue_microphone.js",
     "js/view_dungeon_entrance.js",
     "js/view_earth_boat.js",
-    "js/view_entry_brand.js",
     "js/view_friend_chat.js",
-    "js/view_global_reward.js",
     "js/view_hero_picker.js",
     "js/view_language_adventure.js",
     "js/view_learning_chat.js",
@@ -57,11 +52,52 @@
         "view_*.js"
       ],
       "exclude": [
-        "view_battle.js",
         "view_advisor.js",
         "view_batch.js",
         "view_params.js",
         "view_adventure_debug.js"
+      ]
+    },
+    {
+      "path": "js/ui",
+      "include": [
+        "*.js"
+      ]
+    },
+    {
+      "path": "js/adventure",
+      "include": [
+        "*.js"
+      ]
+    },
+    {
+      "path": "js/adventure/presenters",
+      "include": [
+        "*.js"
+      ]
+    },
+    {
+      "path": "js/adventure/renderer",
+      "include": [
+        "*.js"
+      ]
+    },
+    {
+      "path": "js/views/adventure",
+      "include": [
+        "*.js"
+      ]
+    },
+    {
+      "path": "js/home",
+      "include": [
+        "view_*.js"
+      ]
+    },
+    {
+      "path": "js/social",
+      "include": [
+        "*.js"
       ]
     }
   ],
@@ -242,9 +278,19 @@
       "reason": "错误分类匹配片段"
     },
     {
+      "file": "js/adventure/battle_controller.js",
+      "text": "出战单位",
+      "reason": "错误分类匹配片段"
+    },
+    {
       "file": "js/adventure_expansion_core.js",
       "text": "。网页版：放入宠物食槽，饥饿时自动食用。",
       "reason": "内部拼接片段，不是独立查表键"
+    },
+    {
+      "file": "js/views/adventure/primitives.js",
+      "pattern": "^(坐骑|红蘑菇|霸王虎|白狼|熊|狮|虎|狼|马|鹿|猪|龙|凤|雀|鹰|鸟|龟|兔|狗|羊|牛|鼠|蛇|猴)$",
+      "reason": "坐骑图标匹配关键字，不显示"
     },
     {
       "file": "js/view_adventure.js",

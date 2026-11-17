@@ -1,4 +1,4 @@
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {tr, fill} from './locale_runtime.js';
 import {imageBitmap,compressPhoto} from './photo_head_images.js';
 import {BODY_TO_HEAD,clampHead,headFrameIndex} from './hero_pose_core.js';

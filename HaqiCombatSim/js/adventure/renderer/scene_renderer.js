@@ -1,151 +1,71 @@
-import {createCampToys} from './camp_toys.js';
-import {createInteractionFeedback} from './interaction_feedback.js';
-import {createIdleWorldGuide} from './idle_world_guide.js';
-import {openingJourneyScene,openingGuideAnchor,OPENING_PET} from './opening_journey_core.js';
-import {createBattleScenery,drawBattleBackground,drawBattleDisk} from './battle_scenery.js';
-import {presenceLanguageLabel} from './adventure_presence_core.js';
-import {battleDamageFeedback} from './battle_damage_feedback_core.js';
-import {cinematicCast,sampleBattleCamera,projectBattlePoint,cameraActorFacing} from './battle_camera_core.js';
-import {battleCameraViewport,drawCameraGround} from './view_battle_camera.js';
-import {spellEffect} from './spell_effects_core.js';
-import {drawGatheringProgress} from './view_gathering_progress.js';
-import {drawMemoryNode} from './view_hanzi_memory.js';
-import {fitLocalCamera} from './adventure_local_coop_core.js';
-import {drawPetTraitHalo} from './view_pet_traits.js';
-import {npcCharacter} from './adventure_city_people_core.js';
-import {performanceDiagnostics as perf} from './performance_diagnostics.js';
-import {createQuestMarkerCache} from './adventure_quest_marker_cache_core.js';
-import {createFrameMeter} from './frame_meter_core.js';
-import {sceneResolution} from './scene_resolution_core.js';
-import {mergeSceneObjects} from './scene_order_core.js';
-import {createIslandSceneryCache} from './island_scenery_cache.js';
-import {createIslandTerrainRasterizer} from './island_terrain_rasterizer.js';
-import {islandCompanionNavigation} from './island_companion_navigation.js';
-import {createScheduledTerrainCache} from './terrain_tile_scheduler.js';
-import {socialGesturePose,socialHeadAnchor} from './adventure_social_actions_core.js';
-import {npcHasActiveQuest,npcPurpose} from './adventure_npc_core.js';
-import {forestCommissionScene} from './forest_commission_core.js';
-import {drawForestCommissionSite} from './view_forest_scene.js';
-import {earthCityNpcMarker} from './adventure_earth_city_config_core.js';
-import {monsterScenePositions,stepMonsterWander,monsterTerritoryWarning,monsterSceneParams} from './adventure_monster_motion_core.js';
-import {drawMonsterTerritory} from './view_monster_territory.js';
-import {drawDungeonEntrance} from './view_dungeon_entrance.js';
-import {drawEarthDocks,drawEarthBoatRider} from './view_earth_boat.js';
-import {earthBoatAt,earthBoatRiderPose} from './adventure_earth_boat_core.js';
-import {cityEntranceAppearance} from './adventure_city_dungeons_core.js';
-import {drawCityScene,drawCityHotspot} from './view_city_dungeon.js';
-import {createStreetPainter,paintStreetGround} from './view_city_street.js';
-import {drawSchoolIcon} from './card_renderer.js';
-import {battleTargetRects} from './battle_target_pick_core.js';
-import {battleViewport} from './battle_viewport_core.js';
-import {createDungeonFog} from './view_adventure_dungeon_fog.js';
-import {drawSocialPet,drawPetSocialEffects} from './view_adventure_pet_social.js';
-import {drawPetMood,petIdleLift} from './view_adventure_pet_mood.js';
-import {petBattleMood} from './adventure_pet_mood_core.js';
-import {petDisplayScale} from './adventure_pet_interactions_core.js';
-import {socialBubble,localSocialBubbles,heroSocialLookPeers} from './adventure_social_motion_core.js';
-import { createHeroActor, updateHeroActor } from './hero_pose_core.js';
-import { paintSoftShadow, paintStaticShadows } from './adventure_shadows.js';
-import { createMotionTrail, motionStyle, drawMotionTrail, drawMotionAccessory } from './adventure_motion_effects.js';
-import { createStarFollower } from './adventure_star_motion_core.js';
-import { drawMagicStar, starCompanionVisible } from './adventure_star.js';
-import { magicStarStatus } from './adventure_magic_star_core.js';
-import {activeAdventureHonor} from './adventure_honors_core.js';
-import { drawIslandWeather, stepWeatherFade } from './adventure_weather.js';
-import {createEarthEnvironmentPainter} from './adventure_earth_environment.js';
-import { alignCameraOrigin, clampCameraToWorld, createCameraZoom } from './adventure_camera_core.js';
-import { regionAt } from './adventure_island_layout_core.js';
-import { drawRewardEffect } from './view_adventure_rewards.js';
-import { drawOverheadStatus,drawStatusFeedback } from './view_adventure_overhead_status.js';
-import { drawTeleportEffect } from './view_adventure_teleport.js';
-import { petAppearanceStage } from './adventure_pets_core.js';
-import { resolveMountDrawPose, sceneMountSave } from './adventure_mounts_core.js';
-import { createCompanion, stepCompanion, selectCompanionId, selectSocialPetId } from './adventure_companion_core.js';
-import { hashSeed } from './rng_core.js';
-// Canvas presentation only. Visual motion uses time/seeded map decorations, never gameplay RNG.
-import { createSpellEffects } from './spell_effects.js';
-import { drawAnimatedActor } from './actor_animation.js';
-import { battleActorAction } from './actor_animation_core.js';
-import { drawBattlePointer } from './battle_pointer.js';
-import {drawBattlePips} from './view_battle_pips.js';
-import { nextBattlePointer } from './battle_pointer_core.js';
-import { currentQuest,questReady,questState,questProgress,SCHOOL_NAMES,catalogStatSnapshot } from './adventure_core.js';
-import {catalogNpcMarker,catalogTracksMonster,trackedQuestIds} from './adventure_catalog_quests_core.js';
-import { onIsland,distance,createWorldViewQuery,walkable } from './adventure_world_core.js';
-import { OCEAN_COLOR, paintTerrain } from './adventure_terrain.js';
-import { tr } from './locale_runtime.js';
-import { createSignpostPainter } from './adventure_signposts.js';
-import { paintLargeTerrain,paintLargeTerrainSteps } from './adventure_large_terrain.js';
-export const COLORS={fire:'#e98f44',ice:'#6ecbdc',storm:'#b39aea',life:'#84bd59',death:'#a887c7'};
-const TAU=Math.PI*2;
-// Battle heroes share a 90px nominal height, close to the 99px monster frame.
-const BATTLE_HERO_SCALE=90/78;
-function ellipse(c,x,y,rx,ry,color){c.fillStyle=color;c.beginPath();c.ellipse(x,y,rx,ry,0,0,TAU);c.fill();}
-function text(c,value,x,y,size=13,color='#fff',align='center') {const shown=tr(value);c.font=`600 ${size}px "PingFang SC", "Microsoft YaHei", sans-serif`;c.textAlign=align;c.fillStyle=color;c.fillText(shown,x,y);}
-// Soft scene palette restored by user preference (2026-09-27).
-const PLATE={
-    hero:{text:'#b8ddff'},
-    npc:{text:'#fff0b5'},
-    social:{text:'#9ff5e5'},
-    mob:{text:'#ffc6b3'},
-    place:{text:'#fbf6d7',bg:'rgba(24,55,46,.78)'},
-};
-const plateWidths=new Map();
-function plate(c,label,x,y,style=PLATE.place,school=null) {
-    const shown=tr(label);
-    if(school){
-        c.save();c.font='600 12px "PingFang SC", "Microsoft YaHei", sans-serif';
-        const iconSize=26,iconGap=6,width=c.measureText(shown).width;
-        const iconX=x-(width+iconSize+iconGap)/2+iconSize/2;
-        drawSchoolIcon(c,school,iconX,y-3,iconSize);
-        c.restore();x+=(iconSize+iconGap)/2;
-    }
-    if(!style.bg){c.save();c.shadowColor='#10251f';c.shadowBlur=4;c.shadowOffsetX=0;c.shadowOffsetY=2;text(c,shown,x,y+2,12,style.text);c.restore();return;}
-    c.font='600 12px "PingFang SC", sans-serif';
-    let width=plateWidths.get(shown);
-    if(width===undefined){width=c.measureText(shown).width+20;plateWidths.set(shown,width);if(plateWidths.size>256)plateWidths.delete(plateWidths.keys().next().value);}
-    c.beginPath();c.roundRect(x-width/2,y-14,width,23,8);c.fillStyle=style.bg;c.fill();
-    if(style.stroke){c.strokeStyle=style.stroke;c.lineWidth=1.5;c.stroke();}
-    text(c,shown,x,y+2,12,style.text);
-}
-function circleRune(c,x,y,r,t,color='#e4d69a') {
-    c.save();c.translate(x,y);c.scale(1,.53);c.strokeStyle=color;c.lineWidth=2;
-    c.beginPath();c.arc(0,0,r,0,TAU);c.stroke();c.beginPath();c.arc(0,0,r*.83,0,TAU);c.stroke();
-    c.rotate(t*.05);c.beginPath();for(let i=0;i<6;i++){const a=-Math.PI/2+i*TAU/5;c.lineTo(Math.cos(a)*r*.75,Math.sin(a)*r*.75);}c.stroke();
-    for(let i=0;i<8;i++){c.save();c.rotate(i*TAU/8);c.strokeRect(r*.89,-3,5,6);c.restore();}c.restore();
-}
-// NPC chat invitation; the click target follows the drawn rect.
-function drawSpeechBubble(c,at,t,reduced) {
-    const float=reduced?0:Math.sin(t*2.2)*2.5;
-    const w=24,h=16,x=at.x,y=at.y-66-float;
-    c.fillStyle='#fffbe9';c.strokeStyle='#7a6335';c.lineWidth=1.5;
-    c.beginPath();c.roundRect(x-w/2,y-h,w,h,7);c.fill();c.stroke();
-    c.beginPath();c.moveTo(x-5,y-1);c.lineTo(x+5,y-1);c.lineTo(x,y+5);c.closePath();c.fill();
-    c.beginPath();c.moveTo(x-5,y-1.7);c.lineTo(x,y+4.3);c.lineTo(x+5,y-1.7);c.stroke();
-    c.fillStyle='#7a6335';
-    for(let i=-1;i<=1;i++){c.beginPath();c.arc(x+i*6,y-h/2,1.7,0,TAU);c.fill();}
-    return {x:x-w/2-4,y:y-h-4,w:w+8,h:h+13};
-}
-export function questMarker(save,content,npcId,stats=()=>catalogStatSnapshot(save,content)) {
-    const involved=trackedQuestIds(save,content).some(id=>{
-        const tracked=content.catalogQuests?.byId[id];
-        return tracked&&(tracked.startNpc===npcId||tracked.endNpc===npcId||tracked.groups.some(g=>g.kind==='talk'&&g.items.some(i=>i.id===npcId)));
-    });
-    if(involved){
-        const mark=catalogNpcMarker(save,content,npcId,stats());
-        if(mark)return mark;
-    }
-    const q=currentQuest(save,content);if(!q||!trackedQuestIds(save,content).includes(q.id))return null;
-    if(!questState(save,q.id).accepted&&q.startNpc===npcId)return '!';
-    if(questReady(save,q)&&q.endNpc===npcId)return '?';
-    if(questState(save,q.id).accepted&&questProgress(save,q).some(g=>g.kind==='talk'&&g.id===npcId&&g.value<g.count))return '…';
-    return null;
-}
+import {alignCameraOrigin,clampCameraToWorld,createCameraZoom} from '../../adventure_camera_core.js';
+import {catalogTracksMonster} from '../../adventure_catalog_quests_core.js';
+import {cityEntranceAppearance} from '../../adventure_city_dungeons_core.js';
+import {npcCharacter} from '../../adventure_city_people_core.js';
+import {createCompanion,stepCompanion,selectCompanionId,selectSocialPetId} from '../../adventure_companion_core.js';
+import {currentQuest,questState,questProgress,catalogStatSnapshot} from '../../adventure_core.js';
+import {earthBoatAt,earthBoatRiderPose} from '../../adventure_earth_boat_core.js';
+import {earthCityNpcMarker} from '../../adventure_earth_city_config_core.js';
+import {createEarthEnvironmentPainter} from '../../adventure_earth_environment.js';
+import {activeAdventureHonor} from '../../adventure_honors_core.js';
+import {regionAt} from '../../adventure_island_layout_core.js';
+import {paintLargeTerrain,paintLargeTerrainSteps} from '../../adventure_large_terrain.js';
+import {fitLocalCamera} from '../../adventure_local_coop_core.js';
+import {magicStarStatus} from '../../adventure_magic_star_core.js';
+import {monsterScenePositions,stepMonsterWander,monsterTerritoryWarning,monsterSceneParams} from '../../adventure_monster_motion_core.js';
+import {createMotionTrail,motionStyle,drawMotionTrail,drawMotionAccessory} from '../../adventure_motion_effects.js';
+import {resolveMountDrawPose,sceneMountSave} from '../../adventure_mounts_core.js';
+import {npcHasActiveQuest,npcPurpose} from '../../adventure_npc_core.js';
+import {petDisplayScale} from '../../adventure_pet_interactions_core.js';
+import {petAppearanceStage} from '../../adventure_pets_core.js';
+import {presenceLanguageLabel} from '../../adventure_presence_core.js';
+import {createQuestMarkerCache} from '../../adventure_quest_marker_cache_core.js';
+import {paintSoftShadow,paintStaticShadows} from '../../adventure_shadows.js';
+import {createSignpostPainter} from '../../adventure_signposts.js';
+import {socialGesturePose,socialHeadAnchor} from '../../adventure_social_actions_core.js';
+import {socialBubble,localSocialBubbles,heroSocialLookPeers} from '../../adventure_social_motion_core.js';
+import {drawMagicStar,starCompanionVisible} from '../../adventure_star.js';
+import {createStarFollower} from '../../adventure_star_motion_core.js';
+import {OCEAN_COLOR,paintTerrain} from '../../adventure_terrain.js';
+import {drawIslandWeather,stepWeatherFade} from '../../adventure_weather.js';
+import {onIsland,createWorldViewQuery,walkable} from '../../adventure_world_core.js';
+import {createCampToys} from '../../camp_toys.js';
+import {forestCommissionScene} from '../../forest_commission_core.js';
+import {createFrameMeter} from '../../frame_meter_core.js';
+import {createHeroActor,updateHeroActor} from '../../hero_pose_core.js';
+import {createIdleWorldGuide} from '../../idle_world_guide.js';
+import {createInteractionFeedback} from '../../interaction_feedback.js';
+import {islandCompanionNavigation} from '../../island_companion_navigation.js';
+import {createIslandSceneryCache} from '../../island_scenery_cache.js';
+import {createIslandTerrainRasterizer} from '../../island_terrain_rasterizer.js';
+import {tr} from '../../locale_runtime.js';
+import {openingJourneyScene,openingGuideAnchor,OPENING_PET} from '../../opening_journey_core.js';
+import {performanceDiagnostics as perf} from '../../performance_diagnostics.js';
+import {hashSeed} from '../../rng_core.js';
+import {mergeSceneObjects} from '../../scene_order_core.js';
+import {sceneResolution} from '../../scene_resolution_core.js';
+import {createSpellEffects} from '../../spell_effects.js';
+import {createScheduledTerrainCache} from '../../terrain_tile_scheduler.js';
+import {createDungeonFog} from '../../view_adventure_dungeon_fog.js';
+import {petIdleLift} from '../../view_adventure_pet_mood.js';
+import {drawSocialPet,drawPetSocialEffects} from '../../view_adventure_pet_social.js';
+import {drawRewardEffect} from '../../view_adventure_rewards.js';
+import {drawTeleportEffect} from '../../view_adventure_teleport.js';
+import {drawCityScene,drawCityHotspot} from '../../view_city_dungeon.js';
+import {createStreetPainter,paintStreetGround} from '../../view_city_street.js';
+import {drawDungeonEntrance} from '../../view_dungeon_entrance.js';
+import {drawEarthDocks,drawEarthBoatRider} from '../../view_earth_boat.js';
+import {drawForestCommissionSite} from '../../view_forest_scene.js';
+import {drawGatheringProgress} from '../../view_gathering_progress.js';
+import {drawMemoryNode} from '../../view_hanzi_memory.js';
+import {drawMonsterTerritory} from '../../view_monster_territory.js';
+import {createBattleCanvasRenderer} from './battle_canvas_renderer.js';
+import {TAU,PLATE,ellipse,text,plate,circleRune,drawSpeechBubble,questMarker} from './primitives.js';
+
 export function createRenderer(canvas,assets) {
     const interactionFeedback=createInteractionFeedback();
     const idleGuide=createIdleWorldGuide();
     const campToys=createCampToys(assets.campToyArt);
-    const battleScenery=createBattleScenery();
     const markerCache=createQuestMarkerCache(questMarker,catalogStatSnapshot);
     const drawSignpost=createSignpostPainter();
     const dungeonFog=createDungeonFog(),mapFog=createDungeonFog();
@@ -201,26 +121,16 @@ export function createRenderer(canvas,assets) {
     let viewRect=null,lastMonsterTime=null;
     let heroActor=null,heroPrevious=null,heroScope=null,heroIdentity=null;
     let localActor=null,localPrevious=null,localScope=null,localIdentity=null;
-    const battleHero=createHeroActor(9271);
     const starFollower=createStarFollower();
     function prepareScene(world,save,{visibleOnly=false,localSecond=null,localSecondFollowing=false,low=false}={}){
         const w=canvas.clientWidth,h=canvas.clientHeight;if(world.isCityDungeon||!world.layout)return {total:0,ready:0};if(!w||!h)return {total:1,ready:0};
         const zoom=cameraZoom.value,scale=(w<650?.82:1)*zoom;
-        // Keep terrain raster density tied to the device, not exploration zoom.
-        // A zoom gesture changes the viewport in world units; it must reuse the
-        // existing world-space tiles instead of crossing the scheduler's density
-        // boundary and repainting the whole texture cache.
         const rasterPixelRatio=resolution().terrain;
         const local=localSecond&&!localSecondFollowing?fitLocalCamera([save.position,localSecond.position],w,h,scale):null;
         const actualScale=local?.scale||scale,center=local?.center||save.position;
         const origin=alignCameraOrigin(center.x-w/(2*actualScale),center.y-h/(2*actualScale)+(w<650?50:25)/zoom,actualScale,resolution(low).display);
-        // Match the live viewport exactly, including split-player camera framing,
-        // so preparation and drawing choose the same tile-size/cache-capacity tier.
         const rect={x:origin.x,y:origin.y,w:w/actualScale,h:h/actualScale};
         if(world.isEarth)return world.prepareSurface(rect,{visibleOnly});
-        // The first newly visible tile can still be in flight when walking starts.
-        // Prepare its existing low-resolution fallback during the loading gate,
-        // instead of painting the whole island synchronously on that moving frame.
         ground(world);
         return terrainTiles.prepare(world,rect,rasterPixelRatio,[],{visibleOnly});
     }
@@ -247,7 +157,6 @@ export function createRenderer(canvas,assets) {
         backingZone=world;backing=document.createElement('canvas');backing.width=world.w;backing.height=world.h;
         const c=backing.getContext('2d');
         paintTerrain(c,world);
-        // Inlaid stone plaza and school learning circle.
         ellipse(c,world.center.x,world.center.y-30,133,86,'#aaac85');ellipse(c,world.center.x,world.center.y-34,125,81,'#d9d5b1');
         c.strokeStyle='#b7b58f';c.lineWidth=1.4;for(let y=-65;y<65;y+=22){c.beginPath();c.moveTo(world.center.x-90,world.center.y-30+y);c.lineTo(world.center.x+90,world.center.y-30+y);c.stroke();}
         circleRune(c,world.center.x,world.center.y-32,94,0,'#8fa68a');
@@ -330,7 +239,6 @@ export function createRenderer(canvas,assets) {
         },resolution().terrain,path):0;
         if(!world.layout)ctx.drawImage(ground(world),0,0);
         earthEnvironment.ground(ctx,world,cam,w,h,time,{enabled:graphics.particles&&!graphics.low,reducedMotion:reducedMotion.matches});
-        // Moving water highlights, grounded visual-only ambient animation.
         ctx.strokeStyle='#e3f3da33';ctx.lineWidth=2;
         if(!world.layout&&!reducedMotion.matches)for(let i=0;i<38;i++){const x=(i*151+t*8)%1750,y=80+(i*269)%1450;if(onIsland(x,y,-12))continue;ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+13,y+4,x+26,y);ctx.stroke();}
         if(path.length&&!title){ctx.strokeStyle='#fff6bc88';ctx.setLineDash([3,10]);ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(save.position.x,save.position.y);for(const p of path)ctx.lineTo(p.x,p.y);ctx.stroke();ctx.setLineDash([]);const end=path[path.length-1];circleRune(ctx,end.x,end.y,15,t,'#fff3ae');}
@@ -342,7 +250,6 @@ export function createRenderer(canvas,assets) {
         if(!heroActor||heroScope!==world||heroIdentity!==identity||!heroPrevious||time-heroPrevious.time>1000||Math.hypot(save.position.x-heroPrevious.x,save.position.y-heroPrevious.y)>100){
             heroActor=createHeroActor(Number(save.seed)||7419);heroActor.facing=save.facing||0;heroActor.head=[0,4,12,8][heroActor.facing];heroPrevious={...save.position,time};heroScope=world;heroIdentity=identity;
         }
-        // Head-turnable peers: hero + idle social AI. Static world NPCs cannot turn and stay one-way fallbacks.
         const turnableSocial=heroSocialLookPeers(socialActors,{inParty:inParty||!!save.coopRun});
         if(localSecond&&!title&&!localFollowing&&!localSecondMoving)turnableSocial.push({id:'local-hero-1',...localSecond.position});
         const heroPose=updateHeroActor(heroActor,{id:'hero',dx:save.position.x-heroPrevious.x,dy:save.position.y-heroPrevious.y,x:save.position.x,y:save.position.y,time:t,facing:save.facing||0,lookPeers:turnableSocial,npcs:world.npcs,reducedMotion:reducedMotion.matches});
@@ -358,7 +265,6 @@ export function createRenderer(canvas,assets) {
             localPose=updateHeroActor(localActor,{id:'local-hero-1',dx:localSecond.position.x-localPrevious.x,dy:localSecond.position.y-localPrevious.y,...localSecond.position,time:t,facing:localSecond.facing||0,lookPeers:peers,npcs:world.npcs,reducedMotion:reducedMotion.matches});
             localPrevious={...localSecond.position,time};
         }else{localActor=null;localPrevious=null;}
-        // 坐骑显隐只影响漫游场景；renderBattle 直接用原 save，战斗中坐骑恒显示。
         const visualSave=sceneMountSave(earthBoatAt(world,save.position.x,save.position.y)?{...save,mountId:null}:save,{inParty:inParty||socialActors.some(actor=>actor.inParty)});
         const style=motionStyle(visualSave,membership);style.pose={...style.pose,facing:heroPose.facing,visualHead:heroPose.head,visualBreath:{...heroPose.breath}};
         const motion=motionTrail.step(save.position,time,style,{moving,scope:world,reducedMotion:reducedMotion.matches,hidden:!graphics.trails||title||motionHidden||!!fishingPose||!!teleportEffect});
@@ -366,7 +272,6 @@ export function createRenderer(canvas,assets) {
         const starLevel=magicStarStatus(membership,Date.now()).level;
         drawMotionTrail(ctx,motion,time,(c,p)=>avatar(c,p.pose,p.x,p.y,p.born/1000,true,1,false));
         viewRect={x:cam.x-200,y:cam.y-50,w:w/cam.scale+400,h:h/cam.scale+280};
-        // Query by fixed spawns, expanded to include sprites that wandered into view.
         const monsterRadius=monsterSceneParams(world).territoryRadius,padding=Math.max(320,monsterRadius+110);
         const queryRect={x:cam.x-padding,y:cam.y-padding,w:w/cam.scale+padding*2,h:h/cam.scale+padding*2};
         const nearby=worldView.query(world,queryRect);
@@ -468,7 +373,6 @@ export function createRenderer(canvas,assets) {
             }
             if(o.kind==='pet-social'){ctx.save();ctx.globalAlpha*=o.row.sceneOpacity??1;drawSocialPet(ctx,assets,o.row,petScene?.effects||[],time,reducedMotion.matches,petScene?.now);ctx.restore();}
             if(o.kind==='tree'){ctx.save();if(Math.abs(save.position.x-o.x)<o.size*.4&&save.position.y<o.y&&save.position.y>o.y-o.size*.85)ctx.globalAlpha=.52;const custom=(world.isEarth&&world.drawEarthDecoration?.(ctx,o))||drawCustomTree(ctx,o,world);if(!custom&&!world.isEarth)assets.tile(ctx,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);ctx.restore();}
-            // Stable plant variants add visual detail without changing collision or RNG.
             if(o.kind==='tree'&&!world.isEarth&&!o.snow&&assets.sceneryTile){
                 const variant=Math.abs(Math.round(o.x*7+o.y*13))%8,size=o.size*.36;
                 assets.sceneryTile(ctx,8+variant,o.x+o.size*.18,o.y-size+14,size,size);
@@ -580,7 +484,6 @@ export function createRenderer(canvas,assets) {
                 if(drawEarthBoatRider(ctx,assets,world,o,save.facing||0,(x,y)=>avatar(ctx,{...visualSave,mountId:null,facing:save.facing||0},x,y,0,false,1,true,earthBoatRiderPose(heroPose,save.facing||0)))){
                     nameY=o.y+50;
                 }else if(fishingPose){
-                    // A temporary standing pose, without changing the saved mount or facing.
                     ctx.save();ctx.translate(o.x,o.y-fishingPose.lift);ctx.rotate(fishingPose.lean);
                     avatar(ctx,{...save,mountId:null,facing:fishingPose.facing},0,0,t,false);ctx.restore();
                     nameY=o.y+21;
@@ -605,8 +508,6 @@ export function createRenderer(canvas,assets) {
                 const pet=save.pets?.[petId],id=pet?.speciesId||petId;
                 const hop=reducedMotion.matches?0:companion.moving?Math.abs(Math.sin(companion.phase))*5:petIdleLift(time,reducedMotion.matches);
                 shadow(ctx,o.x,o.y,18);ctx.save();ctx.translate(o.x,o.y);ctx.scale(companion.facing,1);
-                // Pet sheets load lazily: keep the follower visible until its sheet is ready,
-                // including after a failed request. Mount rendering is independent of this pet.
                 const drawn=assets.content.pets?.[id]?.art&&assets.drawPet(ctx,id,pet?petAppearanceStage(pet,assets.content):0,-32,-60-hop,64,64);
                 if(!drawn)creature(ctx,'pet',0,-hop,t,.36,false);
                 ctx.restore();
@@ -671,13 +572,10 @@ export function createRenderer(canvas,assets) {
         if(!title)interactionFeedback.floating.draw(ctx,time,{reduced:reducedMotion.matches});
         mark('earth-render-overlay');
         if(world.isEarth&&!title){
-            // Screen-size labels stay readable at every scene zoom, above scenery.
             const seen=new Set(),placed=[];
             const actors=[save.position,...socialActors.map(a=>a.position),...world.npcs.filter(n=>!n.hidden)].map(p=>({x:(p.x-cam.x)*cam.scale,y:(p.y-cam.y)*cam.scale}));
             ctx.save();ctx.font='600 12px "PingFang SC", sans-serif';
             const landmarks=(world.landmarks||[]).filter(p=>!p.hidden);
-            // A city marker can snap to nearby land; deduplicate by its source ID,
-            // not coordinates, and label the final entrance position only.
             const cities=(world.mapCities||[]).filter(city=>!landmarks.some(p=>p.id===`city:${city.id}`||p.cityFallback?.id===city.id||p.id===`city:${world.city?.id}:entrance`&&city.name===world.city?.name));
             for(const place of [...landmarks,...cities]){
                 const key=`${place.name}:${Math.round(place.x)}:${Math.round(place.y)}`;if(seen.has(key))continue;seen.add(key);
@@ -733,135 +631,7 @@ export function createRenderer(canvas,assets) {
         }
     }
     function screenToWorld(x,y){return{x:x/cam.scale+cam.x,y:y/cam.scale+cam.y};}
-    function renderBattle(target,battle,save,time,presentation) {
-        const c=target.getContext('2d'),pixelWidth=target.clientWidth,pixelHeight=target.clientHeight,dpr=resolution(false).display;
-        if(!pixelWidth||!pixelHeight)return {};
-        const {scale,w,h}=battleViewport(pixelWidth,pixelHeight);
-        if(target.width!==Math.round(pixelWidth*dpr)||target.height!==Math.round(pixelHeight*dpr)){target.width=Math.round(pixelWidth*dpr);target.height=Math.round(pixelHeight*dpr);}
-        c.setTransform(dpr*scale,0,0,dpr*scale,0,0);c.clearRect(0,0,w,h);
-        const t=time/1000,cx=w/2,cy=h*.52,r=Math.min(w*.46,h*.76);
-        if(!target.haze||target.hazeW!==w||target.hazeH!==h){
-            const haze=c.createRadialGradient(cx,cy,20,cx,cy,r*1.5);haze.addColorStop(0,'#527e7166');haze.addColorStop(1,'transparent');
-            target.haze=haze;target.hazeW=w;target.hazeH=h;
-        }
-        const scenery=battleScenery.get(battle,save,assets.content);
-        if(target.dataset)target.dataset.battleScene=scenery?.id||'loading';
-        if(scenery)drawBattleBackground(c,scenery.background,w,h);
-        else {c.fillStyle=target.haze;c.fillRect(0,0,w,h);}
-        const slotPoint=(side,slot)=>{const a=([-155,-110,155,110][slot%4])*Math.PI/180;return{x:cx+Math.cos(a)*r*.67*(side==='near'?1:-1),y:cy+Math.sin(a)*r*.34};};
-        const ev=presentation?.event,p=presentation?.progress||0,worldPositions={};
-        for(const side of ['near','far'])for(const [i,unit] of battle.sides[side].entries())worldPositions[unit.id]=slotPoint(side,unit.slot??i);
-        const card=battle.resolved.cards[ev?.card],spec=card?spellEffect(assets.effects,card):null;
-        const cinematic=p>0&&p<1&&cinematicCast(ev,card,reducedMotion.matches)&&!!worldPositions[ev?.caster]&&(!ev.target||!!worldPositions[ev.target]);
-        const safeRect=battleCameraViewport(target,cinematic,scale);
-        const affectedIds=ev?.type==='cast'&&ev.label!=='reflection'&&ev.sourceType!=='reflection'&&spec?.area?Object.values(battle.unitsById).filter(u=>u.side===(battle.unitsById[ev.target]?.side||battle.unitsById[ev.caster]?.side)&&(presentation?.hp?.[u.id]??u.hp)>0).map(u=>u.id):[];
-        const camera=sampleBattleCamera({event:ev,card,spec:spec||{},progress:p,positions:worldPositions,targets:affectedIds.map(id=>worldPositions[id]),bounds:target.cameraActorBounds,
-            center:{x:cx,y:cy},width:w,height:h,safeRect,reducedMotion:reducedMotion.matches,timeline:assets.effects.timeline});
-        const feedback=battleDamageFeedback(ev,p,presentation?.reactions||[],reducedMotion.matches);
-        target.battleDamageFeedback=feedback;
-        const shakeX=feedback.shakeX/scale,shakeY=feedback.shakeY/scale;
-        c.save();c.translate(shakeX,shakeY);
-        target.battleCamera=camera;
-        const positions=Object.fromEntries(Object.entries(worldPositions).map(([id,at])=>[id,projectBattlePoint(camera,at)]));
-        const sceneCenter=projectBattlePoint(camera,{x:cx,y:cy-2});
-        const pointer=presentation?.pointer||(ev?.type==='movearrow'?{from:ev.from,to:ev.caster,progress:p}:{to:ev?.caster||nextBattlePointer(battle)});
-        if(scenery){
-            drawBattleDisk(c,scenery.disk,camera,{cx,cy,r});
-            if(!camera.active&&(!battle.finished||presentation))drawBattlePointer(c,{center:{x:cx,y:cy},radius:r,from:positions[pointer.from],to:positions[pointer.to],progress:pointer.progress,reduced:reducedMotion.matches});
-        }
-        else if(camera.active)drawCameraGround(c,camera,{center:{x:cx,y:cy},radius:r,time:t,pointer,positions:worldPositions});
-        else {
-            ellipse(c,cx,cy+18,r+24,r*.56+10,'#112f3c99');ellipse(c,cx,cy,r,r*.54,'#809580');ellipse(c,cx,cy-4,r-9,r*.51,'#c5c4a4');
-            circleRune(c,cx,cy-2,r-18,t,'#ebdfaf');circleRune(c,cx,cy-2,r*.62,-t,'#7e9a90');
-            for(const side of ['near','far'])for(let slot=0;slot<4;slot++){const at=slotPoint(side,slot);circleRune(c,at.x,at.y,19,t*.2,'#f2e6b677');}
-            if(!battle.finished||presentation)drawBattlePointer(c,{center:{x:cx,y:cy},radius:r,from:positions[pointer.from],to:positions[pointer.to],progress:pointer.progress,reduced:reducedMotion.matches});
-        }
-        const aura=presentation&&Object.hasOwn(presentation,'aura')?presentation.aura:battle.aura;
-        if(aura?.cardKey)effects.drawEnvironment(c,{card:battle.resolved.cards[aura.cardKey],center:sceneCenter,radius:r*(sceneCenter.scale||1),time:t,reducedMotion:reducedMotion.matches});
-        const actorBounds={},rawActorBounds={},speechAnchors={};
-        const drawIds=Object.keys(battle.unitsById);
-        if(camera.active)drawIds.sort((a,b)=>positions[b].depth-positions[a].depth);
-        for(const id of drawIds) {
-            const bounds=actorBounds[id]={};
-            const hp=presentation?.hp?.[id]??battle.unitsById[id].hp;
-            const hit=presentation?.reactions?.find(reaction=>reaction.target===id);
-            const unit=battle.unitsById[id],petUnit=id!=='hero'&&!unit.arenaProfile&&!unit.isMob&&!save.coopRun?.members.some(m=>m.unit.id===id);
-            const pose=petUnit&&hp<=0?(['damage','dot'].includes(ev?.type)&&ev.target===id&&ev.amount>0?{action:'hit',progress:p}:{action:'idle',progress:0}):hp>0&&hit?{action:'hit',progress:hit.progress}:battleActorAction(id,hp,ev,p);
-            const at=positions[id],actorScale=at.scale||1;
-            const facing=cameraActorFacing(camera,id,worldPositions[id],id==='hero'||unit.side!=='far'?2:1);
-            c.save();c.translate(at.x,at.y);c.scale(actorScale,actorScale);c.translate(-at.x,-at.y);
-            if(camera.active&&camera.focusId&&id!==camera.focusId)c.globalAlpha*=1-camera.blend*.94;
-            if(hp>0)drawPetTraitHalo(c,unit.passiveTraits,positions[id].x,positions[id].y,38);
-            drawAnimatedActor(c,positions[id],pose.action,pose.progress,id==='hero'?1:-1,reducedMotion.matches,()=>{
-                if(id==='hero'){avatar(c,{...save,facing},0,0,t,false,BATTLE_HERO_SCALE,false,camera.active?{facing,head:[0,4,12,8][facing]}:updateHeroActor(battleHero,{time:t,facing,reducedMotion:reducedMotion.matches}),bounds);const supportId=save.formation?.[save.heroSlot],support=save.pets?.[supportId];if((!battle.redMushroom||presentation?.showSupportPet)&&support&&assets.content.pets[support.speciesId]?.art)(()=>{c.save();c.translate(36,0);drawPetMood(c,petBattleMood(hp,unit.maxHp,assets.content),time,reducedMotion.matches,48,column=>assets.drawPet(c,support.speciesId,petAppearanceStage(support,assets.content),-24,-48,48,48,column));c.restore();})();}
-                else if(unit.arenaProfile){avatar(c,{...unit.arenaProfile,facing},0,0,t,false,BATTLE_HERO_SCALE,false,null,bounds);}
-                else if(save.coopRun?.members.some(m=>m.unit.id===id)){const p=save.coopRun.members.find(m=>m.unit.id===id).profile;avatar(c,{...p,mountId:null,facing},0,0,t,false,BATTLE_HERO_SCALE,false,null,bounds);}
-                else {const unit=battle.unitsById[id],species=unit.speciesId||unit.template?.speciesId;if(unit.isMob)monster(c,unit.template,0,0,t,.95);else if(species&&assets.content.pets[species]?.art)drawPetMood(c,petBattleMood(hp,unit.maxHp,assets.content),time,reducedMotion.matches,84,column=>assets.drawPet(c,species,petAppearanceStage(save.pets?.[unit.id]||save.pets?.[species]||unit,assets.content),-42,-84,84,84,column));else creature(c,unit.isMob?unit.template.id:'pet',0,0,t,.85);}
-                if(bounds.speechHead){
-                    // Use the actual drawn head, including mount rider offset, recoil and canvas scale.
-                    const matrix=c.getTransform(),head=bounds.speechHead;
-                    speechAnchors[id]={x:(matrix.a*head.x+matrix.c*head.y+matrix.e)/dpr,y:(matrix.b*head.x+matrix.d*head.y+matrix.f)/dpr};
-                }
-            });
-            c.restore();
-            if(!Number.isFinite(bounds.hitTop))Object.assign(bounds,{left:-52,right:52,hitTop:-100,bottom:0});
-            rawActorBounds[id]={...bounds};
-            for(const key of ['left','right','hitTop','top','bottom'])if(Number.isFinite(bounds[key]))bounds[key]*=actorScale;
-            speechAnchors[id]??={x:(at.x+shakeX)*scale,y:(at.y+bounds.hitTop+shakeY)*scale};
-            if(camera.active&&camera.focusId&&id!==camera.focusId)delete speechAnchors[id];
-        }
-        target.cameraActorBounds=rawActorBounds;
-
-        const statusTargets=[];
-        for(const u of [...battle.sides.near,...battle.sides.far]) {
-            if(camera.active&&camera.focusId&&u.id!==camera.focusId)continue;
-            const at=positions[u.id],hp=presentation?.hp?.[u.id]??u.hp,bw=Math.min(115,w*.20);
-            statusTargets.push(...drawOverheadStatus(c,u,battle,{...at,statusBottom:camera.active?at.y+(actorBounds[u.id]?.top??actorBounds[u.id]?.hitTop??-100)-12:Number.isFinite(actorBounds[u.id]?.top)?at.y+actorBounds[u.id].top-12:undefined},w,hp,presentation?.status?.[u.id]));
-            plate(c,w<650?u.name.slice(0,6):u.name,at.x,at.y+25,u.id==='hero'?PLATE.hero:u.isMob?PLATE.mob:save.coopRun?.members.some(m=>m.unit.id===u.id)?PLATE.social:PLATE.npc,u.school||'balance');c.fillStyle='#173843';c.beginPath();c.roundRect(at.x-bw/2,at.y+38,bw,10,5);c.fill();
-            c.fillStyle=u.isMob?'#d39a7a':'#8ccc8a';c.beginPath();c.roundRect(at.x-bw/2+2,at.y+40,Math.max(0,(bw-4)*hp/u.maxHp),6,3);c.fill();
-        }
-        if(ev?.type==='cast'||ev?.type==='fizzle') {
-            effects.draw(c,{card:battle.resolved.cards[ev.card],progress:p,from:positions[ev.caster],to:positions[ev.target]||positions[ev.caster],center:sceneCenter,width:w,height:h,visualScale:camera.active?Math.min(3,positions[ev.target]?.scale||positions[ev.caster]?.scale||1):1,targets:affectedIds.map(id=>positions[id]),seed:`${ev.round}:${ev.caster}:${ev.card}`,reducedMotion:reducedMotion.matches,failed:ev.type==='fizzle',reflection:ev.label==='reflection',environmentManaged:true});
-        }
-        if(ev?.type==='cast'&&ev.caster==='hero')assets.hanziPresentation?.spell(c,{card:battle.resolved.cards[ev.card],progress:p,from:positions[ev.caster],to:positions[ev.target]||positions[ev.caster],reducedMotion:reducedMotion.matches});
-        if(['damage','dot','heal','hot'].includes(ev?.type)) {
-            const at=positions[ev.target];if(at){c.save();c.globalAlpha=1-p*.65;text(c,`${['heal','hot'].includes(ev.type)?'+':'−'}${ev.amount}${ev.mark==='c'?' 暴击':''}`,at.x,at.y-100-p*40,26,['heal','hot'].includes(ev.type)?'#adf8a0':'#fff0b4');c.restore();}
-        }
-        for(const u of Object.values(battle.unitsById))drawStatusFeedback(c,(presentation?.statusFeedback||[]).filter(change=>change.id===u.id),positions[u.id],time,reducedMotion.matches,w);
-        for(const u of Object.values(battle.unitsById).filter(u=>!camera.active||!camera.focusId||camera.focusId===u.id))drawBattlePips(c,positions[u.id],presentation?.pips?.[u.id]??u.pips,{hp:presentation?.hp?.[u.id]??u.hp});
-        for(const hit of feedback.hits){
-            const at=positions[hit.target];if(!at)continue;
-            const q=Math.max(0,Math.min(1,hit.progress)),size=(18+q*32)*(at.scale||1);
-            c.save();c.globalAlpha=(1-q)*.8;c.strokeStyle='#ffe5a0';c.lineWidth=3;
-            c.beginPath();c.ellipse(at.x,at.y-46*(at.scale||1),size,size*.65,0,0,Math.PI*2);c.stroke();c.restore();
-        }
-        c.restore();
-        const actionTitle=ev?.type==='pass'?'跳过':ev?.type==='fizzle'?'miss':ev?.type==='cast'&&cinematicCast(ev,card)?(ev.wordCardText||spec?.name||card?.name):null;
-        if(camera.active){
-            const caster=battle.unitsById[ev.caster],rect=camera.rect;
-            c.save();c.fillStyle='#102d38cc';c.beginPath();c.roundRect(rect.x,rect.y-32,rect.width,29,8);c.fill();
-            c.font='600 14px "PingFang SC", sans-serif';c.textAlign='center';c.fillStyle='#fff0c9';
-            c.fillText(`${tr(caster?.name||'')} · ${tr(actionTitle||spec?.name||card?.name||'')}`,rect.x+rect.width/2,rect.y-12,Math.max(1,rect.width-16));c.restore();
-        }
-        if(actionTitle&&positions[ev.caster]&&(!camera.active||camera.close)){
-            const at=positions[ev.caster],head=speechAnchors[ev.caster];
-            const headY=head?head.y/scale:at.y+(actorBounds[ev.caster]?.hitTop??-100);
-            const rect=camera.rect||{x:16,y:32,width:w-32,height:h-64};
-            const x=Math.max(rect.x+rect.width*.25,Math.min(rect.x+rect.width*.75,at.x));
-            const y=Math.max(rect.y+28,headY-22);
-            const size=Math.max(26,Math.min(40,w*.065)),pop=reducedMotion.matches?1:1+.09*Math.sin(Math.min(1,p/.08)*Math.PI);
-            c.save();c.globalAlpha=Math.min(1,p/.025,(1-p)/.07);c.translate(x,y);c.scale(pop,pop);
-            c.font=`900 ${size}px "Microsoft YaHei", sans-serif`;c.textAlign='center';c.lineJoin='round';c.lineWidth=6;
-            c.strokeStyle='#12323f';c.fillStyle=ev.type==='fizzle'?'#ffc4a0':'#fff2a8';c.shadowColor='#071d2a';c.shadowBlur=8;
-            c.strokeText(tr(actionTitle),0,0,rect.width-24);c.fillText(tr(actionTitle),0,0,rect.width-24);c.restore();
-        }
-        target.battleTargetRects=battleTargetRects(positions,actorBounds,scale).map(rect=>({...rect,x:rect.x+feedback.shakeX,y:rect.y+feedback.shakeY}));
-        target.battleSpeechAnchors=speechAnchors;
-        target.battleStatusRects=statusTargets.map(hit=>({...hit,x:hit.x*scale+feedback.shakeX,y:hit.y*scale+feedback.shakeY,width:hit.width*scale,height:hit.height*scale}));
-        target.updateStatusTargets?.(target.battleStatusRects);
-        return Object.fromEntries(Object.entries(positions).map(([id,at])=>[id,{x:(at.x+shakeX)*scale,y:(at.y+shakeY)*scale}]));
-    }
+    const renderBattle=createBattleCanvasRenderer({assets,effects,reducedMotion,resolution,avatar,monster,creature});
     function releaseScene(){campToys.clear();idleGuide.clear();interactionFeedback.clear();terrainTiles.clear();terrainRasterizer?.dispose();terrainRasterizer=null;islandScenery.clear();streetPainter.reset();if(backing)backing.width=backing.height=0;backing=null;backingZone=null;if(overview)overview.width=overview.height=0;overview=null;overviewWorld=null;canvas.width=canvas.height=1;}
     return {campToys,idleGuide,interactionFeedback,releaseScene,prepareScene,isAnimating:()=>campToys.active(performance.now())||idleGuide.active||interactionFeedback.active()||cameraZoom.active||performance.now()<zoomUntil||terrainTiles.pending>0||!!(weatherFade?.previous&&weatherFade.previousWeight>.01),frameStats:()=>frameMeter.value,pauseFrameMeter:()=>frameMeter.sample(0,false),environmentStats:()=>earthEnvironment.stats,streetStats:streetPainter.stats,streetPeople:streetPainter.people,terrainStats:()=>({tiles:terrainTiles.size,pending:terrainTiles.pending,...terrainTiles.stats(),scenery:islandScenery.stats()}),resetZoom:()=>{zoomUntil=performance.now()+300;return cameraZoom.reset();},render,minimap,worldToScreen:point=>({x:(point.x-cam.x)*cam.scale,y:(point.y-cam.y)*cam.scale}),screenToWorld,renderBattle,zoomBy,setFishingCamera:active=>cameraZoom.setFishing(active),viewRect:()=>viewRect?{...viewRect}:null,bubbleTarget:()=>bubbleTarget,greetingTarget:()=>greetingTarget,companionTarget:()=>companion?{x:companion.position.x,y:companion.position.y}:null};
 }
-

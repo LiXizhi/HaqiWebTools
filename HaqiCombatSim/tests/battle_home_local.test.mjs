@@ -33,7 +33,7 @@ import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import {assignedKeyboardAction,normalizePlayerInputs} from '../js/player_input_core.js';
 import {normalizeLocalKeys} from '../js/local_controls_core.js';
-const app=readFileSync(new URL('../js/home_app.js',import.meta.url),'utf8');
+const app=readFileSync(new URL('../js/home/home_session_controller.js',import.meta.url),'utf8');
 test('home input routes both keyboards and releases movement on blur or text focus',()=>{
  const listeners={},context={secondHero:{x:1.5,y:0},secondDestination:null,secondPath:[],hero:{x:0,y:0},destination:null,walkPath:[],home:{id:'h'},entering:false,held:[new Set(),new Set()],getContext:()=>({secondSave:{},settings:{}}),document:{hidden:false,activeElement:null,addEventListener(){}},window:{addEventListener:(name,fn)=>listeners[name]=fn},assignedKeyboardAction,normalizePlayerInputs,normalizeLocalKeys,createPlayerInput:options=>{context.pad=options;return {};}};
  vm.runInNewContext(app.slice(app.indexOf(' const duo='),app.indexOf(' let walkChunk=')),context);

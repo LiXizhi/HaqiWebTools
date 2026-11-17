@@ -1,4 +1,4 @@
-import {el,button} from './view_adventure.js';
+import {el, button} from './views/adventure/primitives.js';
 import {fill,tr} from './locale_runtime.js';
 import {drawSchoolIcon} from './card_renderer.js';
 

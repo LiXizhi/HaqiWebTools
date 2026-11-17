@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_world_map.css"><link rel="stylesheet" href="css/home.css"><title>家园隔离验收</title></head><body><div id="overlay"></div><script type="module">
-import {openHomeSystem} from './js/home_app.js';
+import {openHomeSystem} from './js/home/home_session_controller.js';
 import {createHomeStore} from './js/home_store.js';
 import {homeScope} from './js/home_core.js';
 if(!['localhost','127.0.0.1'].includes(location.hostname))throw Error('隔离验收仅限本机');

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {restoreVisibleFocus} from '../js/view_adventure_controls.js';
+import {restoreVisibleFocus} from '../js/ui/controls.js';
 const target=(options={})=>{const calls=[];return {isConnected:true,disabled:false,getClientRects:()=>[{}],focus:value=>calls.push(value),calls,...options};};
 test('closing a dictionary restores its visible opener without scrolling the scene',()=>{
  const opener=target(),world=target();assert.equal(restoreVisibleFocus(opener,world),opener);assert.deepEqual(opener.calls,[{preventScroll:true}]);assert.equal(world.calls.length,0);

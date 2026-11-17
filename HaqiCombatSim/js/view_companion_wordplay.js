@@ -1,8 +1,8 @@
-import {el,button} from './view_adventure.js';
+import {el, button} from './views/adventure/primitives.js';
 import {petPortrait} from './view_adventure_pets.js';
 import {heroPortrait} from './hero_renderer.js';
 import {guidePet} from './companion_guide_core.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {createDialogueMicrophone} from './view_dialogue_microphone.js';
 
 const ROUNDS=[

@@ -1,9 +1,9 @@
-import {DetailDialog} from './view_detail_dialog.js';
+import {DetailDialog} from './ui/detail_dialog.js';
 import {petDisplayScale} from './adventure_pet_interactions_core.js';
 import {renderPetFood} from './view_adventure_pet_food.js';
 import {ownedPetRecords} from './adventure_pet_files_core.js';
 import {setText, tr,fill} from './locale_runtime.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import { showPetDetails } from './view_adventure_pet_details.js';
 import { createMountPreview } from './view_adventure_mount_preview.js';
 import { createPetStatus } from './view_adventure_pet_status.js';

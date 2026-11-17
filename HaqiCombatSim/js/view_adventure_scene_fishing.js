@@ -1,7 +1,7 @@
 import {fishingTuning as tuning,fishWeight,fishingSpecies,fishSize} from './adventure_fishing_records_core.js';
 import {createRng,hashSeed} from './rng_core.js';
 import { readStamina } from './adventure_fishing_core.js';
-import { createCloseButton } from './view_adventure_controls.js';
+import { createCloseButton } from './ui/controls.js';
 import {setText,fill} from './locale_runtime.js';
 import { drawFishingScene, fishingCatchLayout } from './view_adventure_fishing_art.js';
 import {fishingPullMotion,FISHING_PULL_MS} from './view_adventure_fishing_motion.js';

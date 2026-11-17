@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {paintHomeWorldTerrain,paintHomeWorldTerrainSteps} from '../js/view_home_art.js';
+import {paintHomeWorldTerrain, paintHomeWorldTerrainSteps} from '../js/home/view_home_world_terrain.js';
 import {drawBuilding,buildingVisualBounds} from '../js/view_home_building.js';
 import {footprint} from '../js/home_core.js';
 import {buildingConnectionMask} from '../js/home_building_core.js';

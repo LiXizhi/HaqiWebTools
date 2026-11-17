@@ -1,10 +1,11 @@
 import {withBattlePointer} from './battle_pointer_core.js';
 // prologue_stage.js — interactive beats of the prologue: battles on the real battle view and renderer,
 // the embedded 光 writing story, the card forge, and catching the spark.
-import * as V from './view_adventure.js';
+import {art} from './views/adventure/primitives.js';
+import {renderBattle,eventLabel} from './views/adventure/view_battle_layer.js';
 import * as A from './adventure_core.js';
 import {heroPortrait} from './hero_renderer.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {validTargets} from './combat_arena_core.js';
 import {presentationEventDurationMs,presentationEventProgress,samplePresentationClock} from './battle_presentation_core.js';
 import {connectHanziAnimation} from './hanzi_animation_bridge.js';
@@ -105,9 +106,9 @@ export function createPrologueStage({root,assets,renderer,spellSound,speakers,ar
     function speakerAvatar(speakerId){
         if(MASTER_LOOKS[speakerId])return heroPortrait(assets,MASTER_LOOKS[speakerId],64,68);
         if(speakerId==='child')return heroPortrait(assets,CHILD_LOOK,64,68);
-        if(speakerId==='dark-lord')return V.art(assets,'monster:prologue-dark-lord',64,68,'pl-avatar-art');
-        if(speakerId==='imp')return V.art(assets,'monster:boss-40118',64,68,'pl-avatar-art');
-        return V.art(assets,QINGLONG_PORTRAIT,64,68,'pl-avatar-art');
+        if(speakerId==='dark-lord')return art(assets,'monster:prologue-dark-lord',64,68,'pl-avatar-art');
+        if(speakerId==='imp')return art(assets,'monster:boss-40118',64,68,'pl-avatar-art');
+        return art(assets,QINGLONG_PORTRAIT,64,68,'pl-avatar-art');
     }
 
     function names(){
@@ -144,7 +145,7 @@ export function createPrologueStage({root,assets,renderer,spellSound,speakers,ar
     }
     function callbacks(over={}){return new Proxy({...over},{get:(t,k)=>t[k]||noop});}
     function renderBattleLayer(battle,save,extra,cb){
-        V.renderBattle(battleRoot,model(battle,save,extra),callbacks(cb));
+        renderBattle(battleRoot,model(battle,save,extra),callbacks(cb));
         battleRoot.classList.add('pl-battle');
     }
 
@@ -169,7 +170,7 @@ export function createPrologueStage({root,assets,renderer,spellSound,speakers,ar
                 if(disposed)return resolve();
                 const elapsed=(now()-start)/1000,total=frames.reduce((n,f)=>n+f.duration,0)/1000;
                 const played=samplePresentationClock(frames,elapsed),f=frames[played.index],battle=markDisplay(f.arena,far);
-                if(played.index!==shown){shown=played.index;renderBattleLayer(battle,save,{animating:true});const label=f.event&&f.event.type!=='pass'?V.eventLabel(f.event,battle,assets):'';const status=battleRoot.querySelector('#cast-announcement');if(status)status.textContent=label||'';}
+                if(played.index!==shown){shown=played.index;renderBattleLayer(battle,save,{animating:true});const label=f.event&&f.event.type!=='pass'?eventLabel(f.event,battle,assets):'';const status=battleRoot.querySelector('#cast-announcement');if(status)status.textContent=label||'';}
                 const canvas=battleRoot.querySelector('#battle-canvas');
                 const progress=presentationEventProgress(f.event,played.progress,{effects:assets.effects,card:battle.resolved.cards[f.event?.card],reducedMotion:reducedMotion()});
                 if(canvas)renderer.renderBattle(canvas,battle,save,now(),{event:f.event,progress});

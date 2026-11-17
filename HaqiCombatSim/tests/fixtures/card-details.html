@@ -6,7 +6,7 @@
 import {loadResources} from '../../js/adventure_assets.js';
 import {createAdventure,playerSpec} from '../../js/adventure_core.js';
 import {createPveBattle} from '../../js/combat_pve_core.js';
-import {renderBattle} from '../../js/view_adventure.js';
+import {renderBattle} from '../../js/views/adventure/view_battle_layer.js';
 import {setTranslator} from '../../js/locale_runtime.js';
 import {lookup,parseLocaleFile} from '../../js/locale_core.js';
 const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);

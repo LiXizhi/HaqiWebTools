@@ -6,7 +6,7 @@ import {createAdventure,beginEncounter} from '../js/adventure_core.js';
 import {createLocalFormation,localParty,localHumanResources} from '../js/adventure_local_coop_core.js';
 import {restorePveBattle} from '../js/combat_pve_core.js';
 import {cardsInHand} from '../js/combat_unit_core.js';
-import {renderBattle} from '../js/view_adventure.js';
+import {renderBattle} from '../js/views/adventure/view_battle_layer.js';
 
 class Element {
     constructor(tag){this.tagName=tag.toUpperCase();this.children=[];this.dataset={};this.attrs={};this.style={setProperty(){},removeProperty(){}};this.offsetHeight=40;this.offsetTop=22;this.className='';this.classList={add:(...names)=>{this.className+=' '+names.join(' ');},remove:(...names)=>{this.className=this.className.split(' ').filter(n=>!names.includes(n)).join(' ');},toggle:(name,on)=>{if(on)this.classList.add(name);else this.classList.remove(name);}};}

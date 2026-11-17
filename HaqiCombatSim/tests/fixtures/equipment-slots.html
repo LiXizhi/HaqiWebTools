@@ -6,7 +6,7 @@
 import {loadResources} from '../../js/adventure_assets.js';
 import {createAdventure} from '../../js/adventure_core.js';
 import {syncEquipmentInstances} from '../../js/adventure_equipment_instances_core.js';
-import {renderPanel} from '../../js/view_adventure.js';
+import {renderPanel} from '../../js/views/adventure/view_panel_modal.js';
 import {loadLocaleFiles,configureLocale} from '../../js/locale.js';
 addEventListener('error',event=>{document.documentElement.dataset.fixtureError=event.message||'error';});
 addEventListener('unhandledrejection',event=>{document.documentElement.dataset.fixtureError=String(event.reason?.message||event.reason);});

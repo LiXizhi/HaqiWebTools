@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-import {DetailDialog} from '../js/view_detail_dialog.js';
+import {DetailDialog} from '../js/ui/detail_dialog.js';
 import {chunkKey,createHome,terrainChunk,parseSummon,summonSentences,canPlace,visibleChunkKeys,validateHomePart,homeScope,petHomePosition} from '../js/home_core.js';
 import {applyHomeAction,homeObjects} from '../js/home_actions_core.js';
 import {createHomeCloud} from '../js/home_cloud.js';
@@ -56,8 +56,8 @@ test('held home mouse follows the camera continuously and keeps the outer-world 
 });
 
 test('home creation, rename and delete use the shared DetailDialog modal instead of native browser prompt',()=>{
- const viewSource=fs.readFileSync(new URL('../js/view_home.js',import.meta.url),'utf8');
- assert.equal(/\bprompt\s*\(/.test(viewSource),false,'view_home.js must not call native prompt()');
+ const viewSource=fs.readFileSync(new URL('../js/home/view_home_modals.js',import.meta.url),'utf8');
+ assert.equal(/\bprompt\s*\(/.test(viewSource),false,'view_home_modals.js must not call native prompt()');
  assert.match(viewSource,/new DetailDialog\(modal,\{el,title:tr\(isRename\?'重命名':'新建家园'\),className:'equipment-item-dialog home-name-dialog'\}\)/);
  assert.match(viewSource,/new DetailDialog\(modal,\{el,title:tr\('删除家园'\),className:'equipment-item-dialog home-name-dialog'\}\)/);
 });
@@ -78,8 +78,8 @@ test('home dialog headings preserve title nodes and the working shared close but
  const previous=globalThis.document;
  globalThis.document=document;
  t.after(()=>{if(previous===undefined)delete globalThis.document;else globalThis.document=previous;});
- const source=fs.readFileSync(new URL('../js/view_home.js',import.meta.url),'utf8');
- const helper=source.slice(source.indexOf('const el='),source.indexOf('const button='));
+ const source=fs.readFileSync(new URL('../js/home/view_home_modals.js',import.meta.url),'utf8');
+ const helper=source.slice(source.indexOf('export const el='),source.indexOf('export const button=')).replace('export const','const');
  const el=vm.runInNewContext(`${helper}\nel`,{document,tr:value=>String(value)});
  for(const title of ['新建家园','重命名','删除家园']){
   const dialog=new DetailDialog(new Element('section'),{el,title});

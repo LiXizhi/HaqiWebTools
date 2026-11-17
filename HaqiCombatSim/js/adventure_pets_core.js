@@ -2,16 +2,16 @@ import {applyPetTraitStats,petTraitParams,petHungerMultiplier,mergePetTraits,rol
 import {recordPetMeal} from './adventure_pet_quests_core.js';
 import {ownedPetRecords} from './adventure_pet_files_core.js';
 // Adventure adaptation; original combat formulae remain in combat_formulas_core.
-import { resolveParams } from './combat_params_core.js';
 import { baseMaxHp, applyHpStats } from './combat_formulas_core.js';
 import { normalizeStats } from './combat_unit_core.js';
 import { dungeonFor } from './adventure_dungeons_core.js';
+import {petParams,petStage,petCapacity,petXpLevel,petLessons,recommendedPetDeck,validatePetDeck} from './adventure_pet_rules_core.js';
+export {petParams,petStage,petCapacity,petXpLevel,petLessons,recommendedPetDeck,validatePetDeck};
 import {createPetInstance,validatePetInstance} from './adventure_pet_interactions_core.js';
 export const STARTERS=['dragon_green','dragon_purple','dragon_orange'];
 export const STAGE_NAMES=['幼年','青年','成年','隐藏形态'];
 export const FOOD_ID=990001, CAPTURE_ID=990002, GENERAL_CATCH_RUNE=23439;
 const check=(ok,message)=>{if(!ok)throw Error(message);};
-export const petParams=content=>resolveParams({cards:{}},content.balanceParams||{version:'kids'},{groups:['adventure']}).adventure;
 export function foodInfo(content,id){
  const p=petParams(content);
  if(Number(id)===FOOD_ID)return {restore:p.foodRestore,xp:0,price:p.foodPrice};
@@ -66,28 +66,14 @@ export function feedFromSlots(save,content){
  save.careLog=save.careLog.slice(-20);
  return changed;
 }
-export function petStage(level,content){return petParams(content).stageLevels.filter(n=>level>=n).length-1;}
 // Appearance is cosmetic; growth, cards and combat always use the actual level.
 export function petAppearanceStage(pet,content){
  if(content.pets[pet.speciesId]?.staticAppearance)return 0;
  const unlocked=petStage(pet.level,content);
  return Number.isInteger(pet.appearanceStage)&&pet.appearanceStage>=0&&pet.appearanceStage<=unlocked?pet.appearanceStage:unlocked;
 }
-export function petCapacity(pet,content){return petParams(content).petCapacities[petStage(pet.level,content)];}
-export function petXpLevel(xp,content){const p=petParams(content);return Math.min(p.levelCap,Math.floor((1+Math.sqrt(1+8*xp/p.petXpStep))/2));}
 export function petMaxHp(pet,content){return applyHpStats(baseMaxHp(content.pets[pet.speciesId].school,pet.level,'kids'),applyPetTraitStats({},pet.passiveTraits,petTraitParams(content)).hpPct,0,'kids');}
 export function specMaxHp(spec){return applyHpStats(baseMaxHp(spec.school,spec.level,'kids'),spec.stats.hpPct||0,spec.stats.hpFlat||0,'kids');}
-export function petLessons(pet,content){return content.pets[pet.speciesId].lessons;}
-export function recommendedPetDeck(pet,content){
- const lessons=petLessons(pet,content).filter(x=>x.level<=pet.level),out=[];let left=petCapacity(pet,content);
- for(const row of [...lessons].reverse()){const count=Math.min(petParams(content).petCopies,left);if(count){out.push({key:row.key,count});left-=count;}}
- return out;
-}
-export function validatePetDeck(pet,content,deck){
- check(Array.isArray(deck)&&deck.length>0,'宠物卡包不能为空');const seen=new Set();let count=0;
- for(const row of deck){check(!seen.has(row.key)&&Number.isInteger(row.count)&&row.count>0&&row.count<=petParams(content).petCopies&&petLessons(pet,content).some(x=>x.key===row.key&&x.level<=pet.level),'宠物卡牌尚未解锁或份数无效');seen.add(row.key);count+=row.count;}
- check(count<=petCapacity(pet,content),'宠物卡包容量不足');
-}
 export function addPet(save,content,id,xp=0,{traits,captured=false}={}){
  check(Object.hasOwn(content.pets,id),'未知宠物');
  const existing=Object.values(ownedPetRecords(save)).find(p=>p.speciesId===id);

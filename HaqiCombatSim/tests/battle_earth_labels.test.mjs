@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import {cityEntranceAppearance} from '../js/adventure_city_dungeons_core.js';
 
-const source=fs.readFileSync(new URL('../js/adventure_renderer.js',import.meta.url),'utf8').replaceAll('\r\n','\n');
+const source=fs.readFileSync(new URL('../js/adventure/renderer/scene_renderer.js',import.meta.url),'utf8').replaceAll('\r\n','\n');
 const landmarkDraw=source.slice(source.indexOf("            if(o.kind==='landmark')"),source.indexOf("            if(o.kind==='npc')"));
 const labelsDraw=source.slice(source.indexOf('        if(world.isEarth&&!title){'),source.indexOf('        const meter=frameMeter.sample'));
 function render(world){

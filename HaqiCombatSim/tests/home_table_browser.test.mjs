@@ -34,7 +34,7 @@ test('tabletop requests require real surface placement and preserve the child la
   // Grab the rendered (elevated) book after reload, not its old ground position.
   await page.getByRole('button',{name:'建造',exact:true}).click();
   const visual=await page.evaluate(async()=>{
-   const {homeObjectSurfaceLift,homeObjectVisualBounds}=await import('/js/view_home_art.js');
+   const {homeObjectSurfaceLift,homeObjectVisualBounds}=await import('/js/home/view_home_object_art.js');
    const {footprint}=await import('/js/home_core.js');
    const {items}=await (await fetch('/data/adventure/home/catalog.json')).json();
    const book=await worldLearning.placedBook(),table={id:'table',itemId:'table',x:0,y:1};

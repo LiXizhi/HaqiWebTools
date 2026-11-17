@@ -4,7 +4,7 @@
 import {renderLearningMode} from '../../js/view_learning_mode.js';
 import {awardDailySpeech} from '../../js/language_daily_buff_core.js';
 import {claimSpeechReward} from '../../js/language_speech_rewards_core.js';
-import {el,button} from '../../js/view_adventure.js';
+import {el, button} from '../../js/views/adventure/primitives.js';
 const body=document.querySelector('.preview-body'),controls=document.querySelector('.preview-controls');
 const content={items:{100:{},17213:{}}},save={seed:42,inventory:{},locale:'zh-CN',languageLearning:{enabled:true,target:'en',native:'zh-CN',selectionConfirmed:true}};
 const currencyIcons=await fetch('../../data/adventure/currency-icons.json').then(r=>r.json()),currencyImage=new Image();

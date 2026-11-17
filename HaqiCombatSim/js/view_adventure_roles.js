@@ -1,4 +1,5 @@
-import { el, button, createEntryIntro, createEntryFooter } from './view_adventure.js';
+import {el, button} from './views/adventure/primitives.js';
+import {createEntryIntro, createEntryFooter} from './views/adventure/view_entry.js';
 import { tr, setText, fill } from './locale_runtime.js';
 import { SCHOOL_NAMES } from './adventure_core.js';
 import { MAX_ROLES_FREE, roleLimit } from './adventure_roles_core.js';

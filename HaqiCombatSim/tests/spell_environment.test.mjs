@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {presentedEnvironment} from '../js/spell_environment_core.js';
 import {createSpellEffects} from '../js/spell_effects.js';
-import {createRenderer} from '../js/adventure_renderer.js';
+import {createRenderer} from '../js/adventure/renderer/scene_renderer.js';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../'+p,import.meta.url)));
 const effects=read('data/adventure/spell-effects.json'),cards=read('data/kids/cards.json');
 test('environment changes only when its successful cast reaches impact, and persists through other actions',()=>{

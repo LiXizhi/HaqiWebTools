@@ -1,20 +1,30 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
-import vm from 'node:vm';
+import {createPanelController} from '../js/adventure/panel_controller.js';
 
-const app=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
-const departure=app.slice(app.indexOf('function leaveFirstPetWelcome(){'),app.indexOf('function paintPanel()')).replace('let firstWelcomePetId=null;','');
 function setup({formation=['starter',null,null,null],heroSlot=1,fail=false}={}){
  const save={tips:{pendingCompanionWelcome:'rabbit'},pets:{rabbit:{speciesId:'legacy_gululu'}},formation,heroSlot},calls=[];
  let callbacks;
- const context=vm.createContext({save,firstWelcomePetId:'rabbit',nodes:{overlay:{}},model:()=>({save}),
-  renderPetWelcome:(_root,_model,_petId,cb)=>{callbacks=cb;},close:()=>calls.push('close'),
-  persist:()=>{},queueCloudSave:()=>{},storageWarning:false,
-   openPanel:name=>calls.push(name),track:()=>calls.push('track'),
-  performAction:action=>{calls.push(JSON.parse(JSON.stringify(action)));if(fail)return false;save.formation=action.slots;return true;}});
- vm.runInContext(departure+';paintFirstPetWelcome();',context);
- return {save,calls,go:()=>callbacks.go()};
+ const state={save,storageWarning:false};
+ const panels=createPanelController({
+  nodes:{hud:{},overlay:{}},
+  getContext:()=>state,
+  model:()=>({save}),
+  close:()=>calls.push('close'),
+  persist:()=>{},
+  queueCloudSave:()=>{},
+  track:()=>calls.push('track'),
+  onOpenPanel:name=>calls.push(name),
+  performAction:action=>{calls.push(JSON.parse(JSON.stringify(action)));if(fail)return false;save.formation=action.slots;return true;},
+  renderPetWelcomeFn:(_root,_model,_petId,cb)=>{callbacks=cb;},
+ });
+ panels.setFirstWelcomePetId('rabbit');
+ panels.paintFirstPetWelcome();
+ return {
+  save,
+  calls,
+  go:()=>callbacks.go(),
+ };
 }
 test('departing with the first companion joins a free pet position and continues in one action',()=>{
  const ui=setup();assert.deepEqual(ui.calls,[]);ui.go();

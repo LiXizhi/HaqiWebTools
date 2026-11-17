@@ -2,7 +2,7 @@ import {ownedPetRecords} from '../../js/adventure_pet_files_core.js';
 import {loadResources,saveLocal} from '../../js/adventure_assets.js';
 import {createAdventure} from '../../js/adventure_core.js';
 import {createWorld,walkable} from '../../js/adventure_world_core.js';
-import {createRenderer} from '../../js/adventure_renderer.js';
+import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
 import {initializePetWorld,npcPetId} from '../../js/adventure_pet_world_core.js';
 import {createPetScene} from '../../js/adventure_pet_scene.js';
 import {createRoleStore} from '../../js/adventure_roles.js';

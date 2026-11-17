@@ -6,8 +6,8 @@ import {loadResources} from './js/adventure_assets.js';
 import {createAdventure,playerSpec} from './js/adventure_core.js';
 import {validTargets} from './js/combat_arena_core.js';
 import {createPveBattle,playPveRound} from './js/combat_pve_core.js';
-import {renderBattle} from './js/view_adventure.js';
-import {createRenderer} from './js/adventure_renderer.js';
+import {renderBattle} from './js/views/adventure/view_battle_layer.js';
+import {createRenderer} from './js/adventure/renderer/scene_renderer.js';
 
 const assets=await loadResources(),save=createAdventure(assets.content,{name:'场景体验',school:'fire',starter:'dragon_green'});
 const renderer=createRenderer(document.createElement('canvas'),assets),root=document.querySelector('#root');let battle,selected=null,presentation=null;

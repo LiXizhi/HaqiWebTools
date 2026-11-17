@@ -1,5 +1,5 @@
 import {HANZI_BATTLE_CARDS,ownsHanziCard} from './hanzi_battle_core.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {createDialogueMicrophone} from './view_dialogue_microphone.js';
 import {createHanziAnimation,drawHanziMotif} from './hanzi_animation.js';
 import {createHanziWriting} from './view_hanzi_writing.js';

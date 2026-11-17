@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {homeObjectPixelHit} from '../js/view_home_art.js';
+import {homeObjectPixelHit} from '../js/home/view_home_object_art.js';
 
 test('furniture hit mask follows crop alpha and horizontal mirror without swallowing transparent corners',()=>{
  const previous=globalThis.document;let reads=0,cropped;

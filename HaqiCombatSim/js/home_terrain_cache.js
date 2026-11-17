@@ -1,6 +1,6 @@
 import {createScheduledTerrainCache} from './terrain_tile_scheduler.js';
 import {createIslandTerrainRasterizer} from './island_terrain_rasterizer.js';
-import {paintHomeWorldTerrainSteps} from './view_home_art.js';
+import {paintHomeWorldTerrainSteps} from './home/view_home_world_terrain.js';
 
 // The island scheduler owns preparation, prefetch, bitmap lifetime and a 32 MiB terrain budget; building caches reserve the other 32 MiB.
 export function createHomeTerrainCache({theme=null}={}){

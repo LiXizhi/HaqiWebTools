@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {GlobalRewardNotice} from '../js/view_global_reward.js';
+import {GlobalRewardNotice} from '../js/ui/global_reward_notice.js';
 import {equipmentGainLines,equipmentChangeLines} from '../js/adventure_reward_feedback_core.js';
 import {setTranslator} from '../js/locale_runtime.js';
 

@@ -6,7 +6,7 @@ import {createAdventure,beginEncounter} from '../js/adventure_core.js';
 import {createLocalFormation,localParty,localHumanResources} from '../js/adventure_local_coop_core.js';
 import {restorePveBattle} from '../js/combat_pve_core.js';
 import {cardsInHand} from '../js/combat_unit_core.js';
-import {renderBattle} from '../js/view_adventure.js';
+import {renderBattle} from '../js/views/adventure/view_battle_layer.js';
 import {createTacticsFieldBattle} from '../js/tactics_field_battle_core.js';
 
 class Element {

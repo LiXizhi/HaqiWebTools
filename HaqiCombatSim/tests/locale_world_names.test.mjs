@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {parseLocaleFile} from '../js/locale_core.js';
 import {setTranslator} from '../js/locale_runtime.js';
-import {createWorldMapSwitch} from '../js/view_adventure_controls.js';
+import {createWorldMapSwitch} from '../js/ui/controls.js';
 
 test('common world-name allowlist stays below 100 and every name has all UI languages',()=>{
     const data=JSON.parse(fs.readFileSync(new URL('../data/adventure/earth/common-names.json',import.meta.url),'utf8'));

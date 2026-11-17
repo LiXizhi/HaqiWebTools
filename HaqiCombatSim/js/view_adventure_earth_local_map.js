@@ -1,4 +1,4 @@
-import {createCloseButton,createWorldMapSwitch} from './view_adventure_controls.js';
+import {createCloseButton,createWorldMapSwitch} from './ui/controls.js';
 import {earthLocalMapBounds} from './adventure_earth_core.js';
 import {layoutEarthMapLabels} from './earth_map_labels_core.js';
 import {setText,tr} from './locale_runtime.js';

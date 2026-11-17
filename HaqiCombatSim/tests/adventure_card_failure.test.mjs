@@ -52,7 +52,7 @@ test('a battle view exception retains retry and retreat controls without changin
     const error=console.error;console.error=()=>{};
     t.after(()=>{console.error=error;for(const [key,descriptor]of Object.entries(originals)){if(descriptor)Object.defineProperty(globalThis,key,descriptor);else delete globalThis[key];}});
     globalThis.Node=Node;globalThis.document={createElement:tag=>new Node(tag),createTextNode:text=>text};
-    const {renderBattle}=await import('../js/view_adventure.js');
+    const {renderBattle}=await import('../js/views/adventure/view_battle_layer.js');
     const root=new Node('div'),model={battle:null,save:{pendingEncounter:{seed:123,decisions:[]}}},before=JSON.stringify(model.save);
     let retreats=0;renderBattle(root,model,{retreat:()=>retreats++});
     const buttons=()=>root.children[0].children.filter(n=>n.tag==='button');

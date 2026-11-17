@@ -31,26 +31,47 @@ test('missing, failed and timed-out workers use cancellable short fallback slice
 });
 test('late worker replies cannot race an active fallback or disposed scene',()=>{const h=harness();h.request();const first=h.messages.at(-1);h.worker.onerror();h.nav.dispose();h.reply(first);h.drain();assert.deepEqual(h.results,[]);assert.equal(h.scheduled.size,0);});
 
+import { createWorldInteractionController } from '../js/adventure/world_interaction_controller.js';
+
 test('actual controller accepts a delayed route after a same-role pet save commit',()=>{
- const source=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
- const start=source.indexOf('function requestHeroPath('),script=source.slice(start,source.indexOf('\nfunction walkTo(',start));
  const h=harness();
- const c=vm.createContext({world:h.world,save:{position:{x:0,y:0},inventory:{100:50}},roleEpoch:1,roleStore:{owner:'guest',catalog:{activeId:'a'}},path:[],keys:new Set(),joystick:{x:0,y:0},heldPointer:null,stage:'world',panel:null,dialog:null,encounterStarting:false,languageAdventure:{},characterChat:{},secondCharacterChat:null,localPlay:{paused:false},document:{hidden:false},W:{distance:(a,b)=>Math.hypot(a.x-b.x,a.y-b.y)},heroNavigation:h.nav});
- vm.runInContext(script+';requestHeroPath({x:300,y:0});',c);
- const request=h.messages.at(-1);
- c.save={...c.save,inventory:{100:50},petWorld:{lastPrune:1}};
- h.reply(request,[{x:300,y:0}]);
- assert.equal(c.path.length,1,'a background pet commit must not silently discard the pending route');
- assert.equal(c.path[0].x,300);h.nav.dispose();
+ let world=h.world,save={position:{x:0,y:0},inventory:{100:50}},roleEpoch=1,roleStore={owner:'guest',catalog:{activeId:'a'}},path=[],keys=new Set(),joystick={x:0,y:0},heldPointer=null,stage='world',panel=null,dialog=null,encounterStarting=false;
+ const originalDoc=globalThis.document;
+ globalThis.document={hidden:false};
+ try{
+  const ctrl=createWorldInteractionController({
+   nodes:{},
+   getContext:()=>({world,save,roleEpoch,roleStore,path,keys,joystick,heldPointer,stage,panel,dialog,encounterStarting,characterChat:{active:false},secondCharacterChat:null,setPath:next=>{path=next;}}),
+   heroNavigation:h.nav,
+   languageAdventure:{active:false},
+   localPlay:()=>({paused:false}),
+  });
+  ctrl.requestHeroPath({x:300,y:0});
+  const request=h.messages.at(-1);
+  save={...save,inventory:{100:50},petWorld:{lastPrune:1}};
+  h.reply(request,[{x:300,y:0}]);
+  assert.equal(path.length,1,'a background pet commit must not silently discard the pending route');
+  assert.equal(path[0].x,300);h.nav.dispose();
+ }finally{globalThis.document=originalDoc;}
 });
 
 test('the actual adventure controller invalidates paths on manual input, battle, island and role switches',()=>{
-    const source=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
-    const start=source.indexOf('function requestHeroPath('),script=source.slice(start,source.indexOf('\nfunction walkTo(',start));
-    for(const change of [c=>c.keys.add('right'),c=>c.joystick.x=1,c=>c.heldPointer={active:true},c=>c.stage='battle',c=>c.encounterStarting=true,c=>c.world={zone:'town'},c=>c.save={position:{x:20,y:0}},c=>c.roleEpoch++,c=>c.roleStore.owner='other-account',c=>c.roleStore.catalog.activeId='other',c=>c.document.hidden=true]){
-        let request,cancels=0;
-        const c=vm.createContext({world:{zone:'camp'},save:{position:{x:0,y:0}},roleEpoch:1,roleStore:{owner:'guest',catalog:{activeId:'a'}},path:[],keys:new Set(),joystick:{x:0,y:0},heldPointer:null,stage:'world',panel:null,dialog:null,encounterStarting:false,languageAdventure:{},characterChat:{},secondCharacterChat:null,localPlay:{paused:false},document:{hidden:false},W:{distance:(a,b)=>Math.hypot(a.x-b.x,a.y-b.y)},heroNavigation:{cancel(){cancels++;},request(world,from,to,options){request=options;}}});
-        vm.runInContext(script+';requestHeroPath({x:300,y:0});',c);
-        assert.equal(cancels,1);assert.equal(request.isLive(),true);change(c);assert.equal(request.isLive(),false);
-    }
+    const originalDoc=globalThis.document;
+    globalThis.document={hidden:false};
+    try{
+        for(const change of [c=>c.keys.add('right'),c=>c.joystick.x=1,c=>c.heldPointer={active:true},c=>c.stage='battle',c=>c.encounterStarting=true,c=>c.world={zone:'town'},c=>c.save={position:{x:20,y:0}},c=>c.roleEpoch++,c=>c.roleStore.owner='other-account',c=>c.roleStore.catalog.activeId='other',c=>globalThis.document.hidden=true]){
+            globalThis.document.hidden=false;
+            let request,cancels=0;
+            const c={world:{zone:'camp'},save:{position:{x:0,y:0}},roleEpoch:1,roleStore:{owner:'guest',catalog:{activeId:'a'}},path:[],keys:new Set(),joystick:{x:0,y:0},heldPointer:null,stage:'world',panel:null,dialog:null,encounterStarting:false};
+            const ctrl=createWorldInteractionController({
+                nodes:{},
+                getContext:()=>({...c,characterChat:{active:false},secondCharacterChat:null,setPath:next=>{c.path=next;}}),
+                heroNavigation:{cancel(){cancels++;},request(world,from,to,options){request=options;}},
+                languageAdventure:{active:false},
+                localPlay:()=>({paused:false}),
+            });
+            ctrl.requestHeroPath({x:300,y:0});
+            assert.equal(cancels,1);assert.equal(request.isLive(),true);change(c);assert.equal(request.isLive(),false);
+        }
+    }finally{globalThis.document=originalDoc;}
 });

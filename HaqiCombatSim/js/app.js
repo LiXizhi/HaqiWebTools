@@ -3,7 +3,7 @@ import { state, restoreSettings, initParamsForDataset, persist, notify } from '.
 import { loadDataset, discoverDatasets } from './data_core.js';
 import { fetchJson } from './runtime_data.js';
 import { h, clear, select, toast } from './utils.js';
-import { renderBattle } from './view_battle.js';
+import { renderBattle } from './combat/view_sim_arena.js';
 import { renderBatch } from './view_batch.js';
 import { renderParams } from './view_params.js';
 import { renderAdvisor } from './view_advisor.js';

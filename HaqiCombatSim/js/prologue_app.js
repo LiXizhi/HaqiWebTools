@@ -3,7 +3,7 @@
 // first visit). Shares the already loaded assets, renderer, locale and sound; needs no login and writes
 // no save. Story text lives only in data/prologue/script.json.
 import {createJsonReader} from './runtime_data.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import {validateScript,languagePair,bilingual,beatAutoSeconds,createRunner} from './prologue_script_core.js';
 import {wordCardRow} from './prologue_battle_core.js';
 import {createCinema} from './prologue_cinema.js';

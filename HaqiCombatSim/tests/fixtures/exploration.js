@@ -2,8 +2,8 @@ import {loadResources} from '../../js/adventure_assets.js';
 import {createAdventure,applyAction,syncProgression} from '../../js/adventure_core.js';
 import {createWorld,findPath,followPath,nearestInteraction,movePosition} from '../../js/adventure_world_core.js';
 import {regionAt} from '../../js/adventure_island_layout_core.js';
-import {createRenderer} from '../../js/adventure_renderer.js';
-import {renderHud} from '../../js/view_adventure.js';
+import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
+import {renderHud} from '../../js/views/adventure/view_hud.js';
 import {renderMaps} from '../../js/view_adventure_maps.js';
 
 // An isolated in-memory scene viewer. No role, local-storage or cloud writes.

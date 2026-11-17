@@ -1,6 +1,6 @@
 import {heroPortrait} from './hero_renderer.js';
 import {npcCharacter} from './adventure_city_people_core.js';
-import {createCloseButton,createWorldMapSwitch} from './view_adventure_controls.js';
+import {createCloseButton,createWorldMapSwitch} from './ui/controls.js';
 import {earthRules,wrapLongitude} from './adventure_earth_core.js';
 import {layoutEarthAtlasMarkers,layoutEarthAtlasNames,pickEarthAtlasMarker} from './earth_atlas_layout_core.js';
 import {tr,setText,fill} from './locale_runtime.js';

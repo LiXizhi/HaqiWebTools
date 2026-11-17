@@ -21,8 +21,10 @@ test('sub-cell pointer movement preserves fractional positions across zoom level
 
 // Execute the production handlers with isolated callbacks, without a DOM or player saves.
 import {readFileSync} from 'node:fs';
-const appSource=readFileSync(new URL('../js/home_app.js',import.meta.url),'utf8');
-const viewSource=readFileSync(new URL('../js/view_home.js',import.meta.url),'utf8');
+import {homePointerPosition} from '../js/home/view_home_scene_input.js';
+import {bindHomeSceneInputForTest} from './helpers/home_scene_input_harness.mjs';
+const appSource=readFileSync(new URL('../js/home/home_session_controller.js',import.meta.url),'utf8');
+const petSource=readFileSync(new URL('../js/home/home_pet_controller.js',import.meta.url),'utf8');
 test('starter blanket uses the normal placement action only near a resident pet in an empty home',async()=>{
  const source=appSource.slice(appSource.indexOf(' async function tap('),appSource.indexOf(' async function drop('));
  const actions=[];
@@ -37,7 +39,7 @@ test('starter blanket uses the normal placement action only near a resident pet 
  assert.deepEqual(actions,[{type:'place',object:{itemId:'blanket',x:1,y:3},starterBlanket:true}]);
 });
 test('resident walks to the placed blanket and stops sleeping when it is removed',()=>{
- const source=appSource.slice(appSource.indexOf(' function invitePetToBlanket('),appSource.indexOf(' async function restoreEdit('));
+ const source=petSource.slice(petSource.indexOf(' function invitePetToBlanket('),petSource.indexOf(' async function restoreEdit('));
  const parts={'chunk:0,0':{}},object={id:'blanket-one',itemId:'blanket',x:3,y:4,rotation:0};
  applyHomeAction(parts,{type:'place',object},realCatalog);
  const pet={id:'resident',x:1,y:4};
@@ -56,11 +58,9 @@ test('resident walks to the placed blanket and stops sleeping when it is removed
  assert.equal(pet.targetId,null);
 });
 test('canvas pointer coordinates preserve fractional world positions for catalog drops',()=>{
- const source=viewSource.slice(viewSource.indexOf(' function position(e)'),viewSource.indexOf(' function render(next)'));
- const position=new Function('canvas','model',source+';return position;')(
-  {getBoundingClientRect:()=>({left:10,top:20,width:800,height:600})},
-  {camera:{x:-.25,y:.125},scale:40});
- assert.deepEqual(position({clientX:415,clientY:315}),{sx:405,sy:295,x:-.125,y:0});
+ const canvas={getBoundingClientRect:()=>({left:10,top:20,width:800,height:600})};
+ const model={camera:{x:-.25,y:.125},scale:40};
+ assert.deepEqual(homePointerPosition(canvas,model,{clientX:415,clientY:315}),{sx:405,sy:295,x:-.125,y:0});
 });
 test('clicking the ground after selecting existing or catalog furniture never writes a placement',async()=>{
  const source=appSource.slice(appSource.indexOf(' async function tap('),appSource.indexOf(' async function drop('));
@@ -74,9 +74,13 @@ test('clicking the ground after selecting existing or catalog furniture never wr
  }
 });
 test('moving the mouse without a pressed drag never previews selected furniture',()=>{
- const source=viewSource.slice(viewSource.indexOf('  canvas.onpointermove=e=>{'),viewSource.indexOf('  canvas.onpointerup=e=>{'));
  const canvas={},previews=[];
- new Function('canvas','gesture','position','cb','paintStroke','model','eraseStroke','hoverPoint',source)(canvas,null,()=>({x:9,y:12}),{hover:p=>previews.push(p)},null,{build:false},null,null);
+ bindHomeSceneInputForTest({
+  canvas,
+  state:{model:{build:false},gesture:null,paintStroke:null,eraseStroke:null},
+  position:()=>({x:9,y:12}),
+  cb:{hover:p=>previews.push(p)},
+ });
  canvas.onpointermove({pointerId:1,buttons:0});
  assert.deepEqual(previews,[]);
 });

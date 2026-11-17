@@ -99,7 +99,7 @@ try{
   await page.getByRole('button',{name:'关闭照片生成形象',exact:true}).click();
   // Exercise the production lazy facade inside a real parent detail window.
   await page.evaluate(async()=>{
-   const [{DetailDialog},{createPhotoHeadFeature},{createHeroPicker}]=await Promise.all([import('/js/view_detail_dialog.js'),import('/js/photo_head_feature.js'),import('/js/view_hero_picker.js')]);
+   const [{DetailDialog},{createPhotoHeadFeature},{createHeroPicker}]=await Promise.all([import('/js/ui/detail_dialog.js'),import('/js/photo_head_feature.js'),import('/js/view_hero_picker.js')]);
    const el=(tag,cls='',...children)=>{const n=document.createElement(tag);n.className=cls;n.append(...children);return n;};
    const parent=new DetailDialog(document.body,{el,title:'修改名字和形象',className:'equipment-item-dialog hero-customize-dialog'});
    let attempts=0;

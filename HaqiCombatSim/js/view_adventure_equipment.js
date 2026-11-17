@@ -5,7 +5,7 @@ import {dungeonFirstRewardSources} from './dungeon_first_rewards_core.js';
 import {adventureHonors,activeAdventureHonor} from './adventure_honors_core.js';
 import {heroPortrait} from './hero_renderer.js';
 import { setText, fill, tr } from './locale_runtime.js';
-import {DetailDialog} from './view_detail_dialog.js';
+import {DetailDialog} from './ui/detail_dialog.js';
 import {createHeroPicker} from './view_hero_picker.js';
 import {HERO_LOOK_BEANS,HERO_NAME_BEANS,heroCustomizeQuote,resolvedHeadId} from './adventure_hero_customize_core.js';
 import {ItemDetails, attributeSpan} from './view_adventure_item_details.js';

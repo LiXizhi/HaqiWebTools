@@ -5,7 +5,7 @@
 <body class="haqi-app"><div id="root"></div><script type="module">
 import {loadResources} from '../../js/adventure_assets.js';
 import {applyAction,createAdventure} from '../../js/adventure_core.js';
-import {renderPanel} from '../../js/view_adventure.js';
+import {renderPanel} from '../../js/views/adventure/view_panel_modal.js';
 // Real views with an in-memory character; no player storage is read or written.
 const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
 const assets=await loadResources(),save=createAdventure(assets.content,{name:'页签验收'});

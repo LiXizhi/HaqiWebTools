@@ -53,7 +53,7 @@ test('the existing bedside lamp request places a real item in the room',()=>{
 });
 
 test('a resident shows a blocked visit and resumes when the chair moves away',()=>{
- const app=readFileSync(new URL('../js/home_app.js',import.meta.url),'utf8');
+ const app=readFileSync(new URL('../js/home/home_pet_controller.js',import.meta.url),'utf8');
  const source=app.slice(app.indexOf(' function invitePetToBlanket('),app.indexOf(' async function restoreEdit('));
  const {home,parts}=starterRoomLayout(catalog,'chosen-pet');
  const pet={id:'chosen-pet',...parts.residents['chosen-pet']};
@@ -76,7 +76,7 @@ test('a resident shows a blocked visit and resumes when the chair moves away',()
 });
 
 test('starter entry reopens the saved room and leaves deleted rooms deleted',async()=>{
- const app=readFileSync(new URL('../js/home_app.js',import.meta.url),'utf8');
+ const app=readFileSync(new URL('../js/home/home_session_controller.js',import.meta.url),'utf8');
  const entry=app.slice(app.indexOf(' async function enterStarterRoom('),app.indexOf(' function roster('));
  let saved,installs=0;
  const visits=[];

@@ -1,0 +1,52 @@
+// adventure/app_services.js — 聚合跨控制器复用的持久化、导航与反馈基础服务，收敛构造参数列表。
+export function createAppServices({
+    persist,
+    persistRuntime,
+    saveLocal,
+    queueCloudSave,
+    close,
+    openPanel,
+    paintHud,
+    paintPanel,
+    paintDialogue,
+    paintBattle,
+    enterWorld,
+    showTitle,
+    toast,
+    safely,
+    spellSound,
+    globalReward,
+    gameSettings,
+    adaptiveGraphics,
+    framePacer,
+} = {}) {
+    return {
+        persistence: {
+            persist,
+            persistRuntime,
+            saveLocal,
+            queueCloudSave,
+        },
+        navigation: {
+            close,
+            openPanel,
+            paintHud,
+            paintPanel,
+            paintDialogue,
+            paintBattle,
+            enterWorld,
+            showTitle,
+        },
+        feedback: {
+            toast,
+            safely,
+            spellSound,
+            globalReward,
+        },
+        runtime: {
+            gameSettings,
+            adaptiveGraphics,
+            framePacer,
+        },
+    };
+}

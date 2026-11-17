@@ -1,4 +1,4 @@
-import {DetailDialog} from './view_detail_dialog.js';
+import {DetailDialog} from './ui/detail_dialog.js';
 import {setText,fill} from './locale_runtime.js';
 
 const el=(tag,className='',...children)=>{const node=document.createElement(tag);node.className=className;for(const child of children){if(typeof child==='string'){const span=document.createElement('span');setText(span,child);node.append(span);}else node.append(child);}return node;};

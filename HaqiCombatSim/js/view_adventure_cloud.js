@@ -1,7 +1,7 @@
 import {fill} from './locale_runtime.js';
-import {createCloseButton} from './view_adventure_controls.js';
+import {createCloseButton} from './ui/controls.js';
 import { islandName } from './adventure_world_map_core.js';
-import { el, button } from './view_adventure.js';
+import {el, button} from './views/adventure/primitives.js';
 import { SCHOOL_NAMES } from './adventure_core.js';
 function progressCard(save, label) {
     return el('article', 'cloud-progress', el('p', 'eyebrow', label), save

@@ -1,5 +1,5 @@
 import {tr,fill} from './locale_runtime.js';
-import {el,button} from './view_adventure.js';
+import {el, button} from './views/adventure/primitives.js';
 import {petPortrait} from './view_adventure_pets.js';
 import {drawSchoolIcon} from './card_renderer.js';
 import {companionPet} from './view_party_companion_pet.js';

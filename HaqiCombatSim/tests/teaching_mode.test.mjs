@@ -16,16 +16,21 @@ const content = {
 const base = { zone: 'camp', quests: {} };
 
 test('字源岛追踪指针覆盖接取、进行、交付，且只提示一条任务', () => {
-    const source=readFileSync(new URL('../js/view_adventure.js',import.meta.url),'utf8');
-    const renderer=source.slice(source.indexOf('function appendTrackerQuest('),source.indexOf('export function renderHeroTitle('));
+    const source=readFileSync(new URL('../js/views/adventure/view_hud.js',import.meta.url),'utf8');
+    const renderer=source.slice(source.indexOf('export function appendTrackerQuest('),source.indexOf('export function renderHeroTitle(')).replace('export function','function');
     for (const state of [{accepted:false},{accepted:true},{accepted:true,ready:true},{claimed:true}]) {
         for (const level of [9,10]) {
             const nodes=[];
             const el=(tag,cls,...children)=>{const n={tag,cls,children,setAttribute(){},append(...items){this.children.push(...items);},classList:{add(){}}};nodes.push(n);return n;};
             const quest={id:873002,region:'hanzi',title:'脚下的土地'};
             const context=vm.createContext({beginnerTeaching,el,button:(children,run,cls)=>el('button',cls,children),
-                questState:()=>state,catalogQuestReady:()=>!!state.ready,catalogStatSnapshot:()=>({}),catalogQuestStatus:()=>'',
-                catalogTrackLines:()=>[{text:'去找石伯'}],fill:()=>({text:''}),tr:s=>s});
+                buildTrackerEntryState:(_save,_c,_entry,teach)=>{
+                    const teachNow=teach.allow&&(beginnerTeaching({level})||false)&&!state.claimed;
+                    if(teachNow)teach.allow=false;
+                    return {chapter:null,quest,ready:!!state.ready,state,campQuest:false,teachNow,statusLabel:'',goals:null};
+                },
+                buildCatalogTrackLines:()=>[{text:'去找石伯'}],translatedGoal:s=>s,withName:(p)=>p,objectiveLabel:()=>'',
+                buildChapterTrackLines:()=>[],fill:()=>({text:''}),tr:s=>s});
             vm.runInContext(renderer,context);
             const save={zone:'hanzi',level},c={quests:[],catalogQuests:{byId:{873002:quest}}},teach={allow:!!teachingMode(save,c)};
             for(let i=0;i<2;i++)context.appendTrackerQuest(el('div'),{id:873002},save,c,{},teach);

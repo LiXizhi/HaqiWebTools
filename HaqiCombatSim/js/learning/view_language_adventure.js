@@ -4,7 +4,7 @@ import {syncOverlayInert} from '../ui/dom.js';
 
 const el=(tag,cls,text)=>{const n=document.createElement(tag);n.className=cls||'';if(text!==undefined)n.textContent=text;return n;};
 const button=(label,run,cls='secondary')=>{const n=el('button',cls,tr(label));n.type='button';n.onclick=run;return n;};
-const syncGameInert=root=>syncOverlayInert(root,['world','hud','battle-layer','entry'].map(id=>document.getElementById(id)));
+const syncGameInert=root=>syncOverlayInert(root,['world','hud','battle-layer','entry'].map(id=>document?.getElementById?.(id)));
 export function createLearningView(callbacks) {
     const root=el('div','overlay learning-overlay');root.hidden=true;
     document.body.append(root);

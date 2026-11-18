@@ -204,6 +204,10 @@ export function createPanelController(options) {
             opening.paintCompanionPractice();
             return;
         }
+        if (activePanel === 'mentor-practice') {
+            opening.paintMentorPractice();
+            return;
+        }
         if (activePanel === 'dungeon-story') return;
         if (activePanel === 'dungeon-journey') {
             const { journeyId, journeyRestart } = dungeon.getState();

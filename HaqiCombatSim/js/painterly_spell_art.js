@@ -16,6 +16,7 @@ export function validatePainterlySpells(manifest) {
     for(const [base,row] of Object.entries(manifest.bases)){
         const sheet=manifest.sheets[row.sheet];
         if(!sheet||!styles.includes(row.style)||!row.school||!Array.isArray(row.palette)||row.palette.length!==3)throw new Error('手绘法术配置无效：'+base);
+        if(row.upright!==undefined&&typeof row.upright!=='boolean')throw new Error('手绘法术朝向无效：'+base);
         for(const rect of [row.release,row.impact])if(!Array.isArray(rect)||rect.length!==4||rect.some(v=>!Number.isInteger(v))||rect[0]<0||rect[1]<0||rect[2]<=0||rect[3]<=0||rect[0]+rect[2]>sheet.width||rect[1]+rect[3]>sheet.height)throw new Error('手绘法术裁切越界：'+base);
     }
     for(const row of Object.values(manifest.sheets)){
@@ -85,6 +86,8 @@ export function drawPainterlySpell(c,image,row,{spec,p,a,b,caster,from,to,radius
     const {charge,flight,hit,impacted,alpha}=painterlySpellPhase(p,timeline);
     const [primary,light]=row.palette,dir=b.x>=a.x?1:-1,angle=Math.atan2(b.y-a.y,b.x-a.x);
     const size=r*3.4,style=row.style;
+    // Creature silhouettes stay upright when the enemy casts from the other side.
+    const flightAngle=row.upright?0:angle,flightScaleX=row.upright?dir:1;
     const release=(x,y,size,angle=0,alpha=1,sx=1,sy=1)=>sprite(c,image,row.release,x,y,size,angle+(row.releaseRotation??0),alpha,sx,sy);
     c.save();c.globalAlpha*=alpha;c.shadowBlur=0;
     if(failed){
@@ -106,8 +109,8 @@ export function drawPainterlySpell(c,image,row,{spec,p,a,b,caster,from,to,radius
         const swell=.72+Math.sin(flight*Math.PI)*.28;
         if(['comet','orb','leaf','ghost','drain'].includes(style)){
             const x=mix(a.x,b.x,flight),y=mix(a.y,b.y,flight)-Math.sin(flight*Math.PI)*r*.3;
-            for(let i=2;i>=1;i--){const f=clamp(flight-i*.035);release(mix(a.x,b.x,f),mix(a.y,b.y,f)-Math.sin(f*Math.PI)*r*.3,size*.62*swell,angle,.11/i);}
-            release(x,y,size*.76*swell,angle);
+            for(let i=2;i>=1;i--){const f=clamp(flight-i*.035);release(mix(a.x,b.x,f),mix(a.y,b.y,f)-Math.sin(f*Math.PI)*r*.3,size*.62*swell,flightAngle,.11/i,flightScaleX);}
+            release(x,y,size*.76*swell,flightAngle,1,flightScaleX);
             bloom(c,x,y,r*.4,light,.13,1);
         }else if(['meteor','icefall'].includes(style)){
             const start={x:b.x-dir*r*2.1,y:b.y-r*3.5},t=flight*flight;
@@ -144,7 +147,7 @@ export function drawPainterlySpell(c,image,row,{spec,p,a,b,caster,from,to,radius
         if(style==='drain'&&!reflection){
             for(let i=0;i<3;i++){
                 const q=smooth((hit-i*.075)/.68);if(q<=0||q>=1)continue;
-                release(mix(b.x,caster.x,q),mix(b.y,caster.y,q)-Math.sin(q*Math.PI)*r*.55,r*(.62-i*.1),Math.atan2(caster.y-b.y,caster.x-b.x),Math.sin(q*Math.PI)*.85);
+                release(mix(b.x,caster.x,q),mix(b.y,caster.y,q)-Math.sin(q*Math.PI)*r*.55,r*(.62-i*.1),row.upright?0:Math.atan2(caster.y-b.y,caster.x-b.x),Math.sin(q*Math.PI)*.85,row.upright?(caster.x>=b.x?1:-1):1);
             }
             if(!echo)bloom(c,caster.x,from.y,r,light,smooth((hit-.5)/.2)*(1-hit)*.6);
         }

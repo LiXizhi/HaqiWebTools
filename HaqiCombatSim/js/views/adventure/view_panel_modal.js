@@ -1,4 +1,7 @@
 import {setText,fill} from '../../locale_runtime.js';
+import {monsterArtBinding} from '../../adventure_monster_art_core.js';
+import {heroPortrait} from '../../hero_renderer.js';
+import {mentorPracticeCue,mentorPracticeName} from '../../mentor_practice_core.js';
 import {OPENING_PET} from '../../opening_journey_core.js';
 import {renderDebugEditor} from './view_adventure_debug.js';
 import {renderDeckEditor} from './view_adventure_deck.js';
@@ -18,6 +21,64 @@ import {el,button,icon,art,tile,modal,spellHint,spellFace} from './primitives.js
 import {objectiveLabel,gourdArt,updateCheckin} from './view_hud.js';
 
 export {settingsView};
+
+function mentorOpponentArt(assets,unit){
+    const monster=assets.content.monsters[unit.id==='enemy2'?'life-scout':'fire-scout'];
+    const binding=monsterArtBinding(monster,assets.monsterArt);
+    if(binding?.kind==='pet')return petPortrait(assets,binding.petId,0,64);
+    const canvas=el('canvas','art');canvas.width=128;canvas.height=160;canvas.style.width='64px';canvas.style.height='80px';
+    const draw=()=>{const ctx=canvas.getContext('2d');ctx.clearRect(0,0,128,160);assets.drawMonster(ctx,monster,0,0,128,160);};
+    draw();
+    if(binding?.kind==='portrait')void assets.ensureImage('monster:'+binding.id).then(()=>{if(canvas.isConnected)draw();}).catch(()=>{});
+    return canvas;
+}
+export function updateMentorPracticeHealth(field,lesson,cast){
+    if(!field)return;
+    for(const unit of field.querySelectorAll('[data-unit-id]')){
+        const id=unit.dataset.unitId,hp=cast.afterHp[id],max=lesson.arena.unitsById[id].maxHp;
+        unit.setAttribute('aria-label',`${mentorPracticeName(id,lesson.language)} ${hp} / ${max}`);
+        unit.querySelector('.mentor-hp').textContent=`${hp} / ${max}`;
+        unit.querySelector('progress').value=hp;
+    }
+}
+export function renderMentorPractice(root,model,lesson,cb){
+    const {assets,save}=model,body=modal(root,lesson.title,'导师实操 · 借用练习卡，不消耗背包',cb);
+    root.classList.add('mentor-practice-layer');
+    const npc=assets.content.npcs[lesson.npcId],speaker=el('div','practice-speaker');
+    if(npc?.portrait)speaker.append(art(assets,npc.portrait,60,74));
+    speaker.append(el('p','',lesson.presentation?'施法中，观察卡牌对目标的效果。':lesson.message));speaker.setAttribute('role','status');body.append(speaker);
+    const cue=el('div','mentor-cue',el('strong','',mentorPracticeCue(lesson)),button('听指令',cb.listen,'secondary'),button(lesson.hint?'收起提示':'看提示',cb.hint,'secondary'));
+    cue.firstChild.lang=lesson.language;
+    if(lesson.hint)cue.append(el('p','mentor-hint',mentorPracticeCue(lesson,save.languageLearning?.native||'zh')));
+    body.append(cue);
+    const field=el('div','mentor-field');
+    for(const side of ['near','far']){
+        const group=el('div','mentor-team');
+        for(const unit of lesson.arena.sides[side]){
+            const image=unit.id==='student'?heroPortrait(assets,save,64,80):unit.id==='companion'?petPortrait(assets,OPENING_PET,0,64):mentorOpponentArt(assets,unit);
+            const hp=lesson.presentation?.beforeHp[unit.id]??unit.hp;
+            const name=mentorPracticeName(unit.id,lesson.language),target=button([image,el('strong','',name),el('span','mentor-hp',`${hp} / ${unit.maxHp}`)],()=>cb.target(unit.id),'practice-partner');
+            target.setAttribute('aria-label',`${name} ${hp} / ${unit.maxHp}`);
+            target.dataset.unitId=unit.id;target.disabled=!!lesson.presentation||lesson.done||lesson.failed||unit.hp===0;
+            const health=el('progress','');health.max=unit.maxHp;health.value=hp;health.setAttribute('aria-label',name);target.append(health);group.append(target);
+        }
+        field.append(group);
+    }
+    body.append(field);
+    if(!lesson.presentation&&lesson.feedback.length)body.append(el('p','mentor-feedback',lesson.feedback.map(f=>`${mentorPracticeName(f.id,lesson.language)} ${f.delta>0?'+':''}${f.delta}`).join(' · ')));
+    if(lesson.done&&!lesson.presentation)body.append(button('完成导师练习',cb.complete,'primary'));
+    else if(lesson.failed&&!lesson.presentation)body.append(button('重新练习',cb.retry,'primary'));
+    else{
+        const cards=el('div','practice-cards');
+        for(const key of lesson.keys){
+            const card=lesson.arena.resolved.cards[key],original=assets.dataset.cards[key];
+            const pick=button([spellFace(assets,card,original),el('span','practice-card-caption',spellHint(card,assets.dataset))],()=>cb.select(key),'practice-card'+(lesson.selected===key?' selected':''));
+            pick.disabled=!!lesson.presentation;pick.setAttribute('aria-label','选择'+original.name);pick.setAttribute('aria-pressed',String(lesson.selected===key));cards.append(pick);
+        }
+        body.append(cards);
+    }
+    if(!lesson.presentation)body.querySelector(lesson.done||lesson.failed?'.primary':'.practice-card.selected')?.focus({preventScroll:true});
+}
 
 export function renderCompanionPractice(root,model,lesson,cb){
     const body=modal(root,'和伙伴配合','茜茜的练习卡 · 不消耗背包',cb);

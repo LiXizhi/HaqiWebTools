@@ -40,6 +40,86 @@
       "size": 95742,
       "width": 960,
       "height": 540
+    },
+    "fire-a": {
+      "local": "assets/adventure/painterly-spells/fire-a-v1-0e3b635d00b4.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/painterly-spells/20261118/fire-a-v1-0e3b635d00b4.webp",
+      "sha256": "0e3b635d00b441a2993d096d12b2f4b00dfeb75669affd5490ade8070051e3b2",
+      "size": 97818,
+      "width": 768,
+      "height": 432
+    },
+    "fire-b": {
+      "local": "assets/adventure/painterly-spells/fire-b-v1-1db40b41ff1c.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/painterly-spells/20261118/fire-b-v1-1db40b41ff1c.webp",
+      "sha256": "1db40b41ff1c6d81a97d70761278a905c91e31ceda66dba3b543f73ff8f8a0e4",
+      "size": 97118,
+      "width": 768,
+      "height": 432
+    },
+    "ice-a": {
+      "local": "assets/adventure/painterly-spells/ice-a-v1-13ae22eb3e20.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/painterly-spells/20261118/ice-a-v1-13ae22eb3e20.webp",
+      "sha256": "13ae22eb3e201512d50b40915415debcc710ece4f0d20a05345e554684c99cc8",
+      "size": 99810,
+      "width": 768,
+      "height": 432
+    },
+    "ice-b": {
+      "local": "assets/adventure/painterly-spells/ice-b-v1-030c151d6712.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/painterly-spells/20261118/ice-b-v1-030c151d6712.webp",
+      "sha256": "030c151d67121d390ed90cd07254ad66ff34e54f6b4b07e7fe985373f93844db",
+      "size": 96028,
+      "width": 768,
+      "height": 432
+    },
+    "storm-a": {
+      "local": "assets/adventure/painterly-spells/storm-a-v1-afdf16666774.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/painterly-spells/20261118/storm-a-v1-afdf16666774.webp",
+      "sha256": "afdf16666774c5543895b663fc681308472cdd301324fdc11948a0a95655f9b2",
+      "size": 89870,
+      "width": 768,
+      "height": 432
+    },
+    "storm-b": {
+      "local": "assets/adventure/painterly-spells/storm-b-v1-a34744ee5ec9.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/painterly-spells/20261118/storm-b-v1-a34744ee5ec9.webp",
+      "sha256": "a34744ee5ec98013443ed4f14125648c523850abdbdd03d204c0685da17f2b9a",
+      "size": 89408,
+      "width": 768,
+      "height": 432
+    },
+    "life-a": {
+      "local": "assets/adventure/painterly-spells/life-a-v1-5618e8504cf8.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/painterly-spells/20261118/life-a-v1-5618e8504cf8.webp",
+      "sha256": "5618e8504cf8ab596d2fdcb1cbcdcb05b0e0d308cd7bc857d5ad507d0ea5c231",
+      "size": 94642,
+      "width": 768,
+      "height": 432
+    },
+    "life-b": {
+      "local": "assets/adventure/painterly-spells/life-b-v1-6237fc8991ce.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/painterly-spells/20261118/life-b-v1-6237fc8991ce.webp",
+      "sha256": "6237fc8991ce5d9e1458658a644dd8e53c0bbab220823655eb428facdbc69994",
+      "size": 98000,
+      "width": 768,
+      "height": 432
+    },
+    "death-a": {
+      "local": "assets/adventure/painterly-spells/death-a-v1-77b7723602a2.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/painterly-spells/20261118/death-a-v1-77b7723602a2.webp",
+      "sha256": "77b7723602a2098ca0e7ea14a448c600fd30c287fc8037824069fa0751849b9a",
+      "size": 92644,
+      "width": 768,
+      "height": 432
+    },
+    "death-b": {
+      "local": "assets/adventure/painterly-spells/death-b-v1-2460c5b2b2b3.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/painterly-spells/20261118/death-b-v1-2460c5b2b2b3.webp",
+      "sha256": "2460c5b2b2b3414c230f9e97179a9a755a80e08a41843a2492d2c04bb4970abb",
+      "size": 96760,
+      "width": 768,
+      "height": 432
     }
   },
   "bases": {
@@ -387,6 +467,704 @@
         282,
         280,
         246
+      ]
+    },
+    "Fire_SingleAttack_Level3": {
+      "name": "火凤焚天",
+      "school": "fire",
+      "sheet": "fire-a",
+      "style": "comet",
+      "palette": [
+        "#ff8a30",
+        "#fff1a5",
+        "#e54d47"
+      ],
+      "release": [
+        10,
+        12,
+        236,
+        191
+      ],
+      "impact": [
+        13,
+        226,
+        230,
+        196
+      ],
+      "upright": true
+    },
+    "Fire_SingleAttack_Level5": {
+      "name": "火焰喷发",
+      "school": "fire",
+      "sheet": "fire-a",
+      "style": "vines",
+      "palette": [
+        "#ff8a30",
+        "#fff1a5",
+        "#e54d47"
+      ],
+      "release": [
+        278,
+        10,
+        211,
+        196
+      ],
+      "impact": [
+        282,
+        226,
+        204,
+        196
+      ]
+    },
+    "Fire_SingleAttack_Level6": {
+      "name": "火魔掷石",
+      "school": "fire",
+      "sheet": "fire-a",
+      "style": "vines",
+      "palette": [
+        "#ff8a30",
+        "#fff1a5",
+        "#e54d47"
+      ],
+      "release": [
+        522,
+        34,
+        236,
+        148
+      ],
+      "impact": [
+        524,
+        226,
+        232,
+        196
+      ]
+    },
+    "Fire_DOTAttack_LevelX": {
+      "name": "火狼咆哮",
+      "school": "fire",
+      "sheet": "fire-b",
+      "style": "comet",
+      "palette": [
+        "#ff8a30",
+        "#fff1a5",
+        "#e54d47"
+      ],
+      "release": [
+        10,
+        18,
+        236,
+        179
+      ],
+      "impact": [
+        10,
+        229,
+        236,
+        190
+      ],
+      "upright": true
+    },
+    "Fire_SingleAttackWithImmolate_Level4": {
+      "name": "灼伤之炎",
+      "school": "fire",
+      "sheet": "fire-b",
+      "style": "comet",
+      "palette": [
+        "#ff8a30",
+        "#fff1a5",
+        "#e54d47"
+      ],
+      "release": [
+        266,
+        35,
+        236,
+        146
+      ],
+      "impact": [
+        266,
+        226,
+        235,
+        196
+      ]
+    },
+    "Fire_DOTAttackWithSplash_Level6": {
+      "name": "熔岩炸弹",
+      "school": "fire",
+      "sheet": "fire-b",
+      "style": "meteor",
+      "palette": [
+        "#ff8a30",
+        "#fff1a5",
+        "#e54d47"
+      ],
+      "release": [
+        522,
+        33,
+        236,
+        150
+      ],
+      "impact": [
+        531,
+        226,
+        218,
+        196
+      ]
+    },
+    "Ice_SingleAttack_Level3": {
+      "name": "冰剑凛空",
+      "school": "ice",
+      "sheet": "ice-a",
+      "style": "comet",
+      "palette": [
+        "#65d6ff",
+        "#efffff",
+        "#9293ef"
+      ],
+      "release": [
+        10,
+        26,
+        236,
+        163
+      ],
+      "impact": [
+        10,
+        227,
+        236,
+        194
+      ]
+    },
+    "Ice_SingleAttack_Level6": {
+      "name": "海狮冰剑",
+      "school": "ice",
+      "sheet": "ice-a",
+      "style": "comet",
+      "palette": [
+        "#65d6ff",
+        "#efffff",
+        "#9293ef"
+      ],
+      "release": [
+        266,
+        28,
+        236,
+        159
+      ],
+      "impact": [
+        273,
+        226,
+        221,
+        196
+      ],
+      "upright": true
+    },
+    "Ice_SingleAttackWithDOT_Level5": {
+      "name": "冰雹来袭",
+      "school": "ice",
+      "sheet": "ice-a",
+      "style": "icefall",
+      "palette": [
+        "#65d6ff",
+        "#efffff",
+        "#9293ef"
+      ],
+      "release": [
+        540,
+        10,
+        199,
+        196
+      ],
+      "impact": [
+        536,
+        226,
+        207,
+        196
+      ]
+    },
+    "Ice_AreaAttackWithStun_Level7": {
+      "name": "冰攻7",
+      "school": "ice",
+      "sheet": "ice-b",
+      "style": "icecrown",
+      "palette": [
+        "#65d6ff",
+        "#efffff",
+        "#9293ef"
+      ],
+      "release": [
+        24,
+        10,
+        208,
+        196
+      ],
+      "impact": [
+        29,
+        226,
+        198,
+        196
+      ]
+    },
+    "Ice_Pet_SingleAttack_IcePangolinsFreeze": {
+      "name": "冰兽发威",
+      "school": "ice",
+      "sheet": "ice-b",
+      "style": "comet",
+      "palette": [
+        "#65d6ff",
+        "#efffff",
+        "#9293ef"
+      ],
+      "release": [
+        266,
+        24,
+        236,
+        168
+      ],
+      "impact": [
+        279,
+        226,
+        209,
+        196
+      ],
+      "upright": true
+    },
+    "Ice_Pet_SingleAttackWithDOT_FrostScylla": {
+      "name": "冰魄神柱",
+      "school": "ice",
+      "sheet": "ice-b",
+      "style": "icecrown",
+      "palette": [
+        "#65d6ff",
+        "#efffff",
+        "#9293ef"
+      ],
+      "release": [
+        557,
+        10,
+        166,
+        196
+      ],
+      "impact": [
+        541,
+        226,
+        198,
+        196
+      ]
+    },
+    "Storm_SingleAttack_Level3": {
+      "name": "暗夜雷动",
+      "school": "storm",
+      "sheet": "storm-a",
+      "style": "lightning",
+      "palette": [
+        "#a887f2",
+        "#fff1a0",
+        "#e9bd52"
+      ],
+      "release": [
+        10,
+        23,
+        236,
+        169
+      ],
+      "impact": [
+        24,
+        226,
+        208,
+        196
+      ]
+    },
+    "Storm_SingleAttack_Level4": {
+      "name": "雷神之剑",
+      "school": "storm",
+      "sheet": "storm-a",
+      "style": "comet",
+      "palette": [
+        "#a887f2",
+        "#fff1a0",
+        "#e9bd52"
+      ],
+      "release": [
+        266,
+        40,
+        236,
+        136
+      ],
+      "impact": [
+        292,
+        226,
+        183,
+        196
+      ]
+    },
+    "Storm_SingleAttack_Level5": {
+      "name": "蛇女雷暴",
+      "school": "storm",
+      "sheet": "storm-a",
+      "style": "vines",
+      "palette": [
+        "#a887f2",
+        "#fff1a0",
+        "#e9bd52"
+      ],
+      "release": [
+        543,
+        10,
+        194,
+        196
+      ],
+      "impact": [
+        542,
+        226,
+        196,
+        196
+      ]
+    },
+    "Storm_AreaAttack_LevelX": {
+      "name": "风鹰之眼",
+      "school": "storm",
+      "sheet": "storm-b",
+      "style": "comet",
+      "palette": [
+        "#a887f2",
+        "#fff1a0",
+        "#e9bd52"
+      ],
+      "release": [
+        25,
+        10,
+        206,
+        196
+      ],
+      "impact": [
+        28,
+        226,
+        200,
+        196
+      ],
+      "upright": true
+    },
+    "Storm_SingleAttack_WildBolt_Level2": {
+      "name": "极限暴熊",
+      "school": "storm",
+      "sheet": "storm-b",
+      "style": "vines",
+      "palette": [
+        "#a887f2",
+        "#fff1a0",
+        "#e9bd52"
+      ],
+      "release": [
+        282,
+        10,
+        204,
+        196
+      ],
+      "impact": [
+        286,
+        226,
+        196,
+        196
+      ]
+    },
+    "Storm_Pet_AreaAttack_LevelX_ShadowSmashBullsSmash": {
+      "name": "连环闪电",
+      "school": "storm",
+      "sheet": "storm-b",
+      "style": "nova",
+      "palette": [
+        "#a887f2",
+        "#fff1a0",
+        "#e9bd52"
+      ],
+      "release": [
+        522,
+        15,
+        236,
+        186
+      ],
+      "impact": [
+        531,
+        226,
+        217,
+        196
+      ]
+    },
+    "Life_SingleAttack_Level3": {
+      "name": "莽林狂舞",
+      "school": "life",
+      "sheet": "life-a",
+      "style": "cyclone",
+      "palette": [
+        "#82cf50",
+        "#fff3a9",
+        "#32a879"
+      ],
+      "release": [
+        32,
+        10,
+        191,
+        196
+      ],
+      "impact": [
+        33,
+        226,
+        190,
+        196
+      ]
+    },
+    "Life_SingleAttack_Level4": {
+      "name": "噬草召唤",
+      "school": "life",
+      "sheet": "life-a",
+      "style": "vines",
+      "palette": [
+        "#82cf50",
+        "#fff3a9",
+        "#32a879"
+      ],
+      "release": [
+        285,
+        10,
+        197,
+        196
+      ],
+      "impact": [
+        290,
+        226,
+        187,
+        196
+      ]
+    },
+    "Life_SingleAttack_Level6": {
+      "name": "大地之怒",
+      "school": "life",
+      "sheet": "life-a",
+      "style": "vines",
+      "palette": [
+        "#82cf50",
+        "#fff3a9",
+        "#32a879"
+      ],
+      "release": [
+        535,
+        10,
+        210,
+        196
+      ],
+      "impact": [
+        541,
+        226,
+        198,
+        196
+      ]
+    },
+    "Life_SingleAttack_Level1_Crazy": {
+      "name": "生灵光刃",
+      "school": "life",
+      "sheet": "life-b",
+      "style": "comet",
+      "palette": [
+        "#82cf50",
+        "#fff3a9",
+        "#32a879"
+      ],
+      "release": [
+        10,
+        49,
+        236,
+        117
+      ],
+      "impact": [
+        10,
+        237,
+        236,
+        174
+      ]
+    },
+    "Life_SingleAttack_Level2_Crazy": {
+      "name": "荆棘刺尖",
+      "school": "life",
+      "sheet": "life-b",
+      "style": "vines",
+      "palette": [
+        "#82cf50",
+        "#fff3a9",
+        "#32a879"
+      ],
+      "release": [
+        307,
+        10,
+        154,
+        196
+      ],
+      "impact": [
+        271,
+        226,
+        225,
+        196
+      ]
+    },
+    "Life_SingleAttack_Level6_OutStandingCard": {
+      "name": "巨岩之怒",
+      "school": "life",
+      "sheet": "life-b",
+      "style": "meteor",
+      "palette": [
+        "#82cf50",
+        "#fff3a9",
+        "#32a879"
+      ],
+      "release": [
+        522,
+        21,
+        236,
+        174
+      ],
+      "impact": [
+        522,
+        229,
+        236,
+        189
+      ]
+    },
+    "Death_SingleAttackWithLifeTap_Level2": {
+      "name": "吸血幽灵",
+      "school": "death",
+      "sheet": "death-a",
+      "style": "drain",
+      "palette": [
+        "#9c78da",
+        "#c6ffe9",
+        "#58bda3"
+      ],
+      "release": [
+        13,
+        10,
+        229,
+        196
+      ],
+      "impact": [
+        24,
+        226,
+        208,
+        196
+      ],
+      "upright": true
+    },
+    "Death_SingleAttack_Level3": {
+      "name": "幽灵突袭",
+      "school": "death",
+      "sheet": "death-a",
+      "style": "ghost",
+      "palette": [
+        "#9c78da",
+        "#c6ffe9",
+        "#58bda3"
+      ],
+      "release": [
+        266,
+        32,
+        236,
+        152
+      ],
+      "impact": [
+        266,
+        233,
+        236,
+        182
+      ],
+      "upright": true
+    },
+    "Death_SingleAttack_Level5": {
+      "name": "墓地莽石",
+      "school": "death",
+      "sheet": "death-a",
+      "style": "vines",
+      "palette": [
+        "#9c78da",
+        "#c6ffe9",
+        "#58bda3"
+      ],
+      "release": [
+        538,
+        10,
+        204,
+        196
+      ],
+      "impact": [
+        544,
+        226,
+        191,
+        196
+      ]
+    },
+    "Death_SingleAttackWithLifeTap_Level6": {
+      "name": "蝠王吸魂",
+      "school": "death",
+      "sheet": "death-b",
+      "style": "drain",
+      "palette": [
+        "#9c78da",
+        "#c6ffe9",
+        "#58bda3"
+      ],
+      "release": [
+        15,
+        10,
+        226,
+        196
+      ],
+      "impact": [
+        21,
+        226,
+        214,
+        196
+      ],
+      "upright": true
+    },
+    "Death_Pet_SingleAttack_GhostOctopusBossDoom": {
+      "name": "死亡章鱼",
+      "school": "death",
+      "sheet": "death-b",
+      "style": "vines",
+      "palette": [
+        "#9c78da",
+        "#c6ffe9",
+        "#58bda3"
+      ],
+      "release": [
+        275,
+        10,
+        217,
+        196
+      ],
+      "impact": [
+        272,
+        226,
+        224,
+        196
+      ]
+    },
+    "Death_SingleAttackWithDisabledHeal": {
+      "name": "天魔杀星",
+      "school": "death",
+      "sheet": "death-b",
+      "style": "seal",
+      "palette": [
+        "#9c78da",
+        "#c6ffe9",
+        "#58bda3"
+      ],
+      "release": [
+        545,
+        10,
+        189,
+        196
+      ],
+      "impact": [
+        538,
+        226,
+        204,
+        196
       ]
     }
   }

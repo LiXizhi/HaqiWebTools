@@ -24,8 +24,8 @@ function withName(pattern, name) {
     return tr(pattern).replaceAll('{name}', tr(name ?? ''));
 }
 
-export function objectiveLabel(g, c) {
-    if (g.kind === 'talk') return withName('与{name}交谈', c.npcs[g.id]?.name || String(g.id));
+export function objectiveLabel(g, c, questId) {
+    if (g.kind === 'talk') return withName(questId === 63010 ? '完成{name}的实操' : '与{name}交谈', c.npcs[g.id]?.name || String(g.id));
     if (g.kind === 'defeat') return withName('击败{name}', Object.values(c.monsters).find(m => m.goalId === g.id)?.name || '训练敌人');
     return (
         {

@@ -67,7 +67,7 @@ export function createArtCanvas(assets, spec, width, height, ...drawArgs) {
 export function syncOverlayInert(overlay, backgroundNodes = []) {
     if (!overlay) return false;
     const doc = getDoc();
-    const open = (overlay.classList.contains('visible') && !overlay.hidden)
+    const open = (!!overlay.classList?.contains?.('visible') && !overlay.hidden)
         || !!doc?.querySelector?.('.overlay.visible:not([hidden]), .learning-overlay:not([hidden])');
     for (const node of backgroundNodes) {
         if (!node) continue;

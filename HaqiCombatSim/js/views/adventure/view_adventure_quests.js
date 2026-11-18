@@ -108,7 +108,7 @@ export function renderQuestJournal(body,model,cb,ui) {
         const section=(title,...children)=>el('section','journal-section',el('h4','',title),...children);
         const goals=questProgress(save,q);
         const fallback=el('p','');setText(fallback,'与{name}交谈，完成指导。',{name:c.npcs[q.endNpc]?.name||'导师'});
-        detail.append(section('任务目标',...(goals.length?goals.map(g=>el('div',`journal-objective ${g.value>=g.count?'complete':''}`,el('span','',objectiveLabel(g,c)),el('strong','',`${g.value} / ${g.count}`))):[fallback])));
+        detail.append(section('任务目标',...(goals.length?goals.map(g=>el('div',`journal-objective ${g.value>=g.count?'complete':''}`,el('span','',objectiveLabel(g,c,q.id)),el('strong','',`${g.value} / ${g.count}`))):[fallback])));
         detail.append(el('div','journal-contacts',el('p','',el('span','','任务接取'),c.npcs[q.startNpc]?.name||'导师'),el('p','',el('span','','任务交付'),c.npcs[q.endNpc]?.name||'导师')));
         const rewards=rewardsFor(save,c,q);
         detail.append(section(state.claimed?'已获得奖励':'任务奖励',el('div','journal-rewards',...rewards.map(reward=>{

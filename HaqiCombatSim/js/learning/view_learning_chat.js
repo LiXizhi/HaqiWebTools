@@ -10,7 +10,7 @@ import {tr,fill} from '../locale_runtime.js';
 import {createCloseButton} from '../ui/controls.js';
 import {syncOverlayInert} from '../ui/dom.js';
 
-const syncGameInert=root=>syncOverlayInert(root,['world','hud','battle-layer','entry'].map(id=>document.getElementById(id)));
+const syncGameInert=root=>syncOverlayInert(root,['world','hud','battle-layer','entry'].map(id=>document?.getElementById?.(id)));
 
 const el=(tag,cls='',text)=>{const n=document.createElement(tag);n.className=cls;if(text!==undefined)n.textContent=['camp-chat-original','camp-chat-translation'].includes(cls)?text:tr(text);return n;};
 const button=(text,run,cls='secondary')=>{const n=el('button',cls,text);n.type='button';n.onclick=run;return n;};

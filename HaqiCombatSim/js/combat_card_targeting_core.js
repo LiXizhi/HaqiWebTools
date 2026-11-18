@@ -54,7 +54,9 @@ export function expectedBaseDamage(card) {
         v += (numericFromSection(p.damage_min, Math.abs(card.pipcost)) + numericFromSection(p.damage_max, Math.abs(card.pipcost))) / 2;
     }
     if (p.times) v *= Number(p.times) || 1;
-    for (const d of splitCardList(p.dots)) v += Math.abs(numericFromSection(d, Math.abs(card.pipcost))) || 0;
+    // X-pip cards encode max allowed pips as negative pipcost; evaluate per-pip DOTs at 1 pip rather than max pips.
+    const dotCost = card.pipcost < 0 ? 1 : Math.abs(card.pipcost);
+    for (const d of splitCardList(p.dots)) v += Math.abs(numericFromSection(d, dotCost)) || 0;
     return v;
 }
 

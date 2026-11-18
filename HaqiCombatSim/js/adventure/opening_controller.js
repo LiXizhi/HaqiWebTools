@@ -18,13 +18,25 @@ import {
     selectCompanionPractice,
     castCompanionPractice,
 } from '../companion_practice_core.js';
+import {
+    createMentorPractice,
+    selectMentorPractice,
+    castMentorPractice,
+    mentorPracticeCue,
+} from '../mentor_practice_core.js';
+import { playMentorPracticeCast } from '../mentor_practice_effects.js';
+import { currentQuest as defaultCurrentQuest } from '../adventure_core.js';
 import { openCompanionWordplay } from '../learning/companion_wordplay.js';
 import { campDetourGoal } from '../camp_detour_core.js';
 import { persistReward } from '../adventure_reward_persistence.js';
 import { createLearningVoice } from '../audio/language_adventure_voice.js';
 import { recordWordPractice } from '../learning/language_course.js';
 import { learningLesson, learningPracticeLanguage } from '../learning_language_core.js';
-import { renderCompanionPractice as defaultRenderCompanionPractice } from '../views/adventure/view_panel_modal.js';
+import {
+    renderCompanionPractice as defaultRenderCompanionPractice,
+    renderMentorPractice as defaultRenderMentorPractice,
+    updateMentorPracticeHealth,
+} from '../views/adventure/view_panel_modal.js';
 import * as W from '../adventure_world_core.js';
 
 export function createOpeningController({
@@ -52,6 +64,9 @@ export function createOpeningController({
     petScene,
     dialogueVoice,
     renderCompanionPractice = defaultRenderCompanionPractice,
+    renderMentorPractice = defaultRenderMentorPractice,
+    playMentorPracticeCastFn = playMentorPracticeCast,
+    currentQuestFn = defaultCurrentQuest,
     renderForestCommissionView = renderForestCommission,
     renderOpeningJourneyView = renderOpeningJourney,
     playOpeningPetWelcomeFn = playOpeningPetWelcome,
@@ -61,6 +76,7 @@ export function createOpeningController({
 }) {
     let tacticsPractice = null;
     let companionPractice = null;
+    let mentorPractice = null;
     let wordplaySession = null;
     let wordplayDrain = null;
     let openingWelcomeKey = null;
@@ -118,6 +134,147 @@ export function createOpeningController({
         if (latest.save !== session.save || latest.roleEpoch !== session.epoch) return;
         if (next) openTacticsTraining({ lesson: following, returnTo });
         else if (returnTo) openPanel(returnTo);
+    }
+
+    function openMentorPractice(npcId) {
+        const ctx = getContext();
+        const lesson = createMentorPractice(ctx.assets.dataset, {
+            npcId,
+            seed: ctx.save.seed,
+            language: ctx.save.languageLearning?.target,
+        });
+        close();
+        ctx.setPanel('mentor-practice');
+        mentorPractice = {
+            lesson,
+            save: ctx.save,
+            epoch: ctx.roleEpoch,
+            locale: ctx.save.languageLearning?.target,
+            native: ctx.save.languageLearning?.native,
+            abort: new AbortController(),
+        };
+        paintMentorPractice();
+    }
+
+    function paintMentorPractice() {
+        const session = mentorPractice;
+        const active = () => {
+            const nowCtx = getContext();
+            return (
+                session === mentorPractice &&
+                nowCtx.panel === 'mentor-practice' &&
+                nowCtx.stage === 'world' &&
+                nowCtx.save === session.save &&
+                nowCtx.roleEpoch === session.epoch &&
+                currentQuestFn(nowCtx.save, nowCtx.assets.content)?.id === 63010 &&
+                nowCtx.save.languageLearning?.target === session.locale &&
+                nowCtx.save.languageLearning?.native === session.native
+            );
+        };
+        if (!session || !active()) return;
+        renderMentorPractice(nodes.overlay, model(), session.lesson, {
+            close: () => {
+                if (active()) close();
+            },
+            select: key => {
+                if (active() && !session.busy && selectMentorPractice(session.lesson, key)) {
+                    spellSound.play('select');
+                    paintMentorPractice();
+                }
+            },
+            target: id =>
+                safely(async () => {
+                    if (!active() || session.busy) return;
+                    const presentationPhase = session.lesson.phase;
+                    if (!castMentorPractice(session.lesson, id)) {
+                        paintMentorPractice();
+                        return;
+                    }
+                    session.busy = true;
+                    session.lesson.presentationPhase = presentationPhase;
+                    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    try {
+                        for (const [index, cast] of session.lesson.lastCasts.entries()) {
+                            if (!active()) break;
+                            const nowCtx = getContext();
+                            session.lesson.presentation = cast;
+                            paintMentorPractice();
+                            const field = nodes.overlay.querySelector('.mentor-field');
+                            await playMentorPracticeCastFn(field, nowCtx.assets, cast, {
+                                signal: session.abort.signal,
+                                reducedMotion,
+                                onProgress: (p, card) => {
+                                    if (active()) {
+                                        spellSound.track(nowCtx.assets.effects, card, p, {
+                                            active: !document.hidden,
+                                            reducedMotion,
+                                            instance: `mentor:${session.epoch}:${index}`,
+                                        });
+                                    }
+                                },
+                                onImpact: () => {
+                                    if (active()) updateMentorPracticeHealth(field, session.lesson, cast);
+                                },
+                            });
+                            spellSound.stopCast();
+                        }
+                    } finally {
+                        session.busy = false;
+                        delete session.lesson.presentation;
+                        delete session.lesson.presentationPhase;
+                        if (active()) {
+                            spellSound.stopCast();
+                            paintMentorPractice();
+                        }
+                    }
+                }),
+            hint: () => {
+                if (active() && !session.busy) {
+                    session.lesson.hint = !session.lesson.hint;
+                    paintMentorPractice();
+                }
+            },
+            listen: () =>
+                safely(async () => {
+                    if (!active()) return;
+                    const nowCtx = getContext();
+                    await dialogueVoice().speak(
+                        mentorPracticeCue(session.lesson),
+                        session.locale || 'en',
+                        session.abort.signal,
+                        nowCtx.assets.content.npcs[session.lesson.npcId],
+                    );
+                }),
+            retry: () => {
+                if (!active()) return;
+                const nowCtx = getContext();
+                session.lesson = createMentorPractice(nowCtx.assets.dataset, {
+                    npcId: session.lesson.npcId,
+                    seed: nowCtx.save.seed,
+                    language: session.locale,
+                });
+                paintMentorPractice();
+            },
+            complete: () =>
+                safely(() => {
+                    if (!active() || session.busy || !session.lesson.done) return;
+                    const nowCtx = getContext();
+                    const committed = persistRewardFn(
+                        nowCtx.save,
+                        nowCtx.assets.content,
+                        { type: 'talk', npcId: session.lesson.npcId },
+                        {},
+                        nowCtx.roleStorage,
+                    );
+                    nowCtx.setSave(committed.save);
+                    nowCtx.setStorageWarning(false);
+                    mentorPractice = null;
+                    close();
+                    queueCloudSave();
+                    paintHud();
+                    track();
+                }),
+        });
     }
 
     function openCompanionPractice() {
@@ -474,6 +631,9 @@ export function createOpeningController({
     }
 
     function closeAll() {
+        if (mentorPractice?.busy) spellSound?.stopCast();
+        mentorPractice?.abort?.abort();
+        mentorPractice = null;
         wordplaySession?.dispose();
         wordplaySession = null;
         companionPractice = null;
@@ -488,6 +648,10 @@ export function createOpeningController({
     return {
         openTacticsTraining,
         finishTacticsFight,
+        openMentorPractice,
+        setMentorPractice: next => { mentorPractice = next; },
+        getMentorPractice: () => mentorPractice,
+        paintMentorPractice,
         openCompanionPractice,
         setCompanionPractice: next => { companionPractice = next; },
         getCompanionPractice: () => companionPractice,

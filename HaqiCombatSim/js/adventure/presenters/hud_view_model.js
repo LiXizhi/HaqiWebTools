@@ -59,7 +59,7 @@ export function buildChapterTrackLines(save, c, quest, withName, objectiveLabel)
     if (!state.accepted) return [{ text: withName('去找{name}，接取新的任务。', c.npcs[quest.startNpc].name) }];
     if (questReady(save, quest)) return [{ text: withName('任务已完成，向{name}回报。', c.npcs[quest.endNpc].name) }];
     return questProgress(save, quest).map(goal => ({
-        text: objectiveLabel(goal, c),
+        text: objectiveLabel(goal, c, quest.id),
         done: goal.value >= goal.count,
     }));
 }

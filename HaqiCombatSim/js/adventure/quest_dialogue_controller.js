@@ -1,4 +1,5 @@
 import { isLanguageCourseId, languageSceneTarget } from '../language_quest_core.js';
+import { MENTOR_PRACTICES } from '../mentor_practice_core.js';
 import { createLanguageSceneIntro } from '../learning/view_language_scene_intro.js';
 import { openIslandLanguageCourse } from '../learning/island_language_course.js';
 import { npcCharacter } from '../adventure_city_people_core.js';
@@ -146,10 +147,16 @@ export function createQuestDialogueController({
     }
 
     function startQuestTalk(talk, catalog = false) {
-        (onStartLines || startLines)(talk.dialog, talk.dialog.at(-1)?.buttons?.[0]?.label || '谢谢你', () => {
+        const ctx = getContext();
+        const mentor = !catalog && currentQuestFn(ctx.save, ctx.assets.content)?.id === 63010 && MENTOR_PRACTICES[talk.npcId];
+        (onStartLines || startLines)(talk.dialog, mentor ? '开始实操' : talk.dialog.at(-1)?.buttons?.[0]?.label || '谢谢你', () => {
             const nowCtx = getContext();
             if (!catalog && talk.npcId === 36200 && currentQuestFn(nowCtx.save, nowCtx.assets.content)?.id === 63001) {
                 opening.openCompanionPractice();
+                return 'practice';
+            }
+            if (!catalog && currentQuestFn(nowCtx.save, nowCtx.assets.content)?.id === 63010 && MENTOR_PRACTICES[talk.npcId]) {
+                opening.openMentorPractice(talk.npcId);
                 return 'practice';
             }
             applyAction(nowCtx.save, nowCtx.assets.content, { type: 'talk', npcId: talk.npcId });

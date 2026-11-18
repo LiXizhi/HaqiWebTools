@@ -11,6 +11,12 @@ flowchart TB
     Pres --> View["纯视图与共享 UI (views/adventure/* · home/view_home_* · learning/view_* · hanzi/view_* · combat/* · ui/*)"]
     Ctrl --> Renderer["画布渲染 (adventure/renderer/* · home/view_home_canvas_*)"]
     Ctrl --> Core["纯规则核心 (*_core.js · 无 DOM/网络/存储 · 零循环依赖)"]
+    Result["普通 PvE 结算按钮 / 复盘成长建议"] --> Finish["battle_controller.finishBattle"]
+    Finish --> Settlement["encounter_settlement：当前角色与战斗、捕获宠物、语言任务"]
+    Settlement --> Core
+    Finish --> Return["返回世界后展示奖励，再打开选定面板"]
+    Panel["试炼塔面板"] --> Claim["dungeon_controller.claimFloorReward"]
+    Claim --> Commit["persistSaveChange：副本上领奖，本地写入成功后更新角色"]
     Pres --> Core
 ```
 

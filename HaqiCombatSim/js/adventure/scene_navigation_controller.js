@@ -6,7 +6,7 @@ import {catalogQuestsForNpc,catalogTalksForNpc} from '../adventure_catalog_quest
 import {dungeonFor} from '../adventure_dungeons_core.js';
 import {isOcean} from '../adventure_fishing_core.js';
 import {fishingSpot} from '../adventure_fishing_spot_core.js';
-import {monsterInteractionTargets} from '../adventure_monster_motion_core.js';
+import {monsterInteractionTargets,monsterScenePositions} from '../adventure_monster_motion_core.js';
 import {campDetour,campDetourGoal} from '../camp_detour_core.js';
 import {forestCommissionAvailable} from '../forest_commission_core.js';
 import {learningParams} from '../language_adventure_core.js';
@@ -286,12 +286,24 @@ export function createSceneNavigationController({
         });
     }
 
+    function liveEncounterTarget(world,target){
+        if(!world||target?.kind!=='encounter'||!target.explicitChallenge)return target;
+        const live=world.encounters?.find(row=>row.id===target.id);
+        if(!live||live.hidden||live.blocked?.length)return null;
+        const poses=monsterScenePositions(world,live);
+        const anchor=Number.isFinite(target.x)&&Number.isFinite(target.y)?target:live;
+        const closest=poses.reduce((best,pose)=>!best||W.distance(anchor,pose)<W.distance(anchor,best)?pose:best,null);
+        return {...live,x:closest?.x??live.x,y:closest?.y??live.y,kind:'encounter',explicitChallenge:true};
+    }
+
     function trackedDestinationInteraction(target,radius){
         const {world,save}=getContext();
         if(target?.kind==='encounter'&&target.explicitChallenge){
             const live=world.encounters.find(row=>row.id===target.id);
-            if(live&&!live.hidden&&!live.blocked?.length&&W.distance(save.position,live)<radius){
-                return {...live,kind:'encounter'};
+            if(live&&!live.hidden&&!live.blocked?.length){
+                const nearAnchor=W.distance(save.position,live)<radius;
+                const nearSprite=monsterScenePositions(world,live).some(p=>W.distance(save.position,p)<radius);
+                if(nearAnchor||nearSprite)return {...live,kind:'encounter'};
             }
             return null;
         }
@@ -299,7 +311,10 @@ export function createSceneNavigationController({
     }
 
     function walkTo(target,autoInteract=false){
-        if(autoInteract&&target.kind==='encounter')target={...target,explicitChallenge:true};
+        if(autoInteract&&target.kind==='encounter'){
+            target={...target,explicitChallenge:true};
+            target=liveEncounterTarget(getContext().world,target)||target;
+        }
         close();
         getContext().setDestination(autoInteract?target:null);
         const arrival=autoInteract&&trackedDestinationInteraction(target,85);
@@ -397,7 +412,7 @@ export function createSceneNavigationController({
         const target=
             portal
             ||targets
-                .filter(n=>!n.hidden&&Math.abs(n.x-p.x)<48&&p.y>n.y-100&&p.y<n.y+35)
+                .filter(n=>!n.hidden&&Math.abs(n.x-p.x)<62&&p.y>n.y-104&&p.y<n.y+42)
                 .sort((a,b)=>W.distance(a,p)-W.distance(b,p))[0]
             ||renderer.campToys?.pick(p);
         return {p,target};
@@ -489,6 +504,7 @@ export function createSceneNavigationController({
         nearbySceneInteraction,
         interactNearest,
         requestHeroPath,
+        liveEncounterTarget,
         trackedDestinationInteraction,
         walkTo,
         approachInvite,

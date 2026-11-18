@@ -35,11 +35,11 @@ export function createSceneFishing(root, cb, { el, button }) {
     const gear=button('渔具',()=>{records.hidden=true;recordsButton.setAttribute('aria-expanded','false');tools.hidden=!tools.hidden;gear.setAttribute('aria-expanded',String(!tools.hidden));},'fishing-gear');
     gear.setAttribute('aria-expanded','false');
     const tools=el('section','fishing-tools',select,el('small','','沿用背包中的渔网和捕鱼器，每次成功结算消耗一份。'),potions);tools.hidden=true;
-    tools.setAttribute('aria-label','捕鱼道具');
+    tools.setAttribute('role','region');tools.setAttribute('aria-label','捕鱼道具');
     const species=el('select','fishing-select');species.setAttribute('aria-label','选择鱼种排行榜');
     const recordList=el('div','fishing-record-list');
     const records=el('section','fishing-records',el('strong','','个人重量榜'),species,recordList,el('small','','每种鱼保留前十；重量不影响奖励。随角色保存，登录后同步。'));records.hidden=true;
-    records.setAttribute('aria-label','个人钓鱼排行榜');
+    records.setAttribute('role','region');records.setAttribute('aria-label','个人钓鱼排行榜');
     const recordsButton=button('纪录',()=>{records.hidden=!records.hidden;tools.hidden=true;gear.setAttribute('aria-expanded','false');recordsButton.setAttribute('aria-expanded',String(!records.hidden));refreshRecords();},'fishing-gear');
     recordsButton.setAttribute('aria-expanded','false');
     species.addEventListener('change',refreshRecords);
@@ -250,8 +250,9 @@ export function createSceneFishing(root, cb, { el, button }) {
         }else{pressFlash.hidden=true;pressFlash.classList.remove('is-on');}
         place(status,compact?hero.x+side*195:hero.x,compact?Math.max(32,hero.y-70):centerY-128,110);
         place(controls,hero.x,hero.y+108,Math.min(145,w/2));
-        place(tools,h<520?hero.x+side*185:hero.x,h<520?Math.max(24,hero.y-90):hero.y+144,Math.min(130,w/2));
-        place(records,h<520?hero.x+side*185:hero.x,h<520?Math.max(24,hero.y-160):Math.max(24,Math.min(h-270,hero.y+144)),Math.min(140,w/2));
+        const panelY=h<520?Math.max(24,hero.y-160):(hero.y+144>h-260?Math.max(24,hero.y-210):hero.y+144);
+        place(tools,h<520?hero.x+side*185:hero.x,h<520?Math.max(24,hero.y-90):panelY,Math.min(130,w/2));
+        place(records,h<520?hero.x+side*185:hero.x,panelY,Math.min(140,w/2));
         const trophyLayout=fishingCatchLayout(drawing);
         place(caught,trophyLayout.labelX,trophyLayout.labelY,110);
         caught.hidden=!(result?.caught&&phase==='show');

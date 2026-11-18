@@ -3,7 +3,6 @@ import { shopNavigationState, equipmentNavigationState } from '../adventure_shop
 import { recommendedLanguageQuest } from '../language_quest_core.js';
 import { wordLanguage } from '../word_lexicon_core.js';
 import { renderDungeonJourney } from '../views/adventure/view_dungeon_journey.js';
-import { claimTowerReward } from '../adventure_dungeon_journeys_core.js';
 import { dungeonFor } from '../adventure_dungeons_core.js';
 import { renderDungeons } from '../views/adventure/view_adventure_dungeons.js';
 import { initialStrengtheningSelection } from '../adventure_strengthening_core.js';
@@ -25,7 +24,6 @@ export function createPanelController(options) {
         bus,
         close = services?.navigation?.close,
         persist = services?.persistence?.persist,
-        saveLocal = services?.persistence?.saveLocal,
         queueCloudSave = services?.persistence?.queueCloudSave,
         enterWorld = services?.navigation?.enterWorld,
         showTitle = services?.navigation?.showTitle,
@@ -67,6 +65,7 @@ export function createPanelController(options) {
         toast = services?.feedback?.toast,
         safely = services?.feedback?.safely,
         renderHud = defaultRenderHud,
+        renderPanelFn = renderPanel,
         renderPetWelcomeFn,
         playOpeningPetWelcomeFn,
         onOpenPanel,
@@ -75,6 +74,18 @@ export function createPanelController(options) {
     let atlasView = null;
     let selectedQuestId = null;
     let pinJournalQuest = false;
+    let returnPanel = null;
+
+    const closeOrReturn = opts => {
+        if (!opts?.silent && returnPanel) {
+            const back = returnPanel;
+            returnPanel = null;
+            openPanel(back);
+            return;
+        }
+        returnPanel = null;
+        close(opts);
+    };
 
     const hud = createHudController({
         nodes,
@@ -203,18 +214,7 @@ export function createPanelController(options) {
                     close,
                     party: () => openPanel('pet'),
                     prepare: (restart = false) => safely(() => void dungeon.loadAndEnterDungeon(journeyId, restart || journeyRestart)),
-                    claim: floor =>
-                        safely(() => {
-                            const nowCtx = getContext();
-                            const next = structuredClone(nowCtx.save);
-                            const coins = claimTowerReward(next, nowCtx.assets.content, journeyId, floor);
-                            saveLocal(next, nowCtx.roleStorage);
-                            Object.assign(nowCtx.save, next);
-                            queueCloudSave();
-                            hud.paintHud();
-                            paintPanel();
-                            toast(`已领取 ${coins} 奇豆`);
-                        }),
+                    claim: floor => safely(() => dungeon.claimFloorReward(journeyId, floor)),
                 },
             );
             return;
@@ -250,7 +250,7 @@ export function createPanelController(options) {
         }
         if (!activePanel) return;
         const focusState = capturePanelFocusState(nodes.overlay, activePanel);
-        renderPanel(
+        renderPanelFn(
             nodes.overlay,
             activePanel,
             { ...model(), selectedQuestId, pinJournalQuest },
@@ -260,7 +260,7 @@ export function createPanelController(options) {
                     ctx.disposeCourseView();
                 },
                 retryLanguageTasks: () => languageTasks.retry(),
-                close,
+                close: closeOrReturn,
                 action,
                 seenGuide,
                 deleteRole: deleteCurrentRole,
@@ -363,8 +363,11 @@ export function createPanelController(options) {
             return;
         }
         if (lp.openPersonal(kind, openOptions)) return;
+        const previousPanel = ctx.panel;
+        const nextReturn = ['upgrade', 'gems'].includes(kind) && ['inventory', 'equipment'].includes(previousPanel) ? previousPanel : null;
         lp.closeAll();
         close({ silent: true });
+        returnPanel = nextReturn;
         ctx.clearMovementPath();
         ctx.setPanel(kind);
         spellSound.play('open');

@@ -43,6 +43,7 @@ import {
  STARTER_BLANKET_ID,
  STARTER_CHAIR_ID,
  STARTER_ROOM_HINT,
+ starterLampExercise,
  starterRoomLayout,
 } from '../home_starter_room_core.js';
 import { createHomePetController } from './home_pet_controller.js';
@@ -533,7 +534,11 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
   for(const pet of near)if(pet.until&&pet.until<=now){pet.activity=null;pet.targetId=null;pet.until=0;}
   if(now>=nextPetThink){nextPetThink=now+20000;
    const available=near.filter(p=>!p.activity&&selection?.petId!==p.id&&!petCtrl.isVisitingPet(p.id)),pet=available.length?available[petTurn++%available.length]:null;
-   if(pet){const facility=currentObjects().find(o=>{const b=footprint(o,catalog.items);return b.item.activity&&pet.x>=b.x&&pet.x<b.x+b.w&&pet.y>=b.y&&p.y<b.y+b.h&&!pets.some(other=>other.targetId===o.id&&other.until>now);});
+   if(pet){const facility=currentObjects().find(o=>{
+     const b=footprint(o,catalog.items);
+     return b.item.activity&&pet.x>=b.x&&pet.x<b.x+b.w&&pet.y>=b.y&&pet.y<b.y+b.h
+       &&!pets.some(other=>other.targetId===o.id&&other.until>now);
+    });
     if(facility){pet.activity=catalog.items.find(i=>i.id===facility.itemId).activity;pet.targetId=facility.id;pet.until=now+10000;}
     if(['zh','en','ja','ko'].includes(lang())&&!quiet&&(!wish||now>wish.until)&&!(home.id===STARTER_ROOM_ID&&(build||selection))){wish=currentPetWish(pet.id);translation=false;}
    }

@@ -2,7 +2,6 @@
 import { BATTLE_CHAT } from '../battle_chat_core.js';
 import { createBattleIntro } from '../adventure_battle_intro.js';
 import { createArenaClock } from '../adventure_arena_clock.js';
-import { ownedPetRecords } from '../adventure_pet_files_core.js';
 import { captureBattlePresentation, battleStatusChanges } from '../views/adventure/view_battle_presentation.js';
 import { resolveRecordedBattleRound } from '../battle_round_transaction.js';
 import { castHitReactions } from '../actor_animation_core.js';
@@ -21,13 +20,13 @@ import { castBlockedMessage } from '../adventure_cast_feedback_core.js';
 import { openingStrategyCue } from '../opening_training_core.js';
 import { openingCompanionEvent } from '../opening_journey_core.js';
 import { playTacticsFieldRound } from '../tactics_field_battle_core.js';
-import { rewardSnapshot } from '../adventure_reward_feedback_core.js';
 import { createLearningVoice } from '../audio/language_adventure_voice.js';
 import { displayLocale, textFor } from '../locale.js';
 import * as A from '../adventure_core.js';
 import * as P from '../combat_pve_core.js';
 import { battleSpeechController, eventLabel, renderBattle, setCastAnnouncement } from '../views/adventure/view_battle_layer.js';
 import { createBattleAdvisorBridge } from './battle_advisor_bridge.js';
+import { settleFinishedEncounter } from './encounter_settlement.js';
 
 export function createBattleController({
     nodes,
@@ -54,12 +53,14 @@ export function createBattleController({
     languageTasks,
     islandSocial,
     localPlay,
+    renderBattleView = renderBattle,
 }) {
     const resolveRef = ref => (typeof ref === 'function' ? ref() : ref);
     const getWordLearning = () => resolveRef(wordLearning);
     const getHanziMemory = () => resolveRef(hanziMemory);
     const getLanguageTasks = () => resolveRef(languageTasks);
     const battleChatRequests = new WeakMap();
+    const finishingBattles = new WeakSet();
     const battleChatVoice = createLearningVoice({ getSettings: () => getContext().save?.languageLearning || {} });
     let battleChatAbort = null;
 
@@ -153,31 +154,39 @@ export function createBattleController({
         }
     }
 
-    async function withCapturedPetsReady(settle) {
-        const { save, battle } = getContext();
-        const current = save;
-        const currentBattle = battle;
-        const species = new Set(battle.captured || []);
-        const missing = Object.values(ownedPetRecords(save)).filter(p => species.has(p.speciesId) && !save.pets[p.id]);
+    async function finishBattle(battle, destination) {
+        const { stage, battle: activeBattle, save, roleEpoch, assets } = getContext();
+        if (stage !== 'battle' || activeBattle !== battle || !battle.finished || finishingBattles.has(battle)) return;
+        finishingBattles.add(battle);
         try {
-            await Promise.all(missing.map(p => loadPet(p.id)));
-            const latest = getContext();
-            if (latest.save === current && latest.battle === currentBattle && latest.save.pendingEncounter) await settle();
+            if (battle.tacticsField) return await finishTacticsFight();
+            if (battle.redMushroom) return leaveArenaCombat();
+            const outcome = await settleFinishedEncounter({
+                battle, save, content: assets.content, loadPet,
+                completeLanguageTask: ticket => getLanguageTasks().won(ticket),
+                isCurrent: () => {
+                    const ctx = getContext();
+                    return ctx.stage === 'battle' && ctx.roleEpoch === roleEpoch && ctx.battle === battle && ctx.save === save;
+                },
+            });
+            if (!outcome || getContext().battle !== battle || getContext().save !== save) return;
+            const { before, settle, encounterId } = outcome;
+            if (battle.winner === 'near') getHanziMemory().won(encounterId);
+            islandSocial().settled(battle, settle);
+            if (battle.winner === 'near') islandSocial().activity('battle');
+            save.careAt = Date.now();
+            await enterWorld(save, null, { announceBeans: false });
+            const ctx = getContext();
+            if (ctx.roleEpoch !== roleEpoch || ctx.stage !== 'world') return;
+            if (!bus?.emit('rewards:show', { before })) showRewards?.(before);
+            if (settle?.insufficientStamina) toast('你的精力值不足，无法得到这场战斗的战利品。');
+            bus?.emit('battle:settled', { settle });
+            if (destination) openPanel(destination);
         } catch (error) {
             toast(error.message);
+        } finally {
+            finishingBattles.delete(battle);
         }
-    }
-
-    async function settleEncounterWin(finishCtx) {
-        const before = rewardSnapshot(finishCtx.save);
-        const memoryEncounter = finishCtx.save.pendingEncounter?.encounterId;
-        const languageTicket = finishCtx.save.pendingEncounter?.languageTask;
-        const languageWon = finishCtx.battle.winner === 'near';
-        if (languageWon && languageTicket) await getLanguageTasks().won(languageTicket);
-        const settle = A.settleEncounter(finishCtx.save, finishCtx.assets.content, finishCtx.battle, { now: Date.now() });
-        if (finishCtx.battle.winner === 'near') getHanziMemory().won(memoryEncounter);
-        islandSocial().settled(finishCtx.battle, settle);
-        return { before, settle };
     }
 
     function paintBattle() {
@@ -209,7 +218,7 @@ export function createBattleController({
             ctx.assets.content,
             latest.discarded,
         );
-        renderBattle(
+        renderBattleView(
             nodes.battle,
             {
                 ...model(),
@@ -231,20 +240,7 @@ export function createBattleController({
                 aiHintDismiss: () => {
                     advisor.dismissedHintState = advisor.hintState;
                 },
-                aiNavigate: entry =>
-                    withCapturedPetsReady(async () => {
-                        const nowCtx = getContext();
-                        if (!nowCtx.battle.finished) return;
-                        if (nowCtx.battle.tacticsField) {
-                            await finishTacticsFight();
-                            return;
-                        }
-                        const { before, settle } = await settleEncounterWin(nowCtx);
-                        enterWorld(nowCtx.save, null, { announceBeans: false });
-                        showRewards(before);
-                        if (settle?.insufficientStamina) toast('你的精力值不足，无法得到这场战斗的战利品。');
-                        openPanel(entry);
-                    }),
+                aiNavigate: entry => finishBattle(currentBattle, entry),
                 toggleRunes: () => {
                     const nowCtx = getContext();
                     if (nowCtx.animation || nowCtx.battle.finished) return;
@@ -345,26 +341,7 @@ export function createBattleController({
                     enterWorld(nowCtx.save);
                     toast(result?.message || '你撤到了怪物附近。已保留物品与任务进度。');
                 },
-                finish: () => {
-                    const nowCtx = getContext();
-                    if (nowCtx.battle.tacticsField) return safely(() => finishTacticsFight());
-                    if (nowCtx.battle.redMushroom) {
-                        leaveArenaCombat();
-                        return;
-                    }
-                    return withCapturedPetsReady(() =>
-                        safely(async () => {
-                            const finishCtx = getContext();
-                            const { before, settle } = await settleEncounterWin(finishCtx);
-                            if (finishCtx.battle.winner === 'near') islandSocial().activity('battle');
-                            finishCtx.save.careAt = Date.now();
-                            enterWorld(finishCtx.save, null, { announceBeans: false });
-                            if (!bus?.emit('rewards:show', { before })) showRewards?.(before);
-                            if (settle?.insufficientStamina) toast('你的精力值不足，无法得到这场战斗的战利品。');
-                            bus?.emit('battle:settled', { settle });
-                        }),
-                    );
-                },
+                finish: () => finishBattle(currentBattle),
             },
         );
     }
@@ -563,7 +540,6 @@ export function createBattleController({
         stopBattleChatVoice,
         sendBattleChat,
         refreshPetHint: advisorBridge.refreshPetHint,
-        withCapturedPetsReady,
         paintBattle,
         playRound,
         tickAnimation,

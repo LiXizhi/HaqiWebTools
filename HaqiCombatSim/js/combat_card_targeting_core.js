@@ -54,7 +54,7 @@ export function expectedBaseDamage(card) {
         v += (numericFromSection(p.damage_min, Math.abs(card.pipcost)) + numericFromSection(p.damage_max, Math.abs(card.pipcost))) / 2;
     }
     if (p.times) v *= Number(p.times) || 1;
-    for (const d of splitCardList(p.dots)) v += Number(d) || 0;
+    for (const d of splitCardList(p.dots)) v += Math.abs(numericFromSection(d, Math.abs(card.pipcost))) || 0;
     return v;
 }
 

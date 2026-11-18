@@ -399,6 +399,19 @@ export function createLocalGatheringController({
         get visible() {
             return gatherVisible;
         },
+        get drops() {
+            return getRecord().drops || [];
+        },
+        collectDrop(point, walkTo) {
+            const world = state().world;
+            const drop = (getRecord().drops || []).find(d => d.zone === world?.zone && W.distance(point, d) < 34);
+            if (!drop) return false;
+            const hero = saves()[0];
+            const distance = gatheringParams(state().assets.content).gatherPickupDistance;
+            if (hero && W.distance(hero.position, drop) < distance) void pickupGroundDrop(0, drop);
+            else walkTo?.(drop);
+            return true;
+        },
         get gatheringPets() {
             return petJobs
                 .filter(Boolean)

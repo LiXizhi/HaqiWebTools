@@ -1,8 +1,10 @@
 import {createCloseButton} from '../ui/controls.js';
 import {tr} from '../locale_runtime.js';
+import {syncOverlayInert} from '../ui/dom.js';
 
 const el=(tag,cls,text)=>{const n=document.createElement(tag);n.className=cls||'';if(text!==undefined)n.textContent=text;return n;};
 const button=(label,run,cls='secondary')=>{const n=el('button',cls,tr(label));n.type='button';n.onclick=run;return n;};
+const syncGameInert=root=>syncOverlayInert(root,['world','hud','battle-layer','entry'].map(id=>document.getElementById(id)));
 export function createLearningView(callbacks) {
     const root=el('div','overlay learning-overlay');root.hidden=true;
     document.body.append(root);
@@ -18,10 +20,10 @@ export function createLearningView(callbacks) {
         }
     });
     return {
-        close(){root.hidden=true;root.classList.remove('visible');root.replaceChildren();if(trigger?.isConnected)trigger.focus({preventScroll:true});},
+        close(){root.hidden=true;root.classList.remove('visible');root.replaceChildren();syncGameInert(root);if(trigger?.isConnected)trigger.focus({preventScroll:true});},
         render(state){
             if(root.hidden)trigger=document.activeElement;
-            root.hidden=false;root.classList.add('visible');root.replaceChildren();
+            root.hidden=false;root.classList.add('visible');root.replaceChildren();syncGameInert(root);
             const box=el('section','modal learning-room');box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',tr('营地语言冒险'));
             const exit=createCloseButton(callbacks.close,'关闭语言冒险');
             const head=el('header','modal-header');head.append(el('h2','',tr(state.title||'营地语言冒险')),exit);

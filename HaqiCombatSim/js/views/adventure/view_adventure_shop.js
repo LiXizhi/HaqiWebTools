@@ -36,7 +36,7 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
     header.insertBefore(tabs,header.querySelector('.close-button'));
     const playerLine=el('small','');setText(playerLine,'{name} · {level}级',{name:save.name,level:save.level});
     const balance=el('section','shop-wallet',el('div','shop-balances',walletLine(100,'我的奇豆'),walletLine(984,'我的魔豆')),playerLine,
-        el('p','shop-item-meta','奇豆可通过战斗与任务获得；魔豆由会员有效天数兑换。查看会员权益了解兑换条件。'));
+        el('p','shop-item-meta','奇豆用于常规装备、卡包与伙伴补给（战斗/掉落/委托获得）；魔豆由会员天数兑换，用于魔豆坐骑；仙豆用于学习奖励，不用于商城直购。'));
     balance.append(createShopMembershipSummary(model,cb,{el,button}));
     const preview=el('section','shop-preview');preview.setAttribute('aria-label','商品预览');
     const aside=el('aside','shop-sidebar',balance,preview);

@@ -106,9 +106,36 @@ export function createFrameLoopController({
     interact,
     nearbySceneInteraction,
     requestHeroPath,
+    liveEncounterTarget,
     trackedDestinationInteraction,
     startFishing,
 }){
+    function trackMovingEncounter(nowCtx=getContext()){
+        const dest=nowCtx?.destination;
+        if(dest?.kind!=='encounter'||!dest.explicitChallenge||!liveEncounterTarget)return false;
+        const live=liveEncounterTarget(nowCtx.world,dest);
+        if(!live){nowCtx.clearMovementPath();return false;}
+        const shifted=W.distance(dest,live);
+        if(nowCtx.path.length){
+            if(shifted>28&&W.clearSegment(nowCtx.world,nowCtx.save.position,live)){
+                nowCtx.setDestination(live);
+                nowCtx.setPath([{x:live.x,y:live.y}]);
+                return true;
+            }
+            return false;
+        }
+        if(shifted>8&&!heroNavigation?.stats?.()?.pending){
+            nowCtx.setDestination(live);
+            requestHeroPath(live,route=>{
+                const c=getContext();
+                if(c.destination?.id!==live.id)return;
+                c.setPath(route);
+                if(!route.length)c.setDestination(null);
+            });
+            return true;
+        }
+        return false;
+    }
     function backgroundScenePaused(){
         const ctx=getContext();
         return pauseBackgroundScene({
@@ -275,6 +302,7 @@ export function createFrameLoopController({
             else{
                 const arrival=trackedDestinationInteraction(nowCtx.destination,82);
                 if(arrival)interact(arrival);
+                else trackMovingEncounter(nowCtx);
             }
             const near=nearbySceneInteraction();
             updateLocationLabel(nowCtx.world,nowCtx.save,nodes.hud);
@@ -428,5 +456,6 @@ export function createFrameLoopController({
     return {
         backgroundScenePaused,
         frame,
+        trackMovingEncounter,
     };
 }

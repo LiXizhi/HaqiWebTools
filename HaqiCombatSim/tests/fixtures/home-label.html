@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"></head><body><main id="root"></main><script type="module">
-import {openHomeLabel} from './js/view_home_label.js';
-import {createHomeStore} from './js/home_store.js';
+import {openHomeLabel} from './js/home/view_home_label.js';
+import {createHomeStore} from './js/home/home_store.js';
 import {createHome} from './js/home_core.js';
 import {applyHomeAction} from './js/home_actions_core.js';
 const el=(tag,cls='',...children)=>{const n=document.createElement(tag);n.className=cls;n.append(...children);return n;};

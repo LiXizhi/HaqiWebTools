@@ -147,12 +147,14 @@ export function appendTrackerQuest(tracker, entry, save, c, cb, teach) {
                     : q.status === '可接取' && q.interaction?.name
                       ? fill('去找{name}，开始这段故事。', { name: q.interaction.name }).text
                       : q.objective;
+        const follow = button(el('span', 'tracker-follow-text', text), go, 'tracker-follow');
+        follow.title = text;
         tracker.append(
             el(
                 'article',
                 'tracker-quest',
                 el('h3', '', link),
-                el('div', 'tracker-line', button(text, go, 'tracker-follow'), button(q.status === '进行中' && q.region === save.zone ? '继续练习' : '前往', go, 'track-button')),
+                el('div', 'tracker-line', follow, button(q.status === '进行中' && q.region === save.zone ? '继续练习' : '前往', go, 'track-button')),
             ),
         );
         return;
@@ -380,8 +382,10 @@ function renderHudContents(root, model, cb) {
             el('p', '', cleared === dungeon.arenas.length ? '营地已清理完毕，可以退出副本。' : remaining ? `下一站：第 ${cleared + 1} 处营地。沿道路前进，接近怪物后开始战斗。` : '前路暂未开放，可以退出副本。'),
             el('p', 'muted', '副本中不会自动回血，请用现有生命通关。'),
         );
-        if (remaining) tracker.append(button('前往下一处营地', () => cb.track('dungeon-next'), 'track-button'));
-        tracker.append(button('退出副本', () => cb.leaveDungeon?.(), 'track-button'));
+        const actions = el('div', 'opening-tracker-actions dungeon-tracker-actions');
+        if (remaining) actions.append(button('前往下一处营地', () => cb.track('dungeon-next'), 'track-button'));
+        actions.append(button('退出副本', () => cb.leaveDungeon?.(), 'track-button'));
+        tracker.append(actions);
     } else {
         const { entries, teachAllow } = vm.payload;
         const teach = { allow: teachAllow };

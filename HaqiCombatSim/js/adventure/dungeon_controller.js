@@ -9,7 +9,8 @@ import { generatedCityRoute } from '../adventure_city_generated_core.js';
 import { renderCityInteraction } from '../views/adventure/view_city_dungeon.js';
 import { renderEarthLoading } from '../views/adventure/view_adventure_earth.js';
 import { createDungeonStory } from '../adventure_dungeon_story.js';
-import { journeyParty } from '../adventure_dungeon_journeys_core.js';
+import { claimTowerReward, journeyParty } from '../adventure_dungeon_journeys_core.js';
+import { persistSaveChange } from '../adventure_reward_persistence.js';
 import { startCoopRun, coopParty as journeyCoopParty } from '../adventure_coop_core.js';
 import { partySpecs as journeyPetParty } from '../adventure_pets_core.js';
 import { dungeonFor, enterDungeon, leaveDungeon } from '../adventure_dungeons_core.js';
@@ -84,6 +85,16 @@ export function createDungeonController({
         journeyId = id;
         journeyRestart = restart;
         openPanel('dungeon-journey');
+    }
+
+    function claimFloorReward(id, floor) {
+        const { save, assets, roleStorage } = getContext();
+        const committed = persistSaveChange(save, roleStorage, draft => claimTowerReward(draft, assets.content, id, floor));
+        Object.assign(save, committed.save);
+        queueCloudSave();
+        paintHud();
+        paintPanel();
+        toast(`已领取 ${committed.result} 奇豆`);
     }
 
     function pickDungeonLobby(id, restart = false) {
@@ -345,6 +356,7 @@ export function createDungeonController({
     return {
         dungeonStory,
         openJourney,
+        claimFloorReward,
         pickDungeonLobby,
         loadAndEnterCityDungeon,
         openCityHotspot,

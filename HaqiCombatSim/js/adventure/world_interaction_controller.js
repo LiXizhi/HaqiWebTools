@@ -11,6 +11,7 @@ export function createWorldInteractionController(options){
         interact:sceneNavigation.interact,
         nearbySceneInteraction:sceneNavigation.nearbySceneInteraction,
         requestHeroPath:sceneNavigation.requestHeroPath,
+        liveEncounterTarget:sceneNavigation.liveEncounterTarget,
         trackedDestinationInteraction:sceneNavigation.trackedDestinationInteraction,
         startFishing:sceneNavigation.startFishing,
     });

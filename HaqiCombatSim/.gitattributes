@@ -1,0 +1,5 @@
+# These files are checked against source manifests using their exact bytes.
+/assets/adventure/earth/source/BlankMap-Equirectangular.svg text eol=lf
+/data/adventure/quest-catalog.json text eol=lf
+/data/adventure/monster-catalog.json text eol=lf
+/data/adventure/pets.json text eol=lf

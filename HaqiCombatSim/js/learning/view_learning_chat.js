@@ -8,6 +8,9 @@ import {createDialogueMicrophone,createDialogueMicProgress} from './view_dialogu
 export {bindChatMicrophone} from './view_dialogue_microphone.js';
 import {tr,fill} from '../locale_runtime.js';
 import {createCloseButton} from '../ui/controls.js';
+import {syncOverlayInert} from '../ui/dom.js';
+
+const syncGameInert=root=>syncOverlayInert(root,['world','hud','battle-layer','entry'].map(id=>document.getElementById(id)));
 
 const el=(tag,cls='',text)=>{const n=document.createElement(tag);n.className=cls;if(text!==undefined)n.textContent=['camp-chat-original','camp-chat-translation'].includes(cls)?text:tr(text);return n;};
 const button=(text,run,cls='secondary')=>{const n=el('button',cls,text);n.type='button';n.onclick=run;return n;};
@@ -139,9 +142,9 @@ export function createLearningChatView(cb){
     return {
         root,
         dispose(){this.close();toolbarObserver?.disconnect();logObserver?.disconnect();root.remove();},
-        close(){revealedMessages.clear();revealedTurn='';inputTurn='';input.value='';escArmedAt=0;clearMappings();bilingual.close();setMore(false);setHeaderMenu(false);clearPress();root.hidden=true;portraitNode?.remove();portraitNode=null;state=null;key='';fingerprint='';form.hidden=true;if(trigger?.isConnected)trigger.focus();},
+        close(){revealedMessages.clear();revealedTurn='';inputTurn='';input.value='';escArmedAt=0;clearMappings();bilingual.close();setMore(false);setHeaderMenu(false);clearPress();root.hidden=true;portraitNode?.remove();portraitNode=null;state=null;key='';fingerprint='';form.hidden=true;syncGameInert(root);if(trigger?.isConnected)trigger.focus();},
         render(s){
-            state=s;root.classList.toggle('is-guided',s.mode!=='free');room.classList.toggle('is-guided',s.mode!=='free');room.classList.toggle('has-character-art',!!(s.portrait||s.portraitNode));const fresh=root.hidden;if(fresh){trigger=document.activeElement;root.hidden=false;}
+            state=s;root.classList.toggle('is-guided',s.mode!=='free');room.classList.toggle('is-guided',s.mode!=='free');room.classList.toggle('has-character-art',!!(s.portrait||s.portraitNode));const fresh=root.hidden;if(fresh){trigger=document.activeElement;root.hidden=false;}syncGameInert(root);
             if(key!==s.story.id){contextDetails.open=s.mode==='free';setMore(false);key=s.story.id;name.textContent=tr(s.profile.name);role.textContent=tr(s.profile.role);context.textContent=tr(s.story.context);title.textContent=tr(s.story.title);
                 portraitNode?.remove();portraitNode=s.portraitNode||null;if(portraitNode){portraitNode.classList.add('camp-chat-character-art');portraitFrame.append(portraitNode);}portraitFrame.hidden=!s.portrait&&!portraitNode;portrait.hidden=!s.portrait||!!portraitNode;name.title=name.textContent;role.title=role.textContent;if(s.portrait)portrait.src=s.portrait;form.hidden=true;
             }

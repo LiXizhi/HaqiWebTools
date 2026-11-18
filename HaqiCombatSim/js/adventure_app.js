@@ -1,5 +1,5 @@
 // Browser controller: input, rendering, audio and persistence live outside the pure rules.
-import {button,el} from './ui/dom.js';
+import {button,el,syncOverlayInert} from './ui/dom.js';
 import * as W from './adventure_world_core.js';
 import {createAppBus} from './adventure/app_bus.js';
 import {createAppServices} from './adventure/app_services.js';
@@ -60,6 +60,11 @@ import {mountMapServers} from './views/adventure/view_map_servers.js';
 
 const $=id=>document.getElementById(id);
 const nodes={world:$('world'),hud:$('hud'),entry:$('entry'),overlay:$('overlay'),battle:$('battle-layer'),toast:$('toast')};
+const syncBackgroundInert=()=>syncOverlayInert(nodes.overlay,[nodes.world,nodes.hud,nodes.battle,nodes.entry]);
+if(typeof MutationObserver==='function'&&nodes.overlay){
+    new MutationObserver(syncBackgroundInert).observe(nodes.overlay,{attributes:true,attributeFilter:['class']});
+}
+syncBackgroundInert();
 const gameSettings=createGameSettings(),adaptiveGraphics=createAdaptiveGraphics(),framePacer=createFramePacer();
 const spellSound=createSpellSound({defaultEnabled:false,persistPreferences:false,samples:createAudioSamples()});
 const globalReward=new GlobalRewardNotice();
@@ -426,6 +431,7 @@ function close({silent=false}={}){
     state.panel=null;state.dialog=null;state.dialogDone=null;
     nodes.overlay.replaceChildren();
     nodes.overlay.className='overlay';
+    syncBackgroundInert();
     resetMovementInput();
     nodes.world.focus({preventScroll:true});
 }

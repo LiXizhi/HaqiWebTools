@@ -432,7 +432,7 @@
 .storybook-ui .quest-track-title { flex:1; min-width:0; min-height:22px; }
 .storybook-ui .quest-title { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .storybook-ui .tracker-line { display:flex; align-items:center; gap:6px; min-height:22px; }
-.storybook-ui .tracker-follow { display:flex; align-items:center; gap:3px; width:100%; min-width:0; min-height:22px; margin:0; padding:0 0 0 16px; border:0; background:none; box-shadow:none; color:#765d39; font:inherit; font-size:11px; line-height:20px; text-align:left; cursor:pointer; white-space:nowrap; }
+.storybook-ui .tracker-follow { display:flex; align-items:center; gap:3px; width:100%; min-width:0; min-height:22px; overflow:hidden; margin:0; padding:0 0 0 16px; border:0; background:none; box-shadow:none; color:#765d39; font:inherit; font-size:11px; line-height:20px; text-align:left; cursor:pointer; white-space:nowrap; }
 .storybook-ui .tracker-line .tracker-follow { flex:1; }
 .storybook-ui .tracker-follow + .tracker-follow { margin-top:2px; }
 .storybook-ui .tracker-follow-text { min-width:0; overflow:hidden; text-overflow:ellipsis; }
@@ -601,7 +601,8 @@
 .magic-star-reward { padding:7px 3px; }
 .magic-star-item { width:52px; height:52px; }
 .magic-star-reward small { min-height:26px; }
-.magic-star-modal .magic-star-reward button { min-height:28px; height:28px; padding:2px 8px; font-size:11px; }
+.magic-star-modal .magic-star-reward > button:not(.item-inspect-button) { min-width:68px; width:100%; max-width:96px; min-height:30px; height:auto; padding:4px 10px; font-size:11px; line-height:1.25; white-space:nowrap; }
+.magic-star-modal .magic-star-reward > button:not(.item-inspect-button)::before { border-image-width:10px 18px; }
 .magic-star-footer { position:sticky; bottom:-16px; z-index:1; padding:10px 0; border-top:1px solid #cfb477; background:#f5e5ba; }
 
 /* MiJiuHuLu: five brewing stages, separate ordinary and magic-star claims. */

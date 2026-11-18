@@ -17,6 +17,7 @@ import fs from 'node:fs';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 import {installDungeonIndex,installDungeons,enterDungeon,leaveDungeon} from '../js/adventure_dungeons_core.js';
 import {claimTowerReward,towerRecord,journeyParty,journeyRewardPets,dungeonEnemyIntel} from '../js/adventure_dungeon_journeys_core.js';
+import {createDungeonController} from '../js/adventure/dungeon_controller.js';
 import {startCoopRun} from '../js/adventure_coop_core.js';
 import {makeSocialSnapshot} from '../js/adventure_social_core.js';
 import {presetDeck} from '../js/combat_presets_core.js';
@@ -37,6 +38,36 @@ installDungeonIndex(content,read('adventure/dungeon-index'));
 const index=structuredClone(content.dungeons.filter(d=>d.kind));
 installDungeons(content,dataset,read('adventure/dungeons'),read('kids/cards'));
 const tower=content.dungeons.find(d=>d.id==='journey:tower-camp');
+
+test('tower claim can retry a failed write and only publishes the saved reward once', () => {
+    const save = A.createAdventure(content);
+    save.towerRecords = { [tower.id]: { floor: 10, claimed: [] } };
+    const before = structuredClone(save);
+    const writes = new Map(), events = [];
+    let rejectWrite = true;
+    const roleStorage = {
+        getItem: key => writes.get(key),
+        setItem(key, value) {
+            if (rejectWrite) throw Error('quota');
+            writes.set(key, value);
+        },
+    };
+    const dungeon = createDungeonController({
+        nodes: {}, getContext: () => ({ save, roleStorage, assets: { content } }),
+        queueCloudSave: () => events.push('cloud'), paintHud: () => events.push('hud'),
+        paintPanel: () => events.push('panel'), toast: message => events.push(message),
+    });
+    assert.throws(() => dungeon.claimFloorReward(tower.id, 10), /quota/);
+    assert.deepEqual(save, before);
+    assert.deepEqual(events, []);
+    rejectWrite = false;
+    dungeon.claimFloorReward(tower.id, 10);
+    assert.ok([...writes.values()].includes(JSON.stringify(save)));
+    assert.equal(save.inventory[100], (before.inventory[100] || 0) + 1500);
+    assert.deepEqual(save.towerRecords[tower.id].claimed, [10]);
+    assert.throws(() => dungeon.claimFloorReward(tower.id, 10), /已经领取/);
+    assert.deepEqual(events, ['cloud', 'hud', 'panel', '已领取 1500 奇豆']);
+});
 
 test('elite preparation reports actual selected waves without changing enemies or save data',()=>{
  const before=JSON.stringify(content.monsters);

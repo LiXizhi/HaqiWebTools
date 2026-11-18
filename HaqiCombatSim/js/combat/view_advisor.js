@@ -109,7 +109,7 @@ export function renderAdvisor(main) {
     llmPanel.appendChild(notes);
     llmPanel.appendChild(h('div.row', { style: { marginTop: '6px' } },
         askBtn,
-        h('button', { disabled: !batch, onClick: () => { promptTa.value = buildPrompt(batch, ds, notes.value); promptTa.style.display = promptTa.style.display === 'none' ? '' : 'none'; } }, '查看/编辑提示词'),
+        h('button', { disabled: !batch, onClick: () => { promptTa.value = buildPrompt(batch, ds, notes.value); const show = promptTa.style.display === 'none'; promptTa.style.display = show ? '' : 'none'; if (show) { promptTa.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); promptTa.focus({ preventScroll: true }); } } }, '查看/编辑提示词'),
         h('button', { disabled: !batch, onClick: () => { navigator.clipboard.writeText(buildPrompt(batch, ds, notes.value)).then(() => toast('提示词已复制，可粘贴到任意聊天模型')); } }, '复制提示词'),
         h('button', { onClick: () => { const t = prompt('粘贴模型回复（含 ```json 参数块）：'); if (t) showAdvice(t); } }, '粘贴回复解析'),
         h('span.muted.small', 'Key 仅保存在本机 localStorage；兼容 OpenAI / DeepSeek / Moonshot / 本地 Ollama(/v1/chat/completions) 等。'),

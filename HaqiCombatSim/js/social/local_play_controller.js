@@ -638,6 +638,7 @@ export function createLocalPlay(api) {
             return true;
         },
         collectClick(point) {
+            if (gathering.collectDrop(point, p => api.walkTo(p))) return true;
             const n = gathering.visible.find(n => W.distance(point, n) < 24);
             if (!n) return false;
             api.walkTo(n);

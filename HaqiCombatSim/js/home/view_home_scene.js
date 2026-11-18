@@ -27,6 +27,8 @@ import {
 } from './view_home_modals.js';
 import { paintHomeSceneFrame } from './view_home_canvas_renderer.js';
 import { buildHomeSceneChrome } from './view_home_scene_chrome.js';
+import { openHomeDrawing } from './view_home_drawing.js';
+import { openHomeLabel } from './view_home_label.js';
 import {
     bindHomeSceneCanvasInput,
     createHomeAtlasLoader,

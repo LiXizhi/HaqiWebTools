@@ -89,6 +89,7 @@
 .haqi-app .atlas-map-modal{border:1px solid #bd9145;border-radius:19px;background:linear-gradient(135deg,#fff1cd,#eddaaa);box-shadow:0 0 0 3px #523b2266,0 14px 45px #15251b66;overflow:hidden}
 .haqi-app .atlas-map-modal .modal-header{align-items:center;gap:12px;padding:12px 18px 9px;border-bottom:1px solid #bb914c;background:radial-gradient(ellipse at 20% 0,#fff6dba6,transparent 70%),linear-gradient(180deg,#ead19b77,#ca9e4d22);box-shadow:0 2px 0 #fff4d1a8}
 .haqi-app .atlas-map-modal .map-heading{flex:1;min-width:0;gap:12px}
+.haqi-app .atlas-map-modal .map-view-toggle{flex:none;width:auto;min-height:36px;padding:7px 14px;font-size:13px;line-height:1.3;white-space:nowrap}
 .haqi-app .atlas-map-modal .modal-body{padding:16px 18px 18px}
 .atlas-map-modal :is(.earth-map-stage,.world-chart-viewport,.island-guide-chart){border:3px solid #a87c38;border-radius:13px;background:#367a8a;box-shadow:0 0 0 1px #f6dc99,inset 0 0 0 1px #553d28,0 3px 9px #70502833;overflow:hidden}
 .atlas-map-modal .world-chart-viewport{overflow-x:auto;overflow-y:hidden}

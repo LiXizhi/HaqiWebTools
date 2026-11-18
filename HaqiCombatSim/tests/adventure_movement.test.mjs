@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { bindTouchMovement } from '../js/view_adventure_movement.js';
+import { bindTouchMovement } from '../js/views/adventure/view_adventure_movement.js';
 import {createRenderer} from '../js/adventure/renderer/scene_renderer.js';
 
 function setup() {

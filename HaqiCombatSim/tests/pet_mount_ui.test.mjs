@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { renderPetCollection } from '../js/view_adventure_pets.js';
-import { createMountPreview } from '../js/view_adventure_mount_preview.js';
+import { renderPetCollection } from '../js/views/adventure/view_adventure_pets.js';
+import { createMountPreview } from '../js/views/adventure/view_adventure_mount_preview.js';
 import { installExpansion } from '../js/adventure_expansion_core.js';
 import { installMountCatalog, resolveMountDrawPose } from '../js/adventure_mounts_core.js';
 import { createAdventure, applyAction, parseSave } from '../js/adventure_core.js';

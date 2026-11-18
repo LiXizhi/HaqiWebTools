@@ -2,8 +2,8 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {emptyLanguageTree,setTreeMark,treeWordStatus,recordTreeExposure,treeReadiness,validateTreeQuestions} from '../js/language_tree_core.js';
 import {seedDictionaryTree,earnedMastery,restoreMastery,validateMasteryList} from '../js/language_tree_dictionary_core.js';
-import {createMasterySync} from '../js/language_tree_mastery_sync.js';
-import {createLanguageTreeSession} from '../js/language_tree_session.js';
+import {createMasterySync} from '../js/learning/language_tree_mastery_sync.js';
+import {createLanguageTreeSession} from '../js/learning/language_tree_session.js';
 const data={language:'en',title:'英语',entries:[{id:'book',text:'book'},{id:'door',text:'door'}]};
 function setup(){let state=seedDictionaryTree(emptyLanguageTree(),data);const store={async read(){return {state:structuredClone(state),persisted:true};},async update(key,reduce){const result=reduce(state);return {state:structuredClone(state),result,persisted:true};}};return {state,store};}
 test('dictionary seeds are stable and do not claim encounters or mastery',()=>{const {state}=setup();setTreeMark(state,'book','know');seedDictionaryTree(state,data);assert.equal(state.words.book.count,0);assert.equal(state.words.book.mark,'know');assert.equal(state.sequence,2);assert.deepEqual(earnedMastery(state),[]);assert.equal(treeReadiness(state).words,0);recordTreeExposure(state,{locale:'en',text:'Book.',source:'dictionary:book',at:1234});assert.equal(state.words.book.firstAt,1234);});
@@ -15,7 +15,7 @@ test('identity changes and read failures cannot cause writes',async()=>{const {s
 test('Chinese dictionary contexts and sentence questions retain distinct evidence',()=>{const state=seedDictionaryTree(emptyLanguageTree(),{language:'zh',entries:[...'山水火日月'].map(text=>({text,id:text}))});recordTreeExposure(state,{locale:'zh',text:'山。水。火。日。月。',source:'dictionary:one',at:1});for(const id of ['山','水','火'])setTreeMark(state,id,'know');const questions=['山水','水火','火山'].map((sentence,i)=>({target:['山','水','火'][i],sentence,translation:'句子含义',options:[{text:'句子含义',explanation:'正确解释'},{text:'错误',explanation:'错误解释'},{text:'其他',explanation:'其他解释'}],answer:0,glosses:{}}));assert.equal(validateTreeQuestions({questions},state).length,3);assert.equal(state.words['山'].count,1);});
 
 test('cloud adapter uses acknowledged SDK cache write with only two word lists',async()=>{
- const {masteryCloud}=await import('../js/language_tree_mastery_cloud.js');let active=true,writes=[],reads=0;
+ const {masteryCloud}=await import('../js/learning/language_tree_mastery_cloud.js');let active=true,writes=[],reads=0;
  const store={supportsDirectCacheWrite:true,getUsername:()=> 'test-owner',isUseLocal:()=>false,getRemotePagePath:path=>'test-owner/HaqiAdventure/'+path,async savePageData(...args){writes.push(args);}};
  const sdk={token:'test-token',personalPageStore:{withWorkspace:name=>{assert.equal(name,'HaqiAdventure');return store;}},getRepoPath:x=>x,safeEncodeURIComponent:encodeURIComponent,async loadPageCache(){reads++;throw Object.assign(Error('not found'),{status:404});}};
  const remote=masteryCloud({owner:'test-owner',role:'role-a',valid:()=>active,load:async()=>sdk});assert.deepEqual(await remote.read(),{en:[],zh:[]});await remote.write({en:['book'],zh:[]});assert.equal(writes.length,1);assert.deepEqual(JSON.parse(writes[0][2]),{en:['book'],zh:[]});assert.deepEqual(writes[0][5],{directWrite:true});await remote.read();assert.equal(reads,1);active=false;await assert.rejects(remote.write({en:['book','door'],zh:[]}));assert.equal(writes.length,1);

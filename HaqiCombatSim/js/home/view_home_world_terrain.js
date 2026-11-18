@@ -1,5 +1,5 @@
 // home/view_home_world_terrain.js — 家园世界静态地形瓦片绘制（生态区、河流、道路、广场、木桥、树木与树影）。
-import { paintNeuralHomeTerrain } from '../view_home_neural.js';
+import { paintNeuralHomeTerrain } from './view_home_neural.js';
 import { createRng, hashSeed } from '../rng_core.js';
 import {
     homeBiomeAt,

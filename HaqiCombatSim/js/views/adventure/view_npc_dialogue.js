@@ -8,9 +8,9 @@ import {heroPortrait} from '../../hero_renderer.js';
 import {dialogueLearningLines} from '../../locale.js';
 import {tr,setText,fill} from '../../locale_runtime.js';
 import {createCloseButton} from '../../ui/controls.js';
-import {bindDialogue} from '../../view_adventure_dialogue.js';
-import {guidanceCard} from '../../view_adventure_guidance.js';
-import {rewardChip} from '../../view_adventure_quests.js';
+import {bindDialogue} from './view_adventure_dialogue.js';
+import {guidanceCard} from './view_adventure_guidance.js';
+import {rewardChip} from './view_adventure_quests.js';
 import {el,button,art} from './primitives.js';
 
 export function renderDialogue(root,model,dialog,cb) {

@@ -5,8 +5,8 @@ import {createArena} from '../js/combat_arena_core.js';
 import {defaultParams,resolveParams} from '../js/combat_params_core.js';
 import {useCard} from '../js/combat_cards_core.js';
 import {describeCard} from '../js/card_description_core.js';
-import {captureBattlePresentation,battleStatusChanges} from '../js/view_battle_presentation.js';
-import {drawStatusFeedback,drawSpellMiss} from '../js/view_adventure_overhead_status.js';
+import {captureBattlePresentation,battleStatusChanges} from '../js/views/adventure/view_battle_presentation.js';
+import {drawStatusFeedback,drawSpellMiss} from '../js/views/adventure/view_adventure_overhead_status.js';
 const dataset=JSON.parse(fs.readFileSync(new URL('../data/adventure/combat.json',import.meta.url)));
 const cards=JSON.parse(fs.readFileSync(new URL('../data/kids/cards.json',import.meta.url)));
 function setup(){

@@ -4,12 +4,12 @@ import {gameSoundRecipe,rewardSound,battleEventSound} from '../js/audio/game_sou
 import {createSpellSound} from '../js/audio/spell_sound.js';
 import {acquireAudioActivity,audioActivityActive} from '../js/audio/audio_activity.js';
 import {createLearningVoice} from '../js/audio/language_adventure_voice.js';
-import {speakBrowserText,cancelBrowserSpeech} from '../js/browser_speech.js';
+import {speakBrowserText,cancelBrowserSpeech} from '../js/learning/browser_speech.js';
 import fs from 'node:fs';
 import {createAdventure,beginEncounter} from '../js/adventure_core.js';
 import {restorePveBattle,playPveRound} from '../js/combat_pve_core.js';
 import {SimpleBot} from '../js/combat_policy_core.js';
-import {captureBattlePresentation} from '../js/view_battle_presentation.js';
+import {captureBattlePresentation} from '../js/views/adventure/view_battle_presentation.js';
 
 function harness(){
     let time=0;

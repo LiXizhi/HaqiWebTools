@@ -1,5 +1,5 @@
 import {createTeachingEvaluation} from './dictionary-live-evaluation.js';
-import {createDictionary} from '../../js/adventure_dictionary.js';
+import {createDictionary} from '../../js/learning/adventure_dictionary.js';
 import {emptyDictionary} from '../../js/dictionary_core.js';
 import {loadKeepwork} from '../../js/adventure_cloud.js';
 import {createLearningVoice} from '../../js/audio/language_adventure_voice.js';

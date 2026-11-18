@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createDialogueReveal,waitForDialogueReveal} from '../js/dialogue_reveal.js';
+import {createDialogueReveal,waitForDialogueReveal} from '../js/learning/dialogue_reveal.js';
 
 test('quest translation stays readable while the original types',t=>{
  t.mock.timers.enable({apis:['setTimeout']});

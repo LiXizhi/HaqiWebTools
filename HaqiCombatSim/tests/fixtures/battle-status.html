@@ -3,7 +3,7 @@ import {loadResources} from '../../js/adventure_assets.js';
 import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
 import {createAdventure,playerSpec} from '../../js/adventure_core.js';
 import {createPveBattle} from '../../js/combat_pve_core.js';
-import {createBattleRoster,updateBattleRoster} from '../../js/view_adventure_battle_status.js';
+import {createBattleRoster,updateBattleRoster} from '../../js/views/adventure/view_adventure_battle_status.js';
 const assets=await loadResources(),save=createAdventure(assets.content),canvas=document.querySelector('#battle'),renderer=createRenderer(canvas,assets);
 if(new URLSearchParams(location.search).has('mounted')){save.mountId=Object.keys(assets.content.mountByItem).find(id=>assets.content.mountByItem[id].art?.cdn);canvas.style.height='720px';}
 const catalog=await(await fetch('data/adventure/monster-catalog.json')).json();

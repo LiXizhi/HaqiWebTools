@@ -1,4 +1,4 @@
-import {packPetFilesSync,unpackPetPages,hydratePetFile} from './adventure_pet_files.js';
+import {packPetFilesSync,unpackPetPages,hydratePetFile} from './pets/adventure_pet_files.js';
 import {initialPetIds} from './adventure_pet_files_core.js';
 // Local account cache is one atomic JSON write. Legacy storage calls receive a
 // role-scoped facade so cloud/debug backups never leak between roles/accounts.

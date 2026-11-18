@@ -4,7 +4,7 @@ import {defaultParams} from '../js/combat_params_core.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {createHanziMemory} from '../js/adventure_hanzi_memory.js';
+import {createHanziMemory} from '../js/hanzi/adventure_hanzi_memory.js';
 import {createHanziProgress} from '../js/hanzi_core.js';
 import {emptyDictionary} from '../js/dictionary_core.js';
 import {durableSave,runtimeValues} from '../js/adventure_storage_core.js';

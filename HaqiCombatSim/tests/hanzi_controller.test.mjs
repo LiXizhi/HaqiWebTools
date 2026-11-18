@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {createHanziIsland} from '../js/adventure_hanzi.js';
+import {createHanziIsland} from '../js/hanzi/adventure_hanzi.js';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../data/adventure/hanzi/'+p,import.meta.url)));
 const data=read('content.json'),strokes=read('strokes.json');
 function harness(){

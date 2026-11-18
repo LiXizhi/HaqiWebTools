@@ -12,11 +12,11 @@ import {battleViewport} from '../../battle_viewport_core.js';
 import {createHeroActor,updateHeroActor} from '../../hero_pose_core.js';
 import {tr} from '../../locale_runtime.js';
 import {spellEffect} from '../../spell_effects_core.js';
-import {drawOverheadStatus,drawStatusFeedback} from '../../view_adventure_overhead_status.js';
-import {drawPetMood} from '../../view_adventure_pet_mood.js';
-import {battleCameraViewport,drawCameraGround} from '../../view_battle_camera.js';
-import {drawBattlePips} from '../../view_battle_pips.js';
-import {drawPetTraitHalo} from '../../view_pet_traits.js';
+import {drawOverheadStatus,drawStatusFeedback} from '../../views/adventure/view_adventure_overhead_status.js';
+import {drawPetMood} from '../../views/adventure/view_adventure_pet_mood.js';
+import {battleCameraViewport,drawCameraGround} from '../../views/adventure/view_battle_camera.js';
+import {drawBattlePips} from '../../views/adventure/view_battle_pips.js';
+import {drawPetTraitHalo} from '../../views/adventure/view_pet_traits.js';
 import {BATTLE_HERO_SCALE,PLATE,ellipse,text,plate,circleRune} from './primitives.js';
 
 export function createBattleCanvasRenderer({assets,effects,reducedMotion,resolution,avatar,monster,creature}){

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createActorSpeech,speechPlacement} from '../js/view_actor_speech.js';
+import {createActorSpeech,speechPlacement} from '../js/views/adventure/view_actor_speech.js';
 
 test('pet speech stays near its owner instead of jumping above a distant hero status',()=>{
     const hero={x:410,y:70,width:28,height:28},pet={x:180,y:420,width:60,height:28};

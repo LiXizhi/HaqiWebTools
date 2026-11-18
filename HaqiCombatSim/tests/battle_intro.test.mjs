@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {battleIntroRoster,battleIntroDuration,battleIntroFrame} from '../js/battle_intro_core.js';
 import {createBattleIntro} from '../js/adventure_battle_intro.js';
-import {createBattleIntroView} from '../js/view_battle_intro.js';
+import {createBattleIntroView} from '../js/views/adventure/view_battle_intro.js';
 function battle(count=4){
     const monsterTemplates=Array.from({length:count},(_,i)=>({id:`template${i}`,name:`Enemy ${i}`,level:10+i,school:['fire','ice','storm','life'][i]}));
     return {monsterTemplates,sides:{far:monsterTemplates.map((m,i)=>({...m,id:`mob${i}`}))},turn:1};

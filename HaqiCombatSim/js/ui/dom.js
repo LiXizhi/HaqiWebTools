@@ -39,3 +39,27 @@ export function svgEl(tag, attrs = {}) {
     }
     return node;
 }
+
+export function ensureStylesheet(id, href) {
+    const doc = getDoc();
+    if (!doc || doc.getElementById(id)) return;
+    const link = doc.createElement('link');
+    link.id = id;
+    link.rel = 'stylesheet';
+    link.href = href;
+    doc.head.append(link);
+}
+
+export function createArtCanvas(assets, spec, width, height, ...drawArgs) {
+    const doc = getDoc();
+    if (!doc || !spec) return null;
+    const canvas = doc.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    try {
+        assets.draw(canvas.getContext('2d'), spec, 0, 0, width, height, ...drawArgs);
+        return canvas;
+    } catch {
+        return null;
+    }
+}

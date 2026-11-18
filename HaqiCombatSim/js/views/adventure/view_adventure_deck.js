@@ -1,0 +1,340 @@
+import {createCampDeckCoach} from '../../camp_deck_coach_core.js';
+import {createCloseButton} from '../../ui/controls.js';
+import {recommendAdventureDeck} from '../../battle_ai/adventure_adapter_core.js';
+import {teachPointer} from '../../learning/view_teaching.js';
+import {deckLimits,deckCardCopies,syncDeckLayouts,equipmentBlockReason,playerSpec,availableCardLessons,SCHOOL_NAMES} from '../../adventure_core.js';
+import {skillLearningStatus,trainingPoints} from '../../adventure_learning_core.js';
+import {shopGuidance} from '../../adventure_shop_guidance_core.js';
+import {setText, tr,fill} from '../../locale_runtime.js';
+const SCHOOL_LABELS={...SCHOOL_NAMES,balance:'平衡'};
+const PAGE_SIZE=36;
+const HOVER_DELAY=350;
+
+// Keep the full card above/below the icon row, shrinking proportionally on short screens.
+export function hoverPreviewPosition(rect,viewportWidth,viewportHeight,desiredHeight=230) {
+    const gap=8,above=Math.max(0,rect.top-gap*2),below=Math.max(0,viewportHeight-rect.bottom-gap*2);
+    const useBelow=below>=desiredHeight||below>=above;
+    const height=Math.min(desiredHeight,useBelow?below:above,Math.max(0,viewportWidth-gap*2)*230/151);
+    const width=height*151/230;
+    return {width,height,left:Math.max(gap,Math.min((rect.left+rect.right-width)/2,viewportWidth-width-gap)),
+        top:useBelow?rect.bottom+gap:rect.top-gap-height};
+}
+
+// Original bag / collection split, with a transient full-card preview instead of a third column.
+export function renderDeckEditor(body,{assets,save,shopView,deckAnimationClock='realtime'},cb,{el,button,spellFace}) {
+    body.closest?.('.modal')?.classList.add('deck-editor-modal');
+    const content=assets.content,cards=assets.dataset.cards;
+    if(save.tips.bagRulesAdjusted)body.append(el('p','bag-hint','旧存档中不符合等级或学系要求的口袋已卸下，物品仍保留在背包中。'));
+    let bagItemId=save.equipment[24],limits=deckLimits(save,content);
+    let trainingPointsSpent=save.trainingPointsSpent||0;
+    const draftSave=()=>({...save,cards:owned,trainingPointsSpent,equipment:{...save.equipment,24:bagItemId||0}});
+    const copies=key=>deckCardCopies(draftSave(),content,key);
+    const draft=JSON.parse(JSON.stringify(save));syncDeckLayouts(draft,content);
+    const layouts=draft.deckLayouts;
+    let active=draft.activeDeckLayout,school='all',page=0,query='',ownedOnly=true,previewPinned=false,hoverTimer;
+    const owned={...save.cards},learned=new Set(),lessons=availableCardLessons(save,content),lessonMap=new Map(lessons.map(row=>[row.key,row]));
+    layouts[active].deck=save.deck.map(row=>({...row}));
+    const tabs=el('div','bag-tabs'),slots=el('div','bag-slots'),library=el('div','bag-library'),detail=el('div','bag-detail');
+    detail.hidden=true;detail.setAttribute('role','dialog');detail.setAttribute('aria-label','卡牌预览');
+    const coach=createCampDeckCoach(save,content,assets.dataset);
+    const coachFeedback=coach?el('p','bag-hint'):null;
+    const coachPanel=coach?el('section','bag-equipment',el('strong','',coach.name+' · 考核准备'),el('p','',coach.prompt),coachFeedback,
+        el('details','',el('summary','','看提示'),el('p','bag-hint','加入适合自己学系的陷阱卡，再加入一张护盾卡。陷阱增强对应学系的后续攻击；护盾保护自己或伙伴。保存后，在考核中试用。'))):null;
+    if(coach){coachPanel.setAttribute('aria-label','考核配卡提示');coachPanel.querySelector?.('p')?.setAttribute('lang',coach.language);coachFeedback.setAttribute('lang',coach.language);coachFeedback.setAttribute('role','status');}
+    const status=el('span','bag-status');status.setAttribute('aria-live','polite');status.hidden=true;
+    const counter=el('strong','');
+    const total=()=>layouts[active].deck.reduce((n,row)=>n+row.count,0);
+    const say=text=>{setText(status,text);status.hidden=!text;};
+    const showLearning=(node,status)=>{
+        const reason=String(status?.reason||'');
+        const need=/^需要(\d+)训练点$/.exec(reason),cost=/^(\d+)训练点$/.exec(reason);
+        if(need)setText(node,'需要{count}训练点',{count:need[1]});
+        else if(cost)setText(node,'{count}训练点',{count:cost[1]});
+        else setText(node,reason);
+    };
+    const mark=()=>say('');
+    function subject(card) {
+        const canvas=el('canvas','bag-subject');canvas.width=96;canvas.height=96;
+        const base=assets.effects.cards[card.key]?.base;
+        if(base){
+            const draw=()=>assets.skillArt.drawSubject(canvas.getContext('2d'),base,0,0,96,96);
+            if(!draw()&&assets.skillArt.ensure)assets.skillArt.ensure(base).then(()=>{if(canvas.isConnected)draw();}).catch(()=>{});
+        }
+        canvas.setAttribute('aria-hidden','true');return canvas;
+    }
+    function closePreview(){if(hoverTimer!=null)clearTimeout(hoverTimer);detail.hidden=true;previewPinned=false;}
+    function inspect(key,removable=false,anchor=null,pinned=true) {
+        if(hoverTimer!=null)clearTimeout(hoverTimer);previewPinned=pinned;
+        detail.dataset.previewMode=pinned?'click':'hover';
+        detail.setAttribute('role',pinned?'dialog':'tooltip');
+        detail.style.width='';detail.style.height='';
+        if(!pinned){
+            detail.replaceChildren(spellFace(assets,cards[key]));
+            const rect=anchor?.getBoundingClientRect?.();
+            if(rect&&typeof window!=='undefined'){
+                const position=hoverPreviewPosition(rect,window.innerWidth,window.innerHeight);
+                for(const [property,value]of Object.entries(position))detail.style[property]=`${value}px`;
+                detail.style.setProperty('--hover-left',`${position.left}px`);detail.style.setProperty('--hover-top',`${position.top}px`);
+            }
+            detail.hidden=false;return;
+        }
+        const card=cards[key],lesson=lessonMap.get(key);
+        const close=createCloseButton(closePreview,'关闭卡牌预览','bag-preview-close');
+        detail.replaceChildren(close,spellFace(assets,card));
+        if(removable)detail.append(button('移出一张',()=>remove(key),'secondary'));
+        else if(lesson){
+            const learning=skillLearningStatus(draftSave(),content,lesson);
+            const action=button(owned[key]?'放入一张':learning.allowed?fill(`学习并放入（{v0}）`,{v0:String(learning.reason)}).text:learning.reason,()=>add(key),'primary');
+            action.disabled=!learning.allowed;detail.append(action);
+        }
+        detail.hidden=false;
+        // Desktop popover stays beside the hovered icon; narrow screens use a centered sheet.
+        const rect=anchor?.getBoundingClientRect?.();
+        if(rect&&typeof window!=='undefined'){
+            const x=rect.right+190<window.innerWidth?rect.right+8:Math.max(8,rect.left-190);
+            detail.style.left=`${x}px`;detail.style.top=`${Math.max(8,Math.min(rect.top,window.innerHeight-detail.offsetHeight-8))}px`;
+        }
+    }
+    function previewEvents(node,key,removable=false){
+        const schedule=()=>{
+            if(previewPinned)return;
+            closePreview();
+            hoverTimer=setTimeout(()=>{if(node.isConnected&&!previewPinned)inspect(key,removable,node,false);},HOVER_DELAY);
+        };
+        node.onpointerenter=e=>{if(e.pointerType==='mouse')schedule();};
+        node.onpointerleave=()=>{if(!previewPinned)closePreview();};
+        node.onpointerdown=()=>{if(!previewPinned)closePreview();};
+        node.onfocus=schedule;
+        node.onblur=()=>{if(!previewPinned)closePreview();};
+        node.onkeydown=e=>{if(e.key==='Escape')closePreview();};
+    }
+    // Scrolling changes the anchor position; never leave a floating preview over another row.
+    body.addEventListener?.('scroll',()=>{if(!previewPinned)closePreview();},true);
+    function remove(key) {
+        const row=layouts[active].deck.find(row=>row.key===key);if(!row)return;
+        if(total()===1){say('卡包至少保留一张');return;}
+        row.count--;layouts[active].deck=layouts[active].deck.filter(row=>row.count>0);
+        closePreview();mark();paintCards();
+    }
+    let manualAddition=null;
+    function clearAddition(){
+        if(!manualAddition)return;
+        manualAddition.animations.forEach(animation=>animation.cancel());
+        manualAddition.ghost.remove();manualAddition=null;
+    }
+    function sampleAddition(milliseconds){
+        if(!manualAddition)return;
+        manualAddition.ghost.hidden=milliseconds<0||milliseconds>=600;
+        manualAddition.animations.forEach(animation=>{animation.currentTime=Math.max(0,milliseconds);});
+    }
+    function add(key) {
+        const lesson=lessonMap.get(key),deck=layouts[active].deck,row=deck.find(row=>row.key===key),count=row?.count||0;
+        const learning=skillLearningStatus(draftSave(),content,lesson);
+        if(!learning.allowed){showLearning(status,learning);status.hidden=false;return;}
+        if(total()>=limits.capacity){say('卡包已满，请先移出卡牌');return;}
+        if(count>=(owned[key]?copies(key):limits.eachCapacity)){say('已达到单卡上限');return;}
+        const source=[...library.children].find(node=>node.dataset.cardKey===key);
+        const from=source?.getBoundingClientRect();
+        if(!owned[key]){owned[key]=lesson.copies;learned.add(key);trainingPointsSpent+=learning.cost;}
+        if(row)row.count++;else deck.push({key,count:1});closePreview();mark();paintCards();
+        if(from)animateAddition(key,from);
+    }
+    function animateAddition(key,from){
+        clearAddition();
+        if(typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+        const target=[...slots.children].filter(node=>node.dataset.cardKey===key).at(-1);
+        if(!target?.animate)return;
+        // Only scroll the bag itself; keep the collection and page under the user's pointer.
+        const bounds=slots.getBoundingClientRect(),initial=target.getBoundingClientRect();
+        if(initial.bottom>bounds.bottom)slots.scrollTop+=initial.bottom-bounds.bottom+7;
+        else if(initial.top<bounds.top)slots.scrollTop-=bounds.top-initial.top+7;
+        const to=target.getBoundingClientRect(),x=from.left+(from.right-from.left)/2-24,y=from.top+(from.bottom-from.top)/2-24;
+        const dx=to.left+(to.right-to.left)/2-24,dy=to.top+(to.bottom-to.top)/2-24;
+        const ghost=el('div','bag-add-flight',subject(cards[key]));ghost.setAttribute('aria-hidden','true');body.append(ghost);
+        const animation=ghost.animate([
+            {transform:`translate(${x}px,${y}px)`,opacity:1},
+            {transform:`translate(${(x+dx)/2}px,${(y+dy)/2-55}px)`,opacity:1,offset:.5},
+            {transform:`translate(${dx}px,${dy}px)`,opacity:0}
+        ],{duration:600,easing:'ease-in-out'});
+        const highlight=target.animate([{outline:'3px solid transparent'},{outline:'3px solid #efbc50'},{outline:'3px solid transparent'}],{delay:450,duration:400});
+        if(deckAnimationClock==='manual'){
+            manualAddition={ghost,animations:[animation,highlight]};
+            manualAddition.animations.forEach(value=>value.pause());sampleAddition(0);
+        }else animation.finished.then(()=>ghost.remove(),()=>ghost.remove());
+    }
+    // One reusable visual follows the pointer; it never intercepts drop events.
+    const dragGhost=el('div','bag-drag-ghost');dragGhost.hidden=true;dragGhost.setAttribute('aria-hidden','true');
+    function bindCardGesture(node,key,removable=false,onClick=()=>inspect(key,removable,node)) {
+        let timer=null,start=null,suppressClick=false,dragging=false,pointerId=null;
+        const cancel=()=>{if(timer!=null)clearTimeout(timer);timer=null;};
+        const end=()=>{cancel();start=null;dragging=false;dragGhost.hidden=true;dragGhost.remove();slots.classList.remove('dragging');node.classList.remove('dragging');};
+        node.onpointerdown=e=>{
+            closePreview();
+            if(e.button!==0||e.isPrimary===false)return;
+            end();suppressClick=false;pointerId=e.pointerId;start={x:e.clientX,y:e.clientY};
+            if(removable)node.setPointerCapture?.(pointerId);
+            if(e.pointerType==='touch'||e.pointerType==='pen')timer=setTimeout(()=>{
+                cancel();if(!node.isConnected||dragging)return;
+                suppressClick=true;end();inspect(key,removable,node);
+            },550);
+        };
+        node.onpointermove=e=>{
+            if(!start)return;
+            if(Math.hypot(e.clientX-start.x,e.clientY-start.y)>10){
+                cancel();suppressClick=true;
+                if(!removable){start=null;return;} // Let the collection scroll normally.
+                if(!dragging){
+                    dragging=true;closePreview();slots.classList.add('dragging');node.classList.add('dragging');
+                    const rect=node.getBoundingClientRect();
+                    dragGhost.style.width=`${rect.right-rect.left}px`;dragGhost.style.height=`${rect.bottom-rect.top}px`;
+                    dragGhost.replaceChildren(subject(cards[key]));document.body.append(dragGhost);dragGhost.hidden=false;
+                }
+            }
+            if(dragging){dragGhost.style.left=`${e.clientX}px`;dragGhost.style.top=`${e.clientY}px`;}
+        };
+        node.onpointerup=e=>{
+            const rect=slots.getBoundingClientRect();
+            const outside=e.clientX<rect.left||e.clientX>rect.right||e.clientY<rect.top||e.clientY>rect.bottom;
+            const shouldRemove=dragging&&outside;
+            end();if(node.hasPointerCapture?.(pointerId))node.releasePointerCapture(pointerId);
+            if(shouldRemove)remove(key);
+        };
+        node.onpointercancel=()=>{suppressClick=true;end();};
+        node.onlostpointercapture=()=>{if(start||dragging)suppressClick=true;end();};
+        node.oncontextmenu=e=>{e.preventDefault();suppressClick=true;end();inspect(key,removable,node);};
+        node.onclick=()=>{if(!suppressClick)onClick();suppressClick=false;};
+        node.onkeydown=e=>{
+            if(e.key==='Escape'){suppressClick=true;end();closePreview();}
+            if(removable&&(e.key==='Delete'||e.key==='Backspace')){e.preventDefault();end();remove(key);}
+            if(e.key==='ContextMenu'||(e.shiftKey&&e.key==='F10')){e.preventDefault();inspect(key,removable,node);}
+        };
+    }
+    const filters=el('div','bag-school-tabs');
+    for(const [id,label] of [['all','全部'],...Object.entries(SCHOOL_LABELS)]){
+        const tab=button('',()=>{school=id;page=0;paintLibrary();},'bag-school');
+        if(id===save.school)setText(tab,'{school}·本系',{school:label});
+        else setText(tab,label);
+        tab.dataset.school=id;filters.append(tab);
+    }
+    const search=el('input','bag-search');search.type='search';search.placeholder=tr('搜索卡牌');search.setAttribute('aria-label',tr('搜索卡牌'));
+    search.oninput=()=>{query=search.value.trim().toLowerCase();page=0;paintLibrary();};
+    const toggle=button('只看已学',()=>{ownedOnly=!ownedOnly;toggle.setAttribute('aria-pressed',String(ownedOnly));page=0;paintLibrary();},'bag-filter');toggle.setAttribute('aria-pressed','true');
+    const points=el('span','bag-training-points');points.title='本系课程免费；外系课程消耗训练点。升级获得训练点，保存后才扣除。';
+    const countLabel=el('span','bag-page-count'),previous=button('上一页',()=>{page--;paintLibrary();},'bag-page'),next=button('下一页',()=>{page++;paintLibrary();},'bag-page');
+    function paintLibrary(){
+        setText(points,'训练点：{count}',{count:trainingPoints(draftSave(),content)});
+        for(const tab of filters.children)tab.setAttribute('aria-pressed',String(tab.dataset.school===school));
+        const rows=lessons.filter(row=>(school==='all'||row.school===school)&&(!ownedOnly||owned[row.key])&&(!query||`${cards[row.key]?.name||row.name||''} ${row.key}`.toLowerCase().includes(query)));
+        const pages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));page=Math.max(0,Math.min(page,pages-1));
+        setText(countLabel,'{count} 张 · {page}/{pages}',{count:rows.length,page:page+1,pages});previous.disabled=page===0;next.disabled=page>=pages-1;
+        const guide=total()<8;
+        let guideKey=null;
+        if(guide){
+            const missing=rows.find(lesson=>canPlace(lesson)&&placed(lesson.key)===0);
+            const next=missing||rows.find(lesson=>canPlace(lesson));
+            if(next){
+                const guidePage=Math.floor(rows.indexOf(next)/PAGE_SIZE);
+                if(guidePage!==page){page=guidePage;paintLibrary();return;}
+                guideKey=next.key;
+            }
+        }
+        library.replaceChildren();
+        let teachEntry=null;
+        for(const lesson of rows.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE)){
+            const card=cards[lesson.key];if(!card)continue;
+            const n=layouts[active].deck.find(row=>row.key===lesson.key)?.count||0;
+            const learning=skillLearningStatus(draftSave(),content,lesson),available=learning.allowed;
+            const badge=n>0?el('span','bag-card-count',String(n)):null;
+            if(badge)badge.setAttribute('aria-label',fill(`已放入 {v0} 张`,{v0:String(n)}).text);
+            const note=owned[lesson.key]?null:el('small','muted');
+            if(note)showLearning(note,learning);
+            const entry=button([el('span','bag-library-icon',subject(card)),el('span','bag-card-name',card.name),badge,note],()=>{},`bag-library-card ${available?'':'locked'}`);
+            entry.dataset.cardKey=lesson.key;
+            entry.setAttribute('aria-label',`${owned[lesson.key]?'放入':'学习并放入'}${card.name}`);
+            entry.setAttribute('aria-disabled',String(!available||n>=(owned[lesson.key]?copies(lesson.key):limits.eachCapacity)||total()>=limits.capacity));
+            previewEvents(entry,lesson.key);bindCardGesture(entry,lesson.key,false,()=>add(lesson.key));library.append(entry);
+            if(lesson.key===guideKey)teachEntry=entry;
+        }
+        if(!rows.length)library.append(el('p','muted','没有符合条件的卡牌'));
+        // 不自动放牌。任意岛屿，卡包少于 8 张时箭头一直指向下一张已学、还能放的牌，点击不会消失。
+        teachPointer(teachEntry,save,content,{guide:true});
+    }
+    function placed(key){return layouts[active].deck.find(row=>row.key===key)?.count||0;}
+    function canPlace(lesson){
+        if(!owned[lesson.key]||!cards[lesson.key]||total()>=limits.capacity)return false;
+        if(!skillLearningStatus(draftSave(),content,lesson).allowed)return false;
+        const cap=copies(lesson.key);
+        return placed(lesson.key)<cap;
+    }
+    function paintCards(){
+        if(coach)coachFeedback.textContent=coach.evaluate(layouts[active].deck).feedback;
+        setText(counter,'{used}/{capacity} 张 · 单卡最多 {each}',{used:total(),capacity:limits.capacity,each:limits.eachCapacity});slots.replaceChildren();
+        for(const row of layouts[active].deck)for(let i=0;i<row.count;i++){
+            const card=cards[row.key],slot=button(subject(card),()=>{},'bag-slot');
+            slot.dataset.cardKey=row.key;
+            slot.setAttribute('aria-label',fill(`{v0}，第 {v1} 张，拖出移除，长按或右键查看详情`,{v0:String(card.name),v1:String(i+1)}).text);previewEvents(slot,row.key,true);bindCardGesture(slot,row.key,true);slots.append(slot);
+        }
+        for(let i=total();i<limits.capacity;i++){const slot=el('span','bag-slot empty');slot.setAttribute('aria-hidden','true');slots.append(slot);}
+        paintLibrary();
+    }
+    function paintTabs(){
+        closePreview();tabs.replaceChildren();layouts.forEach((layout,index)=>{
+            const item=content.items[layout.bagItemId],art=el('canvas','bag-item-icon');art.width=80;art.height=80;art.setAttribute('aria-hidden','true');
+            if(item?.art)assets.draw?.(art.getContext('2d'),item.art,0,0,80,80);
+            const tab=button(item?.art?art:el('span','',layout.name),()=>{
+                active=index;bagItemId=layout.bagItemId;limits=deckLimits(draftSave(),content);mark();paintTabs();paintCards();
+            },'bag-tab');
+            tab.dataset.bagItemId=String(layout.bagItemId);tab.title=layout.name;tab.setAttribute('aria-label',layout.name);
+            tab.setAttribute('aria-pressed',String(index===active));tabs.append(tab);
+        });
+        for(const item of Object.values(content.items).filter(item=>item.slot===24&&save.inventory[item.id]>0&&!layouts.some(layout=>layout.bagItemId===Number(item.id)))){
+            const art=el('canvas','bag-item-icon');art.width=80;art.height=80;art.setAttribute('aria-hidden','true');
+            if(item.art)assets.draw?.(art.getContext('2d'),item.art,0,0,80,80);
+            const tab=button(item.art?art:item.name,()=>{},'bag-tab');tab.disabled=true;
+            tab.title=`${item.name} · ${equipmentBlockReason(save,item,content)}`;tab.setAttribute('aria-label',tab.title);tab.setAttribute('aria-pressed','false');tabs.append(tab);
+        }
+    }
+    const equipment=el('div','bag-slots equipment-card-slots');
+    for(const row of playerSpec(save,content).fixedCards)for(let i=0;i<row.count;i++){
+        const card=cards[row.key];if(!card)continue;const slot=button(subject(card),()=>{},'bag-slot');slot.setAttribute('aria-label',card.name+'，装备附卡');previewEvents(slot,row.key);equipment.append(slot);
+    }
+    const commitDeck=()=>{
+        const saved=cb.action({type:'deck-layouts',layouts,active,learnedKeys:[...learned],...(bagItemId?{bagItemId}:{})});
+        return saved!==false;
+    };
+    const saveButton=button('保存',()=>{if(commitDeck())cb.close?.();},'primary');
+    const equipmentSummary=el('summary','');
+    setText(equipmentSummary,'装备附卡 {count} 张 · 不占卡位',{count:equipment.children.length});
+    const equipmentPanel=el('details','bag-equipment',equipmentSummary,equipment);
+    equipmentPanel.open=true;
+    const bag=el('section','bag-main',...(coachPanel?[coachPanel]:[]),el('div','bag-section-bar',counter,button('推荐',()=>{const recommendation=recommendAdventureDeck({...draftSave(),deck:layouts[active].deck},content,assets.dataset);layouts[active].deck=recommendation.deck;mark();paintCards();say('已按当前拥有的卡牌与卡包容量生成推荐，保存后生效。');},'secondary')),slots,
+        el('p','bag-hint','拖出移除；长按 / 右键查看详情'),
+        equipmentPanel);
+    const collection=el('section','bag-collection',el('div','bag-section-bar',el('strong','','法术牌库'),search,toggle),filters,
+        library,el('div','bag-pager',countLabel,points,previous,next,saveButton));
+    const bagAdvice=shopGuidance({...save,pets:{}},content);
+    const hasBag=!!bagAdvice.productId&&bagAdvice.owned;
+    const shop=button(hasBag?'装备已有卡包':'查看可用卡包',()=>cb.panel(hasBag?'equipment':'shop',hasBag?{}:{category:'bag',productId:bagAdvice.productId,mode:'catalog'}),'secondary');
+    shop.title=hasBag?'背包里已有更合适的卡包；当前配卡修改需先保存':'查看符合当前等级与学系的卡包；当前配卡修改需先保存';
+    body.append(el('div','bag-toolbar',tabs,shop),el('div','bag-workspace',bag,collection),status,detail);
+    const shell=body.closest?.('.modal'),closeButton=shell?.querySelector?.('.close-button');
+    if(closeButton?.onclick){
+        const leave=closeButton.onclick;
+        closeButton.onclick=()=>{
+            if(commitDeck())leave();
+        };
+    }
+    paintTabs();paintCards();
+    return {previewCard(key){
+        const anchor=[...library.children,...slots.children].find(node=>node.dataset.cardKey===key);
+        if(!anchor)return false;
+        inspect(key,false,anchor,false);return true;
+    },clickCard(key){
+        const anchor=[...library.children].find(node=>node.dataset.cardKey===key);
+        if(!anchor)return false;
+        const before=total();anchor.click();
+        return total()===before+1;
+    },libraryCard:key=>[...library.children].find(node=>node.dataset.cardKey===key),
+    placedCard:key=>[...slots.children].filter(node=>node.dataset.cardKey===key).at(-1),
+    saveButton,save(){saveButton.click();},closePreview,sampleAddition,clearAddition};
+}

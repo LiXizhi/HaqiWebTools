@@ -1,4 +1,4 @@
-import {createEarthWorkScheduler} from './earth_work_scheduler.js';
+import {createEarthWorkScheduler} from './earth/earth_work_scheduler.js';
 
 export function createImageBoundsPreparation({budgetMs,timeoutMs}){
     const scheduler=createEarthWorkScheduler({budgetMs}),pending=new Map();let worker=null,failed=false,sequence=0,idle=null;

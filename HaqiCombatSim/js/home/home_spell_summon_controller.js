@@ -1,7 +1,7 @@
 // home/home_spell_summon_controller.js — 家园语音/文字咒语召唤、候选确认与练习事件入库。
 import { compareDungeonSpeech } from '../dungeon_speech_core.js';
 import { TEMPLATE_PRACTICE } from '../home_building_templates_core.js';
-import { recordHomePractice } from '../home_practice.js';
+import { recordHomePractice } from './home_practice.js';
 import { chunkKey, matchHomeSpell, canPlace, footprint } from '../home_core.js';
 import { homeItemLanguage } from '../home_language_core.js';
 import { starterLampExercise, matchStarterLampRequest } from '../home_starter_room_core.js';

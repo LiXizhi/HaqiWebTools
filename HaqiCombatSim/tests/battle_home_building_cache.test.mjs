@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createHomeBuildingCache} from '../js/home_building_cache.js';
+import {createHomeBuildingCache} from '../js/home/home_building_cache.js';
 const item={id:'floor',size:[1,1],layer:'ground',art:{local:'floor',crop:[0,0,10,10]},building:{type:'floor',style:'wood'}};
 const objects=[{id:'one',itemId:'floor',x:0,y:0}],rect={x:0,y:0,w:400,h:400},image={src:'floor',complete:true,naturalWidth:10,width:10};
 const ctx=new Proxy({}, {get:()=>()=>{}}),pause=()=>new Promise(r=>setTimeout(r,15));

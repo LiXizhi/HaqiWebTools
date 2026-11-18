@@ -2,17 +2,17 @@
 import { shopNavigationState, equipmentNavigationState } from '../adventure_shop_navigation_core.js';
 import { recommendedLanguageQuest } from '../language_quest_core.js';
 import { wordLanguage } from '../word_lexicon_core.js';
-import { renderDungeonJourney } from '../view_dungeon_journey.js';
+import { renderDungeonJourney } from '../views/adventure/view_dungeon_journey.js';
 import { claimTowerReward } from '../adventure_dungeon_journeys_core.js';
 import { dungeonFor } from '../adventure_dungeons_core.js';
-import { renderDungeons } from '../view_adventure_dungeons.js';
+import { renderDungeons } from '../views/adventure/view_adventure_dungeons.js';
 import { initialStrengtheningSelection } from '../adventure_strengthening_core.js';
 import { normalizeGameServerUrl } from '../adventure_game_server.js';
-import { renderMaps } from '../view_adventure_maps.js';
+import { renderMaps } from '../views/adventure/view_adventure_maps.js';
 import * as A from '../adventure_core.js';
 import * as W from '../adventure_world_core.js';
 import { renderHud as defaultRenderHud } from '../views/adventure/view_hud.js';
-import { renderPanel, settingsView } from '../views/adventure/view_panel_modal.js';
+import { capturePanelFocusState, renderPanel, restorePanelFocusState, settingsView } from '../views/adventure/view_panel_modal.js';
 import { createHudController } from './hud_controller.js';
 import { createDebugEditController } from './debug_edit_controller.js';
 
@@ -249,13 +249,7 @@ export function createPanelController(options) {
             return;
         }
         if (!activePanel) return;
-        const equipment = ['equipment', 'inventory', 'shop', 'pet'].includes(activePanel);
-        const scroll = equipment ? nodes.overlay.querySelector('.modal-body')?.scrollTop || 0 : 0;
-        const focusLabel =
-            equipment && nodes.overlay.contains(document.activeElement)
-                ? document.activeElement.getAttribute('aria-label') || document.activeElement.textContent
-                : null;
-        const focusedMount = activePanel === 'pet' && nodes.overlay.contains(document.activeElement) ? document.activeElement.dataset.mountId : null;
+        const focusState = capturePanelFocusState(nodes.overlay, activePanel);
         renderPanel(
             nodes.overlay,
             activePanel,
@@ -331,16 +325,7 @@ export function createPanelController(options) {
                 },
             },
         );
-        if (equipment) {
-            nodes.overlay.querySelector('.modal-body').scrollTop = scroll;
-            if (focusLabel) {
-                const buttons = [...nodes.overlay.querySelectorAll('button')];
-                (
-                    buttons.find(b => (focusedMount ? b.dataset.mountId === focusedMount : (b.getAttribute('aria-label') || b.textContent) === focusLabel))
-                    || nodes.overlay.querySelector('.equipment-detail button:not(:disabled)')
-                )?.focus({ preventScroll: true });
-            }
-        }
+        restorePanelFocusState(nodes.overlay, focusState);
     }
 
     function openPanel(kind, openOptions = {}) {

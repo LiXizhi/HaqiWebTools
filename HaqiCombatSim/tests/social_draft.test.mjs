@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createSocialDraftEditor} from '../js/social_draft.js';
-import {renderSocial} from '../js/view_adventure_social.js';
+import {createSocialDraftEditor} from '../js/social/social_draft.js';
+import {renderSocial} from '../js/views/adventure/view_adventure_social.js';
 
 function harness(target='ja'){
     let ctx={save:{languageLearning:{target}},owner:'tester',roleId:'role-a'},draft='明天去森林找靴子。',resolve,reject,request;

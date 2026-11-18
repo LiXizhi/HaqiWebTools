@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {renderLearningMode} from '../js/view_learning_mode.js';
+import {renderLearningMode} from '../js/learning/view_learning_mode.js';
 
 function setup(t,save,learningForced=false){
     const nodes=[];let applied=null,disabled=false;

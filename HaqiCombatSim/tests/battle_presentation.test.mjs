@@ -5,7 +5,7 @@ import {createArena} from '../js/combat_arena_core.js';
 import {defaultParams,resolveParams} from '../js/combat_params_core.js';
 import {useCard,tickDots} from '../js/combat_cards_core.js';
 import {appendWard,appendAbsorb,absorbUnitDamage,processDamageAgainstWards} from '../js/combat_unit_core.js';
-import {captureBattlePresentation,battleStatusChanges,snapshotBattleStatus} from '../js/view_battle_presentation.js';
+import {captureBattlePresentation,battleStatusChanges,snapshotBattleStatus} from '../js/views/adventure/view_battle_presentation.js';
 const dataset=JSON.parse(fs.readFileSync(new URL('../data/adventure/combat.json',import.meta.url)));
 function scenario(observe=true){
     const resolved=resolveParams(dataset,defaultParams('kids'));

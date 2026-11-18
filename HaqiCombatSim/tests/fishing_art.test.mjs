@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {fishingCatchLayout,drawFishingScene} from '../js/view_adventure_fishing_art.js';
+import {fishingCatchLayout,drawFishingScene} from '../js/views/adventure/view_adventure_fishing_art.js';
 const scene=(grams,compact=false)=>({phase:'show',elapsed:500,time:500,hero:{x:compact?422:195,y:compact?170:382},target:{x:60,y:382},scale:1.4,width:compact?844:390,height:compact?390:844,compact,reduced:false,result:{caught:true,items:[{id:17108,count:1}],catches:[{itemId:17108,grams}]}});
 test('large fish actually draw a larger icon and stay inside portrait and landscape viewports',()=>{
     for(const compact of [false,true]){

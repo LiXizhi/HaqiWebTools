@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { showPetDetails } from '../js/view_adventure_pet_details.js';
+import { showPetDetails } from '../js/views/adventure/view_adventure_pet_details.js';
 import { installExpansion } from '../js/adventure_expansion_core.js';
 import { createAdventure, applyAction } from '../js/adventure_core.js';
 import { STARTERS, addPet } from '../js/adventure_pets_core.js';

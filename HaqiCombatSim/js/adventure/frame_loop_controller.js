@@ -1,6 +1,12 @@
 import * as A from '../adventure_core.js';
-import {syncTeachPointer,updateCheckin,updateHeroHealth} from '../views/adventure/view_hud.js';
-import {updateBattlePetHint,updateBattleRoster,updateBattleSpeech} from '../views/adventure/view_battle_layer.js';
+import {
+    syncCareHud,
+    syncInteractPrompt,
+    syncRewardGlow,
+    syncTeachPointer,
+    updateLocationLabel as renderLocationLabel,
+} from '../views/adventure/view_hud.js';
+import { syncBattleFrame } from '../views/adventure/view_battle_layer.js';
 import * as W from '../adventure_world_core.js';
 import {tickCheckin} from '../adventure_checkin_core.js';
 import {regionAt} from '../adventure_island_layout_core.js';
@@ -10,21 +16,12 @@ import {timeScrollCity} from '../adventure_time_scroll_core.js';
 import {campDetour} from '../camp_detour_core.js';
 import {learningParams} from '../language_adventure_core.js';
 import {localBuffDay} from '../language_daily_buff_core.js';
-import {fill,setText} from '../locale_runtime.js';
-import {TELEPORT_EFFECT_MS} from '../view_adventure_teleport.js';
-import {hanziAnimationActive} from '../view_hanzi_animation.js';
+import {TELEPORT_EFFECT_MS} from '../views/adventure/view_adventure_teleport.js';
+import {hanziAnimationActive} from '../hanzi/view_hanzi_animation.js';
 
 export function updateLocationLabel(world,save,hud){
-    if(!hud)return;
-    if(world.isEarth){
-        const location=hud.querySelector('.location-label span');
-        if(location&&location.dataset.zh!==world.layout.name)setText(location,world.layout.name);
-    }
-    if(world.layout){
-        const label=hud.querySelector('.location-label small');
-        const name=regionAt(world,save.position)?.name||'新的故事，在这里继续';
-        if(label&&label.dataset.zh!==name)setText(label,name);
-    }
+    const regionName = world?.layout ? regionAt(world, save.position)?.name || '' : '';
+    renderLocationLabel(hud, world, save, regionName);
 }
 
 export function stepWorldMovement(nowCtx,nodes,dt,now,languageAdventure,requestHeroPath){
@@ -223,14 +220,7 @@ export function createFrameLoopController({
                     persist();
                     queueCloudSave();
                 }
-                ctx.updatePetStatus(document,c.save,c.assets.content);
-                updateHeroHealth(nodes.hud.querySelector('[data-player="1"]')||nodes.hud,c.save,c.assets.content);
-                if(lp.second){
-                    const title=nodes.hud.querySelector('[data-player="2"]');
-                    if(title)updateHeroHealth(title,lp.second,c.assets.content);
-                }
-                updateCheckin(nodes.hud,model());
-                if(c.panel==='checkin')updateCheckin(nodes.overlay,model());
+                syncCareHud(nodes.hud,nodes.overlay,c.panel,c.save,lp.second,c.assets.content,model(),c.updatePetStatus);
                 if(performance.now()-c.lastRuntimeSave>30000)persistRuntime();
                 if(started)perf.record(c.world.isEarth?'earth-care':'island-care',performance.now()-started);
             },0);
@@ -287,29 +277,8 @@ export function createFrameLoopController({
                 if(arrival)interact(arrival);
             }
             const near=nearbySceneInteraction();
-            const button=document.getElementById('interact');
             updateLocationLabel(nowCtx.world,nowCtx.save,nodes.hud);
-            if(button){
-                button.hidden=!near;
-                if(near){
-                    const monster=(near.monster||nowCtx.assets.content.monsters[near.monsterId])?.name||'待迁移怪物';
-                    const next=
-                        near.kind==='camp-toy'
-                            ?['碰一碰{name}',{name:near.name}]
-                            :near.kind==='npc'
-                              ?['与{name}交谈',{name:near.name}]
-                              :near.kind==='landmark'
-                                ?['查看{name}',{name:near.name}]
-                                :near.kind==='portal'
-                                  ?[near.name,null]
-                                  :['挑战{name}',{name:monster}];
-                    const zh=next[1]?fill(next[0],next[1]).zh:next[0];
-                    if(button.dataset.zh!==zh){
-                        if(next[1])setText(button,next[0],next[1]);
-                        else setText(button,next[0]);
-                    }
-                }
-            }
+            syncInteractPrompt(nodes.hud,near,nowCtx.assets.content);
         }
         const fCtx=getContext();
         wordLearning.hanziMemory.tick(
@@ -325,8 +294,7 @@ export function createFrameLoopController({
         );
         const rewardEffect=rewardFeedback.tick(now,fCtx.stage==='world'&&!fCtx.panel&&!fCtx.dialog&&!sceneFishing.active);
         if(fCtx.moving||rewardEffect||lp.moving?.[0]||lp.moving?.[1])pacer?.wake(now);
-        const bagButton=nodes.hud.querySelector('[data-ui-icon=bag]')?.closest('button');
-        bagButton?.classList.toggle('reward-glow',!rewardRoot.hidden&&!!rewardRoot.querySelector('.reward-popup:not([hidden]) strong'));
+        syncRewardGlow(nodes.hud,rewardRoot);
         if(fCtx.teleportEffect&&(fCtx.stage!=='world'||now-fCtx.teleportEffect.started>=TELEPORT_EFFECT_MS)){
             fCtx.setTeleportEffect(null);
         }
@@ -442,19 +410,17 @@ export function createFrameLoopController({
         if(fCtx.stage==='battle'&&!battleIntro.active){
             const speechEvent=fCtx.animation?.events[fCtx.animation.index];
             const presentation=tickAnimation(now);
-            const canvas=document.getElementById('battle-canvas');
-            if(lp.active){
-                for(const half of nodes.battle.querySelectorAll('.local-battle-shared,.local-battle-half')){
-                    updateBattleRoster(half.battleStatusEntries,presentation);
-                }
-            }else{
-                updateBattleRoster(nodes.battle.battleStatusEntries,presentation);
-            }
-            if(canvas){
-                canvas.battlePositions=fCtx.renderer.renderBattle(canvas,fCtx.battle,fCtx.save,now,presentation);
-                updateBattlePetHint(nodes.battle,fCtx.battle,fCtx.save,fCtx.assets.content,canvas);
-                updateBattleSpeech(nodes.battle,fCtx.battle,canvas,now,speechEvent);
-            }
+            syncBattleFrame({
+                battleRoot:nodes.battle,
+                renderer:fCtx.renderer,
+                battle:fCtx.battle,
+                save:fCtx.save,
+                content:fCtx.assets.content,
+                now,
+                presentation,
+                speechEvent,
+                localActive:lp.active,
+            });
         }
         if(earthFrameStart)perf.record(phasePrefix+'frame-work',performance.now()-earthFrameStart);
     }

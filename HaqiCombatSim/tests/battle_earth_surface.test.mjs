@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 import {createEarthSurfaceRaster,surfaceNoise,earthDecorationFrames,earthTreeFrames,earthDecorationStyle,seamlessEarthAtlas,earthMarchingCoverage,earthMarchingWeights,earthCoastCornerDelta} from '../js/adventure_earth_surface_core.js';
-import {createEarthSurfacePainter} from '../js/adventure_earth_surface.js';
+import {createEarthSurfacePainter} from '../js/earth/adventure_earth_surface.js';
 import {earthRules} from '../js/adventure_earth_core.js';
-import {drawEarthBiomeDecoration} from '../js/adventure_earth_decoration.js';
+import {drawEarthBiomeDecoration} from '../js/earth/adventure_earth_decoration.js';
 const options={size:64,resolution:32,cellSize:16,sample:(x,y)=>x<80?'forest':'water',worldWidth:256};
 const raster=(x,y,size=64,resolution=32)=>{const r=createEarthSurfaceRaster({...options,x,y,size,resolution});while(!r.rows(3)){}return r.pixels;};
 
@@ -340,7 +340,7 @@ test('worker composites terrain, small sprites and shadows, with pixel fallback 
         transferToImageBitmap(){return bitmap;}
     };
     try{
-        await import('../js/adventure_earth_surface_worker.js?surface-composite-test');
+        await import('../js/earth/adventure_earth_surface_worker.js?surface-composite-test');
         const atlas={image:{},width:640},o={x:12,y:20,size:12,earthDecoFrame:7};
         self.onmessage({data:{type:'atlas',art:{decorations:atlas},composite:true}});
         const job={id:1,options:{x:0,y:0,size:32,resolution:8,cellSize:16,worldWidth:256},grid:Object.fromEntries(Array.from({length:64},(_,i)=>[`${i%8}:${Math.floor(i/8)}`,'grass'])),objects:[o]};

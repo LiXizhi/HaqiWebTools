@@ -1,7 +1,7 @@
 // home/home_session_controller.js — 家园系统主控制器（目录与地块加载、建造编辑、双人移动与生命周期）。
 import { homeDrawingChange } from '../home_drawing_core.js';
 import { homeCountingArea } from '../home_counting_core.js';
-import { createHomeLanguageGame } from '../home_language_game.js';
+import { createHomeLanguageGame } from './home_language_game.js';
 import { homeDoorChange, homeObjectWasMoved, homeLabelChange } from '../home_language_game_core.js';
 import { wordLanguage } from '../word_lexicon_core.js';
 import { createHomeEditHistory, homeEditDelta, applyHomeEditDelta } from '../home_edit_history_core.js';
@@ -13,7 +13,7 @@ import { assignedKeyboardAction, normalizePlayerInputs } from '../player_input_c
 import { normalizeLocalKeys } from '../local_controls_core.js';
 import { createPlayerInput } from '../player_input.js';
 import { homeDuoStep, homeDuoCamera, homeDuoScale } from '../home_local_core.js';
-import { createIslandSceneLoadingView } from '../view_island_scene_loading.js';
+import { createIslandSceneLoadingView } from '../views/adventure/view_island_scene_loading.js';
 import { stepHomeWalk, findHomePath } from '../home_walk_core.js';
 import { homeItemLanguage, homeWishLine } from '../home_language_core.js';
 import {
@@ -31,8 +31,8 @@ import {
  summonSentences,
 } from '../home_core.js';
 import { homeObjects, applyHomeAction } from '../home_actions_core.js';
-import { createHomeStore } from '../home_store.js';
-import { createHomeCloud } from '../home_cloud.js';
+import { createHomeStore } from './home_store.js';
+import { createHomeCloud } from './home_cloud.js';
 import { createHomeView } from './view_home_scene.js';
 import { createLearningVoice } from '../audio/language_adventure_voice.js';
 import { ownedPetRecords } from '../adventure_pet_files_core.js';

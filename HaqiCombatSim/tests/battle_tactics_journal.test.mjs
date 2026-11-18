@@ -5,7 +5,7 @@ import {installExpansion} from '../js/adventure_expansion_core.js';
 import * as A from '../js/adventure_core.js';
 import {createTacticsTraining} from '../js/tactics_training_core.js';
 import {useCard} from '../js/combat_cards_core.js';
-import {captureBattlePresentation} from '../js/view_battle_presentation.js';
+import {captureBattlePresentation} from '../js/views/adventure/view_battle_presentation.js';
 import {roundTacticsReport,recordTacticsRound,settleTacticsRecord,validateTacticsRecords} from '../js/battle_tactics_journal_core.js';
 const read=f=>JSON.parse(fs.readFileSync(new URL('../data/'+f,import.meta.url)));
 const {content,dataset}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),read('adventure/pets.json'),read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));

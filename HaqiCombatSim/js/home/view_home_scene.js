@@ -3,18 +3,18 @@ import { createMotionTrail } from '../adventure_motion_effects.js';
 import { createFrameMeter, createFramePacer } from '../frame_meter_core.js';
 import { createHeroActor } from '../hero_pose_core.js';
 import { loadHeroLibrary } from '../hero_renderer.js';
-import { createHomeBuildingCache } from '../home_building_cache.js';
+import { createHomeBuildingCache } from './home_building_cache.js';
 import { buildingItem } from '../home_building_core.js';
 import { homeCapacity } from '../home_capacity_core.js';
 import { homeObjectInteractive, summonSentences } from '../home_core.js';
 import { homeStrokeCells } from '../home_edit_core.js';
 import { homeSceneHit } from '../home_pointer_core.js';
 import { STARTER_ROOM_HINT, starterLampExercise } from '../home_starter_room_core.js';
-import { createHomeTerrainCache } from '../home_terrain_cache.js';
+import { createHomeTerrainCache } from './home_terrain_cache.js';
 import { tr } from '../locale_runtime.js';
 import { fetchJson } from '../runtime_data.js';
 import { createCloseButton } from '../ui/controls.js';
-import { renderSpeechWords } from '../view_bilingual_dialogue.js';
+import { renderSpeechWords } from '../learning/view_bilingual_dialogue.js';
 import { renderHomeSummonExample, renderHomeCatalogSidebar } from './view_home_hud.js';
 import {
     el,

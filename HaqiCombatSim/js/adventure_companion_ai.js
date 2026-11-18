@@ -2,8 +2,8 @@ import {companionParams,companionLanguage,normalizeCompanionMemory,reserveCompan
 import {createLocalStore} from './adventure_local_store.js';
 import {createLearningVoice} from './audio/language_adventure_voice.js';
 import {createDialogueVoiceSession} from './audio/dialogue_voice_session.js';
-import {createCompanionChatView} from './view_companion_chat.js';
-import {createActorSpeech} from './view_actor_speech.js';
+import {createCompanionChatView} from './learning/view_companion_chat.js';
+import {createActorSpeech} from './views/adventure/view_actor_speech.js';
 import {targetLanguageText} from './language_adventure_core.js';
 import {textFor} from './locale.js';
 

@@ -1,7 +1,7 @@
 import {directCacheStore} from './helpers/direct_cache_store.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createSocialClient} from '../js/adventure_social.js';
+import {createSocialClient} from '../js/social/adventure_social.js';
 function harness(){
     let owner='alice',resolveSend;const values=new Map(),calls=[];
     const sdk={token:'fixture',getUserProfile:async()=>({username:owner,id:owner==='alice'?1:3}),onAuthStateChange:()=>()=>{},socialFriends:{

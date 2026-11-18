@@ -4,10 +4,10 @@ import { islandName } from '../../adventure_world_map_core.js';
 import { drawSchoolIcon } from '../../card_renderer.js';
 import { syncLocaleChrome } from '../../locale.js';
 import { tr, setText, fill } from '../../locale_runtime.js';
-import { translatedGoal } from '../../view_adventure_quests.js';
-import { socialHudButton, teamHudButton, bindDungeonMenu } from '../../view_adventure_social_hud.js';
-import { renderCompanionGuide } from '../../view_companion_guide.js';
-import { objectiveProgress } from '../../view_objective_progress.js';
+import { translatedGoal } from './view_adventure_quests.js';
+import { socialHudButton, teamHudButton, bindDungeonMenu } from './view_adventure_social_hud.js';
+import { renderCompanionGuide } from './view_companion_guide.js';
+import { objectiveProgress } from './view_objective_progress.js';
 import {
     buildCatalogTrackLines,
     buildChapterTrackLines,
@@ -530,4 +530,67 @@ function renderHudContents(root, model, cb) {
     interaction.id = 'interact';
     interaction.hidden = true;
     root.append(interaction);
+}
+
+export function updateLocationLabel(hud, world, save, regionName = '') {
+    if (!hud) return;
+    if (world?.isEarth) {
+        const location = hud.querySelector('.location-label span');
+        if (location && location.dataset.zh !== world.layout.name) setText(location, world.layout.name);
+    }
+    if (world?.layout) {
+        const label = hud.querySelector('.location-label small');
+        const name = regionName || '新的故事，在这里继续';
+        if (label && label.dataset.zh !== name) setText(label, name);
+    }
+}
+
+export function syncInteractPrompt(hud, near, content) {
+    const btn = hud?.querySelector?.('#interact') || (typeof document !== 'undefined' ? document.getElementById('interact') : null);
+    if (!btn) return;
+    btn.hidden = !near;
+    if (!near) return;
+    const monster = (near.monster || content.monsters[near.monsterId])?.name || '待迁移怪物';
+    const next =
+        near.kind === 'camp-toy'
+            ? ['碰一碰{name}', { name: near.name }]
+            : near.kind === 'npc'
+              ? ['与{name}交谈', { name: near.name }]
+              : near.kind === 'landmark'
+                ? ['查看{name}', { name: near.name }]
+                : near.kind === 'portal'
+                  ? [near.name, null]
+                  : ['挑战{name}', { name: monster }];
+    const zh = next[1] ? fill(next[0], next[1]).zh : next[0];
+    if (btn.dataset.zh !== zh) {
+        if (next[1]) setText(btn, next[0], next[1]);
+        else setText(btn, next[0]);
+    }
+}
+
+export function syncRewardGlow(hud, rewardRoot) {
+    const bagButton = hud?.querySelector?.('[data-ui-icon=bag]')?.closest('button');
+    if (!bagButton || !rewardRoot) return;
+    bagButton.classList.toggle('reward-glow', !rewardRoot.hidden && !!rewardRoot.querySelector('.reward-popup:not([hidden]) strong'));
+}
+
+export function syncCareHud(hud, overlay, panel, save, secondSave, content, model, updatePetStatus) {
+    if (typeof document !== 'undefined') updatePetStatus?.(document, save, content);
+    updateHeroHealth(hud?.querySelector?.('[data-player="1"]') || hud, save, content);
+    if (secondSave) {
+        const title = hud?.querySelector?.('[data-player="2"]');
+        if (title) updateHeroHealth(title, secondSave, content);
+    }
+    updateCheckin(hud, model);
+    if (panel === 'checkin') updateCheckin(overlay, model);
+}
+
+export function showCompanionPlayReply(hud, line) {
+    const dock = hud?.querySelector?.('.companion-guide');
+    if (!dock) return;
+    dock.querySelector('.companion-play-reply')?.remove();
+    const reply = el('p', 'companion-play-reply', line);
+    reply.setAttribute('role', 'status');
+    dock.append(reply);
+    setTimeout(() => reply.remove(), 3600);
 }

@@ -7,7 +7,7 @@ import {validateHomePart} from '../js/home_core.js';
 import {homeGameActionMatches,homeGameObjectMatches,homeGameActions} from '../js/home_language_game_core.js';
 import {buildWordIndex,parseWordLexicon} from '../js/word_lexicon_core.js';
 import {validateAuthoredHomeGames,selectAuthoredHomeGame} from '../js/home_authored_game_core.js';
-import {paintHomeDrawing} from '../js/view_home_drawing_art.js';
+import {paintHomeDrawing} from '../js/home/view_home_drawing_art.js';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../'+p,import.meta.url),'utf8'));
 const catalog=read('data/adventure/home/catalog.json').items;
 const drawing={version:1,strokes:[{color:'#294734',points:[[100,100],[400,500],[700,200]]}]};

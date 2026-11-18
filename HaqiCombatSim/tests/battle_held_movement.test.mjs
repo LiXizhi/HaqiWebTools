@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as W from '../js/adventure_world_core.js';
 import { earthRules } from '../js/adventure_earth_core.js';
-import { bindTouchMovement } from '../js/view_adventure_movement.js';
+import { bindTouchMovement } from '../js/views/adventure/view_adventure_movement.js';
 import { createPanelController } from '../js/adventure/panel_controller.js';
 import { stepWorldMovement } from '../js/adventure/world_interaction_controller.js';
 

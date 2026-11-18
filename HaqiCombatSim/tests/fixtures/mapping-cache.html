@@ -1,7 +1,7 @@
 <!doctype html><meta charset="utf-8"><title>词义映射缓存验收</title>
 <button id="run">验证映射缓存</button><pre id="result">只使用模拟模型与独立测试数据库。</pre>
 <script type="module">
-import {createMappingStore,createDialogueMapper} from '../../js/dialogue_mapping.js';
+import {createMappingStore,createDialogueMapper} from '../../js/learning/dialogue_mapping.js';
 document.querySelector('#run').onclick=async()=>{
  const result=document.querySelector('#result');result.textContent='验证中…';
  try{

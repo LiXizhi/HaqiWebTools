@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createBilingualDialogue} from '../js/view_bilingual_dialogue.js';
+import {createBilingualDialogue} from '../js/learning/view_bilingual_dialogue.js';
 
 test('mapped words survive collapse and reopen when local vocabulary is unavailable',async t=>{
     function element(){

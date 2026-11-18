@@ -1,10 +1,10 @@
 import { isLanguageCourseId, languageSceneTarget } from '../language_quest_core.js';
-import { createLanguageSceneIntro } from '../view_language_scene_intro.js';
-import { openIslandLanguageCourse } from '../island_language_course.js';
+import { createLanguageSceneIntro } from '../learning/view_language_scene_intro.js';
+import { openIslandLanguageCourse } from '../learning/island_language_course.js';
 import { npcCharacter } from '../adventure_city_people_core.js';
 import { heroPortrait } from '../hero_renderer.js';
 import { learningParams } from '../language_adventure_core.js';
-import { mapDialogue } from '../dialogue_mapping.js';
+import { mapDialogue } from '../learning/dialogue_mapping.js';
 import { catalogGoalEncounter } from '../adventure_island_encounters_core.js';
 import {
     catalogAcceptBlock,
@@ -16,6 +16,7 @@ import { dungeonFor } from '../adventure_dungeons_core.js';
 import { rewardSnapshot } from '../adventure_reward_feedback_core.js';
 import * as A from '../adventure_core.js';
 import * as W from '../adventure_world_core.js';
+import { createArtCanvas } from '../ui/dom.js';
 import { renderDialogue as defaultRenderDialogue } from '../views/adventure/view_npc_dialogue.js';
 
 export function createQuestDialogueController({
@@ -255,10 +256,7 @@ export function createQuestDialogueController({
         const character = target.kind === 'npc' ? npcCharacter(target, ctx.assets.hero?.manifest) : null;
         let portraitNode = character ? heroPortrait(ctx.assets, character, 180, 240) : null;
         if (!portraitNode && target.portrait) {
-            portraitNode = document.createElement('canvas');
-            portraitNode.width = 180;
-            portraitNode.height = 240;
-            ctx.assets.draw(portraitNode.getContext('2d'), target.portrait, 0, 0, 180, 240, true, false);
+            portraitNode = createArtCanvas(ctx.assets, target.portrait, 180, 240, true, false);
         }
         ctx.setCourseView(
             openIslandLanguageCourse({

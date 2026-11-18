@@ -1,20 +1,21 @@
 import { claimTreeMasteryRewards } from '../language_tree_rewards_core.js';
-import { configureLearningReport } from '../learning_report.js';
-import { loadCourseCards, readPracticeCards } from '../language_course.js';
+import { configureLearningReport } from '../learning/learning_report.js';
+import { loadCourseCards, readPracticeCards } from '../learning/language_course.js';
 import { mergeCurriculumWordCards } from '../language_curriculum_core.js';
 import { wordLanguage } from '../word_lexicon_core.js';
-import { configureLanguageTreeCapture } from '../language_tree_capture.js';
-import { openWordCardForCast } from '../word_card_cast.js';
-import { createWordCardPractice } from '../word_card_practice.js';
-import { createDictionaryStore } from '../dictionary_store.js';
+import { configureLanguageTreeCapture } from '../learning/language_tree_capture.js';
+import { openWordCardForCast } from '../learning/word_card_cast.js';
+import { createWordCardPractice } from '../learning/word_card_practice.js';
+import { createDictionaryStore } from '../learning/dictionary_store.js';
 import { validateWordCards, makeWordCardSnapshot, activateWordCard, syncDictionaryQuestProgress } from '../word_cards_core.js';
 import { resolveParams } from '../combat_params_core.js';
-import { createHanziMemory } from '../adventure_hanzi_memory.js';
+import { createHanziMemory } from '../hanzi/adventure_hanzi_memory.js';
 import { DAILY_BUFF_NAMES } from '../language_daily_buff_core.js';
 import { validTargets } from '../combat_arena_core.js';
 import { castBlockedMessage } from '../adventure_cast_feedback_core.js';
 import { restoreVisibleFocus } from '../ui/controls.js';
-import { el, button } from '../ui/dom.js';
+import { ensureStylesheet } from '../ui/dom.js';
+import { renderOverlayCard } from '../views/adventure/view_panel_modal.js';
 
 export function createWordLearningController({
     nodes,
@@ -126,13 +127,7 @@ export function createWordLearningController({
     });
 
     function ensureWordStyle() {
-        if (!document.getElementById('word-practice-style')) {
-            const link = document.createElement('link');
-            link.id = 'word-practice-style';
-            link.rel = 'stylesheet';
-            link.href = new URL('../../css/word-practice.css', import.meta.url).href;
-            document.head.append(link);
-        }
+        ensureStylesheet('word-practice-style', new URL('../../css/word-practice.css', import.meta.url).href);
     }
 
     async function openBattleWord(decision) {
@@ -262,8 +257,7 @@ export function createWordLearningController({
         clearMovementPath();
         getContext().setPanel('hanzi-memory');
         nodes.hud.hidden = true;
-        nodes.overlay.className = 'overlay visible';
-        nodes.overlay.replaceChildren(el('section', 'loading-card', '正在准备汉字练习…'));
+        renderOverlayCard(nodes.overlay, '正在准备汉字练习…');
         void hanziMemory.open();
     }
 
@@ -285,23 +279,16 @@ export function createWordLearningController({
                 restoreVisibleFocus(returnTarget, fromToolbar ? nodes.hud.querySelector('.dictionary-launch') : null, nodes.world);
             }
         };
-        nodes.overlay.className = 'overlay visible';
-        nodes.overlay.replaceChildren(el('section', 'loading-card', el('p', '', '正在翻开字典…'), button('返回', returnToScene)));
+        renderOverlayCard(nodes.overlay, '正在翻开字典…', [{ label: '返回', onClick: returnToScene }]);
         try {
-            const module = await import('../adventure_dictionary.js');
+            const module = await import('../learning/adventure_dictionary.js');
             const latest = getContext();
             if (ticket !== dictionaryTicket || role !== latest.roleStore.catalog.activeId || owner !== latest.roleStore.owner) return;
-            if (!document.getElementById('dictionary-style')) {
-                const link = document.createElement('link');
-                link.id = 'dictionary-style';
-                link.rel = 'stylesheet';
-                link.href = new URL('../../css/dictionary.css', import.meta.url).href;
-                document.head.append(link);
-            }
+            ensureStylesheet('dictionary-style', new URL('../../css/dictionary.css', import.meta.url).href);
             dictionary = module.createDictionary({
                 root: nodes.overlay,
                 onLanguageTree: async (host, options) => {
-                    const { mountDictionaryWordTree } = await import('../word_tree_dictionary.js');
+                    const { mountDictionaryWordTree } = await import('../learning/word_tree_dictionary.js');
                     const key = dictionaryCardKey();
                     return mountDictionaryWordTree({
                         root: host,
@@ -365,9 +352,10 @@ export function createWordLearningController({
             await dictionary.open(language || ({ en: 'en', ja: 'ja', ko: 'ko' }[getContext().save.languageLearning?.target] || 'zh'), entryId);
         } catch (error) {
             if (ticket === dictionaryTicket) {
-                nodes.overlay.replaceChildren(
-                    el('section', 'loading-card', el('p', '', error.message), button('重试', () => openDictionary(language, entryId, returnTarget)), button('返回', returnToScene)),
-                );
+                renderOverlayCard(nodes.overlay, error.message, [
+                    { label: '重试', onClick: () => openDictionary(language, entryId, returnTarget) },
+                    { label: '返回', onClick: returnToScene },
+                ]);
             }
         }
     }

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {drawTeleportEffect,TELEPORT_EFFECT_MS} from '../js/view_adventure_teleport.js';
+import {drawTeleportEffect,TELEPORT_EFFECT_MS} from '../js/views/adventure/view_adventure_teleport.js';
 
 function canvas(){
     const calls=[];

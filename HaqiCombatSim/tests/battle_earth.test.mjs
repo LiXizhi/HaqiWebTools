@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {earthPoint,earthGeo,earthRules,earthLocalMapBounds,terrainKey,cityKey,parseEarthCities,generateEarthCity,earthSafe,earthChapterEvent,earthEncounter,landRoadSegments,earthWalkable,distanceToRoad} from '../js/adventure_earth_core.js';
-import {createEarthService,EarthCache,decodeMapOverview} from '../js/adventure_earth.js';
+import {createEarthService,EarthCache,decodeMapOverview} from '../js/earth/adventure_earth.js';
 import {generateEarthCityConnections} from '../js/adventure_earth_transport_core.js';
 
 test('local Earth collision queries preserve road priority and refresh after streaming without scanning distant buildings',()=>{
@@ -29,7 +29,7 @@ import {SimpleBot} from '../js/combat_policy_core.js';
 import {installDungeons,enterDungeon,leaveDungeon} from '../js/adventure_dungeons_core.js';
 import {packageRuntimeData} from '../scripts/package_runtime_data.mjs';
 import {createWorldMapSwitch} from '../js/ui/controls.js';
-import {renderEarthLocalMap} from '../js/view_adventure_earth_local_map.js';
+import {renderEarthLocalMap} from '../js/views/adventure/view_adventure_earth_local_map.js';
 import {layoutEarthMapLabels} from '../js/earth_map_labels_core.js';
 import {recordLearningCompletion} from '../js/language_adventure_core.js';
 import os from 'node:os';

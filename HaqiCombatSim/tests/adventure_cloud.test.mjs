@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { createCloudClient,loadKeepwork,SDK_URL } from '../js/adventure_cloud.js';
-import {createHomeCloud} from '../js/home_cloud.js';
+import {createHomeCloud} from '../js/home/home_cloud.js';
 import { makeCloudSnapshot,parseCloudSnapshot,snapshotPath,checkpointPaths } from '../js/adventure_cloud_core.js';
 import { SAVE_KEY,BACKUP_KEY,saveLocal,replaceLocalWithBackup } from '../js/adventure_assets.js';
 import * as A from '../js/adventure_core.js';

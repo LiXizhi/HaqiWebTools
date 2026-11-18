@@ -1,4 +1,4 @@
-import {packPetFilesAsync,openPetFiles,hydratePetFile} from './adventure_pet_files.js';
+import {packPetFilesAsync,openPetFiles,hydratePetFile} from './pets/adventure_pet_files.js';
 import {saveWorkspaceFile} from './keepwork_file_io.js';
 // Optional browser IO adapter. PersonalPageStore resolves workspace paths;
 // whole-file PUT acknowledgements confirm writes without redundant readback.

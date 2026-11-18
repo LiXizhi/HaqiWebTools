@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {renderPetFood,manualFoodCandidate} from '../js/view_adventure_pet_food.js';
+import {renderPetFood,manualFoodCandidate} from '../js/views/adventure/view_adventure_pet_food.js';
 import {parseLocaleFile} from '../js/locale_core.js';
 import {setTranslator} from '../js/locale_runtime.js';
 

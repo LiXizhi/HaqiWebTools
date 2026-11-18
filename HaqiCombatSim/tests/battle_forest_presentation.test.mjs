@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import * as forest from '../js/forest_commission_core.js';
 import * as forestLanguage from '../js/forest_commission_language_core.js';
 import {bindSceneDrag,pointInsideElement} from '../js/adventure_scene_drag.js';
-const source=fs.readFileSync(new URL('../js/view_forest_commission.js',import.meta.url),'utf8');
+const source=fs.readFileSync(new URL('../js/views/adventure/view_forest_commission.js',import.meta.url),'utf8');
 const content=JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json',import.meta.url)));
 const exportedItems=JSON.parse(fs.readFileSync(new URL('../data/adventure/shop-candidates.json',import.meta.url)));
 for(const id of [1415,1416,1417,1418,1419])content.items[id]=exportedItems[id];

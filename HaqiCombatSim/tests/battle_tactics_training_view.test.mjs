@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 import {createTacticsTraining,trainingStep,selectTrainingCard,castTrainingCard,trainingTargets} from '../js/tactics_training_core.js';
-import {renderTacticsTraining} from '../js/view_tactics_training.js';
-import {equipmentComparison} from '../js/view_adventure_guidance.js';
+import {renderTacticsTraining} from '../js/views/adventure/view_tactics_training.js';
+import {equipmentComparison} from '../js/views/adventure/view_adventure_guidance.js';
 
 const read=f=>JSON.parse(fs.readFileSync(new URL('../data/'+f,import.meta.url)));
 const {content,dataset}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),read('adventure/pets.json'),read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));

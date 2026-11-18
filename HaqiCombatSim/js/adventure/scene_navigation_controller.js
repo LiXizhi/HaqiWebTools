@@ -1,6 +1,6 @@
 import * as A from '../adventure_core.js';
 import * as P from '../combat_pve_core.js';
-import {el} from '../ui/dom.js';
+import { showCompanionPlayReply } from '../views/adventure/view_hud.js';
 import * as W from '../adventure_world_core.js';
 import {catalogQuestsForNpc,catalogTalksForNpc} from '../adventure_catalog_quests_core.js';
 import {dungeonFor} from '../adventure_dungeons_core.js';
@@ -75,14 +75,7 @@ export function createSceneNavigationController({
                 if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&adaptiveGraphics.effects(gameSettings.value).particles){
                     ctx.renderer.interactionFeedback.particles.emit(response.point.x,response.point.y,performance.now(),{count:response.count});
                 }
-                const dock=nodes.hud.querySelector('.companion-guide');
-                if(dock){
-                    dock.querySelector('.companion-play-reply')?.remove();
-                    const reply=el('p','companion-play-reply',response.line);
-                    reply.setAttribute('role','status');
-                    dock.append(reply);
-                    setTimeout(()=>reply.remove(),3600);
-                }
+                showCompanionPlayReply(nodes.hud,response.line);
             }
             return;
         }

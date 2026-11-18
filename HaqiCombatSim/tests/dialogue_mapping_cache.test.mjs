@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {dialogueMappingPrompt,parseDialogueMapping,mappingColor} from '../js/dialogue_mapping_core.js';
-import {createDialogueMapper,createMappingStore} from '../js/dialogue_mapping.js';
+import {createDialogueMapper,createMappingStore} from '../js/learning/dialogue_mapping.js';
 const lines=[{text:'Hello, world!',locale:'en'},{text:'你好，世界！',locale:'zh-CN'}];
 const output=JSON.stringify({pairs:[{text:'Hello',translation:'你好'},{text:'world',translation:'世界'}]});
 test('keyword pairs preserve original text, punctuation and spacing',()=>{

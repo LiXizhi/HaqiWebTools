@@ -9,17 +9,19 @@ import {initializePetWorld} from '../adventure_pet_world_core.js';
 import {SOCIAL_DEFAULTS} from '../adventure_social_core.js';
 import {timeScrollCity} from '../adventure_time_scroll_core.js';
 import {backgroundMusicId,createBackgroundMusic} from '../audio/background_music.js';
-import {enforceLearningMode} from '../learning_mode_policy.js';
+import {enforceLearningMode} from '../learning/learning_mode_policy.js';
 import {loadLocaleFiles,configureLocale,hasLocale} from '../locale.js';
 import {openingJourney} from '../opening_journey_core.js';
-import {renderEarthLoading} from '../view_adventure_earth.js';
-import {playOpeningPetWelcome} from '../view_opening_journey.js';
+import {renderEarthLoading} from '../views/adventure/view_adventure_earth.js';
+import {playOpeningPetWelcome} from '../views/adventure/view_opening_journey.js';
+import { ensureStylesheet } from '../ui/dom.js';
 import {storedLocalePref} from './locale_prefs.js';
 
 export function createWorldSessionController({
     nodes,
     getContext,
     services,
+    bus,
     close=services?.navigation?.close,
     persist=services?.persistence?.persist,
     queueCloudSave=services?.persistence?.queueCloudSave,
@@ -124,12 +126,15 @@ export function createWorldSessionController({
 
     async function toggleSound(){
         const requested=!spellSound.enabled;
-        if(!requested){stopBattleChatVoice();stopWordAudio();}
+        if(!requested){
+            if(!bus?.emit('audio:stop-battle-voice'))stopBattleChatVoice?.();
+            if(!bus?.emit('audio:stop-word'))stopWordAudio?.();
+        }
         gameSettings.set({sound:requested});
         const ok=await spellSound.setEnabled(requested);
         if(requested&&!ok)toast('浏览器暂时无法启用音效，请重试。');
-        paintPanel();
-        if(getContext().stage==='battle')paintBattle();
+        if(!bus?.emit('panel:dirty'))paintPanel?.();
+        if(getContext().stage==='battle'&&!bus?.emit('battle:dirty'))paintBattle?.();
     }
 
     function afterSceneReady(action){
@@ -152,7 +157,7 @@ export function createWorldSessionController({
         heroNavigation.cancel();
         const {stage,world,save:prevSave,assets,creationPreview,learningForced,setSave,setWorld,setStage,setBattle,setPanel,setAnimation,setTeleportEffect,setPetCardsOpen,setRuneCardsOpen,clearMovementPath}=getContext();
         const resumedWorld=stage==='battle'&&W.canResumeWorld(world,prevSave,newSave,assets.content)?world:null;
-        stopBattleChatVoice();
+        if(!bus?.emit('audio:stop-battle-voice'))stopBattleChatVoice?.();
         arenaPickClock.stop();
         setTeleportEffect(null);
         rewardFeedback.reset();
@@ -210,8 +215,8 @@ export function createWorldSessionController({
             void islandSocial().enter().catch(e=>toast(e.message));
             if(!save.pendingEncounter){
                 wordLearning.clearRecordings();
-                stopWordAudio();
-                refreshWordGoals();
+                if(!bus?.emit('audio:stop-word'))stopWordAudio?.();
+                if(!bus?.emit('word-goals:refresh'))refreshWordGoals?.();
             }
             if(save.pendingEncounter){
                 setBattle(restoredBattle||P.restorePveBattle(assets.dataset,assets.content,save.pendingEncounter));
@@ -358,13 +363,7 @@ export function createWorldSessionController({
         try{
             const module=await import('../adventure_time_scroll.js'),data=await module.loadTimeScroll(city,{signal:abort.signal});
             if(!valid())return;
-            if(!document.getElementById('time-scroll-style')){
-                const link=document.createElement('link');
-                link.id='time-scroll-style';
-                link.rel='stylesheet';
-                link.href=new URL('../../css/time-scroll.css',import.meta.url).href;
-                document.head.append(link);
-            }
+            ensureStylesheet('time-scroll-style',new URL('../../css/time-scroll.css',import.meta.url).href);
             timeScroll=module.createTimeScroll({
                 root:nodes.overlay,
                 data,

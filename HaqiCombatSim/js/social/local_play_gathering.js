@@ -1,5 +1,5 @@
 // social/local_play_gathering.js — 本地双人模式采集、冶炼、掉落拾取与采集画布渲染。
-import { drawGatheringProgress } from '../view_gathering_progress.js';
+import { drawGatheringProgress } from '../views/adventure/view_gathering_progress.js';
 import { selectCompanionId } from '../adventure_companion_core.js';
 import {
     canPetAssistGathering,

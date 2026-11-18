@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createLearningChatView} from '../js/view_learning_chat.js';
+import {createLearningChatView} from '../js/learning/view_learning_chat.js';
 import {setTranslator} from '../js/locale_runtime.js';
 
 test('English UI never translates Chinese teaching text; translation toggle works both ways',async t=>{

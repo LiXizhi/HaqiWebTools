@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createShopMembershipSummary} from '../js/view_adventure_shop_membership.js';
+import {createShopMembershipSummary} from '../js/views/adventure/view_adventure_shop_membership.js';
 import {magicStarWeek} from '../js/adventure_magic_star_core.js';
 
 const magicStar=JSON.parse(readFileSync(new URL('../data/adventure/magic-star.json',import.meta.url),'utf8'));

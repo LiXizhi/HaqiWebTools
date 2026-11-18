@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import {DetailDialog} from '../js/ui/detail_dialog.js';
 import {chunkKey,createHome,terrainChunk,parseSummon,summonSentences,canPlace,visibleChunkKeys,validateHomePart,homeScope,petHomePosition} from '../js/home_core.js';
 import {applyHomeAction,homeObjects} from '../js/home_actions_core.js';
-import {createHomeCloud} from '../js/home_cloud.js';
+import {createHomeCloud} from '../js/home/home_cloud.js';
 const catalog=JSON.parse(fs.readFileSync(new URL('../data/adventure/home/catalog.json',import.meta.url))).items;
 test('legacy catalog plus expanded connected building pieces and 12 activities',()=>{assert.equal(catalog.length,209);assert.equal(new Set(catalog.map(i=>i.id)).size,209);for(const c of new Set(catalog.map(i=>i.category)))assert.equal(catalog.filter(i=>i.category===c).length,c==='blocks'?29:c==='kitchen'?32:c==='living'?27:c==='play'?21:20);assert.equal(new Set(catalog.map(i=>i.activity).filter(Boolean)).size,12);});
 for(const lang of ['en','zh'])test(`all three ${lang} summon forms resolve the right item`,()=>{for(const item of catalog)for(const sentence of summonSentences(item,lang)){assert.deepEqual(parseSummon(sentence,catalog,lang).candidates,[{itemId:item.id,color:''}],sentence);}});

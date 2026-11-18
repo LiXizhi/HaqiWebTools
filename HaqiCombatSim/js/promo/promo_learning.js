@@ -1,5 +1,5 @@
 import {dialogueMappingPrompt,parseDialogueMapping} from '../dialogue_mapping_core.js';
-import {createDialogueMapper} from '../dialogue_mapping.js';
+import {createDialogueMapper} from '../learning/dialogue_mapping.js';
 import {createLearningVoice} from '../audio/language_adventure_voice.js';
 import {awardDailySpeech} from '../language_daily_buff_core.js';
 import {targetLanguageText} from '../language_adventure_core.js';

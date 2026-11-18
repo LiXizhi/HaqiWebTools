@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {drawForestCommissionSite} from '../js/view_forest_scene.js';
+import {drawForestCommissionSite} from '../js/views/adventure/view_forest_scene.js';
 
 test('world supplies use real item art and disappear once carried',()=>{
  const draws=[],labels=[],ctx={};

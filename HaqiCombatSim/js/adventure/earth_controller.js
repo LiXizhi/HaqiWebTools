@@ -1,9 +1,9 @@
 import { locationSnapshot } from '../adventure_coordinates_core.js';
-import { createEarthPlaces } from '../adventure_earth_places.js';
+import { createEarthPlaces } from '../earth/adventure_earth_places.js';
 import { gearScoreV2 } from '../combat_formulas_core.js';
 import { magicStarCombatLevel } from '../adventure_magic_star_core.js';
-import { renderEarthAtlas, renderEarthLoading, renderEarthStory } from '../view_adventure_earth.js';
-import { renderEarthLocalMap } from '../view_adventure_earth_local_map.js';
+import { renderEarthAtlas, renderEarthLoading, renderEarthStory } from '../views/adventure/view_adventure_earth.js';
+import { renderEarthLocalMap } from '../views/adventure/view_adventure_earth_local_map.js';
 import { earthGeo, earthChapterEvent } from '../adventure_earth_core.js';
 import {
     earthCityChapterProgress,
@@ -12,13 +12,13 @@ import {
     earthCityQuestTarget,
     earthCityStory,
 } from '../adventure_earth_city_config_core.js';
-import { createIslandSceneLoadingView } from '../view_island_scene_loading.js';
+import { createIslandSceneLoadingView } from '../views/adventure/view_island_scene_loading.js';
 import * as A from '../adventure_core.js';
 import * as W from '../adventure_world_core.js';
 import { dungeonFor } from '../adventure_dungeons_core.js';
 import { persistReward } from '../adventure_reward_persistence.js';
 import { createLearningVoice } from '../audio/language_adventure_voice.js';
-import { createStoryChat } from '../language_story.js';
+import { createStoryChat } from '../learning/language_story.js';
 
 export function routeWorldPortal(portal, target, { travelEarth, close, setAtlasPortalFocus, setPanel, openEarthMap, openPanel }) {
     if (target === 'earth' && portal.travel) {
@@ -92,7 +92,7 @@ export function createEarthController({
         if (getEarthFn) return getEarthFn();
         if (!earthServiceTask) {
             const { assets } = getContext();
-            earthServiceTask = import('../adventure_earth.js').then(({ createEarthService }) => {
+            earthServiceTask = import('../earth/adventure_earth.js').then(({ createEarthService }) => {
                 earthService = createEarthService({
                     content: assets.content,
                     getPlayerLevel: () => getContext().save?.level || 1,

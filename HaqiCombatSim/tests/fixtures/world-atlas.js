@@ -2,9 +2,9 @@ import {loadResources} from '../../js/adventure_assets.js';
 import {createAdventure} from '../../js/adventure_core.js';
 import {createWorld} from '../../js/adventure_world_core.js';
 import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
-import {renderMaps} from '../../js/view_adventure_maps.js';
-import {renderEarthAtlas} from '../../js/view_adventure_earth.js';
-import {createEarthService} from '../../js/adventure_earth.js';
+import {renderMaps} from '../../js/views/adventure/view_adventure_maps.js';
+import {renderEarthAtlas} from '../../js/views/adventure/view_adventure_earth.js';
+import {createEarthService} from '../../js/earth/adventure_earth.js';
 
 const root=document.getElementById('overlay'),status=document.getElementById('status');
 try{

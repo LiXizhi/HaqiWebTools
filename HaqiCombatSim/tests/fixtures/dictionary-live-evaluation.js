@@ -1,6 +1,6 @@
 import {parseDialogueJson} from '../../js/dialogue_json_core.js';
 import {contextVerdictMessages,validateContextVerdict} from '../../js/dictionary_core.js';
-import {loadDictionary} from '../../js/adventure_dictionary.js';
+import {loadDictionary} from '../../js/learning/adventure_dictionary.js';
 import {createLearningVoice} from '../../js/audio/language_adventure_voice.js';
 import {requestsEnglishExample,resolveTutorMode,presentTutorReply,tutorMessages,tutorComparisons,validateTutorReply} from '../../js/dictionary_tutor_core.js';
 

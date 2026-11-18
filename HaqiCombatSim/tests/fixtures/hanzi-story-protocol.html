@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>汉字动画协议隔离验收</title><style>html,body,iframe{margin:0;width:100%;height:100%;border:0;display:block;overflow:hidden}</style><iframe id="story" title="汉字故事"></iframe><script type="module">
-import {connectHanziAnimation} from '../../js/hanzi_animation_bridge.js';
+import {connectHanziAnimation} from '../../js/hanzi/hanzi_animation_bridge.js';
 import {parseLocaleFile} from '../../js/locale_core.js';
 const q=new URLSearchParams(location.search),locale=q.get('locale')||'en',subtitleLocale=q.get('subtitle')||locale;
 const frame=document.querySelector('iframe'),events=[];window.storyEvents=events;

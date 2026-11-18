@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { bindHandGesture } from '../js/view_adventure_hand.js';
+import { bindHandGesture } from '../js/views/adventure/view_adventure_hand.js';
 import { resolveHandSwipe } from '../js/adventure_hand_core.js';
 
 function classes(){const set=new Set();return {add:x=>set.add(x),remove:(...xs)=>xs.forEach(x=>set.delete(x)),contains:x=>set.has(x),toggle:(x,on)=>on?set.add(x):set.delete(x)};}

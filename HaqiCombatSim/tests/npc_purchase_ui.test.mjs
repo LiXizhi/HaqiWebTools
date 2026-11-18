@@ -5,7 +5,7 @@ import {installExpansion} from '../js/adventure_expansion_core.js';
 import {installNpcCatalog} from '../js/adventure_npc_core.js';
 import {installRuneCatalog} from '../js/adventure_runes_core.js';
 import {createAdventure,applyAction} from '../js/adventure_core.js';
-import {renderNpcServices} from '../js/view_adventure_npc.js';
+import {renderNpcServices} from '../js/views/adventure/view_adventure_npc.js';
 
 class Element {
     constructor(tag,className='',...children){Object.assign(this,{tag,className,children,dataset:{},listeners:{},isConnected:true,classList:{add(){},contains(){return false;}}});}

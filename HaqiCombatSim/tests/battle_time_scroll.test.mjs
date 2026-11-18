@@ -8,7 +8,7 @@ import {installExpansion} from '../js/adventure_expansion_core.js';
 import {checkedProgress} from '../js/adventure_cloud_core.js';
 import {durableSave,runtimeValues,restoreRuntime,splitRoleSave,joinRoleSave,coreCatalogKey} from '../js/adventure_storage_core.js';
 import {awardDailySpeech} from '../js/language_daily_buff_core.js';
-import {createStoryChat} from '../js/language_story.js';
+import {createStoryChat} from '../js/learning/language_story.js';
 const read=path=>JSON.parse(fs.readFileSync(new URL('../data/'+path,import.meta.url),'utf8'));
 const data=read('adventure/earth/time-scroll/common.json');
 const {content,dataset}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),read('adventure/pets.json'),read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));

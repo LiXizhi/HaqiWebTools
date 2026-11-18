@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {fishingPullMotion,FISHING_PULL_MS} from '../js/view_adventure_fishing_motion.js';
-import {drawFishingScene} from '../js/view_adventure_fishing_art.js';
+import {fishingPullMotion,FISHING_PULL_MS} from '../js/views/adventure/view_adventure_fishing_motion.js';
+import {drawFishingScene} from '../js/views/adventure/view_adventure_fishing_art.js';
 test('each direction pulls the rod tip toward that direction and returns to rest',()=>{
     const zero={x:0,y:0,strength:0};
     function tip(pull){

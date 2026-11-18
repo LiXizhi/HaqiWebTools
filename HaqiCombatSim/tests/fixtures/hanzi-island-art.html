@@ -8,7 +8,7 @@ import {loadResources} from '../../js/adventure_assets.js';
 import {createAdventure,applyAction} from '../../js/adventure_core.js';
 import {createWorld} from '../../js/adventure_world_core.js';
 import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
-import {renderHaqiAtlas} from '../../js/view_haqi_atlas.js';
+import {renderHaqiAtlas} from '../../js/views/adventure/view_haqi_atlas.js';
 const status=document.querySelector('#status'),canvas=document.querySelector('#scene'),overlay=document.querySelector('#overlay'),gallery=document.querySelector('#gallery');
 try{
  const assets=await loadResources(),save=createAdventure(assets.content,{name:'字源岛验收',seed:12012});

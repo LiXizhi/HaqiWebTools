@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {parseLocaleFile} from '../js/locale_core.js';
 import {setTranslator,fill} from '../js/locale_runtime.js';
-import {nearestBattlePet} from '../js/view_battle_pet_hint.js';
-import {battleSpeech,updateBattleSpeech} from '../js/view_battle_pet_hint.js';
+import {nearestBattlePet} from '../js/views/adventure/view_battle_pet_hint.js';
+import {battleSpeech,updateBattleSpeech} from '../js/views/adventure/view_battle_pet_hint.js';
 test('NPC speech follows its head on desktop and mobile and survives UI reconstruction',()=>{
  for(const width of [1280,390]){
   const battle={sides:{far:[{id:'mob0',template:{sequences:[[{round:'1-',speak:'请选择目标。'}]]}}]}};
@@ -48,7 +48,7 @@ test('visible hero support pet can speak, but a missing pet or fallen hero canno
  assert.equal(nearestBattlePet(battle,save,{pets:{}},positions),null);
  battle.sides.near[0].hp=0;assert.equal(nearestBattlePet(battle,save,content,positions),null);
 });
-import {createBattlePetHint} from '../js/view_battle_pet_hint.js';
+import {createBattlePetHint} from '../js/views/adventure/view_battle_pet_hint.js';
 test('battle advice translates full sentences, card and target names in all UI languages',()=>{
  const el=(tag,className,...children)=>({tag,className,children,dataset:{},attributes:{},style:{setProperty(){}},setAttribute(key,value){this.attributes[key]=value;},get textContent(){return this.children.join('');},set textContent(value){this.children=[value];}});
  const hero={id:'hero',side:'near',hp:100,school:'fire',pips:{normal:1,power:0},cooldowns:{},deckSeq:['trap'],deckMap:[1],petDeckSeq:['trap'],petDeckMap:[1]},enemy={id:'enemy',side:'far',hp:100,name:'小米粒'};
@@ -99,7 +99,7 @@ test('pet speech is passive plain text, suppressed while choosing or muted',()=>
  assert.equal(createBattlePetHint({...model,aiHintsMuted:true},{el}),null);
  assert.equal(createBattlePetHint({...model,aiHint:{action:{pass:true}}},{el}).children[0].children[0],'先攒魔力，等机会。');
 });
-import {updateBattlePetHint} from '../js/view_battle_pet_hint.js';
+import {updateBattlePetHint} from '../js/views/adventure/view_battle_pet_hint.js';
 
 test('pet advice restores after a cinematic and follows changes to non-first status obstacles',()=>{
  const bubble={style:{setProperty(name,value){this[name]=value;}},dataset:{},offsetWidth:280,offsetHeight:50};

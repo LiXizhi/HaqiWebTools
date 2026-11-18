@@ -1,7 +1,7 @@
 <!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/dictionary.css"><body class="haqi-app storybook-ui"><div id="root" class="overlay visible"></div><script type="module">
 import {loadResources} from '../../js/adventure_assets.js';
-import {createDictionary} from '../../js/adventure_dictionary.js';
-import {createDictionaryStore} from '../../js/dictionary_store.js';
+import {createDictionary} from '../../js/learning/adventure_dictionary.js';
+import {createDictionaryStore} from '../../js/learning/dictionary_store.js';
 import {recordDictionaryAttempt} from '../../js/dictionary_core.js';
 const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
 const assets=await loadResources(),rows=(await(await fetch('data/adventure/dictionary/word-cards.json')).json()).cards;

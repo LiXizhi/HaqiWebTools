@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createPetStatus,updatePetStatus,createPetEvolution} from '../js/view_adventure_pet_status.js';
+import {createPetStatus,updatePetStatus,createPetEvolution} from '../js/views/adventure/view_adventure_pet_status.js';
 import {petMaxHp} from '../js/adventure_pets_core.js';
 
 const el=(tag,className='',...children)=>({tag,className,children,dataset:{},attributes:{},append(...nodes){this.children.push(...nodes);},setAttribute(k,v){this.attributes[k]=v;}});

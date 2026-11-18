@@ -3,7 +3,7 @@ import { campArrivalPet } from '../adventure_arrival_core.js';
 import { createHudRenderGuard } from '../hud_render_guard.js';
 import { recommendedLanguageQuest, languageSceneTarget } from '../language_quest_core.js';
 import { openingJourney, openingJourneyActive } from '../opening_journey_core.js';
-import { playOpeningPetWelcome, renderPetWelcome } from '../view_opening_journey.js';
+import { playOpeningPetWelcome, renderPetWelcome } from '../views/adventure/view_opening_journey.js';
 import { renderHud as defaultRenderHud } from '../views/adventure/view_hud.js';
 
 export function createHudController({

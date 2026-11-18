@@ -5,7 +5,7 @@
 if(new URLSearchParams(location.search).has('phone')){
  const frame=document.createElement('iframe');frame.src='tests/fixtures/learning-reward.html';frame.style='width:390px;height:844px;border:0';document.body.append(frame);
 }else{
- const {createStoryChat}=await import(/* @vite-ignore */ new URL('js/language_story.js',document.baseURI).href);
+ const {createStoryChat}=await import(/* @vite-ignore */ new URL('js/learning/language_story.js',document.baseURI).href);
  const {recordLearningCompletion}=await import(/* @vite-ignore */ new URL('js/language_adventure_core.js',document.baseURI).href);
  const catalog=await fetch('data/adventure/camp-conversations.json').then(r=>r.json());
  const profile=catalog.profiles.find(p=>p.npcId===36205),story=profile.stories[0];

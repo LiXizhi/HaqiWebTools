@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {recordEffectivePractice} from '../js/language_practice_core.js';
 import {buildWordIndex,parseWordLexicon,canonicalWord} from '../js/word_lexicon_core.js';
-import {flushForestCommissionPractice} from '../js/forest_commission_learning.js';
+import {flushForestCommissionPractice} from '../js/learning/forest_commission_learning.js';
 
 const index=buildWordIndex(parseWordLexicon(fs.readFileSync(new URL('../data/adventure/locale/word_en.txt',import.meta.url),'utf8'),'en'));
 const event={id:'forest:camp-patrol-supplies:label-boots:1',valid:true,input:'text',source:'forest-commission',at:100,words:['boots']};

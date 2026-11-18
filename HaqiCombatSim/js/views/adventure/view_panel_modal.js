@@ -1,19 +1,19 @@
 import {setText,fill} from '../../locale_runtime.js';
 import {OPENING_PET} from '../../opening_journey_core.js';
-import {renderDebugEditor} from '../../view_adventure_debug.js';
-import {renderDeckEditor} from '../../view_adventure_deck.js';
-import {renderEquipment} from '../../view_adventure_equipment.js';
-import {renderGems} from '../../view_adventure_gems.js';
-import {renderMembership} from '../../view_adventure_membership.js';
-import {renderNpcServices} from '../../view_adventure_npc.js';
-import {renderPetCollection,petPortrait} from '../../view_adventure_pets.js';
-import {renderQuestJournal} from '../../view_adventure_quests.js';
-import {renderRecharge} from '../../view_adventure_recharge.js';
-import {renderSettings,settingsView} from '../../view_adventure_settings.js';
-import {renderShop} from '../../view_adventure_shop.js';
-import {renderStrengthening} from '../../view_adventure_strengthening.js';
-import {renderWorldMap} from '../../view_adventure_world_map.js';
-import {renderLearningMode} from '../../view_learning_mode.js';
+import {renderDebugEditor} from './view_adventure_debug.js';
+import {renderDeckEditor} from './view_adventure_deck.js';
+import {renderEquipment} from './view_adventure_equipment.js';
+import {renderGems} from './view_adventure_gems.js';
+import {renderMembership} from './view_adventure_membership.js';
+import {renderNpcServices} from './view_adventure_npc.js';
+import {renderPetCollection,petPortrait} from './view_adventure_pets.js';
+import {renderQuestJournal} from './view_adventure_quests.js';
+import {renderRecharge} from './view_adventure_recharge.js';
+import {renderSettings,settingsView} from './view_adventure_settings.js';
+import {renderShop} from './view_adventure_shop.js';
+import {renderStrengthening} from './view_adventure_strengthening.js';
+import {renderWorldMap} from './view_adventure_world_map.js';
+import {renderLearningMode} from '../../learning/view_learning_mode.js';
 import {el,button,icon,art,tile,modal,spellHint,spellFace} from './primitives.js';
 import {objectiveLabel,gourdArt,updateCheckin} from './view_hud.js';
 
@@ -112,3 +112,35 @@ export function renderPanel(root,kind,model,cb) {
     }
 }
 function ownsEgg(save){return (save.inventory[17307]||0)>0;}
+
+export function capturePanelFocusState(overlay, activePanel) {
+    const equipment = ['equipment', 'inventory', 'shop', 'pet'].includes(activePanel);
+    if (!equipment || !overlay) return { equipment: false, scroll: 0, focusLabel: null, focusedMount: null };
+    const scroll = overlay.querySelector('.modal-body')?.scrollTop || 0;
+    const activeEl = typeof document !== 'undefined' ? document.activeElement : null;
+    const focused = !!(activeEl && overlay.contains(activeEl));
+    const focusLabel = focused ? activeEl.getAttribute('aria-label') || activeEl.textContent : null;
+    const focusedMount = activePanel === 'pet' && focused ? activeEl.dataset?.mountId || null : null;
+    return { equipment: true, scroll, focusLabel, focusedMount };
+}
+
+export function restorePanelFocusState(overlay, state) {
+    if (!state?.equipment || !overlay) return;
+    const body = overlay.querySelector('.modal-body');
+    if (body) body.scrollTop = state.scroll;
+    if (state.focusLabel) {
+        const buttons = [...overlay.querySelectorAll('button')];
+        (
+            buttons.find(b => (state.focusedMount ? b.dataset.mountId === state.focusedMount : (b.getAttribute('aria-label') || b.textContent) === state.focusLabel))
+            || overlay.querySelector('.equipment-detail button:not(:disabled)')
+        )?.focus({ preventScroll: true });
+    }
+}
+
+export function renderOverlayCard(overlay, message, actions = []) {
+    if (!overlay) return;
+    overlay.className = 'overlay visible';
+    overlay.replaceChildren(
+        el('section', 'loading-card', el('p', '', message), ...actions.map(a => button(a.label, a.onClick, a.className || ''))),
+    );
+}

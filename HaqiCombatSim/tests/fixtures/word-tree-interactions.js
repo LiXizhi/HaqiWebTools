@@ -1,4 +1,4 @@
-import {WordTree} from '../../js/word_tree.js';
+import {WordTree} from '../../js/learning/word_tree.js';
 import {setTreeMark,validateTreeQuestions} from '../../js/language_tree_core.js';
 import {tenDictionaryExamples,buildExampleTree} from './word-tree-data.js';
 const params=new URLSearchParams(location.search);

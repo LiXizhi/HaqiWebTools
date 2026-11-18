@@ -99,11 +99,11 @@ try{
   await page.getByRole('button',{name:'关闭照片生成形象',exact:true}).click();
   // Exercise the production lazy facade inside a real parent detail window.
   await page.evaluate(async()=>{
-   const [{DetailDialog},{createPhotoHeadFeature},{createHeroPicker}]=await Promise.all([import('/js/ui/detail_dialog.js'),import('/js/photo_head_feature.js'),import('/js/view_hero_picker.js')]);
+   const [{DetailDialog},{createPhotoHeadFeature},{createHeroPicker}]=await Promise.all([import('/js/ui/detail_dialog.js'),import('/js/photo_head/photo_head_feature.js'),import('/js/views/adventure/view_hero_picker.js')]);
    const el=(tag,cls='',...children)=>{const n=document.createElement(tag);n.className=cls;n.append(...children);return n;};
    const parent=new DetailDialog(document.body,{el,title:'修改名字和形象',className:'equipment-item-dialog hero-customize-dialog'});
    let attempts=0;
-   photoQA.assets.photoHeads=createPhotoHeadFeature({assets:photoQA.assets,getOwner:()=>null,onLogin:()=>{},loadService:async()=>{if(++attempts===1)throw Error('Simulated module failure');return import('/js/photo_head_service.js');}});
+   photoQA.assets.photoHeads=createPhotoHeadFeature({assets:photoQA.assets,getOwner:()=>null,onLogin:()=>{},loadService:async()=>{if(++attempts===1)throw Error('Simulated module failure');return import('/js/photo_head/photo_head_service.js');}});
    parent.body.append(createHeroPicker(photoQA.assets,photoQA.draft));parent.open();
   });
   const parent=page.getByRole('dialog',{name:'修改名字和形象',exact:true}),entry=parent.getByRole('button',{name:'用我的照片生成',exact:true});

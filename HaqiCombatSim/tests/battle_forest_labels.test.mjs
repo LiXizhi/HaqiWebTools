@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {applyForestCommission,validateForestCommission} from '../js/forest_commission_core.js';
-import {flushForestCommissionPractice} from '../js/forest_commission_learning.js';
+import {flushForestCommissionPractice} from '../js/learning/forest_commission_learning.js';
 const fresh=(phase='delivery')=>({zone:'camp',position:{x:0,y:0},forestCommission:{version:1,phase}});
 const access={forestTarget:{id:36200,kind:'npc',x:0,y:0}};
 const label=(save,word='boots',text=word)=>applyForestCommission(save,{}, {step:'label',word,text,learning:{at:20,attempts:1,assisted:false}},access);

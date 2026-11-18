@@ -8,11 +8,11 @@ import {addPet,petMaxHp,partySpecs,tickCare,mergeOwnedPetSpecies} from '../js/ad
 import {initializePetWorld,petWorldAction} from '../js/adventure_pet_world_core.js';
 import {createPetInstance} from '../js/adventure_pet_interactions_core.js';
 import {ownedPetRecords,petSummary} from '../js/adventure_pet_files_core.js';
-import {packPetFilesSync,openPetFiles} from '../js/adventure_pet_files.js';
+import {packPetFilesSync,openPetFiles} from '../js/pets/adventure_pet_files.js';
 import {durableSave,runtimeValues,restoreRuntime,coreCatalogKey} from '../js/adventure_storage_core.js';
 import {restorePveBattle,playPveRound,runeCardsInHand} from '../js/combat_pve_core.js';
 import {installRuneCatalog} from '../js/adventure_runes_core.js';
-import {drawPetTraitHalo} from '../js/view_pet_traits.js';
+import {drawPetTraitHalo} from '../js/views/adventure/view_pet_traits.js';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../data/'+p,import.meta.url)));
 function setup(){const {content,dataset}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),read('adventure/pets.json'),read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));content.monsterArt=read('adventure/monster-art.json');installRuneCatalog(content,read('adventure/runes.json'));return {content,dataset};}
 const {content,dataset}=setup();

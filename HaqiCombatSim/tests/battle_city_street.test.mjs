@@ -9,7 +9,7 @@ import {createCityDungeonLoader} from '../js/adventure_city_dungeons.js';
 import {createAdventure} from '../js/adventure_core.js';
 import {installCityDungeons,enterCityDungeon} from '../js/adventure_city_dungeons_core.js';
 import {createWorld,findPath,clearSegment} from '../js/adventure_world_core.js';
-import {createStreetPainter} from '../js/view_city_street.js';
+import {createStreetPainter} from '../js/views/adventure/view_city_street.js';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../'+p,import.meta.url),'utf8'));
 const city=read('data/adventure/earth/cities/shenzhen.json');
 test('street ground cache stays within 24 MiB and reuses a wide zoomed-out view',()=>{

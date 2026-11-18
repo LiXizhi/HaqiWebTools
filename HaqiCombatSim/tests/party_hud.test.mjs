@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {sceneMountSave,startWorldOnFoot} from '../js/adventure_mounts_core.js';
-import {teamHudButton} from '../js/view_adventure_social_hud.js';
+import {teamHudButton} from '../js/views/adventure/view_adventure_social_hud.js';
 
 test('party walking is temporary and does not unequip the mount or change preference',()=>{
     for(const mountHidden of [false,true]){

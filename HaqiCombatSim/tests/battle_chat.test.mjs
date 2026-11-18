@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import {BATTLE_CHAT,chatSupportPick} from '../js/battle_chat_core.js';
 import {createPveBattle,playPveRound} from '../js/combat_pve_core.js';
 import {loadLocaleFiles,textFor} from '../js/locale.js';
-import {createBattleChat} from '../js/view_battle_chat.js';
+import {createBattleChat} from '../js/views/adventure/view_battle_chat.js';
 const read=path=>JSON.parse(fs.readFileSync(new URL(path,import.meta.url)));
 const dataset={...read('../data/adventure/combat.json'),cards:read('../data/kids/cards.json')};
 const chapter=read('../data/adventure/chapter.json');

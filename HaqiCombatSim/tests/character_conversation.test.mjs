@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createCharacterConversation} from '../js/character_conversation.js';
+import {createCharacterConversation} from '../js/learning/character_conversation.js';
 import {fakeWorkspace} from './helpers/character_workspace.js';
 
 function setup(options={}){

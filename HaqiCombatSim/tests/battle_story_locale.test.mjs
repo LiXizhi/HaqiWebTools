@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createDungeonStory} from '../js/adventure_dungeon_story.js';
 import {loadLocaleFiles,configureLocale} from '../js/locale.js';
 import {formatLocaleLine} from '../js/locale_core.js';
-import {translatedGoal,translatedQuestMessage} from '../js/view_adventure_quests.js';
+import {translatedGoal,translatedQuestMessage} from '../js/views/adventure/view_adventure_quests.js';
 import {setTranslator} from '../js/locale_runtime.js';
 
 test('dungeon stories use the chosen target and native languages, and UI locale without learning',async()=>{

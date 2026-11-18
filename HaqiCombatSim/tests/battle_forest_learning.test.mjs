@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {flushForestCommissionPractice} from '../js/forest_commission_learning.js';
+import {flushForestCommissionPractice} from '../js/learning/forest_commission_learning.js';
 import {recordComprehensionPractice} from '../js/language_practice_core.js';
 import {parseWordLexicon,buildWordIndex,canonicalWord} from '../js/word_lexicon_core.js';
 const read=language=>fs.readFileSync(new URL('../data/adventure/locale/word_'+language+'.txt',import.meta.url),'utf8');

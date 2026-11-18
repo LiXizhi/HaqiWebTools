@@ -1,7 +1,7 @@
 import { resolveMountDrawPose, MOUNT_DIRECTIONS } from './adventure_mounts_core.js';
 import { createHeroActor, updateHeroActor, BODY_TO_HEAD, headBreath, walkFrameIndex, headFrameIndex } from './hero_pose_core.js';
 import {publicPhotoHead} from './photo_head_core.js';
-import {verifyHeadAsset} from './photo_head_images.js';
+import {verifyHeadAsset} from './photo_head/photo_head_images.js';
 import {createPortraitScheduler} from './portrait_scheduler.js';
 
 // One UI scheduler; detached portraits release their actor state automatically.

@@ -25,7 +25,7 @@ test('new formal honors are announced once while restored achievements stay quie
  assert.equal(JSON.stringify(s),raw);
  assert.deepEqual(rewardChanges(rewardSnapshot(s),s,content).items,[]);
 });
-import {createRewardFeedback,drawRewardEffect} from '../js/view_adventure_rewards.js';
+import {createRewardFeedback,drawRewardEffect} from '../js/views/adventure/view_adventure_rewards.js';
 function rewardCanvas(){
  const stack=[],labels=[];
  const c={globalAlpha:1,shadowColor:'#000000',shadowBlur:0,fillStyle:'#123456',

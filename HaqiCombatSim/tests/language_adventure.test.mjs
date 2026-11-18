@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import {parseLocaleFile,normalizeLocaleSave,localeIdsToLoad} from '../js/locale_core.js';
 import {configureLocale,displayLocale} from '../js/locale.js';
 import {renderLearningTemplate,selectLesson,triggerAllowed,learningParams,matchesSpeech,evaluateEvidence,rewardStatus,recordLearningCompletion,validateLearningSave} from '../js/language_adventure_core.js';
-import {loadLearningCatalog,createLanguageAdventure,learningSlots} from '../js/language_adventure.js';
+import {loadLearningCatalog,createLanguageAdventure,learningSlots} from '../js/learning/language_adventure.js';
 import {createAdventure,applyAction,parseSave} from '../js/adventure_core.js';
 import {persistReward} from '../js/adventure_reward_persistence.js';
 import {pcm16,createLearningVoice} from '../js/audio/language_adventure_voice.js';

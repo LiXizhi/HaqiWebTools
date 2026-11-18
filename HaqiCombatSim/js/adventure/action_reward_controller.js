@@ -1,5 +1,5 @@
 import * as A from '../adventure_core.js';
-import {el} from '../ui/dom.js';
+import {el,createArtCanvas} from '../ui/dom.js';
 import {equipmentSummary,previewEquipment} from '../adventure_equipment_core.js';
 import {magicBeanExchangeQuote,exchangeMagicBeans} from '../adventure_magic_bean_exchange_core.js';
 import {npcOffers} from '../adventure_npc_core.js';
@@ -9,13 +9,14 @@ import {persistReward} from '../adventure_reward_persistence.js';
 import {rewardSound} from '../audio/game_sound_core.js';
 import {fill} from '../locale_runtime.js';
 import {openingJourney} from '../opening_journey_core.js';
-import {createRewardFeedback} from '../view_adventure_rewards.js';
-import {playOpeningPetWelcome} from '../view_opening_journey.js';
+import {createRewardFeedback} from '../views/adventure/view_adventure_rewards.js';
+import {playOpeningPetWelcome} from '../views/adventure/view_opening_journey.js';
 
 export function createActionRewardController({
     nodes,
     getContext,
     services,
+    bus,
     persist=services?.persistence?.persist,
     queueCloudSave=services?.persistence?.queueCloudSave,
     close=services?.navigation?.close,
@@ -65,8 +66,8 @@ export function createActionRewardController({
             rows.forEach(({text,target,item},index)=>{
                 const rect=target?.getBoundingClientRect();if(!rect)return;
                 const to={x:rect.x+rect.width/2-canvasRect.x,y:rect.y+rect.height/2-canvasRect.y};
-                let image=null;const art=item&&assets.content.items[item.id]?.art;
-                if(art){image=document.createElement('canvas');image.width=image.height=48;try{assets.draw(image.getContext('2d'),art,0,0,48,48);}catch{image=null;}}
+                const art=item&&assets.content.items[item.id]?.art;
+                const image=createArtCanvas(assets,art,48,48);
                 renderer.interactionFeedback.floating.add({
                     image,
                     from:{x:from.x+(index-1)*20,y:from.y-65-index*22},
@@ -227,7 +228,7 @@ export function createActionRewardController({
                 setSave(committed.save);result=committed.result;setStorageWarning(false);
             }else{
                 result=A.applyAction(save,assets.content,request,access);
-                if(value.type==='accept-catalog')refreshWordGoals();
+                if(value.type==='accept-catalog'&&!bus?.emit('word-goals:refresh'))refreshWordGoals?.();
                 persist();
                 if(getContext().storageWarning)return false;
             }

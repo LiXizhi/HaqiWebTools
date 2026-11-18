@@ -10,9 +10,9 @@ import {createAdventure} from '../../js/adventure_core.js';
 import {renderHud} from '../../js/views/adventure/view_hud.js';
 import {createWorld,nearestWalkable} from '../../js/adventure_world_core.js';
 import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
-import {createIslandSocial} from '../../js/adventure_social_controller.js';
-import {renderDungeons} from '../../js/view_adventure_dungeons.js';
-import {renderMaps} from '../../js/view_adventure_maps.js';
+import {createIslandSocial} from '../../js/social/adventure_social_controller.js';
+import {renderDungeons} from '../../js/views/adventure/view_adventure_dungeons.js';
+import {renderMaps} from '../../js/views/adventure/view_adventure_maps.js';
 const params=new URLSearchParams(location.search);
 const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
 // No real account, player save or remote writes. Default is memory-only; storage=arena enables a dedicated QA IndexedDB for arena reload checks.

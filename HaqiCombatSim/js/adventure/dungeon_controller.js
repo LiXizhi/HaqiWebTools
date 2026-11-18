@@ -6,8 +6,8 @@ import {
     applyCityInteraction,
 } from '../adventure_city_dungeons_core.js';
 import { generatedCityRoute } from '../adventure_city_generated_core.js';
-import { renderCityInteraction } from '../view_city_dungeon.js';
-import { renderEarthLoading } from '../view_adventure_earth.js';
+import { renderCityInteraction } from '../views/adventure/view_city_dungeon.js';
+import { renderEarthLoading } from '../views/adventure/view_adventure_earth.js';
 import { createDungeonStory } from '../adventure_dungeon_story.js';
 import { journeyParty } from '../adventure_dungeon_journeys_core.js';
 import { startCoopRun, coopParty as journeyCoopParty } from '../adventure_coop_core.js';

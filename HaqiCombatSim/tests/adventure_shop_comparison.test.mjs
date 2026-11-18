@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {installExpansion} from '../js/adventure_expansion_core.js';
-import {shopBagComparison,shopEquipmentComparison,restoreShopPurchaseFocus} from '../js/view_adventure_shop_comparison.js';
+import {shopBagComparison,shopEquipmentComparison,restoreShopPurchaseFocus} from '../js/views/adventure/view_adventure_shop_comparison.js';
 import {createAdventure,applyAction} from '../js/adventure_core.js';
 import {equipmentSummary} from '../js/adventure_equipment_core.js';
 const read=name=>JSON.parse(fs.readFileSync(new URL(`../data/${name}.json`,import.meta.url)));

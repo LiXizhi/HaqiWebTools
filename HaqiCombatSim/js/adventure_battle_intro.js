@@ -1,5 +1,5 @@
 import {battleIntroRoster,battleIntroFrame} from './battle_intro_core.js';
-import {createBattleIntroView} from './view_battle_intro.js';
+import {createBattleIntroView} from './views/adventure/view_battle_intro.js';
 
 // The app owns the battle; this disposable session only gates its initial presentation.
 export function createBattleIntro({root,onDone,viewFactory=createBattleIntroView,now=()=>performance.now(),reducedMotion=()=>matchMedia('(prefers-reduced-motion: reduce)').matches}){

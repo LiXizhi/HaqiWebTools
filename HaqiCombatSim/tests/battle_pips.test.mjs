@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {drawBattlePips} from '../js/view_battle_pips.js';
-import {captureBattlePresentation} from '../js/view_battle_presentation.js';
+import {drawBattlePips} from '../js/views/adventure/view_battle_pips.js';
+import {captureBattlePresentation} from '../js/views/adventure/view_battle_presentation.js';
 
 function dots(pips,hp=100){
     const marks=[];

@@ -37,7 +37,7 @@ test('capacity changes and debug ownership changes reconcile every saved layout'
     for(const layout of next.deckLayouts)A.validDeck({...next,equipment:{...next.equipment,24:layout.bagItemId}},content,layout.deck);
     assert.deepEqual(next.deckLayouts[next.activeDeckLayout].deck,next.deck);
 });
-import {renderDeckEditor,hoverPreviewPosition} from '../js/view_adventure_deck.js';
+import {renderDeckEditor,hoverPreviewPosition} from '../js/views/adventure/view_adventure_deck.js';
 function domHelpers(){
     class Element {
         constructor(tag,cls='',...children){this.tag=tag;this.className=cls;this.children=[];this.attributes={};this.dataset={};this.style={};this.isConnected=true;this.classList={add(){},remove(){}};this.append(...children);}

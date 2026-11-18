@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createSceneFishing} from '../js/view_adventure_scene_fishing.js';
+import {createSceneFishing} from '../js/views/adventure/view_adventure_scene_fishing.js';
 
 function setup(t,{reduced=false,fail=false,sure=false,empty=false,filmClock=false}={}){
     let now=0;

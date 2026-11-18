@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {createDictionary} from '../js/adventure_dictionary.js';
+import {createDictionary} from '../js/learning/adventure_dictionary.js';
 import {emptyDictionary} from '../js/dictionary_core.js';
 const data=JSON.parse(fs.readFileSync(new URL('../data/adventure/dictionary/en.json',import.meta.url)));
 const now=new Date(2026,9,16,12).getTime();

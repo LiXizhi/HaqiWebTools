@@ -1,4 +1,4 @@
-import {speakBrowserText} from './browser_speech.js';
+import {speakBrowserText} from './learning/browser_speech.js';
 import { LOCALES, lookup, parseLocaleFile, speechCode } from './locale_core.js';
 import { setTranslator,notifyTranslation } from './locale_runtime.js';
 

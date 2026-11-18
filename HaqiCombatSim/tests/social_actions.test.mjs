@@ -26,7 +26,7 @@ test('paired jumps have bounded lifetime and respect reduced motion',()=>{
     assert.equal(socialGesturePose(effect,'hero',4600),null);
 });
 
-import {renderSocialActions,socialActionsHeading} from '../js/view_social_actions.js';
+import {renderSocialActions,socialActionsHeading} from '../js/views/adventure/view_social_actions.js';
 class Element{
     constructor(tag,text=''){this.tag=tag;this.text=text;this.children=[];this.attributes={};this.dataset={};this.classList={add(){}};}
     append(...nodes){this.children.push(...nodes);}

@@ -1,7 +1,7 @@
 import {timeScrollParams,TIME_SCROLL_DEFAULT,validateTimeScrollReference,validateTimeScrollContent,resumeTimePosition,clampTimePosition,moveTimePosition,discoverTimeClue,completeTimeStory} from './adventure_time_scroll_core.js';
-import {createTimeScrollView} from './view_adventure_time_scroll.js';
-import {createStoryChat} from './language_story.js';
-import {createLearningChatView} from './view_learning_chat.js';
+import {createTimeScrollView} from './views/adventure/view_adventure_time_scroll.js';
+import {createStoryChat} from './learning/language_story.js';
+import {createLearningChatView} from './learning/view_learning_chat.js';
 import {createLearningVoice} from './audio/language_adventure_voice.js';
 
 const contentCache=new Map();

@@ -12,13 +12,13 @@ import {
 } from '../home_building_core.js';
 import { homeObjectInteractive, footprint } from '../home_core.js';
 import { STARTER_ROOM_ID, STARTER_BLANKET_ID, STARTER_CHAIR_ID } from '../home_starter_room_core.js';
-import { petIdleLift } from '../view_adventure_pet_mood.js';
+import { petIdleLift } from '../views/adventure/view_adventure_pet_mood.js';
 import {
     drawHomeObject,
     homeObjectVisualBounds,
     homeObjectPixelHit,
 } from './view_home_object_art.js';
-import { drawBuilding, buildingVisualBounds } from '../view_home_building.js';
+import { drawBuilding, buildingVisualBounds } from './view_home_building.js';
 import { COLOR_HEX } from './view_home_modals.js';
 
 export function drawHomeObjectNode(

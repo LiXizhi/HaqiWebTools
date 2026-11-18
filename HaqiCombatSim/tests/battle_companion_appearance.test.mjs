@@ -20,11 +20,11 @@ for(const mode of ['local','cdn'])test(`practice and first-pet welcome share the
  const context=vm.createContext({OPENING_PET,el,document:{createElement:tag=>el(tag)},
   button:(label,action,cls)=>el('button',cls,label),modal:root=>root,
   art:()=>el('canvas'),spellFace:()=>el('div'),spellHint:()=>'',createCloseButton:()=>el('button')});
- const portrait=source('view_adventure_pets.js');
+ const portrait=source('views/adventure/view_adventure_pets.js');
  vm.runInContext(portrait.slice(portrait.indexOf('export function petPortrait('),portrait.indexOf('export function starterPicker(')).replace('export function','function'),context);
  const practice=source('views/adventure/view_panel_modal.js');
  vm.runInContext(practice.slice(practice.indexOf('export function renderCompanionPractice('),practice.indexOf('export function renderPanel(')).replace('export function','function'),context);
- const welcome=source('view_opening_journey.js');
+ const welcome=source('views/adventure/view_opening_journey.js');
  vm.runInContext(welcome.slice(welcome.indexOf('export function')).replaceAll('export function','function'),context);
  const model={assets:{mode,content,dataset},save:{pets:{first:{speciesId:OPENING_PET,appearanceStage:0,name:'咕噜噜'}}}};
  const lesson=createCompanionPractice(dataset),cb={};

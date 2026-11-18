@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {buildingConnectionMask,buildingWallFeet,homeDoorIsOpen} from '../js/home_building_core.js';
 import {buildingFloorAO} from '../js/home_building_ao_core.js';
-import {drawBuilding} from '../js/view_home_building.js';
+import {drawBuilding} from '../js/home/view_home_building.js';
 const catalog=['floor','wall','window','door'].map(type=>({id:type,size:[1,1],building:{type,style:'stone'}}));
 const floors=Array.from({length:9},(_,i)=>({id:`f${i}`,itemId:'floor',x:i%3,y:Math.floor(i/3)}));
 const feet=(o,objects=floors)=>buildingWallFeet(o,buildingConnectionMask(o,[...objects,o],catalog));
@@ -43,7 +43,7 @@ test('an open right-side door swings inward and remains inside the cached cell b
 
 test('walking and cached depth follow the visible front and side wall bases',async()=>{
  const {isHomePassable,stepHomeWalk}=await import('../js/home_walk_core.js');
- const {createHomeBuildingCache}=await import('../js/home_building_cache.js');
+ const {createHomeBuildingCache}=await import('../js/home/home_building_cache.js');
  const items=catalog.map(i=>({...i,layer:i.id==='floor'?'ground':'solid'}));
  for(const [x,y] of [[1,2],[2,1],[0,0]]){
   const wall={id:'w',itemId:'wall',x,y},objects=[...floors,wall];

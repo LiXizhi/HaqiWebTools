@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {createCardFace} from '../js/view_adventure_card.js';
+import {createCardFace} from '../js/views/adventure/view_adventure_card.js';
 
 function el(tag,cls,...children){return {tag,cls,children,attrs:{},setAttribute(k,v){this.attrs[k]=v;},getContext(){return {};}};}
 test('missing art, draw exceptions and unavailable canvas retain readable playable card information',t=>{

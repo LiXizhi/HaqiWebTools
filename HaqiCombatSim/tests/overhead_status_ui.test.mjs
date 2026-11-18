@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {battleStatusEffects,overheadStatusEffects,drawOverheadStatus} from '../js/view_adventure_overhead_status.js';
+import {battleStatusEffects,overheadStatusEffects,drawOverheadStatus} from '../js/views/adventure/view_adventure_overhead_status.js';
 import {popDoT,popHoT} from '../js/combat_unit_core.js';
 
 test('consumed effects disappear while anonymous absorption and active auras remain visible',()=>{

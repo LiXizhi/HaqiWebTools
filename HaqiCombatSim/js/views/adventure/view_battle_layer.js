@@ -2,16 +2,16 @@ import { SCHOOL_NAMES } from '../../adventure_core.js';
 import { COLORS } from '../../adventure/renderer/primitives.js';
 import { describeCard } from '../../card_description_core.js';
 import { tr, setText, fill } from '../../locale_runtime.js';
-import { createBattleRoster, updateBattleRoster } from '../../view_adventure_battle_status.js';
-import { guidanceCard } from '../../view_adventure_guidance.js';
-import { bindHandGesture } from '../../view_adventure_hand.js';
-import { attachStatusTooltips } from '../../view_adventure_status_tooltip.js';
-import { createBattleChat } from '../../view_battle_chat.js';
-import { createBattlePetHint, updateBattlePetHint, updateBattleSpeech, battleSpeechController } from '../../view_battle_pet_hint.js';
-import { defeatReviewNotes } from '../../view_battle_review.js';
-import { bindBattleTargeting } from '../../view_battle_targeting.js';
-import { renderCompanionGuide } from '../../view_companion_guide.js';
-import { createPetTraitBadges, traitUpgradeText } from '../../view_pet_traits.js';
+import { createBattleRoster, updateBattleRoster } from './view_adventure_battle_status.js';
+import { guidanceCard } from './view_adventure_guidance.js';
+import { bindHandGesture } from './view_adventure_hand.js';
+import { attachStatusTooltips } from './view_adventure_status_tooltip.js';
+import { createBattleChat } from './view_battle_chat.js';
+import { createBattlePetHint, updateBattlePetHint, updateBattleSpeech, battleSpeechController } from './view_battle_pet_hint.js';
+import { defeatReviewNotes } from './view_battle_review.js';
+import { bindBattleTargeting } from './view_battle_targeting.js';
+import { renderCompanionGuide } from './view_companion_guide.js';
+import { createPetTraitBadges, traitUpgradeText } from './view_pet_traits.js';
 import { buildBattleHandViewModel, buildBattleResultViewModel } from '../../adventure/presenters/battle_view_model.js';
 import { el, button, icon, badge, spellFace } from './primitives.js';
 
@@ -616,4 +616,26 @@ export function eventLabel(e, battle, assets) {
     if (e.type === 'hanzi_buff') return `${caster} · ${e.description}`;
     if (e.type === 'fizzle') return fill('{caster} 的魔法失误了', { caster }).text;
     return '';
+}
+
+export function setCastAnnouncement(battleRoot, text) {
+    const banner = battleRoot?.querySelector?.('#cast-announcement') || (typeof document !== 'undefined' ? document.getElementById('cast-announcement') : null);
+    if (banner) banner.textContent = text;
+}
+
+export function syncBattleFrame({ battleRoot, renderer, battle, save, content, now, presentation, speechEvent, localActive }) {
+    const canvas = battleRoot?.querySelector?.('#battle-canvas') || (typeof document !== 'undefined' ? document.getElementById('battle-canvas') : null);
+    if (localActive) {
+        for (const half of battleRoot?.querySelectorAll?.('.local-battle-shared,.local-battle-half') || []) {
+            updateBattleRoster(half.battleStatusEntries, presentation);
+        }
+    } else if (battleRoot) {
+        updateBattleRoster(battleRoot.battleStatusEntries, presentation);
+    }
+    if (canvas && renderer) {
+        canvas.battlePositions = renderer.renderBattle(canvas, battle, save, now, presentation);
+        updateBattlePetHint(battleRoot, battle, save, content, canvas);
+        updateBattleSpeech(battleRoot, battle, canvas, now, speechEvent);
+    }
+    return canvas;
 }

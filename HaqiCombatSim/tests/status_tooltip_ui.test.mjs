@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {attachStatusTooltips} from '../js/view_adventure_status_tooltip.js';
+import {attachStatusTooltips} from '../js/views/adventure/view_adventure_status_tooltip.js';
 class Node extends EventTarget {
  constructor(){super();this.children=[];this.style={};this.attrs={};this.clientWidth=390;this.clientHeight=300;this.offsetWidth=180;this.offsetHeight=70;this.offsetLeft=0;this.offsetTop=0;}
  append(...nodes){for(const n of nodes){n.parent=this;this.children.push(n);}}

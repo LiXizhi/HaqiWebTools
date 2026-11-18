@@ -6,7 +6,7 @@ const browser=await chromium.launch({channel:'chrome',headless:true});fs.mkdirSy
 try{
  const page=await browser.newPage({viewport:{width:1280,height:900}});await page.goto('http://127.0.0.1:8792/tests/fixtures/home.html');
  const report=await page.evaluate(async()=>{
-  const {createHomeBuildingCache}=await import('/js/home_building_cache.js');
+  const {createHomeBuildingCache}=await import('/js/home/home_building_cache.js');
   const catalog=(await fetch('/data/adventure/home/catalog.json').then(r=>r.json())).items;
   const images=new Map();for(const i of catalog.filter(i=>i.building)){const image=new Image();image.src='/'+i.art.local;await image.decode();images.set(i.art.local,image);}
   const imageFor=a=>images.get(a.local),canvas=document.createElement('canvas');canvas.width=1280;canvas.height=900;const c=canvas.getContext('2d',{willReadFrequently:true});let drawCalls=0;const drawImage=c.drawImage.bind(c);c.drawImage=(...args)=>{drawCalls++;drawImage(...args);};

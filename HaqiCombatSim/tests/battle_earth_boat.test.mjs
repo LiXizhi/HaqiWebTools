@@ -8,7 +8,7 @@ import {createHeroActor,updateHeroActor,direction16} from '../js/hero_pose_core.
 import {earthRoadCrossings} from '../js/adventure_earth_bridge_core.js';
 import {findPath,followPath} from '../js/adventure_world_core.js';
 import {socialNavigationWorld} from '../js/adventure_social_motion_core.js';
-import {drawEarthBoatRider} from '../js/view_earth_boat.js';
+import {drawEarthBoatRider} from '../js/views/adventure/view_earth_boat.js';
 
 const rules=earthRules(),road={id:'crossing',a:{x:200,y:600},b:{x:1600,y:600},width:52};
 const terrain=x=>x>=600&&x<=1200?'water':'grass';

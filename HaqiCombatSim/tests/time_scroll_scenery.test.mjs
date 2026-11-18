@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {timeScenery} from '../js/adventure_time_scenery_core.js';
-import {createTimeScenery} from '../js/view_time_scenery.js';
+import {createTimeScenery} from '../js/views/adventure/view_time_scenery.js';
 import {streetArtResource,validateStreetArtFrames} from '../js/adventure_city_art_core.js';
 const read=p=>JSON.parse(readFileSync(new URL('../data/adventure/'+p,import.meta.url),'utf8'));
 const data=read('earth/time-scroll/common.json'),manifest=read('earth/street-art.json');

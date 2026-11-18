@@ -2,8 +2,8 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {emptyLanguageTree,setTreeMark,treeReadiness} from '../js/language_tree_core.js';
 import {seedDictionaryTree} from '../js/language_tree_dictionary_core.js';
-import {createLanguageTreeSession} from '../js/language_tree_session.js';
-import {createMasterySync} from '../js/language_tree_mastery_sync.js';
+import {createLanguageTreeSession} from '../js/learning/language_tree_session.js';
+import {createMasterySync} from '../js/learning/language_tree_mastery_sync.js';
 import {claimTreeMasteryRewards} from '../js/language_tree_rewards_core.js';
 import {splitRoleSave} from '../js/adventure_storage_core.js';
 

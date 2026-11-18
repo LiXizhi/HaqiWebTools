@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {earthWildSpecies,earthWildLevel,createEarthWildEncounter,restoreEarthWildEncounter} from '../js/adventure_earth_wild_core.js';
-import {createEarthService} from '../js/adventure_earth.js';
+import {createEarthService} from '../js/earth/adventure_earth.js';
 import {earthEncounter,earthSafe,earthPoint,terrainBounds} from '../js/adventure_earth_core.js';
 import {createMonsterArtRenderer} from '../js/adventure_monster_art.js';
 import {createAdventure,beginEncounter,parseSave,recordDecision,settleEncounter} from '../js/adventure_core.js';

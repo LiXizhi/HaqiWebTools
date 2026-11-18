@@ -9,8 +9,8 @@ import {createWorld,nearestInteraction,nearestWalkable,movePosition,findPath,fol
 import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
 import {enterCityDungeon,leaveCityDungeon,cityDungeonState,cityActionStatus,applyCityInteraction} from '../../js/adventure_city_dungeons_core.js';
 import {generatedCityRoute} from '../../js/adventure_city_generated_core.js';
-import {createEarthService} from '../../js/adventure_earth.js';
-import {renderCityInteraction} from '../../js/view_city_dungeon.js';
+import {createEarthService} from '../../js/earth/adventure_earth.js';
+import {renderCityInteraction} from '../../js/views/adventure/view_city_dungeon.js';
 import {restorePveBattle,playPveRound} from '../../js/combat_pve_core.js';
 import {SimpleBot} from '../../js/combat_policy_core.js';
 import {durableSave,runtimeValues,restoreRuntime} from '../../js/adventure_storage_core.js';

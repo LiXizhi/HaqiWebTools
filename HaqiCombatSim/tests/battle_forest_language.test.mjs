@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {applyForestCommission,validateForestCommission,forestCommissionGoal,forestCommissionPouch} from '../js/forest_commission_core.js';
 import {forestCommissionLesson,forestLabelWritten,forestLabelMatches} from '../js/forest_commission_language_core.js';
-import {flushForestCommissionPractice} from '../js/forest_commission_learning.js';
+import {flushForestCommissionPractice} from '../js/learning/forest_commission_learning.js';
 import {parseWordLexicon,buildWordIndex,canonicalWord} from '../js/word_lexicon_core.js';
 const access={forestTarget:{id:36200,kind:'npc',x:0,y:0}};
 const fresh=(target,phase='delivery')=>({zone:'camp',position:{x:0,y:0},languageLearning:{target},forestCommission:{version:1,phase}});

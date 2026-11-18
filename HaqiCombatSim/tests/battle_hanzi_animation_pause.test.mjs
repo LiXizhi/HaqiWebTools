@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
-import {showHanziAnimation,hanziAnimationActive} from '../js/view_hanzi_animation.js';
+import {showHanziAnimation,hanziAnimationActive} from '../js/hanzi/view_hanzi_animation.js';
 
 test('fullscreen player releases its pause on close, skip and repeated cleanup',()=>{
     const original=globalThis.document;

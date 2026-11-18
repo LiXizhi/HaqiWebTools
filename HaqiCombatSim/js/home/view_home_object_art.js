@@ -1,5 +1,5 @@
 // home/view_home_object_art.js — 家园家具与地面摆件的精灵绘制、交互特效、像素点击命中与桌面抬升几何。
-import { paintHomeDrawing } from '../view_home_drawing_art.js';
+import { paintHomeDrawing } from './view_home_drawing_art.js';
 import { HOME_COLOR_HEX, footprint, homeInteractiveKind } from '../home_core.js';
 
 export const HOME_FURNITURE_SCALE = 1.6;

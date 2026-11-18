@@ -8,7 +8,7 @@ import {installExpansion} from '../js/adventure_expansion_core.js';
 import {durableSave,runtimeValues,restoreRuntime,coreCatalogKey} from '../js/adventure_storage_core.js';
 import {migrateSaveCoordinates,migrateLocationCoordinates,locationSnapshot,migrateCampDrops} from '../js/adventure_coordinates_core.js';
 import {createPetInstance} from '../js/adventure_pet_interactions_core.js';
-import {hydratePetFile,petFileEnvelope} from '../js/adventure_pet_files.js';
+import {hydratePetFile,petFileEnvelope} from '../js/pets/adventure_pet_files.js';
 import {petSummary,petContentKey,petFilePath} from '../js/adventure_pet_files_core.js';
 import {enterDungeon,leaveDungeon,installDungeons,installDungeonIndex} from '../js/adventure_dungeons_core.js';
 import {campScenerySteps} from '../js/adventure_camp_scenery_core.js';

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {renderLocalMap} from '../js/view_adventure_local_map.js';
+import {renderLocalMap} from '../js/views/adventure/view_adventure_local_map.js';
 
 class Element {
     constructor(tag){this.tag=tag;this.children=[];this.style={};this.dataset={};this.attributes={};this.events={};}

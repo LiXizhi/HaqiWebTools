@@ -6,7 +6,7 @@ import {canPlace,validateHomePart} from '../js/home_core.js';
 import {applyHomeAction} from '../js/home_actions_core.js';
 import {homePositionBinding,homePositionCurrent} from '../js/home_position_core.js';
 import {homeObjectSurfaceLift} from '../js/home/view_home_object_art.js';
-import {createHomeBuildingCache} from '../js/home_building_cache.js';
+import {createHomeBuildingCache} from '../js/home/home_building_cache.js';
 const catalog=JSON.parse(fs.readFileSync(new URL('../data/adventure/home/catalog.json',import.meta.url))).items;
 const table={id:'table',itemId:'table',x:0,y:1},book={id:'book',itemId:'book',x:1,y:1.5,parentId:'table',underTable:true};
 test('under-table space is distinct from tabletop, fully contained and exclusive on the ground',()=>{

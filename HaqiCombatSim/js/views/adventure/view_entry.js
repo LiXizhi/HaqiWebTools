@@ -3,10 +3,10 @@ import {COLORS} from '../../adventure/renderer/primitives.js';
 import {heroPortrait} from '../../hero_renderer.js';
 import {localeChoices} from '../../locale.js';
 import {tr,setText,fill} from '../../locale_runtime.js';
-import {starterPicker,petPortrait} from '../../view_adventure_pets.js';
+import {starterPicker,petPortrait} from './view_adventure_pets.js';
 import {createEntryEmblem} from '../../ui/entry_brand.js';
-import {createHeroPicker} from '../../view_hero_picker.js';
-import {createSettingsControls} from '../../view_settings_controls.js';
+import {createHeroPicker} from './view_hero_picker.js';
+import {createSettingsControls} from './view_settings_controls.js';
 import {el,button,schoolDescription,fitGameTitle} from './primitives.js';
 
 // 第一行是母语按钮，第二行是第二语言下拉。母语不出现在下拉里。

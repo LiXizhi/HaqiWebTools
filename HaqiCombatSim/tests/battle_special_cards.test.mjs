@@ -5,10 +5,10 @@ import {createArena,startCombat,playTurn,validTargets,checkFinish} from '../js/c
 import {defaultParams,resolveParams} from '../js/combat_params_core.js';
 import {useCard,tickDots,reviveGuardians,isSupportedType} from '../js/combat_cards_core.js';
 import * as U from '../js/combat_unit_core.js';
-import {battleStatusEffects} from '../js/view_adventure_overhead_status.js';
+import {battleStatusEffects} from '../js/views/adventure/view_adventure_overhead_status.js';
 import {observeBattle} from '../js/battle_ai/haqi_adapter_core.js';
 import {createPveBattle,playPveRound,pickMonsterCard,restorePveBattle} from '../js/combat_pve_core.js';
-import {captureBattlePresentation} from '../js/view_battle_presentation.js';
+import {captureBattlePresentation} from '../js/views/adventure/view_battle_presentation.js';
 const dataset=JSON.parse(fs.readFileSync(new URL('../data/adventure/combat.json',import.meta.url)));
 const cards=JSON.parse(fs.readFileSync(new URL('../data/kids/cards.json',import.meta.url)));
 const chapter=JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json',import.meta.url)));

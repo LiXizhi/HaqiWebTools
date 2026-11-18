@@ -5,10 +5,10 @@
 import {createSpellEffects} from '../../js/spell_effects.js';
 import {createArena} from '../../js/combat_arena_core.js';
 import {resolveParams,defaultParams} from '../../js/combat_params_core.js';
-import {drawOverheadStatus,drawStatusFeedback,drawSpellMiss} from '../../js/view_adventure_overhead_status.js';
+import {drawOverheadStatus,drawStatusFeedback,drawSpellMiss} from '../../js/views/adventure/view_adventure_overhead_status.js';
 import {describeCard} from '../../js/card_description_core.js';
 import {useCard} from '../../js/combat_cards_core.js';
-import {captureBattlePresentation,battleStatusChanges} from '../../js/view_battle_presentation.js';
+import {captureBattlePresentation,battleStatusChanges} from '../../js/views/adventure/view_battle_presentation.js';
 if(new URLSearchParams(location.search).has('mobile'))document.body.className='mobile';
 const dataset=await(await fetch('data/adventure/combat.json')).json(),canvas=document.querySelector('canvas');
 const spec=(id,name)=>({id,name,school:'fire',level:10,deck:[]});

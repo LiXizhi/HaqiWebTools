@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createIslandSceneLoadingView,selectLoadingPet} from '../js/view_island_scene_loading.js';
+import {createIslandSceneLoadingView,selectLoadingPet} from '../js/views/adventure/view_island_scene_loading.js';
 
 function fixture(t,{owned=true}={}){
     const nodes=[],ctx={clearRect(){}};

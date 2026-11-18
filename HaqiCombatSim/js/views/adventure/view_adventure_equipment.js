@@ -1,0 +1,299 @@
+import {magicStarCombatLevel} from '../../adventure_magic_star_core.js';
+import {consumeEquipmentRequest} from '../../adventure_shop_navigation_core.js';
+import {forestCommissionPouch} from '../../forest_commission_core.js';
+import {dungeonFirstRewardSources} from '../../dungeon_first_rewards_core.js';
+import {adventureHonors,activeAdventureHonor} from '../../adventure_honors_core.js';
+import {heroPortrait} from '../../hero_renderer.js';
+import { setText, fill, tr } from '../../locale_runtime.js';
+import {DetailDialog} from '../../ui/detail_dialog.js';
+import {createHeroPicker} from './view_hero_picker.js';
+import {HERO_LOOK_BEANS,HERO_NAME_BEANS,heroCustomizeQuote,resolvedHeadId} from '../../adventure_hero_customize_core.js';
+import {ItemDetails, attributeSpan} from './view_adventure_item_details.js';
+import {DRAGON_TOTEMS,dragonTotemStage,dragonTotemItemExperience} from '../../adventure_progression_bonuses_core.js';
+import {signedAttribute,visibleEquipmentSummary,progressionAttributes,equipmentSetDetails} from '../../adventure_equipment_core.js';
+import {runeStatus} from '../../adventure_runes_core.js';
+import { equipmentInstances, findEquipmentInstance } from '../../adventure_equipment_instances_core.js';
+import { equipmentBlockReason, SCHOOL_NAMES } from '../../adventure_core.js';
+import { teachPointer } from '../../learning/view_teaching.js';
+import { upgradeLevels } from '../../adventure_upgrade_core.js';
+import { EQUIPMENT_SLOTS, previewEquipment } from '../../adventure_equipment_core.js';
+
+const FILTERS = [[0,'全部',[]],[2,'帽子',[2]],[5,'法袍',[5]],[7,'靴子',[7]],['weapons','武器',[10,11]],[24,'卡包',[24]],['apparel','衣饰',[6,8,9]],['accessories','饰品',[4,15,16,17]],['colorful','炫彩',[18,19,70,71]],['mounts','坐骑',['mount']]];
+
+const TRAVEL_FILTERS = [[0,'全部'],['supplies','消耗品'],['cards','卡牌'],['collection','收藏']];
+const travelCategory = item => item.kind===3?'supplies':item.kind===18?'cards':'collection';
+const PAGE_SIZE = 12;
+
+// DOM only; mutations are dispatched through the adventure controller.
+export function renderEquipment(body,model,cb,ui) {
+    const {el,button,art,tile,spellFace}=ui,{save,assets}=model,c=assets.content;
+    const state=model.equipmentView,travel=state.tab==='all';
+    const isGear=item=>item.kind===1||item.slot===24;
+    const isMountItem=item=>!!c.mountByItem?.[item.id]||(item.kind===2&&item.subtype===6)||(item.kind===10&&item.subtype===1);
+    const showingMounts=state.slot==='mounts'||state.slot==='mount';
+    const owned=Object.values(c.items).filter(item=>(save.inventory[item.id]||0)>0&&!['100','113','17213'].includes(String(item.id)));
+    const shell=el('div','equipment-layout'),character=el('section','equipment-character'),wardrobe=el('section','equipment-wardrobe');
+    const tabs=el('div','equipment-tabs');
+    for(const [id,label] of [['gear','角色装备'],['all','旅行背包'],['upgrade','强化装备'],['gems','镶嵌宝石']]) {
+        const b=button(label,()=>{if(['upgrade','gems'].includes(id)&&cb.panel){cb.panel(id);return;}state.tab=id;state.slot=0;state.page=0;state.query='';state.item=null;state.guid=null;render();},`secondary ${state.tab===id?'active':''}`);
+        b.setAttribute('aria-pressed',String(state.tab===id));tabs.append(b);
+    }
+    body.append(tabs);
+    if(travel){
+        const items=forestCommissionPouch(save);
+        if(items.length){
+            const pouch=el('section','forest-quest-pouch',el('h3','','委托袋'));
+            for(const item of items)pouch.append(el('div','forest-pouch-item',item.artItem&&c.items[item.artItem]?.art?art(assets,c.items[item.artItem].art,48,56):'',el('div','',el('strong','',item.name),el('p','',item.description))));
+            if(cb.panel)pouch.append(button('查看森林委托',()=>cb.panel('forest-commission'),'secondary'));
+            body.append(pouch);
+        }
+    }
+    body.append(shell);
+    const edit=button('✎',()=>openCustomize(edit),'equipment-edit');
+    edit.setAttribute('aria-label',tr('修改名字和形象'));
+    edit.title=edit.getAttribute('aria-label');
+    edit.disabled=!!save.pendingEncounter;
+    if(save.pendingEncounter)edit.title=tr('战斗中无法修改名字和形象');
+    const identity=el('div','equipment-identity',el('div','equipment-name-row',el('h3','',save.name),edit),el('p','muted',fill(`{v0}学徒 · 等级 {v1}`,{v0:String(SCHOOL_NAMES[save.school]),v1:String(save.level)}).text));
+    const honor=activeAdventureHonor(save),honors=adventureHonors(save);
+    if(honor){const badge=el('p','adventure-honor',honor.title);badge.title=tr(honor.source);identity.append(badge);}
+    const honorList=el('details','adventure-honors'),honorSummary=el('summary','',`冒险荣誉 · ${honors.filter(row=>row.earned).length}/${honors.length}`);
+    honorList.append(honorSummary);
+    for(const row of honors)honorList.append(el('p',row.earned?'honor-earned':'muted',(row.earned?'已获得 · ':'待挑战 · ')+row.title+'：'+row.source));
+    honorList.append(el('p','muted','已获得的最高进度荣誉会展示在场景名牌上。'));
+    identity.append(honorList);
+    function openCustomize(trigger){
+        const draft={name:save.name,appearance:save.appearance==='girl'?'girl':'boy',headId:resolvedHeadId(save),bodyId:save.bodyId,customHead:save.customHead};
+        const dialog=new DetailDialog(body,{el,title:'修改名字和形象',className:'equipment-item-dialog hero-customize-dialog'});
+        dialog.closeButton.setAttribute('aria-label',tr('关闭修改名字和形象'));
+        dialog.closeButton.title=dialog.closeButton.getAttribute('aria-label');
+        dialog.dialog.setAttribute('aria-label',tr('修改名字和形象'));
+        const picker=createHeroPicker(assets,draft);
+        const name=el('input','name-input');name.id='customize-hero-name';name.value=draft.name;name.maxLength=16;name.autocomplete='off';name.setAttribute('aria-label',tr('你的名字'));
+        const label=el('label','field-label','你的名字');label.htmlFor=name.id;
+        const hint=el('p','muted equipment-customize-hint');
+        const confirm=button('',()=>{},'primary');
+        function refresh(){
+            draft.name=name.value;
+            const quote=heroCustomizeQuote(save,draft);
+            const trimmed=draft.name.trim();
+            const invalid=!trimmed||trimmed.length>16;
+            const balance=save.inventory[984]||0;
+            setText(hint,'改名字每次 {nameCost} 魔豆，改形象每次 {lookCost} 魔豆。只收取有改动的部分。当前 {count} 魔豆。',{nameCost:HERO_NAME_BEANS,lookCost:HERO_LOOK_BEANS,count:balance});
+            if(invalid){setText(confirm,'名字需要一至十六个字');confirm.disabled=true;}
+            else if(!quote.nameChanged&&!quote.lookChanged){setText(confirm,'名字和形象都没有变化');confirm.disabled=true;}
+            else if(balance<quote.total){setText(confirm,quote.nameChanged&&quote.lookChanged?'改名字和形象需要100魔豆':quote.nameChanged?'改名字需要50魔豆':'改形象需要50魔豆');confirm.disabled=true;}
+            else{if(quote.total)setText(confirm,'花费 {count} 魔豆确认',{count:quote.total});else setText(confirm,'免费使用这个形象');confirm.disabled=false;}
+        }
+        name.oninput=refresh;
+        picker.addEventListener('change',()=>refresh());
+        confirm.onclick=()=>{
+            const quote=heroCustomizeQuote(save,{...draft,name:name.value});
+            if(confirm.disabled||!quote.nameChanged&&!quote.lookChanged)return;
+            dialog.close();
+            cb.action({type:'customize-hero',name:name.value,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId,customHead:draft.customHead});
+        };
+        dialog.body.append(picker,label,name,hint,el('p','muted','自定义头像免费切换；改名字和身体仍按原规则收费。'));
+        dialog.footer.append(confirm);
+        refresh();
+        dialog.open(trigger);
+    }
+    const portrait=heroPortrait(assets,save,130,150);
+    portrait.setAttribute('role','img');portrait.setAttribute('aria-label','角色形象');
+    character.append(el('div','equipment-profile',identity,el('div','equipment-portrait',portrait)));
+    if(!travel){
+        const slots=el('div','equipment-slots');
+        for(const slot of EQUIPMENT_SLOTS) {
+            const item=slot.id==='mount'?c.items[save.mountId]:c.items[save.equipment[slot.id]];
+            // An equipped slot shows only the item art; the slot name is kept for empty slots.
+            const b=button([item?null:el('span','equipment-slot-name',slot.name),item?art(assets,item.art,42,42):el('span','equipment-empty','＋'),el('span','equipment-slot-title',item?.name||'未装备')],()=>{state.tab='gear';state.slot=slot.id==='mount'?'mounts':slot.id;state.page=0;state.item=item?.id||null;state.guid=slot.id==='mount'?null:save.equipmentGuids?.[slot.id]||null;const next=render();if(item)next.openDetail(item);},`equipment-slot ${state.slot===slot.id||(slot.id==='mount'&&state.slot==='mounts')?'selected':''}`);
+            b.setAttribute('aria-label',fill(`{v0}：{v1}，查看该部位`,{v0:String(slot.name),v1:String(item?.name||'未装备')}).text);slots.append(b);
+        }
+        character.append(slots);
+        const statDetails=el('details','equipment-stat-details',el('summary','','当前属性'));
+        statDetails.open=state.statsOpen??false;
+        statDetails.ontoggle=()=>{state.statsOpen=statDetails.open;};
+        const stats=el('dl','equipment-summary');
+        for(const row of visibleEquipmentSummary(save,c,magicStarCombatLevel(c,{keepworkVip:model.membership?.isVip,expiresAt:model.membership?.expiresAt,now:model.now})))stats.append(el('dt','',row.label),el('dd','',`${row.value}${row.unit}`));
+        statDetails.append(stats,el('p','muted','属性加成包含装备、强化、宝石和骑乘中的坐骑；其他学系与扩展属性仅显示非零项。最大生命与超级魔力率包含等级基础值。战力按原版公式综合超级魔力率、五系最高攻击和平均防御，不计卡组、生命、暴击或临时状态。装备附加牌不占普通卡包容量。'));
+        character.append(statDetails);
+        if(c.progressionBonuses){
+            const current=DRAGON_TOTEMS.find(row=>(save.inventory[row.id]||0)>0);
+            const experience=save.inventory[50359]||0;
+            const stage=current?dragonTotemStage(c.progressionBonuses,current.id,50359,experience):null;
+            const totems=el('details','equipment-stat-details',el('summary','','龙图腾'));
+            totems.append(el('p','',current?fill(`{v0} · {v1}级 · 经验 {v2}`,{v0:String(current.name),v1:String(stage?.level??0),v2:String(experience)}).text:'尚未学习图腾信仰'));
+            for(const attribute of progressionAttributes(stage?.stats))totems.append(el('p','',attributeSpan(el,attribute)));
+            totems.append(el('p','muted',fill(`魔豆 {v0} · {v1}`,{v0:String(save.inventory[984]||0),v1:String(current?'转换信仰50魔豆，保留经验':'首次学习免费')}).text));
+            const choices=el('div','equipment-attributes');
+            for(const row of DRAGON_TOTEMS){
+                const selected=current?.id===row.id;
+                const choose=button(selected?fill(`{v0} · 已学习`,{v0:String(row.name)}).text:`${current?'转换为':'学习'}${row.name}`,()=>{
+                    if(!globalThis.confirm(current?fill(`花费50魔豆，将信仰转换为{v0}？图腾经验保留。`,{v0:String(row.name)}).text:fill(`免费学习{v0}？`,{v0:String(row.name)}).text))return;
+                    cb.action({type:'choose-totem',professionId:row.id});
+                },'secondary');
+                choose.disabled=selected||!!save.pendingEncounter||!!current&&(save.inventory[984]||0)<50||!c.progressionBonuses.professions?.[row.id]?.length;
+                choices.append(choose);
+            }
+            totems.append(choices);character.append(totems);
+        }
+    }else{
+        character.append(el('h3','equipment-section-title','旅行物品'));
+        const summary=el('dl','equipment-summary');
+        for(const [id,label] of TRAVEL_FILTERS.slice(1))summary.append(el('dt','',label),el('dd','',fill(`{v0} 种`,{v0:String(owned.filter(item=>!isGear(item)&&travelCategory(item)===id).length)}).text));
+        character.append(summary,el('p','muted','消耗品、卡牌与收藏物品收纳在这里。点击右侧物品查看详情。'));
+    }
+    shell.append(character,wardrobe);
+    const header=body.closest('.modal').querySelector('.modal-header');
+    header.querySelector('.equipment-wallet')?.remove();
+    // 货币显示与左上英雄卡一致：豆子图标 + 数量，名称保留在 title/aria/data-zh 里。
+    const walletEntry=(id,label)=>{
+        const amount=(save.inventory[id]||0).toLocaleString('zh-CN');
+        const icon=el('canvas','equipment-bean-icon');icon.width=32;icon.height=32;icon.setAttribute('aria-hidden','true');
+        const art=c.currencyIcons?.[String(id)];
+        if(art)assets.draw(icon.getContext('2d'),art,0,0,32,32);
+        const node=el('span','equipment-wallet-item',icon,el('span','',amount));
+        node.dataset.zh=label;
+        node.title=`${tr(label)} ${amount}`;
+        node.setAttribute('aria-label',node.title);
+        return node;
+    };
+    header.insertBefore(el('div','equipment-wallet',walletEntry(17213,'仙豆'),walletEntry(100,'奇豆')),header.querySelector('.close-button'));
+    const filters=el('div','equipment-filters');
+    for(const [id,label,slots=[]] of travel?TRAVEL_FILTERS:FILTERS) {
+        const b=button(label,()=>{state.slot=id;state.page=0;state.item=null;render();},`equipment-filter ${state.slot===id||slots.includes(state.slot)?'active':''}`);b.setAttribute('aria-pressed',String(state.slot===id||slots.includes(state.slot)));filters.append(b);
+    }
+    const grid=el('div','equipment-grid'),pager=el('div','equipment-pager'),detail=el('section','equipment-detail');detail.setAttribute('aria-label','物品详情');
+    wardrobe.append(filters,grid,pager);
+    const inspector=new ItemDetails(body,model,ui);
+    const {dialog,footer}=inspector;
+    inspector.body.replaceWith(detail);inspector.body=detail;
+    function openDetail(item,trigger){cb.learningEvent?.('item-selected',{itemId:item.id});paintDetail(item);inspector.open(trigger);}
+
+
+    function render(){
+        const focusLabel=document.activeElement?.getAttribute('aria-label')||document.activeElement?.textContent;
+        body.replaceChildren();const next=renderEquipment(body,model,cb,ui);
+        [...body.querySelectorAll('button')].find(b=>(b.getAttribute('aria-label')||b.textContent)===focusLabel)?.focus({preventScroll:true});
+        return next;
+    }
+    function paintList(){
+        const items=owned.filter(item=>showingMounts?isMountItem(item):(travel?!isGear(item):isGear(item))&&(!state.slot||(travel?travelCategory(item)===state.slot:(FILTERS.find(([id])=>id===state.slot)?.[2]||[state.slot]).includes(item.slot))));
+        const requested=consumeEquipmentRequest(state,items,PAGE_SIZE);
+        const pages=Math.max(1,Math.ceil(items.length/PAGE_SIZE));
+        state.page=Math.max(0,Math.min(state.page||0,pages-1));
+        grid.replaceChildren();pager.replaceChildren();
+        if(!items.some(item=>item.id===state.item))state.item=items[0]?.id||null;
+        // 教学模式：仅在第一页扫描前 12 件装备，找第一件未装备且穿上后属性提升的挂悬浮指针；
+        // 旅行背包/坐骑 tab 不参与。其他页不重复跑 previewEquipment。
+        let teachButton=null;
+        const canTeach=!travel&&!showingMounts&&state.page===0;
+        for(const item of items.slice(state.page*PAGE_SIZE,(state.page+1)*PAGE_SIZE)) {
+            const equipped=showingMounts?save.mountId===item.id:Number(save.equipment[item.slot])===item.id;
+            const b=button([art(assets,item.art,52,52),el('span','equipment-item-name',item.name)],()=>{state.item=item.id;state.guid=null;for(const cell of grid.children){const selected=cell===b;cell.classList.toggle('selected',selected);cell.setAttribute('aria-pressed',String(selected));}openDetail(item);},`equipment-item ${equipped?'equipped':''} ${state.item===item.id?'selected':''}`);
+            const quantity=save.inventory[item.id];
+            if(!isGear(item)||quantity>1)b.append(el('span','equipment-quantity',String(quantity)));
+            if(equipped)b.append(el('small','equipment-equipped-label','已装备'));
+            b.setAttribute('aria-label',fill(`{v0}{v1}{v2}，查看详情`,{v0:String(item.name),v1:String(!isGear(item)||quantity>1?fill(`，数量 {v0}`,{v0:String(quantity)}).text:''),v2:String(equipped?'，已装备':'')}).text);
+            b.title=item.name;b.setAttribute('aria-haspopup','dialog');b.setAttribute('aria-pressed',String(state.item===item.id));grid.append(b);
+            if(canTeach&&!teachButton&&!equipped&&isGear(item)&&!equipmentBlockReason(save,item,c)){
+                const instance=findEquipmentInstance(save,c,item.id,state.guid)||findEquipmentInstance(save,c,item.id);
+                const preview=previewEquipment(save,c,{type:'equip',itemId:item.id,guid:instance?.guid});
+                if(preview.rows.some(r=>r.delta>0))teachButton=b;
+            }
+        }
+        while(grid.children.length<PAGE_SIZE){const empty=el('div','equipment-item empty');empty.setAttribute('aria-hidden','true');grid.append(empty);}
+        const previous=button('上一页',()=>{state.page--;paintList();},'secondary small'),next=button('下一页',()=>{state.page++;paintList();},'secondary small');
+        previous.disabled=state.page===0;next.disabled=state.page===pages-1;
+        pager.append(previous,el('span','',`${state.page+1} / ${pages}`),next);
+        if(!items.length&&!travel)grid.append(el('p','equipment-empty-list',state.slot?'这个分类还没有物品。':'还没有装备，完成导师任务可以获得。'));
+        teachPointer(teachButton,save,c);
+        return requested;
+    }
+    function paintDetail(item){
+        detail.replaceChildren();footer.replaceChildren();if(!item){detail.append(el('p','muted','选择一件物品，查看属性、穿戴条件和获取途径。'));return;}
+        const mount=c.mountByItem?.[item.id];
+        const instance=mount?null:findEquipmentInstance(save,c,item.id,state.guid)||findEquipmentInstance(save,c,item.id);
+        const equipped=mount?save.mountId===item.id:Number(save.equipment[item.slot])===item.id&&(!save.equipmentGuids?.[item.slot]||save.equipmentGuids[item.slot]===instance?.guid),gear=isGear(item),level=instance?.serverdata.addlel||0;
+        inspector.render(item,{owned:true,instanceGuid:instance?.guid});
+        if(level)detail.append(el('p','muted',fill(`强化 +{v0}`,{v0:String(level)}).text));
+        if(gear){
+            const copies=equipmentInstances(save,c).rows.filter(row=>row.gsid===item.id);
+            if(copies.length>1){const select=el('select','equipment-instance-select');select.setAttribute('aria-label','选择装备实例');copies.forEach((row,i)=>{const option=el('option','',fill(`第 {v0} 件 · 强化 +{v1}{v2}`,{v0:String(i+1),v1:String(row.serverdata.addlel),v2:String(row.guid===save.equipmentGuids?.[item.slot]?' · 已装备':'')}).text);option.value=row.guid;select.append(option);});select.value=instance.guid;select.onchange=()=>{state.guid=select.value;paintDetail(item);};detail.append(select);}
+        }
+        if(mount){
+            const riding=save.mountId===item.id;
+            const action=riding?{type:'dismount'}:{type:'ride',itemId:item.id};
+            if(mount.art?.cdn&&!save.pendingEncounter){
+                const preview=previewEquipment(save,c,action),changes=preview.rows.filter(row=>row.delta);
+                if(changes.length){
+                    detail.append(el('p','equipment-compare-title',riding?'卸下后变化':'骑乘后变化'));
+                    for(const row of changes)detail.append(el('p',row.delta>0?'equipment-gain':'equipment-loss',`${row.label} ${row.delta>0?'+':''}${row.delta}${row.unit}`));
+                }
+            }
+            const ride=button(riding?'卸下':mount.art?.cdn?'骑上':'暂不可骑乘',()=>{dialog.close();cb.action(action);},riding?'secondary':'primary');
+            ride.disabled=!!save.pendingEncounter||!mount.art?.cdn;
+            footer.prepend(ride);
+            if(save.pendingEncounter)footer.append(el('span','muted','战斗中无法换坐骑'));
+        }else if(gear){
+            const set=equipmentSetDetails(save,c,item.id);
+            if(set){
+                const heading=el('h4','');setText(heading,'套装 {id} · 已穿戴 {count} 件',{id:set.setId,count:set.count});detail.append(heading);
+                for(const group of set.groups){
+                    const status=group.active?'已激活':'未激活';
+                    const attrNodes=[];
+                    group.attributes.forEach((row,i)=>{if(i)attrNodes.push('，');attrNodes.push(attributeSpan(el,row));});
+                    const prefix=fill('{count} 件 · {status}：',{count:group.items,status}).text;
+                    const line=el('p',group.active?'equipment-gain':'muted',prefix,...attrNodes);
+                    line.dataset.zh=`${group.items} 件 · ${status}：${group.attributes.map(row=>`${row.label} ${signedAttribute(row.value)}${row.unit}`).join('，')}`;
+                    detail.append(line);
+                }
+            }
+            const reason=save.pendingEncounter?'战斗中无法换装':equipmentBlockReason(save,item,c);
+            const action=equipped?{type:'unequip',slot:item.slot}:{type:'equip',itemId:item.id,guid:instance?.guid};
+            if(!reason){
+                const preview=previewEquipment(save,c,action),changes=preview.rows.filter(row=>row.delta);
+                const previous=c.items[save.equipment[item.slot]];
+                detail.append(el('p','equipment-compare-title',equipped?'卸下后变化':previous?fill(`替换「{v0}」后变化`,{v0:String(previous.name)}).text:'穿戴后变化'));
+                const table=el('table','equipment-comparison');
+                table.append(el('thead','',el('tr','',...['属性','当前',equipped?'卸下后':'换装后','变化'].map(label=>el('th','',label)))));
+                const rows=el('tbody','');
+                for(const row of changes)rows.append(el('tr','',el('th','',row.label),el('td','',`${row.before}${row.unit}`),el('td','',`${row.value}${row.unit}`),el('td',row.delta>0?'equipment-gain':'equipment-loss',`${row.delta>0?'+':''}${row.delta}${row.unit}`)));
+                table.append(rows);
+                if(changes.length){
+                    const keyChanges=changes.filter(row=>['hp','damagePct','fixed','capacity'].includes(row.key)||row.delta<0);
+                    const quick=el('div','equipment-quick-changes');
+                    for(const row of (keyChanges.length?keyChanges:changes.slice(0,3)))quick.append(el('p',row.delta>0?'equipment-gain':'equipment-loss',`${row.label} ${row.delta>0?'+':''}${row.delta}${row.unit}`));
+                    const comparison=el('details','equipment-full-comparison',el('summary','',fill('查看完整属性对比（{count}项）',{count:changes.length}).text),table);
+                    detail.append(quick,comparison);
+                }
+                if(!changes.length)detail.append(el('p','muted','基础属性不变，请查看附加法术。'));
+                if(preview.trimmed)detail.append(el('p','equipment-warning',fill(`卡包容量降低，将按现有顺序移出 {v0} 张配卡。拥有的卡牌不会丢失，可在卡包中重新配置。`,{v0:String(preview.trimmed)}).text));
+                const b=button(equipped?'卸下':'穿上',()=>{dialog.close();cb.action(action);},equipped?'secondary':'primary');
+                b.disabled=!!save.pendingEncounter;footer.prepend(b);if(save.pendingEncounter)footer.append(el('span','muted','战斗中无法换装'));
+            }else {detail.append(el('p','equipment-warning',reason));const b=button('穿上',()=>{},'primary');b.disabled=true;footer.prepend(b);}
+            if(item.stats[36]>0)footer.append(button('镶嵌宝石',()=>{dialog.close();cb.panel?.('gems',{itemId:item.id,guid:instance?.guid});},'secondary'));
+            if(upgradeLevels(c,item.id).length)footer.append(button('强化',()=>{dialog.close();cb.panel?.('upgrade',{itemId:item.id,guid:instance?.guid});},'secondary'));
+            if(item.slot===24&&cb.panel)footer.append(button('整理魔法卡包',()=>{dialog.close();cb.panel('deck');},'secondary'));
+        }else{
+            const rune=runeStatus(item,c,assets.dataset);
+            if(!rune&&item.id===17307&&!save.pet)footer.append(button('打开出奇蛋',()=>{dialog.close();cb.action({type:'hatch'});},'primary'));
+            else if(item.id===17172){const b=button(save.pet?'喂养宠物':'先孵化一只宠物',()=>{dialog.close();cb.action({type:'feed'});},'primary');b.disabled=!save.pet||save.pet.xp>=c.pet.levels.max_exp;footer.append(b);}
+            else if(item.stats?.[70]!==undefined&&item.stats?.[71]!==undefined){
+                const gain=dragonTotemItemExperience(save,c,item.id);
+                const use=button(gain?fill(`使用 · 图腾经验 +{v0}`,{v0:String(gain)}).text:'图腾道具暂不可用',()=>{
+                    if(!globalThis.confirm(fill(`使用1个{v0}，增加{v1}点图腾经验？`,{v0:String(item.name),v1:String(gain)}).text))return;
+                    dialog.close();cb.action({type:'use-totem-item',itemId:item.id});
+                },'primary');
+                use.disabled=!gain||!!save.pendingEncounter;footer.append(use);
+            }
+            else if(!rune)detail.append(el('p','muted','旅途收藏 · 本章暂无主动使用功能'));
+        }
+        const quests=c.quests.filter(q=>q.rewards.some(group=>group.items.some(row=>row.id===item.id)));
+        const sources=[...quests.map(q=>q.title),...dungeonFirstRewardSources(c,item.id,save.school)];
+        if(sources.length)detail.append(el('p','equipment-source',fill(`获取途径：{v0}`,{v0:sources.join('、')}).text));
+    }
+    const requested=paintList();
+    if(requested)openDetail(requested,grid.querySelector('.equipment-item.selected'));
+    return {openDetail};
+}

@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import {learningLanguage} from '../js/learning_language_core.js';
 import {wordplayGoal,wordplayAnswer,wordplayReaction,applyCompanionWordplay} from '../js/companion_wordplay_core.js';
-const source=fs.readFileSync(new URL('../js/companion_wordplay.js',import.meta.url),'utf8').replace(/^import .*;\r?\n/gm,'').replace('export function','function');
+const source=fs.readFileSync(new URL('../js/learning/companion_wordplay.js',import.meta.url),'utf8').replace(/^import .*;\r?\n/gm,'').replace('export function','function');
 const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 function setup(language='en'){
  let save={zone:'camp',languageLearning:{target:language},openingJourney:{phase:'done'}},active=true,cb,frame,commits=0,drains=0,done=0,closed=0,cancelled=0,failSave=false;

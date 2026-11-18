@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {earthEnvironment,earthSolarElevation} from '../js/adventure_earth_environment_core.js';
-import {createEarthEnvironmentPainter} from '../js/adventure_earth_environment.js';
+import {createEarthEnvironmentPainter} from '../js/earth/adventure_earth_environment.js';
 import {earthRules,earthPoint} from '../js/adventure_earth_core.js';
 import {createAdaptiveGraphics,normalizeGameSettings} from '../js/game_settings_core.js';
 const at=Date.parse('2026-03-21T12:00:00Z');

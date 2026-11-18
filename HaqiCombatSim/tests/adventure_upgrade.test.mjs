@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import * as A from '../js/adventure_core.js';
 import {upgradeLevels,upgradeAt,applyUpgradeStats} from '../js/adventure_upgrade_core.js';
 import {normalizeStats} from '../js/combat_unit_core.js';
-import {renderStrengthening} from '../js/view_adventure_strengthening.js';
+import {renderStrengthening} from '../js/views/adventure/view_adventure_strengthening.js';
 import {affordableUnstrengthenedGear} from '../js/adventure_strengthening_core.js';
 import {findEquipmentInstance} from '../js/adventure_equipment_instances_core.js';
 const content=JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json',import.meta.url)));

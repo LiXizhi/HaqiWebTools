@@ -5,7 +5,7 @@ import {starterLampExercise} from '../home_starter_room_core.js';
 import {tr} from '../locale_runtime.js';
 import {homeItemLanguage} from '../home_language_core.js';
 import {drawHomeObject} from './view_home_object_art.js';
-import {drawBuilding} from '../view_home_building.js';
+import {drawBuilding} from './view_home_building.js';
 import {el,button,activities,COLOR_HEX,INTERACTIVE_BADGES,CATEGORY_PRIORITY,DEFAULT_SUMMON_TIP} from './view_home_modals.js';
 
 export function renderHomeSummonExample({next,example,cb,run,syncSpellTip,setSpellTip,closeSummonDrawer}){

@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { bindTouchMovement } from '../js/view_adventure_movement.js';
-import { createStoryChat } from '../js/language_story.js';
+import { bindTouchMovement } from '../js/views/adventure/view_adventure_movement.js';
+import { createStoryChat } from '../js/learning/language_story.js';
 import { recordLearningCompletion } from '../js/language_adventure_core.js';
 import { createPanelController } from '../js/adventure/panel_controller.js';
 

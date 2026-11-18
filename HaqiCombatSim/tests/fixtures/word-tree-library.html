@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-CN"><meta charset="utf-8"><style>body{margin:0}#one,#two{width:620px;height:650px;display:inline-block}#pending{width:100px;height:100px}</style><p id="sentinel">宿主页面保留</p><div id="one"></div><div id="two"></div><div id="pending"></div><script type="module">
-import {WordTree} from '../../js/word_tree.js';
+import {WordTree} from '../../js/learning/word_tree.js';
 import {emptyLanguageTree} from '../../js/language_tree_core.js';
 import {seedDictionaryTree} from '../../js/language_tree_dictionary_core.js';
 const data=await (await fetch('../../data/adventure/dictionary/en.json')).json();

@@ -2,7 +2,7 @@
 import { roleLimitReachedMessage } from '../adventure_roles_core.js';
 import { createHeroDraft } from '../hero_body_core.js';
 import { confirmDuoRole } from '../role_selection_core.js';
-import { renderRoles } from '../view_adventure_roles.js';
+import { renderRoles } from '../views/adventure/view_adventure_roles.js';
 import { tutorialCards } from '../adventure_creation_preview.js';
 import { openOriginalImport } from '../haqi_import.js';
 import { displayLocale } from '../locale.js';

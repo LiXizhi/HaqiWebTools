@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {learningModeForced,enforceLearningMode} from '../js/learning_mode_policy.js';
+import {learningModeForced,enforceLearningMode} from '../js/learning/learning_mode_policy.js';
 import {normalizeLocaleSave} from '../js/locale_core.js';
-import {createSettingsControls} from '../js/view_settings_controls.js';
+import {createSettingsControls} from '../js/views/adventure/view_settings_controls.js';
 test('forceBilingual is presence-based and only matches its exact parameter',()=>{
     for(const search of ['?forceBilingual','?forceBilingual=1','?forceBilingual=false'])assert.equal(learningModeForced(search),true);
     for(const search of ['', '?forceOther=1','?x=forceBilingual'])assert.equal(learningModeForced(search),false);

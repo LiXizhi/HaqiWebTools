@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {battleSpeechController,updateBattleSpeech} from '../js/view_battle_pet_hint.js';
-import {createActorSpeech} from '../js/view_actor_speech.js';
+import {battleSpeechController,updateBattleSpeech} from '../js/views/adventure/view_battle_pet_hint.js';
+import {createActorSpeech} from '../js/views/adventure/view_actor_speech.js';
 
 function bubble(id,width=120){return {dataset:{caster:id},style:{setProperty(){}},offsetWidth:width,offsetHeight:40,remove(){},hidden:false};}
 function fixture(width=390){

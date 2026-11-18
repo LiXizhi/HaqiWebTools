@@ -1,7 +1,7 @@
 import {describeCard} from '../../card_description_core.js';
 import {heroPortrait} from '../../hero_renderer.js';
 import {tr} from '../../locale_runtime.js';
-import {createCardFace} from '../../view_adventure_card.js';
+import {createCardFace} from './view_adventure_card.js';
 import {createCloseButton} from '../../ui/controls.js';
 
 export function el(tag,cls,...children) {

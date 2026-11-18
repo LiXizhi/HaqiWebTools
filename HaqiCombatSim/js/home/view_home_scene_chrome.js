@@ -2,9 +2,9 @@
 import { buildingItem } from '../home_building_core.js';
 import { tr } from '../locale_runtime.js';
 import { createCloseButton } from '../ui/controls.js';
-import { openBuildingProperties } from '../view_home_building_properties.js';
-import { openHomeDrawing } from '../view_home_drawing.js';
-import { openHomeLabel } from '../view_home_label.js';
+import { openBuildingProperties } from './view_home_building_properties.js';
+import { openHomeDrawing } from './view_home_drawing.js';
+import { openHomeLabel } from './view_home_label.js';
 import { bindHomeTrayDrag } from './view_home_scene_input.js';
 import { el, button } from './view_home_modals.js';
 

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {renderEarthAtlas} from '../js/view_adventure_earth.js';
+import {renderEarthAtlas} from '../js/views/adventure/view_adventure_earth.js';
 import {earthRules} from '../js/adventure_earth_core.js';
 import {setTranslator} from '../js/locale_runtime.js';
 

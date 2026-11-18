@@ -5,8 +5,8 @@ import {
     TACTICS_FIELD_ENCOUNTERS,
 } from '../tactics_field_battle_core.js';
 import { openingJourney, openingJourneyTarget } from '../opening_journey_core.js';
-import { renderOpeningJourney, playOpeningPetWelcome } from '../view_opening_journey.js';
-import { renderForestCommission } from '../view_forest_commission.js';
+import { renderOpeningJourney, playOpeningPetWelcome } from '../views/adventure/view_opening_journey.js';
+import { renderForestCommission } from '../views/adventure/view_forest_commission.js';
 import {
     forestCommissionAvailable,
     forestCommissionGoal,
@@ -18,11 +18,11 @@ import {
     selectCompanionPractice,
     castCompanionPractice,
 } from '../companion_practice_core.js';
-import { openCompanionWordplay } from '../companion_wordplay.js';
+import { openCompanionWordplay } from '../learning/companion_wordplay.js';
 import { campDetourGoal } from '../camp_detour_core.js';
 import { persistReward } from '../adventure_reward_persistence.js';
 import { createLearningVoice } from '../audio/language_adventure_voice.js';
-import { recordWordPractice } from '../language_course.js';
+import { recordWordPractice } from '../learning/language_course.js';
 import { learningLesson, learningPracticeLanguage } from '../learning_language_core.js';
 import { renderCompanionPractice as defaultRenderCompanionPractice } from '../views/adventure/view_panel_modal.js';
 import * as W from '../adventure_world_core.js';
@@ -32,6 +32,7 @@ export function createOpeningController({
     getContext,
     model,
     services,
+    bus,
     close = services?.navigation?.close,
     openPanel = services?.navigation?.openPanel,
     persist = services?.persistence?.persist,
@@ -107,7 +108,7 @@ export function createOpeningController({
         const index = TACTICS_FIELD_ENCOUNTERS.findIndex(row => row.id === lessonId);
         const following = won ? TACTICS_FIELD_ENCOUNTERS[(index + 1) % TACTICS_FIELD_ENCOUNTERS.length].id : lessonId;
         const returnTo = session.returnTo;
-        stopBattleChatVoice();
+        if (!bus?.emit('audio:stop-battle-voice')) stopBattleChatVoice?.();
         tacticsPractice = null;
         ctx.setAnimation(null);
         ctx.setSelected(null);
@@ -311,7 +312,7 @@ export function createOpeningController({
         };
         forestPracticeTask = current;
         try {
-            const { flushForestCommissionPractice } = await import('../forest_commission_learning.js');
+            const { flushForestCommissionPractice } = await import('../learning/forest_commission_learning.js');
             await flushForestCommissionPractice(current, {
                 record: recordWordPractice,
                 valid,

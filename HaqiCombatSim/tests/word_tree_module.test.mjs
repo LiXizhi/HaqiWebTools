@@ -13,7 +13,7 @@ test('WordTree imports with an older cached lexicon lacking the new display expo
   if(modules.has(url.href))return modules.get(url.href);
   let source=fs.readFileSync(url,'utf8');
   if(url.pathname.endsWith('/word_tree.js')&&process.argv[1]==='old-import'){
-   source=source.replace("import {wordTreeDisplayState} from './word_tree_display_core.js';","import {wordTreeDisplayState} from './word_lexicon_core.js';");
+   source=source.replace("import {wordTreeDisplayState} from '../word_tree_display_core.js';","import {wordTreeDisplayState} from '../word_lexicon_core.js';");
   }
   if(url.pathname.endsWith('/word_lexicon_core.js')){
    source=source.split(String.fromCharCode(10)).filter(line=>!line.startsWith('export {wordTreeDisplayState}')).join(String.fromCharCode(10));
@@ -23,7 +23,7 @@ test('WordTree imports with an older cached lexicon lacking the new display expo
   const module=new vm.SourceTextModule(source,{identifier:url.href,initializeImportMeta(meta){meta.url=url.href;}});
   modules.set(url.href,module);return module;
  }
- const root=load(new URL('./js/word_tree.js',import.meta.url));
+ const root=load(new URL('./js/learning/word_tree.js',import.meta.url));
  await root.link((specifier,ref)=>load(new URL(specifier,ref.identifier)));
  await root.evaluate();
  assert.equal(typeof root.namespace.WordTree,'function');

@@ -10,8 +10,9 @@ export function createAppBus() {
 
     function emit(event, payload) {
         const handlers = listeners.get(event);
-        if (!handlers) return;
+        if (!handlers?.size) return 0;
         for (const handler of [...handlers]) handler(payload);
+        return handlers.size;
     }
 
     return { on, emit };

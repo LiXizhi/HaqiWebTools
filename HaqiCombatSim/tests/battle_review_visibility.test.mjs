@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {defeatReviewNotes} from '../js/view_battle_review.js';
+import {defeatReviewNotes} from '../js/views/adventure/view_battle_review.js';
 import {explainResult,reviewBattle} from '../js/battle_ai/review_core.js';
 test('review entry is hidden for victory, draw and empty or missing defeat reports',()=>{
  const report={result:'loss',diagnoses:[{text:'先破盾再攻击。'}],presentation:{highlights:[]}};

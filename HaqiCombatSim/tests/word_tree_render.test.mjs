@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createWordTreeView} from '../js/view_word_tree.js';
+import {createWordTreeView} from '../js/learning/view_word_tree.js';
 import {chooseLearningLabels} from '../js/word_tree_layout_core.js';
 
 test('tree defers text rasterization, bounds filtered surfaces, sleeps and wakes, releases atlases',t=>{

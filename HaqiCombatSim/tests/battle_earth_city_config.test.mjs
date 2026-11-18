@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 import {validateEarthCity,validateEarthCityProgress,earthCityChapterProgress,advanceEarthCityChapter,earthCityQuestOffers,earthCityQuestState,applyEarthCityQuest,earthCityNpcMarker,earthCityQuestTarget,earthCityStory} from '../js/adventure_earth_city_config_core.js';
 import {splitRoleSave} from '../js/adventure_storage_core.js';
 import {createAdventure,parseSave} from '../js/adventure_core.js';
-import {createEarthService} from '../js/adventure_earth.js';
+import {createEarthService} from '../js/earth/adventure_earth.js';
 import {earthPoint} from '../js/adventure_earth_core.js';
 const read=name=>JSON.parse(fs.readFileSync(new URL('../'+name,import.meta.url),'utf8'));
 const city=read('data/adventure/earth/cities/shenzhen.json');

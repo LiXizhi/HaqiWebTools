@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import {urbanResidentProfiles,streetPeopleProfiles,npcCharacter} from '../js/adventure_city_people_core.js';
 import {createStreetMotion,stepStreetMotion} from '../js/adventure_city_street_core.js';
 import {emptyStreet} from '../js/adventure_city_street_layout_core.js';
-import {createStreetPainter} from '../js/view_city_street.js';
+import {createStreetPainter} from '../js/views/adventure/view_city_street.js';
 import {walkFrameIndex} from '../js/hero_pose_core.js';
 import {warmSceneActors} from '../js/adventure_actor_assets.js';
 const manifest=JSON.parse(fs.readFileSync(new URL('../data/adventure/hero-art.json',import.meta.url),'utf8'));

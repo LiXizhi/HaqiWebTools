@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {openWordCardForCast} from '../js/word_card_cast.js';
+import {openWordCardForCast} from '../js/learning/word_card_cast.js';
 function harness(){
  let accept,close,current=true,active=true;const casts=[],activations=[];
  const decision={seq:7,key:'shield',targetId:'ally-2',discardSeqs:[2]};

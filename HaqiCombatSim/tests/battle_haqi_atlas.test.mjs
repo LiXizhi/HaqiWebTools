@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 import {atlasStripLimits,constrainAtlasStrip,atlasBounds,fitAtlas,atlasPoint,atlasInverse,zoomAtlas,constrainAtlas,atlasOceanTiles,atlasSeaDecorations,islandAtlasPoint,islandLocalPoint,islandDetailOpacity,atlasOverviewCamera,pickAtlasPortal,pickAtlasIsland,atlasCoastContains,atlasPortalSize} from '../js/haqi_atlas_core.js';
-import {renderHaqiAtlas} from '../js/view_haqi_atlas.js';
+import {renderHaqiAtlas} from '../js/views/adventure/view_haqi_atlas.js';
 import {ISLANDS} from '../js/adventure_world_map_core.js';
 
 const art=JSON.parse(fs.readFileSync(new URL('../data/adventure/world-map-art.json',import.meta.url)));

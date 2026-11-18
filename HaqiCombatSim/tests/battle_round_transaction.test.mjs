@@ -5,7 +5,7 @@ import {createAdventure,beginEncounter,recordDecision} from '../js/adventure_cor
 import {restorePveBattle,playPveRound} from '../js/combat_pve_core.js';
 import {cardsInHand} from '../js/combat_unit_core.js';
 import {resolveRecordedBattleRound} from '../js/battle_round_transaction.js';
-import {bindBattleTargeting} from '../js/view_battle_targeting.js';
+import {bindBattleTargeting} from '../js/views/adventure/view_battle_targeting.js';
 
 const read=path=>JSON.parse(fs.readFileSync(new URL('../'+path,import.meta.url)));
 const content=read('data/adventure/chapter.json'),dataset=read('data/adventure/combat.json');

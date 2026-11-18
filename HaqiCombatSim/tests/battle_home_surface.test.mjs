@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {homeObjectSurfaceLift, homeObjectVisualBounds} from '../js/home/view_home_object_art.js';
-import {createHomeBuildingCache} from '../js/home_building_cache.js';
+import {createHomeBuildingCache} from '../js/home/home_building_cache.js';
 import {footprint} from '../js/home_core.js';
 const catalog=JSON.parse(readFileSync(new URL('../data/adventure/home/catalog.json',import.meta.url))).items;
 

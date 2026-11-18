@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {streamSocialActors,socialSpawnDescriptors} from '../js/adventure_social_stream_core.js';
 import {SOCIAL_DEFAULTS} from '../js/adventure_social_core.js';
-import {petSceneProfiles} from '../js/adventure_pet_scene.js';
+import {petSceneProfiles} from '../js/pets/adventure_pet_scene.js';
 import {socialNavigationWorld,createSocialActors,stepSocialActors} from '../js/adventure_social_motion_core.js';
 import {earthRules} from '../js/adventure_earth_core.js';
 import {walkable,nearestWalkable} from '../js/adventure_world_core.js';

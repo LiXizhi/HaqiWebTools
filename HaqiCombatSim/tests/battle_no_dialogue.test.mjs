@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createLanguageAdventure} from '../js/language_adventure.js';
+import {createLanguageAdventure} from '../js/learning/language_adventure.js';
 
 function harness(load) {
     const state={stage:'battle',role:'r',identity:'guest',save:{zone:'camp',languageLearning:{enabled:true,target:'en',native:'zh-CN'},inventory:{},pets:{}},content:{items:{}}};

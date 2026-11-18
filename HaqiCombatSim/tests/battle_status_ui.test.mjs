@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createBattleRoster,updateBattleRoster,battleStatusLabels} from '../js/view_adventure_battle_status.js';
+import {createBattleRoster,updateBattleRoster,battleStatusLabels} from '../js/views/adventure/view_adventure_battle_status.js';
 import {CardRenderer} from '../js/card_renderer.js';
 
 function el(tag,cls,...children){

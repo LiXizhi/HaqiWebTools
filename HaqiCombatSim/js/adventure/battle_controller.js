@@ -3,7 +3,7 @@ import { BATTLE_CHAT } from '../battle_chat_core.js';
 import { createBattleIntro } from '../adventure_battle_intro.js';
 import { createArenaClock } from '../adventure_arena_clock.js';
 import { ownedPetRecords } from '../adventure_pet_files_core.js';
-import { captureBattlePresentation, battleStatusChanges } from '../view_battle_presentation.js';
+import { captureBattlePresentation, battleStatusChanges } from '../views/adventure/view_battle_presentation.js';
 import { resolveRecordedBattleRound } from '../battle_round_transaction.js';
 import { castHitReactions } from '../actor_animation_core.js';
 import { withBattlePointer, nextBattlePointer } from '../battle_pointer_core.js';
@@ -26,7 +26,7 @@ import { createLearningVoice } from '../audio/language_adventure_voice.js';
 import { displayLocale, textFor } from '../locale.js';
 import * as A from '../adventure_core.js';
 import * as P from '../combat_pve_core.js';
-import { battleSpeechController, eventLabel, renderBattle } from '../views/adventure/view_battle_layer.js';
+import { battleSpeechController, eventLabel, renderBattle, setCastAnnouncement } from '../views/adventure/view_battle_layer.js';
 import { createBattleAdvisorBridge } from './battle_advisor_bridge.js';
 
 export function createBattleController({
@@ -359,7 +359,7 @@ export function createBattleController({
                             if (finishCtx.battle.winner === 'near') islandSocial().activity('battle');
                             finishCtx.save.careAt = Date.now();
                             enterWorld(finishCtx.save, null, { announceBeans: false });
-                            showRewards(before);
+                            if (!bus?.emit('rewards:show', { before })) showRewards?.(before);
                             if (settle?.insufficientStamina) toast('你的精力值不足，无法得到这场战斗的战利品。');
                             bus?.emit('battle:settled', { settle });
                         }),
@@ -495,10 +495,7 @@ export function createBattleController({
                 speech.say(e.caster, companionText, { duration: 3500 });
             }
             const text = e.type === 'speak' ? '' : companionText || eventLabel(e, currentBattle, ctx.assets);
-            if (text || e.type === 'speak') {
-                const banner = nodes.battle?.querySelector?.('#cast-announcement') || document.getElementById('cast-announcement');
-                if (banner) banner.textContent = text;
-            }
+            if (text || e.type === 'speak') setCastAnnouncement(nodes.battle, text);
         }
         a.statusFeedback = a.statusFeedback.filter(change => now - change.start < 700);
         const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;

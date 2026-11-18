@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import {learningLesson} from '../js/learning_language_core.js';
-const source=fs.readFileSync(new URL('../js/view_companion_wordplay.js',import.meta.url),'utf8');
+const source=fs.readFileSync(new URL('../js/views/adventure/view_companion_wordplay.js',import.meta.url),'utf8');
 function fixture(){
  const nodes=[];let resets=0,mics=0;
  function el(tag,className='',...children){const node={tag,className,children,dataset:{},attributes:{},value:'',hidden:false,disabled:false,classList:{add(){}},setAttribute(k,v){this.attributes[k]=v;},append(...items){this.children.push(...items);},replaceChildren(...items){this.children=items;},addEventListener(){},removeEventListener(){},remove(){this.removed=true;},focus(){this.focused=true;},getClientRects(){return this.hidden?[]:[{}];}};nodes.push(node);return node;}

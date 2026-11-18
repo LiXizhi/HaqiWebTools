@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createPhotoHeadWorkspace} from '../js/photo_head_workspace.js';
-import {createPhotoHeadService} from '../js/photo_head_service.js';
+import {createPhotoHeadWorkspace} from '../js/photo_head/photo_head_workspace.js';
+import {createPhotoHeadService} from '../js/photo_head/photo_head_service.js';
 import {scaleHeadFrames,photoHeadOutfitPreference} from '../js/photo_head_core.js';
 const template=JSON.parse(readFileSync(new URL('../data/hero-preview.json',import.meta.url))).heads['elf-boy'];
 const reference=JSON.parse(readFileSync(new URL('../data/adventure/photo-head.json',import.meta.url))).references.boy;

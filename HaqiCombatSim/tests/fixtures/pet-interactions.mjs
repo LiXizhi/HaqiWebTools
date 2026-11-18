@@ -1,8 +1,8 @@
 import {installExpansion} from '../../js/adventure_expansion_core.js';
 import {createPetInstance,petPairStatus,petDisplayScale} from '../../js/adventure_pet_interactions_core.js';
-import {createPetRepository} from '../../js/adventure_pet_repository.js';
-import {createPetIndexedDB} from '../../js/adventure_pet_indexeddb.js';
-import {createPetInteractionService} from '../../js/adventure_pet_interaction_service.js';
+import {createPetRepository} from '../../js/pets/adventure_pet_repository.js';
+import {createPetIndexedDB} from '../../js/pets/adventure_pet_indexeddb.js';
+import {createPetInteractionService} from '../../js/pets/adventure_pet_interaction_service.js';
 
 const $=id=>document.getElementById(id),DAY=86400000,ids=['preview-hero','preview-npc-a','preview-npc-b'];
 const scope='fixture-pet-interactions-v1',adapter=createPetIndexedDB({scope,databaseName:'haqi-pet-interactions-fixture-v1'});

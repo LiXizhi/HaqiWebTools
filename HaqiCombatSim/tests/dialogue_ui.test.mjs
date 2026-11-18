@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {bindDialogue} from '../js/view_adventure_dialogue.js';
+import {bindDialogue} from '../js/views/adventure/view_adventure_dialogue.js';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import {forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS} from '../js/forest_commission_core.js';

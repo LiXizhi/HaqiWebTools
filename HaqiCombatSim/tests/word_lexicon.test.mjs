@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {parseWordLexicon,buildWordIndex,canonicalWord,matchWordText,localWordMapping,supplementWordMapping,seedWordLexicon,migrateWordLexicon,sentenceWordTokens,wordTreeKey,wordTreeDisplayState} from '../js/word_lexicon_core.js';
-import {createWordLexiconLoader} from '../js/word_lexicon.js';
+import {createWordLexiconLoader} from '../js/learning/word_lexicon.js';
 import {emptyLanguageTree,recordTreeExposure,setTreeMark,treeWordStatus,validateTreeQuestions} from '../js/language_tree_core.js';
 import {localePackageFiles} from '../scripts/package_locale.mjs';
 const texts=Object.fromEntries(['en','zh','ja','ko'].map(language=>[language,fs.readFileSync(new URL(`../data/adventure/locale/word_${language}.txt`,import.meta.url),'utf8')]));

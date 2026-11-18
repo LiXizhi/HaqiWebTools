@@ -4,7 +4,7 @@ import { SCHOOLS, cloneParams, diffParams } from '../combat_params_core.js';
 import { buildJobs, aggregateMatrix, aggregateGlobal, mergeStats } from './sim_batch_core.js';
 import { SimPool } from './sim_pool.js';
 import { tuneProportional, tuneCoordinate } from './sim_tuner_core.js';
-import { buildPrompt, requestAdvice, parseParamPatch, heuristicAdvice } from '../llm_advisor.js';
+import { buildPrompt, requestAdvice, parseParamPatch, heuristicAdvice } from './llm_advisor.js';
 import { SCHOOL_NAMES, SCHOOL_COLORS } from '../combat_presets_core.js';
 import { h, clear, select, numberInput, pct, fmt, toast, download } from '../utils.js';
 

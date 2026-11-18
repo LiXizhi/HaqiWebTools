@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {drawMonsterTerritory} from '../js/view_monster_territory.js';
+import {drawMonsterTerritory} from '../js/views/adventure/view_monster_territory.js';
 
 // Sample actual emitted gradient stops where ground remains visible beside a sprite.
 function sample(distance,time=0,reduced=true) {

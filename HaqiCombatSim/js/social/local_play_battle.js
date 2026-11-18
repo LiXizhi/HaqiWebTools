@@ -1,5 +1,5 @@
 // social/local_play_battle.js — 本地双人模式同屏战斗、红蘑菇赛场与 AI 队友战斗决策。
-import { captureBattlePresentation } from '../view_battle_presentation.js';
+import { captureBattlePresentation } from '../views/adventure/view_battle_presentation.js';
 import { recordTacticsRound } from '../battle_tactics_journal_core.js';
 import { nextBattlePointer } from '../battle_pointer_core.js';
 import { validTargets } from '../combat_arena_core.js';

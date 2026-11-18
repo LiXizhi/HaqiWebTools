@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { renderOriginalImport } from '../js/view_haqi_import.js';
+import { renderOriginalImport } from '../js/views/adventure/view_haqi_import.js';
 
 class Element {
     constructor(tag) { this.tag=tag;this.children=[];this.style={};this.dataset={};this.attributes={}; }

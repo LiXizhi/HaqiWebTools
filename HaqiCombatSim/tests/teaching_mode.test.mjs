@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { teachingMode, beginnerTeaching } from '../js/adventure_core.js';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
-import { teachPointer } from '../js/view_teaching.js';
+import { teachPointer } from '../js/learning/view_teaching.js';
 
 const content = {
     npcs: { 1: { zone: 'camp' }, 2: { zone: 'town' } },

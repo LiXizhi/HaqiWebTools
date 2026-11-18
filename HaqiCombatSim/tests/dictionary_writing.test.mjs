@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createHanziWriting} from '../js/view_hanzi_writing.js';
+import {createHanziWriting} from '../js/hanzi/view_hanzi_writing.js';
 
 function pad(t,count=4){
  const original=globalThis.Path2D;globalThis.Path2D=class{};t.after(()=>{if(original===undefined)delete globalThis.Path2D;else globalThis.Path2D=original;});

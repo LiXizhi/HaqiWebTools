@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createEarthPlaces} from '../js/adventure_earth_places.js';
+import {createEarthPlaces} from '../js/earth/adventure_earth_places.js';
 
 test('only the latest city is retained; favorite coordinates survive reopening and removal',async()=>{
     let record;

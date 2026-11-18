@@ -12,7 +12,7 @@ import { createPolicy } from '../js/combat_policy_core.js';
 import { unitSpec, presetDeck, matchupMatrix, SCHOOL_NAMES } from '../js/combat_presets_core.js';
 import { buildJobs, runJob, mergeStats, aggregateMatrix, aggregateGlobal, wilson } from '../js/combat/sim_batch_core.js';
 import { tuneProportional } from '../js/combat/sim_tuner_core.js';
-import { buildPrompt, parseParamPatch, heuristicAdvice } from '../js/llm_advisor.js';
+import { buildPrompt, parseParamPatch, heuristicAdvice } from '../js/combat/llm_advisor.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const readJson = async (p) => JSON.parse(await readFile(path.join(root, p), 'utf8'));

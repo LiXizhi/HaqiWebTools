@@ -1,7 +1,7 @@
 import {loadKeepwork} from './adventure_cloud.js';
 import {readOriginalCharacter} from './haqi_original.js';
 import {ORIGINAL_IMPORT_BAGS,prepareOriginalImport} from './haqi_import_core.js';
-import {renderOriginalImport} from './view_haqi_import.js';
+import {renderOriginalImport} from './views/adventure/view_haqi_import.js';
 import {renderPanel} from './views/adventure/view_panel_modal.js';
 
 export function openOriginalImport({root,overlay,assets,isCurrent,commit,onClose,loadSDK=loadKeepwork,read=readOriginalCharacter}) {

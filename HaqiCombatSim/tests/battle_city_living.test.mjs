@@ -11,7 +11,7 @@ import {durableSave,runtimeValues,restoreRuntime} from '../js/adventure_storage_
 import {createWorld,findPath,movePosition} from '../js/adventure_world_core.js';
 import {livingArtDimensions} from '../js/adventure_city_living_art_core.js';
 import {streetArtResources,validateStreetArtFrames} from '../js/adventure_city_art_core.js';
-import {createStreetPainter,streetObjectBounds,paintStreetGround,layoutStreetSignText,streetShadowBounds} from '../js/view_city_street.js';
+import {createStreetPainter,streetObjectBounds,paintStreetGround,layoutStreetSignText,streetShadowBounds} from '../js/views/adventure/view_city_street.js';
 const read=f=>JSON.parse(fs.readFileSync(new URL('../'+f,import.meta.url),'utf8'));
 const art=read('data/adventure/earth/street-art.json');
 const setup=()=>{const c=read('data/adventure/chapter.json');c.worldMaps={camp:read(c.worldMapIndex.islands.camp.file)};c.dungeons=[];c.cityStreetArt=art;const save=createAdventure(c,{seed:42});save.zone='earth';return{c,save};};

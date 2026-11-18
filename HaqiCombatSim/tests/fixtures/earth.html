@@ -12,12 +12,12 @@ import {createWorld,movePosition,invalidateWorldObjects,nearestInteraction} from
 import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
 import {gearScoreV2} from '../../js/combat_formulas_core.js';
 import {playerSpec} from '../../js/adventure_core.js';
-import {createEarthService} from '../../js/adventure_earth.js';
+import {createEarthService} from '../../js/earth/adventure_earth.js';
 import {earthNearest,earthGeo,earthChapterEvent,distanceToRoad} from '../../js/adventure_earth_core.js';
 import {earthCityStory,earthCityChapterProgress,earthCityQuestOffers,applyEarthCityQuest} from '../../js/adventure_earth_city_config_core.js';
-import {renderEarthAtlas,renderEarthLoading,renderEarthStory} from '../../js/view_adventure_earth.js';
-import {renderMaps} from '../../js/view_adventure_maps.js';
-import {createIslandSocial} from '../../js/adventure_social_controller.js';
+import {renderEarthAtlas,renderEarthLoading,renderEarthStory} from '../../js/views/adventure/view_adventure_earth.js';
+import {renderMaps} from '../../js/views/adventure/view_adventure_maps.js';
+import {createIslandSocial} from '../../js/social/adventure_social_controller.js';
 import {createRuntimeStore} from '../../js/adventure_runtime_store.js';
 
 const output=document.querySelector('#result'),root=document.querySelector('#overlay'),canvas=document.querySelector('#world'),tools=document.querySelector('#tools');

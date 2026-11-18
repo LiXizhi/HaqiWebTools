@@ -107,3 +107,20 @@ test('views/ and ui/ do not depend on adventure controllers, and legacy compatib
         assert.equal(fs.existsSync(path.join(jsRoot, shim)), false, `${shim} should stay removed`);
     }
 });
+
+test('no view_*.js remains in js/ root and adventure controllers do not construct DOM nodes directly', () => {
+    const rootViews = fs.readdirSync(jsRoot, { withFileTypes: true })
+        .filter(entry => entry.isFile() && entry.name.startsWith('view_') && entry.name.endsWith('.js'))
+        .map(entry => entry.name);
+    assert.deepEqual(rootViews, []);
+    const controllerDomViolations = [];
+    for (const rel of graph.keys()) {
+        if (!rel.startsWith('adventure/') || !rel.endsWith('_controller.js')) continue;
+        const stripped = fs
+            .readFileSync(path.join(jsRoot, rel), 'utf8')
+            .replace(/\/\*[\s\S]*?\*\//g, '')
+            .replace(/\/\/.*$/gm, '');
+        if (/\b(createElement|innerHTML)\b/.test(stripped)) controllerDomViolations.push(rel);
+    }
+    assert.deepEqual(controllerDomViolations, []);
+});

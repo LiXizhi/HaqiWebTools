@@ -9,9 +9,9 @@ import {heroPortrait} from '../hero_renderer.js';
 import {createCloseButton} from '../ui/controls.js';
 import {validTargets} from '../combat_arena_core.js';
 import {presentationEventDurationMs,presentationEventProgress,samplePresentationClock} from '../battle_presentation_core.js';
-import {connectHanziAnimation} from '../hanzi_animation_bridge.js';
+import {connectHanziAnimation} from '../hanzi/hanzi_animation_bridge.js';
 import {textFor} from '../locale.js';
-import {speakBrowserText} from '../browser_speech.js';
+import {speakBrowserText} from '../learning/browser_speech.js';
 import {
     createMastersArena,
     wizardAttackHand,

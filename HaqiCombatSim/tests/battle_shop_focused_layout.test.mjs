@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-const source=fs.readFileSync(new URL('../js/view_adventure_shop.js',import.meta.url),'utf8');
+const source=fs.readFileSync(new URL('../js/views/adventure/view_adventure_shop.js',import.meta.url),'utf8');
 const start=source.indexOf('        catalog.hidden=focused'),end=source.indexOf("        catalog.querySelector('.shop-toolbar')",start);
 const apply=source.slice(start,end);
 function node(){const classes=new Set();return {dataset:{},classes,classList:{toggle(name,on){on?classes.add(name):classes.delete(name);}}};}

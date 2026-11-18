@@ -7,7 +7,7 @@ import {createHanziProgress,validateHanziProgress} from '../js/hanzi_core.js';
 import {ownsHanziCard} from '../js/hanzi_battle_core.js';
 import {catalogGoalRows,catalogVisibleGoalRows,catalogQuestReady,claimCatalogQuest,catalogAcceptBlock} from '../js/adventure_catalog_quests_core.js';
 import {durableSave,runtimeValues} from '../js/adventure_storage_core.js';
-import {connectHanziAnimation} from '../js/hanzi_animation_bridge.js';
+import {connectHanziAnimation} from '../js/hanzi/hanzi_animation_bridge.js';
 const pack=JSON.parse(fs.readFileSync(new URL('../data/adventure/island-packs/hanzi.json',import.meta.url)));
 const cfg=pack.memory,params=memoryParams({}),quest=pack.quests.find(q=>q.id===cfg.stories[0].questId);
 const state=()=>({languageLearning:{target:'zh-CN'},seed:77,zone:'hanzi',hanzi:createHanziProgress(),quests:{},inventory:{}});

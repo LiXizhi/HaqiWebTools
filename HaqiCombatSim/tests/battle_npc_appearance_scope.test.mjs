@@ -33,7 +33,7 @@ test('actual free-chat portrait callback keeps island and Earth surface art',()=
 });
 
 test('actual Earth surface story canvas draws its original NPC portrait',()=>{
-    const s=source('view_adventure_earth.js'),code=s.slice(s.indexOf('export function renderEarthStory(')).replace('export function','function'),draws=[],avatars=[];
+    const s=source('views/adventure/view_adventure_earth.js'),code=s.slice(s.indexOf('export function renderEarthStory(')).replace('export function','function'),draws=[],avatars=[];
     const element=()=>({classList:{add(){}},setAttribute(){},append(){},replaceChildren(){},getContext(){return{};}});
     const context={npcCharacter,fill,tr,setText,heroPortrait:(...args)=>{avatars.push(args);return element();},el:element,button:element,createCloseButton:element};
     vm.createContext(context);vm.runInContext(code,context);

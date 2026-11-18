@@ -1,6 +1,6 @@
 import {fill,tr,setTranslator} from '../js/locale_runtime.js';
 import {parseLocaleFile} from '../js/locale_core.js';
-import {createPetTraitBadges} from '../js/view_pet_traits.js';
+import {createPetTraitBadges} from '../js/views/adventure/view_pet_traits.js';
 import {applyPetTraitStats,petTraitParams,petHungerMultiplier} from '../js/adventure_pet_traits_core.js';
 import {powerPipChanceByLevel} from '../js/combat_formulas_core.js';
 import {petMaxHp,petCapacity,partySpecs} from '../js/adventure_pets_core.js';
@@ -8,7 +8,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-const source=fs.readFileSync(new URL('../js/view_adventure_pet_details.js',import.meta.url),'utf8');
+const source=fs.readFileSync(new URL('../js/views/adventure/view_adventure_pet_details.js',import.meta.url),'utf8');
 test('pet detail vital numbers, raw element names and growth stages use real target dictionaries',()=>{
  try{
   for(const language of ['en','ja','ko']){

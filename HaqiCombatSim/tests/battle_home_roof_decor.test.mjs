@@ -2,7 +2,7 @@ import test from 'node:test';import assert from 'node:assert/strict';import fs f
 import {applyHomeAction,homeObjects} from '../js/home_actions_core.js';
 import {canPlace,validateHomePart} from '../js/home_core.js';
 import {obstruction} from '../js/home_building_core.js';
-import {createHomeBuildingCache} from '../js/home_building_cache.js';
+import {createHomeBuildingCache} from '../js/home/home_building_cache.js';
 const catalog=JSON.parse(fs.readFileSync(new URL('../data/adventure/home/catalog.json',import.meta.url))).items;
 const floor0={id:'f0',itemId:'build-wood-floor',x:31,y:0},floor1={id:'f1',itemId:'build-wood-floor',x:32,y:0};
 const roof={id:'r',itemId:'build-wood-roof',x:31,y:0},prop={id:'p',itemId:'brick-chimney',x:31,y:0,parentId:'r',properties:{surface:'roof'}};

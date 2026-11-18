@@ -1,7 +1,7 @@
 import {createDungeonStory} from '../../js/adventure_dungeon_story.js';
 import {awardDungeonLine} from '../../js/adventure_dungeon_language_core.js';
 import {pauseBackgroundScene} from '../../js/adventure_scene_pause_core.js';
-import {renderDungeonJourney} from '../../js/view_dungeon_journey.js';
+import {renderDungeonJourney} from '../../js/views/adventure/view_dungeon_journey.js';
 import {claimTowerReward} from '../../js/adventure_dungeon_journeys_core.js';
 import {createSocialActors,stepSocialActors} from '../../js/adventure_social_motion_core.js';
 import {startCoopRun} from '../../js/adventure_coop_core.js';
@@ -15,7 +15,7 @@ import {renderHud} from '../../js/views/adventure/view_hud.js';
 import {renderBattle} from '../../js/views/adventure/view_battle_layer.js';
 import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
 import {enterDungeon,leaveDungeon,dungeonFor} from '../../js/adventure_dungeons_core.js';
-import {renderDungeons} from '../../js/view_adventure_dungeons.js';
+import {renderDungeons} from '../../js/views/adventure/view_adventure_dungeons.js';
 const $=id=>document.getElementById(id);
 try{
 const assets=await loadResources(),save=A.createAdventure(assets.content),renderer=createRenderer($('world'),assets);

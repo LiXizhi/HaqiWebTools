@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {dictionarySpellingClue,dictionaryEntryStatus,dictionaryDailyProgress,emptyDictionary,validateDictionary,dailyDictionaryPlan,recordDictionaryView,recordDictionaryAttempt,completeDictionary,importLegacy,dictionaryChoices,normalizeSpelling,validateContextQuestion,validateContextVerdict,mergeDictionaryBuff} from '../js/dictionary_core.js';
 import {awardDailySpeech,dailyBuffs} from '../js/language_daily_buff_core.js';
-import {createDictionaryStore} from '../js/dictionary_store.js';
+import {createDictionaryStore} from '../js/learning/dictionary_store.js';
 import {rewardSnapshot,rewardChanges} from '../js/adventure_reward_feedback_core.js';
 const read=lang=>JSON.parse(fs.readFileSync(new URL('../data/adventure/dictionary/'+lang+'.json',import.meta.url)));
 const en=read('en'),zh=read('zh'),at=new Date(2026,9,16,12).getTime(),day=86400000;
@@ -146,7 +146,7 @@ test('spelling clues hide whole target words and authored forms without damaging
 });
 
 test('adventure dictionary retains existing animations, corrects dance and animationWrite completes practice',async()=>{
-    const {createDictionary}=await import('../js/adventure_dictionary.js');
+    const {createDictionary}=await import('../js/learning/adventure_dictionary.js');
     let homePayload=null,entryPayload=null,successMsg='',viewCallbacks=null;
     const state={save:{seed:9,hanzi:{}},owner:'u1',role:'r1',stage:'world'};
     const mem={state:emptyDictionary()};

@@ -1,4 +1,4 @@
-import {captureBattlePresentation} from './view_battle_presentation.js';
+import {captureBattlePresentation} from './views/adventure/view_battle_presentation.js';
 import {recordTacticsRound} from './battle_tactics_journal_core.js';
 
 // A failed checkpoint must not leave a mutated (possibly finished) battle behind

@@ -12,7 +12,7 @@ import {createWorld,findPath} from '../js/adventure_world_core.js';
 import {durableSave,runtimeValues,restoreRuntime} from '../js/adventure_storage_core.js';
 import {restorePveBattle,playPveRound} from '../js/combat_pve_core.js';
 import {SimpleBot} from '../js/combat_policy_core.js';
-import {drawDungeonEntrance} from '../js/view_dungeon_entrance.js';
+import {drawDungeonEntrance} from '../js/views/adventure/view_dungeon_entrance.js';
 const read=f=>JSON.parse(fs.readFileSync(new URL('../'+f,import.meta.url),'utf8'));
 function setup(){const content=read('data/adventure/chapter.json');content.worldMaps={camp:read(content.worldMapIndex.islands.camp.file)};content.dungeons=[];const save=createAdventure(content,{seed:42});save.zone='earth';return {content,save};}
 const city={id:'12345',name:'测试城市',lon:114,lat:22,level:2};

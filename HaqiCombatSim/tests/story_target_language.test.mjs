@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {storyLanguageLines,storyHasLanguage,prepareStoryLanguage} from '../js/story_language.js';
-import {createStoryChat} from '../js/language_story.js';
+import {storyLanguageLines,storyHasLanguage,prepareStoryLanguage} from '../js/learning/story_language.js';
+import {createStoryChat} from '../js/learning/language_story.js';
 const catalog=JSON.parse(fs.readFileSync(new URL('../data/adventure/camp-conversations.json',import.meta.url)));
 const profile=catalog.profiles.find(p=>p.npcId===36205),story=profile.stories[0];
 const flush=()=>new Promise(resolve=>setImmediate(resolve));

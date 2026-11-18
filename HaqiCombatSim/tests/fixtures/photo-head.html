@@ -1,10 +1,10 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>照片形象隔离验收</title><link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"></head><body class="haqi-app" style="padding:20px;background:#244b42"><p style="color:white">隔离测试：合成参考照片、模拟生成与账号。真实裁剪、去底、WebP压缩和预览；不读写玩家存档、不调用在线生图。</p><button id="open" class="primary">打开照片形象</button><p id="result"></p><div id="picker"></div><script type="module">
 import {HeroRenderer} from '../../js/hero_renderer.js';
-import {createPhotoHeadWorkspace} from '../../js/photo_head_workspace.js';
-import {createPhotoHeadService} from '../../js/photo_head_service.js';
-import {openPhotoHeadView} from '../../js/view_photo_head.js';
-import {createHeroPicker} from '../../js/view_hero_picker.js';
-import {blobDataURL} from '../../js/photo_head_images.js';
+import {createPhotoHeadWorkspace} from '../../js/photo_head/photo_head_workspace.js';
+import {createPhotoHeadService} from '../../js/photo_head/photo_head_service.js';
+import {openPhotoHeadView} from '../../js/photo_head/view_photo_head.js';
+import {createHeroPicker} from '../../js/views/adventure/view_hero_picker.js';
+import {blobDataURL} from '../../js/photo_head/photo_head_images.js';
 import {setTranslator} from '../../js/locale_runtime.js';
 import {parseLocaleFile} from '../../js/locale_core.js';
 const root=document.querySelector('#result'),params=new URLSearchParams(location.search),files=new Map(),cacheMap=new Map();

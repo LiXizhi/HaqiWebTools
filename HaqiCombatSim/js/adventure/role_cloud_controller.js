@@ -2,7 +2,7 @@
 import { checkedRoleProgress, roleLimit, startupRoleId } from '../adventure_roles_core.js';
 import { startWorldOnFoot } from '../adventure_mounts_core.js';
 import { checkedProgress } from '../adventure_cloud_core.js';
-import { renderCloud } from '../view_adventure_cloud.js';
+import { renderCloud } from '../views/adventure/view_adventure_cloud.js';
 import { readLocal, localUpdatedAt, replaceLocalWithBackup, readBackup } from '../adventure_assets.js';
 import { createRoleTitleController } from './role_title_controller.js';
 import * as A from '../adventure_core.js';

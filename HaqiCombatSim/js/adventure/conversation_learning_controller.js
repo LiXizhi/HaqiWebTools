@@ -3,18 +3,18 @@ import * as W from '../adventure_world_core.js';
 import {npcCharacter} from '../adventure_city_people_core.js';
 import {rewardSnapshot} from '../adventure_reward_feedback_core.js';
 import {persistReward} from '../adventure_reward_persistence.js';
-import {createCharacterConversation} from '../character_conversation.js';
+import {createCharacterConversation} from '../learning/character_conversation.js';
 import {characterProfile} from '../character_relationship_core.js';
 import {heroPortrait} from '../hero_renderer.js';
-import {createLanguageAdventure} from '../language_adventure.js';
+import {createLanguageAdventure} from '../learning/language_adventure.js';
 import {DAILY_BUFF_NAMES,awardDailySpeech} from '../language_daily_buff_core.js';
-import {createTutor} from '../language_learning.js';
-import {invalidateLanguageTreeCapture} from '../language_tree_capture.js';
-import {enforceLearningMode} from '../learning_mode_policy.js';
+import {createTutor} from '../learning/language_learning.js';
+import {invalidateLanguageTreeCapture} from '../learning/language_tree_capture.js';
+import {enforceLearningMode} from '../learning/learning_mode_policy.js';
 import {loadLocaleFiles,configureLocale,hasLocale,setGlossAligner,displayLocale} from '../locale.js';
 import {localeIdsToLoad,isLocaleId} from '../locale_core.js';
 import {tr} from '../locale_runtime.js';
-import {createLearningChatView} from '../view_learning_chat.js';
+import {createLearningChatView} from '../learning/view_learning_chat.js';
 import {LOCALE_PREF_KEY,storedLocalePref,storedSecondLocale,rememberSecondLocale} from './locale_prefs.js';
 
 export function resolveConversationPortrait(assets,source,{heroPortraitFn=heroPortrait,artFn=art,npcCharacterFn=npcCharacter}={}){

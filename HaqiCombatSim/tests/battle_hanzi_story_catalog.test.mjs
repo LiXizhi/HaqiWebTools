@@ -26,7 +26,7 @@ test('animation paths admit disambiguated names but reject traversal, alternate 
  for(const animation of ['hanzi/../hanzi_ri.html','hanzi/hanzi_ri.html?x=1','https://example.com/hanzi_ri.html','//cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_ri.html','hanzi/hanzi_mu__eye.html']){const data=structuredClone(dictionary);data.entries[0].animation=animation;assert.throws(()=>validateDictionary(data),/动画地址/);}
 });
 test('authored replacements are standalone executable pages with writing and completion hooks',()=>{
- const mapped=read('js/hanzi_story_animations.js');
+ const mapped=read('js/hanzi/hanzi_story_animations.js');
  for(const id of ['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','mu_eye','jing','xi','er','xin','tian_field','yun','li','zhi','zhi_peak']){
   const filename=`hanzi_${id}.html`,html=read('hanzi/'+filename);
   const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];

@@ -2,7 +2,7 @@ import {createRequire} from 'node:module';import assert from 'node:assert/strict
 const {chromium}=createRequire(import.meta.url)(process.env.PLAYWRIGHT_PATH||'playwright');const browser=await chromium.launch({channel:'chrome',headless:true});
 try{const page=await browser.newPage({viewport:{width:1440,height:960}}),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:8792/HomeBuildingDemo.html');await page.waitForFunction(()=>window.buildingDemo?.ready);
  const result=await page.evaluate(async()=>{
-  const {createHomeStore}=await import('/js/home_store.js'),{createHome}=await import('/js/home_core.js');const store=createHomeStore('capacity-test',{name:'haqi-capacity-test'});
+  const {createHomeStore}=await import('/js/home/home_store.js'),{createHome}=await import('/js/home_core.js');const store=createHomeStore('capacity-test',{name:'haqi-capacity-test'});
   const far=Object.fromEntries(Array.from({length:19999},(_,i)=>['o'+i,{id:'o'+i,itemId:'build-wood-floor',x:3200+i,y:3200}]));
   const h=createHome('test','容量测试',1);h.parts={'chunk:100,100':1,'chunk:0,0':1};await store.install(h,{'chunk:100,100':far,'chunk:0,0':{}});
   await store.mutate(h.id,['chunk:0,0'],(_,d)=>{d['chunk:0,0'].a={id:'a',itemId:'build-wood-floor',x:0,y:0};});

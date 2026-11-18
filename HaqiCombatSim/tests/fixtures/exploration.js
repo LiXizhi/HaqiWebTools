@@ -4,7 +4,7 @@ import {createWorld,findPath,followPath,nearestInteraction,movePosition} from '.
 import {regionAt} from '../../js/adventure_island_layout_core.js';
 import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
 import {renderHud} from '../../js/views/adventure/view_hud.js';
-import {renderMaps} from '../../js/view_adventure_maps.js';
+import {renderMaps} from '../../js/views/adventure/view_adventure_maps.js';
 
 // An isolated in-memory scene viewer. No role, local-storage or cloud writes.
 const $=id=>document.getElementById(id),status=$('preview-status');

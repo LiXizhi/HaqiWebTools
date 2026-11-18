@@ -2,8 +2,8 @@
   "localeDir": "data/adventure/locale",
   "base": "en.txt",
   "files": [
-    "js/view_language_learning.js",
-    "js/view_haqi_import.js",
+    "js/learning/view_language_learning.js",
+    "js/views/adventure/view_haqi_import.js",
     "js/card_renderer.js",
     "js/card_description_core.js",
     "js/adventure_app.js",
@@ -15,46 +15,37 @@
     "js/adventure_checkin_core.js",
     "js/adventure_cloud.js",
     "js/adventure_expansion_core.js",
-    "js/language_learning.js",
+    "js/learning/language_learning.js",
     "js/language_learning_core.js",
-    "js/view_battle_intro.js",
-    "js/view_dungeon_journey.js",
-    "js/view_bilingual_dialogue.js",
+    "js/views/adventure/view_battle_intro.js",
+    "js/views/adventure/view_dungeon_journey.js",
+    "js/learning/view_bilingual_dialogue.js",
     "js/adventure_catalog_quests_core.js",
     "js/adventure_quest_journal_core.js",
-    "js/view_dungeon_story.js",
+    "js/views/adventure/view_dungeon_story.js",
     "js/adventure_dungeon_story.js",
-    "js/view_actor_speech.js",
-    "js/view_character_details.js",
-    "js/view_city_dungeon.js",
-    "js/view_city_street.js",
-    "js/view_dialogue_mapping.js",
-    "js/view_dialogue_microphone.js",
-    "js/view_dungeon_entrance.js",
-    "js/view_earth_boat.js",
-    "js/view_friend_chat.js",
-    "js/view_hero_picker.js",
-    "js/view_language_adventure.js",
-    "js/view_learning_chat.js",
-    "js/view_learning_mode.js",
-    "js/view_monster_territory.js",
-    "js/view_party_companion_pet.js",
-    "js/view_red_mushroom.js",
-    "js/view_settings_controls.js",
-    "js/view_social_actions.js",
-    "js/view_teaching.js",
+    "js/views/adventure/view_actor_speech.js",
+    "js/views/adventure/view_character_details.js",
+    "js/views/adventure/view_city_dungeon.js",
+    "js/views/adventure/view_city_street.js",
+    "js/learning/view_dialogue_mapping.js",
+    "js/learning/view_dialogue_microphone.js",
+    "js/views/adventure/view_dungeon_entrance.js",
+    "js/views/adventure/view_earth_boat.js",
+    "js/learning/view_friend_chat.js",
+    "js/views/adventure/view_hero_picker.js",
+    "js/learning/view_language_adventure.js",
+    "js/learning/view_learning_chat.js",
+    "js/learning/view_learning_mode.js",
+    "js/views/adventure/view_monster_territory.js",
+    "js/views/adventure/view_party_companion_pet.js",
+    "js/views/adventure/view_red_mushroom.js",
+    "js/views/adventure/view_settings_controls.js",
+    "js/views/adventure/view_social_actions.js",
+    "js/learning/view_teaching.js",
     "js/adventure_pets_core.js"
   ],
   "dirs": [
-    {
-      "path": "js",
-      "include": [
-        "view_*.js"
-      ],
-      "exclude": [
-        "view_adventure_debug.js"
-      ]
-    },
     {
       "path": "js/ui",
       "include": [
@@ -83,6 +74,27 @@
       "path": "js/views/adventure",
       "include": [
         "*.js"
+      ],
+      "exclude": [
+        "view_adventure_debug.js"
+      ]
+    },
+    {
+      "path": "js/learning",
+      "include": [
+        "view_*.js"
+      ]
+    },
+    {
+      "path": "js/hanzi",
+      "include": [
+        "view_*.js"
+      ]
+    },
+    {
+      "path": "js/photo_head",
+      "include": [
+        "view_*.js"
       ]
     },
     {

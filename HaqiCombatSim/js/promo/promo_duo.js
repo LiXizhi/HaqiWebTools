@@ -1,9 +1,9 @@
 import {el} from '../views/adventure/primitives.js';
 import {renderHud} from '../views/adventure/view_hud.js';
 import {renderBattle} from '../views/adventure/view_battle_layer.js';
-import {renderRoles} from '../view_adventure_roles.js';
-import {createCompanionChatView} from '../view_companion_chat.js';
-import {createLocalPeerControl} from '../view_local_peer_controls.js';
+import {renderRoles} from '../views/adventure/view_adventure_roles.js';
+import {createCompanionChatView} from '../learning/view_companion_chat.js';
+import {createLocalPeerControl} from '../views/adventure/view_local_peer_controls.js';
 import {createPromoDuoBattle,samplePromoDuoMotion} from './promo_duo_core.js';
 import {presentationEventDurationMs,presentationEventProgress,samplePresentationClock} from '../battle_presentation_core.js';
 

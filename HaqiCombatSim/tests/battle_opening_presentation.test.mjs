@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import {learningLesson} from '../js/learning_language_core.js';
-const source=fs.readFileSync(new URL('../js/view_opening_journey.js',import.meta.url),'utf8');
+const source=fs.readFileSync(new URL('../js/views/adventure/view_opening_journey.js',import.meta.url),'utf8');
 function render(phase,{joined=true,generic=false,language='en'}={} ){
  const all=[];
  function el(tag,cls='',...children){const n={tag,className:cls,children,dataset:{},attributes:{},textContent:typeof children[0]==='string'?children[0]:'',setAttribute(k,v){this.attributes[k]=v;},append(...items){this.children.push(...items);},replaceChildren(...items){this.children=items;},addEventListener(){},querySelector(){return null;},focus(){}};all.push(n);return n;}

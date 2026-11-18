@@ -2,8 +2,8 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {emptyLanguageTree,recordTreeExposure,wordAliases,setTreeMark,treeWordStatus,treeReadiness,treeQuestionMessages,validateTreeQuestions,answerTreeQuestion,TREE_DAY} from '../js/language_tree_core.js';
 import {observeTranslations,setTranslator,tr} from '../js/locale_runtime.js';
-import {createLanguageTreeSession} from '../js/language_tree_session.js';
-import {createLanguageTreeStore} from '../js/language_tree_store.js';
+import {createLanguageTreeSession} from '../js/learning/language_tree_session.js';
+import {createLanguageTreeStore} from '../js/learning/language_tree_store.js';
 const now=Date.now(),event=(text,at=now,source='npc:one')=>({text,at,source,label:'游戏对白',zh:'测试原句',locale:'en'});
 function state(){const s=emptyLanguageTree();recordTreeExposure(s,event('I read a book at home with my mother.'));recordTreeExposure(s,event('My father can open the door and help the child.',now+1,'npc:two'));for(const id of ['read','open','help'])setTreeMark(s,id,'basic');for(const id of ['book','door','child'])setTreeMark(s,id,'know');return s;}
 const questions=()=>({questions:[{target:'book',sentence:'Read the book.',translation:'读这本书。',options:[{text:'读这本书。',explanation:'read表示阅读。'},{text:'开门',explanation:'没有提到门。'},{text:'喝水',explanation:'没有提到水。'}],answer:0,glosses:{}},{target:'door',sentence:'Open the door.',translation:'打开门。',options:[{text:'打开门。',explanation:'open表示打开。'},{text:'读书',explanation:'没有book。'},{text:'回家',explanation:'没有home。'}],answer:0,glosses:{}},{target:'child',sentence:'Help the child.',translation:'帮助孩子。',options:[{text:'帮助孩子',explanation:'child表示孩子。'},{text:'帮助爸爸',explanation:'father才是爸爸。'},{text:'打开门',explanation:'没有door。'}],answer:0,glosses:{}}]});

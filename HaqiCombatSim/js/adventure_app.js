@@ -29,34 +29,34 @@ import {isOcean} from './adventure_fishing_core.js';
 import {createGameServerSession,GAME_SERVER_URL,normalizeGameServerUrl} from './adventure_game_server.js';
 import {createMembershipClient} from './adventure_membership.js';
 import {releaseFieldPursuit} from './adventure_monster_motion_core.js';
-import {createPetScene} from './adventure_pet_scene.js';
+import {createPetScene} from './pets/adventure_pet_scene.js';
 import {createRoleStore} from './adventure_roles.js';
 import {directSignInRequested,familyPadSignInRequested,startupRoleId} from './adventure_roles_core.js';
-import {createIslandSocial} from './adventure_social_controller.js';
+import {createIslandSocial} from './social/adventure_social_controller.js';
 import {timeScrollCity} from './adventure_time_scroll_core.js';
 import {createAudioSamples} from './audio/audio_samples.js';
 import {withBattlePointer,nextBattlePointer} from './battle_pointer_core.js';
-import {mapDialogue} from './dialogue_mapping.js';
+import {mapDialogue} from './learning/dialogue_mapping.js';
 import {createFramePacer} from './frame_meter_core.js';
 import {createGameSettings,legacyLocalMusic} from './game_settings.js';
 import {createAdaptiveGraphics} from './game_settings_core.js';
 import {createIslandHeroNavigation} from './island_hero_navigation.js';
 import {createIslandSceneLoading} from './island_scene_loading.js';
 import {createLearningVoice} from './audio/language_adventure_voice.js';
-import {createLanguageQuestJournal} from './language_quest.js';
-import {learningModeForced} from './learning_mode_policy.js';
+import {createLanguageQuestJournal} from './learning/language_quest.js';
+import {learningModeForced} from './learning/learning_mode_policy.js';
 import {installLocaleTooltip,displayLocale} from './locale.js';
 import {fill,setText,tr} from './locale_runtime.js';
 import {performanceDiagnostics as perf} from './performance_diagnostics.js';
-import {createPhotoHeadFeature} from './photo_head_feature.js';
+import {createPhotoHeadFeature} from './photo_head/photo_head_feature.js';
 import {createLocalPlay} from './social/local_play_controller.js';
 import {createSpellSound} from './audio/spell_sound.js';
 import {GlobalRewardNotice} from './ui/global_reward_notice.js';
-import {bindTouchMovement} from './view_adventure_movement.js';
-import {updatePetStatus} from './view_adventure_pet_status.js';
-import {createSceneFishing} from './view_adventure_scene_fishing.js';
-import {createIslandSceneLoadingView} from './view_island_scene_loading.js';
-import {mountMapServers} from './view_map_servers.js';
+import {bindTouchMovement} from './views/adventure/view_adventure_movement.js';
+import {updatePetStatus} from './views/adventure/view_adventure_pet_status.js';
+import {createSceneFishing} from './views/adventure/view_adventure_scene_fishing.js';
+import {createIslandSceneLoadingView} from './views/adventure/view_island_scene_loading.js';
+import {mountMapServers} from './views/adventure/view_map_servers.js';
 
 const $=id=>document.getElementById(id);
 const nodes={world:$('world'),hud:$('hud'),entry:$('entry'),overlay:$('overlay'),battle:$('battle-layer'),toast:$('toast')};
@@ -185,7 +185,6 @@ const battleController=createBattleController({
     model:()=>model(),
     loadPet:id=>loadPet(id),
     finishTacticsFight:options=>finishTacticsFight(options),
-    showRewards:(before,actionType)=>showRewards(before,actionType),
     updateMusic:()=>updateMusic(),
     toggleSound:()=>toggleSound(),
     openCloud:()=>openCloud(),
@@ -216,7 +215,6 @@ const actionReward=createActionRewardController({
     nodes,getContext,services,bus,
     loadPet:id=>loadPet(id),
     openDictionary:(tab,id)=>openDictionary(tab,id),
-    refreshWordGoals:()=>refreshWordGoals(),
     setSelectedQuestId:id=>panels.setSelectedQuestId(id),
     setFirstWelcomePetId:id=>panels.setFirstWelcomePetId(id),
     paintFirstPetWelcome:()=>paintFirstPetWelcome(),
@@ -245,7 +243,6 @@ const {roles,cloud,openCloud,loginForCharacterChat,loginRoles,showTitle,deleteCu
 const opening=createOpeningController({
     nodes,getContext,services,bus,
     model:()=>model(),
-    stopBattleChatVoice:()=>stopBattleChatVoice(),
     performAction:(value,access)=>performAction(value,access),
     openJourney:(id,restart)=>openJourney(id,restart),
     walkTo:(target,autoInteract)=>walkTo(target,autoInteract),
@@ -305,7 +302,7 @@ const islandSocial=createIslandSocial({
     getOwner:()=>state.roleStore?.owner,
     onChange:()=>{if(state.stage==='world'&&state.save){paintHud();if(['mail','chat','social-party','social-actions','social-profile','social-pvp'].includes(state.panel))paintPanel();}},
     onPersist:()=>{persist();queueCloudSave();},
-    onOpen:openPanel,
+    onOpen:(...args)=>openPanel(...args),
     onClose:close,
     onLogin:()=>void loginRoles(),
     toast,
@@ -315,10 +312,10 @@ const islandSocial=createIslandSocial({
 
 const localPlay=createLocalPlay({
     state:()=>({save:state.save,world:state.world,battle:state.battle,stage:state.stage,assets:state.assets,store:state.roleStore,settings:gameSettings.value,renderer:state.renderer,animating:!!state.animation,battleRoot:nodes.battle,globalPaused:!!state.panel||!!state.dialog||document.hidden||characterChat.active||getSecondCharacterChat()?.active||languageAdventure.active}),
-    control:controllerAction,model:()=>model(),replaceSave:value=>{state.save=value;},activate:activateRole,toast,paintHud,track,travel,interact,sound:toggleSound,login:()=>void loginRoles(),mapDialogue,
+    control:(...args)=>controllerAction(...args),model:()=>model(),replaceSave:value=>{state.save=value;},activate:activateRole,toast,paintHud:()=>paintHud(),track:(...args)=>track(...args),travel,interact:(...args)=>interact(...args),sound:()=>toggleSound(),login:()=>void loginRoles(),mapDialogue,
     loadPetFile:(roleId,filePath)=>state.cloudClient.petFile(roleId,filePath),
     onCoreChange:()=>{persist();queueCloudSave();},
-    openMap:()=>openPanel('map'),openAccountPanel:openPanel,refreshMembership:()=>membership.refresh(),onSpeech:awardLanguageSpeech,
+    openMap:()=>openPanel('map'),openAccountPanel:(...args)=>openPanel(...args),refreshMembership:()=>membership.refresh(),onSpeech:(...args)=>awardLanguageSpeech(...args),
     socialTeam:()=>islandSocial.team,prepareSocialTeam:()=>islandSocial.preparedTeam(),socialActors:()=>islandSocial.actors,socialGesture:()=>islandSocial.gesture,socialAccount:(p,kind)=>islandSocial.select(p,kind),
     characterAffinity:(owner,p)=>roleConversation(owner).affinity(p),
     characterTalk:(owner,p,options={})=>void roleConversation(owner).open(p,{...options,localSocialProfile:p}),
@@ -486,9 +483,6 @@ const {paintDialogue,startQuestTalk,startLanguageTask,tryLanguageScene,untrack,t
 
 const worldSession=createWorldSessionController({
     nodes,getContext,services,bus,
-    stopBattleChatVoice:()=>stopBattleChatVoice(),
-    stopWordAudio:()=>stopWordAudio(),
-    refreshWordGoals:()=>refreshWordGoals(),
     localeFilesToLoad:()=>localeFilesToLoad(),
     awardLanguageSpeech:(...args)=>awardLanguageSpeech(...args),
     maybeExchangeMagicBeans:options=>maybeExchangeMagicBeans(options),
@@ -498,6 +492,16 @@ const worldSession=createWorldSessionController({
     roles,perf,
 });
 const {openHomePanel,toggleSound,resumeSceneIntro,enterWorld,updateMusic,toggleMusic,showTeleportEffect,teleportToLandmark,teleportToPosition,openTimeScroll}=worldSession;
+
+bus.on('hud:dirty',()=>paintHud());
+bus.on('panel:dirty',()=>paintPanel());
+bus.on('dialogue:dirty',()=>paintDialogue());
+bus.on('battle:dirty',()=>paintBattle());
+bus.on('cloud:queued',()=>queueCloudSave());
+bus.on('word-goals:refresh',()=>refreshWordGoals());
+bus.on('audio:stop-word',()=>stopWordAudio());
+bus.on('audio:stop-battle-voice',()=>stopBattleChatVoice());
+bus.on('rewards:show',({before,actionType}={})=>showRewards(before,actionType));
 
 const worldInteraction=createWorldInteractionController({
     nodes,getContext,services,bus,

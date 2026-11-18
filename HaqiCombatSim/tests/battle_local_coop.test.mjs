@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 import {createAdventure,beginEncounter,playerSpec,parseSave} from '../js/adventure_core.js';
 import {useCard} from '../js/combat_cards_core.js';
-import {captureBattlePresentation} from '../js/view_battle_presentation.js';
+import {captureBattlePresentation} from '../js/views/adventure/view_battle_presentation.js';
 import {recordTacticsRound} from '../js/battle_tactics_journal_core.js';
 import {settleLocalBattle,createLocalFormation,moveLocalSeat,localParty,localHumanResources,createLocalReady,fitLocalCamera,constrainLocalPosition,wideEnough} from '../js/adventure_local_coop_core.js';
 import {restorePveBattle,playPveRound} from '../js/combat_pve_core.js';

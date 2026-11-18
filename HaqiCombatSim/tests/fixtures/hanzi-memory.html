@@ -5,16 +5,16 @@
 <body class="haqi-app storybook-ui"><span id="status">正在加载隔离场景</span><div id="hud"></div><canvas id="scene"></canvas><div id="overlay" class="overlay"></div>
 <script type="module">
 import {syncDictionaryQuestProgress} from '../../js/word_cards_core.js';
-import {createWordCardPractice} from '../../js/word_card_practice.js';
+import {createWordCardPractice} from '../../js/learning/word_card_practice.js';
 import {loadResources} from '../../js/adventure_assets.js';
 import * as A from '../../js/adventure_core.js';
 import * as W from '../../js/adventure_world_core.js';
 import * as B from '../../js/combat_pve_core.js';
 import {SimpleBot} from '../../js/combat_policy_core.js';
 import {createRenderer} from '../../js/adventure/renderer/scene_renderer.js';
-import {createHanziMemory} from '../../js/adventure_hanzi_memory.js';
+import {createHanziMemory} from '../../js/hanzi/adventure_hanzi_memory.js';
 import {renderHud} from '../../js/views/adventure/view_hud.js';
-import {createDictionaryStore} from '../../js/dictionary_store.js';
+import {createDictionaryStore} from '../../js/learning/dictionary_store.js';
 const assets=await loadResources(),save=A.createAdventure(assets.content,{seed:73,school:'fire'});
 save.languageLearning.target='zh-CN';A.applyAction(save,assets.content,{type:'travel',zone:'hanzi'});A.applyAction(save,assets.content,{type:'accept-catalog',questId:873100,npcId:863002});
 const world=W.createWorld('hanzi',assets.content,save),canvas=document.querySelector('#scene'),root=document.querySelector('#overlay'),renderer=createRenderer(canvas,assets);

@@ -1,3 +1,5 @@
+import {monsterArtBinding} from './adventure_monster_art_core.js';
+import {mentorPracticeCue,mentorPracticeName} from './mentor_practice_core.js';
 import {tacticsNextGoal} from './tactics_progress_core.js';
 import {forestCommissionAvailable,forestCommissionPhase,forestCommissionGoal,FOREST_NPCS} from './forest_commission_core.js';
 import {dungeonFirstReward} from './dungeon_first_rewards_core.js';
@@ -279,8 +281,8 @@ export function renderEntry(root,assets,stored,cb,error='') {
 function withName(pattern, name) {
     return tr(pattern).replaceAll('{name}', tr(name ?? ''));
 }
-export function objectiveLabel(g,c) {
-    if(g.kind==='talk')return withName('与{name}交谈', c.npcs[g.id]?.name||String(g.id));
+export function objectiveLabel(g,c,questId) {
+    if(g.kind==='talk')return withName(questId===63010?'完成{name}的实操':'与{name}交谈', c.npcs[g.id]?.name||String(g.id));
     if(g.kind==='defeat')return withName('击败{name}', Object.values(c.monsters).find(m=>m.goalId===g.id)?.name||'训练敌人');
     return ({79016:'强化一件装备（点击追踪进入强化）',79019:'喂养你的宠物',79037:'装备翡翠口袋并保存配卡','hatch-pet':'获得出奇蛋中的伙伴','equip-staff':'装备晶石法杖'})[g.id]||'完成导师的指导';
 }
@@ -349,7 +351,7 @@ function chapterTrackLines(save,c,quest) {
     const state=questState(save,quest.id);
     if(!state.accepted)return [{text:withName('去找{name}，接取新的任务。', c.npcs[quest.startNpc].name)}];
     if(questReady(save,quest))return [{text:withName('任务已完成，向{name}回报。', c.npcs[quest.endNpc].name)}];
-    return questProgress(save,quest).map(goal=>({text:objectiveLabel(goal,c),done:goal.value>=goal.count}));
+    return questProgress(save,quest).map(goal=>({text:objectiveLabel(goal,c,quest.id),done:goal.value>=goal.count}));
 }
 function catalogTrackLines(save,c,quest) {
     const snap=catalogStatSnapshot(save,c),state=questState(save,quest.id),ready=catalogQuestReady(save,c,quest,snap);
@@ -500,8 +502,10 @@ function renderHudContents(root,model,cb) {
     }else if(dungeon){
         const cleared=dungeonProgress(save)?.[save.zone]?.cleared.length||0,remaining=dungeon.arenas.filter(a=>!a.blocked.length&&!dungeonProgress(save)?.[save.zone]?.cleared.includes(a.id)).length;
         tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`清怪 ${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'营地已清理完毕，可以退出副本。':remaining?`下一站：第 ${cleared+1} 处营地。沿道路前进，接近怪物后开始战斗。`:'前路暂未开放，可以退出副本。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'));
-        if(remaining)tracker.append(button('前往下一处营地',()=>cb.track('dungeon-next'),'track-button'));
-        tracker.append(button('退出副本',()=>cb.leaveDungeon?.(),'track-button'));
+        const actions=el('div','dungeon-tracker-actions');
+        if(remaining)actions.append(button('前往下一处营地',()=>cb.track('dungeon-next'),'track-button'));
+        actions.append(button('退出副本',()=>cb.leaveDungeon?.(),'track-button'));
+        tracker.append(actions);
     }else{
         const languageQuest=save.zone==='camp'&&openingJourney(save)?null:recommendedLanguageQuest(save,c,model.languageTasks?.rows||[],catalogStatSnapshot(save,c));
         const entries=withLanguageQuest(trackerEntries(save,c),languageQuest);
@@ -616,6 +620,54 @@ function spellFace(assets,card,artCard=card) {
     return createCardFace({el,name:artCard.name,cost,cooldown:rounds,description,
         draw:context=>{const drawn=assets.skillArt.drawCard(context,card,{name:artCard.name,cooldown:rounds,description,wordCard:!!artCard.wordDescription});if(drawn)assets.hanziPresentation?.badge(context,card);return drawn;},
         retry:base?()=>assets.skillArt.ensure(base):undefined});
+}
+function mentorOpponentArt(assets,unit){
+    const monster=assets.content.monsters[unit.id==='enemy2'?'life-scout':'fire-scout'];
+    const binding=monsterArtBinding(monster,assets.monsterArt);
+    if(binding?.kind==='pet')return petPortrait(assets,binding.petId,0,64);
+    const canvas=el('canvas','art');canvas.width=128;canvas.height=160;canvas.style.width='64px';canvas.style.height='80px';
+    const draw=()=>{const ctx=canvas.getContext('2d');ctx.clearRect(0,0,128,160);assets.drawMonster(ctx,monster,0,0,128,160);};
+    draw();
+    if(binding?.kind==='portrait')void assets.ensureImage('monster:'+binding.id).then(()=>{if(canvas.isConnected)draw();}).catch(()=>{});
+    return canvas;
+}
+export function renderMentorPractice(root,model,lesson,cb){
+    const {assets,save}=model,body=modal(root,lesson.title,'导师实操 · 借用练习卡，不消耗背包',cb);
+    root.classList.add('mentor-practice-layer');
+    const npc=assets.content.npcs[lesson.npcId],speaker=el('div','practice-speaker');
+    if(npc?.portrait)speaker.append(art(assets,npc.portrait,60,74));
+    speaker.append(el('p','',lesson.presentation?'施法中，观察卡牌对目标的效果。':lesson.message));speaker.setAttribute('role','status');body.append(speaker);
+    const cue=el('div','mentor-cue',el('strong','',mentorPracticeCue(lesson)),button('听指令',cb.listen,'secondary'),button(lesson.hint?'收起提示':'看提示',cb.hint,'secondary'));
+    cue.firstChild.lang=lesson.language;
+    if(lesson.hint)cue.append(el('p','mentor-hint',mentorPracticeCue(lesson,save.languageLearning?.native||'zh')));
+    body.append(cue);
+    const field=el('div','mentor-field');
+    for(const side of ['near','far']){
+        const group=el('div','mentor-team');
+        for(const unit of lesson.arena.sides[side]){
+            const image=unit.id==='student'?heroPortrait(assets,save,64,80):unit.id==='companion'?petPortrait(assets,OPENING_PET,0,64):mentorOpponentArt(assets,unit);
+            const hp=lesson.presentation?.beforeHp[unit.id]??unit.hp;
+            const name=mentorPracticeName(unit.id,lesson.language),target=button([image,el('strong','',name),el('span','mentor-hp',`${hp} / ${unit.maxHp}`)],()=>cb.target(unit.id),'practice-partner');
+            target.setAttribute('aria-label',`${name} ${hp} / ${unit.maxHp}`);
+            target.dataset.unitId=unit.id;target.disabled=!!lesson.presentation||lesson.done||lesson.failed||unit.hp===0;
+            const health=el('progress','');health.max=unit.maxHp;health.value=hp;health.setAttribute('aria-label',name);target.append(health);group.append(target);
+        }
+        field.append(group);
+    }
+    body.append(field);
+    if(!lesson.presentation&&lesson.feedback.length)body.append(el('p','mentor-feedback',lesson.feedback.map(f=>`${mentorPracticeName(f.id,lesson.language)} ${f.delta>0?'+':''}${f.delta}`).join(' · ')));
+    if(lesson.done&&!lesson.presentation)body.append(button('完成导师练习',cb.complete,'primary'));
+    else if(lesson.failed&&!lesson.presentation)body.append(button('重新练习',cb.retry,'primary'));
+    else{
+        const cards=el('div','practice-cards');
+        for(const key of lesson.keys){
+            const card=lesson.arena.resolved.cards[key],original=assets.dataset.cards[key];
+            const pick=button([spellFace(assets,card,original),el('span','practice-card-caption',spellHint(card,assets.dataset))],()=>cb.select(key),'practice-card'+(lesson.selected===key?' selected':''));
+            pick.disabled=!!lesson.presentation;pick.setAttribute('aria-label','选择'+original.name);pick.setAttribute('aria-pressed',String(lesson.selected===key));cards.append(pick);
+        }
+        body.append(cards);
+    }
+    if(!lesson.presentation)body.querySelector(lesson.done||lesson.failed?'.primary':'.practice-card.selected')?.focus({preventScroll:true});
 }
 export function renderCompanionPractice(root,model,lesson,cb){
     const body=modal(root,'和伙伴配合','茜茜的练习卡 · 不消耗背包',cb);

@@ -1386,3 +1386,20 @@
 @keyframes companion-welcome-glow{0%{opacity:0;transform:translateX(-50%) scale(.35)}35%{opacity:1;transform:translateX(-50%) scale(1.15)}100%{opacity:1;transform:translateX(-50%) scale(1)}}
 @keyframes companion-welcome-sparks{0%{opacity:0;transform:translateY(20px) scale(.4)}30%{opacity:1}100%{opacity:.8;transform:none}}
 @media(prefers-reduced-motion:reduce){.opening-journey-modal.is-celebrating,.opening-journey-modal.is-celebrating .opening-speaker,.opening-journey-modal.is-celebrating .opening-pet-award,.opening-journey-modal.is-celebrating .opening-speaker::before,.opening-journey-modal.is-celebrating .opening-speaker::after{animation:none}}
+
+.mentor-practice-layer .modal{width:min(820px,calc(100vw - 24px));max-height:calc(100dvh - 24px)}
+.mentor-practice-layer .modal-body{display:flex;flex-direction:column;gap:12px}
+.mentor-cue{display:flex;align-items:center;flex-wrap:wrap;gap:10px;line-height:1.5}
+.mentor-cue strong{flex:1 1 280px;font-size:20px}
+.mentor-hint{width:100%;margin:0}
+.mentor-spell-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.mentor-field{position:relative;isolation:isolate;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mentor-team{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:5px;min-width:0}
+.mentor-practice-layer .practice-partner{min-width:0;padding:4px;flex:1 1 72px;font-size:13px}
+.mentor-practice-layer .practice-partner strong{overflow-wrap:anywhere;max-width:110px}
+.mentor-practice-layer progress{width:min(100%,100px)}
+.mentor-practice-layer .practice-cards{gap:12px}
+.mentor-practice-layer .practice-card{width:120px;min-width:0}
+.mentor-practice-layer .card-face{width:112px}
+.mentor-feedback{text-align:center;margin:0;font-weight:bold}
+@media(max-width:480px){.mentor-practice-layer .practice-cards{gap:5px}.mentor-practice-layer .practice-card{width:30%}.mentor-practice-layer .card-face{width:100%}.mentor-practice-layer .practice-card-caption{font-size:12px}.mentor-cue strong{font-size:17px}.mentor-practice-layer .practice-partner canvas{max-width:52px;height:auto!important}}

@@ -698,3 +698,8 @@
 .storybook-ui .opening-tracker-actions { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
 .storybook-ui .opening-tracker-actions .track-button { position:static; flex:1 1 auto; min-height:36px; margin:0; font-size:12px; }
 .storybook-ui .quest-tracker:has(.opening-tracker-actions)>p { margin-right:0; }
+
+/* Dungeon navigation and exit need separate, non-overlapping touch targets. */
+.storybook-ui .dungeon-tracker-actions { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.storybook-ui .dungeon-tracker-actions .track-button { position:static; flex:1 1 auto; min-height:44px; margin:0; font-size:12px; }
+.storybook-ui .quest-tracker:has(.dungeon-tracker-actions)>p { margin-right:0; }

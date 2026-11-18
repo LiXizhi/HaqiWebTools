@@ -101,6 +101,8 @@ import {catalogGoalEncounter} from './adventure_island_encounters_core.js';
 import {renderDungeons} from './view_adventure_dungeons.js';
 import {openOriginalImport} from './haqi_import.js';
 import {persistReward} from './adventure_reward_persistence.js';
+import {playMentorPracticeCast} from './mentor_practice_effects.js';
+import {MENTOR_PRACTICES,createMentorPractice,selectMentorPractice,castMentorPractice,mentorPracticeLanguage,mentorPracticeCue,mentorPracticeName} from './mentor_practice_core.js';
 import {createCompanionPractice,selectCompanionPractice,castCompanionPractice} from './companion_practice_core.js';
 import {openCompanionWordplay} from './companion_wordplay.js';
 import { createMembershipClient } from './adventure_membership.js';
@@ -246,7 +248,7 @@ let path=[],destination=null,moving=false,lastFrame=0,lastRuntimeSave=0,toastTim
 let fishingApproach=null,talkApproach=null;
 let fishingLoadEpoch=0;
 let warmCell='';
-let selected=null,discarded=[],animation=null,music=null,storageWarning=false,companionPractice=null,wordplaySession=null;
+let selected=null,discarded=[],animation=null,music=null,storageWarning=false,companionPractice=null,mentorPractice=null,wordplaySession=null;
 let petCardsOpen=false;
 let runeCardsOpen=false;
 let cloudClient,gameServerSession,mapServersDispose,joiningRoleId=null;
@@ -570,7 +572,7 @@ function persist() {
     const indicator=document.querySelector('.save-indicator');if(indicator){setText(indicator,storageWarning?'存档未保存':'');indicator.hidden=!storageWarning;}
     lastRuntimeSave=performance.now();
 }
-function close({silent=false}={}) {wordplaySession?.dispose();wordplaySession=null;companionPractice=null;if(stage==='world'&&world&&save){releaseFieldPursuit(world,save.position);W.resetAutoInteraction(world,save.position);}openingSpeech?.abort();openingSpeech=null;courseView?.dispose();courseView=null;mapServersDispose?.();mapServersDispose=null;if(!silent&&homeView&&!homeView.canClose())return;homeTicket++;homeView?.dispose();homeView=null;earthLoadingView.hide();earthLoadingRetry=null;earthLoadingExit=null;wordPractice.close();hanziMemory.close();dictionaryTicket++;dictionary?.close();dictionary=null;timeScrollTicket++;timeScrollLoad?.abort();timeScrollLoad=null;timeScroll?.close();timeScroll=null;hanziTicket++;hanziIsland?.close();nodes.overlay.disposeMap?.();atlasView?.dispose();atlasView=null;earthPractice?.close();earthViewTicket++;earthView?.dispose();earthView=null;if(earthTraveling){earthService?.cancelPending();earthTraveling=false;}battleIntro.close();dungeonStory.close();if(stage==='world')nodes.hud.hidden=false;if(!silent&&(panel||dialog))spellSound.play('close');characterChat.close();secondCharacterChat?.close();islandSocial.close();fishingLoadEpoch++;languageAdventure.close();fishingApproach=null;talkApproach=null;sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
+function close({silent=false}={}) {if(mentorPractice?.busy)spellSound.stopCast();mentorPractice?.abort.abort();mentorPractice=null;wordplaySession?.dispose();wordplaySession=null;companionPractice=null;if(stage==='world'&&world&&save){releaseFieldPursuit(world,save.position);W.resetAutoInteraction(world,save.position);}openingSpeech?.abort();openingSpeech=null;courseView?.dispose();courseView=null;mapServersDispose?.();mapServersDispose=null;if(!silent&&homeView&&!homeView.canClose())return;homeTicket++;homeView?.dispose();homeView=null;earthLoadingView.hide();earthLoadingRetry=null;earthLoadingExit=null;wordPractice.close();hanziMemory.close();dictionaryTicket++;dictionary?.close();dictionary=null;timeScrollTicket++;timeScrollLoad?.abort();timeScrollLoad=null;timeScroll?.close();timeScroll=null;hanziTicket++;hanziIsland?.close();nodes.overlay.disposeMap?.();atlasView?.dispose();atlasView=null;earthPractice?.close();earthViewTicket++;earthView?.dispose();earthView=null;if(earthTraveling){earthService?.cancelPending();earthTraveling=false;}battleIntro.close();dungeonStory.close();if(stage==='world')nodes.hud.hidden=false;if(!silent&&(panel||dialog))spellSound.play('close');characterChat.close();secondCharacterChat?.close();islandSocial.close();fishingLoadEpoch++;languageAdventure.close();fishingApproach=null;talkApproach=null;sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
 // Streaming/social updates repaint the HUD during held movement; only explicit
 // cancellation (panel transitions, blur, pointer release) may clear that input.
 const hudRenderGuard=createHudRenderGuard(nodes.hud,{render:paintHudNow,getScope:()=>[world,roleEpoch,roleStore?.owner,roleStore?.catalog.activeId,stage],canRender:()=>stage==='world'&&!!save&&!!assets});
@@ -636,6 +638,7 @@ function paintPanel() {
     if(panel==='cloud'){paintCloud();return;}
     if(panel==='companion-wordplay')return;
     if(panel==='companion-practice'){paintCompanionPractice();return;}
+    if(panel==='mentor-practice'){paintMentorPractice();return;}
     if(panel==='dungeon-story')return;
     if(panel==='dungeon-journey'){renderDungeonJourney(nodes.overlay,{...model(),dungeon:dungeonFor(assets.content,journeyId),restart:journeyRestart},{close,party:()=>openPanel('pet'),prepare:(restart=false)=>safely(()=>{void loadAndEnterDungeon(journeyId,restart||journeyRestart);}),claim:floor=>safely(()=>{const next=structuredClone(save),coins=claimTowerReward(next,assets.content,journeyId,floor);saveLocal(next,roleStorage);Object.assign(save,next);queueCloudSave();paintHud();paintPanel();toast(`已领取 ${coins} 奇豆`);})});return;}
     if(panel==='dungeons'){renderDungeons(nodes.overlay,model(),{close:()=>{if(islandSocial.state().pickingDungeon){islandSocial.cancelDungeonPick();openPanel('social-party');return;}close();},enter:loadAndEnterDungeon,leave:exitDungeon,pick:id=>{try{pickDungeonLobby(id);}catch(e){toast(e.message);}},lobby:(id,restart=false)=>{try{pickDungeonLobby(id,restart);}catch(e){toast(e.message);}}});return;}
@@ -1303,8 +1306,10 @@ function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog
     persist();islandSocial.activity('quest');showRewards(before,'claim-catalog');toast('已完成：{title}',{title:q.title});return 'reward';
 },true),questTalk:(q,talk)=>startQuestTalk(talk,!!assets.content.catalogQuests?.byId[q.id]),tactics:openTacticsTraining,panel:openPanel,travel,track});}
 function startQuestTalk(talk,catalog=false) {
-    startLines(talk.dialog,talk.dialog.at(-1)?.buttons?.[0]?.label||'谢谢你',()=>{
+    const mentor=!catalog&&A.currentQuest(save,assets.content)?.id===63010&&MENTOR_PRACTICES[talk.npcId];
+    startLines(talk.dialog,mentor?'开始实操':talk.dialog.at(-1)?.buttons?.[0]?.label||'谢谢你',()=>{
         if(!catalog&&talk.npcId===36200&&A.currentQuest(save,assets.content)?.id===63001){openCompanionPractice();return 'practice';}
+        if(!catalog&&A.currentQuest(save,assets.content)?.id===63010&&MENTOR_PRACTICES[talk.npcId]){openMentorPractice(talk.npcId);return 'practice';}
         A.applyAction(save,assets.content,{type:'talk',npcId:talk.npcId});
         return catalog?'catalog-talk':true;
     });
@@ -1361,6 +1366,53 @@ async function finishTacticsFight({next=false}={}){
     if(save!==session.save||roleEpoch!==session.epoch)return;
     if(next)openTacticsTraining({lesson:following,returnTo});
     else if(returnTo)openPanel(returnTo);
+}
+function openMentorPractice(npcId){
+    const lesson=createMentorPractice(assets.dataset,{npcId,seed:save.seed,language:save.languageLearning?.target});
+    close();panel='mentor-practice';
+    mentorPractice={lesson,save,epoch:roleEpoch,locale:save.languageLearning?.target,native:save.languageLearning?.native,abort:new AbortController()};
+    paintMentorPractice();
+}
+function paintMentorPractice(){
+    const session=mentorPractice;
+    const active=()=>session===mentorPractice&&panel==='mentor-practice'&&stage==='world'&&save===session.save&&roleEpoch===session.epoch&&A.currentQuest(save,assets.content)?.id===63010&&save.languageLearning?.target===session.locale&&save.languageLearning?.native===session.native;
+    if(!session||!active())return;
+    V.renderMentorPractice(nodes.overlay,model(),session.lesson,{
+        close:()=>{if(active())close();},
+        select:key=>{if(active()&&!session.busy&&selectMentorPractice(session.lesson,key)){spellSound.play('select');paintMentorPractice();}},
+        target:id=>safely(async()=>{
+            if(!active()||session.busy)return;
+            const presentationPhase=session.lesson.phase;
+            if(!castMentorPractice(session.lesson,id)){paintMentorPractice();return;}
+            session.busy=true;session.lesson.presentationPhase=presentationPhase;
+            const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+            try{
+                for(const [index,cast] of session.lesson.lastCasts.entries()){
+                    if(!active())break;
+                    session.lesson.presentation=cast;paintMentorPractice();
+                    const field=nodes.overlay.querySelector('.mentor-field');
+                    await playMentorPracticeCast(field,assets,cast,{signal:session.abort.signal,reducedMotion,
+                        onProgress:(p,card)=>{if(active())spellSound.track(assets.effects,card,p,{active:!document.hidden,reducedMotion,instance:`mentor:${session.epoch}:${index}`});},
+                        onImpact:()=>{if(active())for(const unit of field.querySelectorAll('[data-unit-id]')){
+                            const id=unit.dataset.unitId,hp=cast.afterHp[id],max=session.lesson.arena.unitsById[id].maxHp;
+                            unit.setAttribute('aria-label',`${mentorPracticeName(id,session.lesson.language)} ${hp} / ${max}`);
+                            unit.querySelector('.mentor-hp').textContent=`${hp} / ${max}`;unit.querySelector('progress').value=hp;
+                        }}
+                    });
+                    spellSound.stopCast();
+                }
+            }finally{session.busy=false;delete session.lesson.presentation;delete session.lesson.presentationPhase;if(active()){spellSound.stopCast();paintMentorPractice();}}
+        }),
+        hint:()=>{if(active()&&!session.busy){session.lesson.hint=!session.lesson.hint;paintMentorPractice();}},
+        listen:()=>safely(async()=>{if(!active())return;await dialogueVoice.speak(mentorPracticeCue(session.lesson),session.locale||'en',session.abort.signal,assets.content.npcs[session.lesson.npcId]);}),
+        retry:()=>{if(active()){session.lesson=createMentorPractice(assets.dataset,{npcId:session.lesson.npcId,seed:save.seed,language:session.locale});paintMentorPractice();}},
+        complete:()=>safely(()=>{
+            if(!active()||session.busy||!session.lesson.done)return;
+            const committed=persistReward(save,assets.content,{type:'talk',npcId:session.lesson.npcId},{},roleStorage);
+            save=committed.save;storageWarning=false;
+            close();queueCloudSave();paintHud();track();
+        })
+    });
 }
 function openCompanionPractice(){
     const lesson=createCompanionPractice(assets.dataset,{school:save.school,seed:save.seed});

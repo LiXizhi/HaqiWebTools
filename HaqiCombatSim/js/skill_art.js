@@ -1,11 +1,12 @@
 import {assetUrl} from './adventure_media_core.js';
 import {skillFrame, validateSkillArt} from './skill_art_core.js';
 import {CardRenderer} from './card_renderer.js';
+import {loadPainterlySpellArt} from './painterly_spell_art.js';
 export {cardDescription} from './card_renderer.js';
 
 import { fetchJson } from './runtime_data.js';
 export async function loadSkillArt(effects, mode, read=fetchJson) {
-    const [manifest,frames]=await Promise.all([read('data/adventure/skill-art.json'),read('data/adventure/card-frames.json')]);
+    const [manifest,frames,painterly]=await Promise.all([read('data/adventure/skill-art.json'),read('data/adventure/card-frames.json'),loadPainterlySpellArt(mode,read).catch(error=>{console.warn('手绘法术清单暂不可用，保留原特效：',error);return null;})]);
     validateSkillArt(manifest,effects);
     const images=new Map(),pending=new Map(),subjectFrames=new Map();
     for(const [base,entry]of Object.entries(manifest.bases)){
@@ -32,7 +33,7 @@ export async function loadSkillArt(effects, mode, read=fetchJson) {
     function ensure(base){
         const row=manifest.bases[base];if(!row)return Promise.reject(new Error('缺少技能主体：'+base));
         const id=row.effectAtlas||row.atlas;
-        return Promise.all([load(id,manifest.sheets[id]),ensureFrames()]).then(([image])=>image);
+        return Promise.all([load(id,manifest.sheets[id]),ensureFrames(),painterly?.ensure(base)]).then(([image])=>image);
     }
     function drawSubject(c,base,x,y,w,h,progress=null){
         const cached=subjectFrames.get(base);
@@ -44,5 +45,5 @@ export async function loadSkillArt(effects, mode, read=fetchJson) {
     }
     const renderer=new CardRenderer({images,effects,drawSubject});
     const drawCard=renderer.draw.bind(renderer);
-    return {manifest,images,ensure,drawSubject,renderer,drawCard,async preload(cards){await optionalImages([...new Set(Object.values(cards).map(c=>effects.cards[c.key]?.base).filter(Boolean))].map(ensure));}};
+    return {manifest,images,ensure,painterly,drawSubject,renderer,drawCard,async preload(cards){await optionalImages([...new Set(Object.values(cards).map(c=>effects.cards[c.key]?.base).filter(Boolean))].map(ensure));}};
 }

@@ -111,4 +111,3 @@ export function tacticalReview(battle, cardCatalog = {}) {
     return ['这次坚持了 ' + battle.completedDecisions + ' 回合。',
         battle.tacticsField.id === 'elite' ? '再试一种顺序，先压守护位，或先消耗主攻位的护盾。' : '看到蓄力后，可以提前布置强化抢攻，也可以保留护盾。'];
 }
-

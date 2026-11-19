@@ -123,6 +123,19 @@ test('verified release awaits apps publication before Maisi and stops if apps fa
     }
 });
 
+test('verified release can skip the unrelated Maisi checkout', async () => {
+    const source = fs.readFileSync(new URL('../uploadRelease.mjs', import.meta.url), 'utf8');
+    const block = source.slice(source.lastIndexOf('if (manifest.verified) {'));
+    const calls = [];
+    await vm.runInNewContext(`(async () => {${block}})()`, {
+        manifest: { verified: true }, root: '', release: '', pages: [], args: new Set(['--skip-maisi']),
+        console: { log() {} },
+        syncAppsRelease: async () => { calls.push('apps'); return 'apps'; },
+        syncMaisiRelease: () => { calls.push('maisi'); return 'maisi'; },
+    });
+    assert.deepEqual(calls, ['apps']);
+});
+
 test('release hashes all runtime data, is repeatable, and distinguishes previews from verified releases', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'haqi-release-'));
     try {

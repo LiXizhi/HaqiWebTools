@@ -11,7 +11,7 @@ const dist = path.join(root, 'dist');
 const release = path.join(root, 'release');
 const pages = ['Haqi', 'HaqiOfficialWebsite', 'HaqiPromo'];
 const args = new Set(process.argv.slice(2));
-for (const arg of args) if (!['--dry-run', '--verify-only', '--isolated', '--cdn-only'].includes(arg)) throw new Error(`未知参数：${arg}`);
+for (const arg of args) if (!['--dry-run', '--verify-only', '--isolated', '--cdn-only', '--skip-maisi'].includes(arg)) throw new Error(`未知参数：${arg}`);
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 
 function collect(directory, prefix = '') {
@@ -106,7 +106,7 @@ if (manifest.verified) {
     if (!args.has('--cdn-only')) {
         const appsDestination = await syncAppsRelease({ projectRoot: root, releaseDir: release, pages, verified: true, publish: true, isolated: args.has('--isolated') });
         console.log(`已同步发布入口到：${appsDestination}；先提交本地 apps/master 并推送 origin/master，再发布 keepwork/master 快照。`);
-        const destination = syncMaisiRelease({ projectRoot: root, releaseDir: release, pages, verified: true });
+        const destination = args.has('--skip-maisi') ? null : syncMaisiRelease({ projectRoot: root, releaseDir: release, pages, verified: true });
         console.log(destination ? `已同步发布入口到：${destination}` : '未找到本机Maisi仓库，跳过发布入口复制。');
         console.log('\nHaqi 最终发布入口（Maisi 托管页仍需另行发布；apps 已推送）：');
         console.log('Maisi: https://keepwork.com/maisi/maisi/webgames/MagicHaqi/release/Haqi_v1.html');

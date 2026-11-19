@@ -31,10 +31,13 @@ export async function mountPrologue(host,ctx){
     const make=(tag,cls,text)=>{const n=doc.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;};
     const reducedMotion=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
     let pair=languagePair(ctx.locale,ctx.second);
-    const layer=make('div','prologue-layer');layer.setAttribute('role','dialog');layer.setAttribute('aria-modal','true');layer.setAttribute('aria-label',CHROME.brand[pair.native]);
+    const layer=make('dialog','prologue-layer');layer.setAttribute('aria-label',CHROME.brand[pair.native]);
     const stageNode=make('div','pl-stage');
     const loading=make('p','pl-loading',CHROME.loading[pair.native]);
     layer.append(stageNode,loading);host.append(layer);
+    // Keep the title screen outside the active focus scope while assets load.
+    layer.oncancel=event=>event.preventDefault();
+    layer.showModal();
 
     const read=createJsonReader();
     const [sourceScript,artManifest,words]=await Promise.all([read('data/prologue/script.json'),read('data/prologue/art.json'),read('data/adventure/dictionary/word-cards.json')]);
@@ -158,14 +161,14 @@ export async function mountPrologue(host,ctx){
     };
     skipBtn.onclick=()=>skip('scene');
     const onKey=event=>{
-        if(event.target?.closest?.('input,textarea,select'))return;
+        if(event.defaultPrevented||event.target?.closest?.('input,textarea,select'))return;
         if(event.key===' '||event.key==='Enter'){
-            if(event.repeat||!tapResolvers.size)return;
-            if(event.key===' '||event.target===doc.body||event.target===layer||stageNode.contains(event.target)&&!event.target.closest('button')){event.preventDefault();continueStory();}
+            if(event.repeat||!tapResolvers.size||event.target?.closest?.('button,a,[role="button"]'))return;
+            event.preventDefault();continueStory();
         }
         else if(event.key==='ArrowRight'){event.preventDefault();skip('scene');}
     };
-    doc.addEventListener('keydown',onKey);
+    layer.addEventListener('keydown',onKey);
     paintChrome();
 
     // ----- runner -----
@@ -219,22 +222,25 @@ export async function mountPrologue(host,ctx){
 
     let exitPayload=null,resolveExit;
     const exited=new Promise(resolve=>{resolveExit=resolve;});
+    layer.oncancel=event=>{event.preventDefault();finish({finished:false});};
     function finish({finished}){
         if(disposed)return;disposed=true;epoch++;
         for(const fn of [...skipResolvers])fn();
-        doc.removeEventListener('keydown',onKey);
+        layer.removeEventListener('keydown',onKey);
         layer.removeEventListener('click',onClick);
-        narration?.stop();stage.dispose();dialog.dispose();cinema.dispose();layer.remove();
+        narration?.stop();stage.dispose();dialog.dispose();cinema.dispose();layer.close();layer.remove();
         exitPayload={finished,school:state.school,appearance:state.appearance,draft:state.draft,battles:state.battles,written:!!state.written};
         try{onExit(exitPayload);}finally{resolveExit(exitPayload);}
     }
 
     // Warm the first images before revealing the first frame; the rest load in the background.
     const order=[...new Set(script.scenes.flatMap(s=>s.beats).filter(b=>b.art).map(b=>b.art))];
-    await Promise.race([cinema.preload(order.slice(0,2)),new Promise(r=>setTimeout(r,4000))]);
-    void cinema.preload(order.slice(2));
-    loading.remove();layer.focus?.();
-    const startArt=runner.artAt();if(startArt)cinema.showArt(startArt.art,startArt.move||'still');
+    await Promise.race([cinema.preload(order.slice(0,2)),exited,new Promise(r=>setTimeout(r,4000))]);
+    if(!disposed){
+        void cinema.preload(order.slice(2));
+        loading.remove();
+        const startArt=runner.artAt();if(startArt)cinema.showArt(startArt.art,startArt.move||'still');
+    }
 
     (async()=>{
         while(!disposed&&!runner.done){

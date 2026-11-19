@@ -48,8 +48,10 @@ function renderBattleContent(root, model, cb) {
     root.battleLayoutObserver?.disconnect();
     const oldSelected = root.querySelector('.hand-card.selected')?.dataset.seq;
     const switching = root.handBattle === model.battle && !model.animating && model.selected && oldSelected !== String(model.selected.seq);
-    // Capture the current visual positions, including any unfinished shuffle, before rebuilding.
-    const oldHand = switching ? new Map([...root.querySelectorAll('.hand-card')].map(node => [node.dataset.seq, node.getBoundingClientRect()])) : null;
+    // Capture card faces so their motion leaves the selected card's text and controls in place.
+    const oldHand = switching
+        ? new Map([...root.querySelectorAll('.hand-card:not([hidden]) .card-select')].map(face => [face.closest('.hand-card').dataset.seq, face.getBoundingClientRect()]))
+        : null;
     const previous = root.handBattle === model.battle ? root.handSeqs || new Set() : new Set();
     const { assets, save, battle, selected, discarded = [], animating } = model;
     const hero = battle.unitsById[model.controlledUnitId] || battle.sides.near[0];
@@ -183,7 +185,7 @@ function renderBattleContent(root, model, cb) {
         select.disabled = animating || battle.finished;
         select.setAttribute('aria-label', fill(available ? '选择{name}' : '选择{name}（魔力不足或冷却中）', { name: artCard.name }).text);
         select.setAttribute('aria-pressed', String(isSelected));
-        const drop = button('弃牌', () => cb.discard(h.seq), 'discard-button');
+        const drop = button('弃牌', () => cb.discard(h.seq), 'secondary discard-button');
         drop.disabled = animating || battle.finished;
         const description = describeCard(card, { dataset: battle.resolved, translate: tr });
         node.title = fill('{name} · {target} · {description}', { name: artCard.name, target: description.target, description: description.summary }).text;
@@ -530,8 +532,9 @@ export function animateHandSelection(hand, previous, oldSelected, selected) {
     for (const node of hand.children) {
         if (node.hidden) continue;
         const before = previous.get(node.dataset.seq);
-        if (!before) continue;
-        const after = node.getBoundingClientRect();
+        const face = node.querySelector('.card-select');
+        if (!before || !face) continue;
+        const after = face.getBoundingClientRect();
         const dx = before.left - after.left;
         const dy = before.top - after.top;
         const entering = node.dataset.seq === selected;
@@ -540,7 +543,7 @@ export function animateHandSelection(hand, previous, oldSelected, selected) {
         const restingZ = node.style.zIndex;
         if (returning) node.style.zIndex = '30';
         if (entering) node.style.zIndex = '31';
-        const motion = node.animate(
+        const motion = face.animate(
             [{ translate: `${dx}px ${dy}px` }, { translate: `${dx * 0.45}px ${dy * 0.45 + (entering ? -22 : returning ? 8 : 0)}px`, offset: 0.5 }, { translate: '0px 0px' }],
             { duration: entering || returning ? 340 : 300, easing: 'cubic-bezier(.22,.7,.25,1)' },
         );

@@ -472,9 +472,25 @@ export function createRoleCloudController({
     });
     const { showTitle, deleteCurrentRole, paintTitle, paintRoles, beginOriginalImport, openCreationForm, newRoleForm, paintCreation } = titleCtrl;
 
+    function canAutoSave() {
+        const ctx = getContext();
+        return (
+            ctx.stage === 'world'
+            && !ctx.save?.pendingEncounter
+            && !!ctx.roleStore?.owner
+            && ctx.roleStore.dirty
+            && !ctx.roleStore.recovering
+            && !roles.localOnly
+            && !roles.busy
+            && !cloud.busy
+            && !roles.conflict
+        );
+    }
+
     return {
         roles,
         cloud,
+        canAutoSave,
         currentRoleLimit,
         openCloud,
         paintCloud,

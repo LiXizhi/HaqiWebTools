@@ -32,13 +32,12 @@ export function createSettingsControls({ el, button }) {
     function field(label, ...children) {
         return el('div', 'settings-field', el('span', 'settings-field-label', label), ...children);
     }
-    // 界面语言按钮组：设置窗与首页共用；当前语言用主色按钮表达，配 aria-pressed。
+    // 界面语言在设置和标题页共用绘本页签。
     function localeSelector(current, onPick) {
-        const row = el('div', 'locale-choices');
+        const row = el('div', 'locale-choices gui-tabs');
         for (const locale of LOCALES) {
-            const selected = current === locale.id;
-            const control = button(locale.name, () => onPick(locale.id), selected ? 'primary small' : 'secondary small');
-            control.setAttribute('aria-pressed', String(selected));
+            const control = button(locale.name, () => onPick(locale.id));
+            control.setAttribute('aria-pressed', String(current === locale.id));
             control.setAttribute('lang', locale.id);
             row.append(control);
         }

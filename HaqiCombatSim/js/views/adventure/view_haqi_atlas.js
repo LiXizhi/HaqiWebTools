@@ -11,7 +11,19 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
     root.replaceChildren();root.className='overlay visible';
     const modal=el('section','modal atlas-map-modal compact-map-modal haqi-atlas-modal'),header=el('header','modal-header'),heading=el('div','map-heading'),body=el('div','modal-body');
     modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label',tr('哈奇世界地图'));
-    const locate=button(world.isEarth?'返回当前城市地图':'返回当前岛屿地图',()=>world.isEarth?cb.switchMap('local'):locateCurrent(),'secondary map-view-toggle');
+    let locateTimer=null;
+    const locate=button(world.isEarth?'返回当前城市地图':world.isDungeon?'返回当前副本地图':'返回当前岛屿地图',()=>{
+        if(world.isEarth||world.isDungeon)cb.switchMap?.('local');
+        else{
+            locateCurrent();
+            const cur=islands.find(i=>i.id===focusIslandId())||islands[0];
+            if(cur){
+                showStatus(fill('已定位到当前岛屿：{name}',{name:cur.name}).text);
+                clearTimeout(locateTimer);
+                locateTimer=setTimeout(()=>{if(!disposed&&status.textContent.includes(cur.name))showStatus('');},1800);
+            }
+        }
+    },'secondary map-view-toggle');
     heading.append(locate);if(cb.switchWorld)heading.append(createWorldMapSwitch('haqi',cb.switchWorld));header.append(heading,createCloseButton(cb.close));
     const stage=el('div','haqi-atlas-stage'),canvas=el('canvas','haqi-atlas-canvas'),labels=el('div','haqi-atlas-labels'),controls=el('div','earth-map-zoom'),status=el('p','earth-map-status'),card=el('div','haqi-atlas-selection');
     canvas.width=900;canvas.height=600;canvas.tabIndex=0;canvas.setAttribute('aria-label',tr('哈奇地图，左右拖动浏览岛屿，滚轮、双指或加减按钮缩放'));
@@ -225,5 +237,5 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
                 if(id==='vortex')for(const node of portalNodes.values()){node.style.setProperty('--vortex-image',`url("${image.src}")`);node.classList.add('has-vortex-art');}scene=null;draw();};image.onerror=()=>{if(disposed)return;failed.add(id);showStatus('部分地图图片暂不可用，仍可选择目的地。');};image.src=assetUrl(resource,assets.mode);
         }
     }).catch(()=>{if(disposed)return;showStatus('地图暂不可用，请从列表选择目的地。');const list=el('div','haqi-atlas-fallback');for(const island of ISLANDS){const node=button(island.name,()=>choose(island));list.append(node);}body.append(list);});
-    return {dispose(){disposed=true;stopMotion();observer?.disconnect();if(pendingFrame!==null)cancelAnimationFrame(pendingFrame);pointers.clear();previews.clear();images.clear();masks.clear();if(scene)scene.canvas.width=scene.canvas.height=0;scene=null;},locate:locateCurrent,overview:showAll,zoom,draw,getState:()=>({camera:camera&&{...camera},bounds:{...bounds},decorationCount:decorations.length,renderStats:{...renderStats},selected,previewIds:[...previews.keys()],illustrationIds:islands.filter(i=>i.detailStyle==='illustration'&&images.has(i.resource)).map(i=>i.id),loadedResources:[...images.keys()],failed:[...failed],width,height})};
+    return {dispose(){disposed=true;clearTimeout(locateTimer);stopMotion();observer?.disconnect();if(pendingFrame!==null)cancelAnimationFrame(pendingFrame);pointers.clear();previews.clear();images.clear();masks.clear();if(scene)scene.canvas.width=scene.canvas.height=0;scene=null;},locate:locateCurrent,overview:showAll,zoom,draw,getState:()=>({camera:camera&&{...camera},bounds:{...bounds},decorationCount:decorations.length,renderStats:{...renderStats},selected,previewIds:[...previews.keys()],illustrationIds:islands.filter(i=>i.detailStyle==='illustration'&&images.has(i.resource)).map(i=>i.id),loadedResources:[...images.keys()],failed:[...failed],width,height})};
 }

@@ -41,7 +41,7 @@
 .world-switch-button[data-world=earth] .world-switch-emblem{color:#286579}
 .world-switch-button[aria-pressed=true] .world-switch-emblem{border-color:#f4d582;background:radial-gradient(circle at 35% 25%,#fff3c6,#e3b44f);box-shadow:inset 0 0 0 2px #fff4d388,0 0 8px #f6d68944}
 .world-switch-label{min-width:0;white-space:nowrap}
-@media(max-width:600px){.haqi-app .parallel-world-buttons{gap:8px;padding-bottom:7px}.haqi-app .parallel-world-buttons .world-switch-button{min-width:0;min-height:54px;gap:6px;padding:7px 9px;font-size:14px;flex:1}.world-switch-emblem{width:30px;height:30px}.world-switch-emblem svg{width:25px;height:25px}.world-switch-label{white-space:normal;overflow-wrap:break-word}}
+@media(max-width:600px){.haqi-app .parallel-world-buttons{gap:8px;padding-bottom:7px}.haqi-app .parallel-world-buttons .world-switch-button{min-width:0;min-height:54px;gap:6px;padding:7px 9px;font-size:14px;flex:1}.world-switch-emblem{width:30px;height:30px}.world-switch-emblem svg{width:25px;height:25px}.world-switch-label{white-space:normal;overflow-wrap:normal}}
 @media(prefers-reduced-motion:reduce){.haqi-app .parallel-world-buttons .world-switch-button{transition:none}}
 @media(forced-colors:active){.haqi-app .parallel-world-buttons .world-switch-button[aria-pressed=true]{outline:2px solid Highlight;outline-offset:-5px}.haqi-app .parallel-world-buttons .world-switch-button[aria-pressed=true] .world-switch-label{text-decoration:underline}.world-switch-emblem{border-color:ButtonText}}
 
@@ -511,6 +511,7 @@
     box-shadow:inset 0 1px #fffaf0,0 1px 2px #50361f20;
     text-shadow:none;
     outline:none;
+    font-size:var(--gui-tab-size,13px);
     font-weight:600;
 }
 :is(.haqi-app,.storybook-ui) :is(.gui-tabs,.shop-tabs,.shop-subtabs,.shop-category-tabs,.equipment-tabs,.equipment-filters,.bag-tabs,.bag-school-tabs,.pet-profile-tabs,.strengthening-filters,.gem-tabs,.gem-filters)>button:is([aria-pressed],[aria-selected])::before {
@@ -636,7 +637,7 @@
 .dialogue-learning-word:focus-visible{outline:2px solid var(--gold,#a78a4c)}
 
 /* Forest skin uses separate text-free nine-slice surfaces. Layout remains owned by each view. */
-.forest-ui .storybook-ui :is(.primary,.secondary),.forest-ui.storybook-ui :is(.primary,.secondary){white-space:normal;overflow-wrap:anywhere;box-sizing:border-box;}
+.forest-ui .storybook-ui :is(.primary,.secondary):not(:where(.world-switch-button)),.forest-ui.storybook-ui :is(.primary,.secondary):not(:where(.world-switch-button)){white-space:normal;overflow-wrap:anywhere;box-sizing:border-box;}
 .forest-ui .storybook-ui :is(.primary,.secondary)::before,.forest-ui.storybook-ui :is(.primary,.secondary)::before{border-image-width:12px 30px;}
 .storybook-ui .rpg-dialogue :is(.primary,.secondary){border-radius:18px;transition:transform .14s ease,filter .14s ease;}
 .storybook-ui .rpg-dialogue :is(.primary,.secondary):active:not(:disabled){transform:translateY(2px) scale(.98);}
@@ -646,7 +647,7 @@
 .forest-ui .modal::before{border:40px solid transparent;border-image:var(--ui-paper) var(--ui-paper-slice) fill / 40px / 0 stretch;background:none;box-shadow:none;}
 .forest-ui .modal{padding:18px;background:transparent;border:0;border-radius:24px;}
 .forest-ui .modal-header{background:none;}
-.forest-ui :is(.primary,.secondary):not(.battle-layer *){min-height:48px;padding:12px 32px;line-height:1.5;}
+.forest-ui :is(.primary,.secondary):not(.battle-layer *, .world-switch-button){min-height:48px;padding:12px 32px;line-height:1.5;}
 .forest-ui .opening-journey-modal .cloud-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:stretch;}
 .forest-ui .opening-journey-modal .cloud-actions>button{width:100%;min-width:0;margin:0;min-height:56px;font-size:15px;padding:14px 32px;}
 @media(max-width:650px){.forest-ui .modal{padding:12px}.forest-ui .modal::before{border-width:30px;border-image-width:30px}.forest-ui .opening-journey-modal .cloud-actions{gap:8px}.forest-ui .opening-journey-modal .cloud-actions>button{font-size:14px;padding:12px 26px;}}
@@ -655,17 +656,17 @@
 .forest-ui .result-card::before,.forest-ui .reward-popup::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border:44px solid transparent;border-image:var(--ui-paper) var(--ui-paper-slice) fill / 44px / 0 stretch;background:#f8ebce;background-clip:padding-box;}
 .forest-ui .result-card{top:50%;width:min(560px,calc(100% - 32px));max-height:calc(100dvh - 32px);overflow:auto;padding:40px 40px 34px;box-shadow:0 18px 50px #102b3655,0 0 0 100vmax #102b3638;}
 .forest-ui .result-card .eyebrow{display:inline-block;background:#446729;color:#fff6da;border-radius:18px 6px;padding:7px 18px;margin:0;font-size:13px;letter-spacing:2px;}
-.forest-ui .result-card h2{font-family:"Microsoft YaHei","PingFang SC",sans-serif;font-size:26px;font-weight:800;line-height:1.5;margin:18px auto;color:#365735;overflow-wrap:anywhere;}
-.forest-ui .result-card p:not(.eyebrow){font-size:16px;line-height:1.7;color:#6c5638;padding:12px 16px;margin:10px 0;background:#f2e4bf88;border-radius:14px;}
-.forest-ui .result-card>button:is(.primary,.secondary){display:block;width:min(340px,100%);min-height:60px;box-sizing:border-box;margin:22px auto 0;padding:16px 38px;font-size:17px;line-height:1.5;white-space:normal;overflow-wrap:anywhere;}
+.forest-ui .result-card h2{font-size:var(--gui-title-size);line-height:1.3;margin:18px auto;color:#365735;overflow-wrap:anywhere;}
+.forest-ui .result-card p:not(.eyebrow){font-size:var(--gui-text-size);line-height:1.7;color:#6c5638;padding:12px 16px;margin:10px 0;background:#f2e4bf88;border-radius:14px;}
+.forest-ui .result-card>button:is(.primary,.secondary){display:block;width:min(340px,100%);min-height:60px;box-sizing:border-box;margin:22px auto 0;padding:16px 38px;font-size:var(--gui-text-size);line-height:1.5;white-space:normal;overflow-wrap:anywhere;}
 .forest-ui .result-card>button:is(.primary,.secondary)::before{border-image-width:14px 34px;}
 .forest-ui .result-card>details{text-align:left;margin-top:12px;line-height:1.6;}
 .forest-ui .reward-popup{width:400px;max-width:calc(100vw - 24px);padding:28px 30px;gap:12px;box-shadow:0 10px 32px #19372b55;}
 .forest-ui .reward-popup::after{display:none;}
 .forest-ui .reward-popup>button:is(.primary,.secondary){min-width:0;width:100%;min-height:56px;padding:14px 28px;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;font-size:15px;line-height:1.5;}
 .forest-ui .reward-popup :is(strong,p,small){overflow-wrap:anywhere;line-height:1.6;}
-@media(max-width:650px){.forest-ui .result-card{padding:30px 24px 26px}.forest-ui .result-card::before,.forest-ui .reward-popup::before{border-width:32px;border-image-width:32px}.forest-ui .result-card h2{font-size:22px}.forest-ui .result-card>button:is(.primary,.secondary){font-size:16px;padding:15px 32px}.forest-ui .reward-popup{padding:24px;gap:8px}}
-@media(max-height:480px){.forest-ui .result-card{padding:22px 30px}.forest-ui .result-card h2{font-size:21px;margin:10px 0}.forest-ui .result-card>button:is(.primary,.secondary){margin-top:12px}.forest-ui .result-card p:not(.eyebrow){margin:8px 0;padding:6px 12px}}
+@media(max-width:650px){.forest-ui .result-card{padding:30px 24px 26px}.forest-ui .result-card::before,.forest-ui .reward-popup::before{border-width:32px;border-image-width:32px}.forest-ui .result-card>button:is(.primary,.secondary){padding:15px 32px}.forest-ui .reward-popup{padding:24px;gap:8px}}
+@media(max-height:480px){.forest-ui .result-card{padding:22px 30px}.forest-ui .result-card h2{margin:10px 0}.forest-ui .result-card>button:is(.primary,.secondary){margin-top:12px}.forest-ui .result-card p:not(.eyebrow){margin:8px 0;padding:6px 12px}}
 
 /* Short, consistent reading hierarchy for onboarding. */
 .forest-ui .opening-journey-modal .modal-header h2{font:700 22px/1.35 "Microsoft YaHei",sans-serif;margin:0;}

@@ -10,7 +10,7 @@ import { renderCityInteraction } from '../views/adventure/view_city_dungeon.js';
 import { renderEarthLoading } from '../views/adventure/view_adventure_earth.js';
 import { createDungeonStory } from '../adventure_dungeon_story.js';
 import { claimTowerReward, journeyParty } from '../adventure_dungeon_journeys_core.js';
-import { persistSaveChange } from '../adventure_reward_persistence.js';
+import { createSaveCommitter } from '../adventure_reward_persistence.js';
 import { startCoopRun, coopParty as journeyCoopParty } from '../adventure_coop_core.js';
 import { partySpecs as journeyPetParty } from '../adventure_pets_core.js';
 import { dungeonFor, enterDungeon, leaveDungeon } from '../adventure_dungeons_core.js';
@@ -28,6 +28,7 @@ export function createDungeonController({
     openPanel = services?.navigation?.openPanel,
     persist = services?.persistence?.persist,
     queueCloudSave = services?.persistence?.queueCloudSave,
+    commitSave = services?.persistence?.commitSave,
     paintHud = services?.navigation?.paintHud,
     paintPanel = services?.navigation?.paintPanel,
     toast = services?.feedback?.toast,
@@ -41,6 +42,9 @@ export function createDungeonController({
     localPlay,
     dialogueVoice,
 }) {
+    const saveCommitter = commitSave
+        ? { commitSave }
+        : createSaveCommitter({ getContext, queueCloudSave, paintHud, paintPanel });
     let dungeonLoading = null;
     let journeyId = null;
     let journeyRestart = false;
@@ -88,12 +92,11 @@ export function createDungeonController({
     }
 
     function claimFloorReward(id, floor) {
-        const { save, assets, roleStorage } = getContext();
-        const committed = persistSaveChange(save, roleStorage, draft => claimTowerReward(draft, assets.content, id, floor));
-        Object.assign(save, committed.save);
-        queueCloudSave();
-        paintHud();
-        paintPanel();
+        const { assets } = getContext();
+        const committed = saveCommitter.commitSave(
+            draft => claimTowerReward(draft, assets.content, id, floor),
+            { paint: 'both', mutateInPlace: true, setWarning: false },
+        );
         toast(`已领取 ${committed.result} 奇豆`);
     }
 

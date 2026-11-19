@@ -10,6 +10,7 @@ import { tr } from '../locale_runtime.js';
 import * as A from '../adventure_core.js';
 import * as W from '../adventure_world_core.js';
 import { renderEntry } from '../views/adventure/view_entry.js';
+import { restoreVisibleFocus } from '../ui/controls.js';
 
 export function createRoleTitleController({
     nodes,
@@ -354,7 +355,10 @@ export function createRoleTitleController({
                 importOriginal: beginOriginalImport,
                 playPrologue: () =>
                     void prologue.runPrologue().then(() => {
-                        if (getContext().stage === 'title' && getTitleView() === 'create') paintCreation();
+                        if (getContext().stage === 'title' && getTitleView() === 'create') {
+                            paintCreation();
+                            restoreVisibleFocus(nodes.entry.querySelector('.entry-prologue-replay'));
+                        }
                     }),
                 previewChoices: school => tutorialCards(ctx.assets, school),
                 preview: (...args) => getContext().creationPreview.play(...args),

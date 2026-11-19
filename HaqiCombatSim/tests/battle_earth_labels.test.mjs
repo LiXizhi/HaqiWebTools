@@ -4,14 +4,15 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import {cityEntranceAppearance} from '../js/adventure_city_dungeons_core.js';
 
-const source=fs.readFileSync(new URL('../js/adventure/renderer/scene_renderer.js',import.meta.url),'utf8').replaceAll('\r\n','\n');
-const landmarkDraw=source.slice(source.indexOf("            if(o.kind==='landmark')"),source.indexOf("            if(o.kind==='npc')"));
-const labelsDraw=source.slice(source.indexOf('        if(world.isEarth&&!title){'),source.indexOf('        const meter=frameMeter.sample'));
+const actorSource=fs.readFileSync(new URL('../js/adventure/renderer/actor_pass.js',import.meta.url),'utf8').replaceAll('\r\n','\n');
+const overlaySource=fs.readFileSync(new URL('../js/adventure/renderer/overlay_pass.js',import.meta.url),'utf8').replaceAll('\r\n','\n');
+const landmarkDraw=actorSource.slice(actorSource.indexOf("        if (o.kind === 'landmark')"),actorSource.indexOf("        if (o.kind === 'camp-toy')"));
+const labelsDraw=overlaySource.slice(overlaySource.indexOf('        if (world.isEarth && !title) {'),overlaySource.indexOf("        if (!title && !motionHidden && world.memoryGathering)"));
 function render(world){
     const labels=[],context={world,title:false,motionHidden:false,ctx:{save(){},restore(){},measureText:()=>({width:70})},cam:{x:0,y:0,scale:1},w:800,h:600,
         save:{position:{x:50,y:550}},socialActors:[],cityEntranceAppearance,PLATE:{place:{}},tr:s=>s,
         plate:(ctx,name,x,y,style)=>labels.push({name,x,y,style}),t:0,reducedMotion:{matches:true},assets:{},drawDungeonEntrance(){},drawSignpost(){}};
-    for(const mark of world.landmarks)vm.runInNewContext(landmarkDraw,{...context,o:{...mark,kind:'landmark'}});
+    for(const mark of world.landmarks)vm.runInNewContext(`(()=>{${landmarkDraw}})()`,{...context,o:{...mark,kind:'landmark'}});
     vm.runInNewContext(labelsDraw,context);return labels;
 }
 

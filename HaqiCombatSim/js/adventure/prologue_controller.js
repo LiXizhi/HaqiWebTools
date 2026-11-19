@@ -44,7 +44,9 @@ export function createPrologueController({ getContext, secondLocaleFor, toast })
                 return await handle.exited;
             } catch (error) {
                 console.error('序章加载失败', error);
-                document.querySelector('.prologue-layer')?.remove();
+                const layer = document.querySelector('dialog.prologue-layer');
+                layer?.close();
+                layer?.remove();
                 toast('序章暂时无法播放，可以直接开始冒险。');
                 return null;
             } finally {

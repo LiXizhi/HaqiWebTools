@@ -372,10 +372,11 @@ export function createLocalPlay(api) {
 
     function key(event, down) {
         if (event.target?.closest?.('[data-recording-key],input,textarea,select')) return false;
-        const inputs = normalizePlayerInputs(state().settings.playerInputs),
-            keys = normalizeLocalKeys(state().settings.localKeys);
+        const current = state();
+        if (current.globalPaused || (current.stage !== 'world' && current.stage !== 'battle')) return false;
+        const inputs = normalizePlayerInputs(current.settings.playerInputs),
+            keys = normalizeLocalKeys(current.settings.localKeys);
         const intent = assignedKeyboardAction(inputs, keys, event.code);
-        if (state().globalPaused) return false;
         if (intent && (session || intent.owner === 0)) return control(intent.owner, intent.action, down, event.repeat);
         return !!localKeyAction(keys, event.code);
     }

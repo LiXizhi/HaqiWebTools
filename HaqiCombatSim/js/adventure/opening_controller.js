@@ -28,7 +28,7 @@ import { playMentorPracticeCast } from '../mentor_practice_effects.js';
 import { currentQuest as defaultCurrentQuest } from '../adventure_core.js';
 import { openCompanionWordplay } from '../learning/companion_wordplay.js';
 import { campDetourGoal } from '../camp_detour_core.js';
-import { persistReward } from '../adventure_reward_persistence.js';
+import { createSaveCommitter, persistReward } from '../adventure_reward_persistence.js';
 import { createLearningVoice } from '../audio/language_adventure_voice.js';
 import { recordWordPractice } from '../learning/language_course.js';
 import { learningLesson, learningPracticeLanguage } from '../learning_language_core.js';
@@ -50,6 +50,8 @@ export function createOpeningController({
     persist = services?.persistence?.persist,
     saveLocal = services?.persistence?.saveLocal,
     queueCloudSave = services?.persistence?.queueCloudSave,
+    commitSave = services?.persistence?.commitSave,
+    commitReward = services?.persistence?.commitReward,
     paintHud = services?.navigation?.paintHud,
     paintBattle = services?.navigation?.paintBattle,
     stopBattleChatVoice,
@@ -74,6 +76,9 @@ export function createOpeningController({
     onOpenTacticsTraining,
     onTrackOpeningJourney,
 }) {
+    const saveCommitter = (commitSave && commitReward)
+        ? { commitSave, commitReward }
+        : createSaveCommitter({ getContext, saveLocal, persistRewardFn, queueCloudSave, paintHud });
     let tacticsPractice = null;
     let companionPractice = null;
     let mentorPractice = null;
@@ -113,13 +118,14 @@ export function createOpeningController({
         const lessonId = ctx.battle.tacticsField.id;
         const won = ctx.battle.finished && ctx.battle.winner === 'near';
         if (won && !session.recorded) {
-            const receipt = structuredClone(ctx.save);
-            recordTacticsFieldVictory(receipt, ctx.battle);
-            receipt.revision++;
-            saveLocal(receipt, ctx.roleStorage);
-            Object.assign(ctx.save, receipt);
+            saveCommitter.commitSave(
+                draft => {
+                    recordTacticsFieldVictory(draft, ctx.battle);
+                    draft.revision++;
+                },
+                { mutateInPlace: true, paint: 'none', setWarning: false },
+            );
             session.recorded = true;
-            queueCloudSave();
         }
         const index = TACTICS_FIELD_ENCOUNTERS.findIndex(row => row.id === lessonId);
         const following = won ? TACTICS_FIELD_ENCOUNTERS[(index + 1) % TACTICS_FIELD_ENCOUNTERS.length].id : lessonId;
@@ -258,19 +264,9 @@ export function createOpeningController({
             complete: () =>
                 safely(() => {
                     if (!active() || session.busy || !session.lesson.done) return;
-                    const nowCtx = getContext();
-                    const committed = persistRewardFn(
-                        nowCtx.save,
-                        nowCtx.assets.content,
-                        { type: 'talk', npcId: session.lesson.npcId },
-                        {},
-                        nowCtx.roleStorage,
-                    );
-                    nowCtx.setSave(committed.save);
-                    nowCtx.setStorageWarning(false);
+                    saveCommitter.commitReward({ type: 'talk', npcId: session.lesson.npcId }, {}, { paint: 'none' });
                     mentorPractice = null;
                     close();
-                    queueCloudSave();
                     paintHud();
                     track();
                 }),
@@ -316,14 +312,10 @@ export function createOpeningController({
             complete: () =>
                 safely(() => {
                     if (!active() || !session.lesson.done) return;
-                    const nowCtx = getContext();
-                    const committed = persistRewardFn(nowCtx.save, nowCtx.assets.content, { type: 'talk', npcId: 36200 }, {}, nowCtx.roleStorage);
-                    nowCtx.setSave(committed.save);
-                    nowCtx.setStorageWarning(false);
+                    saveCommitter.commitReward({ type: 'talk', npcId: 36200 }, {}, { paint: 'none' });
                     companionPractice = null;
                     close();
                     petScene().dialogue('resident:36200');
-                    queueCloudSave();
                     paintHud();
                     track();
                 }),
@@ -351,12 +343,13 @@ export function createOpeningController({
                 );
                 const recorded = result?.persisted;
                 if (!recorded || !valid()) break;
-                const next = structuredClone(getContext().save);
-                const events = next.openingJourney.wordplay.practices;
-                next.openingJourney.wordplay.practices = events.filter(row => row.id !== event.id);
-                saveLocal(next, getContext().roleStorage);
-                getContext().setSave(next);
-                queueCloudSave();
+                saveCommitter.commitSave(
+                    draft => {
+                        const events = draft.openingJourney.wordplay.practices;
+                        draft.openingJourney.wordplay.practices = events.filter(row => row.id !== event.id);
+                    },
+                    { expected: { owner, roleId: role, epoch }, paint: 'none', setWarning: false },
+                );
             }
         })();
         wordplayDrain = task;
@@ -389,13 +382,7 @@ export function createOpeningController({
             voice: createLearningVoice({ getSettings: () => getContext().save.languageLearning }),
             commit: action => {
                 if (!active()) return false;
-                const nowCtx = getContext();
-                const committed = persistReward(nowCtx.save, nowCtx.assets.content, action, {}, nowCtx.roleStorage);
-                if (!committed.result.accepted) return committed.result;
-                nowCtx.setSave(committed.save);
-                nowCtx.setStorageWarning(false);
-                queueCloudSave();
-                paintHud();
+                const committed = saveCommitter.commitReward(action, {}, { accept: r => !!r?.accepted, paint: 'hud' });
                 return committed.result;
             },
             drain: drainWordplayPractice,

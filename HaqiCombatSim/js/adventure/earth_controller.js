@@ -16,7 +16,7 @@ import { createIslandSceneLoadingView } from '../views/adventure/view_island_sce
 import * as A from '../adventure_core.js';
 import * as W from '../adventure_world_core.js';
 import { dungeonFor } from '../adventure_dungeons_core.js';
-import { persistReward } from '../adventure_reward_persistence.js';
+import { createSaveCommitter } from '../adventure_reward_persistence.js';
 import { createLearningVoice } from '../audio/language_adventure_voice.js';
 import { createStoryChat } from '../learning/language_story.js';
 
@@ -44,6 +44,7 @@ export function createEarthController({
     openPanel = services?.navigation?.openPanel,
     persist = services?.persistence?.persist,
     queueCloudSave = services?.persistence?.queueCloudSave,
+    commitReward = services?.persistence?.commitReward,
     paintHud = services?.navigation?.paintHud,
     toast = services?.feedback?.toast,
     showTitle = services?.navigation?.showTitle,
@@ -58,6 +59,9 @@ export function createEarthController({
     getEarthFn,
     earthPlacesClient,
 }) {
+    const saveCommitter = commitReward
+        ? { commitReward }
+        : createSaveCommitter({ getContext, queueCloudSave, paintHud });
     let earthPractice = null;
     let earthService = null;
     let earthServiceTask = null;
@@ -293,18 +297,11 @@ export function createEarthController({
                 void openFreeTalk(profile, options);
             },
             commit: completion => {
-                const nowCtx = getContext();
-                const committed = persistReward(
-                    nowCtx.save,
-                    nowCtx.assets.content,
+                const committed = saveCommitter.commitReward(
                     { type: 'language-complete', completion },
                     { learningCompletion: completion },
-                    nowCtx.roleStorage,
+                    { paint: 'hud' },
                 );
-                nowCtx.setSave(committed.save);
-                nowCtx.setStorageWarning(false);
-                queueCloudSave();
-                paintHud();
                 return committed.result;
             },
         });

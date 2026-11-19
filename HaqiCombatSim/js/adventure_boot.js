@@ -42,13 +42,16 @@ export async function bootAdventure() {
     catch (error) {
         console.error('冒险启动失败：',error);
         card.setAttribute('aria-busy', 'false');
+        setText(document.getElementById('load-caption'), '加载失败');
         setText(document.getElementById('load-status'), '冒险暂时无法开始');
         document.getElementById('load-progress').hidden = true;
-        const retry = document.createElement('button');
-        retry.className = 'primary';
-        setText(retry, '重新尝试');
-        retry.onclick = () => location.reload();
-        card.append(retry);
+        if (!card.querySelector('button.boot-retry')) {
+            const retry = document.createElement('button');
+            retry.className = 'primary boot-retry';
+            setText(retry, '重新尝试');
+            retry.onclick = () => location.reload();
+            card.append(retry);
+        }
     }
 }
 

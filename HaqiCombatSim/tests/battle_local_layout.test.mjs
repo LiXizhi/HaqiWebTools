@@ -6,7 +6,7 @@ import {createAdventure,beginEncounter} from '../js/adventure_core.js';
 import {createLocalFormation,localParty,localHumanResources} from '../js/adventure_local_coop_core.js';
 import {restorePveBattle} from '../js/combat_pve_core.js';
 import {cardsInHand} from '../js/combat_unit_core.js';
-import {renderBattle} from '../js/views/adventure/view_battle_layer.js';
+import {animateHandSelection,renderBattle} from '../js/views/adventure/view_battle_layer.js';
 
 class Element {
     constructor(tag){this.tagName=tag.toUpperCase();this.children=[];this.dataset={};this.attrs={};this.style={setProperty(){},removeProperty(){}};this.offsetHeight=40;this.offsetTop=22;this.className='';this.classList={add:(...names)=>{this.className+=' '+names.join(' ');},remove:(...names)=>{this.className=this.className.split(' ').filter(n=>!names.includes(n)).join(' ');},toggle:(name,on)=>{if(on)this.classList.add(name);else this.classList.remove(name);}};}
@@ -22,6 +22,27 @@ class Element {
     querySelector(s){return this.querySelectorAll(s)[0]||null;}
     getBoundingClientRect(){return {left:0,top:0,width:1500,height:900};}
 }
+
+test('selection animates the card face independently of its description and actions',async t=>{
+    const original=globalThis.matchMedia;
+    globalThis.matchMedia=()=>({matches:false});
+    t.after(()=>{if(original===undefined)delete globalThis.matchMedia;else globalThis.matchMedia=original;});
+    const hand=new Element('div'),card=new Element('div'),face=new Element('button');
+    card.dataset.seq='7';
+    card.style.zIndex='30';
+    face.className='card-select';
+    face.getBoundingClientRect=()=>({left:145,top:400});
+    face.animate=()=>({finished:Promise.resolve()});
+    const animate=t.mock.method(face,'animate');
+    card.append(face,new Element('p'),new Element('button'));
+    hand.append(card);
+    animateHandSelection(hand,new Map([['7',{left:214,top:520}]]),null,'7');
+    assert.equal(animate.mock.callCount(),1);
+    assert.deepEqual(animate.mock.calls[0].arguments[0][0],{translate:'69px 120px'});
+    assert.equal(card.style.zIndex,'31');
+    await Promise.resolve();
+    assert.equal(card.style.zIndex,'30');
+});
 
 test('local battle renders one shared arena and rosters with two independent full-size overlapping hands',t=>{
     const original=Object.fromEntries(['document','Node','matchMedia','ResizeObserver','getComputedStyle'].map(k=>[k,globalThis[k]]));

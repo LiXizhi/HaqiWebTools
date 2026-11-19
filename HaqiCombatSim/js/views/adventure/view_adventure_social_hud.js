@@ -19,12 +19,15 @@ export function teamHudButton(team,coopRun,onOpen,localSecond=null){
 export function bindDungeonMenu(button,onOpen){
     button.setAttribute('aria-expanded','false');button.setAttribute('aria-haspopup','true');
     const menu=document.createElement('div');menu.className='dungeon-entry-menu';menu.hidden=true;
-    const hide=(focus=false)=>{menu.hidden=true;button.setAttribute('aria-expanded','false');if(focus)button.focus();};
-    for(const [label,key]of [['PvE 组队副本','dungeons'],['PvP 红蘑菇赛场','social-pvp']]){const row=document.createElement('button');row.type='button';row.textContent=label;row.onclick=()=>{hide();onOpen(key);};menu.append(row);}
     const wrapper=document.createElement('div');wrapper.className='dungeon-entry';button.replaceWith(wrapper);wrapper.append(button,menu);
-    button.onclick=()=>{if(!menu.hidden)hide();else{menu.hidden=false;button.setAttribute('aria-expanded','true');menu.firstElementChild.focus();}};
+    const root=wrapper.closest('#hud')||wrapper.parentElement;
+    const setOpen=open=>{menu.hidden=!open;button.setAttribute('aria-expanded',String(open));root?.classList?.toggle('has-dungeon-menu',open);};
+    const hide=(focus=false)=>{setOpen(false);if(focus)button.focus();};
+    for(const [label,key]of [['PvE 组队副本','dungeons'],['PvP 红蘑菇赛场','social-pvp']]){const row=document.createElement('button');row.type='button';row.textContent=label;row.onclick=()=>{hide();onOpen(key);};menu.append(row);}
+    button.onclick=()=>{if(!menu.hidden)hide();else{setOpen(true);menu.firstElementChild.focus();}};
     wrapper.addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();hide(true);}if(['ArrowDown','ArrowUp'].includes(e.key)){e.preventDefault();const rows=[...menu.children],index=rows.indexOf(document.activeElement);rows[(index+(e.key==='ArrowDown'?1:rows.length-1))%rows.length].focus();}});
     wrapper.addEventListener('focusout',e=>{if(!wrapper.contains(e.relatedTarget))hide();});
     // Capture on the HUD itself, so replacement of HUD nodes removes the listener too.
-    const root=wrapper.closest('#hud')||wrapper.parentElement;root.socialMenuAbort?.abort();root.socialMenuAbort=new AbortController();document.addEventListener('pointerdown',e=>{if(!wrapper.contains(e.target))hide();},{capture:true,signal:root.socialMenuAbort.signal});
+    root.classList?.remove('has-dungeon-menu');
+    root.socialMenuAbort?.abort();root.socialMenuAbort=new AbortController();document.addEventListener('pointerdown',e=>{if(!wrapper.contains(e.target))hide();},{capture:true,signal:root.socialMenuAbort.signal});
 }

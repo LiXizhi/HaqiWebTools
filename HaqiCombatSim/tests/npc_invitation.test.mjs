@@ -4,9 +4,9 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import {npcHasActiveQuest} from '../js/adventure_npc_core.js';
 
-const renderer=fs.readFileSync(new URL('../js/adventure/renderer/scene_renderer.js',import.meta.url),'utf8');
-const start=renderer.indexOf('        const invitedNpc=');
-const invitation=renderer.slice(start,renderer.indexOf('        if(!world.portal.hidden)',start));
+const renderer=fs.readFileSync(new URL('../js/adventure/renderer/overlay_pass.js',import.meta.url),'utf8').replaceAll('\r\n','\n');
+const start=renderer.indexOf('        const invitedNpc =');
+const invitation=renderer.slice(start,renderer.indexOf('        if (!world.portal.hidden)',start));
 test('NPC invitation follows the selected instance with no follower pet and stays above its portrait',()=>{
     const context=vm.createContext({world:{npcs:[{id:1,instanceId:'other',x:5,y:5},{id:1,instanceId:'wanted',x:200,y:300}]},companionBubble:{npcId:1,instanceId:'wanted'},title:false,motionHidden:false,nearbyPartnerBubble:null,socialGesture:null,gestureAt:0,socialGesturePose:()=>null,markerFor:()=>null,npcHasActiveQuest,save:{},assets:{content:{}},ctx:{},t:0,reducedMotion:{matches:true},bubbleTarget:null,drawSpeechBubble:(_ctx,at)=>({x:at.x,y:at.y-82,w:32,h:29})});
     vm.runInContext(invitation,context);

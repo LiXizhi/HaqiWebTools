@@ -39,21 +39,20 @@
 .entry-wizard .entry-locale-stack{margin-top:28px;padding-top:20px;border-top:1px solid #d9c48d33;width:fit-content;row-gap:10px}
 .entry-wizard .entry-locale-label{color:#b8cdc2;letter-spacing:0}
 .entry-wizard .entry-second-locale{min-height:40px;background:#f4f0e2}
-.entry-wizard .locale-choices{display:flex;flex-wrap:wrap;gap:6px}
-.entry-wizard .locale-choices button{min-height:44px;padding:8px 12px}
+.entry-wizard .locale-choices>button{min-height:44px}
 .entry-wizard .character-form{border-radius:20px;border-color:#e2ca8c;background:linear-gradient(145deg,#fffaf0,#f5efdc);box-shadow:0 24px 64px #051f3555,inset 0 0 0 5px #f9f3e3}
 .entry-wizard .creation-form{padding:30px}
 .entry-wizard .character-form>.eyebrow{color:#82704b;margin-bottom:8px}
 .entry-account-choices{gap:8px;margin-top:24px}
-.entry-account-hint{font-size:12px;line-height:1.7;color:var(--muted);padding:0 4px;margin-bottom:14px}
+.entry-account-hint{font-size:var(--gui-meta-size);line-height:1.7;color:var(--muted);padding:0 4px;margin-bottom:14px}
 .entry-account-hint:last-child{margin-bottom:0}
-.entry-account-choices .entry-account-choice{min-height:52px;font-size:14px}
+.entry-account-choices .entry-account-choice{min-height:52px}
 
 /* Keep the account header and primary actions visible around a compact list. */
 .role-screen.entry-wizard .role-manager{padding:24px;max-height:min(700px,100%)}
 .role-head{padding-bottom:16px;border-bottom:1px solid #d6bf8366;margin-bottom:14px}
 .role-head>.eyebrow{color:#8c754b;letter-spacing:.14em;margin-bottom:5px}
-.role-head h2{margin:0 0 14px;letter-spacing:.06em;font-size:28px}
+.role-head h2{margin:0 0 14px;font-size:var(--gui-title-size);line-height:1.3}
 .role-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .role-heading>button{font-size:12px;min-height:40px;padding:8px 14px;margin-bottom:8px}
 .role-head .gui-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px}

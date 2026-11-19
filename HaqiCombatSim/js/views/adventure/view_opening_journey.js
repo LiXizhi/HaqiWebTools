@@ -27,7 +27,7 @@ export function renderOpeningJourney(root,model,cb){
  for(const item of milestones)progress.append(el('li','',item.complete?'已完成：'+item.label:item.label));
  details.append(progress);
  if(state.phase==='offer'){
-  say('莫尼那边有个小家伙被拦住了，我们去看看！');
+  say('青龙刚说完，莫尼那边有个小家伙被拦住了，我们去看看！');
   action('带抱抱龙去看看',{step:'accept'},true);
  }else if(state.phase==='guide'){
   say('咕噜噜想进营地。你愿意带它一起走吗？');

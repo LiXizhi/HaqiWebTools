@@ -2,7 +2,7 @@ import {art} from '../views/adventure/primitives.js';
 import * as W from '../adventure_world_core.js';
 import {npcCharacter} from '../adventure_city_people_core.js';
 import {rewardSnapshot} from '../adventure_reward_feedback_core.js';
-import {persistReward} from '../adventure_reward_persistence.js';
+import {createSaveCommitter} from '../adventure_reward_persistence.js';
 import {createCharacterConversation} from '../learning/character_conversation.js';
 import {characterProfile} from '../character_relationship_core.js';
 import {heroPortrait} from '../hero_renderer.js';
@@ -29,6 +29,8 @@ export function createConversationLearningController({
     persist=services?.persistence?.persist,
     saveLocal=services?.persistence?.saveLocal,
     queueCloudSave=services?.persistence?.queueCloudSave,
+    commitSave=services?.persistence?.commitSave,
+    commitReward=services?.persistence?.commitReward,
     close=services?.navigation?.close,
     openPanel=services?.navigation?.openPanel,
     paintHud=services?.navigation?.paintHud,
@@ -50,6 +52,7 @@ export function createConversationLearningController({
     let secondCharacterChat=null;
     const roleConversation=owner=>owner?(secondCharacterChat||=createRoleConversation(1)):characterChat;
 
+    const saveCommitter=(commitSave&&commitReward)?{commitSave,commitReward}:createSaveCommitter({getContext,saveLocal,queueCloudSave,paintHud});
     function createRoleConversation(owner){
         return createCharacterConversation({
             isFriend:p=>islandSocial().isFriend(p),
@@ -70,13 +73,12 @@ export function createConversationLearningController({
             membership:membership(),
             getPortrait:source=>resolveConversationPortrait(getContext().assets,source),
             commit:next=>{
-                const {roleStore,roleStorage,setSave}=getContext();
-                if(owner&&localPlay().active)localPlay().commitRole(1,next);
-                else{
-                    saveLocal(next,roleStorage);
-                    setSave(roleStore.catalog.roles.find(r=>r.id===roleStore.catalog.activeId).save);
+                if(owner&&localPlay().active){
+                    localPlay().commitRole(1,next);
+                    queueCloudSave();paintHud();
+                    return;
                 }
-                queueCloudSave();paintHud();
+                saveCommitter.commitSave(next,{paint:'hud',setWarning:false});
             },
             onClose:options=>{
                 const {setDialog}=getContext();
@@ -105,14 +107,13 @@ export function createConversationLearningController({
     function recordRelationshipActivity(event){
         if(event.flushOnly){void characterChat.syncActivities();return;}
         if(!islandSocial().isFriend(event.peer)){characterChat.activity(event);return;}
-        const {save,roleStore,roleStorage,setSave}=getContext();
-        if(save.relationshipEvents?.some(row=>row.id===event.id))return;
-        const next=structuredClone(save);
-        next.relationshipEvents=[...(next.relationshipEvents||[]),{...event,peer:characterProfile(event.peer)}];
-        next.revision++;
-        saveLocal(next,roleStorage);
-        setSave(roleStore.catalog.roles.find(r=>r.id===roleStore.catalog.activeId).save);
-        queueCloudSave();
+        const committed=saveCommitter.commitSave(draft=>{
+            if(draft.relationshipEvents?.some(row=>row.id===event.id))return false;
+            draft.relationshipEvents=[...(draft.relationshipEvents||[]),{...event,peer:characterProfile(event.peer)}];
+            draft.revision++;
+            return true;
+        },{shouldSave:changed=>changed,paint:'none',setWarning:false});
+        if(committed.skipped)return;
         void characterChat.syncActivities();
     }
 
@@ -145,15 +146,15 @@ export function createConversationLearningController({
             };
         },
         commit:completion=>{
-            const {save,assets,roleStorage,stage,setSave,setStorageWarning}=getContext();
-            const committed=persistReward(save,assets.content,{type:'language-complete',completion},{learningCompletion:completion},roleStorage);
+            const {save,stage}=getContext();
             const before=rewardSnapshot(save);
-            setSave(committed.save);
-            setStorageWarning(false);
+            const committed=saveCommitter.commitReward(
+                {type:'language-complete',completion},
+                {learningCompletion:completion},
+                {paint:stage==='world'?'hud':'none'},
+            );
             showRewards(before);
-            queueCloudSave();
             islandSocial().activity('learning');
-            if(stage==='world')paintHud();
             return committed.result;
         },
         notify:message=>toast(message),

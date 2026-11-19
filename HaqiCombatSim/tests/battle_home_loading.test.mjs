@@ -99,14 +99,18 @@ test('leaving home during preparation rejects stale completion',async()=>{
 });
 
 test('home releases all scene raster caches and backing canvases while retaining world state',()=>{
- const renderer=readFileSync(new URL('../js/adventure/renderer/scene_renderer.js',import.meta.url),'utf8');
- const start=renderer.indexOf('    function releaseScene()');
- const release=renderer.slice(start,renderer.indexOf('    return {',start));
+ const renderer=readFileSync(new URL('../js/adventure/renderer/scene_renderer.js',import.meta.url),'utf8').replaceAll('\r\n','\n');
+ const terrain=readFileSync(new URL('../js/adventure/renderer/terrain_pass.js',import.meta.url),'utf8').replaceAll('\r\n','\n');
+ const rStart=renderer.indexOf('    function releaseScene()');
+ const release=renderer.slice(rStart,renderer.indexOf('    return {',rStart));
+ const tStart=terrain.indexOf('    function release()');
+ const terrainRelease=terrain.slice(tStart,terrain.indexOf('    return {',tStart)).replace('function release()','function releaseTerrain()');
  const calls=[],backing={width:1024,height:1024},overview={width:560,height:560};
  const context={terrainTiles:{clear:()=>calls.push('terrain')},terrainRasterizer:{dispose:()=>calls.push('worker')},islandScenery:{clear:()=>calls.push('trees')},streetPainter:{reset:()=>calls.push('street')},backing,backingZone:{},overview,overviewWorld:{},canvas:{width:800,height:600}};
  context.campToys={clear:()=>calls.push('toys')};
  context.idleGuide={clear:()=>calls.push('idle-guide')};
  context.interactionFeedback={clear:()=>calls.push('feedback')};
+ context.terrainPass={release:()=>vm.runInNewContext(terrainRelease+'releaseTerrain()',context)};
  vm.runInNewContext(release+'releaseScene()',context);
  assert.deepEqual(calls,['toys','idle-guide','feedback','terrain','worker','trees','street']);assert.equal(backing.width,0);assert.equal(overview.width,0);
  assert.equal(context.canvas.width,1);assert.equal(context.terrainRasterizer,null);assert.equal(context.backingZone,null);

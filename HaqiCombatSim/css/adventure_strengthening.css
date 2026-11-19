@@ -2,7 +2,7 @@
 .haqi-app .modal.strengthening-modal{width:750px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);color:var(--ink)}
 .strengthening-modal .modal-header{cursor:move;touch-action:none;flex-shrink:0}
 .strengthening-modal .modal-header .eyebrow{display:none}
-.strengthening-modal .modal-header h2{margin:0;font-size:24px}
+.strengthening-modal .modal-header h2{margin:0}
 .strengthening-modal .modal-body{min-height:0}
 .strengthening-layout{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:14px;font-size:13px}
 .strengthening-workbench{display:flex;flex-direction:column;align-items:center;min-width:0;padding:14px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(145deg,#fffdf344,#e7ddbc30)}

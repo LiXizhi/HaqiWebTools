@@ -177,6 +177,7 @@
 .storybook-ui .local-personal .rpg-dialogue.companion-conversation .dialogue-portrait{left:0;top:auto;bottom:0;width:104px!important;height:140px!important;}
 .storybook-ui .local-personal .rpg-dialogue.companion-conversation .dialogue-portrait.portrait-height{left:52px;width:auto!important;height:140px!important;}
 /* The opening uses the same character-and-bubble language as resident dialogue. */
+#game:has(#overlay.opening-conversation-layer.visible) #hud :is(.game-nav,.quest-tracker,.utility-nav,.companion-guide,.interact-button){opacity:0;visibility:hidden;pointer-events:none;transition:opacity .15s ease;}
 .forest-ui .opening-conversation-layer:has(.opening-character-dialogue){padding:100px 24px max(24px,env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent 32%,#10251f22 66%,#091c2077);}
 .forest-ui .opening-character-dialogue.opening-journey-modal{display:block;position:relative;isolation:isolate;width:min(1080px,100%);max-height:calc(100dvh - 124px);padding:24px 36px 24px 260px;overflow:visible;border:0;background:none;box-shadow:none;}
 .forest-ui .opening-character-dialogue::before{inset:0 0 0 222px;border-width:36px;border-image-width:36px;}

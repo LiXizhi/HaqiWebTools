@@ -1,44 +1,27 @@
 import {dungeonTacticsProfile,dungeonTacticsVersion} from './dungeon_tactics_core.js';
 import {settleTacticsRecord} from './battle_tactics_journal_core.js';
-import {equipTacticsHonor} from './tactics_challenge_core.js';
 import {settleDungeonChallenge} from './dungeon_challenge_core.js';
 import {grantDungeonFirstReward} from './dungeon_first_rewards_core.js';
-import {mapCoordinateVersion} from './adventure_coordinates_core.js';
 import {dungeonLanguageBuff,dungeonLanguageBaseHp} from './adventure_dungeon_language_core.js';
 import {encounterPetTraitSeed,petTraitParams,monsterPetTraits} from './adventure_pet_traits_core.js';
 import {monsterCaptureSpecies} from './adventure_monster_pets_core.js';
-import {earthNearest,earthChapterEvent} from './adventure_earth_core.js';
+import {earthChapterEvent} from './adventure_earth_core.js';
 import {cityBattleReady,recordCityBattleWin} from './adventure_city_dungeons_core.js';
 import {dailyBuffs} from './language_daily_buff_core.js';
-import {claimSpeechReward} from './language_speech_rewards_core.js';
 import {encounterCoolingDown,markEncounterDefeated} from './adventure_encounter_cooldown_core.js';
 import {ownedPetRecords,ownedPetSpecies} from './adventure_pet_files_core.js';
 import {journeyParty,journeyEnemyFormation,recordTowerWin,journeyRewardPets} from './adventure_dungeon_journeys_core.js';
 import {dungeonProgress,coopParty,settleCoopHealth} from './adventure_coop_core.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
-import {purchaseNpcOffer} from './adventure_npc_core.js';
-import {claimMagicStar,magicStarCombatLevel} from './adventure_magic_star_core.js';
-import {chooseDragonTotem,useDragonTotemItem} from './adventure_progression_bonuses_core.js';
-import {customizeHero} from './adventure_hero_customize_core.js';
-import {applyOpeningJourney,openingJourneyActive,openingJourneyWon} from './opening_journey_core.js';
-import {applyCampDetour} from './camp_detour_core.js';
-import {applyForestCommission} from './forest_commission_core.js';
-import {applyCompanionWordplay} from './companion_wordplay_core.js';
+import {magicStarCombatLevel} from './adventure_magic_star_core.js';
+import {openingJourneyWon} from './opening_journey_core.js';
 import {OPENING_TRAINING_IDS} from './opening_training_core.js';
 // AdventureContent / AdventureSave v1. 任务与存档校验/创建分别拆至 ./adventure_quests_core.js 与 ./adventure_save_core.js 并于此重导出。
-import { islandSpawn, travelStatus } from './adventure_world_map_core.js';
-import { mapInfo } from './adventure_island_layout_core.js';
-import { createWorld, retreatBeside } from './adventure_world_core.js';
-import {recordLearningCompletion} from './language_adventure_core.js';
-import { clampDeck } from './combat_unit_core.js';
+import { dispatchAdventureAction, retreatLanding } from './adventure_actions_core.js';
 import * as Pets from './adventure_pets_core.js';
 import { createRng, hashSeed } from './rng_core.js';
-import { castFishing, useStaminaPotion } from './adventure_fishing_core.js';
 import { applyCombatStamina, encounterStaminaCost } from './adventure_stamina_core.js';
-import {mountGem,removeGems} from './adventure_gems_core.js';
-import { upgradeAt, upgradeLevels } from './adventure_upgrade_core.js';
-import { findEquipmentInstance, syncEquipmentInstances } from './adventure_equipment_instances_core.js';
-import { claimCheckin } from './adventure_checkin_core.js';
+import { syncEquipmentInstances } from './adventure_equipment_instances_core.js';
 import {
     deckLimits,
     deckCardCopies,
@@ -68,7 +51,6 @@ import {
     syncGoals,
     petLevel,
     rewardsFor,
-    grantQuestRewards,
 } from './adventure_quests_core.js';
 import {
     SAVE_VERSION,
@@ -109,241 +91,21 @@ export {
     specialEncounter,
     parseSave,
 };
-import {acceptCatalogQuest,claimCatalogQuest,noteCatalogKills,pinTrackedQuest,unpinTrackedQuest,showCurrentChapter,trackedQuestIds,supplementIslandTrack,noteQuestAccepted} from './adventure_catalog_quests_core.js';
+import {noteCatalogKills} from './adventure_catalog_quests_core.js';
 export { rewardLabel } from './adventure_rewards_core.js';
 export { readStamina, ensureDailyStamina, dungeonStaminaHint, parseArenaStaminaCost } from './adventure_stamina_core.js';
 
 const clone = value => JSON.parse(JSON.stringify(value));
 const assert = (ok, message) => { if (!ok) throw new Error(message); };
-const owns = (s, id) => (s.inventory[id] || 0) > 0;
-function retreatLanding(save,content){
-    const pending=save.pendingEncounter;
-    if(save.zone==='earth'){const w=content.earthWorld;const position=w?earthNearest(w,save.position.x,save.position.y,{safe:true}):save.position;return {position:position||save.position,message:'你回到了附近的安全地点。'};}
-    const safe={position:{...mapInfo(save.zone,content).initialSpawn},message:'你回到了安全地点。已保留物品与任务进度。'};
-    if(!pending)return safe;
-    const encounter=content.encounters.find(e=>e.id===pending.encounterId);
-    const laid=content.worldMaps?.[save.zone]?.encounterPositions?.[encounter?.id];
-    const target=laid?{x:laid[0],y:laid[1]}:(Number.isFinite(encounter?.x)&&Number.isFinite(encounter?.y)?{x:encounter.x,y:encounter.y}:null);
-    if(!target)return {position:{...save.position},message:'你离开了战斗。已保留物品与任务进度。'};
-    const info=mapInfo(save.zone,content);
-    const spot=content.worldMaps?.[save.zone]
-        ?retreatBeside(createWorld(save.zone,content,{...save,position:{...save.position}}),save.position,target)
-        :offsetBeside(save.position,target,info.spawn);
-    return {position:{x:Math.min(info.w,Math.max(0,spot.x)),y:Math.min(info.h,Math.max(0,spot.y))},message:'你撤到了怪物附近。已保留物品与任务进度。'};
-}
-function offsetBeside(player,target,spawn){
-    let dx=player.x-target.x,dy=player.y-target.y,len=Math.hypot(dx,dy);
-    if(len<8){dx=spawn.x-target.x;dy=spawn.y-target.y;len=Math.hypot(dx,dy)||1;}
-    return {x:target.x+dx/len*120,y:target.y+dy/len*120};
-}
 export function applyAction(save, content, action, access={}) {
     const before={...save.inventory};
-    const result=applyAdventureAction(save,content,action,access);
+    const result=dispatchAdventureAction(save,content,action,access,{applyAction,settleRunes});
     if(result.changed){
         grantEggCompanion(save,content);
         if(action.type!=='pet-food-take')Pets.autoStockPetFood(save,content,before);
         syncGoals(save,content);
     }
     return result;
-}
-function applyAdventureAction(save, content, action, access={}) {
-    assert(!action.paidByTest, '语言课程仅发放限额奖励，请使用货币购买');
-    assert(!save.pendingEncounter || ['settle-encounter','retreat','language-complete'].includes(action.type), '请先完成当前战斗');
-    if(content.pets&&Pets.petAction(save,content,action,access)){syncEquipmentInstances(save,content);save.revision++;return {changed:true};}
-    const q = currentQuest(save,content);
-    let notice, trackFull = false;
-    switch (action.type) {
-    case 'companion-wordplay': {const result=applyCompanionWordplay(save,content,action);if(result.accepted)save.revision++;return result;}
-    case 'camp-detour': {const result=applyCampDetour(save,content,action,access);if(result.changed===false)return result;notice=result.message;break;}
-    case 'forest-commission': {const result=applyForestCommission(save,content,action,access);if(result.changed===false)return result;notice=result.message;break;}
-    case 'language-complete': {const result=recordLearningCompletion(save,content,action.completion,access);save.revision++;return result;}
-    case 'npc-purchase': purchaseNpcOffer(save,content,action,access);break;
-    case 'fish': {const result=castFishing(save,content,action,createRng(hashSeed(`${save.revision}:fish:${action.netId}`)));save.revision++;return {...result,changed:true};}
-    case 'stamina-potion': {const result=useStaminaPotion(save,content,action.itemId);save.revision++;return {...result,changed:true};}
-    case 'magic-star-claim': claimMagicStar(save,content,action,access);syncEquipmentInstances(save,content);break;
-    case 'choose-totem': chooseDragonTotem(save,content,action.professionId);break;
-    case 'equip-tactics-honor': equipTacticsHonor(save,action.id);break;
-    case 'customize-hero': {
-        const quote=customizeHero(save,action);
-        notice=quote.nameChanged&&quote.lookChanged?'名字和形象已更新。':quote.nameChanged?'名字已更新。':'形象已更新。';
-        break;
-    }
-    case 'use-totem-item': useDragonTotemItem(save,content,action.itemId);break;
-    case 'checkin': claimCheckin(save, content, action.now, action.index, access, action.bonus===true); break;
-    case 'speech-reward': claimSpeechReward(save,content,action.index,action.now);notice='领取成功，奖励已放入背包！';break;
-    case 'opening-journey': {
-        const result=applyOpeningJourney(save,content,action);
-        if(action.step==='accept'&&q?.id===63000&&!questState(save,63000).accepted)applyAction(save,content,{type:'accept',questId:63000,npcId:36211});
-        if(action.step==='rescue'&&q?.id===63000&&questReady(save,q))applyAction(save,content,{type:'claim',questId:63000,npcId:36211});
-        notice=result.message;
-        break;
-    }
-    case 'accept': {
-        assert(q && q.id === Number(action.questId) && q.startNpc === Number(action.npcId), '当前没有可接取的任务');
-        if (!save.quests[q.id]) {
-            save.quests[q.id] = { accepted: true, claimed: false, progress: {} };
-            noteQuestAccepted(save, q.id);
-        }
-        save.trackedQuestIds = trackedQuestIds(save, content);
-        delete save.trackedQuestId;
-        syncGoals(save,content); break;
-    }
-    case 'talk':
-        assert(content.npcs[action.npcId], '找不到这位居民');
-        signal(save,content,'talk',action.npcId); break;
-    case 'accept-catalog': trackFull = acceptCatalogQuest(save,content,action.questId,action.npcId,catalogStatSnapshot(save,content))?.full === true; break;
-    case 'claim-catalog': {
-        const target = claimCatalogQuest(save,content,action.questId,action.npcId,catalogStatSnapshot(save,content));
-        if (!target) return { changed: false };
-        grantQuestRewards(save,content,target);
-        // Legacy card rewards retired; old quest claims remain readable.
-        save.quests[target.id].claimed = true;
-        unpinTrackedQuest(save, target.id);
-        if(target.region==='hanzi')supplementIslandTrack(save,content,save.zone);
-        syncProgression(save,content);
-        break;
-    }
-    case 'abandon-quest': {
-        const id = Number(action.questId);
-        const chapter = content.quests.find(quest => quest.id === id);
-        const catalog = content.catalogQuests?.byId[id];
-        const state = save.quests[id];
-        assert(chapter || catalog, '找不到这个任务');
-        assert(state?.accepted === true && !state.claimed, '只能放弃进行中的任务');
-        if (chapter) assert(q?.id === id, '只能放弃当前教学任务');
-        delete save.quests[id];
-        unpinTrackedQuest(save, id);
-        if (chapter) showCurrentChapter(save, content);
-        notice = `已放弃：${(chapter || catalog).title}`;
-        break;
-    }
-    case 'track-catalog': {
-        if (action.remove) { unpinTrackedQuest(save, action.questId); notice = '已取消追踪'; break; }
-        if (action.questId == null) { unpinTrackedQuest(save, null); break; }
-        const pinned = pinTrackedQuest(save, content, action.questId);
-        if (pinned.already || pinned.full) return { changed: false, ...pinned };
-        break;
-    }
-    case 'claim': {
-        const target = content.quests.find(x => x.id === Number(action.questId));
-        if (save.quests[target?.id]?.claimed) return { changed: false };
-        assert(target?.id!==63000||!openingJourneyActive(save)||save.openingJourney.phase==='showcase','先和莫尼一起帮咕噜噜解围');
-        assert(target === q && questReady(save,q) && q.endNpc === Number(action.npcId), '任务尚未完成');
-        grantQuestRewards(save,content,q);
-        save.quests[q.id].claimed = true;
-        unpinTrackedQuest(save, q.id);
-        showCurrentChapter(save, content);
-        syncProgression(save,content);
-        if (q.id === 63013) save.graduated = true;
-        break;
-    }
-    case 'equip': {
-        const item = content.items[action.itemId];
-        assert(canEquip(save,item,content), equipmentBlockReason(save,item,content));
-        const instance=findEquipmentInstance(save,content,item.id,action.guid);
-        assert(instance,'找不到这件装备');
-        syncEquipmentInstances(save,content);
-        save.equipment[item.slot] = item.id;
-        save.equipmentGuids[item.slot]=instance.guid;
-        save.deck = clampDeck(save.deck, { ...deckLimits(save,content), version:'kids' }).deck;
-        syncGoals(save,content); break;
-    }
-    case 'unequip': {
-        const slot = Number(action.slot);
-        assert(Number.isInteger(slot) && save.equipment[slot], '这个部位没有装备');
-        delete save.equipment[slot];
-        if(save.equipmentGuids)delete save.equipmentGuids[slot];
-        save.deck = clampDeck(save.deck, { ...deckLimits(save,content), version:'kids' }).deck;
-        break;
-    }
-    case 'ride': {
-        const itemId = Number(action.itemId);
-        const mount = content.mountByItem?.[itemId];
-        assert(mount?.art?.cdn && owns(save, itemId), '尚未获得这只坐骑');
-        save.mountId = itemId;
-        break;
-    }
-    case 'dismount': {
-        assert(save.mountId, '当前没有骑乘坐骑');
-        save.mountId = null;
-        break;
-    }
-    case 'mount-gem': {
-        const result=mountGem(save,content,action);
-        if(result.success){signal(save,content,'action',79017);signal(save,content,'action',79026);}
-        syncGoals(save,content);syncEquipmentInstances(save,content);save.revision++;return {...result,changed:true};
-    }
-    case 'remove-gems': {const result=removeGems(save,content,action);save.revision++;return {...result,changed:true};}
-    case 'upgrade': {
-        const instance=findEquipmentInstance(save,content,action.itemId,action.guid);
-        const iid = instance?.gsid, level = instance?.serverdata.addlel || 0;
-        assert(content.items[iid] && owns(save,iid) && upgradeLevels(content,iid).length, '请选择已拥有且支持强化的装备');
-        const upgrade = upgradeAt(content,iid,level+1);
-        assert(upgrade, '装备已达到强化上限');
-        const [currency,cost] = upgrade.cost;
-        assert((save.inventory[currency] || 0) >= cost, `${content.items[currency]?.name||'强化材料'}不足`);
-        syncEquipmentInstances(save,content);
-        save.inventory[currency] -= cost;
-        save.equipmentInstances.find(row=>row.guid===instance.guid).serverdata.addlel=level+1;
-        // PowerAPI_client.lua L191–199: goal 79016 only follows a successful upgrade.
-        signal(save,content,'action',79016); signal(save,content,'action',79025); syncGoals(save,content); break;
-    }
-    case 'hatch':
-        assert(owns(save,17307) && !save.pet, '需要一枚出奇蛋');
-        save.inventory[17307]--; save.inventory[content.pet.itemId] = 1;
-        save.pet = { itemId: content.pet.itemId, name: content.pet.name, xp: 0, level: 0 }; if(content.pets?.legacy_gululu)Pets.addPet(save,content,'legacy_gululu'); syncGoals(save,content); break;
-    case 'feed': {
-        assert(save.pet && owns(save,content.pet.foodId), '需要宠物和战宠口粮');
-        assert(save.pet.xp < content.pet.levels.max_exp, '宠物已经长大了！');
-        save.inventory[content.pet.foodId]--; save.pet.xp = Math.min(content.pet.levels.max_exp, save.pet.xp + content.pet.foodXp);
-        save.pet.level = petLevel(save.pet.xp,content); {const legacy=Object.values(save.pets||{}).find(p=>p.speciesId==='legacy_gululu');if(legacy){legacy.xp+=content.pet.foodXp;legacy.level=Pets.petXpLevel(legacy.xp,content);}} syncGoals(save,content); break;
-    }
-    case 'deck-layouts': {
-        const next={...save,cards:{...save.cards},equipment:{...save.equipment}};
-        if(action.bagItemId!==undefined){
-            const bag=content.items[action.bagItemId];
-            assert(bag?.slot===24&&canEquip(save,bag,content),'卡包尚未拥有或不符合使用条件');
-            next.equipment[24]=bag.id;
-        }
-        if(action.learnedKeys?.length)learnDeckCards(next,content,action.learnedKeys);
-        validateDeckLayouts(next,content,action.layouts,action.active);
-        const selected=action.layouts[action.active].bagItemId;
-        if(selected!==undefined){
-            assert(action.bagItemId===undefined||action.bagItemId===selected,'请选择一致的卡包');
-            if(selected)next.equipment[24]=selected;else delete next.equipment[24];
-        }else{
-            assert(action.layouts.length<=deckLayoutCapacity(next,content), '没有多余的可用卡包，请先到商店购买');
-        }
-        save.cards=next.cards;
-        save.trainingPointsSpent=next.trainingPointsSpent;
-        save.equipment=next.equipment;
-        save.deckLayouts=clone(action.layouts);save.activeDeckLayout=action.active;
-        save.deck=clone(save.deckLayouts[action.active].deck);
-        save.tips.deckEdited=true;save.tips.deckEditedWithBag=save.equipment[24]===24003;syncGoals(save,content);break;
-    }
-    case 'deck':
-        validDeck(save,content,action.deck); save.deck = clone(action.deck); save.tips.deckEdited = true; save.tips.deckEditedWithBag = save.equipment[24] === 24003; syncGoals(save,content); break;
-    case 'travel': {
-        const previous = save.zone;
-        assert(travelStatus(save,content,action.zone).allowed, travelStatus(save,content,action.zone).reason);
-        save.zone = action.zone; save.position = islandSpawn(action.zone,content); save.positionCoordinateVersion=mapCoordinateVersion(action.zone,content); save.worldLayoutVersion = content.worldMapIndex.layoutVersion;
-        if (action.zone === 'town') save.visitedTown = true;
-        if (previous !== action.zone) supplementIslandTrack(save, content, action.zone, catalogStatSnapshot(save, content));
-        break;
-    }
-    case 'retreat': {
-        settleRunes(save);
-        const landing=retreatLanding(save,content);
-        save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); save.position = landing.position; notice=landing.message; break;
-    }
-    default: throw new Error('未知操作');
-    }
-    migrateBagRules(save,content);
-    migrateDefaultPocket(save,content);
-    syncDeckLayouts(save,content);
-    syncEquipmentInstances(save,content);
-    save.revision++;
-    return { changed: true, quest: currentQuest(save,content), level: save.level, ...(notice ? { message: notice } : {}), ...(trackFull ? { full: true } : {}) };
 }
 export function beginEncounter(save,content,encounterId,access={}) {
     assert(!save.pendingEncounter, '已有进行中的战斗');

@@ -20,6 +20,7 @@ import {createWorldInteractionController} from './adventure/world_interaction_co
 import {createWorldSessionController} from './adventure/world_session_controller.js';
 import {createRenderer} from './adventure/renderer/scene_renderer.js';
 import {loadResources,saveLocal} from './adventure_assets.js';
+import {createSaveCommitter} from './adventure_reward_persistence.js';
 import {createAutoSave} from './adventure_autosave.js';
 import {createCloudClient} from './adventure_cloud.js';
 import {createCreationPreview} from './adventure_creation_preview.js';
@@ -27,9 +28,10 @@ import {hasDebugBackup} from './adventure_debug.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
 import {isOcean} from './adventure_fishing_core.js';
 import {createGameServerSession,GAME_SERVER_URL,normalizeGameServerUrl} from './adventure_game_server.js';
-import {createMembershipClient} from './adventure_membership.js';
+import {createMembershipController} from './adventure/membership_controller.js';
 import {releaseFieldPursuit} from './adventure_monster_motion_core.js';
 import {createPetScene} from './pets/adventure_pet_scene.js';
+import {createPetLoader} from './pets/pet_loader.js';
 import {createRoleStore} from './adventure_roles.js';
 import {directSignInRequested,familyPadSignInRequested,startupRoleId} from './adventure_roles_core.js';
 import {createIslandSocial} from './social/adventure_social_controller.js';
@@ -92,59 +94,47 @@ function attachMapServers(){
 }
 
 const autoSave=createAutoSave({
-    eligible:()=>state.stage==='world'&&!state.save?.pendingEncounter&&state.roleStore?.owner&&state.roleStore.dirty&&!state.roleStore.recovering&&!roles.localOnly&&!roles.busy&&!cloud.busy&&!roles.conflict,
+    eligible:()=>roleCloud.canAutoSave(),
     save:async()=>{roles.busy='正在自动保存…';try{persist();if(state.storageWarning)throw Error('本地存档失败，云端同步已暂停');await syncRoles();cloud.error='';}finally{roles.busy='';}},
     onError:error=>{if(cloud.error!==error.message)toast('云存档暂未完成，本地进度已保留，将自动重试。');cloud.error=error.message;},
 });
 function queueCloudSave(){autoSave.request();}
 
-const petLoads=new Map();
-async function loadPet(id){
-    if(state.save.pets[id]||state.save.petWorld?.[id])return state.save.pets[id]||state.save.petWorld[id];
-    const current=state.save,roleId=state.roleStore.catalog.activeId,owner=state.roleStore.owner,ref=state.save.petFileRefs?.[id];if(!ref)throw Error('找不到宠物引用');
-    const key=JSON.stringify([owner,roleId,id,ref.path]);if(petLoads.has(key))return petLoads.get(key);
-    const task=(async()=>{try{state.roleStore.petFileIO(roleId).read(ref.path);}catch(error){if(!owner||state.cloudClient.owner!==owner)throw error;await state.cloudClient.petFile(roleId,ref.path);}
-        if(state.save!==current||state.roleStore.catalog.activeId!==roleId||state.roleStore.owner!==owner)return null;
-        const next=state.roleStore.loadPet(current,id),pet=next[ref.group][id];current[ref.group][id]=pet;return pet;
-    })().finally(()=>petLoads.delete(key));petLoads.set(key,task);return task;
-}
+const loadPet=createPetLoader({getState:()=>state});
 
 const petScene=createPetScene({
     isFriend:owner=>islandSocial.isFriend(owner),
     sound:name=>spellSound.play(name),
     getState:()=>({loadPet,save:state.save,world:state.world,content:state.assets?.content,socialActors:islandSocial.actors,team:islandSocial.team.map(p=>p.id),scope:`${state.roleStore?.owner||'guest'}:${state.roleStore?.catalog.activeId}`,locked:state.stage!=='world'||document.hidden||!!state.save?.pendingEncounter}),
-    commit:next=>{saveLocal(next,state.roleStorage);state.save=state.roleStore.catalog.roles.find(r=>r.id===state.roleStore.catalog.activeId).save;queueCloudSave();paintHud();if(state.panel)paintPanel();},
+    commit:next=>saveCommitter.commitSave(next,{paint:state.panel?'both':'hud',setWarning:false}),
     toast:message=>toast(message),
 });
 setInterval(()=>{void autoSave.tick();if(state.stage==='world')islandSocial.tick();},15000);
 
-const membership=createMembershipClient({
-    onChange:()=>{
-        if(state.stage==='title'){paintTitle();return;}
-        if(!state.assets||!state.save)return;
-        if(state.stage==='world'&&!state.save.pendingEncounter)maybeExchangeMagicBeans();
-        if(state.stage==='world'){paintHud();if(['shop','npc-services','membership','recharge','checkin'].includes(state.panel))paintPanel();}
-        if(state.stage==='world')localPlay.refreshShops();
-    },
-});
-function accountIsVip(){return membership.state.status==='ready'&&membership.state.isVip===true&&(!state.roleStore?.owner||membership.state.username===state.roleStore.owner);}
-async function rechargeMembership(amount){
-    try{
-        await membership.openRecharge(amount,state.roleStore?.owner);
-        toast('已刷新会员状态，魔豆按实际新增到期日兑换。');
-    }catch(error){toast(error.message);}
-}
-const refreshMembership=(force=false)=>{
-    if(state.panel==='recharge')void membership.refreshRechargePrice({force});
-    return membership.refresh({force}).catch(error=>toast(error.message));
-};
-
 const bus=createAppBus();
+const membership=createMembershipController({
+    getContext,
+    bus,
+    toast:(message,vars)=>toast(message,vars),
+    onTitleDirty:()=>paintTitle(),
+    onLocalShopsDirty:()=>localPlay.refreshShops(),
+    maybeExchangeMagicBeans:()=>maybeExchangeMagicBeans(),
+});
+const {accountIsVip,rechargeMembership,refreshMembership}=membership;
+const saveCommitter=createSaveCommitter({
+    getContext,
+    saveLocal,
+    queueCloudSave:()=>queueCloudSave(),
+    paintHud:()=>paintHud(),
+    paintPanel:()=>paintPanel(),
+});
 const services=createAppServices({
     persist:()=>persist(),
     persistRuntime:()=>persistRuntime(),
     saveLocal,
     queueCloudSave:()=>queueCloudSave(),
+    commitSave:saveCommitter.commitSave,
+    commitReward:saveCommitter.commitReward,
     close:options=>close(options),
     openPanel:(name,options)=>openPanel(name,options),
     paintHud:()=>paintHud(),

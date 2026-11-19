@@ -5090,3 +5090,10 @@ home家园机会1→2、here2→3、please2→3、thank you3→4；总作者机�
 - **回归**：主路径 29/29、2D 回退 4/4、iframe 协议 6/6、汉字 Node 测试 124/124、三语词表 10959 条对齐 errors 0。
 - **视觉修复**：天空按真实视线渐变并跟随相机、破晓暖光地平线处归零、地形饱和抬升、远山按高度溶雾、月轮避开顶部 UI、光柱改柔光隙、孔明灯改中景灯河；字幕首帧不再全透明。
 - **未覆盖**：未上传 CDN、未发布、未提交 git；真机移动端与真实音频输出未验证。
+
+## 2026-11-18：定点模块拆分与架构清理验证（未发布）
+
+- **改动范围**：`adventure_reward_persistence.js` 新增 `createSaveCommitter` 收敛控制器存档提交；`scene_renderer.js` 拆出 `frame_context` / `terrain_pass` / `actor_pass` / `overlay_pass` / `minimap`；`adventure_app.js` 迁出 `pet_loader`、`membership_controller` 与 `roleCloud.canAutoSave`；`adventure_core.js` 将 34 分支 `applyAdventureAction` 拆入 `adventure_actions_core.js` 注册表；更新 `docs/architecture.md` 与 `docs/devlog/devlog_2026-11-18.md`。
+- **Node 回归**：`npm run check:bindings`（`eslint js`）通过；`npm test` 3,173/3,288 通过（115 既有跳过、0 失败，含新增 `save_commit.test.mjs` 与 34 动作快照 `adventure_actions_snapshot.test.mjs`）；`npm run test:battle` 1,886/1,886 通过；`npm run check:maps`、`npm run check:adventure`、`npm run audit:effects` 均通过。
+- **浏览器冒烟**（无头 Edge + 本地静态服务）：`Haqi.html?assets=local`（序章、访客 3 步创角进入营地 HUD、商店/会员/设置面板打开）、`HaqiCombatSim.html`、`HaqiPromo.html?assets=local`、`tests/fixtures/battle-camera.html`（`strike@0.2` 镜头采样 `eventsUnchanged: true`）、`earth.html`、`exploration.html` 均正常渲染，0 console/page error。
+- **未覆盖**：未执行 `npm run build` / 发布，未联网验收真实账号云同步与游戏服，真机移动端与真实音频输出未验证；改动保留在本地 `main` 工作区，未提交 git。

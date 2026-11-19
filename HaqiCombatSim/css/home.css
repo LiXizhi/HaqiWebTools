@@ -1,5 +1,5 @@
 .home-modal{width:min(1500px,98vw);max-width:98vw;height:94dvh;max-height:94dvh;display:flex;flex-direction:column;padding:14px;overflow:hidden;background:var(--paper,#fff5dc)}
-.home-modal .modal-header{flex-wrap:wrap;gap:8px;flex-shrink:0}.home-modal .modal-header h2{margin:0;flex:1;min-width:80px;font-size:19px}.home-modal .parallel-world-buttons{flex-wrap:wrap}.home-modal .world-switch-button{min-width:78px}
+.home-modal .modal-header{flex-wrap:wrap;gap:8px;flex-shrink:0}.home-modal .modal-header h2{margin:0;flex:1;min-width:80px}.home-modal .parallel-world-buttons{flex-wrap:wrap}.home-modal .world-switch-button{min-width:78px}
 .home-body{min-height:0;flex:1}
 
 /* Home Archipelago Manager */

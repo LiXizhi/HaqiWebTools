@@ -1,3 +1,4 @@
+import { createSaveCommitter } from '../adventure_reward_persistence.js';
 import { claimTreeMasteryRewards } from '../language_tree_rewards_core.js';
 import { configureLearningReport } from '../learning/learning_report.js';
 import { loadCourseCards, readPracticeCards } from '../learning/language_course.js';
@@ -24,6 +25,7 @@ export function createWordLearningController({
     persist = services?.persistence?.persist,
     saveLocal = services?.persistence?.saveLocal,
     queueCloudSave = services?.persistence?.queueCloudSave,
+    commitSave = services?.persistence?.commitSave,
     paintHud = services?.navigation?.paintHud,
     paintDialogue = services?.navigation?.paintDialogue,
     close = services?.navigation?.close,
@@ -36,6 +38,9 @@ export function createWordLearningController({
     spellSound = services?.feedback?.spellSound,
     dialogueVoice,
 }) {
+    const saveCommitter = commitSave
+        ? { commitSave }
+        : createSaveCommitter({ getContext, saveLocal, queueCloudSave, paintHud });
     const dictionaryCardsStore = createDictionaryStore();
     const wordRecordings = new Map();
     const wordCardsByLanguage = new Map();
@@ -298,14 +303,11 @@ export function createWordLearningController({
                         onConfirmed: (confirmedLanguage, words) => {
                             const nowCtx = getContext();
                             if (dictionaryCardKey() !== key || nowCtx.panel !== 'dictionary' || nowCtx.stage !== 'world') return;
-                            const next = structuredClone(nowCtx.save);
-                            const amount = claimTreeMasteryRewards(next, confirmedLanguage, words);
-                            if (!amount) return;
-                            saveLocal(next, nowCtx.roleStorage);
-                            Object.assign(nowCtx.save, next);
-                            queueCloudSave();
-                            paintHud();
-                            toast(`已验证学会，兑换 ${amount} 奇豆`);
+                            const committed = saveCommitter.commitSave(
+                                draft => claimTreeMasteryRewards(draft, confirmedLanguage, words),
+                                { shouldSave: amount => amount > 0, mutateInPlace: true, paint: 'hud', setWarning: false },
+                            );
+                            if (!committed.skipped) toast(`已验证学会，兑换 ${committed.result} 奇豆`);
                         },
                         owner: getContext().roleStore.owner,
                         role: getContext().roleStore.catalog.activeId,

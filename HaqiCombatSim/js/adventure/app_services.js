@@ -4,6 +4,8 @@ export function createAppServices({
     persistRuntime,
     saveLocal,
     queueCloudSave,
+    commitSave,
+    commitReward,
     close,
     openPanel,
     paintHud,
@@ -26,6 +28,8 @@ export function createAppServices({
             persistRuntime,
             saveLocal,
             queueCloudSave,
+            commitSave,
+            commitReward,
         },
         navigation: {
             close,

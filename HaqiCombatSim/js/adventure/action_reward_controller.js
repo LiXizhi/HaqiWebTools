@@ -5,7 +5,7 @@ import {magicBeanExchangeQuote,exchangeMagicBeans} from '../adventure_magic_bean
 import {npcOffers} from '../adventure_npc_core.js';
 import {ownedPetRecords} from '../adventure_pet_files_core.js';
 import {rewardSnapshot,rewardChanges,firstCompanionReward,equipmentChangeLines} from '../adventure_reward_feedback_core.js';
-import {persistReward} from '../adventure_reward_persistence.js';
+import {createSaveCommitter} from '../adventure_reward_persistence.js';
 import {rewardSound} from '../audio/game_sound_core.js';
 import {fill} from '../locale_runtime.js';
 import {openingJourney} from '../opening_journey_core.js';
@@ -19,6 +19,7 @@ export function createActionRewardController({
     bus,
     persist=services?.persistence?.persist,
     queueCloudSave=services?.persistence?.queueCloudSave,
+    commitReward=services?.persistence?.commitReward,
     close=services?.navigation?.close,
     openPanel=services?.navigation?.openPanel,
     paintHud=services?.navigation?.paintHud,
@@ -44,6 +45,7 @@ export function createActionRewardController({
     playOpeningPetWelcomeFn=playOpeningPetWelcome,
     queueMicrotaskFn=queueMicrotask,
 }){
+    const saveCommitter=commitReward?{commitReward}:createSaveCommitter({getContext,queueCloudSave,paintHud,paintPanel});
     let buyingVip=false;
     let exchangingBeans=false;
 
@@ -214,7 +216,7 @@ export function createActionRewardController({
 
     function performAction(value,access={}){
         return safely(()=>{
-            const {save,assets,roleStorage,setSave,setStorageWarning}=getContext();
+            const {save,assets}=getContext();
             if(value.type==='pet-feed'&&save.petInstanceVersion===1){petScene().feed(value.petId);paintPanel();return true;}
             if(value.type==='magic-star-follow')return setMagicStarFollow(value.follow!==false);
             if(value.type==='mount-visibility')return setMountVisibility(value.hidden===true);
@@ -224,8 +226,8 @@ export function createActionRewardController({
             const request=value.type==='checkin'?{...value,now:Date.now()}:value;
             let result;
             if(['forest-commission','camp-detour','opening-journey','buy','npc-purchase','checkin','speech-reward','magic-star-claim','choose-totem','use-totem-item','fish','stamina-potion'].includes(value.type)){
-                const committed=persistReward(save,assets.content,request,access,roleStorage);
-                setSave(committed.save);result=committed.result;setStorageWarning(false);
+                const committed=saveCommitter.commitReward(request,access,{paint:'none',cloud:false});
+                result=committed.result;
             }else{
                 result=A.applyAction(save,assets.content,request,access);
                 if(value.type==='accept-catalog'&&!bus?.emit('word-goals:refresh'))refreshWordGoals?.();

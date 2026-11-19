@@ -102,7 +102,7 @@
 @media(max-width:600px){.haqi-app .atlas-map-modal .modal-header{gap:8px;padding:10px 10px 7px}.haqi-app .atlas-map-modal .map-heading{gap:8px}.haqi-app .atlas-map-modal .modal-body{padding:11px 10px 13px}.atlas-map-modal .parallel-world-buttons{width:100%;flex-basis:auto}.atlas-map-modal :is(.earth-map-stage,.world-chart-viewport,.island-guide-chart){border-width:2px;border-radius:10px}}
 
 /* Server selector is scoped to map windows and its nested dialog. */
-.haqi-app .map-server-trigger{flex:none;min-height:40px;max-width:160px;color:var(--green);font-weight:700}
+.haqi-app .atlas-map-modal .map-server-trigger{flex:none;min-height:40px;padding:8px 16px;color:var(--green);font-size:var(--gui-tab-size);font-weight:700;line-height:1.3;white-space:nowrap}
 .map-server-trigger::after{content:' ▾'}
 .map-server-dialog{width:min(620px,94vw);max-height:85dvh;box-sizing:border-box}
 .map-server-dialog .equipment-detail{overflow:auto;max-height:65dvh}

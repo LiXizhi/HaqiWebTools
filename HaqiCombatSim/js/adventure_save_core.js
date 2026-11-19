@@ -1,3 +1,4 @@
+import {validateTacticsChallenges} from './tactics_challenge_core.js';
 // adventure_save_core.js — 冒险存档创建、校验、迁移与角色战力属性派生。
 import { validateCatalogQuests } from './adventure_catalog_quests_core.js';
 import { claimCheckin, validateCheckin } from './adventure_checkin_core.js';
@@ -198,6 +199,7 @@ export function parseSave(raw, content) {
     assert(s && s.schemaVersion === SAVE_VERSION && s.contentVersion === content.contentVersion, '存档版本不兼容');
     validateOpeningJourney(s);
     validateTacticsTraining(s);
+    validateTacticsChallenges(s);
     validateTacticsRecords(s);
     validateCampDetour(s);
     validateForestCommission(s);

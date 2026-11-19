@@ -293,7 +293,7 @@ export function processStatAgainstCharms(unit, resolved, buffs, statName, school
  * player_server.lua L4001-4039 ProcessDamageAgainstWards：从后往前弹 boost_damage ward 与 prism ward
  * @return 最终 damage_school
  */
-export function processDamageAgainstWards(unit, resolved, buffs, damageSchool) {
+export function processDamageAgainstWards(unit, resolved, buffs, damageSchool, source = {}) {
     const effected = {};
     for (let order = unit.wards.length - 1; order >= 0; order--) {
         const w = unit.wards[order];
@@ -307,7 +307,7 @@ export function processDamageAgainstWards(unit, resolved, buffs, damageSchool) {
             if (tplSchool === String(damageSchool).toLowerCase() || tplSchool === 'all') {
                 const id=w.id;
                 w.id = 0;
-                unit._arena?.onStatusEffect?.({type:'effect_used',target:unit.id,kind:'ward',id,order});
+                unit._arena?.onStatusEffect?.({type:'effect_used',target:unit.id,kind:'ward',id,order,...source});
                 buffs.push(Number(tpl.boost_damage));
                 effected[baseId] = true;
             }

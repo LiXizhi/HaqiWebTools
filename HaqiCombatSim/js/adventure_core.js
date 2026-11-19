@@ -1,5 +1,6 @@
 import {dungeonTacticsProfile,dungeonTacticsVersion} from './dungeon_tactics_core.js';
 import {settleTacticsRecord} from './battle_tactics_journal_core.js';
+import {equipTacticsHonor} from './tactics_challenge_core.js';
 import {settleDungeonChallenge} from './dungeon_challenge_core.js';
 import {grantDungeonFirstReward} from './dungeon_first_rewards_core.js';
 import {mapCoordinateVersion} from './adventure_coordinates_core.js';
@@ -161,6 +162,7 @@ function applyAdventureAction(save, content, action, access={}) {
     case 'stamina-potion': {const result=useStaminaPotion(save,content,action.itemId);save.revision++;return {...result,changed:true};}
     case 'magic-star-claim': claimMagicStar(save,content,action,access);syncEquipmentInstances(save,content);break;
     case 'choose-totem': chooseDragonTotem(save,content,action.professionId);break;
+    case 'equip-tactics-honor': equipTacticsHonor(save,action.id);break;
     case 'customize-hero': {
         const quote=customizeHero(save,action);
         notice=quote.nameChanged&&quote.lookChanged?'名字和形象已更新。':quote.nameChanged?'名字已更新。':'形象已更新。';

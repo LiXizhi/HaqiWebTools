@@ -5,8 +5,23 @@ import { HIT_DURATION_MS } from './actor_animation_core.js';
 import { POINTER_TURN_MS } from './battle_pointer_core.js';
 
 export const CAST_NAME_HOLD_MS=1900;
-export function presentationEffectDuration(effects,card,reducedMotion=false){
-    return reducedMotion?effectDuration(effects,card,true):Math.max(1500,effectDuration(effects,card)*1.65);
+const REPEAT_NAME_HOLD_MS = 650;
+
+export function markRepeatedTacticalCasts(events, seenByCaster) {
+    return events.map(event => {
+        if (event.type !== 'cast' || !event.caster || !event.card || event.sourceType === 'reflection' || event.label === 'reflection') return event;
+        let spells = seenByCaster.get(event.caster);
+        if (!spells) seenByCaster.set(event.caster, spells = new Set());
+        if (spells.has(event.card)) return {...event, repeatTacticalCast: true};
+        spells.add(event.card);
+        return event;
+    });
+}
+
+export function presentationEffectDuration(effects, card, reducedMotion = false, repeated = false) {
+    if (reducedMotion) return effectDuration(effects, card, true);
+    const authored = effectDuration(effects, card);
+    return repeated && card?.pipcost === 0 ? Math.max(900, authored * 1.1) : Math.max(1500, authored * 1.65);
 }
 
 export function presentationEventDurationMs(event, {effects, card, hp = 0, reducedMotion = false, briskTraining = false} = {}) {
@@ -16,8 +31,9 @@ export function presentationEventDurationMs(event, {effects, card, hp = 0, reduc
     if (event.type === 'aura') return 1;
     if (event.type === 'speak') return briskTraining ? 900 : 1300;
     if (event.type === 'cast') {
-        const base=presentationEffectDuration(effects,card,reducedMotion);
-        return cinematicCast(event,card)?CAST_NAME_HOLD_MS+base*.88:base;
+        const base = presentationEffectDuration(effects, card, reducedMotion, event.repeatTacticalCast);
+        const hold = event.repeatTacticalCast ? REPEAT_NAME_HOLD_MS : CAST_NAME_HOLD_MS;
+        return cinematicCast(event,card)?hold+base*.88:base;
     }
     // A skipped turn has no spell to watch. Keep failures readable and preserve
     // every cast, hit and reward event; only shorten idle beginner beats.
@@ -45,7 +61,8 @@ export function samplePresentationClock(frames, elapsedSeconds) {
 export function presentationEventProgress(event,linear,options={}) {
     const p=Math.max(0,Math.min(1,linear));
     if(p===1||event?.type!=='cast'||!cinematicCast(event,options.card))return p;
-    const base=presentationEffectDuration(options.effects,options.card,options.reducedMotion);
-    const elapsed=p*(CAST_NAME_HOLD_MS+base*.88);
-    return elapsed<=CAST_NAME_HOLD_MS?elapsed/CAST_NAME_HOLD_MS*.12:Math.min(1,.12+(elapsed-CAST_NAME_HOLD_MS)/base);
+    const base = presentationEffectDuration(options.effects, options.card, options.reducedMotion, event.repeatTacticalCast);
+    const hold = event.repeatTacticalCast ? REPEAT_NAME_HOLD_MS : CAST_NAME_HOLD_MS;
+    const elapsed = p * (hold + base * .88);
+    return elapsed <= hold ? elapsed / hold * .12 : Math.min(1, .12 + (elapsed - hold) / base);
 }

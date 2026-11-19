@@ -75,7 +75,7 @@ export class GlobalRewardNotice {
     }
 
     reset() {
-        clearTimeout(this.timer);
+        if (this.timer !== null) clearTimeout(this.timer);
         this.timer = null;
         this.queue.length = 0;
         try {

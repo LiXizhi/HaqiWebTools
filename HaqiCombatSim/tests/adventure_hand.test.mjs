@@ -18,8 +18,9 @@ function setup(){
     const dispose=bindHandGesture(hand,{select:seq=>calls.push(['select',seq]),play:seq=>calls.push(['play',seq]),discard:seq=>calls.push(['discard',seq]),hint});
     function send(type,props={},surface=hand){
         const event=new Event(type,{cancelable:true});
-        Object.assign(event,{pointerId:1,pointerType:'touch',button:0,isPrimary:true,clientX:20,clientY:480},props);
-        Object.defineProperty(event,'target',{value:props.target||hand.children[0].face});
+        const {target,...pointer}=props;
+        Object.assign(event,{pointerId:1,pointerType:'touch',button:0,isPrimary:true,clientX:20,clientY:480},pointer);
+        Object.defineProperty(event,'target',{value:target||hand.children[0].face});
         surface.dispatchEvent(event);return event;
     }
     return {hand,doc,win,root,calls,captures,hint,dispose,send,timers};
@@ -76,6 +77,15 @@ test('downward mouse, pen and touch drags discard exactly once even below the ha
         s.send('pointerup',{pointerType,clientY:600});
         assert.deepEqual(s.calls,[['discard',0]]);assert.equal(s.captures.size,0);
         assert.ok(s.send('click',{clientX:110,clientY:600,detail:1},s.root).defaultPrevented);
+    }
+});
+test('a tap on a moving card face below the hand selects the exact face hit',()=>{
+    for(const pointerType of ['mouse','pen','touch']){
+        const s=setup(),target=s.hand.children[1].face;
+        // Other cards overlap this X coordinate, but the tapped face is in front here.
+        s.send('pointerdown',{pointerType,target,clientX:110,clientY:609});
+        s.send('pointerup',{pointerType,clientX:113,clientY:611});
+        assert.deepEqual(s.calls,[['select',1]]);
     }
 });
 

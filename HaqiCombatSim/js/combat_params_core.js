@@ -176,6 +176,7 @@ export function defaultParams(version = 'teen') {
         },
         perSchool: perSchoolDefaults(),
         cardOverrides: {},
+        tacticalEncounter: { preparationBoost:100, counterBoost:100, focusWeight:1, focusFreeAttack:true, preparationShield:true },
         battleAI: {
             branches: 12, candidateCount: 3, chainCandidates: 3, chainDiscount: 0.65,
             lethalValue: 600, pipValue: 24, reserveValue: 0.25, survivalValue: 1.6,

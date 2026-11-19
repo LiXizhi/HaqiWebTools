@@ -76,8 +76,8 @@ export function renderQuestJournal(body,model,cb,ui) {
     const pager=el('div','journal-pagination');
     const sidebar=el('aside','journal-sidebar',el('div','journal-chapter',el('strong','','任务清单'),counter),list,pager);
     if(!model.localSecond){
-        const goal=tacticsNextGoal(save),training=button('战术委托 · '+goal.done+'/'+goal.total,()=>cb.panel('tactics-training'),'journal-tactics-link');
-        training.title=tr(goal.title);training.setAttribute('aria-label',tr('战术委托')+'：'+tr(goal.title));
+        const goal=tacticsNextGoal(save),challengeDone=['normal','elite','boss'].filter(id=>save.tacticsChallenges?.completed?.[id]?.wins).length,training=button('巡夜 '+challengeDone+'/3 · 战术练习 '+goal.done+'/'+goal.total,()=>cb.panel('tactics-training'),'journal-tactics-link');
+        training.title=tr('三场巡夜挑战 · 原有战术进度')+' '+goal.done+'/'+goal.total+' · '+tr(goal.title);training.setAttribute('aria-label',tr('巡夜挑战 / 战术练习')+'：'+tr(goal.title));
         sidebar.insertBefore(training,list);
     }
     const toolbar=el('div','journal-filters');

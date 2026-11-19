@@ -2,11 +2,12 @@
 import { BATTLE_CHAT } from '../battle_chat_core.js';
 import { createBattleIntro } from '../adventure_battle_intro.js';
 import { createArenaClock } from '../adventure_arena_clock.js';
-import { captureBattlePresentation, battleStatusChanges } from '../views/adventure/view_battle_presentation.js';
+import { captureBattlePresentation, battleStatusChanges, isTacticalPreparation } from '../views/adventure/view_battle_presentation.js';
 import { resolveRecordedBattleRound } from '../battle_round_transaction.js';
 import { castHitReactions } from '../actor_animation_core.js';
 import { withBattlePointer, nextBattlePointer } from '../battle_pointer_core.js';
 import {
+    markRepeatedTacticalCasts,
     presentationEventDurationMs,
     presentationEventProgress,
     presentationEffectDuration,
@@ -26,6 +27,7 @@ import * as A from '../adventure_core.js';
 import * as P from '../combat_pve_core.js';
 import { battleSpeechController, eventLabel, renderBattle, setCastAnnouncement } from '../views/adventure/view_battle_layer.js';
 import { createBattleAdvisorBridge } from './battle_advisor_bridge.js';
+import { createTacticalClueHandler } from './tactical_clue_controller.js';
 import { settleFinishedEncounter } from './encounter_settlement.js';
 
 export function createBattleController({
@@ -60,7 +62,13 @@ export function createBattleController({
     const getHanziMemory = () => resolveRef(hanziMemory);
     const getLanguageTasks = () => resolveRef(languageTasks);
     const battleChatRequests = new WeakMap();
+    const tacticalSpellsSeen = new WeakMap();
+    let fastChallengePlayback = false;
+    const watchedChallenges = new WeakSet();
+    const canWatchPartner = battle => !!battle.tacticalEncounter && !battle.finished
+        && battle.sides.near[0].hp <= 0 && battle.sides.near.slice(1).some(unit => unit.hp > 0);
     const finishingBattles = new WeakSet();
+    const answerTacticalClue = createTacticalClueHandler({ getContext, paintBattle, spellSound });
     const battleChatVoice = createLearningVoice({ getSettings: () => getContext().save?.languageLearning || {} });
     let battleChatAbort = null;
 
@@ -222,6 +230,9 @@ export function createBattleController({
             nodes.battle,
             {
                 ...model(),
+                fastChallengePlayback,
+                canWatchPartner: canWatchPartner(currentBattle),
+                resolvingTurn: latest.animation?.turn,
                 aiReview,
                 aiHintsMuted,
                 aiHint,
@@ -232,6 +243,13 @@ export function createBattleController({
             },
             {
                 battleChat: sendBattleChat,
+                answerTacticalClue: answer => answerTacticalClue(currentBattle, answer),
+                setFastChallengePlayback: enabled => {
+                    const ctx = getContext();
+                    if (ctx.battle === currentBattle && currentBattle.tacticalEncounter && !ctx.animation) {
+                        fastChallengePlayback = enabled;
+                    }
+                },
                 aiHintsToggle: () => {
                     advisor.muted = !advisor.muted;
                     advisor.dismissedHintState = null;
@@ -300,6 +318,7 @@ export function createBattleController({
                     nowCtx.setDiscarded([...nowCtx.discarded, seq]);
                     if (nowCtx.selected?.seq === seq) nowCtx.setSelected(null);
                     paintBattle();
+                    if (nowCtx.battle.tacticalEncounter) toast('已弃牌，本回合尚未结束。');
                 },
                 target: id => {
                     const nowCtx = getContext();
@@ -327,7 +346,14 @@ export function createBattleController({
                     paintBattle();
                 },
                 pass: () => playRound({ pass: true, discardSeqs: getContext().discarded }),
+                watchPartner: () => {
+                    const latest = getContext();
+                    if (latest.battle !== currentBattle || latest.animation || !canWatchPartner(currentBattle)) return;
+                    watchedChallenges.add(currentBattle);
+                    playRound({ pass: true, discardSeqs: latest.discarded });
+                },
                 practiceNext: () => safely(() => finishTacticsFight({ next: true })),
+                adjustChallenge: () => safely(() => finishTacticsFight({ adjust: true })),
                 retreat: () => {
                     const nowCtx = getContext();
                     if (nowCtx.battle.tacticsField) return safely(() => finishTacticsFight());
@@ -371,6 +397,7 @@ export function createBattleController({
             const aura = currentBattle.aura ? { ...currentBattle.aura } : null;
             const hand = cardsInHand(currentBattle.sides.near[0]);
             const previous = nextBattlePointer(currentBattle);
+            const turn = currentBattle.turn;
             const tacticsPractice = nowCtx.tacticsPractice;
             const round = currentBattle.redMushroom
                 ? { playback: captureBattlePresentation(currentBattle, () => islandSocial().playArena(decision)) }
@@ -395,8 +422,13 @@ export function createBattleController({
             nowCtx.setDiscarded([]);
             nowCtx.setPetCardsOpen(false);
             nowCtx.setRuneCardsOpen(false);
-            const events = playback.events;
+            let events = playback.events;
+            if (currentBattle.tacticalEncounter) {
+                if (!tacticalSpellsSeen.has(currentBattle)) tacticalSpellsSeen.set(currentBattle, new Map());
+                events = markRepeatedTacticalCasts(events, tacticalSpellsSeen.get(currentBattle));
+            }
             nowCtx.setAnimation({
+                turn,
                 events: withBattlePointer(
                     events.map(e => ({ ...e, periodic: e.type === 'dot' || e.type === 'hot', type: e.type === 'dot' ? 'damage' : e.type === 'hot' ? 'heal' : e.type })),
                     previous,
@@ -442,11 +474,15 @@ export function createBattleController({
                 spellSound.play(currentBattle.winner === 'near' ? 'victory' : 'defeat');
             }
             paintBattle();
+            if (watchedChallenges.has(currentBattle)) {
+                if (canWatchPartner(currentBattle) && getContext().stage === 'battle') playRound({ pass: true });
+                else watchedChallenges.delete(currentBattle);
+            }
             return null;
         }
         if (a.entered !== a.index) {
             a.entered = a.index;
-            const cue = battleEventSound(a.events, a.index);
+            const cue = isTacticalPreparation(e, currentBattle) ? 'tacticCharge' : battleEventSound(a.events, a.index);
             if (cue && a.index > (a.silentThrough ?? -1)) spellSound.play(cue);
             if (e.status) {
                 a.statusFeedback.push(...battleStatusChanges(a.status, e.status, e).map(change => ({ ...change, start: now })));
@@ -481,9 +517,11 @@ export function createBattleController({
             card: currentBattle.resolved.cards[e.card],
             hp: a.hp[e.target],
             reducedMotion,
-            briskTraining: currentBattle.monsterTemplates?.some(m => m.openingTrainingVersion === 3),
+            briskTraining: !!currentBattle.tacticalEncounter || currentBattle.monsterTemplates?.some(m => m.openingTrainingVersion === 3),
         });
-        const progress = presentationEventProgress(e, Math.min(1, (now - a.start) / duration), {
+        const speed = watchedChallenges.has(currentBattle) ? 4 : currentBattle.tacticalEncounter && fastChallengePlayback ? 1.5 : 1;
+        const linear = duration > 0 ? Math.min(1, (now - a.start) * speed / duration) : 1;
+        const progress = presentationEventProgress(e, linear, {
             effects: ctx.assets.effects,
             card: currentBattle.resolved.cards[e.card],
             reducedMotion,
@@ -496,7 +534,7 @@ export function createBattleController({
             a.events,
             a.index,
             progress,
-            e.type === 'cast' ? presentationEffectDuration(ctx.assets.effects, card, reducedMotion) : duration,
+            e.type === 'cast' ? presentationEffectDuration(ctx.assets.effects, card, reducedMotion, e.repeatTacticalCast) : duration,
             impact,
         );
         a.recoiledEvents ??= new Set();

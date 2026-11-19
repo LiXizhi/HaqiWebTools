@@ -499,7 +499,7 @@ export function createRenderer(canvas,assets) {
                 if(star.front)drawMagicStar(ctx,star,assets,starLevel);
                 if(!title){
                     plate(ctx,save.name,o.x,nameY,PLATE.hero);
-                    const honor=(save.tacticsRecord||save.dungeonChallengeRecords)?activeAdventureHonor(save):null;
+                    const honor=(save.tacticsRecord||save.dungeonChallengeRecords||save.tacticsChallenges)?activeAdventureHonor(save):null;
                     if(honor)plate(ctx,'「'+honor.title+'」',o.x,nameY+21,PLATE.npc);
                 }
                 if(gesturePose){const head=socialHeadAnchor(o);text(ctx,gesturePose.icon,head.x,head.y+9,27,'#fff');}ctx.restore();

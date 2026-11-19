@@ -1,4 +1,5 @@
 import {createPveBattle,playPveRound} from './combat_pve_core.js';
+import {grantTacticalClueWard} from './tactical_clue_core.js';
 import {selectableCards,canCast} from './combat_unit_core.js';
 
 const ATTACK='Fire_SingleAttack_Level0_45',HEAVY='Fire_SingleAttack_Level6_low_level';
@@ -50,13 +51,19 @@ export function createTacticsFieldBattle(dataset,content,{lessonId='focus',seed=
 
 // Replay also restores random rolls and AI choices after a failed round.
 export function playTacticsFieldRound({battle,decisions,create},decision,capturePresentation=null){
+ const clueWardTurn=battle.tacticalEncounter?.clueWardTurn;
  try{
   const resolve=()=>playPveRound(battle,decision);
   const playback=capturePresentation?capturePresentation(battle,resolve):(resolve(),null);
   decisions.push(structuredClone(battle.lastDecision||decision));
   return {battle,playback,error:null};
  }catch(error){
-  const restored=create();for(const previous of decisions)playPveRound(restored,previous);
+  const restored=create();
+  for(const previous of decisions){
+   if(restored.turn===clueWardTurn)grantTacticalClueWard(restored);
+   playPveRound(restored,previous);
+  }
+  if(restored.turn===clueWardTurn)grantTacticalClueWard(restored);
   return {battle:restored,playback:null,error};
  }
 }

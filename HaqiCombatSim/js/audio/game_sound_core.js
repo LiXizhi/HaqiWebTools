@@ -7,6 +7,11 @@ export function gameSoundRecipe(name){
         select:[tone(740,960,.09)],discard:[tone(400,220,.12,0,.07,.15)],
         countdown:[tone(880,880,.13,0,.16)],countdownFinal:[tone(1175,1175,.22,0,.18)],
         hit:[tone(140,65,.18,0,.11,.24)],heal:chime([660,880]),shield:[tone(440,700,.22,0,.1,.04)],
+        tacticCharge:[tone(270,540,.25,0,.07),tone(540,720,.14,.12,.07)],
+        tacticBlock:[tone(330,220,.12,0,.12,.14),tone(660,550,.18,.05,.06)],
+        tacticBreak:[tone(930,310,.13,0,.09,.3),tone(550,125,.15,.07,.08,.19)],
+        tacticPhase:chime([262,330,392,523],.2),
+        tacticCounter:chime([554,831],.14),
         fizzle:[tone(200,85,.22,0,.08,.1)],capture:chime([523,659,784]),miss:[tone(330,220,.2)],
         victory:chime([523,659,784,1047],.32),defeat:chime([392,330,262],.3),
         level:chime([523,659,784,1047],.35),quest:chime([659,784,988]),reward:chime([784,988],.17),
@@ -36,6 +41,8 @@ export function rewardSound(event,action=''){
 export function battleEventSound(events,index){
     const event=events[index];
     if(!event)return null;
+    const tactical={tactic_charge:'tacticCharge',tactic_block:'tacticBlock',tactic_shield_break:'tacticBreak',tactic_phase:'tacticPhase',tactic_counter_window:'tacticCounter'};
+    if(tactical[event.type])return tactical[event.type];
     if(event.type==='combat_end')return event.winner==='near'?'victory':'defeat';
     if(event.type==='capture')return event.success?'capture':'miss';
     if(!['damage','heal','status'].includes(event.type))return null;

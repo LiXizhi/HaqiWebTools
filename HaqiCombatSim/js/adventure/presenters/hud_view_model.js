@@ -145,8 +145,8 @@ export function buildHudTrackerViewModel(model) {
     }
 
     const tacticsGoal =
-        !model.localSecond && !dungeon && !openingJourneyActive(save) && !campDetourGoal(save)
-            ? tacticsNextGoal(save)
+        !model.localSecond && !dungeon
+            ? {...tacticsNextGoal(save),challengeDone:['normal','elite','boss'].filter(id=>save.tacticsChallenges?.completed?.[id]?.wins).length}
             : null;
     const forestAvailable =
         save.zone === 'camp'

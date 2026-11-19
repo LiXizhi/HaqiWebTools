@@ -1,6 +1,8 @@
 import { SCHOOL_NAMES } from '../../adventure_core.js';
+import { isTacticalPreparation } from './view_battle_presentation.js';
 import { COLORS } from '../../adventure/renderer/primitives.js';
 import { describeCard } from '../../card_description_core.js';
+import { tacticalHandRole } from '../../battle_tactics_core.js';
 import { tr, setText, fill } from '../../locale_runtime.js';
 import { createBattleRoster, updateBattleRoster } from './view_adventure_battle_status.js';
 import { guidanceCard } from './view_adventure_guidance.js';
@@ -9,6 +11,8 @@ import { attachStatusTooltips } from './view_adventure_status_tooltip.js';
 import { createBattleChat } from './view_battle_chat.js';
 import { createBattlePetHint, updateBattlePetHint, updateBattleSpeech, battleSpeechController } from './view_battle_pet_hint.js';
 import { defeatReviewNotes } from './view_battle_review.js';
+import { tacticalIntentPanel } from './view_tactical_intents.js';
+import { tacticalReview } from '../../tactical_review_core.js';
 import { bindBattleTargeting } from './view_battle_targeting.js';
 import { renderCompanionGuide } from './view_companion_guide.js';
 import { createPetTraitBadges, traitUpgradeText } from './view_pet_traits.js';
@@ -53,6 +57,7 @@ function renderBattleContent(root, model, cb) {
     const previous = root.handBattle === model.battle ? root.handSeqs || new Set() : new Set();
     const { assets, save, battle, selected, discarded = [], animating } = model;
     const hero = battle.unitsById[model.controlledUnitId] || battle.sides.near[0];
+    if (battle.tacticalEncounter && root.handBattle !== battle) root.tacticalMemory = { open: false, answer: '', feedback: '' };
     root.replaceChildren();
     root.className = `battle-layer visible${animating ? ' battle-playing' : ''}`;
     const soundIcon = icon('sound');
@@ -68,7 +73,7 @@ function renderBattleContent(root, model, cb) {
         el(
             'div',
             '',
-            el('p', 'eyebrow', battle.tacticsField ? '借用烈火卡组 · ' + battle.tacticsField.size + ' 对 ' + battle.tacticsField.size : '魔法对决'),
+            el('p', 'eyebrow', battle.tacticsField ? '借用' + (SCHOOL_NAMES[hero.school] || '') + '卡组 · ' + battle.sides.near.length + ' 对 ' + battle.sides.far.length : '魔法对决'),
             el(
                 'h2',
                 '',
@@ -83,7 +88,8 @@ function renderBattleContent(root, model, cb) {
             sound,
             (() => {
                 const turn = el('span', 'badge');
-                setText(turn, '第 {turn} 回合', { turn: battle.turn });
+                const resolvingTurn = battle.tacticalEncounter && animating ? model.resolvingTurn : null;
+                setText(turn, '第 {turn} 回合', { turn: resolvingTurn ?? battle.turn });
                 return turn;
             })(),
             button('撤退', cb.retreat, 'secondary small'),
@@ -111,9 +117,10 @@ function renderBattleContent(root, model, cb) {
     setText(status, battle.finished ? '对决结束' : animating ? '魔法正在生效…' : model.localDuo ? blockedMessage : '');
     status.classList.toggle('cast-blocked', !!model.localDuo && !!blockedMessage && !animating && !battle.finished);
     const hand = el('div', 'battle-hand');
+    if (battle.tacticalEncounter) hand.classList.add('tactical-hand');
     const bottom = el('div', 'battle-controls');
     hand.classList.toggle('hand-focused', !!selected);
-    hand.hidden = animating || battle.finished;
+    hand.hidden = animating || battle.finished || model.canWatchPartner;
     const petHand = handVm.petHand;
     const petCardsOpen = !!model.petCardsOpen;
     const runeCardsOpen = !!model.runeCardsOpen;
@@ -180,10 +187,19 @@ function renderBattleContent(root, model, cb) {
             node.style.setProperty('--deal-delay', `${hand.children.length * 65}ms`);
         }
         const select = button(spellFace(assets, card, artCard), () => cb.select(h), 'card-select');
+        if (battle.tacticalEncounter) {
+            const cost = Number(card.pipcost) < 0 || Number(card.pipcost) === 114 ? 'X' : String(card.pipcost ?? 0);
+            const role = tacticalHandRole(battle, hero, card);
+            if (role) select.append(el('span', 'tactical-hand-role', role));
+            select.append(el('span', 'tactical-hand-caption', el('span', '', artCard.name), el('b', '', cost)));
+        }
         select.disabled = animating || battle.finished;
         select.setAttribute('aria-label', fill(available ? '选择{name}' : '选择{name}（魔力不足或冷却中）', { name: artCard.name }).text);
         select.setAttribute('aria-pressed', String(isSelected));
         const drop = button('弃牌', () => cb.discard(h.seq), 'discard-button');
+        if (battle.tacticalEncounter) {
+            drop.title = tr(handVm.drawPileCount ? '弃牌不占出招次数，下回合从待抽牌中补牌' : '没有待抽牌了，弃掉后这张手牌不会自动补回');
+        }
         drop.disabled = animating || battle.finished;
         const description = describeCard(card, { dataset: battle.resolved, translate: tr });
         node.title = fill('{name} · {target} · {description}', { name: artCard.name, target: description.target, description: description.summary }).text;
@@ -204,6 +220,9 @@ function renderBattleContent(root, model, cb) {
                     }).text,
                 ),
             );
+            if (battle.tacticalEncounter && handVm.drawPileCount === 0 && !petCardsOpen && !runeCardsOpen) {
+                brief.append(el('br'), el('small', '', tr('待抽牌已用完，弃掉后手牌会变少。')));
+            }
             const detailBody = el(
                 'div',
                 'battle-card-detail-body',
@@ -235,6 +254,7 @@ function renderBattleContent(root, model, cb) {
     }
     const pass = button('跳过本回合', cb.pass, 'secondary');
     pass.disabled = animating || battle.finished;
+    const watch = model.canWatchPartner && !animating ? button('观战至结算', cb.watchPartner, 'primary') : null;
     if (cb.aiHintsToggle && !battle.redMushroom && !battle.tacticsField) {
         const hintIcon = icon('pet');
         delete hintIcon.dataset.uiIcon;
@@ -271,11 +291,13 @@ function renderBattleContent(root, model, cb) {
         root.classList.add('has-selected-card');
     }
     const deckLeft = el('small', '');
-    setText(deckLeft, '卡包剩余 {count} 张', { count: handVm.deckRemainingCount });
+    if (model.canWatchPartner) setText(deckLeft, '你已倒下，可用 4 倍速看伙伴打完');
+    else if (battle.tacticalEncounter) setText(deckLeft, '待抽 {count} 张', { count: handVm.drawPileCount });
+    else setText(deckLeft, '卡包剩余 {count} 张', { count: handVm.deckRemainingCount });
     const chat = cb.battleChat
         ? createBattleChat({ el, button, onSend: cb.battleChat, disabled: animating || battle.finished || hero.hp <= 0, tactical: !battle.redMushroom })
         : null;
-    bottom.append(el('div', 'pip-legend', deckLeft), el('div', 'battle-actions', targetEnemy, targetSelf, el('div', 'battle-hand-actions', chat, togglePets, toggleRunes, pass)));
+    bottom.append(el('div', 'pip-legend', deckLeft), el('div', 'battle-actions', targetEnemy, targetSelf, el('div', 'battle-hand-actions', chat, togglePets, toggleRunes, watch, pass)));
     const focusActions = hand.querySelector('.hand-focus-actions');
     if (focusActions && !model.localDuo) bottom.querySelector('.battle-actions').prepend(focusActions);
     const targetHint = unit => {
@@ -354,7 +376,9 @@ function renderBattleContent(root, model, cb) {
         hand.hidden = true;
     }
     root.append(top, canvas, status, ...(model.localBattleShared ? [] : [hand]), bottom);
-    if (intent && !animating && !battle.finished && !model.localBattlePane) {
+    if (battle.tacticalEncounter && !animating && !battle.finished) {
+        top.append(tacticalIntentPanel(model, cb, root.tacticalMemory));
+    } else if (intent && !animating && !battle.finished && !model.localBattlePane) {
         const base = model.assets?.effects?.cards?.[intent.cardKey]?.base;
         let icon = null;
         if (base && model.assets?.skillArt) {
@@ -419,7 +443,7 @@ function renderBattleContent(root, model, cb) {
             'div',
             '',
             ...battle.events
-                .filter(e => ['cast', 'damage', 'heal', 'dot', 'hot', 'speak', 'fizzle', 'capture'].includes(e.type))
+                .filter(e => ['cast', 'damage', 'heal', 'dot', 'hot', 'speak', 'fizzle', 'capture', 'tactic_charge', 'tactic_block', 'tactic_shield_break', 'tactic_phase', 'tactic_counter_window', 'tactic_prepare_guard', 'tactic_clue_ward'].includes(e.type))
                 .slice(-24)
                 .map(e => el('p', '', eventLabel(e, battle, assets))),
         ),
@@ -428,6 +452,19 @@ function renderBattleContent(root, model, cb) {
     if (battle.finished && !animating) {
         const resultVm = buildBattleResultViewModel({ save, battle, assets });
         const { won } = resultVm;
+        if (battle.tacticalEncounter) {
+            const field = battle.tacticsField;
+            const cleared = save.tacticsChallenges?.completed?.[field.id];
+            root.append(el('div', 'result-card tactical-result',
+                el('p', 'eyebrow', field.title + ' · ' + field.kind),
+                el('h2', '', won ? '挑战成功' : '挑战失利'),
+                ...tacticalReview(battle, model.assets?.dataset?.cards).map(line => el('p', '', line)),
+                won ? el('p', '', cleared ? '本次通关计入挑战记录。' : '首次通关称号 · ' + field.honor) : null,
+                button(won ? (field.id === 'boss' ? '重访巡夜试锋' : '迎战下一组') : '再试一次', cb.practiceNext, 'primary'),
+                button('调整配卡再战', cb.adjustChallenge, 'secondary'),
+                button('返回森林', cb.finish, 'secondary')));
+            return;
+        }
         if (battle.tacticsField) {
             root.append(
                 el(
@@ -594,6 +631,17 @@ export function eventLabel(e, battle, assets) {
     const caster = battle.unitsById[e.caster]?.name || '';
     const target = battle.unitsById[e.target]?.name || '';
     const card = e.wordCardText || assets.dataset.cards[e.card]?.name || '';
+    if (e.type === 'tactic_phase') return '第二阶段 · ' + caster + '开始组合施法';
+    if (e.type === 'tactic_prepare_guard') return caster + '升起蓄力护盾 · 可用小攻击先破盾';
+    if (e.type === 'tactic_counter_window') {
+        if (e.kind === 'charm') return (battle.unitsById[e.targetId]?.name || '反制者') + '抓住反击机会！下次本系攻击伤害提高 ' + e.boost + '%';
+        return caster + '露出破绽！下次攻击伤害提高 ' + e.boost + '%';
+    }
+    if (e.type === 'tactic_block') return '防住了！' + (battle.unitsById[e.targetId]?.name || '') + '的护盾挡下部分' + (e.segment === 'dot' ? '持续伤害' : '伤害');
+    if (e.type === 'tactic_shield_break') return '破盾！' + (e.segment === 'dot' ? '持续伤害消耗了' : '击破了') + (battle.unitsById[e.targetId]?.name || '目标') + '的一层护盾';
+    if (e.type === 'tactic_charge') return caster + '释放了蓄好的强化';
+    if (e.type === 'tactic_clue_ward') return target + '解读口令，获得一层护盾';
+    if (isTacticalPreparation(e, battle)) return caster + '开始蓄力 · ' + card;
     if (e.type === 'freeze') return fill(e.success ? '{target} 被冰封了' : '{target} 抵抗了冰封', { target }).text;
     if (e.type === 'guardian') return fill('{target} 获得一次替身守护', { target }).text;
     if (e.type === 'enrage') return fill('{target} 被激怒了', { target }).text;

@@ -1,5 +1,11 @@
 import {overheadStatusEffects} from './view_adventure_overhead_status.js';
 
+export function isTacticalPreparation(event, battle) {
+    return event.type === 'cast' && !!battle.tacticalEncounter && battle.events.some(row =>
+        row.type === 'tactic_intent' && !row.upcoming && row.turn === event.turn &&
+        row.caster === event.caster && row.key === event.card && row.effect === '蓄力');
+}
+
 export function snapshotBattleStatus(battle) {
     return Object.fromEntries(Object.values(battle.unitsById).map(unit=>[unit.id,
         unit.hp>0?overheadStatusEffects(unit,battle):[]]));
@@ -28,7 +34,7 @@ export function captureBattlePresentation(battle,resolve) {
         if(ownedStatus)battle.onStatusEffect=previousStatus;else delete battle.onStatusEffect;
     }
     flush();
-    const visible=new Set(['cast','damage','heal','dot','hot','speak','fizzle','pass','capture','aura','freeze','guardian','enrage']);
+    const visible=new Set(['cast','damage','heal','dot','hot','speak','fizzle','pass','capture','aura','freeze','guardian','enrage','tactic_phase','tactic_block','tactic_shield_break','tactic_charge','tactic_counter_window','tactic_prepare_guard']);
     const events=[];let status=initial;
     for(const {event,status:next,pips} of timeline){
         const changed=JSON.stringify(next)!==JSON.stringify(status);

@@ -26,7 +26,8 @@ export function bindHandGesture(hand, { select, play, discard }) {
         const cards=[...hand.children].map(node=>({node,rect:node.getBoundingClientRect(),disabled:node.querySelector('.card-select').disabled}));
         const card=cards.find(c=>c.node===face.parentElement);
         e.preventDefault();
-        gesture={id:e.pointerId,cards,card,baseY:e.clientY,rise:0,locked:false,touch:e.pointerType==='touch'};
+        gesture={id:e.pointerId,cards,card,startX:e.clientX,startY:e.clientY,
+            baseY:e.clientY,rise:0,locked:false,browsing:false,touch:e.pointerType==='touch'};
         hand.setPointerCapture(e.pointerId);hand.classList.add('hand-browsing');preview();
     }
     function move(e) {
@@ -35,7 +36,8 @@ export function bindHandGesture(hand, { select, play, discard }) {
         g.rise=g.baseY-e.clientY;
         if(Math.abs(g.rise)>18)g.locked=true;
         if(Math.abs(g.rise)<10)g.locked=false;
-        if(!g.locked&&g.touch){
+        if(Math.abs(e.clientX-g.startX)>=8)g.browsing=true;
+        if(!g.locked&&g.touch&&g.browsing){
             // Use the frozen exposed strips, not the moving/raised card faces.
             const candidates=g.cards.filter(c=>!c.disabled&&e.clientX>=c.rect.left&&e.clientX<=c.rect.right);
             const card=candidates.at(-1);
@@ -57,13 +59,15 @@ export function bindHandGesture(hand, { select, play, discard }) {
     function up(e) {
         if(!gesture||e.pointerId!==gesture.id)return;
         move(e);
-        const {card,rise,touch}=gesture;
+        const {card,rise,touch,startX,startY}=gesture;
         const rect=hand.getBoundingClientRect();
         const inside=e.clientX>=rect.left-24&&e.clientX<=rect.right+24&&e.clientY<=rect.bottom+24;
+        // During the deal a visible card can extend beyond the hand container.
+        const tap=Math.hypot(e.clientX-startX,e.clientY-startY)<8;
         suppressClick(e);clear();
         const seq=Number(card.node.dataset.seq);
         if(rise<=-56&&discard){discard(seq);return;}
-        if(inside)(touch&&rise>=56?play:select)(seq);
+        if(inside||tap)(touch&&rise>=56?play:select)(seq);
     }
     function cancel(e){if(gesture&&(!e||e.pointerId===gesture.id))clear();}
     function secondTouch(e){if(gesture&&e.pointerType==='touch'&&e.pointerId!==gesture.id)clear();}

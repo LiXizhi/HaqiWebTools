@@ -1403,3 +1403,32 @@
 .mentor-practice-layer .card-face{width:112px}
 .mentor-feedback{text-align:center;margin:0;font-weight:bold}
 @media(max-width:480px){.mentor-practice-layer .practice-cards{gap:5px}.mentor-practice-layer .practice-card{width:30%}.mentor-practice-layer .card-face{width:100%}.mentor-practice-layer .practice-card-caption{font-size:12px}.mentor-cue strong{font-size:17px}.mentor-practice-layer .practice-partner canvas{max-width:52px;height:auto!important}}
+.tactical-intent-panel{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:4px;width:max-content;max-width:min(490px,90vw);box-sizing:border-box;background:#fff4d9;color:#3d3024;border:1px solid #b79251;border-radius:9px;padding:5px 12px;box-shadow:0 3px 10px #25221540;font-size:13px;line-height:1.35;text-align:left;pointer-events:none}
+.tactical-intent-row{display:flex;align-items:baseline;gap:8px}.tactical-intent-row b{flex:none;color:#705426}.tactical-intent-row:nth-child(2) b{color:#994227}.tactical-intent-row span{overflow-wrap:anywhere}
+.tactical-intent-details{pointer-events:auto}.tactical-intent-details summary{width:max-content;cursor:pointer;font-size:12px;color:#594525;padding:3px 0}
+.tactical-intent-sheet{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:min(410px,88vw);box-sizing:border-box;max-height:min(48dvh,420px);overflow:auto;overscroll-behavior:contain;background:#fff5dc;border:1px solid #ad8a52;border-radius:8px;padding:12px;box-shadow:0 8px 20px #15251f50}
+.tactical-playback-speed{display:flex;align-items:center;gap:6px;min-height:32px;margin-bottom:5px;border-bottom:1px solid #d3be8f;cursor:pointer}
+.tactical-intent-notes p,.tactical-clue-feedback{margin:4px 0}.tactical-intent-notes small{display:block;margin:2px 0 7px;color:#65533c}.tactical-clue{border-top:1px solid #d3be8f;padding-top:8px;display:grid;gap:5px}.tactical-clue label{display:grid;gap:4px}.tactical-clue input{background:white;padding:6px;color:#302922;font:inherit;border:1px solid #9f8555;border-radius:4px}.tactical-intent-sheet button{min-height:30px;color:#fff7dd;background:#465d46;border-radius:4px;padding:3px 12px}.tactical-clue-feedback:empty{display:none}
+.battle-heading:has(.tactical-intent-details[open]){z-index:9}.tactical-result p{line-height:1.5}
+.tactical-intent-row.imminent-threat span{color:#8e301e;font-weight:700}
+.tactical-intent-spell{display:flex;align-items:center;gap:8px}.tactical-intent-icon{width:32px;height:32px;flex:none}
+.tactical-effect-values{color:#764720;font-size:12px}
+.tactical-hand-caption,.tactical-hand-role{display:none}
+@media(max-width:540px) and (orientation:portrait){
+ .battle-hand.tactical-hand:not(.hand-focused):not([hidden]){display:grid;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px;width:min(362px,calc(100% - 22px));padding:0;bottom:var(--tactical-hand-bottom,103px)}
+ .tactical-hand:not(.hand-focused) .hand-card{width:100%;min-width:0}
+ .tactical-hand:not(.hand-focused) .card-select{position:relative;height:clamp(49px,8dvh,68px);width:100%;overflow:hidden;border:1px solid #c7ae72;border-radius:6px;background:#e5dac0}
+ .tactical-hand:not(.hand-focused) .spell-face{display:block;width:100%;height:auto;aspect-ratio:151/230;position:absolute;left:0;top:50%;transform:translateY(-34%);pointer-events:none}
+ .tactical-hand:not(.hand-focused) .spell-art{width:100%;height:auto}
+ .tactical-hand:not(.hand-focused) .discard-button{display:none}
+ .tactical-hand:not(.hand-focused) .tactical-hand-caption{display:flex;justify-content:space-between;align-items:center;position:absolute;inset:auto 0 0;padding:2px 5px;background:#173a37ed;color:#fff6da;line-height:1.2;font-size:12px;font-weight:600;text-align:left}
+ .tactical-hand-caption b{border-radius:50%;min-width:15px;text-align:center;background:#f2df9a;color:#243f39}
+ .tactical-hand:not(.hand-focused) .tactical-hand-role{display:block;position:absolute;top:1px;left:1px;border-radius:3px;padding:1px 4px;background:#203938e8;color:#fff6da;line-height:1.25;font-size:11px;font-weight:600}
+}
+@media(max-height:540px){.tactical-intent-panel{font-size:11px;padding:2px 8px;max-width:min(420px,65vw);margin:0}.tactical-intent-details summary{font-size:11px;padding:1px 0}.tactical-intent-sheet{max-height:53dvh}}
+@media(max-width:540px) and (orientation:portrait){
+ .battle-layer:has(.tactical-intent-panel) .battle-roster{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+ .battle-layer:has(.tactical-intent-panel) .combatant-status{width:100%;padding:3px 5px}
+ .battle-layer:has(.tactical-intent-panel) .combatant-school{width:23px;height:23px;flex-basis:23px}
+ .battle-layer:has(.tactical-intent-panel) .roster-near>.combatant-status:only-child{grid-column:2}
+}

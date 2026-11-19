@@ -1,3 +1,6 @@
+import {createTacticsChallenge,recordTacticsChallengeVictory,TACTICS_CHALLENGES} from '../tactics_challenge_core.js';
+import { hashSeed } from '../rng_core.js';
+import {renderTacticsChallenges} from '../views/adventure/view_tactics_challenges.js';
 import {
     createTacticsFieldBattle,
     nextTacticsFieldId,
@@ -67,6 +70,7 @@ export function createOpeningController({
     renderMentorPractice = defaultRenderMentorPractice,
     playMentorPracticeCastFn = playMentorPracticeCast,
     currentQuestFn = defaultCurrentQuest,
+    renderTacticsChallengesView = renderTacticsChallenges,
     renderForestCommissionView = renderForestCommission,
     renderOpeningJourneyView = renderOpeningJourney,
     playOpeningPetWelcomeFn = playOpeningPetWelcome,
@@ -86,11 +90,25 @@ export function createOpeningController({
     function openTacticsTraining(options) {
         const ctx = getContext();
         if (ctx.stage !== 'world' || ctx.save.pendingEncounter) return;
+        if (!options?.lesson && !options?.challenge) {
+            close();
+            ctx.setPanel('tactics-challenges');
+            renderTacticsChallengesView(nodes.overlay,ctx.save,{
+                close,
+                lesson:id=>openTacticsTraining({lesson:id,returnTo:options?.returnTo}),
+                start:(id,school,loadout)=>openTacticsTraining({challenge:id,school,loadout,returnTo:options?.returnTo}),
+            },options?.retry);
+            return;
+        }
         const lessonId = TACTICS_FIELD_ENCOUNTERS.some(row => row.id === options?.lesson)
             ? options.lesson
             : nextTacticsFieldId(ctx.save);
         const settings = { lessonId, seed: ctx.save.seed, name: ctx.save.name };
-        const create = () => createTacticsFieldBattle(ctx.assets.dataset, ctx.assets.content, settings);
+        const wins = ctx.save.tacticsChallenges?.completed?.[options?.challenge]?.wins || 0;
+        const challengeSeed = wins ? hashSeed(`${ctx.save.seed}:tactics:${options.challenge}:${wins}`) : ctx.save.seed;
+        const create = options?.challenge
+            ? () => createTacticsChallenge(ctx.assets.dataset,ctx.assets.content,{id:options.challenge,school:options.school||ctx.save.school,loadout:options.loadout,seed:challengeSeed,name:ctx.save.name})
+            : () => createTacticsFieldBattle(ctx.assets.dataset, ctx.assets.content, settings);
         const next = create(); // Prepare fully before changing the world or current view.
         tacticsPractice = { save: ctx.save, epoch: ctx.roleEpoch, create, decisions: [], recorded: false, returnTo: options?.returnTo };
         close();
@@ -106,33 +124,42 @@ export function createOpeningController({
         paintBattle();
     }
 
-    async function finishTacticsFight({ next = false } = {}) {
+    async function finishTacticsFight({ next = false, adjust = false } = {}) {
         const ctx = getContext();
         const session = tacticsPractice;
-        if (!session || ctx.save !== session.save || ctx.roleEpoch !== session.epoch || !ctx.battle?.tacticsField) return;
+        if (!session || session.leaving || ctx.save !== session.save || ctx.roleEpoch !== session.epoch || !ctx.battle?.tacticsField) return;
         const lessonId = ctx.battle.tacticsField.id;
         const won = ctx.battle.finished && ctx.battle.winner === 'near';
         if (won && !session.recorded) {
             const receipt = structuredClone(ctx.save);
-            recordTacticsFieldVictory(receipt, ctx.battle);
+            if(ctx.battle.tacticsField.challenge) recordTacticsChallengeVictory(receipt,ctx.battle);
+            else recordTacticsFieldVictory(receipt, ctx.battle);
             receipt.revision++;
             saveLocal(receipt, ctx.roleStorage);
             Object.assign(ctx.save, receipt);
             session.recorded = true;
             queueCloudSave();
         }
-        const index = TACTICS_FIELD_ENCOUNTERS.findIndex(row => row.id === lessonId);
-        const following = won ? TACTICS_FIELD_ENCOUNTERS[(index + 1) % TACTICS_FIELD_ENCOUNTERS.length].id : lessonId;
+        const challenge=ctx.battle.tacticsField.challenge,school=ctx.battle.tacticsField.school,loadout=ctx.battle.tacticsField.loadout;
+        const choices=challenge?TACTICS_CHALLENGES:TACTICS_FIELD_ENCOUNTERS;
+        const index = choices.findIndex(row => row.id === lessonId);
+        const following = won ? choices[(index + 1) % choices.length].id : lessonId;
         const returnTo = session.returnTo;
         if (!bus?.emit('audio:stop-battle-voice')) stopBattleChatVoice?.();
-        tacticsPractice = null;
         ctx.setAnimation(null);
         ctx.setSelected(null);
         ctx.setDiscarded([]);
-        await enterWorld(ctx.save, null, { announceBeans: false });
+        session.leaving = true;
+        try {
+            await enterWorld(ctx.save, null, { announceBeans: false });
+        } finally {
+            session.leaving = false;
+        }
+        if(tacticsPractice===session)tacticsPractice=null;
         const latest = getContext();
         if (latest.save !== session.save || latest.roleEpoch !== session.epoch) return;
-        if (next) openTacticsTraining({ lesson: following, returnTo });
+        if (adjust && challenge) openTacticsTraining({retry:{id:lessonId,school,loadout},returnTo});
+        else if (next) openTacticsTraining(challenge?{challenge:following,school,loadout,returnTo}:{ lesson: following, returnTo });
         else if (returnTo) openPanel(returnTo);
     }
 

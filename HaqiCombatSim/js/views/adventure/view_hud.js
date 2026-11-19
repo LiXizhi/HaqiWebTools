@@ -406,16 +406,16 @@ function renderHudContents(root, model, cb) {
         }
     }
 
-    if (vm.tacticsGoal && !vm.tacticsGoal.complete) {
+    if (vm.tacticsGoal) {
         const goal = vm.tacticsGoal;
         const link = button(
-            (goal.kind === 'lesson' ? '和茜茜打怪 · ' : '实战委托 · ') + goal.done + '/' + goal.total,
+            '巡夜挑战 / 战术练习',
             () => cb.panel('tactics-training'),
             'tracker-tactics',
         );
-        link.title = goal.title + '：' + goal.body;
-        link.setAttribute('aria-label', tr('战术委托') + '：' + tr(goal.title));
-        tracker.append(el('div', 'tracker-tactics-goal', link, el('small', '', goal.title)));
+        link.title = '巡夜 ' + (goal.challengeDone||0) + '/3 · 练习 ' + goal.done + '/' + goal.total + ' · ' + goal.title + '：' + goal.body;
+        link.setAttribute('aria-label', tr('巡夜挑战 / 战术练习') + '：' + tr(goal.title));
+        tracker.append(el('div', 'tracker-tactics-goal', link, el('small', '', '巡夜 ' + (goal.challengeDone||0) + '/3 · 练习 ' + goal.done + '/' + goal.total)));
     }
     if (vm.forestGoal) {
         const { phase, goal } = vm.forestGoal;

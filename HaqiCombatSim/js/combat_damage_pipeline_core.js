@@ -64,7 +64,7 @@ export function applyDamage(arena, caster, target, card, opts) {
     const buffs = { list: [...(opts.buffsTargetList || [])], damagePercent: opts.damagePercent || 0 };
     let boostAbs = opts.boostAbs || 0;
 
-    school = U.processDamageAgainstWards(target, R, buffs.list, school);
+    school = U.processDamageAgainstWards(target, R, buffs.list, school, {caster:caster.id,card:card.key,segment:'immediate'});
     if (!opts.skipResist) {
         buffs.resistPercent = U.getResist(target, school, R, arena);
         buffs.spellPenetration = U.getSpellPenetration(caster, school, R, arena) + (Number(opts.baseSpellPen) || 0);
@@ -121,7 +121,7 @@ export function applyDamage(arena, caster, target, card, opts) {
     emit(arena, { type: 'damage', caster: caster.id, target: target.id, card: card.key, school, amount: damage, mark, label: opts.label || '' });
     if (reflected) {
         const reflectBuffs = { list: [] };
-        const reflectSchool = U.processDamageAgainstWards(caster, R, reflectBuffs.list, school);
+        const reflectSchool = U.processDamageAgainstWards(caster, R, reflectBuffs.list, school, {caster:target.id,card:card.key,segment:'reflection'});
         reflectBuffs.resistPercent = U.getResist(caster, reflectSchool, R, arena);
         reflectBuffs.spellPenetration = U.getSpellPenetration(caster, reflectSchool, R, arena);
         reflectBuffs.spellPenetrationReceive = U.getSpellPenetrationReceive(caster);
@@ -189,7 +189,7 @@ export function tickDots(arena, unit) {
     const R = arena.resolved;
     const applyTick = (victim, baseDamage, dot, label) => {
         const buffs = { list: [...(dot.buffsTarget || [])], damagePercent: 0 };
-        let school = U.processDamageAgainstWards(victim, R, buffs.list, dot.damageSchool);
+        let school = U.processDamageAgainstWards(victim, R, buffs.list, dot.damageSchool, {caster:dot.casterId,card:dot.cardKey,segment:'dot'});
         buffs.resistPercent = U.getResist(victim, school, R);
         buffs.spellPenetration = dot.spellPenetration;
         buffs.spellPenetrationReceive = U.getSpellPenetrationReceive(victim);

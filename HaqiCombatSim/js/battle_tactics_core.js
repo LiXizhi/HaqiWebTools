@@ -4,6 +4,16 @@ const schools={fire:'烈火',ice:'寒冰',storm:'风暴',life:'生命',death:'�
 const schoolName=school=>schools[String(school||'all').toLowerCase()]||'对应系';
 const ids=value=>String(value??'').split(',').map(Number).filter(Number.isFinite);
 
+const handRoles = { boost: '强化', weaken: '虚弱', trap: '陷阱', shield: '护盾', dot: '灼烧' };
+
+export function tacticalHandRole(battle, actor, card) {
+ if (card.type === 'SingleAttack') return Number(card.pipcost) === 0 ? '小攻' : '攻击';
+ if (card.type === 'SingleAttackWithLifeTap') return '吸血';
+ if (card.type.startsWith('SingleHeal')) return '治疗';
+ const advice = cardTacticAdvice(battle, actor, card);
+ return handRoles[advice?.kind] || '';
+}
+
 // Run the engine's consumption selectors on disposable status copies. This is a
 // preview of matching effects, not a damage forecast: no RNG or live state is used.
 export function attackTacticEffects(battle,actor,target,card){

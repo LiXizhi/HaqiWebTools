@@ -134,6 +134,7 @@ export function createPanelController(options) {
             hud.paintFirstPetWelcome();
             return;
         }
+        if (panel === 'tactics-challenges') return;
         if (panel === 'tactics-training') {
             opening.openTacticsTraining();
             return;

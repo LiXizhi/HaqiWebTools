@@ -1,3 +1,4 @@
+import {TACTICS_CHALLENGES} from './tactics_challenge_core.js';
 // Honors derive from persisted achievements; no currency or simulated rankings.
 const rules=[
  {id:'forest-supplies',title:'营地补给员',source:'辨认补给、送达便签，再完成巡夜灯实战并向茜茜汇报。',earned:s=>s.forestCommission?.phase==='done'},
@@ -7,7 +8,11 @@ const rules=[
  {id:'journey:first-watch',title:'晨光守望者',source:'完整通关精英副本「晨雾中的巡夜灯」。',earned:s=>s.dungeonChallengeRecords?.['journey:first-watch']?.clears>0},
  {id:'journey:lost-spark',title:'星火寻回者',source:'完整通关精英副本「走失的火种」。',earned:s=>s.dungeonChallengeRecords?.['journey:lost-spark']?.clears>0},
  {id:'journey:ember-night',title:'余烬领队',source:'完整通关精英副本「篝火守夜人」。',earned:s=>s.dungeonChallengeRecords?.['journey:ember-night']?.clears>0},
+ ...TACTICS_CHALLENGES.map(row=>({id:'tactical:'+row.id,title:row.honor,source:'首次战胜'+row.title+'。',earned:s=>s.tacticsChallenges?.completed?.[row.id]?.wins>0})),
 ];
 export function adventureHonors(save){return rules.map(({earned,...row})=>({...row,earned:earned(save)}));}
-export function activeAdventureHonor(save){return adventureHonors(save).filter(row=>row.earned).at(-1)||null;}
+export function activeAdventureHonor(save){
+ const earned=adventureHonors(save).filter(row=>row.earned);
+ return earned.find(row=>row.id==='tactical:'+save.tacticsChallenges?.equipped)||earned.at(-1)||null;
+}
 export function dungeonHonorTitle(id){return rules.find(row=>row.id===id)?.title||null;}

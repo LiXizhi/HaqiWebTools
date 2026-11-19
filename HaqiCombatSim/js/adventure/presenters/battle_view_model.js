@@ -23,7 +23,7 @@ export function buildBattleHandViewModel({ battle, hero, selected, discarded, as
     const canPlay = selected && !discarded.includes(selected.seq) && U.isAlive(hero) && !blockedMessage;
     const catchCard = selected && battle.resolved.cards[selected.key]?.type === 'CatchPet' ? battle.resolved.cards[selected.key] : null;
     const deckRemainingCount = U.deckRemaining(hero) - discarded.length;
-    const intent = tacticsFieldCue(battle) || openingEnemyIntentInfo(battle) || dungeonEnemyIntentInfo(battle);
+    const intent = battle.tacticalEncounter ? null : tacticsFieldCue(battle) || openingEnemyIntentInfo(battle) || dungeonEnemyIntentInfo(battle);
     return {
         blockedMessage,
         legalTargets,
@@ -31,6 +31,7 @@ export function buildBattleHandViewModel({ battle, hero, selected, discarded, as
         canPlay,
         catchCard,
         deckRemainingCount,
+        drawPileCount: battle.tacticalEncounter ? U.deckCounts(hero).unused : null,
         intent,
         petHand: U.petCardsInHand(hero),
         playerHand: (U.cardsInHand(hero) || []).filter(h => !discarded.includes(h.seq)),

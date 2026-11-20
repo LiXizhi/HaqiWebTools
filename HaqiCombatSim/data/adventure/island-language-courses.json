@@ -886,8 +886,12 @@
           "hint": "溪禾想知道你为什么找小灯。告诉她：你在帮助朋友阿初。回应后先处理石头路附近的小鼠，再回码头。",
           "prompt": "Are you helping Achu?",
           "promptGloss": "你在帮助阿初吗？",
-          "answer": "Yes. He is my friend.",
-          "answerGloss": "是的。他是我的朋友。",
+          "answer": "Yes, I am helping my friend Achu.",
+          "answerGloss": "是的，我在帮助我的朋友阿初。",
+          "alternatives": [
+            { "id": "friend-confirmation", "answer": "Yes. He is my friend.", "answerGloss": "是的。他是我的朋友。" },
+            { "id": "helping-my-friend", "answer": "I am helping my friend Achu.", "answerGloss": "我在帮助我的朋友阿初。" }
+          ],
           "ending": "She is looking for him, too.",
           "endingGloss": "她也在找他。",
           "words": [
@@ -928,8 +932,11 @@
           "hint": "你刚见过阿初，他仍在初生码头。回答石伯后，去字源亭通往远行灯塔的路上找小灯。",
           "prompt": "Is Achu at home?",
           "promptGloss": "阿初在家吗？",
-          "answer": "No. Not at home.",
+          "answer": "No. He is not at home.",
           "answerGloss": "不。他不在家。",
+          "alternatives": [
+            { "id": "not-at-home-short", "answer": "No. Not at home.", "answerGloss": "不。他不在家。" }
+          ],
           "ending": "Good. Please tell Xiaodeng.",
           "endingGloss": "好。请把消息告诉小灯。",
           "words": [
@@ -949,8 +956,12 @@
           "hint": "把确认过的消息告诉小灯：阿初仍在初生码头等她。这次把人物和地点都说清，帮助两人解开误会。",
           "prompt": "Is Achu still waiting?",
           "promptGloss": "阿初还在等吗？",
-          "answer": "He is waiting.",
-          "answerGloss": "他还在等。",
+          "answer": "Achu is waiting at the dock.",
+          "answerGloss": "阿初正在码头等她。",
+          "alternatives": [
+            { "id": "waiting-short", "answer": "He is waiting.", "answerGloss": "他还在等。" },
+            { "id": "waiting-confirmed", "answer": "Yes, Achu is waiting at the dock.", "answerGloss": "是的，阿初正在码头等她。" }
+          ],
           "ending": "He's waiting! Thank you!",
           "endingGloss": "他还在等我！谢谢你！",
           "words": [

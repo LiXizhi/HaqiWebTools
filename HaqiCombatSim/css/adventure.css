@@ -1348,6 +1348,12 @@
 .forest-recipient{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:0;width:100%;min-height:180px;padding:8px;border:2px dashed #617747;border-radius:14px;background:#e4edcb99;text-align:center}
 .forest-recipient>canvas{max-width:100%;object-fit:contain}
 .forest-briefing-head{display:flex;align-items:center;gap:12px;margin:16px 0 8px;font-weight:700}
+.forest-recall{margin:16px 0 8px;font-weight:700}
+.forest-recall-choices{display:flex;justify-content:center;gap:16px;margin:10px 0 16px}
+.forest-recall-choice{display:flex;align-items:center;justify-content:center;width:min(42%,150px);min-height:132px;padding:8px;background:#f5eccf;border:2px solid #ab986b;border-radius:14px}
+.forest-recall-choice:hover,.forest-recall-choice:focus-visible{border-color:#446a38;background:#fff6da}
+.forest-recall-choice>canvas{max-width:100%;object-fit:contain}
+.forest-recall[hidden],.forest-briefing-head[hidden],.forest-tactic-choices[hidden]{display:none}
 .forest-briefing-head>canvas{flex:none;max-width:72px;height:auto!important}
 .forest-tactic-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:8px 0 18px}
 .forest-tactic-choice{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:12px;min-height:156px;background:#f5eccf;border:2px solid #ab986b;border-radius:14px;color:#354432;text-align:center;font-size:clamp(16px,2.5vw,21px);font-weight:700;line-height:1.4}

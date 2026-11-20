@@ -123,6 +123,7 @@ export function applyForestCommission(save,content,action,access={}){
  if(action.step==='brief'){
   nearby(save,access,FOREST_NPCS.receiver,'npc');check(phase==='briefing','先把路线便签带回来。');
   check(action.tactic==='focus','先按路线便签选择巡逻时的攻击方式。');
+  check(action.recalled==='boots','先认出刚才交付的补给。');
   const {at,attempts,assisted}=action.learning||{};
   check(Number.isFinite(at)&&at>=0&&Number.isSafeInteger(attempts)&&attempts>=1&&attempts<=999&&typeof assisted==='boolean','巡逻分工练习记录无效');
   check(count(save)<999999,'巡逻实绩已达到当前记录上限，请保留便签，稍后再确认路线。');

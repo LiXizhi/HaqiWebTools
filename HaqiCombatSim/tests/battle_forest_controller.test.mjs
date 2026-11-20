@@ -61,7 +61,7 @@ test('camp commission follows real scene targets through pickup, delivery and a 
  assert.equal(h.ctx.save.inventory[1260]||0,0,'carried boots are still a quest object');
  h.arrive().action({step:'deliver'});assert.equal(h.ctx.save.inventory[1260],1);assert.equal(forestCommissionPhase(h.ctx.save),'note');
  h.arrive().action({step:'take-note',revealed:true});assert.equal(forestCommissionPhase(h.ctx.save),'briefing');
- h.arrive().action({step:'brief',tactic:'focus',learning:{at:1234,attempts:1,assisted:false}});assert.equal(forestCommissionPhase(h.ctx.save),'patrol');
+ h.arrive().action({step:'brief',tactic:'focus',recalled:'boots',learning:{at:1234,attempts:2,assisted:false}});assert.equal(forestCommissionPhase(h.ctx.save),'patrol');
  const restored=A.parseSave(h.stored(),content);assert.equal(forestCommissionPhase(restored),'patrol');
  h.ctx.save=restored;h.ctx.world=W.createWorld('camp',content,restored);h.paint();
  h.cb().training('focus');assert.equal(h.calls.at(-1).training.lesson,'focus');assert.equal(h.calls.at(-1).training.returnTo,'forest-commission');

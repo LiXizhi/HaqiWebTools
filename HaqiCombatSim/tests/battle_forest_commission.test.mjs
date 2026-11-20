@@ -22,7 +22,7 @@ function act(save,step,props={}){
  return A.applyAction(save,content,{type:'forest-commission',step,...props},{forestTarget});
 }
 function toBriefing(save){act(save,'accept');act(save,'take-boots',{object:'boots'});act(save,'deliver');act(save,'take-note',{revealed:true});}
-const briefing=()=>({tactic:'focus',learning:{at:20,attempts:1,assisted:false}});
+const briefing=()=>({tactic:'focus',recalled:'boots',learning:{at:20,attempts:2,assisted:false}});
 const record=clears=>({version:1,clears,bestTurns:8,bestDefeats:0,lastTurns:8,lastDefeats:0});
 
 test('world props and NPC responses follow carried objects and persisted progress',()=>{
@@ -64,8 +64,9 @@ test('commission carries quest objects separately and requires a new full patrol
  assert.equal(forestCommissionPouch(save)[0].id,'patrol-note');
  assert.throws(()=>act(save,'brief'),/选择巡逻时的攻击方式/);
  assert.throws(()=>act(save,'brief',{tactic:'split',learning:{at:20,attempts:1,assisted:false}}),/选择巡逻时的攻击方式/);
+ assert.throws(()=>act(save,'brief',{tactic:'focus',learning:{at:20,attempts:1,assisted:false}}),/交付的补给/);
  act(save,'brief',briefing());
- assert.deepEqual(save.forestCommission.briefingPractice,{language:'en',at:20,attempts:1,assisted:false});
+ assert.deepEqual(save.forestCommission.briefingPractice,{language:'en',at:20,attempts:2,assisted:false});
  assert.equal(save.forestCommission.clearBaseline,2);assert.throws(()=>act(save,'report'),/完整完成/);
  save.dungeonChallengeRecords[FOREST_PATROL_DUNGEON]=record(3);
  assert.equal(forestCommissionPhase(save),'report');act(save,'report');

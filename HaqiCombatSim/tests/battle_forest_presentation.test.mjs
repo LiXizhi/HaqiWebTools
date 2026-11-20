@@ -114,15 +114,23 @@ test('carried quest objects can be handed to the recipient',()=>{
  }
 });
 
-test('briefing requires a target-language tactical choice and records wrong tries',()=>{
+test('briefing recalls the delivered supply before target-language tactics',()=>{
  for(const language of ['en','ja','ko','zh-CN']){
   const ui=render('briefing',{language}),options=ui.all.filter(n=>n.className==='forest-tactic-choice');
+  const recall=ui.all.find(n=>n.className==='forest-recall');
+  assert.ok(recall.children[0].textContent.includes(forestLanguage.forestCommissionLesson({languageLearning:{target:language}}).words.boots));
+  assert.equal(options[0].children.at(-1).lang,language);
+  assert.equal(options[0].hidden,undefined);
+  assert.equal(ui.all.find(n=>n.className==='forest-tactic-choices').hidden,true);
+  assert.equal(ui.object('靴子').children.find(n=>n?.drawnArt).drawnArt.id,content.items[1260].art.id);
+  ui.object('帽子').click();assert.deepEqual(ui.calls,[]);
+  ui.object('靴子').click();assert.equal(recall.hidden,true);
   assert.equal(options.length,2);
   assert.deepEqual(options.map(n=>n.children.at(-1).textContent),[forestLanguage.forestCommissionLesson({languageLearning:{target:language}}).tactics.split,forestLanguage.forestCommissionLesson({languageLearning:{target:language}}).tactics.focus]);
   assert.ok(options.every(n=>n.children.some(child=>child.className==='forest-tactic-art')));
   options[0].click();assert.deepEqual(ui.calls,[]);
   assert.ok(ui.all.some(n=>n.className==='forest-status'&&n.textContent.includes('不一样')));
-  options[1].click();assert.deepEqual(ui.calls,[{step:'brief',tactic:'focus',learning:{at:1234,attempts:2,assisted:false}}]);
+  options[1].click();assert.deepEqual(ui.calls,[{step:'brief',tactic:'focus',recalled:'boots',learning:{at:1234,attempts:4,assisted:false}}]);
  }
 });
 

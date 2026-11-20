@@ -518,7 +518,7 @@ for(const seed of [23,42,137,353])for(const opening of [false,true])for(const [s
  act('accept');act('take-boots',{object:'boots'});roundtrip();
  assert.equal(forestCommissionPouch(save)[0].id,'patrol-boots');
  act('deliver');A.applyAction(save,content,{type:'equip',itemId:gear[1]});
- act('take-note',{revealed:true});act('brief',{tactic:'focus',learning:{at:now,attempts:1,assisted:false}});roundtrip();
+ act('take-note',{revealed:true});act('brief',{tactic:'focus',recalled:'boots',learning:{at:now,attempts:2,assisted:false}});roundtrip();
  assert.equal(forestCommissionPhase(save),'patrol');assert.equal(forestCommissionPouch(save)[0].id,'patrol-note');
  // Earn the entrance level through the actual first six mainline quests.
  // This also reproduces why another hat/robe would be a duplicate reward.

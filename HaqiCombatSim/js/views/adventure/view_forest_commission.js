@@ -137,19 +137,35 @@ export function renderForestCommission(root,model,cb){
   let attempts=0,assisted=false;
   clue('briefing','一起行动，集中攻击同一个敌人。',()=>{assisted=true;});
   if(model.nearby){
+   const hat=assets.content.items[forestCommissionScene(save).sites[FOREST_SITES.boots].hatArt],boots=forestCommissionRewards(save,assets.content,'deliver')[0]?.item;
+   const recall=el('div','forest-recall',el('p','',`先回想：刚才交付的 ${lesson.words.boots} 是哪件补给？`));
+   const recallChoices=el('div','forest-recall-choices');
    const prompt=el('div','forest-briefing-head',illustration(assets,'environmentArt','forestQuest','routeNote',96,88),el('p','','根据便签，茜茜让大家怎么攻击？'));
    const choices=el('div','forest-tactic-choices');
+   prompt.hidden=true;choices.hidden=true;
+   for(const [id,item] of [['hat',hat],['boots',boots]]){
+    const b=button('',()=>{
+     attempts=Math.min(attempts+1,999);
+     if(id!=='boots'){status.textContent='再看看刚才交给茜茜的物品。';cb.sound?.('select');return;}
+     status.textContent='想起来了！接着看便签。';cb.sound?.('paper');recall.hidden=true;prompt.hidden=false;choices.hidden=false;
+     choices.querySelector('button')?.focus({preventScroll:true});
+    },'forest-recall-choice');
+    b.setAttribute('aria-label',id==='boots'?'靴子':'帽子');
+    if(item?.art)b.append(art(assets,item.art,90,106));
+    recallChoices.append(b);
+   }
+   recall.append(recallChoices);
    for(const tactic of ['split','focus']){
     const label=el('span','',lesson.tactics[tactic]);label.lang=lesson.language;
     const b=button('',()=>{
      attempts=Math.min(attempts+1,999);
      if(tactic!=='focus'){status.textContent='这和便签上的安排不一样。再听一次，或打开提示。';cb.sound?.('select');return;}
-     cb.sound?.('paper');cb.action({step:'brief',tactic,learning:{at:Date.now(),attempts,assisted}});
+     cb.sound?.('paper');cb.action({step:'brief',tactic,recalled:'boots',learning:{at:Date.now(),attempts,assisted}});
     },'forest-tactic-choice');
     b.append(el('span','forest-tactic-art',scoutArt('fire-scout'),...(tactic==='split'?[scoutArt('life-scout')]:[])),label);
     choices.append(b);
    }
-   body.append(prompt,choices);
+   body.append(recall,prompt,choices);
   }else go('拿便签给茜茜');
   actions.append(button('和茜茜打怪',cb.training,'secondary'));
  }else if(phase==='patrol'){

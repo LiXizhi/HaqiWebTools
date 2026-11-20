@@ -39,7 +39,7 @@ test('autoplay rejection retries only on another gesture and late play cannot un
 test('original music follows world and combat without changing the title theme',()=>{
  assert.match(backgroundMusicId('battle','ice','town.ogg'),/combat_teen_common_trialversion/);
  assert.match(backgroundMusicId('world','camp','town.ogg'),/area_forest/);
- assert.match(backgroundMusicId('world','dark','town.ogg'),/area_forest/);
+ assert.match(backgroundMusicId('world','dark','town.ogg'),/dark_grove\.wav/);
  assert.match(backgroundMusicId('world','ice','town.ogg'),/area_snow/);
  assert.equal(backgroundMusicId('title','ice','town.ogg'),'town.ogg');
  assert.equal(backgroundMusicId('world','town','town.ogg'),'town.ogg');

@@ -4,7 +4,8 @@ const MUSIC_ROOT='audio/haqi/ariesregionbgmusics/';
 export function backgroundMusicId(stage,zone,defaultId){
     if(stage==='battle')return MUSIC_ROOT+'combat_teen_common_trialversion.ogg';
     if(stage==='world'&&zone==='ice')return MUSIC_ROOT+'area_snow.ogg';
-    if(stage==='world'&&['camp','dark'].includes(zone))return MUSIC_ROOT+'area_forest.ogg';
+    if(stage==='world'&&zone==='dark')return 'audio/haqi/adventure/dark_grove.wav';
+    if(stage==='world'&&zone==='camp')return MUSIC_ROOT+'area_forest.ogg';
     return defaultId;
 }
 // Keep a small set of original loops so short battles do not restart the forest.
@@ -49,9 +50,9 @@ export function createBackgroundMusic(url,{audioFactory=src=>new Audio(src),onEr
         if(current&&!outgoing)stop(current);
         current=incoming;track=next;
         if(!wanted)stop(current);
-        // Four original scene themes are enough; do not retain arbitrary URLs.
+        // Keep the five scene themes; do not retain arbitrary URLs.
         for(const [id,entry]of loops){
-            if(loops.size<=4)break;
+            if(loops.size<=5)break;
             if(entry===current||entry===outgoing)continue;
             stop(entry);entry.audio.onerror=null;loops.delete(id);
         }

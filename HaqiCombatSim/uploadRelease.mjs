@@ -22,7 +22,7 @@ function collect(directory, prefix = '') {
         if (entry.isDirectory()) return collect(absolute, `${relative}/`);
         // Static artwork/audio already has permanent URLs in the media manifests.
         // Defensively skip any manually added media; Vite never emits it either.
-        if (/\.(webp|ogg)$/i.test(entry.name)) return [];
+        if (/\.(webp|ogg|wav)$/i.test(entry.name)) return [];
         const localeText = /^data\/adventure\/locale\/[A-Za-z0-9._-]+\.txt$/.test(relative);
         const wordLexicon = /^assets\/word_(?:zh|en|ja|ko)-[A-Za-z0-9_-]+\.txt$/.test(relative);
         if (!localeText && !wordLexicon && !/\.(html|js|css|json)$/.test(entry.name)) throw new Error(`不允许发布此类型：${relative}`);

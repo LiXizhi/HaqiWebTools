@@ -4,6 +4,10 @@ const signature=Buffer.from([137,80,78,71,13,10,26,10]);
 function crc32(buffer){let value=0xffffffff;for(const byte of buffer){value^=byte;for(let bit=0;bit<8;bit++)value=(value>>>1)^((value&1)?0xedb88320:0);}return(value^0xffffffff)>>>0;}
 export function validateMedia(filename,data){
     if(filename.endsWith('.ogg')){if(data.toString('ascii',0,4)!=='OggS')throw new Error('Invalid Ogg');return;}
+    if(filename.endsWith('.wav')){
+        if(data.length<44||data.toString('ascii',0,4)!=='RIFF'||data.readUInt32LE(4)+8!==data.length||data.toString('ascii',8,16)!=='WAVEfmt '||data.readUInt32LE(16)!==16||data.readUInt16LE(20)!==1||data.readUInt16LE(22)!==1||!data.readUInt32LE(24)||data.readUInt32LE(28)!==data.readUInt32LE(24)*2||data.readUInt16LE(32)!==2||data.readUInt16LE(34)!==16||data.toString('ascii',36,40)!=='data'||data.readUInt32LE(40)+44!==data.length)throw new Error('Invalid PCM WAV');
+        return;
+    }
     if(filename.endsWith('.webp')){
         if(data.length<20||data.toString('ascii',0,4)!=='RIFF'||data.toString('ascii',8,12)!=='WEBP'||data.readUInt32LE(4)+8!==data.length)throw new Error('Invalid WebP container');
         let offset=12,dimensions=null,pixels=false;

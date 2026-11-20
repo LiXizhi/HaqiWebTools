@@ -12,7 +12,7 @@ test('all hosts default to permanent Keepwork CDN; local source mode is explicit
     assert.equal(assetMode('game.keepwork.com','','local'),'local');assert.equal(assetMode('game.keepwork.com','?assets=cdn','local'),'cdn');assert.equal(assetMode('localhost','','cdn'),'cdn');
 });
 test('asset policy rejects temporary/offsite URLs, traversal and missing required references',()=>{
-    const media=load('media'),source=load('assets');assert.equal(validateMediaManifest(media,source,'cdn'),95);
+    const media=load('media'),source=load('assets');assert.equal(validateMediaManifest(media,source,'cdn'),96);
     assert.equal(assetUrl(media.entries.sprites),media.entries.sprites.cdn);
     for(const cdn of ['https://unpkg.com/image.webp','https://cdn.keepwork.com/image.webp?token=x','http://cdn.keepwork.com/x.webp',null])assert.throws(()=>assetUrl({cdn},'cdn'));
     assert.throws(()=>assetUrl({local:'assets/adventure/../private.webp'},'local'));

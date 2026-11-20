@@ -21,7 +21,8 @@ export function renderEntryLocale(locale, secondLocale, onLocale, onSecond) {
     select.onchange=()=>onSecond?.(select.value);
     const native=el('div','entry-locale',el('span','entry-locale-label','母语'),createSettingsControls({el,button}).localeSelector(locale,onLocale));
     const second=el('div','entry-locale',el('span','entry-locale-label','第二语言'),select);
-    return {root:el('div','entry-locale-stack',native,second),controls:[...native.querySelectorAll('button'),select]};
+    const note=el('p','entry-locale-note','上面的第二语言只用于新建角色；已有角色请在「旅途设置 → 语言」中修改。');
+    return {root:el('div','entry-locale-stack',native,second,note),controls:[...native.querySelectorAll('button'),select]};
 }
 // 标题页左栏：大标题与语言选择。已有角色时登录留在右侧列表；没有离线角色时，右侧先选择登录或本地访客。
 const ONLINE_GAME_LICENSE='文网文[2009]093号';

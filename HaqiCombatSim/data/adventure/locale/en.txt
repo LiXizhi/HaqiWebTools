@@ -324,6 +324,7 @@ AIChat 请求失败||AIChat request failed
 魔法哈奇||Magic Haqi
 魔法哈奇 · 第一章||Magic Haqi · Chapter 1
 第二语言||Second language
+上面的第二语言只用于新建角色；已有角色请在「旅途设置 → 语言」中修改。||The second language above applies to new characters. For an existing character, change it in Journey Settings → Language.
 带上你的宠物和来自世界各地的用户开启魔法之旅。\n练习你的第二语言。||Bring your pet and players from around the world on a magical journey.\nPractice your second language.
 登录 Keepwork||Sign in to Keepwork
 选择进入方式||Choose how to enter

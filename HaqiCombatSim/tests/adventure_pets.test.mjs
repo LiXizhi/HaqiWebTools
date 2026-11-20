@@ -16,7 +16,7 @@ test('active saves predating exploration defaults reload and replay without losi
  const save=fresh('dragon_green');A.beginEncounter(save,c,'trial:1');
  const original=B.restorePveBattle(d,c,save.pendingEncounter);
  const decision={pass:true};B.playPveRound(original,decision);A.recordDecision(save,decision);
- for(const key of ['monsterRespawnMs','fieldEncounterRadius','dungeonEncounterRadius'])delete save.pendingEncounter.adventureParams[key];
+ for(const key of ['monsterRespawnMs','fieldEncounterRadius','dungeonEncounterRadius','petFoodXpMultiplier'])delete save.pendingEncounter.adventureParams[key];
  const before=structuredClone(save);
  const restored=checkedProgress(JSON.stringify(save),c,d);
  assert.deepEqual(save,before);

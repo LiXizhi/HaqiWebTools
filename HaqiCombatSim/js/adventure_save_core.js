@@ -318,6 +318,7 @@ export function parseSave(raw, content) {
             const expected = Pets.petParams(petContent), saved = s.pendingEncounter.adventureParams;
             const threatVersion = s.pendingEncounter.threatRulesVersion || 0;
             const optional = new Set([
+                'petFoodXpMultiplier',
                 ...(s.pendingEncounter.captureRulesVersion !== 1 ? ['catchMinChance', 'catchMaxChance', 'catchEnragedDifficulty'] : []),
                 ...(s.pendingEncounter.specialCardRulesVersion !== 1 || threatVersion < 3 ? ['effectThreatSingleFreeze', 'effectThreatConversePositiveWard'] : []),
                 ...(threatVersion < 5 ? ['iceAreaAttackThreatRatio'] : []),

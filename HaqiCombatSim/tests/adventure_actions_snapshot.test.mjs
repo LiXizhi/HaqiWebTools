@@ -312,7 +312,7 @@ function runScenarios() {
 }
 
 const GOLDEN = {
-    'companion-wordplay': 'c33215c7c6219222',
+    'companion-wordplay': '9b501066a8c069e6',
     'camp-detour': '22a5ec3842c0179b',
     'forest-commission': '2fc154831722883d',
     'language-complete': '1e875c7cfb96bdd7',
@@ -341,7 +341,7 @@ const GOLDEN = {
     'remove-gems': 'a8f7f663de171ef5',
     upgrade: 'e6b9d12074c4e3dd',
     hatch: '5a442393c5d99887',
-    feed: 'd47f8462d4a25f48',
+    feed: '7f32b6e70942398a',
     deck: 'f798713f169d10aa',
     'deck-layouts': 'f798713f169d10aa',
     travel: 'b9fb9ed26ea65e8b',

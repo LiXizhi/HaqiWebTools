@@ -14,6 +14,7 @@ import { dungeonChallengePreview } from '../../dungeon_challenge_core.js';
 import { dungeonFirstReward } from '../../dungeon_first_rewards_core.js';
 import { dungeonEnemyIntentInfo } from '../../dungeon_tactics_core.js';
 import { openingEnemyIntentInfo } from '../../opening_training_core.js';
+import { examinerEnemyIntentInfo } from '../../examiner_intent_core.js';
 import { tacticsFieldCue } from '../../tactics_field_battle_core.js';
 
 export function buildBattleHandViewModel({ battle, hero, selected, discarded, assets }) {
@@ -23,7 +24,7 @@ export function buildBattleHandViewModel({ battle, hero, selected, discarded, as
     const canPlay = selected && !discarded.includes(selected.seq) && U.isAlive(hero) && !blockedMessage;
     const catchCard = selected && battle.resolved.cards[selected.key]?.type === 'CatchPet' ? battle.resolved.cards[selected.key] : null;
     const deckRemainingCount = U.deckRemaining(hero) - discarded.length;
-    const intent = battle.tacticalEncounter ? null : tacticsFieldCue(battle) || openingEnemyIntentInfo(battle) || dungeonEnemyIntentInfo(battle);
+    const intent = battle.tacticalEncounter ? null : tacticsFieldCue(battle) || openingEnemyIntentInfo(battle) || dungeonEnemyIntentInfo(battle) || examinerEnemyIntentInfo(battle);
     return {
         blockedMessage,
         legalTargets,

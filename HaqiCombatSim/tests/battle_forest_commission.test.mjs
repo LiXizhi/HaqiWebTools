@@ -22,6 +22,7 @@ function act(save,step,props={}){
  return A.applyAction(save,content,{type:'forest-commission',step,...props},{forestTarget});
 }
 function toBriefing(save){act(save,'accept');act(save,'take-boots',{object:'boots'});act(save,'deliver');act(save,'take-note',{revealed:true});}
+const briefing=()=>({tactic:'focus',learning:{at:20,attempts:1,assisted:false}});
 const record=clears=>({version:1,clears,bestTurns:8,bestDefeats:0,lastTurns:8,lastDefeats:0});
 
 test('world props and NPC responses follow carried objects and persisted progress',()=>{
@@ -60,7 +61,11 @@ test('commission carries quest objects separately and requires a new full patrol
  assert.equal(forestCommissionPouch(save)[0].id,'patrol-boots');assert.deepEqual(save.inventory,before);
  act(save,'deliver');assert.equal(save.inventory[1260],1);assert.deepEqual(forestCommissionPouch(save),[]);
  assert.throws(()=>act(save,'take-note'),/挪开石头/);act(save,'take-note',{revealed:true});
- assert.equal(forestCommissionPouch(save)[0].id,'patrol-note');act(save,'brief');
+ assert.equal(forestCommissionPouch(save)[0].id,'patrol-note');
+ assert.throws(()=>act(save,'brief'),/选择巡逻时的攻击方式/);
+ assert.throws(()=>act(save,'brief',{tactic:'split',learning:{at:20,attempts:1,assisted:false}}),/选择巡逻时的攻击方式/);
+ act(save,'brief',briefing());
+ assert.deepEqual(save.forestCommission.briefingPractice,{language:'en',at:20,attempts:1,assisted:false});
  assert.equal(save.forestCommission.clearBaseline,2);assert.throws(()=>act(save,'report'),/完整完成/);
  save.dungeonChallengeRecords[FOREST_PATROL_DUNGEON]=record(3);
  assert.equal(forestCommissionPhase(save),'report');act(save,'report');
@@ -68,6 +73,18 @@ test('commission carries quest objects separately and requires a new full patrol
  assert.deepEqual(forestCommissionPouch(save),[]);assert.equal(forestCommissionPhase(save),'done');
  const reward=structuredClone(save.inventory);assert.throws(()=>act(save,'report'));assert.deepEqual(save.inventory,reward);
  assert.ok(A.parseSave(save,content));assert.ok(checkedProgress(save,content,dataset));
+});
+
+test('older patrol saves without a briefing practice record remain playable',()=>{
+ const save=fresh();toBriefing(save);act(save,'brief',briefing());
+ delete save.forestCommission.briefingPractice;
+ assert.ok(A.parseSave(save,content));
+ assert.ok(checkedProgress(save,content,dataset));
+ save.dungeonChallengeRecords={[FOREST_PATROL_DUNGEON]:record(1)};
+ assert.equal(forestCommissionPhase(save),'report');
+ act(save,'report');
+ assert.equal(forestCommissionPhase(save),'done');
+ assert.ok(A.parseSave(save,content));
 });
 
 test('commission checks physical access, onboarding and live battle before changing progress',()=>{
@@ -105,7 +122,7 @@ test('owned reward equipment converts once and a failed local write cannot consu
 for(const [school,[hat,robe,cloak,hp]]of Object.entries({fire:[1240,1250,1415,40],ice:[1236,1246,1416,54],storm:[1239,1249,1417,32],death:[1237,1247,1418,45],life:[1238,1248,1419,48]}))test(school+' patrol cloak adds actual combat stats beyond the mainline hat and robe',()=>{
  const save=fresh(school);save.xp=content.progression.xpThresholds[4];A.syncProgression(save,content);
  for(const id of [hat,robe]){save.inventory[id]=1;A.applyAction(save,content,{type:'equip',itemId:id});}
- toBriefing(save);act(save,'brief');save.dungeonChallengeRecords={[FOREST_PATROL_DUNGEON]:record(1)};
+ toBriefing(save);act(save,'brief',briefing());save.dungeonChallengeRecords={[FOREST_PATROL_DUNGEON]:record(1)};
  const before=structuredClone(A.playerSpec(save,content));
  const [preview]=forestCommissionRewardPreviews(save,content,'report');
  assert.equal(preview.id,cloak);assert.equal(preview.reason,'');assert.equal(preview.owned,false);
@@ -123,7 +140,7 @@ for(const [school,[hat,robe,cloak,hp]]of Object.entries({fire:[1240,1250,1415,40
 });
 
 test('a pre-owned patrol cloak converts once, and missing reward data cannot consume a completed patrol',()=>{
- const save=fresh();toBriefing(save);act(save,'brief');save.dungeonChallengeRecords={[FOREST_PATROL_DUNGEON]:record(1)};
+ const save=fresh();toBriefing(save);act(save,'brief',briefing());save.dungeonChallengeRecords={[FOREST_PATROL_DUNGEON]:record(1)};
  const unavailable={...content,items:{...content.items}};delete unavailable.items[1415];
  const before=JSON.stringify(save),access={forestTarget:{id:FOREST_NPCS.receiver,kind:'npc',...save.position}};
  assert.throws(()=>A.applyAction(save,unavailable,{type:'forest-commission',step:'report'},access),/尚未准备好/);
@@ -138,7 +155,7 @@ test('invalid optional commission progress is rejected while untouched legacy sa
  for(const state of [{version:2,phase:'boots'},{version:1,phase:'report'},{version:1,phase:'patrol',clearBaseline:-1},{version:1,phase:'done',clearBaseline:0},{version:1,phase:'boots',rewarded:true}]){
   const save=fresh();save.forestCommission=state;assert.throws(()=>A.parseSave(save,content));
  }
- const save=fresh();toBriefing(save);act(save,'brief');save.dungeonChallengeRecords={[FOREST_PATROL_DUNGEON]:record(1)};
+ const save=fresh();toBriefing(save);act(save,'brief',briefing());save.dungeonChallengeRecords={[FOREST_PATROL_DUNGEON]:record(1)};
  act(save,'report');save.forestCommission.clearBaseline=2;assert.throws(()=>A.parseSave(save,content));
 });
 

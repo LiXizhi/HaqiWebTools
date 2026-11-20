@@ -343,7 +343,7 @@ export function createPanelController(options) {
         if (kind === 'language-course') kind = 'quests';
         if (kind === 'home') {
             const learning = ctx.save.languageLearning;
-            void openHomePanel({ offerStarterRoom: !!(learning?.enabled && wordLanguage(learning.target) === 'en') });
+            void openHomePanel({ offerStarterRoom: !!(learning?.enabled && ['en', 'ja', 'ko'].includes(wordLanguage(learning.target))) });
             return;
         }
         if (kind === 'hanzi' && ctx.assets.content.islandPacks?.some(p => p.island.id === ctx.save.zone && p.memory)) {

@@ -1920,6 +1920,7 @@ Boss 已击败，可以退出副本。||Boss defeated. You can exit the dungeon.
 击败生命侦查兵，再去找莫纳。||Defeat the Life Scout, then go find Mona.
 去找青龙，领取新的法杖。||Go to Azure Dragon and claim your new wand.
 强化一件装备，再向青龙回报。||Upgrade a piece of equipment, then report back to Azure Dragon.
+装备晶石法杖，并强化一件装备，再向青龙回报。||Equip the Crystal Wand, upgrade a piece of equipment, then report back to Azure Dragon.
 打开出奇蛋，再与杰西卡交谈。||Open the Surprise Egg, then talk with Jessica.
 在宠物面板喂养一包战宠口粮。||Feed a pack of pet food in the pet panel.
 与五位魔法导师交谈，了解各系特色。||Talk with the five magic mentors to learn about each school's traits.

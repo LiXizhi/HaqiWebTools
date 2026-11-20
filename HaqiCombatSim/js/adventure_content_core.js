@@ -4,6 +4,11 @@ const assert=(ok,message)=>{if(!ok)throw new Error(`章节数据无效：${messa
 export function validateAdventureContent(c,d,assets) {
     assert(c.schemaVersion===1&&c.contentVersion==='kids-opening-1','版本');
     assert(c.quests?.length===14&&c.quests.every((q,i)=>q.id===63000+i),'任务编号');
+    for (const [id, xp] of Object.entries(c.progression?.questXpOverrides || {})) {
+        const quest = c.quests.find(q => q.id === Number(id));
+        assert(quest?.rewards.flatMap(group => group.items).filter(item => item.id === 113).length === 1
+            && Number.isInteger(xp) && xp > 0, `任务经验改编 ${id}`);
+    }
     assert(!c.missingAssets?.length,'缺少必要资源');
     const image=(ref,required=true)=>{
         if(!ref&&!required)return;
@@ -13,7 +18,7 @@ export function validateAdventureContent(c,d,assets) {
     const card=key=>assert(d.cards[key]&&isSupportedType(d.cards[key].type),`未支持卡牌 ${key}`);
     const actions=new Set(['gotonext','doaccept','dofinished','donpcdialoged','closedialog']);
     const dialogue=rows=>{assert(rows?.length,'空白对话');for(const line of rows){assert(c.npcs[line.npcId]&&typeof line.text==='string','对话居民');for(const b of line.buttons)assert(actions.has(b.action),`对话动作 ${b.action}`);}};
-    const goals=new Set(['79016','79019','79037','hatch-pet']);
+    const goals=new Set(['79016','79019','79037','hatch-pet','equip-staff']);
     for(const [index,q]of c.quests.entries()) {
         assert(c.npcs[q.startNpc]&&c.npcs[q.endNpc],`任务 ${q.id} 居民`);
         for(const dependency of q.requires)assert(c.quests.slice(0,index).some(p=>p.id===dependency),`任务依赖 ${dependency}`);

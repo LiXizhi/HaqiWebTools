@@ -8,6 +8,10 @@ const id=value=>typeof value==='string'&&/^[-a-zA-Z0-9_:]{1,150}$/.test(value)&&
 const object=value=>value&&typeof value==='object'&&!Array.isArray(value);
 export const timeScrollParams=content=>resolveParams({version:'kids'},content?.balanceParams||{}).timeScroll;
 export const TIME_SCROLL_DEFAULT='data/adventure/earth/time-scroll/common.json';
+export function timeScrollLearningLocale(save){
+    const target=save?.languageLearning?.target;
+    return ['en','ja','ko','zh-CN'].includes(target)?target:'en';
+}
 export function validateTimeScrollReference(value){
     assert(value===undefined||typeof value==='string'&&/^data\/adventure\/earth\/time-scroll\/[a-z0-9-]+\.json$/.test(value),'时光内容引用无效');
 }
@@ -23,14 +27,14 @@ export function validateTimeScrollContent(data){
     assert(data?.version===1&&id(data.id)&&Array.isArray(data.stations)&&data.stations.length>=2&&data.stations.length<=12,'时光长卷内容无效');
     assert(Number.isFinite(data.spacing)&&data.spacing>=400&&data.spacing<=1600,'时光长卷间距无效');
     const ids=new Set(),stories=new Set();let previous=Infinity;
-    const bilingual=row=>object(row)&&['zh-CN','en'].every(k=>typeof row[k]==='string'&&row[k].length>0&&row[k].length<1000);
+    const bilingual=row=>object(row)&&['zh-CN','en','ja','ko'].every(k=>typeof row[k]==='string'&&row[k].length>0&&row[k].length<1000);
     for(const [index,station]of data.stations.entries()){
         assert(id(station.id)&&!ids.has(station.id)&&typeof station.label==='string'&&Number.isInteger(station.yearsAgo)&&station.yearsAgo>=0&&station.yearsAgo<previous,'时光站点顺序或身份无效');ids.add(station.id);previous=station.yearsAgo;
         if(index===data.stations.length-1){assert(station.yearsAgo===0,'时光长卷终点必须是现在');continue;}
         const {traveler,clue,story}=station;
         assert(traveler?.name&&['boy','girl'].includes(traveler.appearance)&&bilingual(station.reading),'时光旅人内容缺失');
         assert(id(clue?.id)&&clue.name&&bilingual(clue.text),'探索线索无效');
-        assert(id(story?.id)&&story.id.startsWith('time-scroll:')&&!stories.has(story.id)&&story.title&&story.context&&story.turns?.length===3,'旅人故事无效');stories.add(story.id);
+        assert(id(story?.id)&&story.id.startsWith('time-scroll:')&&!stories.has(story.id)&&story.title&&story.context&&bilingual(story.opening)&&story.turns?.length===3,'旅人故事无效');stories.add(story.id);
         const turns=new Set();for(const turn of story.turns){assert(id(turn.id)&&turn.id.length<100&&!turns.has(turn.id)&&bilingual(turn.question)&&bilingual(turn.answer)&&bilingual(turn.response)&&typeof turn.pattern==='string'&&typeof turn.hint==='string','旅人对话无效');turns.add(turn.id);}
     }
     return data;

@@ -176,6 +176,7 @@ export const ADVENTURE_ACTION_HANDLERS = {
         assert(q && q.id === Number(action.questId) && q.startNpc === Number(action.npcId), '当前没有可接取的任务');
         if (!save.quests[q.id]) {
             save.quests[q.id] = { accepted: true, claimed: false, progress: {} };
+            if (q.id === 63007) save.quests[q.id].equipmentTutorialVersion = 2;
             noteQuestAccepted(save, q.id);
         }
         save.trackedQuestIds = trackedQuestIds(save, content);
@@ -312,11 +313,12 @@ export const ADVENTURE_ACTION_HANDLERS = {
         assert(save.pet && owns(save, content.pet.foodId), '需要宠物和战宠口粮');
         assert(save.pet.xp < content.pet.levels.max_exp, '宠物已经长大了！');
         save.inventory[content.pet.foodId]--;
-        save.pet.xp = Math.min(content.pet.levels.max_exp, save.pet.xp + content.pet.foodXp);
+        const foodXp = Pets.foodInfo(content, content.pet.foodId).xp;
+        save.pet.xp = Math.min(content.pet.levels.max_exp, save.pet.xp + foodXp);
         save.pet.level = petLevel(save.pet.xp, content);
         const legacy = Object.values(save.pets || {}).find(p => p.speciesId === 'legacy_gululu');
         if (legacy) {
-            legacy.xp += content.pet.foodXp;
+            legacy.xp += foodXp;
             legacy.level = Pets.petXpLevel(legacy.xp, content);
         }
         syncGoals(save, content);

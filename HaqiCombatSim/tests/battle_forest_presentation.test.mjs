@@ -5,31 +5,32 @@ import vm from 'node:vm';
 import * as forest from '../js/forest_commission_core.js';
 import * as forestLanguage from '../js/forest_commission_language_core.js';
 import {bindSceneDrag,pointInsideElement} from '../js/adventure_scene_drag.js';
+import {monsterArtBinding} from '../js/adventure_monster_art_core.js';
 const source=fs.readFileSync(new URL('../js/views/adventure/view_forest_commission.js',import.meta.url),'utf8');
 const content=JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json',import.meta.url)));
 const exportedItems=JSON.parse(fs.readFileSync(new URL('../data/adventure/shop-candidates.json',import.meta.url)));
 for(const id of [1415,1416,1417,1418,1419])content.items[id]=exportedItems[id];
-function render(phase,{nearby=true,level=1}={}){
+function render(phase,{nearby=true,level=1,language='en'}={}){
  const all=[],calls=[],document={activeElement:null};
  function el(tag,cls='',...children){
   const n={tag,className:cls,children,dataset:{},style:{},attributes:{},events:{},textContent:typeof children[0]==='string'?children[0]:'',
    setAttribute(k,v){this.attributes[k]=v;},append(...v){this.children.push(...v);},replaceChildren(...v){this.children=v;},
-   addEventListener(k,fn){this.events[k]=fn;},focus(){document.activeElement=this;},getClientRects(){return this.hidden?[]:[{}];},getContext(){return {};},getBoundingClientRect(){return {left:0,right:200,top:300,bottom:400};},
+   addEventListener(k,fn){this.events[k]=fn;},focus(){document.activeElement=this;},getClientRects(){return this.hidden?[]:[{}];},getContext(){return {clearRect(){}};},getBoundingClientRect(){return {left:0,right:200,top:300,bottom:400};},
    querySelectorAll(selector){const descendants=[];function scan(parent){for(const child of parent.children)if(child&&typeof child==='object'){descendants.push(child);scan(child);}}scan(this);
     return descendants.filter(row=>selector==='.forest-object'?row.className.split(' ').includes('forest-object'):selector==='button'?row.tag==='button':selector.startsWith('.primary')?row.className==='primary'&&!row.disabled:(row.tag==='button'&&!row.disabled)||row.tag==='summary');},
    querySelector(selector){return this.querySelectorAll(selector)[0]||null;}};
   n.classList={add:cls=>n.className+=' '+cls,remove:cls=>n.className=n.className.split(' ').filter(c=>c!==cls).join(' ')};all.push(n);return n;
  }
- const context=vm.createContext({document,Date:{now:()=>1234},watchTreeText:()=>{},...forest,...forestLanguage,bindSceneDrag,pointInsideElement,forestCommissionRewardPreviews:(save,c,step)=>forest.forestCommissionRewards(save,c,step).map(row=>({...row,changes:[]})),equipmentComparison:()=>el('section','equipment-comparison'),el,button:(label,action,cls='')=>Object.assign(el('button',cls,label),{click:action}),
+ const context=vm.createContext({document,Date:{now:()=>1234},watchTreeText:()=>{},...forest,...forestLanguage,bindSceneDrag,pointInsideElement,monsterArtBinding,forestCommissionRewardPreviews:(save,c,step)=>forest.forestCommissionRewards(save,c,step).map(row=>({...row,changes:[]})),equipmentComparison:()=>el('section','equipment-comparison'),el,button:(label,action,cls='')=>Object.assign(el('button',cls,label),{click:action}),
   art:(assets,value)=>Object.assign(el('canvas'),{drawnArt:value}),createCloseButton:click=>Object.assign(el('button','close-button'),{click})});
  vm.runInContext(source.replace(/^import .*;\r?\n/gm,'').replace('export function','function'),context);
- const save={school:'fire',level,inventory:{},...(phase==='offer'?{}:{forestCommission:{version:1,phase:phase==='report'?'patrol':phase,...(['patrol','report','done'].includes(phase)?{clearBaseline:0}:{})}})};
+ const save={school:'fire',level,languageLearning:{target:language},inventory:{},...(phase==='offer'?{}:{forestCommission:{version:1,phase:phase==='report'?'patrol':phase,...(['patrol','report','done'].includes(phase)?{clearBaseline:0}:{})}})};
  if(['report','done'].includes(phase))save.dungeonChallengeRecords={'journey:first-watch':{clears:1}};
  const cb=Object.fromEntries(['close','go','training','equipment','patrol','nextChallenge','mainline'].map(k=>[k,()=>calls.push(k)]));
  cb.training=lesson=>calls.push(typeof lesson==='string'?{training:lesson}:'training');
  cb.action=value=>calls.push(JSON.parse(JSON.stringify(value)));cb.listen=line=>calls.push({listen:line});
  const root=el('div'),draw=()=>true;
- context.renderForestCommission(root,{save,nearby,assets:{content,buildingArt:{draw},environmentArt:{draw}}},cb);
+ context.renderForestCommission(root,{save,nearby,assets:{content,buildingArt:{draw},environmentArt:{draw},drawMonster(){}}},cb);
  return {all,calls,document,modal:root.children[0],find:label=>all.find(n=>n.textContent===label),object:label=>all.find(n=>n.attributes['aria-label']===label)};
 }
 
@@ -76,10 +77,14 @@ test('a cancelled rock drag leaves the note hidden; a deliberate drag reveals it
 });
 
 test('the hidden note is revealed deliberately before it can be picked up',()=>{
- const ui=render('note'),note=ui.object('拾取巡逻路线便签'),rock=ui.object('挪开石头');
+ const ui=render('note'),note=ui.object('拾取巡逻路线便签'),rock=ui.object('挪开石头'),bush=ui.object('检查灌木');
  assert.equal(note.hidden,true);assert.deepEqual(ui.calls,[]);
+ assert.equal(ui.find('挪开石头'),undefined,'the visible action must not reveal the language clue answer');
+ assert.ok(bush.children.some(n=>n.className==='forest-illustration'),'the other hiding place uses authored prop art');
+ bush.click();assert.equal(note.hidden,true);assert.deepEqual(ui.calls,[]);
+ assert.ok(ui.all.some(n=>n.className==='forest-status'&&n.textContent.includes('没有便签')));
  rock.click();assert.equal(note.hidden,false);assert.equal(rock.disabled,true);assert.equal(ui.document.activeElement,note);
- note.click();assert.deepEqual(ui.calls,[{step:'take-note',revealed:true}]);
+ note.click();assert.deepEqual(ui.calls,[{step:'take-note',revealed:true,learning:{at:1234,attempts:2}}]);
 });
 
 test('distant scenes provide travel instead of remote pickup or delivery',()=>{
@@ -98,14 +103,26 @@ test('the patrol report identifies the actual school cloak before the player cla
  assert.deepEqual(ui.calls,[]);
 });
 
-test('carried quest objects can be handed to the recipient without a dialog answer gate',()=>{
+test('carried quest objects can be handed to the recipient',()=>{
  const e=(x,y,id=1)=>({pointerId:id,pointerType:'touch',clientX:x,clientY:y,preventDefault(){}});
- for(const [phase,label,step]of [['delivery','递出待送达的巡逻靴','deliver'],['briefing','递出巡逻路线便签','brief'],['report','递出巡逻路线便签','report']]){
+ for(const [phase,label,step]of [['delivery','递出待送达的巡逻靴','deliver'],['report','递出巡逻路线便签','report']]){
   const clicked=render(phase);clicked.object(label).click();assert.deepEqual(clicked.calls,[{step}],phase+' click hands in the item');
   const ui=render(phase),carried=ui.object(label);assert.ok(carried,phase);assert.ok(ui.object('茜茜收取物品的位置'));
   carried.events.pointerdown(e(50,100));carried.events.pointermove(e(50,350));carried.events.pointercancel(e(50,350));assert.deepEqual(ui.calls,[]);
   carried.events.pointerdown(e(50,100));carried.events.pointermove(e(250,350));carried.events.pointerup(e(250,350));assert.deepEqual(ui.calls,[]);
   carried.events.pointerdown(e(50,100));carried.events.pointermove(e(50,350));carried.events.pointerup(e(50,350));assert.deepEqual(ui.calls,[{step}],phase);
+ }
+});
+
+test('briefing requires a target-language tactical choice and records wrong tries',()=>{
+ for(const language of ['en','ja','ko','zh-CN']){
+  const ui=render('briefing',{language}),options=ui.all.filter(n=>n.className==='forest-tactic-choice');
+  assert.equal(options.length,2);
+  assert.deepEqual(options.map(n=>n.children.at(-1).textContent),[forestLanguage.forestCommissionLesson({languageLearning:{target:language}}).tactics.split,forestLanguage.forestCommissionLesson({languageLearning:{target:language}}).tactics.focus]);
+  assert.ok(options.every(n=>n.children.some(child=>child.className==='forest-tactic-art')));
+  options[0].click();assert.deepEqual(ui.calls,[]);
+  assert.ok(ui.all.some(n=>n.className==='forest-status'&&n.textContent.includes('不一样')));
+  options[1].click();assert.deepEqual(ui.calls,[{step:'brief',tactic:'focus',learning:{at:1234,attempts:2,assisted:false}}]);
  }
 });
 

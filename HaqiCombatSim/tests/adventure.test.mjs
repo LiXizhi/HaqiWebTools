@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import * as A from '../js/adventure_core.js';
 import * as P from '../js/combat_pve_core.js';
+import {examinerEnemyIntentInfo} from '../js/examiner_intent_core.js';
+import {buildBattleHandViewModel} from '../js/adventure/presenters/battle_view_model.js';
 import * as W from '../js/adventure_world_core.js';
 import * as U from '../js/combat_unit_core.js';
 import { SimpleBot } from '../js/combat_policy_core.js';
@@ -131,6 +133,7 @@ test('rune recording requires engine results and cannot restore spent inventory'
 export function playChapter(school) {
     const s=A.createAdventure(content,{school,seed:530});
     const evidence=[];
+    const levels=[];
     for(const q of content.quests) {
         assert.equal(A.currentQuest(s,content)?.id,q.id);
         act(s,'accept',{questId:q.id,npcId:q.startNpc});
@@ -149,12 +152,13 @@ export function playChapter(school) {
         }
         assert.ok(A.questReady(s,q),`${q.id} not ready`);
         act(s,'claim',{questId:q.id,npcId:q.endNpc});
+        levels.push(s.level);
         for(const id of Object.keys(s.inventory))if(A.canEquip(s,content.items[id],content))act(s,'equip',{itemId:id});
         A.parseSave(JSON.stringify(s),content);
     }
     act(s,'travel',{zone:'town'});
     const b=battle(s,'water-bubble');assert.equal(b.winner,'near');A.settleEncounter(s,content,b);
-    return {s,evidence};
+    return {s,evidence,levels};
 }
 test('chapter references, dialogue, card types and assets are complete',()=>{
     assert.equal(content.quests.length,14);assert.deepEqual(content.missingAssets,[]);
@@ -166,7 +170,16 @@ test('chapter references, dialogue, card types and assets are complete',()=>{
     for(const c of Object.values(dataset.cards))assert.ok(isSupportedType(c.type),c.type);
 });
 for(const school of ['fire','ice','storm','life','death'])test(`${school}: complete 14 original quests, graduate and battle in town`,()=>{
-    const {s}=playChapter(school);assert.equal(s.level,10);assert.ok(s.visitedTown&&s.pet.xp>0&&s.upgrades[1912]>0);assert.equal(s.equipment[24],24003);
+    const {s,levels}=playChapter(school);assert.equal(s.level,10);assert.ok(s.visitedTown&&s.pet.xp>0&&s.upgrades[1912]>0);assert.equal(s.equipment[24],24003);
+    assert.deepEqual(levels,[1,2,2,3,4,5,5,6,6,7,8,8,9,10]);
+});
+test('chapter reward preview uses paced experience and preserves source rewards',()=>{
+    const s=A.createAdventure(content);
+    for(const [id,xp] of [[63002,40],[63003,70],[63007,260],[63009,257]]){
+        const q=content.quests.find(row=>row.id===id);
+        assert.equal(A.rewardsFor(s,content,q).find(row=>row.id===113).count,xp);
+    }
+    assert.equal(content.quests.find(row=>row.id===63002).rewards[0].items[0].count,73);
 });
 test('PvE contains both sides in one round, startup pips and scripted pre-round attack',()=>{
     const s=A.createAdventure(content);const b=P.createPveBattle({dataset,player:A.playerSpec(s,content),monsters:[content.monsters['fire-scout']],seed:1});
@@ -256,6 +269,22 @@ test('every examiner scripted round and its HP gene are preserved',()=>{
     assert.equal(P.pickMonsterCard(b,u).key,m.genes[0].card);
     for(let i=0;i<30;i++)assert.ok(P.pickMonsterCard(b,u).key,'AI pool is renewable');
 });
+test('examiner intent previews only the scripted action without advancing AI',()=>{
+    const s=A.createAdventure(content),m=content.monsters['death-scout'];
+    const b=P.createPveBattle({dataset,player:A.playerSpec(s,content),monsters:[m],seed:23}),u=b.sides.far[0];
+    const originalRound=u.aiMemory.round;
+    assert.equal(examinerEnemyIntentInfo(b).cardKey,m.sequences[0][0].card);
+    assert.match(examinerEnemyIntentInfo(b).label,/偷袭/);
+    assert.match(buildBattleHandViewModel({battle:b,hero:b.sides.near[0],selected:null,discarded:[],assets:{}}).intent.label,/偷袭/);
+    for(let round=2;round<=18;round++){
+        b.turn=round;
+        const expected=m.sequences[0].find(row=>row.round===String(round));
+        assert.equal(examinerEnemyIntentInfo(b).cardKey,expected.card,`第 ${round} 回合`);
+    }
+    assert.equal(u.aiMemory.round,originalRound,'preview must not consume AI turns');
+    b.turn=19;assert.equal(examinerEnemyIntentInfo(b),null,'do not guess pool or gene picks');
+    b.turn=2;u.hp=0;assert.equal(examinerEnemyIntentInfo(b),null,'dead examiner has no intent');
+});
 test('equipment attributes, fixed spells and source upgrade costs affect only equipped gear',()=>{
     const s=A.createAdventure(content);s.xp=114;A.syncProgression(s,content);s.inventory[1912]=1;s.inventory[17213]=490;
     const initial=A.playerSpec(s,content);act(s,'equip',{itemId:1912});
@@ -277,13 +306,14 @@ test('quest dependencies and all school reward choices are exact',()=>{
         }
     }
 });
-test('cumulative XP boundaries and original pet feeding progression are stable',()=>{
+test('cumulative XP boundaries and paced pet feeding are stable',()=>{
     const s=A.createAdventure(content);
     for(let i=1;i<10;i++){s.xp=content.progression.xpThresholds[i]-1;A.syncProgression(s,content);assert.equal(s.level,i);s.xp++;A.syncProgression(s,content);assert.equal(s.level,i+1);}
     s.inventory[17307]=1;s.inventory[17172]=3;act(s,'hatch');assert.equal(s.pet.level,0);
-    act(s,'feed');assert.equal(s.pet.xp,300);assert.equal(s.pet.level,3);
-    act(s,'feed');assert.equal(s.pet.xp,464);assert.equal(s.pet.level,5);
-    assert.throws(()=>act(s,'feed'));assert.equal(s.inventory[17172],1);
+    act(s,'feed');assert.equal(s.pet.xp,60);assert.equal(s.pet.level,1);
+    act(s,'feed');assert.equal(s.pet.xp,120);assert.equal(s.pet.level,2);
+    act(s,'feed');assert.equal(s.pet.xp,180);assert.equal(s.pet.level,2);
+    assert.throws(()=>act(s,'feed'));assert.equal(s.inventory[17172],0);
 });
 test('completed encounter checkpoints settle only once, including a reload at victory',()=>{
     const s=A.createAdventure(content),b=battle(s,'fire-scout'),checkpoint=structuredClone(s.pendingEncounter);

@@ -37,9 +37,9 @@ test('mentor instructions and target names follow all supported target languages
 });
 test('mentor completion survives storage failure and rejects stale callbacks',()=>{
  for(const stale of [null,'closed','role','save','language','native','quest']){
-  let save={languageLearning:{target:'ja',native:'zh-CN'}},panel='mentor-practice',roleEpoch=1,quest=63010;
+  let save={languageLearning:{target:'ja',native:'zh-CN',enabled:true}},panel='mentor-practice',roleEpoch=1,quest=63010;
   const session={save,epoch:1,locale:'ja',native:'zh-CN',lesson:{done:true,npcId:36206}};
-  let callbacks,writes=0,tracked=0,fail=true;
+  let callbacks,writes=0,tracked=0,awards=0,fail=true;
   const ctrl=createOpeningController({
    nodes:{overlay:{}},
    getContext:()=>({save,roleEpoch,panel,stage:'world',roleStorage:{},assets:{content:{}},setSave:next=>{save=next;},setStorageWarning:()=>{},setPanel:next=>{panel=next;}}),
@@ -52,13 +52,14 @@ test('mentor completion survives storage failure and rejects stale callbacks',()
    queueCloudSave(){},
    paintHud(){},
    track:()=>tracked++,
+   awardLanguageSpeech:id=>{assert.equal(id,'mentor-practice:36206');awards++;},
   });
   ctrl.setMentorPractice(session);
   ctrl.paintMentorPractice();
   if(stale==='closed')panel=null;if(stale==='role')roleEpoch++;if(stale==='save')save={...save};
   if(stale==='language')save.languageLearning.target='ko';if(stale==='native')save.languageLearning.native='en';if(stale==='quest')quest=63011;
-  callbacks.complete();assert.equal(writes,stale?0:1);
-  if(!stale){assert.equal(ctrl.getMentorPractice(),session);fail=false;callbacks.complete();assert.equal(writes,2);assert.equal(tracked,1);callbacks.complete();assert.equal(writes,2);}
+  callbacks.complete();assert.equal(writes,stale?0:1);assert.equal(awards,0);
+  if(!stale){assert.equal(ctrl.getMentorPractice(),session);fail=false;callbacks.complete();assert.equal(writes,2);assert.equal(tracked,1);assert.equal(awards,1);callbacks.complete();assert.equal(writes,2);assert.equal(awards,1);}
  }
 });
 

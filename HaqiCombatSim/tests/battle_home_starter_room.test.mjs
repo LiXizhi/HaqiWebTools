@@ -52,6 +52,18 @@ test('the existing bedside lamp request places a real item in the room',()=>{
  assert.equal(homeObjects(parts).find(row=>row.id===object.id).active,undefined);
 });
 
+test('starter lamp request follows the selected Japanese or Korean learning language',()=>{
+ const itemId='bedside-lamp';
+ const item=catalog.find(row=>row.id===itemId);
+ for(const [language,request,wrong] of [
+  ['ja','ランプをもらえますか？','椅子をもらえますか？'],
+  ['ko','램프 하나를 주시겠어요?','의자 하나를 주시겠어요?']
+ ]){
+  assert.equal(matchStarterLampRequest(request,item,{itemId},undefined,language).candidates[0]?.itemId,itemId);
+  assert.deepEqual(matchStarterLampRequest(wrong,item,{itemId},{input:'speech',speechAttempts:3},language).candidates,[]);
+ }
+});
+
 test('a resident shows a blocked visit and resumes when the chair moves away',()=>{
  const app=readFileSync(new URL('../js/home/home_pet_controller.js',import.meta.url),'utf8');
  const source=app.slice(app.indexOf(' function invitePetToBlanket('),app.indexOf(' async function restoreEdit('));

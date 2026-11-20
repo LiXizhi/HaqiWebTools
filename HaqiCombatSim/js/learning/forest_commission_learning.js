@@ -15,6 +15,15 @@ export async function flushForestCommissionPractice(save,{record,valid,persist})
  }catch(error){save.forestCommission.practice=event;throw error;}
  flushed=true;
  }
+ const noteEvent=save.forestCommission?.notePractice;
+ if(noteEvent){
+  const result=await record({...noteEvent,...vocabulary(noteEvent,'note'),input:'read',source:'forest-commission'},valid);
+  if(!result?.persisted||!valid()||save.forestCommission?.notePractice!==noteEvent)return false;
+  delete save.forestCommission.notePractice;
+  try{if(!persist()){save.forestCommission.notePractice=noteEvent;return false;}}
+  catch(error){save.forestCommission.notePractice=noteEvent;throw error;}
+  flushed=true;
+ }
  while(valid()&&save.forestCommission?.labelPractice?.length){
   const pending=save.forestCommission.labelPractice,event=pending[0];
   const {word,...receipt}=event;

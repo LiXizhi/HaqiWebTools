@@ -518,11 +518,11 @@ for(const seed of [23,42,137,353])for(const opening of [false,true])for(const [s
  act('accept');act('take-boots',{object:'boots'});roundtrip();
  assert.equal(forestCommissionPouch(save)[0].id,'patrol-boots');
  act('deliver');A.applyAction(save,content,{type:'equip',itemId:gear[1]});
- act('take-note',{revealed:true});act('brief');roundtrip();
+ act('take-note',{revealed:true});act('brief',{tactic:'focus',learning:{at:now,attempts:1,assisted:false}});roundtrip();
  assert.equal(forestCommissionPhase(save),'patrol');assert.equal(forestCommissionPouch(save)[0].id,'patrol-note');
- // Earn the entrance level through the actual first five mainline quests.
+ // Earn the entrance level through the actual first six mainline quests.
  // This also reproduces why another hat/robe would be a duplicate reward.
- for(const quest of content.quests.slice(0,5)){
+ for(const quest of content.quests.slice(0,6)){
   if(save.quests[quest.id]?.claimed)continue;
   assert.equal(A.currentQuest(save,content).id,quest.id);
   A.applyAction(save,content,{type:'accept',questId:quest.id,npcId:quest.startNpc});
@@ -542,6 +542,12 @@ for(const seed of [23,42,137,353])for(const opening of [false,true])for(const [s
    }
   }
   assert.equal(A.questReady(save,quest),true);A.applyAction(save,content,{type:'claim',questId:quest.id,npcId:quest.endNpc});roundtrip();
+  if(quest.id===63004){
+   // Use the school hat and robe already earned before the harder scout and patrol fights.
+   for(const itemId of [1236,1237,1238,1239,1240,1246,1247,1248,1249,1250]){
+    if(save.inventory[itemId])A.applyAction(save,content,{type:'equip',itemId});
+   }
+  }
  }
  assert.ok(save.level>=5);assert.equal(forestCommissionPhase(save),'patrol','mainline fights cannot count as a patrol clear');
  save.deck=A.recommendedDeck(save,content);
@@ -568,25 +574,24 @@ for(const seed of [23,42,137,353])for(const opening of [false,true])for(const [s
   // companions, not a fixture that invents levels, pets or combat stats.
   A.applyAction(save,content,{type:'equip',itemId:gear[0]});
   A.applyAction(save,content,{type:'equip',itemId:24002});
-  const quest=content.quests[5];assert.equal(A.currentQuest(save,content).id,quest.id);
-  A.applyAction(save,content,{type:'accept',questId:quest.id,npcId:quest.startNpc});
-  for(const goal of quest.goals){
-   assert.equal(goal.kind,'defeat');
-   const encounter=content.encounters.find(e=>e.zone==='camp'&&content.monsters[e.monsterId]?.goalId===goal.id);assert.ok(encounter);
-   now+=60000;tickCare(save,content,A.playerSpec(save,content),now);save.deck=A.recommendedDeck(save,content);
-   A.beginEncounter(save,content,encounter.id);const battle=P.restorePveBattle(dataset,content,save.pendingEncounter);
-   for(let turn=0;turn<120&&!battle.finished;turn++){
-    const pick={...bot.pick(battle,battle.sides.near[0]),aiVersion:1};P.playPveRound(battle,pick);A.recordDecision(save,battle.lastDecision,battle);
+  for(const quest of content.quests.slice(6,8)){
+   assert.equal(A.currentQuest(save,content).id,quest.id);
+   A.applyAction(save,content,{type:'accept',questId:quest.id,npcId:quest.startNpc});
+   if(quest.id===63007){
+    A.applyAction(save,content,{type:'equip',itemId:1912});
+    A.applyAction(save,content,{type:'upgrade',itemId:1912});
    }
-   assert.equal(battle.winner,'near',school+' next mainline');A.settleEncounter(save,content,battle,{now});
+   assert.equal(A.questReady(save,quest),true);
+   A.applyAction(save,content,{type:'claim',questId:quest.id,npcId:quest.endNpc});roundtrip();
   }
-  A.applyAction(save,content,{type:'claim',questId:quest.id,npcId:quest.endNpc});roundtrip();assert.ok(save.level>=6);
+  assert.ok(save.level>=6);
   if(!opening){
    const heroSlot=save.formation.findIndex(id=>!id);assert.ok(heroSlot>=0);
    A.applyAction(save,content,{type:'formation',slots:[...save.formation],heroSlot});roundtrip();
   }
   const next=content.dungeons.find(d=>d.id==='journey:lost-spark');
-  now+=60000;tickCare(save,content,A.playerSpec(save,content),now);save.deck=A.recommendedDeck(save,content);
+  // Recover the companion after the four-floor patrol before attempting a 2v2.
+  now+=20*60000;tickCare(save,content,A.playerSpec(save,content),now);save.deck=A.recommendedDeck(save,content);
   enterDungeon(save,content,next.id);A.beginEncounter(save,content,next.arenas[0].id);
   let battle=P.restorePveBattle(dataset,content,save.pendingEncounter);
   assert.equal(battle.sides.near.length,2);assert.equal(battle.sides.far.length,2);

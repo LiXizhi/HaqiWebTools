@@ -1,5 +1,5 @@
 import {createRng,hashSeed} from '../rng_core.js';
-import {spellSoundCues,crossedSoundCues} from './spell_sound_core.js';
+import {spellSoundCues,crossedSoundCues,spellSampleCue} from './spell_sound_core.js';
 import {gameSoundRecipe} from './game_sound_core.js';
 import {audioActivityActive,subscribeAudioActivity} from './audio_activity.js';
 const KEY='haqi.spell-sound.v1',VOLUME_KEY='haqi.game-sound.volume.v1';
@@ -38,7 +38,7 @@ export function createSpellSound({defaultEnabled=false,persistPreferences=true,s
         if(priority===0&&[...groups].some(g=>g.priority>0))return false;
         if(groups.size>=8){const lowest=[...groups].sort((a,b)=>a.priority-b.priority)[0];if(lowest.priority>=priority)return false;remove(lowest);}
         const group={priority,cast,voices:new Set()},source=context.createBufferSource(),gain=context.createGain();
-        source.buffer=buffer;if(source.playbackRate)source.playbackRate.value=rate;gain.gain.value=(['hit','release'].includes(name)?.65:.5)*level;source.connect(gain);gain.connect(master);
+        source.buffer=buffer;if(source.playbackRate)source.playbackRate.value=rate;gain.gain.value=(name==='hit'||name==='release'||name.startsWith('impact')?.65:.5)*level;source.connect(gain);gain.connect(master);
         let cleaned=false;const handle={source,cleanup(){if(cleaned)return;cleaned=true;source.disconnect();gain.disconnect();group.voices.delete(handle);groups.delete(group);}};
         group.voices.add(handle);groups.add(group);source.onended=handle.cleanup;
         try{source.start();return true;}catch{remove(group);return false;}
@@ -67,7 +67,7 @@ export function createSpellSound({defaultEnabled=false,persistPreferences=true,s
         const key=card.key+':'+failed+':'+instance;
         if(key!==lastKey){stopCast();lastKey=key;previous=progress<.08?-.001:null;}
         const cues=spellSoundCues(config,card,{failed,reducedMotion});
-        for(const cue of crossedSoundCues(cues,previous,progress)){const effect=failed?'fizzle':cue.at===0?'cast':cue.at>=config.timeline.impact?(['life'].includes(card.spellSchool)?'heal':'hit'):'release';if(!sample(effect,1,true))emit([cue],1,true);}
+        for(const cue of crossedSoundCues(cues,previous,progress)){const {name,rate}=spellSampleCue(config,card,cue,{failed});if(!sample(name,1,true,rate))emit([cue],1,true);}
         previous=progress;
     }
     return {get sampleCount(){return samples?.count||0;},get enabled(){return enabled;},get volume(){return volume;},unlock,track,play,stop,stopCast,

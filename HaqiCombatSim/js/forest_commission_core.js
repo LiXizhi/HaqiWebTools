@@ -110,13 +110,24 @@ export function applyForestCommission(save,content,action,access={}){
  }
  if(action.step==='take-note'){
   nearby(save,access,FOREST_SITES.note,'landmark');check(phase==='note','先完成当前的送达任务。');
-  check(action.revealed===true,'先按线索挪开石头，看看后面。');s.phase='briefing';
+  check(action.revealed===true,'先按线索挪开石头，看看后面。');
+  if(action.learning!==undefined){
+   const {at,attempts}=action.learning||{};
+   check(Number.isFinite(at)&&at>=0&&Number.isSafeInteger(attempts)&&attempts>=1&&attempts<=999,'路线线索练习记录无效');
+   const {language}=forestCommissionLesson(save);
+   s.notePractice={id:forestPracticeId('note',language),at,attempts,assisted:true,...(language==='en'?{}:{language})};
+  }
+  s.phase='briefing';
   return {message:`找到路线便签了。${forestCommissionLesson(save).clues.briefing} 拿给茜茜确认路线。`};
  }
  if(action.step==='brief'){
   nearby(save,access,FOREST_NPCS.receiver,'npc');check(phase==='briefing','先把路线便签带回来。');
+  check(action.tactic==='focus','先按路线便签选择巡逻时的攻击方式。');
+  const {at,attempts,assisted}=action.learning||{};
+  check(Number.isFinite(at)&&at>=0&&Number.isSafeInteger(attempts)&&attempts>=1&&attempts<=999&&typeof assisted==='boolean','巡逻分工练习记录无效');
   check(count(save)<999999,'巡逻实绩已达到当前记录上限，请保留便签，稍后再确认路线。');
-  s.clearBaseline=count(save);s.phase='patrol';return {message:'路线已确认。先练习配合、穿好装备，再完整挑战晨雾中的巡夜灯；撤退后仍可重试。'};
+  s.briefingPractice={language:forestCommissionLesson(save).language,at,attempts,assisted};
+  s.clearBaseline=count(save);s.phase='patrol';return {message:'路线已确认：巡逻时集中攻击同一个敌人。先练习配合、穿好装备，再完整挑战晨雾中的巡夜灯；撤退后仍可重试。'};
  }
  if(action.step==='report'){
   nearby(save,access,FOREST_NPCS.receiver,'npc');check(phase==='report','先在接到巡逻安排后，完整完成一轮巡夜灯挑战。');
@@ -130,7 +141,7 @@ export function validateForestCommission(save){
  check(s&&typeof s==='object'&&!Array.isArray(s)&&s.version===1&&PHASES.includes(s.phase),'营地委托记录无效');
  const late=['patrol','done'].includes(s.phase);
  check(late?Number.isSafeInteger(s.clearBaseline)&&s.clearBaseline>=0&&s.clearBaseline<=999999:s.clearBaseline===undefined,'营地委托巡逻记录无效');
- check(Object.keys(s).every(k=>['version','phase','clearBaseline','practice','findAttempts','labels','localizedLabels','labelPractice'].includes(k)),'营地委托记录包含未知字段');
+ check(Object.keys(s).every(k=>['version','phase','clearBaseline','practice','notePractice','briefingPractice','findAttempts','labels','localizedLabels','labelPractice'].includes(k)),'营地委托记录包含未知字段');
  const labelAllowed=word=>word==='boots'?['delivery','note','briefing','patrol','done'].includes(s.phase):word==='note'&&['briefing','patrol','done'].includes(s.phase);
  if(s.labels!==undefined)check(Array.isArray(s.labels)&&s.labels.length<=2&&new Set(s.labels).size===s.labels.length&&s.labels.every(labelAllowed),'营地物品标签无效');
  if(s.localizedLabels!==undefined)check(s.localizedLabels&&typeof s.localizedLabels==='object'&&!Array.isArray(s.localizedLabels)&&Object.entries(s.localizedLabels).every(([language,labels])=>language!=='en'&&FOREST_LEARNING_LANGUAGES.includes(language)&&Array.isArray(labels)&&labels.length<=2&&new Set(labels).size===labels.length&&labels.every(labelAllowed)),'营地多语言标签无效');
@@ -139,6 +150,14 @@ export function validateForestCommission(save){
  if(s.practice!==undefined){
   const p=s.practice;
   check(s.phase!=='boots'&&p&&typeof p==='object'&&!Array.isArray(p)&&FOREST_LEARNING_LANGUAGES.includes(forestPracticeLanguage(p))&&p.id===forestPracticeId('boots',forestPracticeLanguage(p))&&Number.isFinite(p.at)&&p.at>=0&&Number.isSafeInteger(p.attempts)&&p.attempts>=1&&p.attempts<=999&&p.assisted===true&&Object.keys(p).every(k=>['id','at','attempts','assisted','language'].includes(k)),'营地委托选物记录无效');
+ }
+ if(s.notePractice!==undefined){
+  const p=s.notePractice;
+  check(['briefing','patrol','done'].includes(s.phase)&&p&&typeof p==='object'&&!Array.isArray(p)&&FOREST_LEARNING_LANGUAGES.includes(forestPracticeLanguage(p))&&p.id===forestPracticeId('note',forestPracticeLanguage(p))&&Number.isFinite(p.at)&&p.at>=0&&Number.isSafeInteger(p.attempts)&&p.attempts>=1&&p.attempts<=999&&p.assisted===true&&Object.keys(p).every(k=>['id','at','attempts','assisted','language'].includes(k)),'营地路线线索练习记录无效');
+ }
+ if(s.briefingPractice!==undefined){
+  const p=s.briefingPractice;
+  check(late&&p&&typeof p==='object'&&!Array.isArray(p)&&FOREST_LEARNING_LANGUAGES.includes(p.language)&&Number.isFinite(p.at)&&p.at>=0&&Number.isSafeInteger(p.attempts)&&p.attempts>=1&&p.attempts<=999&&typeof p.assisted==='boolean'&&Object.keys(p).every(k=>['language','at','attempts','assisted'].includes(k)),'巡逻分工练习记录无效');
  }
  check(!late||count(save)>=s.clearBaseline,'营地委托与巡逻实绩不一致');
  check(s.phase!=='done'||count(save)>s.clearBaseline,'营地委托尚未完成巡逻');

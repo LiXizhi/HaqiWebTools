@@ -9,7 +9,9 @@
       "label": "约100年前",
       "reading": {
         "zh-CN": "地图能帮助我们认识地方，但不同年代的地图可能不一样。这里是一幅想象地图，我们不把它当成过去真实的城市。",
-        "en": "Maps help us learn about places. Maps can change over time. This is an imagined map, not a real old city map."
+        "en": "Maps help us learn about places. Maps can change over time. This is an imagined map, not a real old city map.",
+        "ja": "地図は場所を知る手助けになります。地図は時代とともに変わります。これは想像の地図で、昔の本物の街の地図ではありません。",
+        "ko": "지도는 장소를 알아보는 데 도움이 돼요. 지도는 시간이 지나면서 달라질 수 있어요. 이것은 상상 속 지도이지, 옛 도시의 실제 지도가 아니에요."
       },
       "traveler": {
         "name": "绘图旅人",
@@ -20,7 +22,9 @@
         "name": "地图卡片",
         "text": {
           "zh-CN": "地图上的符号代表不同的地方。先看图例，再找你要去的地方。",
-          "en": "Symbols on a map stand for places. Read the key, then find your place."
+          "en": "Symbols on a map stand for places. Read the key, then find your place.",
+          "ja": "地図の記号は場所を表します。凡例を見てから、行きたい場所を探しましょう。",
+          "ko": "지도 기호는 여러 장소를 나타내요. 범례를 보고 가고 싶은 곳을 찾아보세요."
         }
       },
       "story": {
@@ -30,7 +34,9 @@
         "rewardGroup": "help",
         "opening": {
           "zh-CN": "地图能帮助我们认识地方，但不同年代的地图可能不一样。这里是一幅想象地图，我们不把它当成过去真实的城市。",
-          "en": "Maps help us learn about places. Maps can change over time. This is an imagined map, not a real old city map."
+          "en": "Maps help us learn about places. Maps can change over time. This is an imagined map, not a real old city map.",
+          "ja": "地図は場所を知る手助けになります。地図は時代とともに変わります。これは想像の地図で、昔の本物の街の地図ではありません。",
+          "ko": "지도는 장소를 알아보는 데 도움이 돼요. 지도는 시간이 지나면서 달라질 수 있어요. 이것은 상상 속 지도이지, 옛 도시의 실제 지도가 아니에요."
         },
         "turns": [
           {
@@ -39,15 +45,21 @@
             "hint": "我有一张地图。",
             "question": {
               "zh-CN": "你手里拿着什么？",
-              "en": "What do you have?"
+              "en": "What do you have?",
+              "ja": "何を持っていますか？",
+              "ko": "무엇을 가지고 있나요?"
             },
             "answer": {
               "zh-CN": "我有一张地图。",
-              "en": "I have a map."
+              "en": "I have a map.",
+              "ja": "地図を持っています。",
+              "ko": "지도를 가지고 있어요."
             },
             "response": {
               "zh-CN": "谢谢你。我们继续探索吧。",
-              "en": "Thank you. Let us keep exploring."
+              "en": "Thank you. Let us keep exploring.",
+              "ja": "ありがとう。探検を続けましょう。",
+              "ko": "고마워요. 계속 탐험해요."
             }
           },
           {
@@ -56,15 +68,21 @@
             "hint": "我们可以看图例。",
             "question": {
               "zh-CN": "地图上的符号是什么意思？",
-              "en": "What do the symbols mean?"
+              "en": "What do the symbols mean?",
+              "ja": "地図の記号は何を意味しますか？",
+              "ko": "지도 기호는 무엇을 뜻하나요?"
             },
             "answer": {
               "zh-CN": "我们可以看图例。",
-              "en": "We can read the key."
+              "en": "We can read the key.",
+              "ja": "凡例を見ましょう。",
+              "ko": "범례를 봅시다."
             },
             "response": {
               "zh-CN": "谢谢你。我们继续探索吧。",
-              "en": "Thank you. Let us keep exploring."
+              "en": "Thank you. Let us keep exploring.",
+              "ja": "ありがとう。探検を続けましょう。",
+              "ko": "고마워요. 계속 탐험해요."
             }
           },
           {
@@ -73,15 +91,21 @@
             "hint": "不，这是一张想象地图。",
             "question": {
               "zh-CN": "这是一张真实的旧地图吗？",
-              "en": "Is this a real old map?"
+              "en": "Is this a real old map?",
+              "ja": "これは本物の古い地図ですか？",
+              "ko": "이것은 진짜 옛날 지도인가요?"
             },
             "answer": {
               "zh-CN": "不，这是一张想象地图。",
-              "en": "No, this is an imagined map."
+              "en": "No, this is an imagined map.",
+              "ja": "いいえ、想像の地図です。",
+              "ko": "아니요, 상상 속 지도예요."
             },
             "response": {
               "zh-CN": "谢谢你。我们继续探索吧。",
-              "en": "Thank you. Let us keep exploring."
+              "en": "Thank you. Let us keep exploring.",
+              "ja": "ありがとう。探検を続けましょう。",
+              "ko": "고마워요. 계속 탐험해요."
             }
           }
         ]
@@ -93,7 +117,9 @@
       "label": "约50年前",
       "reading": {
         "zh-CN": "我在找一块路牌。请和我一起往右走。屏幕的左右不是地图的东西，要先看方向标记。",
-        "en": "I am looking for a sign. Walk to the right with me. Right on the screen does not always mean east on a map. Check the directions first."
+        "en": "I am looking for a sign. Walk to the right with me. Right on the screen does not always mean east on a map. Check the directions first.",
+        "ja": "道しるべを探しています。いっしょに右へ歩きましょう。画面の右が地図の東とは限りません。まず方角を確かめましょう。",
+        "ko": "길 표지판을 찾고 있어요. 함께 오른쪽으로 걸어가요. 화면의 오른쪽이 지도에서 항상 동쪽은 아니에요. 먼저 방향을 확인해요."
       },
       "traveler": {
         "name": "寻路旅人",
@@ -104,7 +130,9 @@
         "name": "方向路牌",
         "text": {
           "zh-CN": "东、西、南、北可以帮助我们描述方向。地图可能旋转，先确认北方在哪里。",
-          "en": "East, west, south and north help us give directions. A map can turn. Check where north is first."
+          "en": "East, west, south and north help us give directions. A map can turn. Check where north is first.",
+          "ja": "東、西、南、北は方角を伝えるときに役立ちます。地図が回っていることもあります。まず北がどこか確かめましょう。",
+          "ko": "동서남북은 방향을 말할 때 도움이 돼요. 지도가 돌아가 있을 수도 있어요. 먼저 북쪽이 어디인지 확인해요."
         }
       },
       "story": {
@@ -114,7 +142,9 @@
         "rewardGroup": "help",
         "opening": {
           "zh-CN": "我在找一块路牌。请和我一起往右走。屏幕的左右不是地图的东西，要先看方向标记。",
-          "en": "I am looking for a sign. Walk to the right with me. Right on the screen does not always mean east on a map. Check the directions first."
+          "en": "I am looking for a sign. Walk to the right with me. Right on the screen does not always mean east on a map. Check the directions first.",
+          "ja": "道しるべを探しています。いっしょに右へ歩きましょう。画面の右が地図の東とは限りません。まず方角を確かめましょう。",
+          "ko": "길 표지판을 찾고 있어요. 함께 오른쪽으로 걸어가요. 화면의 오른쪽이 지도에서 항상 동쪽은 아니에요. 먼저 방향을 확인해요."
         },
         "turns": [
           {
@@ -123,15 +153,21 @@
             "hint": "我们一起找吧。",
             "question": {
               "zh-CN": "我们一起找路牌好吗？",
-              "en": "Shall we find the sign?"
+              "en": "Shall we find the sign?",
+              "ja": "いっしょに道しるべを探しませんか？",
+              "ko": "함께 길 표지판을 찾을까요?"
             },
             "answer": {
               "zh-CN": "我们一起找吧。",
-              "en": "Let us find it together."
+              "en": "Let us find it together.",
+              "ja": "いっしょに探しましょう。",
+              "ko": "함께 찾아봐요."
             },
             "response": {
               "zh-CN": "谢谢你。我们继续探索吧。",
-              "en": "Thank you. Let us keep exploring."
+              "en": "Thank you. Let us keep exploring.",
+              "ja": "ありがとう。探検を続けましょう。",
+              "ko": "고마워요. 계속 탐험해요."
             }
           },
           {
@@ -140,15 +176,21 @@
             "hint": "北方在哪里？",
             "question": {
               "zh-CN": "地图上先找哪个方向？",
-              "en": "Which direction shall we check first?"
+              "en": "Which direction shall we check first?",
+              "ja": "地図ではまずどの方角を確かめますか？",
+              "ko": "지도에서 어떤 방향을 먼저 확인할까요?"
             },
             "answer": {
               "zh-CN": "北方在哪里？",
-              "en": "Where is north?"
+              "en": "Where is north?",
+              "ja": "北はどこですか？",
+              "ko": "북쪽은 어디인가요?"
             },
             "response": {
               "zh-CN": "谢谢你。我们继续探索吧。",
-              "en": "Thank you. Let us keep exploring."
+              "en": "Thank you. Let us keep exploring.",
+              "ja": "ありがとう。探検を続けましょう。",
+              "ko": "고마워요. 계속 탐험해요."
             }
           },
           {
@@ -157,15 +199,21 @@
             "hint": "不，它就在附近。",
             "question": {
               "zh-CN": "路牌在这里，离我们远吗？",
-              "en": "The sign is here. Is it far away?"
+              "en": "The sign is here. Is it far away?",
+              "ja": "道しるべはここです。遠いですか？",
+              "ko": "표지판이 여기 있어요. 멀리 있나요?"
             },
             "answer": {
               "zh-CN": "不，它就在附近。",
-              "en": "No, it is nearby."
+              "en": "No, it is nearby.",
+              "ja": "いいえ、近くにあります。",
+              "ko": "아니요, 가까이에 있어요."
             },
             "response": {
               "zh-CN": "谢谢你。我们继续探索吧。",
-              "en": "Thank you. Let us keep exploring."
+              "en": "Thank you. Let us keep exploring.",
+              "ja": "ありがとう。探検を続けましょう。",
+              "ko": "고마워요. 계속 탐험해요."
             }
           }
         ]
@@ -177,7 +225,9 @@
       "label": "约10年前",
       "reading": {
         "zh-CN": "我在收集过去与现在的词语。向左走，我们想到过去；向右走，我们回到现在。这些故事是想象，不是这座城市的历史记录。",
-        "en": "I collect words about then and now. We walk left to think about the past and right to return to now. These stories are imagined, not records of this city."
+        "en": "I collect words about then and now. We walk left to think about the past and right to return to now. These stories are imagined, not records of this city.",
+        "ja": "昔と今の言葉を集めています。左へ歩くと昔を思い、右へ歩くと今に戻ります。この物語は想像で、この街の歴史の記録ではありません。",
+        "ko": "저는 과거와 현재에 관한 말을 모으고 있어요. 왼쪽으로 걸으면 과거를 떠올리고, 오른쪽으로 걸으면 현재로 돌아와요. 이 이야기는 상상이며 이 도시의 역사 기록이 아니에요."
       },
       "traveler": {
         "name": "记事旅人",
@@ -188,7 +238,9 @@
         "name": "时光便笺",
         "text": {
           "zh-CN": "过去是已经发生的时间。了解一个地方的过去，要寻找有日期和来源的记录，不能只看想象的画面。",
-          "en": "The past is time that has already happened. To learn about a place, look for dated records and sources, not just imagined pictures."
+          "en": "The past is time that has already happened. To learn about a place, look for dated records and sources, not just imagined pictures.",
+          "ja": "過去はすでに起きた時間です。場所の過去を知るには、日付と出典のある記録を探しましょう。想像の絵だけでは分かりません。",
+          "ko": "과거는 이미 지나간 시간이에요. 어떤 장소의 과거를 알려면 날짜와 출처가 있는 기록을 찾아야 해요. 상상한 그림만으로는 알 수 없어요."
         }
       },
       "story": {
@@ -198,7 +250,9 @@
         "rewardGroup": "help",
         "opening": {
           "zh-CN": "我在收集过去与现在的词语。向左走，我们想到过去；向右走，我们回到现在。这些故事是想象，不是这座城市的历史记录。",
-          "en": "I collect words about then and now. We walk left to think about the past and right to return to now. These stories are imagined, not records of this city."
+          "en": "I collect words about then and now. We walk left to think about the past and right to return to now. These stories are imagined, not records of this city.",
+          "ja": "昔と今の言葉を集めています。左へ歩くと昔を思い、右へ歩くと今に戻ります。この物語は想像で、この街の歴史の記録ではありません。",
+          "ko": "저는 과거와 현재에 관한 말을 모으고 있어요. 왼쪽으로 걸으면 과거를 떠올리고, 오른쪽으로 걸으면 현재로 돌아와요. 이 이야기는 상상이며 이 도시의 역사 기록이 아니에요."
         },
         "turns": [
           {
@@ -207,15 +261,21 @@
             "hint": "我们正在想到过去。",
             "question": {
               "zh-CN": "我们正在想到哪个时间？",
-              "en": "Which time are we thinking about?"
+              "en": "Which time are we thinking about?",
+              "ja": "どの時間を思い浮かべていますか？",
+              "ko": "우리는 어느 때를 생각하고 있나요?"
             },
             "answer": {
               "zh-CN": "我们正在想到过去。",
-              "en": "We are thinking about the past."
+              "en": "We are thinking about the past.",
+              "ja": "過去を思い浮かべています。",
+              "ko": "과거를 생각하고 있어요."
             },
             "response": {
               "zh-CN": "谢谢你。我们继续探索吧。",
-              "en": "Thank you. Let us keep exploring."
+              "en": "Thank you. Let us keep exploring.",
+              "ja": "ありがとう。探検を続けましょう。",
+              "ko": "고마워요. 계속 탐험해요."
             }
           },
           {
@@ -224,15 +284,21 @@
             "hint": "有些事情会改变。",
             "question": {
               "zh-CN": "现在和过去一样吗？",
-              "en": "Is now the same as the past?"
+              "en": "Is now the same as the past?",
+              "ja": "今は過去と同じですか？",
+              "ko": "현재는 과거와 같나요?"
             },
             "answer": {
               "zh-CN": "有些事情会改变。",
-              "en": "Some things change."
+              "en": "Some things change.",
+              "ja": "変わることもあります。",
+              "ko": "어떤 것들은 변해요."
             },
             "response": {
               "zh-CN": "谢谢你。我们继续探索吧。",
-              "en": "Thank you. Let us keep exploring."
+              "en": "Thank you. Let us keep exploring.",
+              "ja": "ありがとう。探検を続けましょう。",
+              "ko": "고마워요. 계속 탐험해요."
             }
           },
           {
@@ -241,15 +307,21 @@
             "hint": "我们可以寻找旧记录。",
             "question": {
               "zh-CN": "我们怎样了解过去？",
-              "en": "How can we learn about the past?"
+              "en": "How can we learn about the past?",
+              "ja": "どうすれば過去を知ることができますか？",
+              "ko": "과거를 어떻게 알 수 있나요?"
             },
             "answer": {
               "zh-CN": "我们可以寻找旧记录。",
-              "en": "We can look for old records."
+              "en": "We can look for old records.",
+              "ja": "古い記録を探しましょう。",
+              "ko": "옛 기록을 찾아볼 수 있어요."
             },
             "response": {
               "zh-CN": "谢谢你。我们继续探索吧。",
-              "en": "Thank you. Let us keep exploring."
+              "en": "Thank you. Let us keep exploring.",
+              "ja": "ありがとう。探検を続けましょう。",
+              "ko": "고마워요. 계속 탐험해요."
             }
           }
         ]

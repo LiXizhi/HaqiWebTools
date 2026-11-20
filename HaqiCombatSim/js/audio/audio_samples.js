@@ -1,6 +1,6 @@
 import {fetchJson} from '../runtime_data.js';
 
-export const sampleNames=Object.freeze({click:'click_003',open:'open_001',close:'close_001',select:'select_002',discard:'bookFlip1',hit:'chop',heal:'glass_002',shield:'glass_002',fizzle:'error_002',miss:'error_002',victory:'confirmation_002',defeat:'error_002',level:'confirmation_002',quest:'confirmation_002',reward:'handleCoins',purchase:'handleCoins',equip:'cloth1',teleport:'glass_002',capture:'confirmation_002',catch:'confirmation_002',feed:'cloth1',friendship:'confirmation_002',adopt:'confirmation_002',cast:'bookFlip1',release:'knifeSlice',paper:'bookFlip1',stone:'knifeSlice',pickup:'cloth1'});
+export const sampleNames=Object.freeze({click:'click_003',open:'open_001',close:'close_001',select:'select_002',discard:'bookFlip1',hit:'chop',impactIce:'glass_002',impactFire:'chop',impactStorm:'knifeSlice',impactDeath:'knifeSlice',impactBalance:'chop',heal:'glass_002',shield:'glass_002',fizzle:'error_002',miss:'error_002',victory:'confirmation_002',defeat:'error_002',level:'confirmation_002',quest:'confirmation_002',reward:'handleCoins',purchase:'handleCoins',equip:'cloth1',teleport:'glass_002',capture:'confirmation_002',catch:'confirmation_002',feed:'cloth1',friendship:'confirmation_002',adopt:'confirmation_002',cast:'bookFlip1',release:'knifeSlice',paper:'bookFlip1',stone:'knifeSlice',pickup:'cloth1'});
 
 // Optional cache; first gesture unlocks WebAudio without waiting for the network.
 // Each file is bounded, decoded once, and never turns failure into a replay later.

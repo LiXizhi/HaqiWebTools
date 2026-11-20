@@ -3,6 +3,7 @@ import {currentQuest,questState,questReady,questProgress} from './adventure_core
 import {openingJourneyActive,openingJourneyTarget} from './opening_journey_core.js';
 import {STARTERS} from './adventure_pets_core.js';
 import {campDetourGoal,campDetourAvailable} from './camp_detour_core.js';
+import {wordplayGoal} from './companion_wordplay_core.js';
 import {recommendedLanguageQuest} from './language_quest_core.js';
 
 // Read-only advice: no rewards, progress writes or invented world targets.
@@ -13,7 +14,7 @@ export function guidePet(save,content){
 export function companionWorldGuide(save,content,{languageTasks=[]}={}){
  const outing=campDetourGoal(save);
  if(outing)return {text:outing.text,label:'带我找找',track:'camp-detour'};
- if(campDetourAvailable(save)&&(save.openingJourney.wordplay?.step??0)<3)return {text:`用${learningLesson(save).name}叫我跳一跳！`,label:'玩口令',track:'companion-wordplay'};
+ if(campDetourAvailable(save)&&!wordplayGoal(save).done)return {text:`用${learningLesson(save).name}叫我跳一跳！`,label:'玩口令',track:'companion-wordplay'};
  if(save.zone==='camp'&&openingJourneyActive(save)){
   const goal=openingJourneyTarget(save);
   return {text:goal.objective,label:'带我去',track:'opening-journey'};

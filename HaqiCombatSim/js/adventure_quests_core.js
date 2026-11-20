@@ -33,7 +33,11 @@ export function questState(save, id) {
 
 export function questProgress(save, quest) {
     const state = questState(save, quest.id);
-    return quest.goals.map(g => ({
+    // Existing accepted saves keep the original strengthening-only objective.
+    const goals = quest.id === 63007 && state.equipmentTutorialVersion !== 2
+        ? quest.goals.filter(g => g.id !== 'equip-staff')
+        : quest.goals;
+    return goals.map(g => ({
         ...g,
         value: Math.min(g.count, Math.max(state.progress[`${g.kind}:${g.id}`] || 0, openingTrainingCredit(save, quest.id, g))),
     }));
@@ -100,7 +104,12 @@ export function rewardsFor(save, content, quest) {
         });
         rewards.push(...(group.choice > 0 ? rows.slice(0, group.choice) : rows));
     }
-    return rewards.map(reward => resolvePetReward(content, reward));
+    return rewards.map(reward => {
+        const adapted = reward.id === 113 && content.progression.questXpOverrides?.[quest.id]
+            ? { ...reward, count: content.progression.questXpOverrides[quest.id] }
+            : reward;
+        return resolvePetReward(content, adapted);
+    });
 }
 
 export function grantQuestRewards(save, content, quest) {

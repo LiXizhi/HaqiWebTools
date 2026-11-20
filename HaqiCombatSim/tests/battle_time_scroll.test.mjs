@@ -9,9 +9,23 @@ import {checkedProgress} from '../js/adventure_cloud_core.js';
 import {durableSave,runtimeValues,restoreRuntime,splitRoleSave,joinRoleSave,coreCatalogKey} from '../js/adventure_storage_core.js';
 import {awardDailySpeech} from '../js/language_daily_buff_core.js';
 import {createStoryChat} from '../js/learning/language_story.js';
+import {storyHasLanguage} from '../js/learning/story_language.js';
 const read=path=>JSON.parse(fs.readFileSync(new URL('../data/'+path,import.meta.url),'utf8'));
 const data=read('adventure/earth/time-scroll/common.json');
 const {content,dataset}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),read('adventure/pets.json'),read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));
+test('time scroll reading and dialogue are authored for the selected learning language',()=>{
+    for(const locale of ['en','ja','ko','zh-CN']){
+        assert.equal(T.timeScrollLearningLocale({languageLearning:{target:locale}}),locale);
+        for(const station of data.stations.filter(row=>row.story)){
+            assert.ok(station.reading[locale]);
+            assert.ok(station.clue.text[locale]);
+            assert.ok(storyHasLanguage(station.story,locale));
+        }
+    }
+    assert.equal(T.timeScrollLearningLocale({}), 'en');
+    const missing=structuredClone(data);delete missing.stations[0].story.turns[0].answer.ja;
+    assert.throws(()=>T.validateTimeScrollContent(missing));
+});
 test('ordered segmented timeline, bounds, nearest station, bounded neighbours and deterministic movement',()=>{
     T.validateTimeScrollContent(data);assert.deepEqual(data.stations.map(s=>s.yearsAgo),[100,50,10,0]);
     assert.equal(T.clampTimePosition(data,-1),0);assert.equal(T.clampTimePosition(data,Infinity),1920);
@@ -100,8 +114,23 @@ test('real shared chat opts out of coins, awards verified speech once across reo
     voice.finish=()=>new Promise(resolve=>{finish=resolve;});await callbacks.start();const waiting=callbacks.finish();chat.close();finish(story.turns[1].answer.en);await waiting;assert.equal(rewards.length,3);
 });
 
-test('time scroll accepts selected Japanese and Korean and exposes guarded lesson preparation',()=>{
- for(const language of ['ja','ko']){const h=harness();h.state.save.languageLearning.target=language;h.cb.onPractice(data.stations[0]);assert.ok(h.chat());assert.equal(h.chat().getState().save.languageLearning.target,language);assert.equal(typeof h.chat().voice.judge,'function');assert.throws(()=>h.chat().voice.judge([]),/登录/);assert.equal(h.log.length,0);h.scroll.close();}
+test('selected Japanese and Korean time stories complete offline through their authored dialogue',async()=>{
+    for(const locale of ['ja','ko']){
+        const state={save:createAdventure(content),content,role:'a',identity:'one',stage:'world'};
+        state.save.languageLearning={...state.save.languageLearning,enabled:true,target:locale};
+        const story=data.stations[0].story,profile={name:'旅人',stories:[story]};
+        let callbacks,ui;
+        const voice={speak:async()=>{},cancel:async()=>{},judge:()=>{throw Error('unexpected online course preparation');}};
+        const chat=createStoryChat({practiceOnly:true,allowedZone:state.save.zone,getState:()=>state,voice,commit:c=>T.completeTimeStory(state.save,data,c),viewFactory:cb=>{callbacks=cb;return {render:s=>{ui=s;},close(){}};}});
+        await chat.open(profile,story,null,{greeted:true});
+        assert.equal(ui.phase,'ready');assert.equal(ui.loadError,undefined);
+        assert.equal(ui.messages[0].text[locale],story.turns[0].question[locale]);
+        for(const turn of story.turns)await callbacks.help(turn.answer[locale]);
+        assert.equal(ui.done,true,`${locale}: ${ui.status}`);
+        assert.equal(state.save.languageAdventure.stories[locale][story.id].completed,1);
+        assert.equal(state.save.languageAdventure.stories.en,undefined);
+        chat.close();
+    }
 });
 
 test('Japanese and Korean time story completion preserves language and cannot reward replay',()=>{

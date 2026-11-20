@@ -7,9 +7,9 @@ import {createCloseButton} from '../../ui/controls.js';
 import {createDialogueMicrophone} from '../../learning/view_dialogue_microphone.js';
 
 const ROUNDS=[
- {intent:'先用英语和它打个招呼。',example:'Hello!',reply:'它也在向你打招呼！',motion:'greet'},
- {intent:'试着用英语请它跳一下。',example:'Jump!',reply:'跳起来啦！它听懂你了。',motion:'jump'},
- {intent:'叫它到你身边来吧。',example:'Come here!',reply:'它跑过来了，想和你一起走。',motion:'come'}
+ {reply:'它也在向你打招呼！',motion:'greet'},
+ {reply:'跳起来啦！它听懂你了。',motion:'jump'},
+ {reply:'它跑过来了，想和你一起走。',motion:'come'}
 ];
 
 // Persistent controls: ASR permission prompts and partial transcripts never remount the mic.

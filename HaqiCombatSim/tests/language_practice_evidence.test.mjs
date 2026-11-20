@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {recordEffectivePractice} from '../js/language_practice_core.js';
+import {recordEffectivePractice,recordComprehensionPractice} from '../js/language_practice_core.js';
 import {buildWordIndex,parseWordLexicon,canonicalWord} from '../js/word_lexicon_core.js';
 import {flushForestCommissionPractice} from '../js/learning/forest_commission_learning.js';
 
@@ -47,4 +47,18 @@ test('forest labels reach canonical vocabulary entries and survive an acknowledg
   assert.equal(entry.lastPractice.attempts,receipt.attempts);
   assert.equal(entry.mark,undefined);
  }
+});
+test('route note reading survives an acknowledgement retry without double credit',async()=>{
+ const receipt={id:'forest:camp-patrol-supplies:note:1',at:120,attempts:2,assisted:true};
+ const save={forestCommission:{notePractice:receipt}},note=canonicalWord(index,'note'),state={words:{[note]:{practiceCount:1,lastPractice:{at:10}}}};
+ let canPersist=false;
+ const adapter={valid:()=>true,persist:()=>canPersist,record:async event=>({persisted:true,changed:recordComprehensionPractice(state,{...event,valid:true},index)})};
+ assert.equal(await flushForestCommissionPractice(save,adapter),false);
+ assert.equal(save.forestCommission.notePractice,receipt);
+ canPersist=true;
+ assert.equal(await flushForestCommissionPractice(save,adapter),true);
+ assert.equal(save.forestCommission.notePractice,undefined);
+ assert.equal(state.words[note].practiceCount,1);
+ assert.deepEqual(state.words[note].lastPractice,{at:10});
+ assert.deepEqual(state.words[note].comprehension.read,{count:1,unassistedFirstChoice:0,last:{id:receipt.id,at:120,source:'forest-commission',assisted:true,attempts:2}});
 });

@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import {learningLesson,LEARNING_LANGUAGES} from '../js/learning_language_core.js';
 import {openingFriendAnswer,applyOpeningJourney,validateOpeningJourney} from '../js/opening_journey_core.js';
 import {wordplayGoal,wordplayAnswer,applyCompanionWordplay,validateCompanionWordplay} from '../js/companion_wordplay_core.js';
+import {companionWorldGuide} from '../js/companion_guide_core.js';
 import {homeItemLanguage,homeWishLine} from '../js/home_language_core.js';
 import {summonSentences,matchHomeSpell,petWish} from '../js/home_core.js';
 import {starterLampExercise} from '../js/home_starter_room_core.js';
@@ -29,12 +30,35 @@ test('all four languages own their opening and three companion utterances',()=>{
   for(const [step,round]of learningLesson('en').rounds.entries())assert.equal(wordplayAnswer(step,round[1],language).accepted,false);
  }
 });
-test('switching language rejects late answers and preserves shared progress without rewards',()=>{
- const save=fresh('en');const answer=(step,text,language)=>applyCompanionWordplay(save,{}, {step:'answer',expectedStep:step,text,input:'speech',receipt:`r${step}`,at:step,language});
+test('switching language keeps independent companion practice and rejects late answers',()=>{
+ const save=fresh('en');const answer=(step,text,language)=>applyCompanionWordplay(save,{}, {step:'answer',expectedStep:step,text,input:'speech',receipt:`${language}-${step}`,at:step,language});
  answer(0,'Hello!','en');save.languageLearning.target='ja';const before=structuredClone(save);
  assert.equal(answer(1,'Jump!','en').stale,true);assert.deepEqual(save,before);
- answer(1,'ジャンプして！','ja');save.languageLearning.target='ko';answer(2,'이리 와요!','ko');
- assert.equal(validateCompanionWordplay(save),true);assert.equal(save.openingJourney.wordplay.step,3);assert.equal(save.xp,1);
+ assert.equal(wordplayGoal(save).step,0);
+ assert.equal(answer(0,'こんにちは！','ja').accepted,true);
+ save.languageLearning.target='ko';assert.equal(wordplayGoal(save).step,0);
+ assert.equal(answer(0,'안녕하세요!','ko').accepted,true);
+ save.languageLearning.target='en';assert.equal(wordplayGoal(save).step,1);
+ assert.equal(answer(1,'Jump!','en').accepted,true);
+ save.languageLearning.target='ja';assert.equal(wordplayGoal(save).step,1);
+ assert.equal(validateCompanionWordplay(save),true);assert.equal(save.xp,1);
+ assert.deepEqual(save.openingJourney.wordplay.practices.map(row=>row.language),['en','ja','ko','en']);
+});
+test('a completed older-language practice does not complete a newly selected language',()=>{
+ const save=fresh('en');
+ for(const [step,round]of learningLesson('en').rounds.entries())assert.equal(applyCompanionWordplay(save,{}, {step:'answer',expectedStep:step,text:round[1],input:'text',receipt:`old-${step}`,at:step,language:'en'}).accepted,true);
+ assert.equal(wordplayGoal(save).done,true);
+ // A save written before language-tagged progress still has its opening language.
+ delete save.openingJourney.wordplay.language;
+ save.openingJourney.wordplay.practices=[];
+ save.openingJourney.practice={language:'en'};
+ save.languageLearning.target='ja';
+ assert.equal(wordplayGoal(save).step,0);
+ assert.equal(companionWorldGuide(save,{}).track,'companion-wordplay');
+ assert.equal(applyCompanionWordplay(save,{}, {step:'answer',expectedStep:0,text:learningLesson('ja').rounds[0][1],input:'text',receipt:'new-0',at:4,language:'ja'}).accepted,true);
+ assert.equal(validateCompanionWordplay(save),true);
+ save.languageLearning.target='en';assert.equal(wordplayGoal(save).done,true);
+ save.languageLearning.target='ja';assert.equal(wordplayGoal(save).step,1);
 });
 test('opening receipt freezes selected language and validates multilingual save records',()=>{
  for(const language of LEARNING_LANGUAGES){

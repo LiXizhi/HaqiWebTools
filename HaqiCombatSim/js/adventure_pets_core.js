@@ -16,7 +16,7 @@ export function foodInfo(content,id){
  const p=petParams(content);
  if(Number(id)===FOOD_ID)return {restore:p.foodRestore,xp:0,price:p.foodPrice};
  const rule=p.petFoodRules?.[id],item=content.petFoods?.[id];
- return rule&&item?{...rule,xp:Number(item.stats[60]||0)}:null;
+ return rule&&item?{...rule,xp:Math.round(Number(item.stats[60]||0)*p.petFoodXpMultiplier)}:null;
 }
 // Newly received stock fills empty trays only; withdrawals are never re-deposited.
 export function autoStockPetFood(save,content,before){
@@ -43,8 +43,8 @@ export function validateFoodSlots(save,content){
  check(Array.isArray(save.petFoodSlots)&&save.petFoodSlots.length===2,'宠物食槽无效');
  for(const row of save.petFoodSlots)check(row===null||row&&Number.isSafeInteger(row.itemId)&&foodInfo(content,row.itemId)&&Number.isSafeInteger(row.count)&&row.count>0,'食槽口粮无效');
 }
-// Kids CombatPetFoodsPage.lua L272–293 and globalstore stats[60] supply XP.
-// Satiety and automatic trays are Web adaptations, controlled by BalanceParams.
+// Kids CombatPetFoodsPage.lua L272–293 and globalstore stats[60] supply base XP.
+// Feeding XP, satiety and automatic trays are Web adaptations, controlled by BalanceParams.
 function eatFood(save,content,pet,itemId){
  const food=foodInfo(content,itemId),before=pet.hunger;
  recordPetMeal(save,content);

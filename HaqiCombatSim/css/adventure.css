@@ -1347,6 +1347,15 @@
 .forest-carried-note{font:700 16px/1.4 serif;overflow-wrap:anywhere}
 .forest-recipient{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:0;width:100%;min-height:180px;padding:8px;border:2px dashed #617747;border-radius:14px;background:#e4edcb99;text-align:center}
 .forest-recipient>canvas{max-width:100%;object-fit:contain}
+.forest-briefing-head{display:flex;align-items:center;gap:12px;margin:16px 0 8px;font-weight:700}
+.forest-briefing-head>canvas{flex:none;max-width:72px;height:auto!important}
+.forest-tactic-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:8px 0 18px}
+.forest-tactic-choice{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:12px;min-height:156px;background:#f5eccf;border:2px solid #ab986b;border-radius:14px;color:#354432;text-align:center;font-size:clamp(16px,2.5vw,21px);font-weight:700;line-height:1.4}
+.forest-tactic-choice:hover,.forest-tactic-choice:focus-visible{border-color:#446a38;background:#fff6da}
+.forest-tactic-art{display:flex;justify-content:center;align-items:end;min-height:90px}
+.forest-tactic-art>canvas{max-width:50%;height:auto!important}
+.forest-tactic-art>canvas:only-child{max-width:100%}
+@media(max-width:520px){.forest-tactic-choices{gap:8px}.forest-tactic-choice{padding:8px;font-size:15px;min-height:142px}}
 .forest-next-goal{font-size:19px;font-weight:700;margin-top:20px}
 .forest-level-note{border-left:3px solid #9d7b32;background:#efe4c4;padding:12px 16px;line-height:1.7}
 .forest-quest-pouch{padding:14px;border:1px solid #c6b98e;border-radius:12px;margin:10px 0 18px}
@@ -1359,14 +1368,19 @@
 .forest-dropbag{flex-direction:row;align-items:center;gap:16px;min-height:104px;padding:8px 16px}
 .forest-dropbag p{margin:5px 0 0}.forest-dropbag .forest-illustration{flex:none}
 .forest-status:empty{display:none}
-.forest-note{top:24px;left:calc(50% - 105px);width:210px;min-height:210px;padding:0;background:transparent;border:0;box-shadow:none}
+.forest-note{top:24px;left:calc(31% - 105px);width:210px;min-height:210px;padding:0;background:transparent;border:0;box-shadow:none}
+.forest-note-scene .forest-rock{left:calc(31% - 110px)}
+.forest-note-decoy{position:absolute;right:9%;top:42px;width:180px;height:160px;padding:0;border:0;background:transparent;cursor:pointer}
+.forest-note-decoy>canvas{pointer-events:none;max-width:100%;height:auto!important;object-fit:contain}
+.forest-note-scene .forest-rock.moved{transform:translateX(145px) rotate(12deg);opacity:.22;pointer-events:none}
 .forest-note .forest-illustration{display:block;max-width:100%;margin:auto}
 .forest-note span{font-size:14px;font-weight:600;line-height:1.4;background:#f8edcf;border-radius:12px;padding:3px 12px}
-.forest-note:not([hidden]){animation:forest-find .32s ease-out both}
+.forest-note:not([hidden]){z-index:1;animation:forest-find .32s ease-out both}
 .forest-commission-modal .forest-carried-object{cursor:grab}
 .forest-commission-modal .forest-carried-object:active{cursor:grabbing}
 @keyframes forest-find{from{opacity:0;transform:translateY(12px) scale(.9)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.forest-note:not([hidden]){animation:none}}
+@media(max-width:520px){.forest-note-scene .forest-rock{left:5%;width:48%;height:180px}.forest-note{left:5%;width:48%}.forest-note-decoy{right:5%;width:43%}.forest-note-scene .forest-rock.moved{transform:translateX(100px) rotate(12deg)}}
 
 /* A first companion gets one deliberate entrance, after its save commits. */
 .forest-ui .opening-character-dialogue .modal-body>.opening-pet-award{font-size:clamp(26px,4vw,34px);font-weight:800;line-height:1.25;color:#775127;letter-spacing:.08em;margin:0 0 14px;text-shadow:0 2px #fff9df}

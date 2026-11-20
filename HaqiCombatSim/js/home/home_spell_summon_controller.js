@@ -40,9 +40,9 @@ export function createHomeSpellSummonController({
 
  function matchSelectedHomeSpell(text, options) {
   const selection = getSelection();
-  if (selection?.starterLamp && lang() === 'en') {
+  if (selection?.starterLamp) {
    const item = catalog.items.find(item => item.id === selection.itemId);
-   return matchStarterLampRequest(text, item, selection, options);
+   return matchStarterLampRequest(text, item, selection, options, lang());
   }
   return matchHomeSpell(
    text,

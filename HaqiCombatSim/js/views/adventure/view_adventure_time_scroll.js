@@ -1,5 +1,6 @@
 import {createCloseButton} from '../../ui/controls.js';
-import {timeStationIndex,visibleTimeStations,timeScrollEnd,timeDiscoveries,timeDiscoveryKey} from '../../adventure_time_scroll_core.js';
+import {timeStationIndex,visibleTimeStations,timeScrollEnd,timeDiscoveries,timeDiscoveryKey,timeScrollLearningLocale} from '../../adventure_time_scroll_core.js';
+import {learningLesson} from '../../learning_language_core.js';
 import {dailyBuffDescription} from '../../language_daily_buff_core.js';
 import {createTimeScenery} from './view_time_scenery.js';
 
@@ -41,12 +42,14 @@ export function createTimeScrollView(root,{data,city,assets,getSave,onTarget,onJ
     room.addEventListener('focusout',e=>{if(!room.contains(e.relatedTarget))onDirection(0);});
     function hideDetail(){detail.hidden=true;readStation=null;canvas.focus();}
     function showDetail(label,children){onDirection(0);detail.replaceChildren();const h=el('header');h.append(el('h3','',label),createCloseButton(hideDetail,'关闭时光详情'));detail.append(h,...children);detail.hidden=false;detail.querySelector('button')?.focus();}
-    function showCollection(){readStation=null;const found=timeDiscoveries(getSave(),city.id);showDetail(`${city.name} · 发现记录`,data.stations.filter(s=>s.clue).map(s=>{const done=found.includes(timeDiscoveryKey(data,s));const row=el('article');row.append(el('h4','',`${s.label} · ${done?s.clue.name:'尚未发现'}`),el('p','',done?s.clue.text['zh-CN']:'沿着时光道路，寻找这一站的线索。'));if(done)row.append(el('p','time-scroll-english',s.clue.text.en));return row;}));}
+    function targetText(text){const locale=timeScrollLearningLocale(getSave());if(locale==='zh-CN')return null;const node=el('p','time-scroll-target-language',text[locale]);node.lang=locale;return node;}
+    function showCollection(){readStation=null;const found=timeDiscoveries(getSave(),city.id);showDetail(`${city.name} · 发现记录`,data.stations.filter(s=>s.clue).map(s=>{const done=found.includes(timeDiscoveryKey(data,s));const row=el('article');row.append(el('h4','',`${s.label} · ${done?s.clue.name:'尚未发现'}`),el('p','',done?s.clue.text['zh-CN']:'沿着时光道路，寻找这一站的线索。'));const translation=done?targetText(s.clue.text):null;if(translation)row.append(translation);return row;}));}
     function showBuff(){readStation=null;showDetail('今日语言加成',[el('p','time-scroll-buffs',dailyBuffDescription(getSave())),el('p','','有效口语沿用全局每日加成。阅读、发现线索和文字回答不增加口语加成；时光探索不发放货币。')]);}
     function reading(station,kind='talk'){
         const text=kind==='clue'?station.clue.text:station.reading;
-        const children=[el('p','',text['zh-CN']),el('p','time-scroll-english',text.en)];
-        if(kind==='talk')children.push(button('练习双语对话',()=>onPractice(station),'primary'));
+        const children=[el('p','',text['zh-CN'])],translation=targetText(text);
+        if(translation)children.push(translation);
+        if(kind==='talk')children.push(button(`练习${learningLesson(timeScrollLearningLocale(getSave())).name}对话`,()=>onPractice(station),'primary'));
         showDetail(kind==='clue'?`已发现 · ${station.clue.name}`:`${station.traveler.name} · 虚构人物`,children);readStation=station;
     }
     function draw(x,time,moving,facing){

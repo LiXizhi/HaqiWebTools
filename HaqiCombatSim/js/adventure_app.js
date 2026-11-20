@@ -242,6 +242,7 @@ const opening=createOpeningController({
     openJourney:(id,restart)=>openJourney(id,restart),
     walkTo:(target,autoInteract)=>walkTo(target,autoInteract),
     track:(questId,options)=>track(questId,options),
+    awardLanguageSpeech:(...args)=>awardLanguageSpeech(...args),
     petScene:()=>petScene,
     dialogueVoice:()=>dialogueVoice,
 });

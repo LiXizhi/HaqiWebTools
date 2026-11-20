@@ -854,7 +854,7 @@
       "questId": 63007,
       "section": "description",
       "original": "为了以后的出行做最好的准备，需要学会通过强化装备来提升自己的实力。",
-      "replacement": "强化一件装备，再向青龙回报。",
+      "replacement": "装备晶石法杖，并强化一件装备，再向青龙回报。",
       "reason": "compact-web-opening"
     },
     {
@@ -2826,7 +2826,7 @@
     {
       "id": 63007,
       "title": "让自己变得更强",
-      "description": "强化一件装备，再向青龙回报。",
+      "description": "装备晶石法杖，并强化一件装备，再向青龙回报。",
       "startNpc": 36211,
       "endNpc": 36211,
       "requires": [
@@ -2840,6 +2840,11 @@
         }
       ],
       "goals": [
+        {
+          "kind": "action",
+          "id": "equip-staff",
+          "count": 1
+        },
         {
           "kind": "action",
           "id": 79016,
@@ -4346,7 +4351,7 @@
           {
             "round": "1-",
             "card": "Death_SingleAttack_Level0_120_adv",
-            "speak": "鼠标点击卡牌，再选择目标就可以攻击了！",
+            "speak": "先接住我的偷袭，再想好怎么对付陷阱！",
             "accuracy_boost": "1000",
             "target_hostile": "threat_highest",
             "target_friendly": "self"
@@ -4354,7 +4359,7 @@
           {
             "round": "1",
             "card": "Death_DeathDamageTrap",
-            "speak": "使用陷阱技能，能提高下一次对目标的伤害！",
+            "speak": "陷阱已经布下，下一击会更痛！",
             "accuracy_boost": "1000",
             "target_hostile": "threat_highest",
             "target_friendly": "self"
@@ -4370,7 +4375,7 @@
           {
             "round": "3",
             "card": "Death_DeathDamageBlade",
-            "speak": "使用术技能，同样可以提高你下一次的伤害！",
+            "speak": "我先聚集力量，下一击要来了！",
             "accuracy_boost": "1000",
             "target_hostile": "threat_highest",
             "target_friendly": "max_max_hp"
@@ -4410,7 +4415,7 @@
           {
             "round": "8",
             "card": "Death_DeathDamageTrap",
-            "speak": "使用陷阱技能，能提高下一次对目标的伤害！",
+            "speak": "陷阱已经布下，下一击会更痛！",
             "accuracy_boost": "1000",
             "target_hostile": "threat_highest",
             "target_friendly": "self"
@@ -4426,7 +4431,7 @@
           {
             "round": "10",
             "card": "Death_DeathDamageBlade",
-            "speak": "使用术技能，同样可以提高你下一次的伤害！",
+            "speak": "我先聚集力量，下一击要来了！",
             "accuracy_boost": "1000",
             "target_hostile": "threat_highest",
             "target_friendly": "max_max_hp"
@@ -4466,7 +4471,7 @@
           {
             "round": "15",
             "card": "Death_DeathDamageTrap",
-            "speak": "使用陷阱技能，能提高下一次对目标的伤害！",
+            "speak": "陷阱已经布下，下一击会更痛！",
             "accuracy_boost": "1000",
             "target_hostile": "threat_highest",
             "target_friendly": "self"
@@ -4482,7 +4487,7 @@
           {
             "round": "17",
             "card": "Death_DeathDamageBlade",
-            "speak": "使用术技能，同样可以提高你下一次的伤害！",
+            "speak": "我先聚集力量，下一击要来了！",
             "accuracy_boost": "1000",
             "target_hostile": "threat_highest",
             "target_friendly": "max_max_hp"
@@ -8228,6 +8233,16 @@
     }
   },
   "progression": {
+    "questXpOverrides": {
+      "63002": 40,
+      "63003": 70,
+      "63004": 150,
+      "63005": 250,
+      "63006": 100,
+      "63007": 260,
+      "63008": 250,
+      "63009": 257
+    },
     "xpThresholds": [
       0,
       41,

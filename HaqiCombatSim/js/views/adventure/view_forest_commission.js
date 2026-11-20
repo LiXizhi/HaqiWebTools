@@ -6,6 +6,7 @@ import {createCloseButton} from '../../ui/controls.js';
 import {watchTreeText} from '../../learning/language_tree_capture.js';
 import {forestCommissionLesson,forestLabelMatches,forestLabelWritten} from '../../forest_commission_language_core.js';
 import {forestCommissionPhase,forestCommissionGoal,forestCommissionPouch,forestCommissionRewards,forestCommissionScene,FOREST_SITES,FOREST_NPCS} from '../../forest_commission_core.js';
+import {monsterArtBinding} from '../../adventure_monster_art_core.js';
 
 // A scene interaction dispatches intent. Inventory, distance, order and rewards
 // are checked by the core and persisted by the controller before this repaints.
@@ -23,13 +24,24 @@ export function renderForestCommission(root,model,cb){
  const npc=assets.content.npcs[[ 'offer','boots'].includes(phase)?FOREST_NPCS.giver:FOREST_NPCS.receiver];
  const say=text=>body.append(el('div','forest-speaker',npc?.portrait?art(assets,npc.portrait,68,86):'',el('p','',text)));
  const act=(label,value,primary=true)=>actions.append(button(label,()=>cb.action(value),primary?'primary':'secondary'));
- const clue=(phase,help)=>{
+ const clue=(phase,help,onHelp)=>{
   const line=lesson.clues[phase],text=el('p','forest-english',line);text.lang=lesson.language;
   const support=el('details','forest-help');support.append(el('summary','','看提示'),el('p','',help));
+  if(onHelp)support.addEventListener('toggle',()=>{if(support.open)onHelp();});
   body.append(el('div','forest-clue',text,button('听线索',()=>cb.listen(line,lesson.language),'secondary')),support);
   watchTreeText(text,{source:'forest-commission',label:'营地补给委托',locale:lesson.language,text:line});
  };
  const go=(label='带我去')=>actions.append(button(label,cb.go,'primary'));
+ const scoutArt=id=>{
+  const monster=assets.content.monsters[id],canvas=el('canvas','forest-tactic-monster');
+  canvas.width=144;canvas.height=180;canvas.style.width='72px';canvas.style.height='90px';canvas.setAttribute('aria-hidden','true');
+  if(!monster)return canvas;
+  const draw=()=>{const ctx=canvas.getContext('2d');ctx.clearRect(0,0,144,180);assets.drawMonster(ctx,monster,0,0,144,180);};
+  draw();
+  const binding=monsterArtBinding(monster,assets.monsterArt);
+  if(binding?.kind==='portrait')void assets.ensureImage('monster:'+binding.id).then(()=>{if(canvas.isConnected)draw();}).catch(()=>{});
+  return canvas;
+ };
  const labelObject=(word,name)=>{
   if(!model.nearby)return;
   if(forestLabelWritten(save,word)){body.append(el('p','forest-status',`已写好标签：${lesson.words[word]}`));return;}
@@ -104,24 +116,41 @@ export function renderForestCommission(root,model,cb){
   labelObject('boots','靴子');
   handover('deliver');rewards('deliver');if(model.nearby)act('交付靴子',{step:'deliver'});else go('去找茜茜');
  }else if(phase==='note'){
-  say('靴子归你啦！再找找石头后面的路线便签。');
-  clue('note',`${lesson.words.note} 便签。挪开石头看看。`);
+  say('靴子归你啦！路线桌旁还藏着一张便签，读线索找找看。');
+  clue('note',`${lesson.words.note} 是便签；线索说的是石头后面。`);
   if(model.nearby){
-   const scene=el('div','forest-scene forest-note-scene'),note=button('',()=>cb.action({step:'take-note',revealed:true}),'forest-note');note.setAttribute('aria-label','拾取巡逻路线便签');note.lang='zh-CN';note.hidden=true;
+   let searchAttempts=1;
+   const scene=el('div','forest-scene forest-note-scene'),note=button('',()=>cb.action({step:'take-note',revealed:true,learning:{at:Date.now(),attempts:searchAttempts}}),'forest-note');scene.setAttribute('aria-label','按语言线索选择便签藏匿的位置');note.setAttribute('aria-label','拾取巡逻路线便签');note.lang='zh-CN';note.hidden=true;
    note.append(illustration(assets,'environmentArt','forestQuest','routeNote',210,188),el('span','','拿起便签'));
    const rock=button('',moveRock,'forest-rock');rock.setAttribute('aria-label','挪开石头');
    rock.append(illustration(assets,'environmentArt','campProps','mossBoulder',210,180));
-   const move=button('挪开石头',moveRock,'secondary');
-   function moveRock(){if(note.hidden){note.hidden=false;rock.classList.add('moved');rock.disabled=true;move.disabled=true;status.textContent='找到了！';cb.sound?.('stone');note.focus({preventScroll:true});}}
+   const bush=button('',()=>{searchAttempts=Math.min(searchAttempts+1,999);status.textContent='这里没有便签。再读一遍线索，或打开提示。';cb.sound?.('select');},'forest-note-decoy');bush.setAttribute('aria-label','检查灌木');
+   bush.append(illustration(assets,'environmentArt','campProps','lushBush',180,160));
+   function moveRock(){if(note.hidden){note.hidden=false;rock.classList.add('moved');rock.disabled=true;bush.disabled=true;status.textContent='找到了！';cb.sound?.('stone');note.focus({preventScroll:true});}}
    bindSceneDrag(rock,{threshold:25,onEnd:gesture=>{if(!gesture.cancelled&&gesture.moved)moveRock();}});
-   scene.append(note,rock);body.append(scene);actions.append(move);
+   scene.append(note,rock,bush);body.append(scene);
   }else go('去路线桌找便签');
   actions.append(button('穿上新靴子',cb.equipment,'secondary'));
  }else if(phase==='briefing'){
   labelObject('note','便签');
-  say('一起行动，集中攻击。和我练一场，就能去巡逻啦！');
-  handover('brief');clue('briefing','一起行动，集中攻击同一个敌人。');
-  if(model.nearby)act('确认路线',{step:'brief'});else go('拿便签给茜茜');
+  say('拿着便签，选出今晚的巡逻分工。确认后和我练一场，再去巡逻！');
+  let attempts=0,assisted=false;
+  clue('briefing','一起行动，集中攻击同一个敌人。',()=>{assisted=true;});
+  if(model.nearby){
+   const prompt=el('div','forest-briefing-head',illustration(assets,'environmentArt','forestQuest','routeNote',96,88),el('p','','根据便签，茜茜让大家怎么攻击？'));
+   const choices=el('div','forest-tactic-choices');
+   for(const tactic of ['split','focus']){
+    const label=el('span','',lesson.tactics[tactic]);label.lang=lesson.language;
+    const b=button('',()=>{
+     attempts=Math.min(attempts+1,999);
+     if(tactic!=='focus'){status.textContent='这和便签上的安排不一样。再听一次，或打开提示。';cb.sound?.('select');return;}
+     cb.sound?.('paper');cb.action({step:'brief',tactic,learning:{at:Date.now(),attempts,assisted}});
+    },'forest-tactic-choice');
+    b.append(el('span','forest-tactic-art',scoutArt('fire-scout'),...(tactic==='split'?[scoutArt('life-scout')]:[])),label);
+    choices.append(b);
+   }
+   body.append(prompt,choices);
+  }else go('拿便签给茜茜');
   actions.append(button('和茜茜打怪',cb.training,'secondary'));
  }else if(phase==='patrol'){
   say('点亮巡夜灯！受伤了就回营地休息，进度会保留。');

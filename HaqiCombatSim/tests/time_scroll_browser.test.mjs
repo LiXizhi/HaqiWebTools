@@ -29,7 +29,7 @@ test('time scroll desktop and touch: walk, discover, type, revisit and return wi
         await page.getByRole('button',{name:'约10年前',exact:true}).click();await page.waitForTimeout(100);
         assert.ok(sceneryResponses.length>0,'registered street WebP atlases loaded from CDN');
         await page.screenshot({path:path.join(root,`tmp/time-scroll-${width}-scene.png`)});
-        await page.getByRole('button',{name:'记事旅人 · 交谈',exact:true}).click();await page.getByRole('button',{name:'练习双语对话',exact:true}).click();
+        await page.getByRole('button',{name:'记事旅人 · 交谈',exact:true}).click();await page.getByRole('button',{name:'练习英语对话',exact:true}).click();
         const chat=page.getByRole('dialog',{name:'时光旅人双语对话',exact:true});await chat.waitFor();await page.screenshot({path:path.join(root,`tmp/time-scroll-${width}-dialogue.png`)});
         await chat.getByRole('button',{name:'打字回答',exact:true}).click();
         for(const answer of ['We are thinking about the past.','Some things change.','We can look for old records.']){

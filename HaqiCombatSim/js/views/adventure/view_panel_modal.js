@@ -10,6 +10,7 @@ import {renderGems} from './view_adventure_gems.js';
 import {renderMembership} from './view_adventure_membership.js';
 import {renderNpcServices} from './view_adventure_npc.js';
 import {renderPetCollection,petPortrait} from './view_adventure_pets.js';
+import {foodInfo} from '../../adventure_pets_core.js';
 import {renderQuestJournal} from './view_adventure_quests.js';
 import {renderRecharge} from './view_adventure_recharge.js';
 import {renderSettings,settingsView} from './view_adventure_settings.js';
@@ -160,7 +161,7 @@ export function renderPanel(root,kind,model,cb) {
     if(kind==='pet'&&!c.pets){
         body.append(el('h3','','初心之旅 · 咕噜噜教学'));
         body.append(el('div','pet-portrait',tile(assets,'creatures',save.pet?6:7,170,180)));
-        if(save.pet)body.append(el('h3','center',save.pet.name),el('p','center muted',fill('等级 {level} · 经验 {xp} · 教学伙伴',{level:save.pet.level,xp:save.pet.xp}).text),el('p','center','小小的咕噜噜，已经认定你是它最好的朋友。'),el('p','center muted',fill('战宠口粮 {count} 包 · 每包增加 {xp} 经验',{count:save.inventory[17172]||0,xp:c.pet.foodXp}).text),button('喂养一包战宠口粮',()=>cb.action({type:'feed'}),'primary centered'));
+        if(save.pet)body.append(el('h3','center',save.pet.name),el('p','center muted',fill('等级 {level} · 经验 {xp} · 教学伙伴',{level:save.pet.level,xp:save.pet.xp}).text),el('p','center','小小的咕噜噜，已经认定你是它最好的朋友。'),el('p','center muted',fill('战宠口粮 {count} 包 · 每包增加 {xp} 经验',{count:save.inventory[17172]||0,xp:foodInfo(c,c.pet.foodId).xp}).text),button('喂养一包战宠口粮',()=>cb.action({type:'feed'}),'primary centered'));
         else body.append(el('h3','center','等待与你相遇'),el('p','center muted','完成青龙的强化指导，即可获得一枚出奇蛋。'),ownsEgg(save)?button('打开出奇蛋',()=>cb.action({type:'hatch'}),'primary centered'):el('p','center','继续你的冒险吧。'));
     }
     if(kind==='debug'){body.closest('.modal').classList.add('debug-modal');renderDebugEditor(body,model,cb,{el,button});}

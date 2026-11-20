@@ -32,7 +32,7 @@ export function renderPetFood(parent,model,cb,{el,button,art}){
    if(!stock){const buy=button(fill(`买 10 份 · {v0} 奇豆`,{v0:String(food.price*10)}).text,()=>{dialog.close();cb.action({type:'buy',productId:'supply:'+id,count:10});},'secondary pet-food-buy');buy.disabled=!!save.pendingEncounter||(save.inventory[100]||0)<food.price*10;row.append(buy);}
    dialog.body.append(row);
   }
-  dialog.body.append(el('p','muted','原版口粮保留经验值；饱食效果与奇豆售价采用网页版规则。满级宠物仍会吃已放入的口粮，但不再获得经验。'));
+  dialog.body.append(el('p','muted','口粮经验、饱食效果与奇豆售价采用网页版节奏。满级宠物仍会吃已放入的口粮，但不再获得经验。'));
   dialog.footer.append(button('前往补给商店',()=>{dialog.close();cb.panel('shop',{category:'supply'});},'secondary'));
   dialog.open(trigger);
  }

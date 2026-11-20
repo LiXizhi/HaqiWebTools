@@ -40,6 +40,18 @@ test('a delayed reading receipt stays in the language actually read, even after 
  await flushForestCommissionPractice(save,{valid:()=>true,persist:()=>true,record:async e=>{event=e;return {persisted:true};}});
  assert.equal(event.language,'ja');assert.deepEqual(event.words,['ブーツ']);assert.equal(event.assisted,true);assert.equal(event.input,'read');
 });
+for(const language of ['en','ja','ko','zh-CN'])test(language+' route clue stores guided reading in the language used at pickup',async()=>{
+ const save=fresh(language,'note'),lesson=forestCommissionLesson(save),site={forestTarget:{id:'forest-route-desk',kind:'landmark',x:0,y:0}};
+ applyForestCommission(save,{}, {step:'take-note',revealed:true,learning:{at:40,attempts:2}},site);
+ validateForestCommission(save);
+ assert.equal(save.forestCommission.phase,'briefing');
+ save.languageLearning.target=language==='ko'?'ja':'ko';
+ const events=[];
+ await flushForestCommissionPractice(save,{valid:()=>true,persist:()=>true,record:async event=>{events.push(event);return {persisted:true};}});
+ assert.deepEqual(events.map(event=>[event.language,event.words,event.input,event.attempts,event.assisted]),[[language==='zh-CN'?'zh':language,[lesson.words.note],'read',2,true]]);
+ assert.equal(save.forestCommission.notePractice,undefined);
+ validateForestCommission(save);
+});
 test('input supports Japanese width variants and rejects wrong-language answers and invalid receipt languages',()=>{
  assert.equal(forestLabelMatches(fresh('ja'),'boots',' ﾌﾞｰﾂ '),true);
  assert.equal(forestLabelMatches(fresh('ko'),'note','쪽지'),true);

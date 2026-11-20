@@ -29,3 +29,17 @@ export function crossedSoundCues(cues,previous,current) {
     const start=current<previous?-.001:previous;
     return cues.filter(cue=>cue.at>start&&cue.at<=current);
 }
+
+// Reuse the recorded sample bank with a school-specific colour. The synthesis
+// recipe remains the fallback when a sample has not loaded yet.
+export function spellSampleCue(config,card,cue,{failed=false}={}) {
+    if(failed)return {name:'fizzle',rate:1};
+    const spec=spellEffect(config,card);
+    const kind=spec.kind==='summon'?spec.attack:spec.kind;
+    const impact=spec.kind==='summon'?config.timeline.summonImpact:config.timeline.impact;
+    const supportive=spec.friendly||['heal','shield','absorb','reflect','cleanse','pips'].includes(kind);
+    if(cue.at===0)return {name:'cast',rate:{ice:1.12,fire:.9,storm:1.08,life:1.18,death:.82,balance:1}[card.spellSchool]||1};
+    if(cue.at<impact)return {name:'release',rate:{ice:1.18,fire:.9,storm:1.25,life:1.12,death:.8,balance:1}[card.spellSchool]||1};
+    if(supportive)return {name:kind==='shield'||kind==='absorb'||kind==='reflect'?'shield':'heal',rate:card.spellSchool==='life'?1.15:1};
+    return {name:{ice:'impactIce',fire:'impactFire',storm:'impactStorm',death:'impactDeath',balance:'impactBalance'}[card.spellSchool]||'hit',rate:1};
+}

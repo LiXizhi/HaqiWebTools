@@ -26,6 +26,24 @@ test('original goal 79016 requires successful upgrade after acceptance; any conf
     assert.equal(s.inventory[17307],1);assert.equal(A.currentQuest(s,content).id,63008);
     assert.deepEqual(A.parseSave(s,content),s);
 });
+test('new strengthening lesson requires wearing the awarded staff and upgrading equipment',()=>{
+    const s=hero();
+    act(s,'accept',{questId:q.id,npcId:q.startNpc});
+    assert.equal(s.quests[q.id].equipmentTutorialVersion,2);
+    act(s,'upgrade',{itemId:1240});
+    assert.equal(A.questReady(s,q),false);
+    assert.deepEqual(A.questProgress(s,q).map(g=>g.value),[0,1]);
+    act(s,'equip',{itemId:1912});
+    assert.equal(A.questReady(s,q),true);
+    assert.deepEqual(A.parseSave(s,content),s);
+});
+test('an accepted legacy lesson and its completed save retain the original objective',()=>{
+    const s=hero();s.quests[q.id]={accepted:true,claimed:false,progress:{'action:79016':1}};
+    assert.equal(A.questReady(s,q),true);
+    assert.deepEqual(A.questProgress(s,q).map(g=>g.value),[1]);
+    act(s,'claim',{questId:q.id,npcId:q.endNpc});
+    assert.deepEqual(A.parseSave(s,content),s);
+});
 test('insufficient materials, unknown equipment and maximum level leave save and goal unchanged',()=>{
     const s=hero();act(s,'accept',{questId:q.id,npcId:q.startNpc});s.inventory[17213]=69;
     for(const id of [1912,17213,999999]){const before=structuredClone(s);assert.throws(()=>act(s,'upgrade',{itemId:id}));assert.deepEqual(s,before);}
@@ -50,7 +68,7 @@ test('six Lua strengthening contributions are cumulative target values, only equ
     assert.ok(mixed);assert.ok(upgradeAt(content,mixed.gsids[0],2).cost[0]!==17213);
 });
 test('strengthening panel exposes working button before equipment comparison and completes task',()=>{
-    const s=hero();act(s,'accept',{questId:q.id,npcId:q.startNpc});
+    const s=hero();act(s,'accept',{questId:q.id,npcId:q.startNpc});act(s,'equip',{itemId:1912});
     class Element{
             constructor(tag,cls,...children){this.tag=tag;this.children=children.flat();this.attributes={};this.style={};this.classList={add(){}};}
             append(...children){this.children.push(...children.flat());}

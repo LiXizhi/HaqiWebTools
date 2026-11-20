@@ -31,18 +31,28 @@ test('supplied English reply advances the story without claiming typed practice'
  assert.equal(save.openingJourney.phase,'rescue');
  assert.equal(save.openingJourney.practice,undefined);
 });
-test('completed opening battles credit training without auto-accepting or duplicating rewards',()=>{
+test('opening battles cannot complete later training before those quests are accepted',()=>{
  const save=fresh();guide(save,'battle');fight(save,'fire-scout');act(save,'rescue',{join:true});fight(save,'ice-scout');
  const before=JSON.stringify(save.inventory);
  for(const id of [63002,63003]){
   const q=content.quests.find(q=>q.id===id);
   assert.equal(A.questReady(save,q),false);
+  assert.ok(A.questProgress(save,q).every(g=>g.value===0));
+  save.quests[id]={accepted:true,claimed:true,progress:{}};
   assert.ok(A.questProgress(save,q).every(g=>g.value===g.count));
+  delete save.quests[id];
  }
  assert.equal(JSON.stringify(save.inventory),before);
  const q=content.quests.find(q=>q.id===63001),progress=A.questProgress(save,q);
  assert.equal(progress.find(g=>g.id===36201).value,1);
  assert.equal(progress.find(g=>g.id!==36201).value,0);
+ for(const id of [63000,63001,63002])save.quests[id]={accepted:true,claimed:true,progress:{}};
+ save.quests[63003]={accepted:true,claimed:false,progress:{}};
+ const ice=content.quests.find(row=>row.id===63003);
+ assert.equal(A.questReady(save,ice),false);
+ assert.throws(()=>A.applyAction(save,content,{type:'claim',questId:63003,npcId:36211}),/任务尚未完成/);
+ assert.equal(fight(save,'ice-scout',1031000).winner,'near');
+ assert.equal(A.questReady(save,ice),true);
 });
 test('friend answer accepts equivalent beginner expressions but never negations or unrelated answers',()=>{
  for(const text of ['We are friends.','Yes, WE’RE friends!',' we  are friends ','He is my friend.',"He's my friend!",'This is my friend.','Yes, he is our friend.'])assert.equal(openingFriendAnswer(text).accepted,true,text);
@@ -80,8 +90,8 @@ function act(save,step,extra={}){
 function guide(save,route){
  act(save,'accept');act(save,'meet');act(save,'route',{route});
 }
-function fight(save,id){
- A.beginEncounter(save,content,id);
+function fight(save,id,now=1000000){
+ A.beginEncounter(save,content,id,{now});
  const battle=P.restorePveBattle(dataset,content,save.pendingEncounter),bot=new SimpleBot();
  let rounds=0;
  while(!battle.finished&&rounds++<120){
@@ -89,7 +99,7 @@ function fight(save,id){
   P.playPveRound(battle,pick);A.recordDecision(save,pick,battle);
  }
  assert.equal(battle.finished,true);
- A.settleEncounter(save,content,battle,{now:1000000});
+ A.settleEncounter(save,content,battle,{now});
  return {winner:battle.winner,rounds};
 }
 test('English route recruits one usable companion and a real second fight completes the journey',()=>{

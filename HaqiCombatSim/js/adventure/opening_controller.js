@@ -63,6 +63,7 @@ export function createOpeningController({
     openJourney,
     walkTo,
     track,
+    awardLanguageSpeech = () => {},
     toast = services?.feedback?.toast,
     safely = services?.feedback?.safely,
     spellSound = services?.feedback?.spellSound,
@@ -296,6 +297,9 @@ export function createOpeningController({
                     close();
                     paintHud();
                     track();
+                    if (session.save.languageLearning?.enabled && ['en', 'ja', 'ko'].includes(session.locale)) {
+                        awardLanguageSpeech(`mentor-practice:${session.lesson.npcId}`);
+                    }
                 }),
         });
     }
@@ -476,7 +480,7 @@ export function createOpeningController({
         const ctx = getContext();
         const current = ctx.save;
         const role = ctx.roleStore.catalog.activeId;
-        if ((!current?.forestCommission?.practice && !current?.forestCommission?.labelPractice?.length) || forestPracticeTask) return;
+        if ((!current?.forestCommission?.practice && !current?.forestCommission?.notePractice && !current?.forestCommission?.labelPractice?.length) || forestPracticeTask) return;
         const valid = () => {
             const nowCtx = getContext();
             return nowCtx.save === current && nowCtx.roleStore.catalog.activeId === role;
@@ -493,11 +497,11 @@ export function createOpeningController({
                 },
             });
         } catch {
-            if (valid()) toast('选物记录暂未保存，稍后会重试；补给和奖励会保留。');
+            if (valid()) toast('语言练习记录暂未保存，稍后会重试；补给和奖励会保留。');
         } finally {
             forestPracticeTask = null;
             const nowCtx = getContext();
-            if (nowCtx.save !== current && (nowCtx.save?.forestCommission?.practice || nowCtx.save?.forestCommission?.labelPractice?.length)) {
+            if (nowCtx.save !== current && (nowCtx.save?.forestCommission?.practice || nowCtx.save?.forestCommission?.notePractice || nowCtx.save?.forestCommission?.labelPractice?.length)) {
                 void drainForestPractice();
             }
         }

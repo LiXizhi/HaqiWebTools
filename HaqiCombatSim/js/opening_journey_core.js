@@ -14,12 +14,15 @@ export function openingJourneyActive(save){
  const state=openingJourney(save);
  return !!state&&state.phase!=='done';
 }
-// Credit only events proved by the persisted opening state; never grant quest rewards here.
+// The opening friendship conversation also satisfies the first chapter talk goal.
+// Preserve credit on old, already-claimed training quests; new quests require a fresh victory.
 export function openingTrainingCredit(save,questId,goal){
  const state=openingJourney(save);if(!state)return 0;
  if(questId===63001&&goal.kind==='talk'&&goal.id===36201&&state.petId)return 1;
- if(questId===63002&&goal.kind==='defeat'&&goal.id===40250&&state.route==='battle'&&['rescue','showcase','done'].includes(state.phase))return 1;
- if(questId===63003&&goal.kind==='defeat'&&goal.id===40249&&state.phase==='done')return 1;
+ if(save.quests?.[questId]?.claimed){
+  if(questId===63002&&goal.kind==='defeat'&&goal.id===40250&&state.route==='battle'&&['rescue','showcase','done'].includes(state.phase))return 1;
+  if(questId===63003&&goal.kind==='defeat'&&goal.id===40249&&state.phase==='done')return 1;
+ }
  return 0;
 }
 export function openingGuideAnchor(save,npc){

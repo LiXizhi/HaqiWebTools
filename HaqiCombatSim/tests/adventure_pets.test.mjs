@@ -188,7 +188,7 @@ test('capture replay consumes crystal once and duplicate captures become experie
 test('legacy migration, linkage and invalid imported pet states',()=>{
  const old=A.createAdventure(read('adventure/chapter.json'));old.schemaVersion=1;
  old.pet={itemId:c.pet.itemId,name:c.pet.name,xp:300,level:3};
- const s=A.parseSave(old,c);assert.equal(s.starterChosen,false);assert.equal(s.pets.legacy_gululu.xp,300);assert.equal(s.pet.xp,300);
+ const s=A.parseSave(old,c);assert.equal(s.starterChosen,false);assert.equal(s.pets.legacy_gululu.xp,300);assert.equal(s.pets.legacy_gululu.level,P.petXpLevel(300,c));assert.equal(s.pet.xp,300);assert.equal(s.pet.level,3);
  A.applyAction(s,c,{type:'starter',petId:'dragon_orange'});assert.equal(s.pet.xp,300);
  const link=P.exportPetLink(s,c);assert.deepEqual(P.validatePetLink(link,c),link);
  const broken=structuredClone(s);broken.pets.dragon_orange.hunger=-1;assert.throws(()=>A.parseSave(broken,c),/状态/);

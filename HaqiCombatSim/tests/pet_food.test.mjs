@@ -17,15 +17,15 @@ test('food deposit and withdrawal conserve stock; invalid actions never mutate',
  }
  applyAction(s,c,{type:'pet-food-take',slot:0});assert.equal(s.inventory[17172],5);assert.equal(s.petFoodSlots[0],null);
 });
-test('hungry formation eats left then right with original XP and leaves backpack/resting pets alone',()=>{
+test('hungry formation eats left then right with paced XP and leaves backpack/resting pets alone',()=>{
  const s=fresh(),pet=s.pets[s.formation[0]],resting=addPet(s,c,'dragon_purple');
  applyAction(s,c,{type:'pet-food-put',slot:0,itemId:17172,count:1});applyAction(s,c,{type:'pet-food-put',slot:1,itemId:17185,count:2});
  pet.hunger=0;resting.hunger=0;s.careAt=1000;tickCare(s,c,playerSpec(s,c),61000,true);
- assert.equal(pet.hunger,40);assert.equal(pet.xp,300);assert.equal(pet.level,petXpLevel(300,c));assert.equal(s.petFoodSlots[0],null);assert.equal(s.petFoodSlots[1].count,2);assert.equal(resting.xp,0);assert.equal(s.inventory[990001],10);
- pet.hunger=29;tickCare(s,c,playerSpec(s,c),121000,true);assert.equal(pet.hunger,98);assert.equal(pet.xp,1500);assert.equal(s.petFoodSlots[1].count,1);
+ assert.equal(pet.hunger,40);assert.equal(pet.xp,60);assert.equal(pet.level,petXpLevel(60,c));assert.equal(s.petFoodSlots[0],null);assert.equal(s.petFoodSlots[1].count,2);assert.equal(resting.xp,0);assert.equal(s.inventory[990001],10);
+ pet.hunger=29;tickCare(s,c,playerSpec(s,c),121000,true);assert.equal(pet.hunger,98);assert.equal(pet.xp,300);assert.equal(s.petFoodSlots[1].count,1);
 });
 test('putting food immediately feeds hungry pets; full pets, offline and battles never eat',()=>{
- const s=fresh(),pet=s.pets[s.formation[0]];pet.hunger=0;applyAction(s,c,{type:'pet-food-put',slot:0,itemId:17211,count:2});assert.equal(pet.hunger,100);assert.equal(pet.xp,2400);assert.equal(s.petFoodSlots[0].count,1);
+ const s=fresh(),pet=s.pets[s.formation[0]];pet.hunger=0;applyAction(s,c,{type:'pet-food-put',slot:0,itemId:17211,count:2});assert.equal(pet.hunger,100);assert.equal(pet.xp,480);assert.equal(s.petFoodSlots[0].count,1);
  pet.hunger=0;s.careAt=1000;tickCare(s,c,playerSpec(s,c),61000,false);assert.equal(s.petFoodSlots[0].count,1);
  s.pendingEncounter={};tickCare(s,c,playerSpec(s,c),121000,true);assert.equal(s.petFoodSlots[0].count,1);assert.throws(()=>applyAction(s,c,{type:'pet-food-take',slot:0}),/战斗/);
 });

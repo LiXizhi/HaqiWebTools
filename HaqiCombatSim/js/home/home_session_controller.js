@@ -317,9 +317,9 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
  }
  function requestStarterLamp(){
    if(!canRequestStarterLamp())return;
-   const point=[{x:2,y:2},{x:6,y:2},{x:2,y:3}].find(p=>canPlace(at('bedside-lamp',p),currentObjects(),catalog.items).ok);
-   if(!point)throw Error('先挪出一点空间，再添灯。');
    select('bedside-lamp');
+   const point=[{x:2,y:2},{x:6,y:2},{x:2,y:3}].find(p=>canPlace(at('bedside-lamp',p),currentObjects(),catalog.items).ok);
+   if(!point){selection=null;throw Error('先挪出一点空间，再添灯。');}
    Object.assign(selection,{spellPosition:point,starterLamp:true});
    status='用当前学习语言要一盏灯，拿到后就能照亮小屋。';
    emit();
@@ -369,7 +369,7 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
  }
  async function enter(row){check();spellEpoch++;await mutation.catch(()=>{});check();if(pending)throw Error('请先重试保存未完成的操作');
   editHistory.clear();const ticket=++entryTicket;const checkEntry=()=>{check();if(ticket!==entryTicket)throw Error('家园加载已取消');};entering=true;retryEntry=row;showLoading({phase:'assets',message:'正在读取家园地块…'});
-  try{loadTicket++;await voice.cancel();checkEntry();recording=null;selection=null;preview=null;wish=null;petCtrl.resetPetFurnitureVisit();pets=[];parts={};
+  try{loadTicket++;await voice.cancel();checkEntry();recording=null;selection=null;preview=null;wish=null;petCtrl.resetPetFurnitureVisit();pets=[];for(const key of Object.keys(parts))delete parts[key];
   if(row.cloudOnly){if(!remote)throw Error('请先登录');await remote.download(row);checkEntry();}
   const spawn=row.id===STARTER_ROOM_ID?STARTER_ROOM_SPAWN:initialPosition;
   const loadedHome=store.measureCapacity?await store.measureCapacity(row.id):await store.get(row.id);checkEntry();if(!loadedHome||loadedHome.deleted)throw Error('家园已移除');let residents=remote?await remote.loadPart(loadedHome,'residents'):await store.read(loadedHome.id,'residents');checkEntry();if(residents.$selection?.version!==1){const result=await store.mutate(loadedHome.id,['residents'],(_,data)=>{data.residents=initializeHomeResidents(data.residents,ownedPetRecords(getContext().save),loadedHome.seed);});checkEntry();Object.assign(loadedHome,result.home);residents=result.data.residents;}home=loadedHome;parts.residents=residents;camera={...spawn};hero={...spawn,facing:0};showRoofs=row.id!==STARTER_ROOM_ID;secondHero={x:1.5,y:0,facing:0};secondDestination=null;secondPath=[];clearInput();destination=null;walkPath=[];build=false;walkChunk=null;visitElapsed=0;visitClock=performance.now();visitCheckpoint=0;nextPetThink=Date.now()+20000;onScene(true);status=row.id===STARTER_ROOM_ID?STARTER_ROOM_HINT:'已保存到本机；点击草地控制主角移动。';roster();emit();await loadChunks();
@@ -379,7 +379,7 @@ export async function openHomeSystem({root,getContext,close,cloud,starterRoom=fa
   entering=false;loading.hide();void drainPractice(home.id).catch(e=>{pending=()=>drainPractice(home.id);error(e);});
   }catch(e){if(ticket===entryTicket&&valid())showLoading({phase:'error',message:e.message||'家园暂时未能加载，请重试。'});}
  }
- async function back(){spellEpoch++;await mutation.catch(()=>{});check();if(pending)throw Error('请先点击重试保存');await saveVisit(true);await voice.cancel();loadTicket++;onScene(false);clearInput();secondDestination=null;secondPath=[];destination=null;walkPath=[];home=null;editHistory.clear();parts={};pets=[];selection=null;preview=null;wish=null;await list();}
+ async function back(){spellEpoch++;await mutation.catch(()=>{});check();if(pending)throw Error('请先点击重试保存');await saveVisit(true);await voice.cancel();loadTicket++;onScene(false);clearInput();secondDestination=null;secondPath=[];destination=null;walkPath=[];home=null;editHistory.clear();for(const key of Object.keys(parts))delete parts[key];pets=[];selection=null;preview=null;wish=null;await list();}
  async function loadChunks(){if(!home||!valid())return;const ticket=++loadTicket,id=home.id,{width,height}=view.size,keys=visibleChunkKeys(camera,width,height,scale).map(k=>`chunk:${k}`);const values=await Promise.all(keys.map(k=>remote?remote.loadPart(home,k):store.read(id,k)));if(ticket!==loadTicket||home?.id!==id||!valid())return;for(const k of Object.keys(parts))if(k.startsWith('chunk:')&&!keys.includes(k))delete parts[k];keys.forEach((k,i)=>{parts[k]=values[i];});if(walkPath.length&&destination)navigate(destination,0);if(secondPath.length&&secondDestination)navigate(secondDestination,1);emit();}
 
  function select(itemId,color='',fromInventory=false){

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {spellSoundCues,crossedSoundCues} from '../js/audio/spell_sound_core.js';
+import {spellSoundCues,crossedSoundCues,spellSampleCue} from '../js/audio/spell_sound_core.js';
 import {createSpellSound} from '../js/audio/spell_sound.js';
 const config=JSON.parse(fs.readFileSync(new URL('../data/adventure/spell-effects.json',import.meta.url)));
 const cards=JSON.parse(fs.readFileSync(new URL('../data/kids/cards.json',import.meta.url)));
@@ -51,6 +51,29 @@ test('all sound recipes are bounded, deterministic and preserve secondary timing
  assert.deepEqual(crossedSoundCues(cues,null,.8),[]);
  assert.deepEqual(crossedSoundCues(cues,.1,.8),[]);
  assert.deepEqual(crossedSoundCues(cues,.98,.02),[cues[0]]);
+});
+test('recorded spell cues distinguish schools and play support effects as support',()=>{
+ const impact={at:config.timeline.impact};
+ const sample=key=>spellSampleCue(config,cards[key],spellSoundCues(config,cards[key]).find(cue=>cue.gain===.16)).name;
+ assert.equal(sample('Fire_SingleAttackWithDOT_Level1'),'impactFire');
+ assert.equal(sample('Ice_SingleAttack_Level6'),'impactIce');
+ assert.equal(sample('Storm_SingleAttack_Level1'),'impactStorm');
+ assert.equal(sample('Life_SingleHealWithHOT_Level1'),'heal');
+ assert.equal(sample('Fire_FireGreatShield'),'shield');
+ assert.equal(spellSampleCue(config,cards.Fire_SingleAttackWithDOT_Level1,{at:0}).name,'cast');
+ assert.equal(spellSampleCue(config,cards.Fire_SingleAttackWithDOT_Level1,impact,{failed:true}).name,'fizzle');
+});
+test('the cast timeline reaches the selected recorded impact',async()=>{
+ const requested=[];let time=0;
+ const param=()=>({value:0,setValueAtTime(){},exponentialRampToValueAtTime(){}});
+ const node=()=>({connect(){},disconnect(){},gain:param(),frequency:param()});
+ const context={state:'running',currentTime:1,sampleRate:100,destination:{},createGain:node,createBiquadFilter:node,createOscillator:()=>({...node(),start(){},stop(){}}),createBufferSource:()=>({...node(),playbackRate:{value:1},start(){},stop(){}}),createBuffer:()=>({getChannelData:()=>new Float32Array(100)}),async close(){}};
+ const sound=createSpellSound({defaultEnabled:true,persistPreferences:false,contextFactory:()=>context,now:()=>time,samples:{load(){},get(name){requested.push(name);return {};},dispose(){}}});
+ await sound.unlock();
+ const card=cards.Storm_SingleAttack_Level1;
+ for(const progress of [.01,.24,.48,.7]){sound.track(config,card,progress);time+=200;}
+ assert.deepEqual(requested,['cast','release','impactStorm']);
+ await sound.dispose();
 });
 test('audio requires unlock, plays once per cue, caps voices, cancels on pause and mute',async()=>{
  let starts=0,stops=0,closed=0;

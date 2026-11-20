@@ -1,6 +1,7 @@
 import {canPlace,chunkKey,createHome,matchHomeSpell} from './home_core.js';
 import {buildingTemplateObjects,validateTemplatePlacement} from './home_building_templates_core.js';
 import {compareDungeonSpeech} from './dungeon_speech_core.js';
+import {homeItemLanguage} from './home_language_core.js';
 
 export const STARTER_ROOM_ID='starter-room-v1';
 export const STARTER_ROOM_SPAWN={x:4.5,y:4.5};
@@ -16,11 +17,13 @@ export function starterLampExercise(item){
  };
 }
 
-export function matchStarterLampRequest(text,item,selection,options){
+export function matchStarterLampRequest(text,item,selection,options,language='en'){
  const exercise=starterLampExercise(item);
- const result=matchHomeSpell(text,[exercise],'en',selection,options);
- if(compareDungeonSpeech(text,exercise.en,'en').accuracy===1)return result;
- return {...result,candidates:[],error:'这次想要的是灯。试试用上 lamp。'};
+ const result=matchHomeSpell(text,[exercise],language,selection,options);
+ const noun=language==='en'?exercise.en:language==='zh'?exercise.zh:homeItemLanguage(exercise,language);
+ const named=!!noun&&(language==='en'?compareDungeonSpeech(text,noun,'en').accuracy===1:String(text||'').normalize('NFKC').replace(/\s+/g,'').includes(noun.normalize('NFKC').replace(/\s+/g,'')));
+ if(named)return result;
+ return {...result,candidates:[],error:`这次想要的是灯。试试用上 ${noun||'灯'}。`};
 }
 
 export function starterRoomLayout(catalog,petId){

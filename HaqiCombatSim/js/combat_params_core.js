@@ -141,7 +141,7 @@ export function defaultParams(version = 'teen') {
             tauntThreatWeight:5,
             levelCap: Math.max(50,...PACK_ISLANDS.map(i=>i.recommendedLevel)), stageLevels: [1,10,25,40], petCapacities: [2,4,6,8],
             petCopies: 3, heroRegenPerSecond: .02, regenPerMinute: .05, hungerPerMinute: 1, restingHungerPerMinute: .5, feedThreshold: 30,
-            foodRestore: 40, petFoodRules: {'17172':{restore:40,price:30},'17185':{restore:70,price:120},'17211':{restore:100,price:240}}, defeatHp: .1, captureBase: .2, captureWounded: .65,
+            foodRestore: 40, petFoodXpMultiplier: .2, petFoodRules: {'17172':{restore:40,price:30},'17185':{restore:70,price:120},'17211':{restore:100,price:240}}, defeatHp: .1, captureBase: .2, captureWounded: .65,
             catchMinChance: .01, catchMaxChance: .95, catchEnragedDifficulty: 2,
             foodPrice: 10, capturePrice: 25, petPriceBase: 100, petPriceLevel: 40,
             gearPriceBase: 30, gearPriceLevel: 15, duplicateXp: 50, mountSpeed: 1.35,

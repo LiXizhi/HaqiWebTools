@@ -1422,6 +1422,21 @@
 .mentor-practice-layer .card-face{width:112px}
 .mentor-feedback{text-align:center;margin:0;font-weight:bold}
 @media(max-width:480px){.mentor-practice-layer .practice-cards{gap:5px}.mentor-practice-layer .practice-card{width:30%}.mentor-practice-layer .card-face{width:100%}.mentor-practice-layer .practice-card-caption{font-size:12px}.mentor-cue strong{font-size:17px}.mentor-practice-layer .practice-partner canvas{max-width:52px;height:auto!important}}
+
+/* A short exchange belongs to the delivery, with typing always available. */
+.forest-exchange{border:1px solid #bca77b;border-radius:12px;padding:14px;background:#fffaf0;min-width:0}
+.forest-exchange h3{margin:0 0 8px;font-size:19px}
+.forest-exchange label{display:block;line-height:1.6}
+.forest-exchange input{display:block;box-sizing:border-box;width:100%;min-height:48px;margin:6px 0 12px;padding:10px;font:inherit;border:1px solid #99845b;border-radius:8px;background:#fff;color:#342b20}
+.forest-exchange-controls,.forest-story-choices{display:flex;flex-wrap:wrap;gap:8px}
+.forest-exchange-controls button,.forest-story-choices button{min-height:48px;white-space:normal;touch-action:manipulation}
+.forest-story-choices>p{flex-basis:100%;margin:4px 0}
+.forest-story-choices button[aria-pressed="true"]{outline:3px solid #6c7f36;outline-offset:1px}
+.forest-plan-reply{padding:12px;background:#f1ead8;border-radius:8px;line-height:1.7}
+.forest-exchange-examples .forest-clue{flex-wrap:wrap}
+.forest-exchange-examples p{overflow-wrap:anywhere;min-width:0}
+.forest-exchange-controls [hidden]{display:none}
+@media(max-width:520px){.forest-exchange{padding:10px}.forest-exchange-controls button,.forest-story-choices button{flex:1 1 145px}.forest-story-choices{width:100%}}
 .tactical-intent-panel{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:4px;width:max-content;max-width:min(490px,90vw);box-sizing:border-box;background:#fff4d9;color:#3d3024;border:1px solid #b79251;border-radius:9px;padding:5px 12px;box-shadow:0 3px 10px #25221540;font-size:13px;line-height:1.35;text-align:left;pointer-events:none}
 .tactical-intent-row{display:flex;align-items:baseline;gap:8px}.tactical-intent-row b{flex:none;color:#705426}.tactical-intent-row:nth-child(2) b{color:#994227}.tactical-intent-row span{overflow-wrap:anywhere}
 .tactical-intent-details{pointer-events:auto}.tactical-intent-details summary{width:max-content;cursor:pointer;font-size:12px;color:#594525;padding:3px 0}
@@ -1451,3 +1466,35 @@
  .battle-layer:has(.tactical-intent-panel) .combatant-school{width:23px;height:23px;flex-basis:23px}
  .battle-layer:has(.tactical-intent-panel) .roster-near>.combatant-status:only-child{grid-column:2}
 }
+
+.forest-mystery-scene{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:12px;border:1px solid #bca77b;border-radius:12px;background:#fffaf0;min-width:0}
+.forest-mystery-scene canvas{max-width:100%;height:auto;flex:0 1 auto}
+.forest-mystery-objects{display:grid;gap:8px;flex:1 1 190px;min-width:0}
+.forest-mystery-objects button,.forest-mystery-move button,.forest-mystery-endings button{min-height:48px;white-space:normal;touch-action:manipulation}
+.forest-mystery-objects [aria-pressed=true],.forest-mystery-endings [aria-pressed=true]{background:#e6f0d5;border-color:#617745}
+.forest-mystery-order{padding-left:28px;display:grid;gap:10px}
+.forest-mystery-order li{padding:10px;border:1px solid #bca77b;border-radius:10px;background:#fffaf0;overflow-wrap:anywhere}
+.forest-mystery-move,.forest-mystery-endings{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.forest-mystery-endings button{flex:1 1 190px}
+@media(max-width:520px){.forest-mystery-scene{padding:8px}.forest-mystery-move button{flex:1 1 100px}.forest-mystery-order{padding-left:24px}}
+
+/* Optional lost-spark escort: a readable route at narrow phone widths. */
+.spark-rescue>.modal-header{flex:none;gap:16px}
+.spark-rescue>.modal-header h2{min-width:0;overflow-wrap:anywhere}
+.spark-rescue .modal-body{max-width:640px}
+.spark-route-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;max-width:420px;margin:16px auto}
+.spark-route-cell{min-width:0;min-height:52px;padding:5px 2px;white-space:normal;border:2px solid #bba787;border-radius:10px;background:#f5ebd5;color:#3d3427;touch-action:manipulation}
+.spark-route-cell[data-terrain="积水"]{background:#d7e9f4;border-style:dashed;color:#2d5064}
+.spark-route-cell[data-terrain="风口"]{background:#e8e9ee;border-style:dashed}
+.spark-route-cell[data-terrain="暖石"]{background:#f6d7ac}
+.spark-route-cell[data-terrain="灯台"]{background:#f7edb5;border-color:#9d7a24}
+.spark-route-cell.passed{box-shadow:inset 0 0 0 3px #9fb18d}
+.spark-route-cell.current{background:#ffe49a;border-color:#744d10;font-weight:700;box-shadow:0 0 0 2px #f3cd66}
+.spark-route-cell:focus-visible{outline:3px solid #245f88;outline-offset:2px}
+.spark-methods,.spark-directions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.spark-rescue button{min-height:48px;white-space:normal;touch-action:manipulation}
+.spark-directions button{flex:1;min-width:60px}
+.spark-rescue-status{position:sticky;top:0;z-index:1;min-height:1.5em;color:#345c55;background:var(--paper)}
+.spark-rescue-status:not(:empty){padding:10px 12px;border:1px solid #b9cdc2;border-radius:10px;box-shadow:0 3px 8px #294c4420}
+.spark-restart{margin:12px 0}.spark-restart summary{min-height:44px;cursor:pointer}
+@media(max-width:380px){.spark-route-grid{gap:4px}.spark-route-cell{font-size:13px}}

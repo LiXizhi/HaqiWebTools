@@ -208,6 +208,7 @@ export function createEarthController({
     }
 
     async function travelEarth(geo) {
+        if (earthTraveling) return;
         const ctx = getContext();
         if (ctx.save.pendingEncounter || ctx.save.coopRun || dungeonFor(ctx.assets.content, ctx.save.zone)) {
             toast('请先完成战斗或退出副本');
@@ -490,6 +491,7 @@ export function createEarthController({
 
     function resetSession() {
         earthViewTicket++;
+        earthTraveling = false;
         earthService?.cancel();
         earthOwner = null;
         const { assets } = getContext();

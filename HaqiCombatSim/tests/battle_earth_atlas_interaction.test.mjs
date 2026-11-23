@@ -9,7 +9,7 @@ async function withAtlas(model,run,callbacks={}){
     class Element{
         constructor(tag){this.tag=tag;this.children=[];this.style={};this.dataset={};this.className='';this.classList={add(){},remove(){}};}
         append(...nodes){this.children.push(...nodes);}replaceChildren(...nodes){this.children=nodes;}
-        setAttribute(){}setPointerCapture(){}
+        setAttribute(){}removeAttribute(){}setPointerCapture(){}
         getBoundingClientRect(){return {left:0,top:0,width:900,height:470};}
         getContext(){return new Proxy({strokeText:text=>painted.push(text),fillText:text=>painted.push(text),measureText:text=>{measured.push(text);return {width:text.length*13};}},{get:(target,key)=>target[key]||(()=>{})});}
         querySelector(selector){return this.children.find(n=>n.className?.split(' ').includes(selector.slice(1)))||this.children.map(n=>n.querySelector?.(selector)).find(Boolean);}
@@ -108,9 +108,53 @@ test('favorite mode distinguishes drags from placement, persists coordinates, an
         assert.deepEqual(removed,['saved']);assert.equal(root.querySelector('.earth-saved-places').children.length,0);
     },{addFavorite:async geo=>{added.push(geo);return {favorites:[{...geo,id:'saved',favorite:true}]};},removeFavorite:async id=>{removed.push(id);return {favorites:[]};}});
 });
+test('favoriting a city label saves the city coordinates instead of the offset click',async()=>{
+    const city={id:'edmonton',name:'埃德蒙顿',lon:0,lat:12.5},added=[];
+    await withAtlas({current:city,index:{hotspots:[city]}},async({root,click,travels})=>{
+        root.querySelector('.earth-map-tools').children[0].onclick();
+        click(470,220);await Promise.resolve();await Promise.resolve();
+        assert.deepEqual(added,[{name:city.name,lon:city.lon,lat:city.lat}]);
+        root.querySelector('.earth-saved-marker').onclick();
+        assert.equal(travels[0].lon,city.lon);assert.equal(travels[0].lat,city.lat);
+    },{addFavorite:async geo=>{added.push(geo);return {favorites:[{...geo,id:'saved',favorite:true}]};}});
+});
+
 test('failed favorite save stays in placement mode with visible retry feedback',async()=>{
     await withAtlas({},async({root,click})=>{
         const tools=root.querySelector('.earth-map-tools');tools.children[0].onclick();click(450,235);await Promise.resolve();await Promise.resolve();
         assert.match(tools.children[1].textContent,/保存失败/);assert.equal(tools.children[0].disabled,false);assert.equal(root.querySelector('.earth-saved-places').children.length,0);
     },{addFavorite:async()=>{throw Error('quota');}});
+});
+
+test('thirty viewport destinations each select and travel with their own coordinates after map redesign',async()=>{
+    const cities=Array.from({length:30},(_,i)=>({id:`destination-${i}`,name:`旅行地点${i+1}`,lon:-150+i%6*60,lat:-45+Math.floor(i/6)*25,population:1000}));
+    await withAtlas({current:{lon:0,lat:12.5}},async({view,click,popup,travels})=>{
+        const markers=view.getState().markers;assert.equal(markers.length,cities.length);
+        for(const marker of markers){
+            const before=travels.length;click(marker.x,marker.y);
+            assert.equal(popup.hidden,false);assert.equal(popup.children[0].textContent,marker.city.name);
+            assert.equal(travels.length,before,'choosing a marker waits for explicit travel');
+            popup.children[1].onclick();
+            assert.equal(travels.at(-1).id,marker.city.id);assert.equal(travels.at(-1).lon,marker.city.lon);assert.equal(travels.at(-1).lat,marker.city.lat);
+        }
+        assert.equal(new Set(travels.map(city=>city.id)).size,30);
+    },{viewport:async()=>({cities,tiles:[]})});
+});
+
+test('atlas travel lock covers city selection, saved stars and rows, then restores on error',async()=>{
+    const first={id:'first',name:'第一站',lon:0,lat:12.5},next={id:'next',name:'下一站',lon:90,lat:12.5};
+    await withAtlas({index:{hotspots:[first,next]},places:{recent:next,favorites:[]}},async({root,view,popup,click,travels})=>{
+        assert.equal(view.selectCity('first'),true);
+        const star=root.querySelector('.earth-saved-marker'),row=root.querySelector('.earth-saved-row').children[0];
+        view.busy('正在准备目的地');
+        for(const node of [popup.children[1],star,row]){assert.equal(node.disabled,true);node.onclick();}
+        const marker=view.getState().markers.find(p=>p.city.id==='next');click(marker.x,marker.y);
+        assert.equal(view.selectCity('next'),false);assert.equal(popup.children[0].textContent,first.name);assert.equal(travels.length,0);
+        view.error('连接失败，请重试');
+        for(const node of [popup.children[1],star,row])assert.equal(node.disabled,false);
+        popup.children[1].onclick();star.onclick();row.onclick();assert.deepEqual(travels.map(p=>p.id),['first','next','next']);
+        view.dispose();view.error('过期错误');
+        for(const node of [popup.children[1],star,row]){assert.equal(node.disabled,true);node.onclick();}
+        assert.equal(view.selectCity('first'),false);assert.equal(travels.length,3);
+    });
 });

@@ -247,6 +247,13 @@ test('keyboard arrows animate and disposal cancels outstanding movement',async()
     await withMap(({stage,view,stepFrame,flushFrames})=>{const x=view.getState().camera.x;stage.onkeydown({key:'ArrowRight',preventDefault(){}});assert.equal(view.getState().camera.x,x);stepFrame(50);assert.ok(view.getState().camera.x>x);view.dispose();const stopped=view.getState().camera.x;flushFrames();assert.equal(view.getState().camera.x,stopped);});
 });
 
+test('short landscape stages retain a readable island instead of collapsing to minimum zoom',()=>{
+    const h=Math.max(...art.islands.map(i=>i.h));
+    const {max}=atlasStripLimits(art.islands,735,200);
+    assert.ok(h*max>=90);
+    assert.ok(h*max+92<=200);
+});
+
 test('mobile island framing uses more of the viewport without clipping the island label',()=>{
     for(const [width,height]of [[320,280],[390,360],[450,360]]){
         const {max}=atlasStripLimits(art.islands,width,height),w=Math.max(...art.islands.map(i=>i.w)),h=Math.max(...art.islands.map(i=>i.h));

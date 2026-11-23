@@ -1,4 +1,6 @@
 import {directCacheStore} from './helpers/direct_cache_store.js';
+import {SPARK_DUNGEON,applySparkRescue} from '../js/spark_rescue_core.js';
+import {settleDungeonChallenge} from '../js/dungeon_challenge_core.js';
 import {forestCommissionPhase,forestCommissionPouch,FOREST_NPCS,FOREST_SITES} from '../js/forest_commission_core.js';
 import {dungeonTacticsMonsters,dungeonEnemyIntentInfo,dungeonTacticsPreparation} from '../js/dungeon_tactics_core.js';
 import {companionBattleAdvice} from '../js/companion_battle_advice_core.js';
@@ -38,6 +40,27 @@ installDungeonIndex(content,read('adventure/dungeon-index'));
 const index=structuredClone(content.dungeons.filter(d=>d.kind));
 installDungeons(content,dataset,read('adventure/dungeons'),read('kids/cards'));
 const tower=content.dungeons.find(d=>d.id==='journey:tower-camp');
+
+test('lost spark aftermath uses the real cleared exit and survives local and cloud storage',()=>{
+ const save=A.createAdventure(content,{school:'fire',seed:23}),id=SPARK_DUNGEON;
+ enterDungeon(save,content,id);
+ assert.equal(W.createWorld(id,content,save).portal.name,'离开副本');
+ const dungeon=content.dungeons.find(d=>d.id===id),run=save.dungeonRuns[id];
+ for(const arena of dungeon.arenas){run.cleared.push(arena.id);settleDungeonChallenge(save,dungeon,run,{dungeonMonsterIds:arena.monsterIds},{finished:true,winner:'near',turn:3});}
+ save.position={x:content.worldMaps[id].portal.x,y:content.worldMaps[id].portal.y};
+ assert.equal(W.createWorld(id,content,save).portal.name,'照看火种 · 离开副本');
+ applySparkRescue(save,content,{step:'start',method:'lamp'});
+ for(const to of [17,12,7,2,3,4])applySparkRescue(save,content,{step:'move',to});
+ const parts=splitRoleSave(save,content),local=A.parseSave(joinRoleSave(parts.state,parts,content),content);
+ assert.deepEqual(local.sparkRescue,save.sparkRescue);
+ const cloud=makeCloudSnapshot(save,content,dataset,'2026-11-23T04:00:00.000Z','12345678-1234-1234-1234-123456789abc');
+ const restored=parseCloudSnapshot(JSON.stringify(cloud),content,dataset).save;
+ assert.deepEqual(restored.sparkRescue,save.sparkRescue);
+ applySparkRescue(restored,content,{step:'finish',promise:'signal'});
+ assert.equal(W.createWorld(id,content,restored).portal.name,'火种已安顿 · 离开副本');
+ leaveDungeon(restored,content);assert.ok(A.parseSave(restored,content));assert.equal(restored.sparkRescue.status,'safe');
+ const forged=structuredClone(restored);forged.sparkRescue.path=[16,4];assert.throws(()=>A.parseSave(forged,content),/火种/);
+});
 
 test('tower claim can retry a failed write and only publishes the saved reward once', () => {
     const save = A.createAdventure(content);

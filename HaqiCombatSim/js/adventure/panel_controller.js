@@ -210,6 +210,10 @@ export function createPanelController(options) {
             return;
         }
         if (activePanel === 'dungeon-story') return;
+        if (activePanel === 'spark-rescue') {
+            dungeon.paintSparkRescue();
+            return;
+        }
         if (activePanel === 'dungeon-journey') {
             const { journeyId, journeyRestart } = dungeon.getState();
             renderDungeonJourney(

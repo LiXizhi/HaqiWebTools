@@ -1,6 +1,7 @@
 // Browser-only skin: one downloaded atlas, CSS sprites and four in-memory
 // border-image crops. Gameplay and all text remain ordinary DOM content.
 import { fetchJson } from './runtime_data.js';
+import {loadMapUiArt} from './map_ui_art.js';
 
 export async function loadUiArt(mode,read=fetchJson) {
     const manifest = await read('data/adventure/ui-art.json');
@@ -54,7 +55,10 @@ export async function loadUiArt(mode,read=fetchJson) {
     document.getElementById(style.id)?.remove();
     document.head.append(style);
     document.documentElement.classList.add('storybook-ui');
-    await loadForestUi(mode,read).catch(error=>console.warn('森林界面素材暂未加载，沿用原皮肤',error.message));
+    await Promise.all([
+        loadForestUi(mode,read).catch(error=>console.warn('森林界面素材暂未加载，沿用原皮肤',error.message)),
+        loadMapUiArt(mode,read).catch(error=>console.warn('地图插画暂未加载，使用清晰的文字与图标',error.message)),
+    ]);
     return manifest;
 }
 

@@ -128,6 +128,7 @@ export function createSceneNavigationController({
             else paintDialogue();
         }
         if(target.kind==='portal'&&(target.id===ctx.world.entrancePortal?.id||!ctx.world.portal.hidden)){
+            if(target.id===ctx.world.portal.id&&dungeon.openSparkRescue?.())return;
             if(dungeonFor(ctx.assets.content,ctx.save.zone))dungeon.exitDungeon();
             else openPanel('worldmap');
         }

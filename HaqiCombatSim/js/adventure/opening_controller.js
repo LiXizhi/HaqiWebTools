@@ -32,6 +32,7 @@ import { currentQuest as defaultCurrentQuest } from '../adventure_core.js';
 import { openCompanionWordplay } from '../learning/companion_wordplay.js';
 import { campDetourGoal } from '../camp_detour_core.js';
 import { createSaveCommitter, persistReward } from '../adventure_reward_persistence.js';
+import {createForestExchangeRecorder} from '../forest_exchange_recorder.js';
 import { createLearningVoice } from '../audio/language_adventure_voice.js';
 import { recordWordPractice } from '../learning/language_course.js';
 import { learningLesson, learningPracticeLanguage } from '../learning_language_core.js';
@@ -78,6 +79,7 @@ export function createOpeningController({
     renderOpeningJourneyView = renderOpeningJourney,
     playOpeningPetWelcomeFn = playOpeningPetWelcome,
     persistRewardFn = persistReward,
+    createLearningVoiceFn = createLearningVoice,
     onOpenTacticsTraining,
     onTrackOpeningJourney,
 }) {
@@ -480,7 +482,7 @@ export function createOpeningController({
         const ctx = getContext();
         const current = ctx.save;
         const role = ctx.roleStore.catalog.activeId;
-        if ((!current?.forestCommission?.practice && !current?.forestCommission?.notePractice && !current?.forestCommission?.labelPractice?.length) || forestPracticeTask) return;
+        if ((!current?.forestCommission?.practice && !current?.forestCommission?.notePractice && !current?.forestCommission?.labelPractice?.length && !current?.forestCommission?.exchangePractice?.length) || forestPracticeTask) return;
         const valid = () => {
             const nowCtx = getContext();
             return nowCtx.save === current && nowCtx.roleStore.catalog.activeId === role;
@@ -501,7 +503,7 @@ export function createOpeningController({
         } finally {
             forestPracticeTask = null;
             const nowCtx = getContext();
-            if (nowCtx.save !== current && (nowCtx.save?.forestCommission?.practice || nowCtx.save?.forestCommission?.notePractice || nowCtx.save?.forestCommission?.labelPractice?.length)) {
+            if (nowCtx.save !== current && (nowCtx.save?.forestCommission?.practice || nowCtx.save?.forestCommission?.notePractice || nowCtx.save?.forestCommission?.labelPractice?.length || nowCtx.save?.forestCommission?.exchangePractice?.length)) {
                 void drainForestPractice();
             }
         }
@@ -520,14 +522,30 @@ export function createOpeningController({
         }
         const target = forestTarget();
         const nearby = ctx.save.zone === 'camp' && target && Math.hypot(ctx.save.position.x - target.x, ctx.save.position.y - target.y) <= 110;
+        const current = ctx.save, role = ctx.roleStore.catalog.activeId, language = current.languageLearning?.target;
+        const valid = () => {
+            const now = getContext();
+            return now.panel === 'forest-commission' && now.save === current && now.roleStore.catalog.activeId === role && now.save.languageLearning?.target === language;
+        };
         renderForestCommissionView(
             nodes.overlay,
             { ...model(), nearby },
             {
                 close,
                 sound: name => spellSound.play(name),
+                recorder: handlers => {
+                    const voice = createLearningVoiceFn({getSettings: () => current.languageLearning});
+                    return createForestExchangeRecorder({
+                        ...handlers, valid,
+                        voice: {
+                            start: signal => { openingSpeech?.abort(); return voice.start(signal); },
+                            finish: () => voice.finish(), cancel: () => voice.cancel(),
+                        },
+                    });
+                },
                 listen: (line, language) =>
                     safely(async () => {
+                        nodes.overlay.cancelForestRecording?.();
                         openingSpeech?.abort();
                         const controller = new AbortController();
                         openingSpeech = controller;
@@ -654,6 +672,7 @@ export function createOpeningController({
         mentorPractice = null;
         wordplaySession?.dispose();
         wordplaySession = null;
+        nodes.overlay.disposeForestCommission?.();
         companionPractice = null;
         openingSpeech?.abort();
         openingSpeech = null;

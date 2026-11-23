@@ -19,6 +19,8 @@ import { askAdventureConfirm } from '../ui/confirm_dialog.js';
 import { tr } from '../locale_runtime.js';
 import * as A from '../adventure_core.js';
 import * as W from '../adventure_world_core.js';
+import {sparkRescueNear,applySparkRescue} from '../spark_rescue_core.js';
+import {renderSparkRescue} from '../views/adventure/view_spark_rescue.js';
 
 export function createDungeonController({
     nodes,
@@ -48,6 +50,37 @@ export function createDungeonController({
     let dungeonLoading = null;
     let journeyId = null;
     let journeyRestart = false;
+    let sparkMessage = '';
+
+    function openSparkRescue() {
+        const ctx=getContext();
+        if(ctx.stage!=='world'||!sparkRescueNear(ctx.save,ctx.assets.content))return false;
+        sparkMessage='';openPanel('spark-rescue');return true;
+    }
+
+    function paintSparkRescue({focus=true}={}) {
+        const ctx=getContext();
+        if(ctx.panel!=='spark-rescue')return;
+        if(ctx.stage!=='world'||!sparkRescueNear(ctx.save,ctx.assets.content)){close();return;}
+        const expected={save:ctx.save,epoch:ctx.roleEpoch};
+        renderSparkRescue(nodes.overlay,{save:ctx.save,message:sparkMessage,focus},{
+            close:()=>{const now=getContext();if(now.panel==='spark-rescue'&&now.save===expected.save&&now.roleEpoch===expected.epoch)close();},
+            leave:()=>{const now=getContext();if(now.panel==='spark-rescue'&&now.save===expected.save&&now.roleEpoch===expected.epoch)exitDungeon();},
+            action:action=>{
+                const now=getContext();
+                if(now.panel!=='spark-rescue'||now.stage!=='world'||now.save!==expected.save||now.roleEpoch!==expected.epoch)return false;
+                const committed=saveCommitter.commitSave(next=>applySparkRescue(next,now.assets.content,action),{expected,paint:'none',shouldSave:result=>result.changed!==false});
+                if(!committed||committed.rejected)return false;
+                sparkMessage=committed.result?.message||'';
+                if(!committed.skipped){
+                    const current=getContext();
+                    if(committed.result?.completed&&current.world?.portal)current.world.portal.name='火种已安顿 · 离开副本';
+                    paintHud();paintSparkRescue({focus:true});
+                }
+                return committed.result;
+            },
+        });
+    }
 
     const dungeonStory = createDungeonStory({
         root: nodes.overlay,
@@ -359,6 +392,8 @@ export function createDungeonController({
     return {
         dungeonStory,
         openJourney,
+        openSparkRescue,
+        paintSparkRescue,
         claimFloorReward,
         pickDungeonLobby,
         loadAndEnterCityDungeon,

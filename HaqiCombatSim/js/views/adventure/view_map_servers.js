@@ -11,7 +11,8 @@ export function mountMapServers(root,cb){
     if(!header)return ()=>{};
     const trigger=button('游戏服未连接',()=>{detail.open(trigger);void load(1);});
     trigger.classList.add('map-server-trigger');trigger.setAttribute('aria-haspopup','dialog');
-    header.insertBefore(trigger,header.querySelector('.close-button'));
+    const tools=header.querySelector('.map-header-tools')||header;
+    tools.insertBefore(trigger,tools.querySelector('.close-button'));
     const detail=new DetailDialog(root,{el,title:'选择服务器',className:'equipment-item-dialog map-server-dialog'});
     const message=el('p','map-server-message'),grid=el('div','map-server-grid'),pager=el('div','map-server-pager');
     message.setAttribute('role','status');detail.body.replaceChildren(message,grid,pager);

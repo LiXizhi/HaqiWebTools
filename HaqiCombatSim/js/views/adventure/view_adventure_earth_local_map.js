@@ -1,4 +1,4 @@
-import {createCloseButton,createWorldMapSwitch} from '../../ui/controls.js';
+import {createMapHeader} from '../../ui/controls.js';
 import {earthLocalMapBounds} from '../../adventure_earth_core.js';
 import {layoutEarthMapLabels} from '../../earth_map_labels_core.js';
 import {setText,tr} from '../../locale_runtime.js';
@@ -7,9 +7,8 @@ import {setText,tr} from '../../locale_runtime.js';
 export function renderEarthLocalMap(root,world,save,cb){
     const el=(tag,className)=>{const node=document.createElement(tag);node.className=className;return node;};
     root.replaceChildren();root.className='overlay visible';
-    const modal=el('section','modal earth-modal atlas-map-modal'),header=el('header','modal-header'),heading=el('div','map-heading'),body=el('div','modal-body');
+    const modal=el('section','modal earth-modal atlas-map-modal'),header=createMapHeader(world.layout.name,'earth',cb.switchWorld,cb.close),body=el('div','modal-body');
     modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label',world.layout.name);
-    heading.append(createWorldMapSwitch('earth',cb.switchWorld));header.append(heading,createCloseButton(cb.close));
     const map=el('div','earth-map-stage earth-local-map'),canvas=el('canvas','earth-atlas'),name=el('h2','island-map-name');
     canvas.width=560;canvas.height=560;canvas.tabIndex=0;canvas.setAttribute('aria-label',tr('当前城市周边地图，可拖动或使用方向键浏览'));setText(name,world.layout.name);
     const ns='http://www.w3.org/2000/svg',lines=document.createElementNS(ns,'svg'),cityLayer=el('div','earth-local-cities'),locate=el('button','earth-local-locate'),status=el('button','earth-local-status');
@@ -22,7 +21,7 @@ export function renderEarthLocalMap(root,world,save,cb){
         cityLayer.replaceChildren();nodes=[];
         for(const city of cities){
             const node=el('button','earth-local-city'),dot=el('button','earth-local-dot');node.type=dot.type='button';setText(node,city.name);dot.title=city.name;dot.setAttribute('aria-label',city.name);
-            node.onclick=dot.onclick=e=>{if(!suppressClick||e.detail===0)cb.travel(city);};cityLayer.append(dot,node);nodes.push({city,node,dot});
+            node.onclick=dot.onclick=e=>{if(!disposed&&!travelBusy&&(!suppressClick||e.detail===0))cb.travel(city);};node.disabled=dot.disabled=travelBusy;cityLayer.append(dot,node);nodes.push({city,node,dot});
         }
     }
     installCities(world.mapCities||[]);
@@ -72,5 +71,6 @@ export function renderEarthLocalMap(root,world,save,cb){
         e.preventDefault();bounds.x+=(e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0)*bounds.w/8;bounds.y+=(e.key==='ArrowDown'?1:e.key==='ArrowUp'?-1:0)*bounds.h/8;draw();queueRefresh();
     };
     body.append(map);modal.append(header,body);root.append(modal);draw();void refresh();header.querySelector('.close-button').focus();
-    return {dispose(){disposed=true;revision++;clearTimeout(timer);},busy(text){travelBusy=true;showStatus(text);},error(text){travelBusy=false;showStatus(text);}};
+    function setTravelBusy(value){travelBusy=value;for(const {node,dot} of nodes)node.disabled=dot.disabled=value;}
+    return {dispose(){disposed=true;revision++;clearTimeout(timer);},busy(text){setTravelBusy(true);showStatus(text);},error(text){setTravelBusy(false);showStatus(text);}};
 }

@@ -12,19 +12,22 @@ const read=file=>JSON.parse(fs.readFileSync(new URL('../data/'+file,import.meta.
 const content=read('adventure/chapter.json');
 content.worldMaps={camp:read('adventure/maps/camp.json')};
 
-function harness(){
+function harness({voice}={}){
  let callbacks,view,written,fail=false;
  const calls=[],errors=[];
  const ctx={
   save:A.createAdventure(content,{school:'fire',seed:23}),
-  panel:'forest-commission',
+  panel:'forest-commission',activeRole:'r1',
   world:null,
  };
  ctx.world=W.createWorld('camp',content,ctx.save);
  const storage={getItem(){return written||null;},setItem(key,value){if(fail)throw Error('quota');if(!key.endsWith('.updated'))written=value;}};
+ const overlay={};
  const ctrl=createOpeningController({
-  nodes:{overlay:{}},
-  getContext:()=>({save:ctx.save,world:ctx.world,panel:ctx.panel,assets:{content},roleStore:{catalog:{activeId:'r1'}},setPanel:next=>{ctx.panel=next;}}),
+  nodes:{overlay},
+  createLearningVoiceFn:()=>voice,
+  dialogueVoice:()=>({speak:async()=>{}}),safely:fn=>fn(),
+  getContext:()=>({save:ctx.save,world:ctx.world,panel:ctx.panel,assets:{content},roleStore:{catalog:{activeId:ctx.activeRole}},setPanel:next=>{ctx.panel=next;}}),
   model:()=>({save:ctx.save,assets:{content}}),
   close:()=>{ctx.panel=null;},
   openPanel:panel=>calls.push({panel}),
@@ -42,7 +45,7 @@ function harness(){
  });
  const paint=()=>{ctrl.paintForestCommission();return callbacks;};
  const arrive=()=>{const target=ctrl.forestTarget();assert.ok(target);ctx.save.position={x:target.x,y:target.y};return paint();};
- return {ctx,calls,errors,paint,arrive,cb:()=>callbacks,view:()=>view,stored:()=>written,fail:value=>{fail=value;}};
+ return {ctx,calls,errors,ctrl,overlay,paint,arrive,cb:()=>callbacks,view:()=>view,stored:()=>written,fail:value=>{fail=value;}};
 }
 
 test('camp commission follows real scene targets through pickup, delivery and a retained route note',()=>{
@@ -85,4 +88,29 @@ test('outside the camp the same saved quest offers return travel, and onboarding
  const h=harness();h.ctx.save.zone='earth';h.paint();assert.equal(h.view().nearby,false);
  h.cb().go();assert.equal(h.calls.at(-2).panel,'worldmap');assert.match(h.calls.at(-1).toast,/回营地/);
  h.ctx.save.zone='camp';h.ctx.save.openingJourney={version:1,phase:'offer'};h.paint();assert.equal(h.ctx.panel,null);
+});
+
+for(const change of ['save','role','language','panel'])test('forest recording ignores recognition after '+change+' changes',async()=>{
+ let resolve,stops=0;const finish=new Promise(r=>{resolve=r;});
+ const h=harness({voice:{start:async()=>{},finish:()=>finish,cancel:()=>{stops++;}}});
+ h.ctx.save.languageLearning={target:'en'};
+ const texts=[],cb=h.paint(),recorder=cb.recorder({onState(){},onText:t=>texts.push(t),onError:e=>{throw e;}});
+ await recorder.start();const pending=recorder.finish();
+ if(change==='save')h.ctx.save=structuredClone(h.ctx.save);
+ if(change==='role')h.ctx.activeRole='r2';
+ if(change==='language')h.ctx.save.languageLearning.target='ja';
+ if(change==='panel')h.ctx.panel='equipment';
+ resolve('Here are the boots.');await pending;
+ assert.deepEqual(texts,[]);assert.ok(stops>0);recorder.dispose();
+});
+
+test('forest controller cancels recording before a spoken hint and releases it on close',async()=>{
+ let starts=0,stops=0,disposed=0;const h=harness({voice:{start:async()=>{starts++;},finish:async()=>'',cancel:()=>{stops++;}}});
+ h.ctx.save.languageLearning={target:'en'};const cb=h.paint();
+ const recorder=cb.recorder({onState(){},onText(){},onError:e=>{throw e;}});
+ assert.equal(starts,0);await recorder.start();assert.equal(starts,1);
+ h.overlay.cancelForestRecording=()=>recorder.cancel();
+ h.overlay.disposeForestCommission=()=>{disposed++;recorder.dispose();};
+ await cb.listen('Here are the boots.','en');assert.ok(stops>0);
+ h.ctrl.closeAll();assert.equal(disposed,1);
 });

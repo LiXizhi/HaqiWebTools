@@ -1,7 +1,7 @@
 import {loadHaqiAtlas} from '../../haqi_atlas_data.js';
 import {assetUrl} from '../../adventure_media_core.js';
 import {ISLANDS,travelStatus} from '../../adventure_world_map_core.js';
-import {createCloseButton,createWorldMapSwitch} from '../../ui/controls.js';
+import {createMapHeader} from '../../ui/controls.js';
 import {setText,tr,fill} from '../../locale_runtime.js';
 import {atlasStripLimits,constrainAtlasStrip,atlasBounds,fitAtlas,atlasPoint,atlasInverse,zoomAtlas,islandAtlasPoint,islandLocalPoint,islandDetailOpacity,pickAtlasIsland,pickAtlasPortal,atlasCoastContains,atlasOceanTiles,atlasSeaDecorations,atlasPortalSize} from '../../haqi_atlas_core.js';
 
@@ -9,7 +9,7 @@ const el=(tag,className='',text)=>{const node=document.createElement(tag);node.c
 const button=(text,callback,className='secondary')=>{const node=el('button',className,text);node.type='button';node.onclick=callback;return node;};
 export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,focusPortal},cb,initial='world'){
     root.replaceChildren();root.className='overlay visible';
-    const modal=el('section','modal atlas-map-modal compact-map-modal haqi-atlas-modal'),header=el('header','modal-header'),heading=el('div','map-heading'),body=el('div','modal-body');
+    const modal=el('section','modal atlas-map-modal compact-map-modal haqi-atlas-modal'),header=createMapHeader('哈奇世界地图','haqi',cb.switchWorld,cb.close),heading=header.querySelector('.map-heading'),body=el('div','modal-body');
     modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label',tr('哈奇世界地图'));
     let locateTimer=null;
     const locate=button(world.isEarth?'返回当前城市地图':world.isDungeon?'返回当前副本地图':'返回当前岛屿地图',()=>{
@@ -24,7 +24,7 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
             }
         }
     },'secondary map-view-toggle');
-    heading.append(locate);if(cb.switchWorld)heading.append(createWorldMapSwitch('haqi',cb.switchWorld));header.append(heading,createCloseButton(cb.close));
+    heading.append(locate);
     const stage=el('div','haqi-atlas-stage'),canvas=el('canvas','haqi-atlas-canvas'),labels=el('div','haqi-atlas-labels'),controls=el('div','earth-map-zoom'),status=el('p','earth-map-status'),card=el('div','haqi-atlas-selection');
     canvas.width=900;canvas.height=600;canvas.tabIndex=0;canvas.setAttribute('aria-label',tr('哈奇地图，左右拖动浏览岛屿，滚轮、双指或加减按钮缩放'));
     const enter=button('传送过去',()=>performTravel(),'primary');card.hidden=true;card.append(enter);status.setAttribute('role','status');
@@ -167,7 +167,7 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
             if(p.x+w<0||p.y+h<0||p.x>width||p.y>height){node.hidden=true;for(const tag of tags)if(!tag.hidden)tag.hidden=true;continue;}
             const layout=assets.content.worldMaps?.[island.id],opacity=layout?islandDetailOpacity(island,camera.scale,width,height):0;
             positionLabel(node,point({x:island.x,y:island.y+island.h/2+24/camera.scale}));
-            if(opacity>.5&&layout){
+            if(opacity>.5&&layout&&height>=240&&w>=280&&h>=180){
                 for(const mark of layout.landmarks||[]){const tag=labelNodes.get(`${island.id}:${mark.id}`);if(tag)positionLabel(tag,point(islandAtlasPoint(island,layout,mark)));}
             }else for(const tag of tags)if(!tag.hidden)tag.hidden=true;
             if(layout&&island.id===save.zone){

@@ -1,7 +1,19 @@
 import {performanceDiagnostics as perf} from '../performance_diagnostics.js';
 
-// One preparation budget per frame, shared by streaming, indexes and surface work.
-export function createEarthWorkScheduler({budgetMs=2,clock=()=>performance.now(),schedule=cb=>typeof requestAnimationFrame==='function'?requestAnimationFrame(cb):setTimeout(cb,0),unschedule=id=>typeof cancelAnimationFrame==='function'?cancelAnimationFrame(id):clearTimeout(id)}={}){
+// Short preparation tasks must keep running when an occluded window throttles animation frames.
+function createPreparationQueue(){
+    let channel=null,sequence=0;const callbacks=new Map();
+    function closeIfIdle(){if(callbacks.size||!channel)return;channel.port1.close();channel.port2.close();channel=null;}
+    return {schedule(callback){
+        if(typeof MessageChannel!=='function')return {timer:setTimeout(callback,0)};
+        if(!channel){channel=new MessageChannel();channel.port1.onmessage=({data:id})=>{const callback=callbacks.get(id);callbacks.delete(id);try{callback?.();}finally{closeIfIdle();}};}
+        const id=++sequence;callbacks.set(id,callback);channel.port2.postMessage(id);return {id};
+    },cancel(ticket){if(ticket.timer!==undefined)clearTimeout(ticket.timer);else{callbacks.delete(ticket.id);closeIfIdle();}}};
+}
+
+// One time budget per task, shared by streaming, indexes and surface work.
+export function createEarthWorkScheduler({budgetMs=2,clock=()=>performance.now(),schedule,unschedule}={}){
+    const tasks=createPreparationQueue();schedule??=tasks.schedule;unschedule??=tasks.cancel;
     const queue=[];let handle=null,disposed=false,maxSliceMs=0;
     function pump(){
         handle=null;if(disposed)return;

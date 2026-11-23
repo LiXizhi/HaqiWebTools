@@ -1,5 +1,6 @@
 import {earthDecorationIsTree} from './adventure_earth_nature_core.js';
 import {forestCommissionSites} from './forest_commission_core.js';
+import {sparkRescueReady} from './spark_rescue_core.js';
 import {createPathQueue} from './path_queue_core.js';
 import {streetWalkable,streetSegmentWalkable} from './adventure_city_street_core.js';
 import {streetFindPath} from './adventure_city_navigation_core.js';
@@ -44,6 +45,7 @@ export function createWorld(zone,content,save=null) {
     const world={zone,isDungeon:!!dungeonFor(content,zone),w:layout.w,h:layout.h,layout,npcs,encounters,portal:{id:'portal',...layout.portal,zone:zone==='camp'?'town':'camp',name:dungeonFor(content,zone)?'离开副本':'查看世界地图'},
         interactionParams,monsterSceneParams:resolvedParams.monsterScene,landmarks:layout.landmarks,buildings:layout.buildings||[],paths:layout.paths,trees:layout.trees,decorations:[],center:{...(layout.center||layout.spawn)}};
     if(layout.route){
+        if(save&&sparkRescueReady(save,content))world.portal.name=save.sparkRescue?.status==='safe'?'火种已安顿 · 离开副本':'照看火种 · 离开副本';
         world.encounters.forEach((e,i)=>{e.hidden=i>0;});
         world.portal.hidden=!dungeonProgress(save)?.[zone]?.cleared.includes(layout.bossArenaId);
         world.entrancePortal={id:'dungeon-entrance',...layout.entrancePortal,name:'离开副本',zone:world.portal.zone};

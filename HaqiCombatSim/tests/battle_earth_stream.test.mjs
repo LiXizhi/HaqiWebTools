@@ -169,3 +169,12 @@ test('prewarmed scene worker prepares seamless atlas pixels off-thread and trans
         assert.deepEqual(await worker.run('seamless-atlas',{source,width}),seamlessEarthAtlas(source,width));assert.equal(source.byteLength,width*width*4);
     }finally{worker.cancel();scheduler.dispose();}
 });
+
+test('Earth preparation progresses even when animation frames stop',async t=>{
+    const previous=globalThis.requestAnimationFrame;globalThis.requestAnimationFrame=()=>99;t.after(()=>{if(previous===undefined)delete globalThis.requestAnimationFrame;else globalThis.requestAnimationFrame=previous;});
+    const scheduler=createEarthWorkScheduler();let timer;
+    try{
+        const result=await Promise.race([scheduler.run((function*(){for(let i=0;i<100;i++)yield;return 'ready';})()),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('preparation waited for a rendering frame')),500);})]);
+        assert.equal(result,'ready');
+    }finally{clearTimeout(timer);scheduler.dispose();}
+});

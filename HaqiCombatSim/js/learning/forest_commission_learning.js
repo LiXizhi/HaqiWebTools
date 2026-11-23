@@ -34,5 +34,13 @@ export async function flushForestCommissionPractice(save,{record,valid,persist})
   catch(error){pending.unshift(event);throw error;}
   flushed=true;
  }
+ while(valid()&&save.forestCommission?.exchangePractice?.length){
+  const pending=save.forestCommission.exchangePractice,event=pending[0],{word,...receipt}=event;
+  const result=await record({...receipt,...vocabulary(event,word),source:'forest-commission'},valid);
+  if(!result?.persisted||!valid()||save.forestCommission?.exchangePractice!==pending)return false;
+  pending.shift();
+  try{if(!persist()){pending.unshift(event);return false;}}catch(error){pending.unshift(event);throw error;}
+  flushed=true;
+ }
  return flushed;
 }

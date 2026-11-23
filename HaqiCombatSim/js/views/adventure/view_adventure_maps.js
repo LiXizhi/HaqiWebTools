@@ -1,6 +1,6 @@
 import {renderLocalMap} from './view_adventure_local_map.js';
 import {setText,tr} from '../../locale_runtime.js';
-import {createWorldMapSwitch} from '../../ui/controls.js';
+import {createMapHeader} from '../../ui/controls.js';
 import {renderHaqiAtlas} from './view_haqi_atlas.js';
 
 // One map window; controller determines the initial view for each entry point.
@@ -15,8 +15,8 @@ export function renderMaps(root,world,model,cb,view='local'){
     setText(toggle,view==='world'?(world.isEarth?'返回当前城市地图':'返回当前岛屿地图'):'打开世界地图');
     toggle.setAttribute('aria-label',toggle.textContent);
     toggle.onclick=()=>cb.switchMap(view==='world'?'local':'world');
-    const heading=document.createElement('div');heading.className='map-heading';
-    if(view==='world'||!cb.switchWorld)heading.append(toggle);
-    if(cb.switchWorld)heading.append(createWorldMapSwitch('haqi',cb.switchWorld,view==='local'?'返回哈奇世界地图':'哈奇世界'));
-    header.replaceChildren(heading,header.querySelector('.close-button'));
+    const nextHeader=createMapHeader(world.layout.name,'haqi',cb.switchWorld,cb.close);
+    nextHeader.querySelector('.map-heading').append(toggle);
+    header.replaceWith(nextHeader);
+    nextHeader.querySelector('.close-button').focus();
 }

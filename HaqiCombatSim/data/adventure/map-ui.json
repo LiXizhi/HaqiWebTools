@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "style": "绘本探索地图",
+  "status": "cdn-verified",
+  "assets": {
+    "banner": {
+      "local": "assets/adventure/ui/maps/explorer-banner-86f9d0b8b7cf.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/ui/maps/20261123-v1/explorer-banner-86f9d0b8b7cf.webp",
+      "width": 1440,
+      "height": 480,
+      "size": 74746,
+      "sha256": "86f9d0b8b7cf231eac06dd74ecac8787f63f0061fa5dc89d2a786e36348dc284",
+      "alpha": false,
+      "crop": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "source": {
+        "generator": "image_gen",
+        "date": "2026-11-23",
+        "sha256": "78ff2d8ae0c8f018389c4aaee25c62c69904e55f7bb9cc98e0eb5fc15ec211ca",
+        "width": 2172,
+        "height": 724
+      }
+    },
+    "haqi": {
+      "local": "assets/adventure/ui/maps/explorer-haqi-8921fe212cfb.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/ui/maps/20261123-v1/explorer-haqi-8921fe212cfb.webp",
+      "width": 192,
+      "height": 175,
+      "size": 11194,
+      "sha256": "8921fe212cfb877ae8d81b091d04c731a75ec971c2050ca5a13df25c6cf12255",
+      "alpha": true,
+      "crop": [
+        0,
+        0,
+        1312,
+        1199
+      ],
+      "source": {
+        "generator": "image_gen",
+        "date": "2026-11-23",
+        "sha256": "5d4ce4f5974627e2500a54d9861a9852929b7fe505a308d1400fbe2cb4801ecf",
+        "width": 1312,
+        "height": 1199
+      }
+    },
+    "earth": {
+      "local": "assets/adventure/ui/maps/explorer-earth-ed9915d341f1.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/ui/maps/20261123-v1/explorer-earth-ed9915d341f1.webp",
+      "width": 192,
+      "height": 175,
+      "size": 10982,
+      "sha256": "ed9915d341f168424698c0f907a20eb7f9395033850963d718b478f70401dc96",
+      "alpha": true,
+      "crop": [
+        0,
+        0,
+        1312,
+        1199
+      ],
+      "source": {
+        "generator": "image_gen",
+        "date": "2026-11-23",
+        "sha256": "a255d9a602bfe53c0cfa4c9f16e158f01dbe90f9049755ea104f1b7a846fc159",
+        "width": 1312,
+        "height": 1199
+      }
+    }
+  }
+}

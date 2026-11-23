@@ -47,6 +47,7 @@ import { SCHOOLS } from './combat_params_core.js';
 import { normalizeStats, statIdToEntry } from './combat_unit_core.js';
 import { dungeonTacticsProfile, validDungeonTacticsCheckpoint } from './dungeon_tactics_core.js';
 import { validateForestCommission } from './forest_commission_core.js';
+import {validateSparkRescue} from './spark_rescue_core.js';
 import { validateHanziBattleSpec } from './hanzi_battle_core.js';
 import { validateHanziProgress } from './hanzi_core.js';
 import { validateLearningSave } from './language_adventure_core.js';
@@ -203,6 +204,7 @@ export function parseSave(raw, content) {
     validateTacticsRecords(s);
     validateCampDetour(s);
     validateForestCommission(s);
+    validateSparkRescue(s);
     validateCompanionWordplay(s);
     normalizeLocaleSave(s);
     validateHanziProgress(s.hanzi);

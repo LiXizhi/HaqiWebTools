@@ -359,7 +359,7 @@ export function createPanelController(options) {
             return;
         }
         if (kind === 'dictionary' || kind === 'hanzi') {
-            void wordLearning.openDictionary(openOptions.character ? 'zh' : null, openOptions.character);
+            void wordLearning.openDictionary(openOptions.language || (openOptions.character ? 'zh' : null), openOptions.character);
             return;
         }
         if (kind === 'time-scroll') {

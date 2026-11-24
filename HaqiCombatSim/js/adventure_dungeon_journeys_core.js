@@ -87,12 +87,39 @@ export function towerRewardAmount(content,d,floor){
     const p=resolveParams({cards:{}},content.balanceParams||{}).dungeonJourney;
     return Math.round(floor*p.rewardPerFloor*(floor===d.floors?p.summitMultiplier:1));
 }
+const TOWER_SUMMIT_BONUSES={
+    'journey:tower-town':{itemId:1453,count:1,purpose:'20 层登顶奖励：8 级全学派圣徒衣'},
+    'journey:tower-fire':{itemId:1345,count:1,purpose:'30 层登顶奖励：25 级全学派精锐冠'},
+    'journey:tower-ice':{itemId:1927,count:1,purpose:'50 层登顶奖励：35 级传说回魂之眼法杖'},
+    'journey:tower-desert':{itemId:1934,count:1,purpose:'70 层登顶奖励：40 级传说权利法杖'},
+    'journey:tower-dark':{itemId:1866,count:1,purpose:'100 层登顶奖励：45 级卓越魔晶法杖'},
+    'journey:tide:tower':{itemId:1800,count:1,purpose:'60 层登顶奖励：高阶魔晶项链'},
+    'journey:float:tower':{itemId:1803,count:1,purpose:'80 层登顶奖励：高阶顽石项链（+700 生命）'},
+    'journey:sail:tower':{itemId:2223,count:1,purpose:'100 层登顶奖励：终章大天使之翼'},
+};
+export function towerMilestoneBonus(content,d,floor){
+    if(d?.kind!=='tower'||d.id==='journey:tower-camp'||!towerRewardSteps(d).includes(floor))return null;
+    if(floor===d.floors){
+        const summit=TOWER_SUMMIT_BONUSES[d.id];
+        const item=summit&&content?.items?.[summit.itemId];
+        return item?{itemId:summit.itemId,count:summit.count,name:item.name,summit:true,purpose:summit.purpose}:null;
+    }
+    const stepIndex=Math.floor(floor/10);
+    const isBeans=stepIndex%2===0;
+    const itemId=isBeans?17213:17172;
+    const count=isBeans?Math.min(400,floor*5):Math.min(10,Math.max(2,stepIndex+1));
+    const item=content?.items?.[itemId];
+    return item?{itemId,count,name:item.name,summit:false}:null;
+}
 export function claimTowerReward(save,content,id,floor){
     if(save.pendingEncounter)throw Error('请先结束战斗');
     const d=content.dungeons.find(d=>d.id===id),row=towerRecord(save,id);
     if(!towerRewardSteps(d).includes(floor)||row.floor<floor||row.claimed.includes(floor))throw Error('奖励尚未解锁或已经领取');
     const coins=towerRewardAmount(content,d,floor);
-    row.claimed.push(floor);save.inventory[100]=(save.inventory[100]||0)+coins;save.revision++;
+    const bonus=towerMilestoneBonus(content,d,floor);
+    row.claimed.push(floor);save.inventory[100]=(save.inventory[100]||0)+coins;
+    if(bonus)save.inventory[bonus.itemId]=(save.inventory[bonus.itemId]||0)+bonus.count;
+    save.revision++;
     return coins;
 }
 export function validateTowerRecords(save,content){

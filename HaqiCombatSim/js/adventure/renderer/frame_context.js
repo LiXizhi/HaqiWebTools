@@ -1,6 +1,8 @@
 import { alignCameraOrigin, clampCameraToWorld } from '../../adventure_camera_core.js';
 import { fitLocalCamera } from '../../adventure_local_coop_core.js';
 import { forestCommissionScene } from '../../forest_commission_core.js';
+import { hanziIslandScene } from '../../hanzi_island_scene_core.js';
+import { laterIslandScene } from '../../later_islands_scene_core.js';
 
 export function createFrameContextBuilder({
     canvas,
@@ -62,6 +64,8 @@ export function createFrameContextBuilder({
         };
         const markerFor = markerCache.forState(save, assets.content, world);
         const forestScene = !title && !localSecond && world.zone === 'camp' ? forestCommissionScene(save) : null;
+        const hanziScene = !title && !localSecond && world.zone === 'hanzi' ? hanziIslandScene(save, assets.content, world) : null;
+        const laterScene = !title && !localSecond ? laterIslandScene(save, world.zone) : null;
         const { w, h, dpr } = size(graphics.low);
         const t = time / 1000;
         const gestureAt = Date.now();
@@ -72,7 +76,7 @@ export function createFrameContextBuilder({
         cam.y = camera.y;
         const viewport = { x: cam.x, y: cam.y, w: w / cam.scale, h: h / cam.scale };
         const viewRect = { x: cam.x - 200, y: cam.y - 50, w: w / cam.scale + 400, h: h / cam.scale + 280 };
-        return { w, h, dpr, t, gestureAt, viewport, viewRect, markerFor, forestScene, mark };
+        return { w, h, dpr, t, gestureAt, viewport, viewRect, markerFor, forestScene, hanziScene, laterScene, mark };
     }
 
     return { size, computeCameraOrigin, build };

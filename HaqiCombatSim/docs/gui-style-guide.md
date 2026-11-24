@@ -2,6 +2,8 @@
 
 适用于 `Haqi.html`、冒险弹窗及场景预览页。新增或修改界面前先读本页；模拟器和美术调试工具可以保留工具型布局，但应遵守语义、可访问性和组件复用原则。
 
+2026-11-19 的[控件盘点与统一建议](ui-control-audit.md)记录了 21 个界面状态的贴图、图集图标与代码外观，以及语言选择和分页的改造顺序。
+
 ## 风格来源与修改位置
 
 游戏使用经典魔法绘本风格：纸色内容面板、金棕边框、绿色主操作。优先复用已有资源，避免同一操作出现文字叉号、不同大小图标和不同皮肤。
@@ -10,9 +12,9 @@
 | --- | --- |
 | 基础布局、模态窗口结构 | `css/adventure.css` |
 | 绘本颜色、图集图标、主次按钮、共享页签状态、共享关闭按钮尺寸 | `css/adventure_storybook.css` |
-| 美术来源、裁剪和永久 CDN | `data/adventure/ui-art.json`、`js/adventure_ui_art.js` |
-| 共享关闭按钮 DOM 与事件 | `js/view_adventure_controls.js` |
-| 地图窗口布局 | `js/view_adventure_maps.js`、`css/adventure_world_map.css` |
+| 美术来源、裁剪和永久 CDN | `data/adventure/ui-art.json`、`data/adventure/forest-ui.json`、`js/adventure_ui_art.js` |
+| 共享关闭按钮 DOM 与事件 | `js/ui/controls.js` |
+| 地图窗口布局 | `js/views/adventure/view_adventure_maps.js`、`css/adventure_world_map.css` |
 
 地图窗口顶部不显示文字标题：当前岛屿地图只显示“返回哈奇世界地图 / 现实世界”；哈奇世界地图显示“返回当前岛屿地图”及“哈奇世界 / 现实世界”；现实世界地图只显示“哈奇世界 / 现实世界”。世界入口复用 `createWorldMapSwitch` 的 `.primary.world-switch-button` 徽章按钮：城堡/地球原生矢量图标、浅金纸色未选中态、哈奇绿色/现实蓝色选中态及底部金色菱形标记，不采用通用页签皮肤；窗口名称保留在无障碍标签中。
 
@@ -25,7 +27,8 @@
 ## 关闭按钮：必须复用组件
 
 ```js
-import {createCloseButton} from './view_adventure_controls.js';
+// 从 js/views/adventure/ 下的视图引用。
+import {createCloseButton} from '../../ui/controls.js';
 
 header.append(title, createCloseButton(callbacks.close));
 // 子窗口用明确的无障碍名称，视觉仍保持一致。

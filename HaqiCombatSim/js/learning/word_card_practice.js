@@ -11,20 +11,26 @@ import {resolveParams} from '../combat_params_core.js';
 import {wordReadingMatches} from '../word_cards_core.js';
 import {createLearningVoice} from '../audio/language_adventure_voice.js';
 import {createHanziWriting} from '../hanzi/view_hanzi_writing.js';
+import {showHanziAnimation} from '../hanzi/view_hanzi_animation.js';
+import {connectHanziAnimation} from '../hanzi/hanzi_animation_bridge.js';
 import {createCardFace} from '../views/adventure/view_adventure_card.js';
 import {drawHanziGlyph} from '../hanzi/hanzi_animation.js';
 import {createCloseButton} from '../ui/controls.js';
+import {displayLocale,learningPair,textFor} from '../locale.js';
+import {tr} from '../locale_runtime.js';
 
 const el=(tag,text='')=>{const n=document.createElement(tag);n.textContent=text;return n;};
 export function createWordCardPractice({getState,onSaved,onPause=()=>{},storage=createDictionaryStore(),load=loadDictionary,voice=createLearningVoice({getSettings:()=>getState().save.languageLearning})}){
     let session=null;
     const key=()=>{const s=getState();return JSON.stringify([s.owner||'guest',s.role]);};
     const valid=s=>session===s&&!s.abort.signal.aborted&&key()===s.key&&getState().save===s.save&&getState().save.languageLearning?.target===s.target;
-    function close(){const s=session;if(!s)return;session=null;s.abort.abort();clearTimeout(s.timer);clearInterval(s.guard);s.dialogue?.dispose();s.writing?.dispose();void voice.cancel();s.root.remove();onPause(false);s.returnFocus?.focus?.();s.onClosed?.();}
-    async function open(card,onAccepted,onClosed){
-        close();const params=resolveParams({version:'kids'},getState().content?.balanceParams||{});const s=session={receipt:crypto.randomUUID(),target:getState().save.languageLearning?.target,params,voiceAttempts:0,operation:0,card:{...card,readText:card.language==='zh'&&!card.treeEntryId?card.description:card.readText},onAccepted,onClosed,key:key(),save:getState().save,abort:new AbortController(),hinted:false,errors:0,busy:false,recording:false,returnFocus:document.activeElement};
-        onPause(true);const root=s.root=el('dialog');root.className='word-practice';root.setAttribute('aria-label','文字卡练习');
-        const header=el('header'),title=el('h2',card.language==='zh'?'请大声读出这句话或写出这个字，释放卡片。':'请大声读出这句话或拼写这个单词，释放卡片。'),body=el('div');header.append(title,createCloseButton(close,'关闭文字卡练习'));root.append(header,body);document.body.append(root);root.showModal();root.addEventListener('cancel',e=>{e.preventDefault();close();});
+    function stopAnimation(s){if(!s)return;s.stopBridge?.();s.stopBridge=null;s.dismissAnimation?.();s.dismissAnimation=null;}
+    function close(){const s=session;if(!s)return;session=null;stopAnimation(s);s.abort.abort();clearTimeout(s.timer);clearInterval(s.guard);s.dialogue?.dispose();s.writing?.dispose();void voice.cancel();s.root.remove();onPause(false);s.returnFocus?.focus?.();s.onClosed?.();}
+    async function open(card,onAccepted,onClosed,options={}){
+        close();const params=resolveParams({version:'kids'},getState().content?.balanceParams||{});const islandStory=options?.islandStory||null;const s=session={receipt:crypto.randomUUID(),target:getState().save.languageLearning?.target,params,islandStory,voiceAttempts:0,operation:0,card:{...card,readText:card.language==='zh'&&!card.treeEntryId?card.description:card.readText},onAccepted,onClosed,key:key(),save:getState().save,abort:new AbortController(),hinted:false,errors:0,busy:false,recording:false,returnFocus:document.activeElement};
+        onPause(true);const root=s.root=el('dialog');root.className=islandStory?'word-practice has-story':'word-practice';root.setAttribute('aria-label',islandStory?'找回文字记忆':'文字卡练习');
+        const heading=islandStory?`找回「${islandStory.glyph||''}」字记忆 · ${islandStory.storyTitle}`:(card.language==='zh'?'请大声读出这句话或写出这个字，释放卡片。':'请大声读出这句话或拼写这个单词，释放卡片。');
+        const header=el('header'),title=el('h2',heading),body=el('div');header.append(title,createCloseButton(close,islandStory?'关闭文字记忆':'关闭文字卡练习'));root.append(header,body);document.body.append(root);root.showModal();root.addEventListener('cancel',e=>{e.preventDefault();close();});
         body.append(el('p','正在准备练习…'));
         s.guard=setInterval(()=>{if(!valid(s)&&session===s)close();},250);
         try{if(card.treeEntryId){const index=await loadWordLexicon(card.language);s.entry=index.entries.get(card.treeEntryId);s.data=null;}else{s.data=await load(card.language);s.entry=s.data.entries.find(e=>e.id===card.entryId);}if(!valid(s))return;if(!s.entry)throw Error('找不到这个字词');render(s,body);}catch(error){if(valid(s)){body.replaceChildren(el('p',error.message));}}
@@ -104,7 +110,15 @@ export function createWordCardPractice({getState,onSaved,onPause=()=>{},storage=
                 draw:context=>assets.skillArt.drawCard(context,base,{name:s.card.title,cooldown:base.params.cooldown??0,description:s.card.description,wordCard:true}),
                 retry:artBase?()=>assets.skillArt.ensure(artBase):undefined}));
         }
-        showcase.append(s.dialogue.node);study.append(exercise);layout.append(showcase,study);body.append(layout,status);
+        showcase.append(s.dialogue.node);study.append(exercise);layout.append(showcase,study);
+        if(s.islandStory){
+            const storyBox=el('section');storyBox.className='word-practice-story';
+            if(s.islandStory.glimpse){const g=el('p',s.islandStory.glimpse);g.className='word-practice-glimpse';storyBox.append(g);}
+            const tipText=s.entry.coaching?.tip||s.islandStory.problem;
+            if(tipText){const tip=el('p',tipText);tip.className='word-practice-tip';storyBox.append(tip);}
+            body.append(storyBox);
+        }
+        body.append(layout,status);
         if(s.card.language==='zh'&&s.entry.strokes?.medians?.length){
             const glyph=el('div',s.entry.text);glyph.className='word-practice-glyph';
             const order=el('div');order.className='word-practice-strokes';order.setAttribute('aria-label',`${s.entry.text}的笔顺`);
@@ -127,7 +141,32 @@ export function createWordCardPractice({getState,onSaved,onPause=()=>{},storage=
                     else{s.writing.confirmStroke(n-1);if(n===medians.length){s.input='text';s.effective=true;await attempt(true);}}
                 })();
             }});
-            exercise.append(button('看演示',()=>{s.hinted=true;s.writing.demonstrate();}));
+            const actionRow=el('div');actionRow.className='word-practice-tools';
+            if(s.entry.animation&&s.islandStory){
+                const watch=button(`看「${s.entry.text}」字象形故事动画`,async()=>{
+                    if(s.recording||s.connecting)await cancelRecording();
+                    if(!valid(s))return;
+                    stopAnimation(s);
+                    const frame=el('iframe');frame.title=`${s.entry.text}的汉字动画`;frame.allow='autoplay';frame.sandbox='allow-scripts allow-same-origin';frame.referrerPolicy='no-referrer';frame.src=s.entry.animation;
+                    const uiLocale=displayLocale()||document.documentElement.lang||s.save.locale||'zh-CN',pair=learningPair();
+                    const subtitleLocale=pair?.enabled&&pair.target&&pair.target!=='zh-CN'?pair.target:uiLocale;
+                    const translate=(value,loc)=>loc&&loc!=='zh-CN'?(textFor(value,loc)!==value?textFor(value,loc):loc===uiLocale?tr(value):value):value;
+                    const closeStory=()=>{stopAnimation(s);};
+                    s.stopBridge=connectHanziAnimation(frame,{
+                        entryId:s.entry.id,sessionId:crypto.randomUUID(),locale:uiLocale,subtitleLocale,
+                        translate,
+                        onWritten:()=>{
+                            if(!valid(s)||s.busy)return;
+                            stopAnimation(s);s.input='text';s.effective=true;void attempt(true);
+                        },
+                    });
+                    s.dismissAnimation=showHanziAnimation(frame,{close:closeStory,skip:closeStory});
+                });
+                watch.className='primary word-practice-anim-btn';
+                actionRow.append(watch);
+            }
+            actionRow.append(button('看演示',()=>{s.hinted=true;s.writing.demonstrate();}));
+            exercise.append(actionRow);
         }else{
             exercise.append(button('改用拼写',async()=>{if(s.recording||s.connecting)await cancelRecording();s.audio=null;showcase.hidden=true;layout.classList.add('is-spelling');exercise.replaceChildren(el('p',`请拼写：${s.entry.meaning}`));const input=el('input');input.autocomplete='off';input.spellcheck=false;input.setAttribute('aria-label','目标语言词语');const submit=button('检查拼写',()=>{s.input='text';s.effective=true;return attempt(wordReadingMatches(input.value,s.entry.text));});input.onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();submit.click();}};exercise.append(input,submit);input.focus();}));
         }

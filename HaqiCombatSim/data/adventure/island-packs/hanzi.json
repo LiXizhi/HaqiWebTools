@@ -113,6 +113,39 @@
         "xp": 30,
         "coins": 10
       }
+    },
+    {
+      "id": "pack:hanzi:crab",
+      "name": "炽壳墨蟹",
+      "templateId": "island-monster:config/Aries/Mob/FireLand/MobTemplate_RedCrab.xml",
+      "stats": {
+        "level": 4,
+        "hp": 220,
+        "xp": 55,
+        "coins": 22
+      }
+    },
+    {
+      "id": "pack:hanzi:shell",
+      "name": "石甲守碑虫",
+      "templateId": "config/Aries/Mob/FireLand/MobTemplate_IronShell.xml",
+      "stats": {
+        "level": 6,
+        "hp": 340,
+        "xp": 85,
+        "coins": 36
+      }
+    },
+    {
+      "id": "pack:hanzi:pangolin",
+      "name": "古林灵穿山",
+      "templateId": "config/Aries/Mob/FireLand/MobTemplate_IcePangolin.xml",
+      "stats": {
+        "level": 8,
+        "hp": 460,
+        "xp": 120,
+        "coins": 55
+      }
     }
   ],
   "encounters": [
@@ -126,7 +159,7 @@
     {
       "id": "pack:hanzi:field-2",
       "zone": "hanzi",
-      "monsterId": "pack:hanzi:sprout",
+      "monsterId": "pack:hanzi:pangolin",
       "x": 4174,
       "y": 1574
     },
@@ -140,7 +173,7 @@
     {
       "id": "pack:hanzi:field-4",
       "zone": "hanzi",
-      "monsterId": "pack:hanzi:sprout",
+      "monsterId": "pack:hanzi:pangolin",
       "x": 2492,
       "y": 1095
     },
@@ -154,21 +187,21 @@
     {
       "id": "pack:hanzi:field-6",
       "zone": "hanzi",
-      "monsterId": "pack:hanzi:sprout",
+      "monsterId": "pack:hanzi:shell",
       "x": 3216,
       "y": 1736
     },
     {
       "id": "pack:hanzi:field-7",
       "zone": "hanzi",
-      "monsterId": "pack:hanzi:sprout",
+      "monsterId": "pack:hanzi:shell",
       "x": 2268,
       "y": 1995
     },
     {
       "id": "pack:hanzi:field-8",
       "zone": "hanzi",
-      "monsterId": "pack:hanzi:sprout",
+      "monsterId": "pack:hanzi:crab",
       "x": 3601,
       "y": 2419
     },
@@ -182,7 +215,7 @@
     {
       "id": "pack:hanzi:field-10",
       "zone": "hanzi",
-      "monsterId": "pack:hanzi:sprout",
+      "monsterId": "pack:hanzi:crab",
       "x": 2885,
       "y": 2294
     },
@@ -196,21 +229,21 @@
     {
       "id": "pack:hanzi:field-12",
       "zone": "hanzi",
-      "monsterId": "pack:hanzi:sprout",
+      "monsterId": "pack:hanzi:pangolin",
       "x": 3047,
       "y": 1179
     },
     {
       "id": "pack:hanzi:field-13",
       "zone": "hanzi",
-      "monsterId": "pack:hanzi:sprout",
+      "monsterId": "pack:hanzi:shell",
       "x": 1844,
       "y": 1707
     },
     {
       "id": "pack:hanzi:field-14",
       "zone": "hanzi",
-      "monsterId": "pack:hanzi:sprout",
+      "monsterId": "pack:hanzi:shell",
       "x": 2645,
       "y": 1685
     },
@@ -224,41 +257,44 @@
     {
       "id": "pack:hanzi:field-16",
       "zone": "hanzi",
-      "monsterId": "pack:hanzi:sprout",
+      "monsterId": "pack:hanzi:shell",
       "x": 3761,
       "y": 1799
     },
     {
       "id": "pack:hanzi:field-17",
       "zone": "hanzi",
-      "monsterId": "pack:hanzi:sprout",
+      "monsterId": "pack:hanzi:crab",
       "x": 1850,
       "y": 2204
     },
     {
       "id": "pack:hanzi:field-18",
       "zone": "hanzi",
-      "monsterId": "pack:hanzi:sprout",
+      "monsterId": "pack:hanzi:pangolin",
       "x": 2247,
       "y": 1446
     },
     {
       "id": "pack:hanzi:field-19",
       "zone": "hanzi",
-      "monsterId": "pack:hanzi:sprout",
+      "monsterId": "pack:hanzi:shell",
       "x": 3315,
       "y": 2128
     },
     {
       "id": "pack:hanzi:field-20",
       "zone": "hanzi",
-      "monsterId": "pack:hanzi:sprout",
+      "monsterId": "pack:hanzi:crab",
       "x": 2717,
       "y": 2644
     }
   ],
   "goalPaths": {
-    "pack:hanzi:sprout": 883000
+    "pack:hanzi:sprout": 883000,
+    "pack:hanzi:crab": 883001,
+    "pack:hanzi:shell": 883002,
+    "pack:hanzi:pangolin": 883003
   },
   "quests": [
     {
@@ -927,7 +963,12 @@
             {
               "id": 100,
               "name": "奇豆",
-              "count": 30
+              "count": 60
+            },
+            {
+              "id": 17172,
+              "name": "战宠口粮",
+              "count": 3
             }
           ]
         }
@@ -1039,7 +1080,12 @@
             {
               "id": 100,
               "name": "奇豆",
-              "count": 30
+              "count": 80
+            },
+            {
+              "id": 17213,
+              "name": "仙豆",
+              "count": 100
             }
           ]
         }
@@ -1151,7 +1197,12 @@
             {
               "id": 100,
               "name": "奇豆",
-              "count": 30
+              "count": 100
+            },
+            {
+              "id": 1462,
+              "name": "圣徒手镯",
+              "count": 1
             }
           ]
         }
@@ -1263,7 +1314,12 @@
             {
               "id": 100,
               "name": "奇豆",
-              "count": 30
+              "count": 120
+            },
+            {
+              "id": 1456,
+              "name": "圣徒鞋",
+              "count": 1
             }
           ]
         }
@@ -1375,7 +1431,12 @@
             {
               "id": 100,
               "name": "奇豆",
-              "count": 30
+              "count": 150
+            },
+            {
+              "id": 1450,
+              "name": "圣徒帽",
+              "count": 1
             }
           ]
         }
@@ -1487,7 +1548,12 @@
             {
               "id": 100,
               "name": "奇豆",
-              "count": 30
+              "count": 200
+            },
+            {
+              "id": 1459,
+              "name": "圣徒披风",
+              "count": 1
             }
           ]
         }
@@ -1495,7 +1561,90 @@
       "legacyRewardQuestId": 873005
     }
   ],
-  "journeys": [],
+  "journeys": [
+    {
+      "id": "journey:hanzi:stele-trial",
+      "kind": "elite",
+      "island": "hanzi",
+      "name": "字源守碑试炼",
+      "recommendedLevel": 8,
+      "sourceId": "dungeon:HaqiTown_FireCavern",
+      "partySize": 1,
+      "arenaCount": 3,
+      "enemyTemplateIds": [
+        "pack:hanzi:crab",
+        "pack:hanzi:shell",
+        "pack:hanzi:pangolin"
+      ],
+      "story": [
+        {
+          "id": "journey:hanzi:stele-trial:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "远行灯塔北侧的古碑亮起墨色符文，三道守碑灵兽挡在石阶前。",
+          "sex": "female",
+          "age": 12
+        },
+        {
+          "id": "journey:hanzi:stele-trial:line-2",
+          "role": "npc",
+          "speaker": "小灯",
+          "text": "石伯说，只有看清守卫出招意图的人，才能取走碑中留下的学派法杖。",
+          "sex": "female",
+          "age": 12
+        },
+        {
+          "id": "journey:hanzi:stele-trial:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我会先稳住呼吸，看清每一波变化。",
+          "reward": "hp",
+          "sex": "male"
+        },
+        {
+          "id": "journey:hanzi:stele-trial:line-4",
+          "role": "npc",
+          "speaker": "石伯",
+          "text": "第一波墨蟹爱蓄力重击，第二波石甲虫会举盾护身，别把大招浪费在盾上。",
+          "sex": "male",
+          "age": 68
+        },
+        {
+          "id": "journey:hanzi:stele-trial:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "小招破盾，再用强化和陷阱配合主攻。",
+          "reward": "attack",
+          "sex": "male"
+        },
+        {
+          "id": "journey:hanzi:stele-trial:line-6",
+          "role": "npc",
+          "speaker": "小灯",
+          "text": "如果中途血量见底，可以随时离开试炼回岛休息，进度都会保留。",
+          "sex": "female",
+          "age": 12
+        },
+        {
+          "id": "journey:hanzi:stele-trial:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "遇到重击前，我会留好护盾或虚弱。",
+          "reward": "defense",
+          "sex": "male"
+        },
+        {
+          "id": "journey:hanzi:stele-trial:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "石碑轰然开启，守碑试炼的第一道门就在眼前。",
+          "sex": "female",
+          "age": 12
+        }
+      ],
+      "sceneBiome": "forest"
+    }
+  ],
   "social": {
     "enabled": true,
     "size": "large",

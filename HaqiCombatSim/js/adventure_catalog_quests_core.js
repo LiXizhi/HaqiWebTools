@@ -132,10 +132,14 @@ export function requirementValue(save, content, id, stats = {}) {
     if (content.items?.[id]) return save.inventory[id] || 0;
     return null;
 }
+function isUnsupportedLegacyRechargeQuest(quest) {
+    return (quest?.groups || []).some(group => group.kind === 'custom' && (group.items || []).some(item => String(item?.name || '').includes('充值魔豆')));
+}
 export function catalogAcceptBlock(save, content, quest, stats = {}) {
     const state = questRecord(save, quest.id);
     if (!learningQuestMatches(save,quest)) return '请切换到此任务的学习语言';
     if (quest.retired) return '请寻找新的祖先记忆任务';
+    if (isUnsupportedLegacyRechargeQuest(quest)) return '原服充值活动暂未开放';
     if (state.accepted && !state.claimed) return '已经接取';
     if (state.claimed && !quest.repeat) return '已经完成';
     for (const prerequisite of quest.prerequisites) if (prerequisite.value === 1 && !save.quests[prerequisite.id]?.claimed) return '请先完成前置任务';

@@ -32,7 +32,9 @@ import { drawCityHotspot } from '../../views/adventure/view_city_dungeon.js';
 import { drawDungeonEntrance } from '../../views/adventure/view_dungeon_entrance.js';
 import { drawEarthBoatRider } from '../../views/adventure/view_earth_boat.js';
 import { drawForestCommissionSite } from '../../views/adventure/view_forest_scene.js';
+import { drawLaterIslandRestoration } from '../../views/adventure/view_later_islands_scene.js';
 import { drawMemoryNode } from '../../hanzi/view_hanzi_memory.js';
+import { drawHanziSignPlaque, drawHanziLandmarkRestoration } from '../../hanzi/view_hanzi_scene.js';
 import { drawMonsterTerritory } from '../../views/adventure/view_monster_territory.js';
 import { PLATE, ellipse, text, plate, circleRune } from './primitives.js';
 
@@ -72,7 +74,7 @@ export function createActorPass({
 
     function drawObject(o, state) {
         const { world, save, time, frame, options, visualSave, heroPose, localPose, star, starLevel, motion, streetFocus, petId } = state;
-        const { w, t, gestureAt, markerFor, forestScene } = frame;
+        const { w, t, gestureAt, markerFor, forestScene, hanziScene, laterScene } = frame;
         const {
             localSecondMoving = false,
             graphics = { particles: true, trails: true },
@@ -92,14 +94,7 @@ export function createActorPass({
             return;
         }
         if (o.kind === 'hanzi-sign') {
-            ctx.save();
-            ctx.fillStyle = '#f3dfab';
-            ctx.fillRect(o.x - 15, o.y - 27, 30, 32);
-            ctx.fillStyle = '#614524';
-            ctx.textAlign = 'center';
-            ctx.font = '22px serif';
-            ctx.fillText(o.glyph, o.x, o.y - 3);
-            ctx.restore();
+            drawHanziSignPlaque(ctx, o, t, reducedMotion.matches);
             return;
         }
         if (o.kind.startsWith('street')) {
@@ -179,6 +174,25 @@ export function createActorPass({
                 drawCityHotspot(ctx, o);
             } else if (!world.isEarth && !o.cityDungeon && !o.streetArt) {
                 drawSignpost(ctx, o.name, o.x, o.y);
+                if (hanziScene?.landmarks[o.name]) {
+                    drawHanziLandmarkRestoration(
+                        ctx,
+                        o,
+                        hanziScene.landmarks[o.name],
+                        t,
+                        { reduced: reducedMotion.matches, low: !!graphics.low },
+                        (label, lx, ly, highlight) => plate(ctx, label, lx, ly, highlight ? { ...PLATE.place, text: '#fff1a3', stroke: '#d9bd65' } : PLATE.place),
+                    );
+                } else if (laterScene?.landmarks[o.name]) {
+                    drawLaterIslandRestoration(
+                        ctx,
+                        o,
+                        laterScene.landmarks[o.name],
+                        t,
+                        { reduced: reducedMotion.matches, low: !!graphics.low },
+                        (label, lx, ly, highlight) => plate(ctx, label, lx, ly, highlight ? { ...PLATE.place, text: '#fff1a3', stroke: '#d9bd65' } : PLATE.place),
+                    );
+                }
             }
             if (o.cityDungeon && !world.isEarth) {
                 const art = cityEntranceAppearance(o.cityLevel, o.cityNodeEntrance);
@@ -220,8 +234,9 @@ export function createActorPass({
                     ? earthCityNpcMarker(save, world.city, o.id)
                     : markerFor(o.id) || (forestNpc ? (forestScene.phase === 'report' ? '?' : '!') : null);
             if (marker) text(ctx, marker, o.x, o.y - sh - 8 + Math.sin(t * 3) * 3, 29, '#fff1a3');
-            if (forestScene?.npcs[o.id] && Math.hypot(o.x - save.position.x, o.y - save.position.y) < 155) {
-                plate(ctx, forestScene.npcs[o.id], o.x, o.y - sh - 35, PLATE.place);
+            const sceneNote = forestScene?.npcs[o.id] || world.hanziScene?.npcs[o.id] || world.laterScene?.npcs[o.id];
+            if (sceneNote && Math.hypot(o.x - save.position.x, o.y - save.position.y) < 165) {
+                plate(ctx, sceneNote, o.x, o.y - sh - 35, PLATE.place);
             }
             return;
         }
@@ -661,6 +676,7 @@ export function createActorPass({
             for (const row of gatheringPets) objects.push({ ...row.position, kind: 'pet-social', row: { ...row, scale: petDisplayScale(row.pet, assets.content) } });
             for (const n of world.memoryNodes || []) objects.push({ ...n, kind: 'hanzi-memory' });
             for (const n of world.memorySigns || []) objects.push({ ...n, kind: 'hanzi-sign' });
+            for (const n of frame.hanziScene?.signs || []) objects.push({ ...n, kind: 'hanzi-sign' });
         }
         if (hideLocalActors) objects = objects.filter(o => !['hero', 'pet', 'pet-social', 'local-player', 'opening-companion'].includes(o.kind));
         objects = mergeSceneObjects(scenery, objects);
@@ -679,6 +695,8 @@ export function createActorPass({
         if (islandCache) terrain.islandScenery.begin(world, treeSource || assets.images?.get('sprites'), cam.scale * dpr);
         else terrain.islandScenery.clear();
 
+        world.hanziScene = frame.hanziScene || null;
+        world.laterScene = frame.laterScene || null;
         const drawState = { world, save, time, frame, options, visualSave, heroPose, localPose, star, starLevel, motion, streetFocus, petId };
         for (let objectIndex = 0; objectIndex < objects.length; objectIndex++) {
             const o = objects[objectIndex];

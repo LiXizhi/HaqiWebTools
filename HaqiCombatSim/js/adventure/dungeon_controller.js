@@ -9,7 +9,7 @@ import { generatedCityRoute } from '../adventure_city_generated_core.js';
 import { renderCityInteraction } from '../views/adventure/view_city_dungeon.js';
 import { renderEarthLoading } from '../views/adventure/view_adventure_earth.js';
 import { createDungeonStory } from '../adventure_dungeon_story.js';
-import { claimTowerReward, journeyParty } from '../adventure_dungeon_journeys_core.js';
+import { claimTowerReward, journeyParty, towerMilestoneBonus } from '../adventure_dungeon_journeys_core.js';
 import { createSaveCommitter } from '../adventure_reward_persistence.js';
 import { startCoopRun, coopParty as journeyCoopParty } from '../adventure_coop_core.js';
 import { partySpecs as journeyPetParty } from '../adventure_pets_core.js';
@@ -126,11 +126,12 @@ export function createDungeonController({
 
     function claimFloorReward(id, floor) {
         const { assets } = getContext();
+        const bonus = towerMilestoneBonus(assets.content, dungeonFor(assets.content, id), floor);
         const committed = saveCommitter.commitSave(
             draft => claimTowerReward(draft, assets.content, id, floor),
             { paint: 'both', mutateInPlace: true, setWarning: false },
         );
-        toast(`已领取 ${committed.result} 奇豆`);
+        toast(bonus ? `已领取 ${committed.result} 奇豆与 ${bonus.name}×${bonus.count}` : `已领取 ${committed.result} 奇豆`);
     }
 
     function pickDungeonLobby(id, restart = false) {

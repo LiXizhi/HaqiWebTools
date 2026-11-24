@@ -1,8 +1,8 @@
 import {el, button} from './primitives.js';
 import {tr,fill} from '../../locale_runtime.js';
 import {createCloseButton} from '../../ui/controls.js';
-import {towerRecord,towerRewardSteps,towerRewardAmount,dungeonEnemyIntel} from '../../adventure_dungeon_journeys_core.js';
-import {dungeonTacticsProfile,dungeonTacticsPreparation} from '../../dungeon_tactics_core.js';
+import {towerRecord,towerRewardSteps,towerRewardAmount,towerMilestoneBonus,dungeonEnemyIntel} from '../../adventure_dungeon_journeys_core.js';
+import {dungeonTacticsProfile,dungeonTacticsPreparation,nextTowerMilestone} from '../../dungeon_tactics_core.js';
 import {dungeonChallengeLines} from '../../dungeon_challenge_core.js';
 import {guidanceCard} from './view_adventure_guidance.js';
 import {dungeonHonorTitle} from '../../adventure_honors_core.js';
@@ -49,11 +49,19 @@ export function renderDungeonJourney(root,{assets,save,dungeon:d,restart=false},
     actions.append(button(startOver?'从头开始新一轮':cleared.length&&!tower?'继续本轮':'进入',()=>cb.prepare(startOver),'primary'));
     body.append(actions);
     if(tower){
+        const row=towerRecord(save,d.id);
+        const nextBoss=nextTowerMilestone(d,row.floor);
+        const summitBonus=towerMilestoneBonus(assets.content,d,d.floors);
+        const towerSteps=['每逢 5 层与 10 层出现机制守关首领，按蓄力、铁壁、控场、破阵轮换战术意图。'];
+        if(nextBoss)towerSteps.push(`下一个机制守关：第 ${nextBoss.floor} 层「${nextBoss.title}」——${nextBoss.tip}`);
+        if(summitBonus)towerSteps.push(`${summitBonus.purpose}（${summitBonus.name}）。`);
+        body.append(guidanceCard({eyebrow:'试炼塔守关机制与目标',title:`当前已通过 ${row.floor} / ${d.floors} 层`,steps:towerSteps,footnote:'每 10 层可返回休息并领取阶段奖励；中后期试炼塔额外附带战宠口粮、仙豆与登顶装备。'}));
         const details=el('details','journey-entry-rewards',el('summary','','查看攀登进度与奖励'));
-        const row=towerRecord(save,d.id);details.append(el('p','',fill('已通过 {floor} / {floors} 层',{floor:row.floor,floors:d.floors}).text));
+        details.append(el('p','',fill('已通过 {floor} / {floors} 层',{floor:row.floor,floors:d.floors}).text));
         for(const floor of towerRewardSteps(d)){
-            const claimed=row.claimed.includes(floor),b=button(claimed?'已领取':row.floor>=floor?'领取':'未解锁',()=>cb.claim(floor),'secondary');b.disabled=claimed||row.floor<floor;
-            details.append(el('div','journey-reward',el('span','',fill('第 {floor} 层 · {amount} 奇豆',{floor,amount:towerRewardAmount(assets.content,d,floor)}).text),b));
+            const claimed=row.claimed.includes(floor),bonus=towerMilestoneBonus(assets.content,d,floor),b=button(claimed?'已领取':row.floor>=floor?'领取':'未解锁',()=>cb.claim(floor),'secondary');b.disabled=claimed||row.floor<floor;
+            const amountText=fill('第 {floor} 层 · {amount} 奇豆',{floor,amount:towerRewardAmount(assets.content,d,floor)}).text;
+            details.append(el('div','journey-reward',el('span','',bonus?`${amountText} + ${bonus.name}×${bonus.count}`:amountText),b));
         }body.append(details);
     }
     actions.querySelector('.primary')?.focus();

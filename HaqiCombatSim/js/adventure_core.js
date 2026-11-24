@@ -1,4 +1,4 @@
-import {dungeonTacticsProfile,dungeonTacticsVersion} from './dungeon_tactics_core.js';
+import {dungeonTacticsProfile,dungeonTacticsVersion,towerFloorTactic} from './dungeon_tactics_core.js';
 import {settleTacticsRecord} from './battle_tactics_journal_core.js';
 import {settleDungeonChallenge} from './dungeon_challenge_core.js';
 import {grantDungeonFirstReward} from './dungeon_first_rewards_core.js';
@@ -128,6 +128,7 @@ export function beginEncounter(save,content,encounterId,access={}) {
         seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 2, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1, dispelRulesVersion:1, specialCardRulesVersion:1, captureRulesVersion:1 };
     if(save.openingJourney?.version===1&&save.zone==='camp'&&OPENING_TRAINING_IDS.includes(encounterId))save.pendingEncounter.openingTrainingVersion=3;
     if(dungeonTacticsProfile(dungeon))Object.assign(save.pendingEncounter,{dungeonTacticsVersion:dungeonTacticsVersion(dungeon),dungeonTacticsId:dungeon.id});
+    else if(towerFloorTactic(dungeon,encounterId))Object.assign(save.pendingEncounter,{dungeonTacticsVersion:3,dungeonTacticsId:dungeon.id});
     if(dungeonTacticsProfile(dungeon)?.companionSlots)save.pendingEncounter.journeyPartyVersion=1;
     if(encounter.monsterIds){const formation=journeyEnemyFormation(encounter,dungeon,initialParty);save.pendingEncounter.dungeonMonsterIds=[...formation.ids];save.pendingEncounter.dungeonMonsterSlots=[...formation.slots];}
     if(content.pets){

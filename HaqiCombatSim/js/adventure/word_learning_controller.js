@@ -11,6 +11,7 @@ import { createDictionaryStore } from '../learning/dictionary_store.js';
 import { validateWordCards, makeWordCardSnapshot, activateWordCard, syncDictionaryQuestProgress } from '../word_cards_core.js';
 import { resolveParams } from '../combat_params_core.js';
 import { createHanziMemory } from '../hanzi/adventure_hanzi_memory.js';
+import { hanziMemoryContext } from '../hanzi_island_scene_core.js';
 import { DAILY_BUFF_NAMES } from '../language_daily_buff_core.js';
 import { validTargets } from '../combat_arena_core.js';
 import { castBlockedMessage } from '../adventure_cast_feedback_core.js';
@@ -184,7 +185,18 @@ export function createWordLearningController({
             const ctx = getContext();
             if (ctx.save !== current || ctx.roleStore?.owner !== owner || ctx.roleStore?.catalog.activeId !== role || ctx.stage !== 'world' || ctx.panel !== 'hanzi-memory') return;
             ensureWordStyle();
-            await wordPractice.open(rows.find(r => r.language === 'zh' && r.entryId === id), done, () => close());
+            const islandStory = hanziMemoryContext(ctx.assets?.content, id);
+            await wordPractice.open(
+                rows.find(r => r.language === 'zh' && r.entryId === id),
+                () => {
+                    done?.();
+                    if (islandStory?.restored) {
+                        toast(`已找回「${islandStory.glyph}」：${islandStory.restored}`);
+                    }
+                },
+                () => close(),
+                { islandStory },
+            );
         } catch (error) {
             const ctx = getContext();
             if (ctx.save === current && ctx.roleStore?.owner === owner && ctx.roleStore?.catalog.activeId === role && ctx.panel === 'hanzi-memory') {

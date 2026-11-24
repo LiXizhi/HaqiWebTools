@@ -88,16 +88,23 @@
           },
           "objective": "去找苏菲交谈",
           "hint": "苏菲正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "朋友？",
-          "promptGloss": "朋友。",
-          "answer": "朋友。",
-          "answerGloss": "朋友。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "桌边还空着一把椅子，你在等谁呢？",
+          "promptGloss": "桌边还空着一把椅子，你在等谁呢？",
+          "answer": "我在等朋友。",
+          "answerGloss": "我在等朋友。",
+          "ending": "太好了，那我们一起去湖边找汉特问问吧。",
+          "endingGloss": "太好了，那我们一起去湖边找汉特问问吧。",
           "words": [
             "朋友"
           ],
-          "intro": "朋友们还没到齐。你愿意帮我找找他们吗？我们先认一认“朋友”怎么说。"
+          "intro": "朋友们还没到齐。你愿意帮我找找他们吗？我们先认一认“朋友”怎么说。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "朋友。",
+              "answerGloss": "朋友。"
+            }
+          ]
         },
         {
           "id": "conversation-2",
@@ -108,16 +115,23 @@
           },
           "objective": "到南部湖畔观察并读出词语",
           "hint": "你到了南部湖畔。看看周围，听示范，试着说出这个词。",
-          "prompt": "水？",
-          "promptGloss": "水。",
-          "answer": "水。",
-          "answerGloss": "水。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "站在南部湖畔，你看见眼前一片清亮的是什么？",
+          "promptGloss": "站在南部湖畔，你看见眼前一片清亮的是什么？",
+          "answer": "我看见湖水。",
+          "answerGloss": "我看见湖水。",
+          "ending": "湖水映着晴天，汉特就在不远处的岸边。",
+          "endingGloss": "湖水映着晴天，汉特就在不远处的岸边。",
           "words": [
             "水"
           ],
-          "intro": "湖水就在眼前。先听听水声，再试着说出你看到的东西。"
+          "intro": "湖水就在眼前。先听听水声，再试着说出你看到的东西。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "水。",
+              "answerGloss": "水。"
+            }
+          ]
         },
         {
           "id": "conversation-3",
@@ -128,16 +142,23 @@
           },
           "objective": "去找渔夫汉特交谈",
           "hint": "渔夫汉特正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "家？",
-          "promptGloss": "家。",
-          "answer": "家。",
-          "answerGloss": "家。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "苏菲想请大家聚一聚，我们要去哪里做客？",
+          "promptGloss": "苏菲想请大家聚一聚，我们要去哪里做客？",
+          "answer": "去苏菲的家。",
+          "answerGloss": "去苏菲的家。",
+          "ending": "我马上收好渔网，这就一起去她家做客！",
+          "endingGloss": "我马上收好渔网，这就一起去她家做客！",
           "words": [
             "家"
           ],
-          "intro": "你是来找朋友的呀！说起做客，我们先认一认“家”这个词。"
+          "intro": "你是来找朋友的呀！说起做客，我们先认一认“家”这个词。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "家。",
+              "answerGloss": "家。"
+            }
+          ]
         },
         {
           "id": "conversation-4",
@@ -148,16 +169,23 @@
           },
           "objective": "去找苏菲交谈",
           "hint": "苏菲正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "朋友？",
-          "promptGloss": "朋友。",
-          "answer": "朋友。",
-          "answerGloss": "朋友。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "汉特愿意来吗？快告诉苏菲好消息吧。",
+          "promptGloss": "汉特愿意来吗？快告诉苏菲好消息吧。",
+          "answer": "朋友马上就来。",
+          "answerGloss": "朋友马上就来。",
+          "ending": "太棒了，这下那把空椅子终于有主人啦！",
+          "endingGloss": "太棒了，这下那把空椅子终于有主人啦！",
           "words": [
             "朋友"
           ],
-          "intro": "你回来了！下次再遇到他们，就可以用刚才的话介绍朋友了。要不要试一次？"
+          "intro": "你回来了！下次再遇到他们，就可以用刚才的话介绍朋友了。要不要试一次？",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "朋友。",
+              "answerGloss": "朋友。"
+            }
+          ]
         }
       ],
       "sceneVersion": 1,
@@ -179,16 +207,23 @@
           },
           "objective": "去找火百灵交谈",
           "hint": "火百灵正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "热？",
-          "promptGloss": "热。",
-          "answer": "热。",
-          "answerGloss": "热。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "你摸摸这只刚烧开的水壶，感觉怎么样？",
+          "promptGloss": "你摸摸这只刚烧开的水壶，感觉怎么样？",
+          "answer": "水壶很热。",
+          "answerGloss": "水壶很热。",
+          "ending": "小心烫手！先去熔岩边缘看看火势大不大。",
+          "endingGloss": "小心烫手！先去熔岩边缘看看火势大不大。",
           "words": [
             "热"
           ],
-          "intro": "靠近熔岩会很热。先别急着走，我们试试怎么提醒伙伴。"
+          "intro": "靠近熔岩会很热。先别急着走，我们试试怎么提醒伙伴。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "热。",
+              "answerGloss": "热。"
+            }
+          ]
         },
         {
           "id": "conversation-2",
@@ -199,16 +234,23 @@
           },
           "objective": "到熔岩边缘观察并读出词语",
           "hint": "你到了熔岩边缘。看看周围，听示范，试着说出这个词。",
-          "prompt": "火？",
-          "promptGloss": "火。",
-          "answer": "火。",
-          "answerGloss": "火。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "熔岩边缘亮起一片红光，你看到了什么？",
+          "promptGloss": "熔岩边缘亮起一片红光，你看到了什么？",
+          "answer": "那里有火。",
+          "answerGloss": "那里有火。",
+          "ending": "火势很旺，我们去找安格斯借点冷水降降温。",
+          "endingGloss": "火势很旺，我们去找安格斯借点冷水降降温。",
           "words": [
             "火"
           ],
-          "intro": "熔岩边缘透着火光。站在安全的地方，试着说出眼前的火。"
+          "intro": "熔岩边缘透着火光。站在安全的地方，试着说出眼前的火。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "火。",
+              "answerGloss": "火。"
+            }
+          ]
         },
         {
           "id": "conversation-3",
@@ -219,16 +261,23 @@
           },
           "objective": "去找安格斯交谈",
           "hint": "安格斯正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "水？",
-          "promptGloss": "水。",
-          "answer": "水。",
-          "answerGloss": "水。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "安格斯看你跑得满头大汗，问你需要什么帮忙？",
+          "promptGloss": "安格斯看你跑得满头大汗，问你需要什么帮忙？",
+          "answer": "我需要冷水。",
+          "answerGloss": "我需要冷水。",
+          "ending": "没问题，这一壶凉水快带回给火百灵吧！",
+          "endingGloss": "没问题，这一壶凉水快带回给火百灵吧！",
           "words": [
             "水"
           ],
-          "intro": "你是来问水的吗？别着急，先试着把需要的东西说出来。"
+          "intro": "你是来问水的吗？别着急，先试着把需要的东西说出来。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "水。",
+              "answerGloss": "水。"
+            }
+          ]
         },
         {
           "id": "conversation-4",
@@ -239,16 +288,23 @@
           },
           "objective": "去找火百灵交谈",
           "hint": "火百灵正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "热？",
-          "promptGloss": "热。",
-          "answer": "热。",
-          "answerGloss": "热。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "带回凉水后，提醒火百灵熔岩那边的情况吧。",
+          "promptGloss": "带回凉水后，提醒火百灵熔岩那边的情况吧。",
+          "answer": "熔岩边很热。",
+          "answerGloss": "熔岩边很热。",
+          "ending": "多亏你提醒，又送来凉水，大家这下安心多了。",
+          "endingGloss": "多亏你提醒，又送来凉水，大家这下安心多了。",
           "words": [
             "热"
           ],
-          "intro": "现在你知道怎么提醒伙伴了。再说一次，让我听清楚。"
+          "intro": "现在你知道怎么提醒伙伴了。再说一次，让我听清楚。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "热。",
+              "answerGloss": "热。"
+            }
+          ]
         }
       ],
       "sceneVersion": 1,
@@ -270,16 +326,23 @@
           },
           "objective": "去找虾米粒交谈",
           "hint": "虾米粒正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "冷？",
-          "promptGloss": "冷。",
-          "answer": "冷。",
-          "answerGloss": "冷。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "门外留下了一串新脚印，今天山上的风怎么样？",
+          "promptGloss": "门外留下了一串新脚印，今天山上的风怎么样？",
+          "answer": "外面很冷。",
+          "answerGloss": "外面很冷。",
+          "ending": "确实很冷，先去北部雪岭看看是谁走过去了。",
+          "endingGloss": "确实很冷，先去北部雪岭看看是谁走过去了。",
           "words": [
             "冷"
           ],
-          "intro": "今天有点冷。去看雪之前，我们先试试怎么说出这种感觉。"
+          "intro": "今天有点冷。去看雪之前，我们先试试怎么说出这种感觉。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "冷。",
+              "answerGloss": "冷。"
+            }
+          ]
         },
         {
           "id": "conversation-2",
@@ -290,16 +353,23 @@
           },
           "objective": "到北部雪岭观察并读出词语",
           "hint": "你到了北部雪岭。看看周围，听示范，试着说出这个词。",
-          "prompt": "雪？",
-          "promptGloss": "雪。",
-          "answer": "雪。",
-          "answerGloss": "雪。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "登上北部雪岭，脚印一路延伸进白茫茫的什么里？",
+          "promptGloss": "登上北部雪岭，脚印一路延伸进白茫茫的什么里？",
+          "answer": "厚厚的雪。",
+          "answerGloss": "厚厚的雪。",
+          "ending": "雪这么深，快去问问蒙克要不要先歇一歇。",
+          "endingGloss": "雪这么深，快去问问蒙克要不要先歇一歇。",
           "words": [
             "雪"
           ],
-          "intro": "雪铺在山岭上。你停下脚步，试着说出眼前的雪。"
+          "intro": "雪铺在山岭上。你停下脚步，试着说出眼前的雪。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "雪。",
+              "answerGloss": "雪。"
+            }
+          ]
         },
         {
           "id": "conversation-3",
@@ -310,16 +380,23 @@
           },
           "objective": "去找蒙克交谈",
           "hint": "蒙克正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "休息？",
-          "promptGloss": "休息。",
-          "answer": "休息。",
-          "answerGloss": "休息。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "蒙克走得有点累了，你可以怎么关心他？",
+          "promptGloss": "蒙克走得有点累了，你可以怎么关心他？",
+          "answer": "先休息一下。",
+          "answerGloss": "先休息一下。",
+          "ending": "谢谢你，喝口热茶休息一会儿再继续走。",
+          "endingGloss": "谢谢你，喝口热茶休息一会儿再继续走。",
           "words": [
             "休息"
           ],
-          "intro": "走了一会儿，有点累了吧？我们试试怎么说“休息”。"
+          "intro": "走了一会儿，有点累了吧？我们试试怎么说“休息”。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "休息。",
+              "answerGloss": "休息。"
+            }
+          ]
         },
         {
           "id": "conversation-4",
@@ -330,16 +407,23 @@
           },
           "objective": "去找虾米粒交谈",
           "hint": "虾米粒正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "冷？",
-          "promptGloss": "冷。",
-          "answer": "冷。",
-          "answerGloss": "冷。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "回到虾米粒身边，告诉她雪岭上的天气吧。",
+          "promptGloss": "回到虾米粒身边，告诉她雪岭上的天气吧。",
+          "answer": "雪岭上很冷。",
+          "answerGloss": "雪岭上很冷。",
+          "ending": "原来这么冷，那我们等风小一点再一起出门。",
+          "endingGloss": "原来这么冷，那我们等风小一点再一起出门。",
           "words": [
             "冷"
           ],
-          "intro": "回来啦！外面冷不冷？你可以用刚才听过的话告诉我。"
+          "intro": "回来啦！外面冷不冷？你可以用刚才听过的话告诉我。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "冷。",
+              "answerGloss": "冷。"
+            }
+          ]
         }
       ],
       "sceneVersion": 1,
@@ -361,16 +445,23 @@
           },
           "objective": "去找青青交谈",
           "hint": "青青正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "地图？",
-          "promptGloss": "地图。",
-          "answer": "地图。",
-          "answerGloss": "地图。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "进沙漠前要做两份准备，青青问你先带好什么认路？",
+          "promptGloss": "进沙漠前要做两份准备，青青问你先带好什么认路？",
+          "answer": "带好地图。",
+          "answerGloss": "带好地图。",
+          "ending": "有地图就不怕迷路了，先去南部绿洲探探路吧。",
+          "endingGloss": "有地图就不怕迷路了，先去南部绿洲探探路吧。",
           "words": [
             "地图"
           ],
-          "intro": "有地图，找路就容易一些。出发前，我们先认一认它。"
+          "intro": "有地图，找路就容易一些。出发前，我们先认一认它。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "地图。",
+              "answerGloss": "地图。"
+            }
+          ]
         },
         {
           "id": "conversation-2",
@@ -381,16 +472,23 @@
           },
           "objective": "到南部绿洲观察并读出词语",
           "hint": "你到了南部绿洲。看看周围，听示范，试着说出这个词。",
-          "prompt": "水？",
-          "promptGloss": "水。",
-          "answer": "水。",
-          "answerGloss": "水。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "走进南部绿洲，树荫下清亮的是什么？",
+          "promptGloss": "走进南部绿洲，树荫下清亮的是什么？",
+          "answer": "这里有水。",
+          "answerGloss": "这里有水。",
+          "ending": "绿洲水源充足，快去告诉尤里可以装水了。",
+          "endingGloss": "绿洲水源充足，快去告诉尤里可以装水了。",
           "words": [
             "水"
           ],
-          "intro": "绿洲里能看到水。你停在水边，试着说出自己的发现。"
+          "intro": "绿洲里能看到水。你停在水边，试着说出自己的发现。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "水。",
+              "answerGloss": "水。"
+            }
+          ]
         },
         {
           "id": "conversation-3",
@@ -401,16 +499,23 @@
           },
           "objective": "去找尤里交谈",
           "hint": "尤里正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "水？",
-          "promptGloss": "水。",
-          "answer": "水。",
-          "answerGloss": "水。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "尤里正准备补给，他问你绿洲里找到了什么？",
+          "promptGloss": "尤里正准备补给，他问你绿洲里找到了什么？",
+          "answer": "找到了水。",
+          "answerGloss": "找到了水。",
+          "ending": "太好了！有水就能放心继续穿越沙海了。",
+          "endingGloss": "太好了！有水就能放心继续穿越沙海了。",
           "words": [
             "水"
           ],
-          "intro": "找到水了吗？慢慢说，我在听。"
+          "intro": "找到水了吗？慢慢说，我在听。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "水。",
+              "answerGloss": "水。"
+            }
+          ]
         },
         {
           "id": "conversation-4",
@@ -421,16 +526,23 @@
           },
           "objective": "去找青青交谈",
           "hint": "青青正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "地图？",
-          "promptGloss": "地图。",
-          "answer": "地图。",
-          "answerGloss": "地图。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "回到青青这里，要把绿洲的位置记在哪里？",
+          "promptGloss": "回到青青这里，要把绿洲的位置记在哪里？",
+          "answer": "记在地图上。",
+          "answerGloss": "记在地图上。",
+          "ending": "地图和水都准备妥当，这趟沙漠旅途稳妥多了！",
+          "endingGloss": "地图和水都准备妥当，这趟沙漠旅途稳妥多了！",
           "words": [
             "地图"
           ],
-          "intro": "我们再看一眼地图。下次找路，也可以用这个词来问我。"
+          "intro": "我们再看一眼地图。下次找路，也可以用这个词来问我。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "地图。",
+              "answerGloss": "地图。"
+            }
+          ]
         }
       ],
       "sceneVersion": 1,
@@ -452,16 +564,23 @@
           },
           "objective": "去找古格交谈",
           "hint": "古格正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "朋友？",
-          "promptGloss": "朋友。",
-          "answer": "朋友。",
-          "answerGloss": "朋友。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "门后传来轻轻的敲门声，古格在期待谁的到来？",
+          "promptGloss": "门后传来轻轻的敲门声，古格在期待谁的到来？",
+          "answer": "在等朋友。",
+          "answerGloss": "在等朋友。",
+          "ending": "别担心，我们去北部密林看看朋友是不是在路上。",
+          "endingGloss": "别担心，我们去北部密林看看朋友是不是在路上。",
           "words": [
             "朋友"
           ],
-          "intro": "我在等朋友。你愿意陪我去看看吗？先认一认“朋友”怎么说。"
+          "intro": "我在等朋友。你愿意陪我去看看吗？先认一认“朋友”怎么说。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "朋友。",
+              "answerGloss": "朋友。"
+            }
+          ]
         },
         {
           "id": "conversation-2",
@@ -472,16 +591,23 @@
           },
           "objective": "到北部密林观察并读出词语",
           "hint": "你到了北部密林。看看周围，听示范，试着说出这个词。",
-          "prompt": "树？",
-          "promptGloss": "树。",
-          "answer": "树。",
-          "answerGloss": "树。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "北部密林的小路两旁高高站立着什么？",
+          "promptGloss": "北部密林的小路两旁高高站立着什么？",
+          "answer": "高大的树。",
+          "answerGloss": "高大的树。",
+          "ending": "穿过树林就能看见艾琳提着灯站在前方。",
+          "endingGloss": "穿过树林就能看见艾琳提着灯站在前方。",
           "words": [
             "树"
           ],
-          "intro": "树影轻轻晃动。先看清眼前的树，再试着说出它的名字。"
+          "intro": "树影轻轻晃动。先看清眼前的树，再试着说出它的名字。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "树。",
+              "answerGloss": "树。"
+            }
+          ]
         },
         {
           "id": "conversation-3",
@@ -492,16 +618,23 @@
           },
           "objective": "去找艾琳交谈",
           "hint": "艾琳正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "来？",
-          "promptGloss": "来。",
-          "answer": "来。",
-          "answerGloss": "来。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "艾琳不好意思敲门，你可以怎样热情邀请她？",
+          "promptGloss": "艾琳不好意思敲门，你可以怎样热情邀请她？",
+          "answer": "快过来吧。",
+          "answerGloss": "快过来吧。",
+          "ending": "好呀，有你陪着我，我现在就去敲古格的门。",
+          "endingGloss": "好呀，有你陪着我，我现在就去敲古格的门。",
           "words": [
             "来"
           ],
-          "intro": "你想邀请朋友过来吗？我们一起试试怎么说“来”。"
+          "intro": "你想邀请朋友过来吗？我们一起试试怎么说“来”。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "来。",
+              "answerGloss": "来。"
+            }
+          ]
         },
         {
           "id": "conversation-4",
@@ -512,16 +645,23 @@
           },
           "objective": "去找古格交谈",
           "hint": "古格正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "朋友？",
-          "promptGloss": "朋友。",
-          "answer": "朋友。",
-          "answerGloss": "朋友。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "门开了，向古格介绍门外的来客吧。",
+          "promptGloss": "门开了，向古格介绍门外的来客吧。",
+          "answer": "是你的朋友。",
+          "answerGloss": "是你的朋友。",
+          "ending": "原来你真的来了！快进屋一起坐吧。",
+          "endingGloss": "原来你真的来了！快进屋一起坐吧。",
           "words": [
             "朋友"
           ],
-          "intro": "谢谢你陪我找朋友。现在试着向我介绍一下你的朋友吧。"
+          "intro": "谢谢你陪我找朋友。现在试着向我介绍一下你的朋友吧。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "朋友。",
+              "answerGloss": "朋友。"
+            }
+          ]
         }
       ],
       "sceneVersion": 1,
@@ -543,16 +683,23 @@
           },
           "objective": "去找阿澜交谈",
           "hint": "阿澜正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "信？",
-          "promptGloss": "信。",
-          "answer": "信。",
-          "answerGloss": "信。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "灯塔桌上放着一封没有署名的旧东西，那是什么？",
+          "promptGloss": "灯塔桌上放着一封没有署名的旧东西，那是什么？",
+          "answer": "是一封信。",
+          "answerGloss": "是一封信。",
+          "ending": "先去月潮码头看看刚靠岸的船，也许有线索。",
+          "endingGloss": "先去月潮码头看看刚靠岸的船，也许有线索。",
           "words": [
             "信"
           ],
-          "intro": "这封信还没送出去。出发之前，先认一认“信”怎么说吧。"
+          "intro": "这封信还没送出去。出发之前，先认一认“信”怎么说吧。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "信。",
+              "answerGloss": "信。"
+            }
+          ]
         },
         {
           "id": "conversation-2",
@@ -563,16 +710,23 @@
           },
           "objective": "到月潮码头观察并读出词语",
           "hint": "你到了月潮码头。看看周围，听示范，试着说出这个词。",
-          "prompt": "船？",
-          "promptGloss": "船。",
-          "answer": "船。",
-          "answerGloss": "船。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "月潮码头的浪声里，正缓缓靠岸的是什么？",
+          "promptGloss": "月潮码头的浪声里，正缓缓靠岸的是什么？",
+          "answer": "一艘小船。",
+          "answerGloss": "一艘小船。",
+          "ending": "小船刚进港，我们去问问岑伯认不认识送信的人。",
+          "endingGloss": "小船刚进港，我们去问问岑伯认不认识送信的人。",
           "words": [
             "船"
           ],
-          "intro": "码头边停着船。你看着船，试着说出它的名字。"
+          "intro": "码头边停着船。你看着船，试着说出它的名字。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "船。",
+              "answerGloss": "船。"
+            }
+          ]
         },
         {
           "id": "conversation-3",
@@ -583,16 +737,23 @@
           },
           "objective": "去找岑伯交谈",
           "hint": "岑伯正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "朋友？",
-          "promptGloss": "朋友。",
-          "answer": "朋友。",
-          "answerGloss": "朋友。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "岑伯笑着问你，这封信要送给他的哪位老相识？",
+          "promptGloss": "岑伯笑着问你，这封信要送给他的哪位老相识？",
+          "answer": "送给朋友。",
+          "answerGloss": "送给朋友。",
+          "ending": "原来是老朋友的问候，快回灯塔告诉阿澜吧！",
+          "endingGloss": "原来是老朋友的问候，快回灯塔告诉阿澜吧！",
           "words": [
             "朋友"
           ],
-          "intro": "你在找送信的朋友吗？先试着说出“朋友”，我听听。"
+          "intro": "你在找送信的朋友吗？先试着说出“朋友”，我听听。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "朋友。",
+              "answerGloss": "朋友。"
+            }
+          ]
         },
         {
           "id": "conversation-4",
@@ -603,16 +764,23 @@
           },
           "objective": "去找阿澜交谈",
           "hint": "阿澜正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "信？",
-          "promptGloss": "信。",
-          "answer": "信。",
-          "answerGloss": "信。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "回到阿澜身边，告诉他我们可以把什么寄出去了？",
+          "promptGloss": "回到阿澜身边，告诉他我们可以把什么寄出去了？",
+          "answer": "寄出这封信。",
+          "answerGloss": "寄出这封信。",
+          "ending": "太好了，灯塔终于又送出了一封温暖的回信。",
+          "endingGloss": "太好了，灯塔终于又送出了一封温暖的回信。",
           "words": [
             "信"
           ],
-          "intro": "我们再看一眼这封信。你还记得刚才怎么说吗？"
+          "intro": "我们再看一眼这封信。你还记得刚才怎么说吗？",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "信。",
+              "answerGloss": "信。"
+            }
+          ]
         }
       ],
       "sceneVersion": 1,
@@ -634,16 +802,23 @@
           },
           "objective": "去找芦笙交谈",
           "hint": "芦笙正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "地图？",
-          "promptGloss": "地图。",
-          "answer": "地图。",
-          "answerGloss": "地图。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "桌上摊开着两张画法不同的图纸，芦笙在看什么？",
+          "promptGloss": "桌上摊开着两张画法不同的图纸，芦笙在看什么？",
+          "answer": "在看地图。",
+          "answerGloss": "在看地图。",
+          "ending": "两张地图方向相反，我们先去双名井核对一下。",
+          "endingGloss": "两张地图方向相反，我们先去双名井核对一下。",
           "words": [
             "地图"
           ],
-          "intro": "地图上的标记有点不一样。我们先认一认“地图”，再去看看。"
+          "intro": "地图上的标记有点不一样。我们先认一认“地图”，再去看看。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "地图。",
+              "answerGloss": "地图。"
+            }
+          ]
         },
         {
           "id": "conversation-2",
@@ -654,16 +829,23 @@
           },
           "objective": "到双名井观察并读出词语",
           "hint": "你到了双名井。看看周围，听示范，试着说出这个词。",
-          "prompt": "水？",
-          "promptGloss": "水。",
-          "answer": "水。",
-          "answerGloss": "水。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "走到双名井旁往下看，井里倒映着什么？",
+          "promptGloss": "走到双名井旁往下看，井里倒映着什么？",
+          "answer": "清澈的水。",
+          "answerGloss": "清澈的水。",
+          "ending": "井水就在镇子正中，快去找米拉对一对另一张图。",
+          "endingGloss": "井水就在镇子正中，快去找米拉对一对另一张图。",
           "words": [
             "水"
           ],
-          "intro": "井就在这里，里面有水。你朝井里看了看，试着说出自己的发现。"
+          "intro": "井就在这里，里面有水。你朝井里看了看，试着说出自己的发现。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "水。",
+              "answerGloss": "水。"
+            }
+          ]
         },
         {
           "id": "conversation-3",
@@ -674,16 +856,23 @@
           },
           "objective": "去找米拉交谈",
           "hint": "米拉正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "地图？",
-          "promptGloss": "地图。",
-          "answer": "地图。",
-          "answerGloss": "地图。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "米拉也拿着一张旧纸，她想和你核对什么？",
+          "promptGloss": "米拉也拿着一张旧纸，她想和你核对什么？",
+          "answer": "核对地图。",
+          "answerGloss": "核对地图。",
+          "ending": "把纸转过来一看，两张地图果然拼在了一起！",
+          "endingGloss": "把纸转过来一看，两张地图果然拼在了一起！",
           "words": [
             "地图"
           ],
-          "intro": "你也来看地图吗？先告诉我你想看什么，我们再一起核对。"
+          "intro": "你也来看地图吗？先告诉我你想看什么，我们再一起核对。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "地图。",
+              "answerGloss": "地图。"
+            }
+          ]
         },
         {
           "id": "conversation-4",
@@ -694,16 +883,23 @@
           },
           "objective": "去找芦笙交谈",
           "hint": "芦笙正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "朋友？",
-          "promptGloss": "朋友。",
-          "answer": "朋友。",
-          "answerGloss": "朋友。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "芦笙问你是谁一起帮忙把两张图合起来的？",
+          "promptGloss": "芦笙问你是谁一起帮忙把两张图合起来的？",
+          "answer": "是好朋友。",
+          "answerGloss": "是好朋友。",
+          "ending": "换个方向看世界，有朋友一起核对真好！",
+          "endingGloss": "换个方向看世界，有朋友一起核对真好！",
           "words": [
             "朋友"
           ],
-          "intro": "谢谢你一起核对。认识了新朋友，就试着介绍一下吧。"
+          "intro": "谢谢你一起核对。认识了新朋友，就试着介绍一下吧。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "朋友。",
+              "answerGloss": "朋友。"
+            }
+          ]
         }
       ],
       "sceneVersion": 1,
@@ -725,16 +921,23 @@
           },
           "objective": "去找莉风交谈",
           "hint": "莉风正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "计划？",
-          "promptGloss": "计划。",
-          "answer": "计划。",
-          "answerGloss": "计划。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "庆典马上开始，莉风问你准备好迎接大家的什么了吗？",
+          "promptGloss": "庆典马上开始，莉风问你准备好迎接大家的什么了吗？",
+          "answer": "准备好了计划。",
+          "answerGloss": "准备好了计划。",
+          "ending": "安排得真周到！先去归帆码头看看客人到没到。",
+          "endingGloss": "安排得真周到！先去归帆码头看看客人到没到。",
           "words": [
             "计划"
           ],
-          "intro": "迎船前，还有些事要商量。我们先试着说出“计划”。"
+          "intro": "迎船前，还有些事要商量。我们先试着说出“计划”。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "计划。",
+              "answerGloss": "计划。"
+            }
+          ]
         },
         {
           "id": "conversation-2",
@@ -745,16 +948,23 @@
           },
           "objective": "到归帆码头观察并读出词语",
           "hint": "你到了归帆码头。看看周围，听示范，试着说出这个词。",
-          "prompt": "船？",
-          "promptGloss": "船。",
-          "answer": "船。",
-          "answerGloss": "船。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "归帆码头的海风里，远方驶来的是什么？",
+          "promptGloss": "归帆码头的海风里，远方驶来的是什么？",
+          "answer": "归航的船。",
+          "answerGloss": "归航的船。",
+          "ending": "船已经靠岸了，快去迎接刚下船的小舟吧。",
+          "endingGloss": "船已经靠岸了，快去迎接刚下船的小舟吧。",
           "words": [
             "船"
           ],
-          "intro": "船在码头边。你望向船，试着说出眼前的东西。"
+          "intro": "船在码头边。你望向船，试着说出眼前的东西。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "船。",
+              "answerGloss": "船。"
+            }
+          ]
         },
         {
           "id": "conversation-3",
@@ -765,16 +975,23 @@
           },
           "objective": "去找小舟交谈",
           "hint": "小舟正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "朋友？",
-          "promptGloss": "朋友。",
-          "answer": "朋友。",
-          "answerGloss": "朋友。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "小舟刚踏上码头，告诉他今天欢迎谁来参加庆典？",
+          "promptGloss": "小舟刚踏上码头，告诉他今天欢迎谁来参加庆典？",
+          "answer": "欢迎朋友。",
+          "answerGloss": "欢迎朋友。",
+          "ending": "谢谢你们一直记得我，这就一起去广场吧！",
+          "endingGloss": "谢谢你们一直记得我，这就一起去广场吧！",
           "words": [
             "朋友"
           ],
-          "intro": "你也来迎接朋友吗？试着告诉我，你在等谁。"
+          "intro": "你也来迎接朋友吗？试着告诉我，你在等谁。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "朋友。",
+              "answerGloss": "朋友。"
+            }
+          ]
         },
         {
           "id": "conversation-4",
@@ -785,16 +1002,23 @@
           },
           "objective": "去找莉风交谈",
           "hint": "莉风正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "计划？",
-          "promptGloss": "计划。",
-          "answer": "计划。",
-          "answerGloss": "计划。",
-          "ending": "谢谢你。",
-          "endingGloss": "谢谢你。",
+          "prompt": "客人到齐了，回莉风那里宣布庆典按什么开始吧？",
+          "promptGloss": "客人到齐了，回莉风那里宣布庆典按什么开始吧？",
+          "answer": "按计划开始。",
+          "answerGloss": "按计划开始。",
+          "ending": "太棒了，扬起白帆，让风帆岛的庆典正式开始！",
+          "endingGloss": "太棒了，扬起白帆，让风帆岛的庆典正式开始！",
           "words": [
             "计划"
           ],
-          "intro": "你回来啦！我们再确认一下计划。试着用刚才听到的词开个头吧。"
+          "intro": "你回来啦！我们再确认一下计划。试着用刚才听到的词开个头吧。",
+          "alternatives": [
+            {
+              "id": "short",
+              "answer": "计划。",
+              "answerGloss": "计划。"
+            }
+          ]
         }
       ],
       "sceneVersion": 1,
@@ -889,8 +1113,16 @@
           "answer": "Yes, I am helping my friend Achu.",
           "answerGloss": "是的，我在帮助我的朋友阿初。",
           "alternatives": [
-            { "id": "friend-confirmation", "answer": "Yes. He is my friend.", "answerGloss": "是的。他是我的朋友。" },
-            { "id": "helping-my-friend", "answer": "I am helping my friend Achu.", "answerGloss": "我在帮助我的朋友阿初。" }
+            {
+              "id": "friend-confirmation",
+              "answer": "Yes. He is my friend.",
+              "answerGloss": "是的。他是我的朋友。"
+            },
+            {
+              "id": "helping-my-friend",
+              "answer": "I am helping my friend Achu.",
+              "answerGloss": "我在帮助我的朋友阿初。"
+            }
           ],
           "ending": "She is looking for him, too.",
           "endingGloss": "她也在找他。",
@@ -935,7 +1167,11 @@
           "answer": "No. He is not at home.",
           "answerGloss": "不。他不在家。",
           "alternatives": [
-            { "id": "not-at-home-short", "answer": "No. Not at home.", "answerGloss": "不。他不在家。" }
+            {
+              "id": "not-at-home-short",
+              "answer": "No. Not at home.",
+              "answerGloss": "不。他不在家。"
+            }
           ],
           "ending": "Good. Please tell Xiaodeng.",
           "endingGloss": "好。请把消息告诉小灯。",
@@ -959,8 +1195,16 @@
           "answer": "Achu is waiting at the dock.",
           "answerGloss": "阿初正在码头等她。",
           "alternatives": [
-            { "id": "waiting-short", "answer": "He is waiting.", "answerGloss": "他还在等。" },
-            { "id": "waiting-confirmed", "answer": "Yes, Achu is waiting at the dock.", "answerGloss": "是的，阿初正在码头等她。" }
+            {
+              "id": "waiting-short",
+              "answer": "He is waiting.",
+              "answerGloss": "他还在等。"
+            },
+            {
+              "id": "waiting-confirmed",
+              "answer": "Yes, Achu is waiting at the dock.",
+              "answerGloss": "是的，阿初正在码头等她。"
+            }
           ],
           "ending": "He's waiting! Thank you!",
           "endingGloss": "他还在等我！谢谢你！",
@@ -1702,16 +1946,28 @@
           },
           "objective": "去找虾米粒交谈",
           "hint": "虾米粒正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Cold?",
-          "promptGloss": "冷。",
-          "answer": "Cold!",
-          "answerGloss": "冷。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "Is the wind strong outside today?",
+          "promptGloss": "今天外面的风很冷吗？",
+          "answer": "Yes, it is cold.",
+          "answerGloss": "是的，外面很冷。",
+          "ending": "Then let me bring a warm coat first.",
+          "endingGloss": "那我先拿一件暖和的外套。",
           "words": [
             "cold"
           ],
-          "intro": "今天有点冷。去看雪之前，我们先试试怎么说出这种感觉。"
+          "intro": "今天有点冷。去看雪之前，我们先试试怎么说出这种感觉。",
+          "alternatives": [
+            {
+              "id": "short-cold",
+              "answer": "It is cold.",
+              "answerGloss": "很冷。"
+            },
+            {
+              "id": "word-cold",
+              "answer": "Cold!",
+              "answerGloss": "好冷！"
+            }
+          ]
         },
         {
           "id": "conversation-2",
@@ -1722,16 +1978,28 @@
           },
           "objective": "到北部雪岭观察并读出词语",
           "hint": "你到了北部雪岭。看看周围，听示范，试着说出这个词。",
-          "prompt": "Snow?",
-          "promptGloss": "雪。",
-          "answer": "Snow!",
-          "answerGloss": "雪。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "What covers the ridge ahead?",
+          "promptGloss": "前方山岭上盖着什么？",
+          "answer": "I see snow.",
+          "answerGloss": "我看见了雪。",
+          "ending": "The snow is deep. Monk will want to rest first.",
+          "endingGloss": "雪很厚，蒙克肯定想先休息一下。",
           "words": [
             "snow"
           ],
-          "intro": "雪铺在山岭上。你停下脚步，试着说出眼前的雪。"
+          "intro": "雪铺在山岭上。你停下脚步，试着说出眼前的雪。",
+          "alternatives": [
+            {
+              "id": "deep-snow",
+              "answer": "Deep snow.",
+              "answerGloss": "厚厚的雪。"
+            },
+            {
+              "id": "word-snow",
+              "answer": "Snow!",
+              "answerGloss": "是雪！"
+            }
+          ]
         },
         {
           "id": "conversation-3",
@@ -1742,16 +2010,28 @@
           },
           "objective": "去找蒙克交谈",
           "hint": "蒙克正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Rest?",
-          "promptGloss": "休息。",
+          "prompt": "Should we keep walking or stop here?",
+          "promptGloss": "我们继续走，还是先在这里歇歇？",
           "answer": "Rest, please.",
-          "answerGloss": "休息。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "answerGloss": "请先休息一下吧。",
+          "ending": "Thank you. That warm empty bed looks just right.",
+          "endingGloss": "谢谢你，那张暖和的空床正合适。",
           "words": [
             "rest"
           ],
-          "intro": "走了一会儿，有点累了吧？我们试试怎么说“休息”。"
+          "intro": "走了一会儿，有点累了吧？我们试试怎么说“休息”。",
+          "alternatives": [
+            {
+              "id": "let-us-rest",
+              "answer": "Let us rest, please.",
+              "answerGloss": "请让我们休息吧。"
+            },
+            {
+              "id": "need-rest",
+              "answer": "Please rest here.",
+              "answerGloss": "请在这里休息。"
+            }
+          ]
         },
         {
           "id": "conversation-4",
@@ -1762,16 +2042,28 @@
           },
           "objective": "去找虾米粒交谈",
           "hint": "虾米粒正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Cold?",
-          "promptGloss": "冷。",
-          "answer": "Cold!",
-          "answerGloss": "冷。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "How is the wind on the ridge now?",
+          "promptGloss": "雪岭上的风现在怎么样？",
+          "answer": "It is very cold.",
+          "answerGloss": "那边非常冷。",
+          "ending": "Let Monk rest first. The snow will still wait for us.",
+          "endingGloss": "先让蒙克好好休息，雪会等我们的。",
           "words": [
             "cold"
           ],
-          "intro": "回来啦！外面冷不冷？你可以用刚才听过的话告诉我。"
+          "intro": "回来啦！外面冷不冷？你可以用刚才听过的话告诉我。",
+          "alternatives": [
+            {
+              "id": "short-cold-2",
+              "answer": "It is cold.",
+              "answerGloss": "很冷。"
+            },
+            {
+              "id": "word-cold-2",
+              "answer": "Cold!",
+              "answerGloss": "很冷！"
+            }
+          ]
         }
       ],
       "sceneVersion": 1,
@@ -1793,16 +2085,28 @@
           },
           "objective": "去找青青交谈",
           "hint": "青青正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Map?",
-          "promptGloss": "地图。",
-          "answer": "My map.",
-          "answerGloss": "地图。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "What helps us find the oasis?",
+          "promptGloss": "什么能帮我们找到绿洲？",
+          "answer": "Look at my map.",
+          "answerGloss": "看看我的地图。",
+          "ending": "Good! The green oasis is just south of the dunes.",
+          "endingGloss": "太好了！绿洲就在沙丘南边。",
           "words": [
             "map"
           ],
-          "intro": "有地图，找路就容易一些。出发前，我们先认一认它。"
+          "intro": "有地图，找路就容易一些。出发前，我们先认一认它。",
+          "alternatives": [
+            {
+              "id": "short-map",
+              "answer": "My map.",
+              "answerGloss": "我的地图。"
+            },
+            {
+              "id": "have-map",
+              "answer": "I have a map.",
+              "answerGloss": "我有一张地图。"
+            }
+          ]
         },
         {
           "id": "conversation-2",
@@ -1813,16 +2117,28 @@
           },
           "objective": "到南部绿洲观察并读出词语",
           "hint": "你到了南部绿洲。看看周围，听示范，试着说出这个词。",
-          "prompt": "Water?",
-          "promptGloss": "水。",
-          "answer": "Water.",
-          "answerGloss": "水。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "What is shining beside the palm trees?",
+          "promptGloss": "棕榈树旁闪着光的是什么？",
+          "answer": "I see water.",
+          "answerGloss": "我看见水了。",
+          "ending": "Clear water! Let us tell Yuri right away.",
+          "endingGloss": "清澈的水！我们马上去告诉尤里。",
           "words": [
             "water"
           ],
-          "intro": "绿洲里能看到水。你停在水边，试着说出自己的发现。"
+          "intro": "绿洲里能看到水。你停在水边，试着说出自己的发现。",
+          "alternatives": [
+            {
+              "id": "short-water",
+              "answer": "Water.",
+              "answerGloss": "是水。"
+            },
+            {
+              "id": "fresh-water",
+              "answer": "There is water.",
+              "answerGloss": "这里有水。"
+            }
+          ]
         },
         {
           "id": "conversation-3",
@@ -1833,16 +2149,28 @@
           },
           "objective": "去找尤里交谈",
           "hint": "尤里正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Water?",
-          "promptGloss": "水。",
-          "answer": "Water.",
-          "answerGloss": "水。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "What did you find at the southern oasis?",
+          "promptGloss": "你在南部绿洲找到了什么？",
+          "answer": "We found water.",
+          "answerGloss": "我们找到了水。",
+          "ending": "What a relief! Everyone can fill their flasks now.",
+          "endingGloss": "真是太好了！大家现在都能装满水壶了。",
           "words": [
             "water"
           ],
-          "intro": "找到水了吗？慢慢说，我在听。"
+          "intro": "找到水了吗？慢慢说，我在听。",
+          "alternatives": [
+            {
+              "id": "short-water-2",
+              "answer": "Water.",
+              "answerGloss": "水。"
+            },
+            {
+              "id": "has-water",
+              "answer": "There is water.",
+              "answerGloss": "那里有水。"
+            }
+          ]
         },
         {
           "id": "conversation-4",
@@ -1853,16 +2181,28 @@
           },
           "objective": "去找青青交谈",
           "hint": "青青正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Map?",
-          "promptGloss": "地图。",
-          "answer": "My map.",
-          "answerGloss": "地图。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "Should we mark the oasis on our route?",
+          "promptGloss": "要把绿洲标在我们的路线上吗？",
+          "answer": "Yes, mark my map.",
+          "answerGloss": "好的，标在我的地图上。",
+          "ending": "Now no traveler will miss this oasis again.",
+          "endingGloss": "这样以后旅人再也不会错过这片绿洲了。",
           "words": [
             "map"
           ],
-          "intro": "我们再看一眼地图。下次找路，也可以用这个词来问我。"
+          "intro": "我们再看一眼地图。下次找路，也可以用这个词来问我。",
+          "alternatives": [
+            {
+              "id": "short-map-2",
+              "answer": "My map.",
+              "answerGloss": "我的地图。"
+            },
+            {
+              "id": "on-map",
+              "answer": "On my map.",
+              "answerGloss": "标在地图上。"
+            }
+          ]
         }
       ],
       "sceneVersion": 1,
@@ -1884,16 +2224,28 @@
           },
           "objective": "去找古格交谈",
           "hint": "古格正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Friend?",
-          "promptGloss": "朋友。",
-          "answer": "My friend.",
-          "answerGloss": "朋友。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "Who are you waiting for by the door?",
+          "promptGloss": "你在门边等谁呢？",
+          "answer": "I wait for my friend.",
+          "answerGloss": "我在等我的朋友。",
+          "ending": "Maybe she is still near the northern woods. Let us check.",
+          "endingGloss": "也许她还在北部密林附近，我们去看看吧。",
           "words": [
             "friend"
           ],
-          "intro": "我在等朋友。你愿意陪我去看看吗？先认一认“朋友”怎么说。"
+          "intro": "我在等朋友。你愿意陪我去看看吗？先认一认“朋友”怎么说。",
+          "alternatives": [
+            {
+              "id": "short-friend",
+              "answer": "My friend.",
+              "answerGloss": "我的朋友。"
+            },
+            {
+              "id": "for-friend",
+              "answer": "For my friend.",
+              "answerGloss": "等我的朋友。"
+            }
+          ]
         },
         {
           "id": "conversation-2",
@@ -1904,16 +2256,28 @@
           },
           "objective": "到北部密林观察并读出词语",
           "hint": "你到了北部密林。看看周围，听示范，试着说出这个词。",
-          "prompt": "Tree?",
-          "promptGloss": "树。",
-          "answer": "A tree.",
-          "answerGloss": "树。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "What stands quietly beside the lantern path?",
+          "promptGloss": "灯火小路旁静静立着什么？",
+          "answer": "I see a big tree.",
+          "answerGloss": "我看见一棵大树。",
+          "ending": "Someone left a small ribbon on the tree. Ailin must be nearby.",
+          "endingGloss": "树上系着一条小丝带，艾琳一定就在附近。",
           "words": [
             "tree"
           ],
-          "intro": "树影轻轻晃动。先看清眼前的树，再试着说出它的名字。"
+          "intro": "树影轻轻晃动。先看清眼前的树，再试着说出它的名字。",
+          "alternatives": [
+            {
+              "id": "short-tree",
+              "answer": "A tree.",
+              "answerGloss": "一棵树。"
+            },
+            {
+              "id": "see-tree",
+              "answer": "I see a tree.",
+              "answerGloss": "我看见一棵树。"
+            }
+          ]
         },
         {
           "id": "conversation-3",
@@ -1924,16 +2288,28 @@
           },
           "objective": "去找艾琳交谈",
           "hint": "艾琳正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Come?",
-          "promptGloss": "来。",
-          "answer": "Come here.",
-          "answerGloss": "来。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "Guge thinks I forgot. What should I do?",
+          "promptGloss": "古格以为我忘了约定，我该怎么办？",
+          "answer": "Please come with me.",
+          "answerGloss": "请跟我一起来吧。",
+          "ending": "You are right. Let us knock on his door together.",
+          "endingGloss": "你说得对，我们一起去敲他的门吧。",
           "words": [
             "come"
           ],
-          "intro": "你想邀请朋友过来吗？我们一起试试怎么说“来”。"
+          "intro": "你想邀请朋友过来吗？我们一起试试怎么说“来”。",
+          "alternatives": [
+            {
+              "id": "come-here",
+              "answer": "Come here.",
+              "answerGloss": "来这里。"
+            },
+            {
+              "id": "please-come",
+              "answer": "Please come.",
+              "answerGloss": "请过来吧。"
+            }
+          ]
         },
         {
           "id": "conversation-4",
@@ -1944,16 +2320,28 @@
           },
           "objective": "去找古格交谈",
           "hint": "古格正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Friend?",
-          "promptGloss": "朋友。",
-          "answer": "My friend.",
-          "answerGloss": "朋友。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "Look who arrived at the doorstep!",
+          "promptGloss": "快看是谁来到门口了！",
+          "answer": "Here is my friend.",
+          "answerGloss": "我的朋友来了。",
+          "ending": "Welcome in! I am so glad you came.",
+          "endingGloss": "快请进！真高兴你能来。",
           "words": [
             "friend"
           ],
-          "intro": "谢谢你陪我找朋友。现在试着向我介绍一下你的朋友吧。"
+          "intro": "谢谢你陪我找朋友。现在试着向我介绍一下你的朋友吧。",
+          "alternatives": [
+            {
+              "id": "short-friend-2",
+              "answer": "My friend.",
+              "answerGloss": "我的朋友。"
+            },
+            {
+              "id": "my-friend-came",
+              "answer": "It is my friend.",
+              "answerGloss": "是我的朋友。"
+            }
+          ]
         }
       ],
       "sceneVersion": 1,
@@ -1975,16 +2363,28 @@
           },
           "objective": "去找阿澜交谈",
           "hint": "阿澜正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Letter?",
-          "promptGloss": "信。",
-          "answer": "A letter.",
-          "answerGloss": "信。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "What is still sitting in the lighthouse bag?",
+          "promptGloss": "灯塔的旧邮袋里还留着什么？",
+          "answer": "It is a letter.",
+          "answerGloss": "是一封信。",
+          "ending": "Let us check the pier first to see which boat just arrived.",
+          "endingGloss": "我们先去码头看看哪艘船刚靠岸。",
           "words": [
             "letter"
           ],
-          "intro": "这封信还没送出去。出发之前，先认一认“信”怎么说吧。"
+          "intro": "这封信还没送出去。出发之前，先认一认“信”怎么说吧。",
+          "alternatives": [
+            {
+              "id": "short-letter",
+              "answer": "A letter.",
+              "answerGloss": "一封信。"
+            },
+            {
+              "id": "old-letter",
+              "answer": "An old letter.",
+              "answerGloss": "一封旧信。"
+            }
+          ]
         },
         {
           "id": "conversation-2",
@@ -1995,16 +2395,28 @@
           },
           "objective": "到月潮码头观察并读出词语",
           "hint": "你到了月潮码头。看看周围，听示范，试着说出这个词。",
-          "prompt": "Boat?",
-          "promptGloss": "船。",
-          "answer": "A boat.",
-          "answerGloss": "船。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "What is floating beside the Moon Tide Pier?",
+          "promptGloss": "月潮码头旁停着什么？",
+          "answer": "I see a boat.",
+          "answerGloss": "我看见一艘船。",
+          "ending": "The evening boat is back! Let us ask Uncle Cen.",
+          "endingGloss": "晚班船回来了！我们去问问岑伯。",
           "words": [
             "boat"
           ],
-          "intro": "码头边停着船。你看着船，试着说出它的名字。"
+          "intro": "码头边停着船。你看着船，试着说出它的名字。",
+          "alternatives": [
+            {
+              "id": "short-boat",
+              "answer": "A boat.",
+              "answerGloss": "一艘船。"
+            },
+            {
+              "id": "a-boat-here",
+              "answer": "There is a boat.",
+              "answerGloss": "那里有一艘船。"
+            }
+          ]
         },
         {
           "id": "conversation-3",
@@ -2015,16 +2427,28 @@
           },
           "objective": "去找岑伯交谈",
           "hint": "岑伯正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Friend?",
-          "promptGloss": "朋友。",
-          "answer": "My friend.",
-          "answerGloss": "朋友。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "Who came back on the evening boat?",
+          "promptGloss": "晚班船上回来的是谁呀？",
+          "answer": "It is my friend.",
+          "answerGloss": "是我的朋友。",
+          "ending": "Wonderful! Please bring the letter back to Alan.",
+          "endingGloss": "太好了！快把这个消息和信带回给阿澜吧。",
           "words": [
             "friend"
           ],
-          "intro": "你在找送信的朋友吗？先试着说出“朋友”，我听听。"
+          "intro": "你在找送信的朋友吗？先试着说出“朋友”，我听听。",
+          "alternatives": [
+            {
+              "id": "short-friend-3",
+              "answer": "My friend.",
+              "answerGloss": "我的朋友。"
+            },
+            {
+              "id": "our-friend",
+              "answer": "Our friend.",
+              "answerGloss": "我们的朋友。"
+            }
+          ]
         },
         {
           "id": "conversation-4",
@@ -2035,16 +2459,28 @@
           },
           "objective": "去找阿澜交谈",
           "hint": "阿澜正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Letter?",
-          "promptGloss": "信。",
-          "answer": "A letter.",
-          "answerGloss": "信。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "Can we finally deliver what we kept so long?",
+          "promptGloss": "我们终于能把留了这么久的东西送出去了吗？",
+          "answer": "Yes, send the letter.",
+          "answerGloss": "是的，把这封信送出去吧。",
+          "ending": "At last, this reply will reach the right hands.",
+          "endingGloss": "这封回信终于能送到对的人手里了。",
           "words": [
             "letter"
           ],
-          "intro": "我们再看一眼这封信。你还记得刚才怎么说吗？"
+          "intro": "我们再看一眼这封信。你还记得刚才怎么说吗？",
+          "alternatives": [
+            {
+              "id": "short-letter-2",
+              "answer": "A letter.",
+              "answerGloss": "一封信。"
+            },
+            {
+              "id": "send-letter",
+              "answer": "The letter.",
+              "answerGloss": "这封信。"
+            }
+          ]
         }
       ],
       "sceneVersion": 1,
@@ -2163,16 +2599,28 @@
           },
           "objective": "去找莉风交谈",
           "hint": "莉风正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Plan?",
-          "promptGloss": "计划。",
-          "answer": "My plan.",
-          "answerGloss": "计划。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "How shall we welcome Xiaozhou to the festival?",
+          "promptGloss": "我们怎么安排迎接小舟的庆典呢？",
+          "answer": "Here is my plan.",
+          "answerGloss": "这是我的计划。",
+          "ending": "Sounds clear! Let us check the harbor first.",
+          "endingGloss": "听起来很清楚！我们先去码头看看。",
           "words": [
             "plan"
           ],
-          "intro": "迎船前，还有些事要商量。我们先试着说出“计划”。"
+          "intro": "迎船前，还有些事要商量。我们先试着说出“计划”。",
+          "alternatives": [
+            {
+              "id": "short-plan",
+              "answer": "My plan.",
+              "answerGloss": "我的计划。"
+            },
+            {
+              "id": "have-plan",
+              "answer": "I have a plan.",
+              "answerGloss": "我有个计划。"
+            }
+          ]
         },
         {
           "id": "conversation-2",
@@ -2183,16 +2631,28 @@
           },
           "objective": "到归帆码头观察并读出词语",
           "hint": "你到了归帆码头。看看周围，听示范，试着说出这个词。",
-          "prompt": "Boat?",
-          "promptGloss": "船。",
-          "answer": "A boat.",
-          "answerGloss": "船。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "What is sailing into the Return Sail Pier?",
+          "promptGloss": "正驶入归帆码头的是什么？",
+          "answer": "I see a boat.",
+          "answerGloss": "我看见一艘船。",
+          "ending": "The sails are bright white! Xiaozhou must be on deck.",
+          "endingGloss": "白帆真亮眼！小舟一定在甲板上。",
           "words": [
             "boat"
           ],
-          "intro": "船在码头边。你望向船，试着说出眼前的东西。"
+          "intro": "船在码头边。你望向船，试着说出眼前的东西。",
+          "alternatives": [
+            {
+              "id": "short-boat-2",
+              "answer": "A boat.",
+              "answerGloss": "一艘船。"
+            },
+            {
+              "id": "boat-here",
+              "answer": "There is a boat.",
+              "answerGloss": "那里有一艘船。"
+            }
+          ]
         },
         {
           "id": "conversation-3",
@@ -2203,16 +2663,28 @@
           },
           "objective": "去找小舟交谈",
           "hint": "小舟正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Friend?",
-          "promptGloss": "朋友。",
-          "answer": "My friend.",
-          "answerGloss": "朋友。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "Who are we inviting to the front seat tonight?",
+          "promptGloss": "今晚我们要请谁坐到前排来？",
+          "answer": "Welcome, my friend.",
+          "answerGloss": "欢迎你，我的朋友。",
+          "ending": "Thank you for saving me a seat at the festival!",
+          "endingGloss": "谢谢你们在庆典上替我留了位置！",
           "words": [
             "friend"
           ],
-          "intro": "你也来迎接朋友吗？试着告诉我，你在等谁。"
+          "intro": "你也来迎接朋友吗？试着告诉我，你在等谁。",
+          "alternatives": [
+            {
+              "id": "short-friend-4",
+              "answer": "My friend.",
+              "answerGloss": "我的朋友。"
+            },
+            {
+              "id": "invite-friend",
+              "answer": "My friend!",
+              "answerGloss": "我的朋友！"
+            }
+          ]
         },
         {
           "id": "conversation-4",
@@ -2223,16 +2695,28 @@
           },
           "objective": "去找莉风交谈",
           "hint": "莉风正在和你说话。先听示范，再试着回应；也可以打字。",
-          "prompt": "Plan?",
-          "promptGloss": "计划。",
-          "answer": "My plan.",
-          "answerGloss": "计划。",
-          "ending": "Thank you!",
-          "endingGloss": "谢谢你。",
+          "prompt": "Is everything ready for our celebration?",
+          "promptGloss": "庆典的一切都按安排准备好了吗？",
+          "answer": "Yes, follow my plan.",
+          "answerGloss": "好了，照我的计划开始吧。",
+          "ending": "Then let the sails rise and the music begin!",
+          "endingGloss": "那就扬起白帆，让音乐响起来吧！",
           "words": [
             "plan"
           ],
-          "intro": "你回来啦！我们再确认一下计划。试着用刚才听到的词开个头吧。"
+          "intro": "你回来啦！我们再确认一下计划。试着用刚才听到的词开个头吧。",
+          "alternatives": [
+            {
+              "id": "short-plan-2",
+              "answer": "My plan.",
+              "answerGloss": "我的计划。"
+            },
+            {
+              "id": "our-plan",
+              "answer": "Our plan.",
+              "answerGloss": "我们的计划。"
+            }
+          ]
         }
       ],
       "sceneVersion": 1,

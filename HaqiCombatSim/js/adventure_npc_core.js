@@ -1,5 +1,7 @@
 import {trainingPoints} from './adventure_learning_core.js';
 import {mountDirectSale} from './adventure_mounts_core.js';
+import {HANZI_NPCS} from './hanzi_island_scene_core.js';
+import {LATER_ISLAND_NPCS} from './later_islands_scene_core.js';
 
 const schools={fire:986,ice:987,storm:988,life:990,death:991};
 // Accepted quests take priority over optional chat, even when not tracked.
@@ -50,8 +52,25 @@ export function npcPurpose(content,npc) {
     if(id===36203)return {role:'装备顾问',title:'让新装备真正派上用场',body:'查看装备与法杖，比较生命、伤害、抗性和附加卡牌。穿戴后会显示实际属性变化。',panel:'inventory',label:'比较并穿戴装备'};
     if(id===36202)return {role:'战宠伙伴',title:'安排下一位出战伙伴',body:'查看已有战宠、出战阵容和喂养状态。不同伙伴与卡牌，适合承担不同的战斗职责。',panel:'pet',label:'查看战宠与出战阵容'};
     if(id===36205||npc.name==='法斯特船长')return {role:'旅行向导',title:'找到下一处冒险',body:'打开世界地图，查看可前往的岛屿与探索地点。',panel:'worldmap',label:'选择下一处目的地'};
+    if(id===HANZI_NPCS.shibo)return {role:'字源刻碑人',title:'翻看汉字象形故事与笔顺',body:'打开中文字典，观看汉字象形故事动画、练习笔顺，并查看已找回的文字战斗卡。',panel:'dictionary',options:{language:'zh'},label:'打开汉字字典与故事动画'};
+    if(id===HANZI_NPCS.xihe)return {role:'溪边农事官',title:'照料并编排岛上结识的战宠',body:'用字源岛获得的战宠口粮喂养并编排伙伴阵容，一起应对更强的守字野怪与守碑试炼。',panel:'pet',label:'查看战宠与出战阵容'};
+    if(id===HANZI_NPCS.xiaodeng)return {role:'灯塔守夜人',title:'挑战字源守碑试炼',body:'查看字源岛专属三波战术试炼与各岛秘境。完整通关守碑试炼可获得 10 级本学派法杖与荣誉称号。',panel:'dungeons',label:'查看字源守碑试炼'};
+    if(id===HANZI_NPCS.achu)return {role:'家书执笔人',title:'穿戴字源旅途获得的新装备',body:'打开角色与装备，比较新获得的圣徒装备与法杖属性，穿戴后直接增强下一次探索与试炼。',panel:'inventory',label:'比较并穿戴装备'};
+    if(id===LATER_ISLAND_NPCS.tide.alan)return {role:'灯塔守信人',title:'挑战潮汐秘境与 60 层回声塔',body:'查看「失声的潮灯」战术秘境与潮汐岛回声试炼塔。首通与登顶可获魔晶短裤与魔晶项链。',panel:'dungeons',label:'查看潮汐岛秘境与试炼塔'};
+    if(id===LATER_ISLAND_NPCS.tide.cenbo)return {role:'老茶客',title:'整理高阶饰品与装备',body:'潮汐旅途中获得的魔晶戒指、项链与高阶装备，穿戴后即可直接对比生命与抗性提升。',panel:'inventory',label:'比较并穿戴装备'};
+    if(id===LATER_ISLAND_NPCS.tide.cenning)return {role:'远航旅人',title:'整备出战伙伴阵容',body:'高阶秘境与试炼塔允许携带多位伙伴共同出战，用旅途获得的口粮培养强力战宠。',panel:'pet',label:'查看战宠与出战阵容'};
+    if(id===LATER_ISLAND_NPCS.float.lusheng)return {role:'海图测绘人',title:'挑战浮岸秘境与 80 层回声塔',body:'查看「两岸的旧测量台」三波战术秘境与浮岸岛回声试炼塔，赢取高阶魔晶装备与顽石项链。',panel:'dungeons',label:'查看浮岸岛秘境与试炼塔'};
+    if(id===LATER_ISLAND_NPCS.float.mila)return {role:'旧账整理人',title:'比较并换上浮岸新装备',body:'检查浮岸岛任务赠予的传说权利法杖与饰品，强化并穿戴后再去迎战高阶守卫。',panel:'inventory',label:'比较并穿戴装备'};
+    if(id===LATER_ISLAND_NPCS.float.hezhou)return {role:'旧港引路人',title:'编排双人/多人伙伴阵容',body:'调整出战伙伴与坐骑，让治疗、护盾与输出各司其职。',panel:'pet',label:'查看战宠与出战阵容'};
+    if(id===LATER_ISLAND_NPCS.sail.lifeng)return {role:'庆典筹备人',title:'挑战风帆档案室与百层试炼塔',body:'查看终章秘境「只准欢呼的档案室」与百层风帆回声塔，赢取终章大天使之翼与荣誉称号。',panel:'dungeons',label:'查看风帆岛秘境与试炼塔'};
+    if(id===LATER_ISLAND_NPCS.sail.keeper)return {role:'名单守护者',title:'穿戴终章传说装备',body:'打开背包比较卓越魔晶法杖与高级短裤的属性增幅，迎接终章百层考验。',panel:'inventory',label:'比较并穿戴装备'};
+    if(id===LATER_ISLAND_NPCS.sail.xiaozhou)return {role:'归航舵手',title:'检查满编伙伴状态',body:'确认全队战宠的等级、生命与卡组配置，在试炼塔每 5/10 层机制首领前做好准备。',panel:'pet',label:'查看战宠与出战阵容'};
     if(services.some(row=>row.kind==='mentor'))return {role:'魔法导师',title:'为下一场战斗补充打法',body:'查看可学习的魔法与所需条件。先看卡牌效果，再决定用它来进攻、布置还是保护。',panel:'npc-services',label:'查看可学习的魔法'};
     if(services.some(row=>row.kind==='shop'&&!row.gated))return {role:'商店',title:'看看这里能补充什么',body:'查看商品、价格与购买条件，再按当前需要选择。',panel:'npc-services',label:'查看商品与价格'};
+    if(id===30513)return {role:'火鸟岛向导',title:'探索赤焰试炼塔与篝火秘境',body:'火鸟岛藏着 30 层赤焰试炼塔与 50 级四人秘境「篝火守夜人」，首通与登顶均提供专属装备。',panel:'dungeons',label:'查看火鸟岛秘境与试炼塔'};
+    if(id===30601)return {role:'寒冰岛向导',title:'挑战霜晶试炼塔与冰封回信',body:'查看 50 层霜晶试炼塔与双人战术秘境「冰封的回信」，破除冰盾与虚弱即可赢取精锐装备。',panel:'dungeons',label:'查看寒冰岛秘境与试炼塔'};
+    if(id===30702)return {role:'沙漠岛向导',title:'挑战流沙试炼塔与沙海回声',body:'查看 70 层流沙试炼塔与单人战术秘境「沙海回声」，预判蓄力重击赢取牛仔帽与传说权利法杖。',panel:'dungeons',label:'查看沙漠岛秘境与试炼塔'};
+    if(id===35002)return {role:'幽暗岛向导',title:'挑战百层幽月塔与梦魇之约',body:'查看 100 层幽月试炼塔与双人高阶秘境「梦魇尽头的约定」，赢取魔晶法杖与终阶装备。',panel:'dungeons',label:'查看幽暗岛秘境与试炼塔'};
     return null;
 }
 export function npcOffers(content,npc) {

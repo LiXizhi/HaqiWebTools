@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import * as spark from '../js/spark_rescue_core.js';
+import {tr,fill,setText} from '../js/locale_runtime.js';
 import {persistSaveChange,createSaveCommitter} from '../js/adventure_reward_persistence.js';
 const {SPARK_DUNGEON:id,SPARK_GRID:grid,applySparkRescue:apply,validateSparkRescue:validate}=spark;
 const content={dungeons:[{id,arenas:[{id:'first'},{id:'last'}]}],worldMaps:{[id]:{portal:{x:100,y:200}}}};
@@ -70,7 +71,7 @@ test('storage failure leaves live rescue state and rewards unchanged, retry pers
 function render(save,action=()=>true,close=()=>{}){
  const all=[],document={activeElement:null};
  function el(tag,className='',...children){const n={tag,className,children,attributes:{},dataset:{},textContent:typeof children[0]==='string'?children[0]:'',append(...c){this.children.push(...c);},replaceChildren(...c){this.children=c;},setAttribute(k,v){this.attributes[k]=v;},addEventListener(type,handler){this['on'+type]=handler;},getClientRects(){return [{}];},querySelectorAll(){return all.filter(n=>(n.tag==='button'&&!n.disabled&&n.tabIndex!==-1)||n.tag==='summary');},focus(){document.activeElement=this;},querySelector(){return all.find(n=>n.className==='spark-route-cell current')||null;}};all.push(n);return n;}
- const context=vm.createContext({...spark,document,el,createCloseButton:click=>Object.assign(el('button','close-button'),{click}),button:(label,click,cls='')=>Object.assign(el('button',cls,label),{click})});
+ const context=vm.createContext({...spark,tr,fill,setText,document,el,createCloseButton:click=>Object.assign(el('button','close-button'),{click}),button:(label,click,cls='')=>Object.assign(el('button',cls,label),{click})});
  vm.runInContext(fs.readFileSync(new URL('../js/views/adventure/view_spark_rescue.js',import.meta.url),'utf8').replace(/^import .*;\r?\n/gm,'').replace('export function','function'),context);
  context.renderSparkRescue(el('root'),{save,focus:true},{action,close,leave(){}});return {all,document};
 }

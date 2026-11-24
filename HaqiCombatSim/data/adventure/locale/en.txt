@@ -11941,3 +11941,445 @@ Word · 回忆拼写||Word · Recall Spelling
 一驿接一驿，把灯传下去||Post after post, keep the lamp passing on
 3D 夜驿立体剧场 · 三次互动与六笔描字 · 建议开启声音||3D night post theatre · Three interactions and six traced strokes · Sound recommended
 古字形为艺术示意 · 笔画轮廓与中线核对自 Make Me a Hanzi (Arphic Public License)||Ancient forms are artistic illustrations · Stroke outlines and medians verified against Make Me a Hanzi (Arphic Public License)
+
+# Forest commission, investigation and spark escort
+调查袋 · {count}/4 件物证||Evidence bag · {count}/4 clues
+{name}：||{name}:
+莫尼的证词：灯暗了，先出门查看；回程捡到草地上的靴子，放回帐篷。补给单也淋湿了。他以为放回去就好了，没有说一声。||Moni's account: When the lantern dimmed, he went out to check it. On his way back, he found the boots in the grass and returned them to the tent. The supply list got wet too. He thought putting things back was enough and told no one.
+核对后的经过：巡夜灯变暗 → 莫尼出门查看 → 回程捡到靴子 → 放回帐篷，没有通知茜茜。||Confirmed sequence: The patrol lantern dimmed → Moni went out to check → He found the boots on his way back → He returned them to the tent without telling Sissy.
+草屑和脚印||Grass and Footprints
+你们决定从靴底的草屑追起。||You decide to start with the grass caught in the boot soles.
+你们决定先检查巡夜灯，再回头找补给留下的痕迹。||You decide to check the patrol lantern first, then look for traces of the supplies.
+先走到现场。找到的物证会留在调查袋里。||Go to the scene first. Your clues will stay in the evidence bag.
+带我去调查地点||Take me to the investigation site
+帐篷里的东西是干的，帐篷外却留着泥和碎草。点开物件仔细看看。||The things inside the tent are dry, but there is mud and grass outside. Select an object to look more closely.
+灯又亮了。沿着灯边的草地，看看脚印来回走向哪里。||The lantern is lit again. Follow the grass beside it and see where the footprints go and return.
+查看泥里的草屑||Inspect the grass in the mud
+翻看湿补给单||Examine the wet supply list
+看看干帽子||Look at the dry hat
+沿着脚印观察||Follow the footprints
+检查灯柄||Inspect the lantern handle
+翻看灌木叶下||Look under the bush leaves
+已记录 · {label}||Recorded · {label}
+莫尼看了看你找到的草屑：“这是从那片湿草地带回来的。你想知道我为什么去过那里吗？”||Moni looks at the grass you found. “That came from the wet grass over there. Do you want to know why I went there?”
+拿出物证，问问经过||Show the clues and ask what happened
+茜茜把三张经过卡放到桌上：“先后顺序弄清楚，就知道补给为什么没在原处了。你来排，我来记。”||Sissy puts three event cards on the table. “Once we know the order, we'll understand why the supplies moved. You arrange them; I'll write it down.”
+往前移||Move earlier
+往后移||Move later
+已把“{event}”移到第 {step} 步。||Moved “{event}” to step {step}.
+{event}，{action}||{event}, {action}
+再听一遍莫尼的证词||Hear Moni's account again
+“灯一暗，我先去查看。回程看见靴子掉在草地上，就捡回帐篷。补给单也淋湿了。”||“When the lantern dimmed, I went to check it first. On my way back, I saw the boots in the grass and took them back to the tent. The supply list got wet too.”
+把经过讲给茜茜听||Tell Sissy what happened
+茜茜：莫尼先去查看灯，回程才看见草地上的靴子。把这两步挪到前面，再试一次。||Sissy: Moni checked the lantern first, then saw the boots on his way back. Move those two events to the front and try again.
+这次经过没有保存，可以重试。||This account wasn't saved. You can try again.
+以后送补给，你们准备怎么做？||How will you deliver supplies from now on?
+移动补给后，留下位置便签||Leave a location note after moving supplies
+结伴送达，当面告诉对方||Deliver together and tell the recipient in person
+先收好调查袋||Put the evidence bag away for now
+把捡到的靴子放回帐篷||Return the found boots to the tent
+巡夜灯暗了，莫尼出门查看||The patrol lantern dims; Moni goes out to check
+回程在湿草地捡到靴子||Find the boots in the wet grass on the way back
+靴底留下的草屑||Grass caught in the boot soles
+帐篷边的泥里也有发亮的草屑。草茎被压断，和靴底夹住的那几根很像。||There is shiny grass in the mud beside the tent too. The stems are crushed, just like the pieces caught in the boot soles.
+湿透的补给单||Soaked supply list
+另一半补给单压在干帽子下面。纸上的墨迹被雨水晕开了，帽子和帐篷里面却是干的。||The other half of the supply list is under the dry hat. Rain has blurred the ink, but the hat and the inside of the tent are dry.
+一来一回的脚印||Footprints going out and back
+草地边的脚印通向帐篷，又折回路线桌。两排鞋底的缺口在同一边，像是同一个人来回走过。||Footprints lead from the grass to the tent, then back to the route table. Both sets have the same gap on one side of the sole, as if one person walked both ways.
+灯旁的泥手印||Muddy handprint by the lantern
+灯柄上留着泥手印，接缝里夹着和靴底相似的碎草。有人从湿草地走来，提过这盏灯。||There is a muddy handprint on the handle, with grass caught in the seam like the grass on the boot soles. Someone came from the wet grass and picked up this lantern.
+回补给帐篷检查草屑和湿补给单||Return to the supply tent to check the grass and wet list
+检查两件物证；不急着认定是谁拿走了补给。||Check both clues before deciding who moved the supplies.
+到路线桌旁查看脚印和巡夜灯||Check the footprints and patrol lantern by the route table
+沿脚印找方向，再看看灯柄。||Follow the footprints, then inspect the lantern handle.
+把找到的物证拿给莫尼看||Show Moni the clues you found
+先听当事人说说，别只凭脚印猜。||Hear his account first. Don't guess from footprints alone.
+和茜茜一起还原补给的经过||Piece together what happened with Sissy
+把三件事排好，再决定以后怎样送补给。||Put the three events in order, then decide how to deliver supplies next time.
+先完成巡逻并向茜茜汇报，再一起调查。||Finish the patrol and report to Sissy before investigating together.
+草屑和脚印的经过已经记在调查袋里。||The story behind the grass and footprints is already in the evidence bag.
+调查还在继续，按当前线索找就好。||The investigation is still underway. Follow your current clue.
+茜茜和你约好：先回帐篷找草屑，再沿脚印查看。||You and Sissy agree to look for grass at the tent first, then follow the footprints.
+茜茜和你约好：先检查巡夜灯，再回帐篷看看补给。||You and Sissy agree to check the patrol lantern first, then the supplies at the tent.
+先和茜茜约好一起调查。||Agree to investigate together with Sissy first.
+茜茜替你收好调查袋。找到的物证会保留，回来可以继续。||Sissy puts away the evidence bag for you. Your clues are kept safe; you can continue when you return.
+物证已经齐了，先去找当事人。||You have all the clues. Go speak to the person involved.
+帽子里面是干的，也没有泥。它一直待在帐篷下，说明不了草地上发生了什么。||The hat is dry inside, with no mud. It stayed under the tent and tells us nothing about what happened in the grass.
+灌木叶子是湿的，叶下却没有脚印。先看看草地边那条路。||The bush leaves are wet, but there are no footprints underneath. Check the path beside the grass first.
+这个物件不在眼前，先走近对应的地方。||That object isn't nearby. Go to its location first.
+先把两处现场的物证找齐。||Find all the clues at both sites first.
+莫尼：灯一暗，我先去看灯。回程看见靴子掉在湿草地上，就捡回帐篷。补给单也淋湿了。我以为放回去就好了，没有说一声，害你们找了半天。||Moni: When the lantern dimmed, I went to check it. On my way back, I found the boots in the wet grass and took them to the tent. The supply list got wet too. I thought putting them back was enough, so I didn't tell anyone. That's why you had to search so long.
+先找齐物证，再听莫尼说说。||Find all the clues, then hear Moni's account.
+先把三张经过卡各放一次。||Use each of the three event cards once.
+先商量以后怎样送补给。||First agree on how to deliver supplies next time.
+茜茜：这段先后好像接不上。莫尼先去查看灯，回程才看见草地上的靴子。再把卡片挪一挪？||Sissy: That order doesn't quite fit. Moni checked the lantern first and found the boots on his way back. Shall we move the cards again?
+茜茜把补给位置写在便签上：挪动物品后留个记号。这次没有小偷，是一句没来得及说的话。||Sissy writes the supplies' location on a note: leave a sign after moving things. There was no thief this time, only something left unsaid.
+茜茜和莫尼约好：以后结伴送补给，送到后当面说一声。这次没有小偷，是一句没来得及说的话。||Sissy and Moni agree to deliver supplies together and tell the recipient in person. There was no thief this time, only something left unsaid.
+护送走失的火种||Escort the lost spark
+灯台前的最后一段路||The last stretch to the lantern shelter
+守卫退开后，你才看见缩在石头旁的火种。它每挪一步就停下来等：“能陪我走到避风灯台吗？我怕水，也怕被风吹散。”||After the guards retreat, you notice a spark huddled beside a stone. It stops to wait after every step. “Will you walk with me to the lantern shelter? I'm afraid of water, and of being scattered by the wind.”
+这一步没有保存，可以重试。||This step wasn't saved. You can try again.
+重新提灯选路||Restart with the lantern
+提灯遮风，穿过风口||Use the lantern to cross windy spots
+重新绕行选路||Restart with a detour
+沿干石绕行，避开风口||Follow dry stones around the wind
+提灯能挡风，每经过一处风口都会消耗暖意；到暖石可以恢复暖意。绕行不用穿风口，但要多走几步。两种方法都能把火种带到灯台。||The lantern shields against wind, but each windy spot you cross uses warmth. Warm stones restore it. A detour avoids wind but takes more steps. Both methods can bring the spark to the shelter.
+火种的光稳下来了||The spark's glow is steady now
+你们约好谁也不独自赶路。守护者接过提灯，陪火种回课堂。||You agree that no one will travel alone. The guardian takes the lantern and walks the spark back to class.
+你教火种用明暗发信号。守护者试着回应，和它约好沿路互相确认，再一起回课堂。||You teach the spark to signal by dimming and brightening. The guardian tries replying. They agree to keep checking on each other as they return to class together.
+这次用了{method}的方法，走了 {steps} 步。||You used {method} and took {steps} steps.
+提灯遮风||lantern shielding
+绕开风口||a detour around the wind
+提灯护送 · 暖意 {warmth} / 2||Lantern escort · Warmth {warmth} / 2
+沿干石绕行 · 风口不能通过||Dry-stone detour · Windy spots are blocked
+每次走到上下左右相邻的一块石头。积水不能踩；选错可以撤回。方向键也能走。||Move one stone up, down, left, or right each time. Avoid puddles; you can undo a step. Arrow keys work too.
+护送路线，四行五列||Escort route, four rows and five columns
+灯台||Lantern shelter
+积水||Puddle
+风口||Windy spot
+暖石||Warm stone
+起点||Start
+干石||Dry stone
+火种||Spark
+第{row}行第{column}列，{terrain}，火种在这里||Row {row}, column {column}, {terrain}, spark is here
+第{row}行第{column}列，{terrain}，已经走过||Row {row}, column {column}, {terrain}, already visited
+第{row}行第{column}列，{terrain}||Row {row}, column {column}, {terrain}
+和守护者约好，等齐再走||Agree to wait for everyone before moving on
+火种终于敢抬起头：“回课堂的路上，要是又走散怎么办？”||The spark finally dares to look up. “What if we get separated again on the way back to class?”
+教它用灯光互相回应||Teach it to reply with light signals
+向上||Up
+向左||Left
+向下||Down
+向右||Right
+撤回一步||Undo one step
+重新选择护送方法（回到起点）||Choose a method again (return to start)
+这段护送可以稍后继续。找到的路会保存，不影响已经获得的战利品。||You can continue this escort later. Your route is saved, and your loot is unaffected.
+留在灯台旁||Stay by the lantern shelter
+稍后继续护送||Continue escort later
+先离开副本||Leave the dungeon for now
+先选身边相邻的一块石头。||Choose an adjacent stone first.
+这块石头已经走过。想改路，可以撤回上一步。||You've already visited this stone. Undo your last step to change route.
+这里有积水，火种缩回了脚。换一条干燥的路吧。||There's a puddle here, and the spark pulls back. Try a dry path.
+这里是风口。没有提灯遮挡，要从干燥的石头绕过去。||This is a windy spot. Without a lantern shield, go around on dry stones.
+提灯的暖意不够了。先到暖石旁缓一缓，或撤回改路。||The lantern is running out of warmth. Visit a warm stone, or undo a step and change route.
+先清理守卫，再走近出口旁的避风灯台。||Clear the guards, then approach the sheltered lantern by the exit.
+先选提灯护送，或沿石头绕过风口。||Choose a lantern escort or a stone path around the wind.
+火种已经在避风灯台安顿好了。||The spark is already safe at the lantern shelter.
+护送已经开始，可以继续，也可以重新选路。||The escort has started. Continue or choose a new route.
+你提起灯：风口可以通过，但要留意灯的暖意。||You lift the lantern. You can cross windy spots, but watch its warmth.
+你把灯交给守护者，约好沿干燥的石头绕过风口。||You give the lantern to the guardian and agree to take dry stones around the wind.
+先和火种约好怎样走。||Agree with the spark on how to travel first.
+还在起点，可以重新选择护送方法。||You're still at the start. You can choose a different escort method.
+你们退回上一块石头，重新看路。||You step back to the previous stone and check the route again.
+已经到达灯台，先和火种约好接下来怎么办。||You've reached the shelter. Agree with the spark on what to do next.
+火种走进避风灯台，身上的光稳了下来。||The spark enters the lantern shelter, and its glow steadies.
+暖石让灯重新暖了起来。||The warm stone restores the lantern's warmth.
+火种跟着你挪到了下一块石头。||The spark follows you to the next stone.
+先把火种带到避风灯台。||Bring the spark to the lantern shelter first.
+和火种约好回程怎样互相照应。||Agree with the spark on how to look after each other on the way back.
+你教火种用明暗发出信号。守护者试着回应，约好沿路互相确认，再一起回课堂。||You teach the spark to signal by dimming and brightening. The guardian replies, and they agree to check on each other as they return to class together.
+森林委托：失踪的巡逻补给||Forest request: Missing patrol supplies
+失踪的巡逻补给||Missing patrol supplies
+接委托||Accept request
+找补给||Find supplies
+送达||Deliver
+找路线||Find the route
+巡逻||Patrol
+汇报||Report back
+完成||Complete
+巡逻之后 · 草屑和脚印||After the patrol · Grass and footprints
+看提示||Show hint
+听线索||Listen to the clue
+营地补给委托||Camp supply request
+带我去||Take me there
+便签||Note
+用{language}把{item}交给茜茜||Give Sissy the {item} using {language}
+交付{item}的{language}短句||A {language} phrase to hand over the {item}
+想不到怎么说？看{language}短句||Not sure what to say? See a {language} phrase
+茜茜歪了歪头：“你是要把它交给我吗？”可以换一种短句、看看提示，或直接递交。||Sissy tilts her head. “Are you giving that to me?” Try another phrase, see a hint, or hand it over directly.
+这次交付没有保存，请稍后重试。||This handover wasn't saved. Please try again later.
+说好了，交给她||Confirm and hand it over
+用麦克风说||Speak with the microphone
+取消录音||Cancel recording
+说完了，识别||Done speaking; transcribe
+正在开启麦克风…||Starting the microphone…
+正在录音。说完后点“说完了，识别”。||Recording. When finished, select “Done speaking; transcribe”.
+正在识别，请稍候。||Transcribing. Please wait.
+先看看识别结果，再确认交付；也可以修改。||Check the transcript before confirming the handover. You can edit it too.
+没有听清，可以再说一次，或直接输入。||I couldn't hear clearly. Try speaking again or type your phrase.
+麦克风暂时没连上，可以直接输入短句。||The microphone isn't available right now. You can type your phrase.
+让她知道你带来了什么。可输入，也可说；只填物品名还不算交付短句。||Tell her what you brought. Type or speak a phrase; the item name alone isn't a handover sentence.
+你对茜茜说：||You say to Sissy:
+已写好标签：{word}||Label written: {word}
+给{item}写{language}标签（可选）||Write a {language} label for the {item} (optional)
+{item}的{language}标签||{language} label for the {item}
+看{language}标签||See the {language} label
+标签还没写对。可以看看{language}提示，再试一次；也可以直接递交物品。||The label isn't quite right yet. Check the {language} hint and try again, or hand over the item directly.
+看着物品，试着写出{item}的{language}名称：||Look at the item and try writing the {language} name for {item}:
+写到标签上||Write on the label
+标签会记录到词树。也可以直接递交物品。||The label will be recorded in your word tree. You can also hand over the item directly.
+交给茜茜||Give to Sissy
+茜茜收取物品的位置||Sissy's item drop area
+递出{item}||Hand over the {item}
+拖到茜茜面前试试。||Try dragging it to Sissy.
+点物品，或拖给茜茜。||Select the item or drag it to Sissy.
+回礼||Thank-you gift
+学派装备||School equipment
+已拥有，换200奇豆||Already owned; receive 200 Qidou instead
+交付后获得||Received after delivery
+装备变化||Equipment changes
+穿上后||When equipped
+需重配{count}张卡，卡牌保留。||Reassign {count} cards; all cards are kept.
+接下补给单||Accept the supply list
+去找莫尼||Find Moni
+{boots} 靴子；{hat} 帽子。找帐篷旁的靴子。||{boots}: boots; {hat}: hat. Find the boots beside the tent.
+帐篷旁的补给物品||Supplies beside the tent
+委托袋||Request bag
+把物品拖进来||Drag the item here
+先选一件物品||Choose an item first
+装进袋子||Put in the bag
+翻开靴底，发亮的草屑粘在泥里。像是刚从湿草地捡回来。||You turn over the boot. Shiny grass sticks to the muddy sole, as if it was just picked up from wet grass.
+帽檐下缝着“守帐人”的记号。莫尼说，这顶帽子要留给帐篷的主人。||A “tent keeper” mark is sewn under the brim. Moni says this hat should stay with the tent's owner.
+一顶帽子||A hat
+一双靴子||A pair of boots
+带我去补给帐篷||Take me to the supply tent
+把补给带给茜茜，换取回礼。||Bring the supplies to Sissy for a thank-you gift.
+交付靴子||Deliver the boots
+去找茜茜||Find Sissy
+{note} 便签。挪开石头看看。||{note}: note. Move the stone and look.
+按语言线索选择便签藏匿的位置||Use the language clue to find where the note is hidden
+拾取巡逻路线便签||Pick up the patrol route note
+拿起便签||Pick up the note
+挪开石头||Move the stone
+这里没有便签。再读一遍线索，或打开提示。||There's no note here. Read the clue again or open the hint.
+检查灌木||Check the bushes
+找到了！||Found it!
+去路线桌找便签||Find the note at the route table
+穿上新靴子||Equip the new boots
+你的提议：||Your suggestion:
+先守住灯，一起前进。||Keep the lantern lit and move together.
+我想先追脚印，看看是谁。||I want to follow the footprints first and find out who it was.
+茜茜：“好，灯一暗就停下等对方。遇到敌人，我们一起攻击同一个。”||Sissy: “All right. If the lantern dims, stop and wait for each other. If we meet enemies, we'll attack the same one together.”
+茜茜：“我也想知道是谁。但这次不能再分开。先把灯守亮，等路看清了，我们再一起找。”||Sissy: “I want to know too. But we mustn't split up again. Keep the lantern lit first; once we can see the path, we'll search together.”
+茜茜已收好路线便签。需要时，你们可以一起查看。||Sissy has put the route note away. You can look at it together whenever needed.
+一起行动，集中攻击同一个敌人。||Stay together and focus attacks on the same enemy.
+先回想：刚才交付的 {word} 是哪件补给？||Think back: which supply did you hand over as {word}?
+根据便签，茜茜让大家怎么攻击？||According to the note, how does Sissy want everyone to attack?
+再看看刚才交给茜茜的物品。||Look again at the item you just gave Sissy.
+想起来了！接着看便签。||You remembered! Now look at the note.
+这和便签上的安排不一样。再听一次，或打开提示。||That doesn't match the note's plan. Listen again or open the hint.
+拿便签给茜茜||Take the note to Sissy
+和茜茜打怪||Fight monsters with Sissy
+受伤了可以回营地休息。巡逻进度会保留；完整完成一轮后，再来找茜茜。||If you're hurt, rest at camp. Patrol progress is kept. Return to Sissy after completing a full round.
+当前{level}级，5级可出发。||Currently level {level}. You can depart at level 5.
+先跟随主线完成眼前的任务。靴子、路线便签和分工会保留；到5级再找茜茜巡逻。||Follow the main story and finish your current tasks. Your boots, route note, and plan are kept. Return to Sissy for patrol at level 5.
+跟随主线提升等级||Level up through the main story
+出发巡逻||Start patrol
+整理装备||Arrange equipment
+茜茜展开路线便签，和你核对刚才的巡逻。||Sissy unfolds the route note and reviews the patrol with you.
+领取披风||Claim the cape
+回营地||Return to camp
+补给的经过已查清。你们留下位置便签，帐篷旁也有了新的提醒。||The supply mystery is solved. You left a location note and a new reminder beside the tent.
+补给的经过已查清。莫尼和茜茜约好结伴送达，交付后当面说一声。||The supply mystery is solved. Moni and Sissy agree to deliver together and tell the recipient in person.
+靴底的草屑和那串脚印还没有解释。茜茜愿意等你一起去看看。||The grass on the boots and those footprints are still unexplained. Sissy will wait to investigate with you.
+继续查草屑和脚印||Continue investigating the grass and footprints
+一起查草屑和脚印||Investigate the grass and footprints together
+找茜茜一起调查||Find Sissy to investigate together
+6级就能带伙伴去找走失的火种。||At level 6, you can take companions to find the lost spark.
+升到6级||Reach level 6
+重访走失的火种||Revisit the lost spark
+挑战走失的火种||Challenge: The Lost Spark
+查看装备||View equipment
+再战巡夜灯||Fight for the patrol lantern again
+查看森林委托记录||View the forest request record
+和茜茜调查草屑和脚印||Investigate the grass and footprints with Sissy
+和茜茜查看草屑与脚印||Examine the grass and footprints with Sissy
+巡逻已经结束，补给的经过还没查清。回营地和茜茜一起看看。||The patrol is over, but the supply mystery remains. Return to camp and investigate with Sissy.
+茜茜听懂了，接过便签。现在可以一起确认路线和巡逻分工。||Sissy understands and takes the note. Now you can review the route and patrol roles together.
+便签由茜茜保管，你们可以一起查看路线和巡夜灯的位置。||Sissy keeps the note. You can check the route and patrol lantern's location together.
+路线已确认，便签和巡逻准备会保留。先沿当前主线完成任务、提升到5级，再回来和茜茜出发；练习配合本身不提供升级经验。||The route is confirmed. Your note and patrol preparations are kept. Complete current main-story tasks to reach level 5, then return to depart with Sissy. Cooperation practice itself gives no level-up experience.
+
+# Forest commission story
+莫尼捏着半张湿透的补给单：“巡夜灯刚才灭了一次。茜茜要带队去查看，可给同行者准备的靴子还没送到。能替我跑一趟吗？别把旁边的帽子也带走，守帐篷的人还要用。”||Moni holds half a soaked supply list. “The patrol lantern went out just now. Sissy wants to investigate, but the boots for her companion have not arrived. Could you deliver them? Leave the hat beside them—the tent keeper needs it.”
+帐篷边有一顶干帽子，一双沾着泥的靴子。靴底夹着发亮的草屑，像是从湿草地捡回来的。莫尼说的补给，会是哪一件？||A dry hat and a pair of muddy boots sit beside the tent. Shining grass clings to the soles, as if someone picked the boots up from wet grass. Which item did Moni ask for?
+茜茜正倒掉旧靴子里的水：“来得正好！这双是给你的。这次我想请你一起巡逻。”她看见靴底的草屑，停了一下：“这片草地，今天还有人走过。”||Sissy pours water out of her old boots. “Perfect timing! These are for you. Will you join my patrol?” She pauses at the grass on the soles. “Someone else crossed that grass today.”
+茜茜指着路线桌：“风把我的便签卷走了，上面写着巡逻分工。找到它，我们就一起看。”桌脚有拖动的痕迹，石头后面露出一点纸角。||Sissy points to the route table. “The wind blew away my note with our patrol roles. Find it and we can read it together.” There are drag marks by the table leg and a corner of paper behind a stone.
+便签上画着两个人和一盏灯。茜茜压住翘起的纸角：“上次灯一灭，我就追着脚印跑了，把同伴留在后面。这次，你觉得我们该先做什么？”||The note shows two people and a lantern. Sissy holds down a curled corner. “Last time the light went out, I chased the tracks and left my companion behind. What should we do first this time?”
+茜茜把便签折好：“你惦记着脚印，我记得。先一起把巡夜灯守亮；路看清了，才不会把新的线索踩掉。”||Sissy folds the note. “I remember you want to follow the tracks. First, let us keep the patrol lantern lit together. Once we can see the path, we will not tread on new clues.”
+茜茜提起灯：“按我们说好的，一起前进，集中攻击。有人走慢了，另一个就等一下。”||Sissy lifts the lantern. “As we agreed, move together and focus our attacks. If one of us falls behind, the other waits.”
+茜茜提起灯：“便签上写好了分工。一起前进，集中攻击，别把同伴留在黑暗里。”||Sissy lifts the lantern. “Our roles are on the note. Move together, focus our attacks, and leave no companion in the dark.”
+茜茜接过巡逻记录：“灯亮了。脚印的事还没弄清，但这次我们都平安回来了。你还愿意和我一起查下去吗？”||Sissy takes the patrol record. “The lantern is lit. We still do not know about the tracks, but we both returned safely. Will you keep investigating with me?”
+茜茜接过巡逻记录：“这次灯没有把我们分开。谢谢你等着我，也谢谢你把补给送来。”||Sissy takes the patrol record. “This time the lantern did not separate us. Thank you for waiting for me, and for bringing the supplies.”
+莫尼把“营地补给员”的徽记挂在委托袋上。茜茜笑着说：“下次灯又灭了，我会先叫上你。”||Moni hangs the Camp Supplier badge on your commission bag. Sissy smiles. “Next time the lantern goes out, I will call you first.”
+
+# Forest commission goals and feedback
+待送达的巡逻靴||Patrol boots for delivery
+从帐篷旁找到的营地补给。交给茜茜，不可出售或穿戴。||Camp supplies found beside the tent. Deliver them to Sissy; they cannot be sold or equipped.
+巡逻路线便签||Patrol route note
+ 茜茜标出了巡夜灯的位置；任务结束后归还。|| Sissy marked the patrol lantern's location. Return the note after the task.
+找莫尼接取营地急件||Ask Moni about the urgent camp delivery
+把巡逻靴交给茜茜||Deliver the patrol boots to Sissy
+靴子已经放进旅行背包的委托袋。||The boots are in your travel backpack's commission bag.
+到营地路线桌寻找便签||Find the note at the camp route table
+把路线便签拿给茜茜||Bring the route note to Sissy
+先听巡逻分工，再去实战。||Discuss patrol roles before heading into battle.
+完整挑战晨雾中的巡夜灯||Complete the full Patrol Lantern in the Morning Mist challenge
+5级精英副本；先准备卡组、穿戴装备。可随时回来继续。||Level 5 elite dungeon. Prepare your deck and equipment first. You can return to continue anytime.
+回营地向茜茜汇报||Return to camp and report to Sissy
+整轮巡逻已经完成，领取装备与补给员荣誉。||The full patrol is complete. Collect your equipment and supplier honor.
+营地急件已完成||Urgent camp delivery complete
+装备、语言线索与巡逻记录都保留在冒险中。||Your equipment, language clues and patrol records remain with your adventure.
+巡夜灯灭了一次，巡逻补给还没送到。来看看补给单。||The patrol lantern went out once, and the supplies have not arrived. Come look at the supply list.
+靴底怎么有发亮的草屑？照补给单拿物品，帽子先留给守帐篷的人。||Why is shining grass stuck to the soles? Take what the supply list says; leave the hat for the tent keeper.
+找到补给了？茜茜在等这双靴子。||Found the supplies? Sissy is waiting for those boots.
+巡逻队平安回来了，多亏你的补给。下次留心那片发亮的草。||The patrol returned safely thanks to your supplies. Keep an eye on that shining grass next time.
+补给到了！你愿意和我一起去吗？先把委托袋拿给我看看。||The supplies are here! Will you join me? Show me your commission bag first.
+风把分工便签吹跑了。路线桌有一角纸，能帮我找找吗？||The wind blew away our role note. There is a paper corner by the route table. Could you look for it?
+带上便签，我们一起确认巡逻分工。这次别把同伴留在后面。||Bring the note so we can confirm patrol roles together. Let us leave no companion behind this time.
+我记着你说的脚印。先护好同伴、守亮灯，再找线索。||I remember the tracks you mentioned. Protect our companions and keep the lantern lit, then look for clues.
+护好同伴，集中攻击；有人走慢了，另一个就等一下。||Protect each other and focus your attacks. If one falls behind, the other waits.
+巡夜灯亮了！你也平安回来了，快来收下巡逻队的回礼。||The patrol lantern is lit, and you are back safely! Come collect the patrol's thank-you gift.
+营地补给员，欢迎回来。下次巡逻，我会先叫上你。||Welcome back, Camp Supplier. Next patrol, I will call you first.
+补给齐了，巡逻队就能出发。||Once supplies are ready, the patrol can set out.
+这次巡逻，需要补给与配合。||This patrol needs supplies and teamwork.
+补给待领取||Supplies awaiting collection
+巡逻靴已送出||Patrol boots delivered
+路线便签已带走||Route note collected
+巡逻路线已归还||Patrol route returned
+路线桌留有语言线索||Language clues remain at the route table
+草屑和湿补给单？拿来给我看看，我知道它们是怎么回事。||Grass and a wet supply list? Bring them here. I know what happened.
+我在这里等你。找到物证后，我们一起把经过理清楚。||I will wait here. Bring the evidence and we will work out what happened together.
+调查补给帐篷||Investigate the supply tent
+调查巡夜灯与脚印||Investigate the patrol lantern and tracks
+补给便签：挪动后留位置||Supply note: record the new location after moving items
+结伴送补给，交付说一声||Deliver supplies together and tell the recipient
+补给换了位置，我会写在便签上。这次一定记得。||If I move supplies, I will note their new location. I will remember this time.
+下次送补给，我和茜茜一起去。送到后当面说一声。||Next delivery, Sissy and I will go together and tell the recipient in person.
+原来是莫尼把靴子捡回来了。谢谢你先找物证，没有急着责怪谁。||So Moni brought the boots back. Thank you for finding evidence before blaming anyone.
+守护者捎话来了：火种回到课堂了。它还记得你教的灯光信号，路上一直有人回应。||The guardian sent word: the spark is back in class. It remembered your light signals, and someone answered all the way.
+守护者捎话来了：火种回到课堂了。这回他们等齐才走，谁也没有掉队。||The guardian sent word: the spark is back in class. This time they waited for everyone, and nobody fell behind.
+补给帐篷||Supply tent
+营地路线桌||Camp route table
+先结束战斗，回到营地再继续委托。||Finish the battle and return to camp to continue the commission.
+靠近委托地点再进行这个操作。||Move closer to the commission location first.
+委托装备尚未准备好，请稍后重试。||The commission equipment is not ready. Please try again later.
+先和伙伴完成第一次冒险，再接营地委托。||Complete your first adventure with your companion before taking camp commissions.
+委托已记下，按当前线索继续就好。||The commission is recorded. Follow the current clue.
+先找莫尼接取营地急件。||Ask Moni for the urgent camp delivery first.
+拿回便签后，再和茜茜商量。||Bring back the note before discussing it with Sissy.
+先选一个巡逻提议。||Choose a patrol proposal first.
+茜茜记得你的提议，准备好了就出发。||Sissy remembers your proposal. Set out when you are ready.
+茜茜点头：先保住灯光，一起前进，遇敌集中攻击。||Sissy nods: protect the light, move together and focus attacks on enemies.
+茜茜蹲下看了看脚印：我也想知道是谁。先一起守住灯，等路亮了，再找脚印的主人。||Sissy kneels to inspect the tracks: I want to know who it was too. Let us guard the lantern together, then follow the tracks once the path is lit.
+物品已经交付，或还没有找到。||The item has already been delivered, or has not been found yet.
+目标语言已改变，请用当前语言重新交流。||The target language changed. Try the exchange again in the current language.
+交流记录无效，请重新试试。||The exchange could not be recorded. Please try again.
+茜茜还没听明白。试试提示中的短句，也可以直接递交物品。||Sissy did not understand yet. Try the suggested phrase, or hand over the item directly.
+这件物品不需要写标签。||This item does not need a label.
+先把对应物品放进委托袋。||Put the matching item in the commission bag first.
+这个标签已经写好了，直接递交物品就行。||This label is already written. You can hand over the item.
+标签还没写对，可以看看提示，再试一次。||The label is not correct yet. Check the hint and try again.
+这处补给已经取过了。||These supplies have already been collected.
+先看清物品，再放入委托袋。||Identify the item before putting it in the commission bag.
+巡逻靴已放入委托袋，带去交给茜茜。||The patrol boots are in the commission bag. Take them to Sissy.
+委托袋里没有这次要送的巡逻靴。||The commission bag does not contain the patrol boots for this delivery.
+茜茜收下补给，把一双适合你学派的靴子交给你。到背包比较并穿戴，再去找路线便签。||Sissy accepts the supplies and gives you boots suited to your school. Compare and equip them in your backpack, then find the route note.
+先完成当前的送达任务。||Complete the current delivery first.
+先按线索挪开石头，看看后面。||Follow the clue: move the stone and look behind it.
+先把路线便签带回来。||Bring back the route note first.
+先按路线便签选择巡逻时的攻击方式。||Choose a patrol attack tactic using the route note first.
+先认出刚才交付的补给。||First identify the supplies you just delivered.
+巡逻实绩已达到当前记录上限，请保留便签，稍后再确认路线。||Your patrol record has reached its current limit. Keep the note and confirm the route later.
+路线已确认：巡逻时集中攻击同一个敌人。先练习配合、穿好装备，再完整挑战晨雾中的巡夜灯；撤退后仍可重试。||Route confirmed: focus attacks on the same enemy during patrol. Practice teamwork and equip your gear, then complete Patrol Lantern in the Morning Mist. You can retry after retreating.
+先在接到巡逻安排后，完整完成一轮巡夜灯挑战。||After receiving patrol orders, complete one full patrol lantern challenge first.
+巡逻补给送到了，路线也验证了！获得本学派5级披风和荣誉「营地补给员」。已有的同件披风折算200奇豆。||Supplies delivered and route confirmed! You receive a level 5 cloak for your school and the Camp Supplier honor. A duplicate cloak is converted to 200 Qidou.
+
+# locale incremental update
+火种还在等你，已走过的护送路线会保留。||The spark is still waiting. Your escort route is saved.
+继续护送火种||Continue escorting the spark
+
+# Forest patrol route confirmation
+和茜茜确认巡逻路线||Confirm the patrol route with Sissy
+
+# locale incremental update
+森林委托 · 营地急件||Forest commission · Urgent camp supplies
+森林委托 · {goal}||Forest commission · {goal}
+到补给帐篷按{language}补给单选物。||Go to the supply tent and choose items using the {language} supply list.
+
+# forest HUD short objective
+到补给帐篷按{language}补给单选物||Go to the supply tent and choose items using the {language} supply list.
+
+# automatic navigation status
+正在前往{name}||On the way to {name}
+正在前往目的地||On the way to your destination
+语言练习记录暂未保存，重新打开森林委托时会重试；补给和奖励会保留。||Your language practice has not been saved yet. Reopen the Forest Commission to try again. Your supplies and rewards are safe.
+
+# forest patrol battle guidance
+守卫已经清理，可以前往出口旁的避风灯台。||The guardians are cleared. You can head to the sheltered lantern stand beside the exit.
+重访避风灯台||Revisit the sheltered lantern stand
+从头开始新一轮||Start a new run from the beginning
+出发前先看本轮敌情。战斗中留意“对手这一回合”和下回合预告，再看护盾、虚弱等状态，按手中的卡牌决定先攻、先用小招应对或保护伙伴。||Check this round’s enemies before setting out. In battle, watch “Opponent this turn” and the next-turn preview, then check shields, weakness and other effects. Use the cards in your hand to decide whether to strike first, respond with a small move or protect a companion.
+
+# first-watch four-wave preparation
+四波巡夜，四种应对||Four patrol waves, four ways to respond
+第一波：强化后攻击。可以抢攻，也可以为重击准备护盾或虚弱。||Wave 1: The enemy powers up, then attacks. You can strike first or prepare a shield or weakness effect for the heavy hit.
+第二波：加盾后连续攻击两回合。观察盾的状态，用小攻击消耗护盾，再安排主攻。||Wave 2: The enemy gains a shield, then attacks for two turns in a row. Check the shield, use small attacks to wear it down, then plan your main attack.
+第三波：施加虚弱后连续攻击两回合。虚弱会消耗在适用的攻击上，可以先用小攻击处理，再打主攻。||Wave 3: The enemy applies weakness, then attacks for two turns in a row. Weakness is used up by attacks it applies to. You can use a small attack first, then make your main attack.
+第四波：先强化，再布置陷阱，随后攻击。准备期可以进攻；若来不及击倒，就为重击做好防护。||Wave 4: The enemy powers up, sets a trap, then attacks. You can attack while it prepares. If you cannot defeat it in time, prepare protection against the heavy hit.
+每波准备与进攻的节奏不同。留意战中本轮意图、下一回合预告和实际状态，再决定出牌顺序。||Each wave has a different rhythm of preparation and attacks. Check the current intent, next-turn preview and active effects before choosing the order of your cards.
+伙伴需有饱食才会恢复生命；饱食耗尽时，可在伙伴面板放入口粮，或先移出阵位休息恢复饱食。||Companions need fullness to recover health. When fullness runs out, add food in the companion panel, or remove the companion from the formation so they can rest and regain fullness.
+
+# spark exit and restart status
+照看火种 · 离开副本||Care for the spark · Leave dungeon
+火种已安顿 · 离开副本||Spark safely settled · Leave dungeon
+将从第一处营地开始新一轮；已领取的首通奖励与个人最佳记录会保留。||A new run will start from the first camp. First-clear rewards you have already claimed and your personal best records will be kept.
+
+# challenge readiness and run records
+当前 {level} 级，建议 {recommendedLevel} 级。可以先做岛上任务升级，再来挑战。||Current level: {level}. Recommended level: {recommendedLevel}. You can complete island quests to level up, then return for this challenge.
+当前 {level} 级，建议 {recommendedLevel} 级。等级建议已达到，仍需留意卡组和生命。||Current level: {level}. Recommended level: {recommendedLevel}. You meet the level recommendation, but still need to check your deck and health.
+{card}由当前装备附带，已可在战斗中抽到；配合相同学派的攻击使用。||{card} comes with your current equipment and can already be drawn in battle. Use it with attacks from the same school.
+{card}已装入当前卡组；配合相同学派的攻击使用。||{card} is in your current deck. Use it with attacks from the same school.
+{card}已学会，尚未装入当前卡组；可到卡组中加入。||You have learned {card}, but it is not in your current deck. Open your deck to add it.
+{card}尚未学会，本学派 {level} 级解锁；课堂借用的卡牌不会带出课堂。||You have not learned {card} yet. It unlocks at level {level} in this school. Cards borrowed in class cannot be taken out of class.
+{card}尚未学会；课堂借用的卡牌不会带出课堂。||You have not learned {card} yet. Cards borrowed in class cannot be taken out of class.
+当前主角生命 {hp}；副本内不会自动恢复生命；可先离开副本，在岛上休息恢复，再进入继续已有进度。||Your hero currently has {hp} health. Health does not recover automatically inside dungeons. You can leave, rest on the island to recover, then re-enter to continue your saved progress.
+{waves} 波 · 每波最多 {maxEnemies} 名敌人||{waves} waves · Up to {maxEnemies} enemies per wave
+敌人等级 {minLevel}–{maxLevel}；生命最高的「{enemy}」有 {hp} 生命。||Enemy levels: {minLevel}–{maxLevel}. {enemy} has the most health, at {hp}.
+可独自挑战，也可带一位已出战伙伴；当前将有 {size} 个出战单位。检查各自的生命与卡组。||You can challenge alone or bring one companion assigned to battle. You will currently have {size} units in battle. Check each unit’s health and deck.
+本次需要 {size} 个出战单位。检查每位成员的等级、当前生命和卡组，主角等级达标并不代表全队准备好了。||This challenge requires {size} units in battle. Check every member’s level, current health and deck. Your hero meeting the level requirement does not mean the whole team is ready.
+{level} 级可装备；领取后到背包比较并穿戴。||Can be equipped at level {level}. After claiming it, open your bag to compare and equip it.
+首次完整通关可获荣誉「{honor}」。统计整轮战斗的累计回合与失利次数；从头挑战开始新一轮。真实玩家协作另行记录。||Your first full clear earns the honor “{honor}”. Total turns and defeats are counted across the whole run. Starting from the beginning starts a new run. Cooperation with real players is recorded separately.
+完整通关 {count} 次||Full clears: {count}
+最快通关 {turns} 回合 · 期间失利 {defeats} 次||Fastest clear: {turns} turns · {defeats} defeats during that run
+最近通关 {turns} 回合 · 期间失利 {defeats} 次||Latest clear: {turns} turns · {defeats} defeats during that run
+强化术||Enhancement Spell
+陷阱||Trap
+继续本轮进度：已清理 {cleared} / {total} 处营地。||Continue this run: {cleared} / {total} camps cleared.
+尚未完成整轮挑战；从头进入副本后开始记录。||You have not completed a full run yet. Tracking begins when you enter the dungeon from the beginning.
+这是后期四人挑战，末波包含 50 级敌人。建议准备四位等级与装备相称的出战单位；只提升主角等级仍可能失利。||This is a late-game challenge for four units, with level 50 enemies in the final wave. Prepare four units with suitable levels and equipment. Raising only your hero’s level may still lead to defeat.
+副本内不会自动恢复生命；可先离开副本，在岛上休息恢复，再进入继续已有进度。||Health does not recover automatically inside dungeons. You can leave, rest on the island to recover, then re-enter to continue your saved progress.
+本轮真实敌情||Enemies in this run
+先把课堂战术装进自己的卡组||Add the classroom tactics to your own deck first
+这是准备建议，可以自由尝试其他打法。||These are preparation tips. You can try other tactics too.
+首通奖励已领取||First-clear reward claimed
+整轮首通奖励||First full-run reward
+从头完成个人整轮挑战后领取一次；真实玩家协作另行记录。领取后可自行选择是否穿戴。||Claim once after completing an entire personal challenge from the beginning. Cooperation with real players is recorded separately. After claiming it, you can choose whether to equip it.
+个人挑战实绩||Personal challenge record
+用更少回合完成整轮挑战||Complete the full run in fewer turns
+继续本轮||Continue this run
+本次线索已结束。||This clue is no longer available.
+正在记录练习…||Saving your practice…
+再读一遍口令，从中找出对应的词。||Read the clue again and find the matching word.
+练习尚未生效，可再试一次。||Your practice has not been saved yet. You can try again.
+口令已记入词树，你获得了一层护盾。||The word has been added to your word tree. You gained a shield.
+词树暂时无法保存，护盾次数已保留。||Your word tree could not be saved. You can still claim the shield after retrying.
+本场口令已解读，护盾已领取。||You have solved this battle’s clue and claimed its shield.
+领一次护盾||Claim a shield
+找出口令里表示“{meaning}”的词||Find the word in the clue that means “{meaning}”.
+等待||Wait
+营地急件：接取寻物委托||Urgent camp delivery: accept the supply search
+继续森林补给委托||Continue the forest supply commission
+
+# Dungeon preparation: available cards and owned equipment
+看清敌人意图：手中有对应卡牌时，可在重击前给进攻者挂虚弱，或给受击队友加盾；也可以抢先攻击。||Read enemy intent: with the right cards in hand, you can weaken the attacker or shield the target before a heavy hit. You can also attack first.
+{card}可由已拥有的装备附带；到背包比较并穿戴后，即可在战斗中抽到。||Equipment you already own can grant {card}. Compare and equip it from your backpack to draw this card in battle.

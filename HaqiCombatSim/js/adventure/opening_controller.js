@@ -94,6 +94,7 @@ export function createOpeningController({
     let openingWelcomeKey = null;
     let openingSpeech = null;
     let forestPracticeTask = null;
+    let forestPracticeRequested = false;
 
     function openTacticsTraining(options) {
         const ctx = getContext();
@@ -482,7 +483,11 @@ export function createOpeningController({
         const ctx = getContext();
         const current = ctx.save;
         const role = ctx.roleStore.catalog.activeId;
-        if ((!current?.forestCommission?.practice && !current?.forestCommission?.notePractice && !current?.forestCommission?.labelPractice?.length && !current?.forestCommission?.exchangePractice?.length) || forestPracticeTask) return;
+        if (!current?.forestCommission?.practice && !current?.forestCommission?.notePractice && !current?.forestCommission?.labelPractice?.length && !current?.forestCommission?.exchangePractice?.length) return;
+        if (forestPracticeTask) {
+            forestPracticeRequested = true;
+            return;
+        }
         const valid = () => {
             const nowCtx = getContext();
             return nowCtx.save === current && nowCtx.roleStore.catalog.activeId === role;
@@ -499,11 +504,14 @@ export function createOpeningController({
                 },
             });
         } catch {
-            if (valid()) toast('语言练习记录暂未保存，稍后会重试；补给和奖励会保留。');
+            if (valid()) toast('语言练习记录暂未保存，重新打开森林委托时会重试；补给和奖励会保留。');
         } finally {
             forestPracticeTask = null;
+            // Consume an explicit reopen request once; a failed write alone must not loop.
+            const requested = forestPracticeRequested;
+            forestPracticeRequested = false;
             const nowCtx = getContext();
-            if (nowCtx.save !== current && (nowCtx.save?.forestCommission?.practice || nowCtx.save?.forestCommission?.notePractice || nowCtx.save?.forestCommission?.labelPractice?.length || nowCtx.save?.forestCommission?.exchangePractice?.length)) {
+            if ((requested || nowCtx.save !== current) && (nowCtx.save?.forestCommission?.practice || nowCtx.save?.forestCommission?.notePractice || nowCtx.save?.forestCommission?.labelPractice?.length || nowCtx.save?.forestCommission?.exchangePractice?.length)) {
                 void drainForestPractice();
             }
         }

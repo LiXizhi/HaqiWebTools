@@ -9,14 +9,17 @@ import * as forestStory from '../js/forest_commission_story_core.js';
 import * as forestMystery from '../js/forest_mystery_core.js';
 import {bindSceneDrag,pointInsideElement} from '../js/adventure_scene_drag.js';
 import {monsterArtBinding} from '../js/adventure_monster_art_core.js';
+import {tr,fill,setText,setTranslator} from '../js/locale_runtime.js';
+import {lookup,parseLocaleFile} from '../js/locale_core.js';
 const source=fs.readFileSync(new URL('../js/views/adventure/view_forest_commission.js',import.meta.url),'utf8');
 const mysterySource=fs.readFileSync(new URL('../js/views/adventure/view_forest_mystery.js',import.meta.url),'utf8');
 const content=JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json',import.meta.url)));
 const exportedItems=JSON.parse(fs.readFileSync(new URL('../data/adventure/shop-candidates.json',import.meta.url)));
 for(const id of [1415,1416,1417,1418,1419])content.items[id]=exportedItems[id];
-function render(phase,{nearby=true,level=1,language='en',target=language,recorder,action,plan,mystery,rescue}={}){
+function render(phase,{nearby=true,level=1,language='en',target=language,recorder,action,plan,mystery,rescue,exchangeCompleted}={}){
  const all=[],calls=[],document={activeElement:null};
  function el(tag,cls='',...children){
+  children=children.map(child=>typeof child==='string'?tr(child):child);
   const n={tag,className:cls,children,dataset:{},style:{},attributes:{},events:{},textContent:typeof children[0]==='string'?children[0]:'',
    setAttribute(k,v){this.attributes[k]=v;},append(...v){this.children.push(...v);},replaceChildren(...v){this.children=v;},
    addEventListener(k,fn){this.events[k]=fn;},focus(){document.activeElement=this;},getClientRects(){return this.hidden?[]:[{}];},getContext(){return {clearRect(){}};},getBoundingClientRect(){return {left:0,right:200,top:300,bottom:400};},
@@ -25,12 +28,13 @@ function render(phase,{nearby=true,level=1,language='en',target=language,recorde
    querySelector(selector){return this.querySelectorAll(selector)[0]||null;}};
   n.classList={add:cls=>n.className+=' '+cls,remove:cls=>n.className=n.className.split(' ').filter(c=>c!==cls).join(' ')};all.push(n);return n;
  }
- const context=vm.createContext({document,Date:{now:()=>1234},watchTreeText:()=>{},...forest,...forestLanguage,...forestExchange,...forestStory,...forestMystery,monsterArtBinding,bindSceneDrag,pointInsideElement,forestCommissionRewardPreviews:(save,c,step)=>forest.forestCommissionRewards(save,c,step).map(row=>({...row,changes:[]})),equipmentComparison:()=>el('section','equipment-comparison'),el,button:(label,action,cls='')=>Object.assign(el('button',cls,label),{click:action}),
+ const context=vm.createContext({tr,fill,setText,document,Date:{now:()=>1234},watchTreeText:()=>{},...forest,...forestLanguage,...forestExchange,...forestStory,...forestMystery,monsterArtBinding,bindSceneDrag,pointInsideElement,forestCommissionRewardPreviews:(save,c,step)=>forest.forestCommissionRewards(save,c,step).map(row=>({...row,changes:[]})),equipmentComparison:()=>el('section','equipment-comparison'),el,button:(label,action,cls='')=>Object.assign(el('button',cls,label),{click:action}),
   art:(assets,value)=>Object.assign(el('canvas'),{drawnArt:value}),createCloseButton:click=>Object.assign(el('button','close-button'),{click})});
  vm.runInContext(mysterySource.replace(/^import .*;\r?\n/gm,'').replace(/export function/g,'function'),context);
  vm.runInContext(source.replace(/^import .*;\r?\n/gm,'').replace('export function','function'),context);
  const save={school:'fire',level,inventory:{},...(phase==='offer'?{}:{forestCommission:{version:1,phase:phase==='report'?'patrol':phase,...(['patrol','report','done'].includes(phase)?{clearBaseline:0}:{})}})};
  if(rescue)save.sparkRescue=structuredClone(rescue);
+ if(exchangeCompleted)save.forestCommission.exchangeCompleted=exchangeCompleted;
  if(target)save.languageLearning={target};if(plan)save.forestCommission.plan=plan;
  if(mystery)save.forestCommission={version:1,phase:'done',clearBaseline:0,mystery:structuredClone(mystery)};
  if(['report','done'].includes(phase))save.dungeonChallengeRecords={'journey:first-watch':{clears:1}};
@@ -43,6 +47,92 @@ function render(phase,{nearby=true,level=1,language='en',target=language,recorde
 }
 
 const mysteryAt=(observed=[],witness=false)=>({version:1,status:'active',route:'tracks',observed,witness});
+test('the route note can be spoken once while optional tactics remain available',()=>{
+ const ui=render('briefing'),field=ui.all.find(n=>n.tag==='input'&&n.maxLength===120);
+ assert.ok(field);field.value='Here are the boots.';ui.find('说好了，交给她').click();assert.deepEqual(ui.calls,[]);
+ const help=ui.all.find(n=>n.children?.some(child=>child?.className==='forest-exchange-examples'));
+ help.open=true;help.events.toggle();field.value='Here is the note.';
+ const enter={key:'Enter',isComposing:true,preventDefault(){},stopPropagation(){}};
+ field.events.keydown(enter);assert.deepEqual(ui.calls,[]);
+ field.events.keydown({...enter,isComposing:false});
+ assert.equal(ui.calls[0].word,'note');assert.equal(ui.calls[0].learning.assisted,true);
+ const completed=render('briefing',{exchangeCompleted:['note']});
+ assert.equal(completed.all.some(n=>n.tag==='input'),false);
+ assert.ok(completed.find('茜茜已收好路线便签。需要时，你们可以一起查看。'));
+ completed.object('靴子').click();
+ completed.all.filter(n=>n.className==='forest-tactic-choice')[1].click();
+ assert.equal(completed.calls.at(-1).step,'brief');assert.equal(completed.calls.at(-1).tactic,'focus');
+ assert.ok(completed.all.some(n=>n.className==='forest-tactic-choices'&&!n.hidden));
+ const distant=render('briefing',{nearby:false});
+ assert.equal(distant.all.some(n=>n.maxLength===120),false);assert.ok(distant.find('拿便签给茜茜'));
+ const returning=render('briefing',{nearby:false,exchangeCompleted:['note']});
+ assert.equal(returning.find('拿便签给茜茜'),undefined);
+ returning.find('和茜茜确认巡逻路线').click();assert.deepEqual(returning.calls,['go']);
+ assert.deepEqual(returning.save.forestCommission.exchangeCompleted,['note']);
+ const skipped=render('briefing');skipped.object('靴子').click();skipped.all.filter(n=>n.className==='forest-tactic-choice')[1].click();
+ assert.equal(skipped.calls.length,1);assert.equal(skipped.calls[0].step,'brief');
+});
+
+test('reporting a patrol checks the already delivered note without handing it over again',()=>{
+ const ui=render('report',{exchangeCompleted:['note']});
+ assert.equal(ui.all.some(n=>n.className==='forest-carried-object'),false);
+ assert.ok(ui.find('茜茜展开路线便签，和你核对刚才的巡逻。'));
+ ui.find('领取披风').click();assert.deepEqual(ui.calls,[{step:'report'}]);
+});
+
+test('translated interface preserves Chinese and Japanese learning words and sentences',()=>{
+ const translations={'靴子':'boots','帽子':'hat','便签':'note','先回想：刚才交付的 {word} 是哪件补给？':'Which item was {word}?','看{language}标签':'Show {language} label','用{language}把{item}交给茜茜':'Give Sissy the {item} in {language}','当前{level}级，5级可出发。':'Level {level}; patrol starts at 5.'};
+ setTranslator(value=>translations[value]||value,'en');
+ try{
+  for(const target of ['zh-CN','ja']){
+   const ui=render('briefing',{target}),lesson=forestLanguage.forestCommissionLesson(ui.save);
+   assert.ok(ui.all.some(n=>n.textContent===`Which item was ${lesson.words.boots}?`));
+   assert.ok(ui.all.some(n=>n.textContent===lesson.words.note));
+   for(const line of forestExchange.forestExchangeLines(ui.save,'note').slice(0,3))assert.ok(ui.all.some(n=>n.className==='forest-english'&&n.textContent===line));
+   assert.ok(ui.all.some(n=>n.textContent===lesson.tactics.focus));
+   assert.equal(ui.all.some(n=>n.textContent?.includes('{word}')),false);
+  }
+  assert.ok(render('patrol',{level:4}).find('Level 4; patrol starts at 5.'));
+ }finally{setTranslator(null);}
+});
+
+test('real interface dictionaries keep learning text intact across native and target languages',()=>{
+ const dictionaries=Object.fromEntries(['en','ja','ko'].map(id=>[id,parseLocaleFile(fs.readFileSync(new URL(`../data/adventure/locale/${id}.txt`,import.meta.url),'utf8'))]));
+ try{
+  for(const native of ['en','ja','ko']){
+   setTranslator(value=>lookup(value,native,dictionaries),native);
+   const guide=render('patrol',{level:5}).all.find(n=>n.className==='forest-tactics-guide');
+   assert.ok(guide);assert.doesNotMatch(guide.textContent,/出发前先看|手中的卡牌|\{[^}]+\}/,native+': translated patrol guidance');
+   for(const target of ['zh-CN','en','ja','ko']){
+    if(native===target)continue;
+    const ui=render('briefing',{target}),lesson=forestLanguage.forestCommissionLesson(ui.save);
+    assert.ok(ui.all.some(n=>n.textContent===lesson.words.note),`${native}/${target}: note label`);
+    assert.ok(ui.all.some(n=>n.textContent===lesson.tactics.focus),`${native}/${target}: tactic`);
+    for(const line of forestExchange.forestExchangeLines(ui.save,'note').slice(0,3))assert.ok(ui.all.some(n=>n.className==='forest-english'&&n.textContent===line),`${native}/${target}: ${line}`);
+    assert.equal(ui.all.some(n=>/\{(?:word|language|item)\}|__learning_\d+__/.test(n.textContent||'')),false,`${native}/${target}: unresolved slot`);
+   }
+  }
+ }finally{setTranslator(null);}
+});
+
+test('English commission guidance renders each stage without Chinese fallback or unresolved slots',()=>{
+ const dictionaries={en:parseLocaleFile(fs.readFileSync(new URL('../data/adventure/locale/en.txt',import.meta.url),'utf8'))};
+ setTranslator(value=>lookup(value,'en',dictionaries),'en');
+ try{
+  const missing=new Set();
+  const stages=['offer','boots','delivery','note','briefing','patrol','report','done'].map(phase=>({phase}));
+  for(const status of ['active','safe'])for(const method of ['lamp','shelter'])stages.push({phase:'done',rescue:{status,method,path:[16,17],promise:'signal'}});
+  for(const {phase,rescue} of stages){
+   for(const nearby of [true,false]){
+    const ui=render(phase,{nearby,target:'en',rescue,...(['briefing','patrol','report','done'].includes(phase)?{exchangeCompleted:['note']}:{})});
+    const visibleStrings=ui.all.flatMap(n=>[n.textContent,n.attributes?.['aria-label']]).filter(Boolean);
+    for(const text of visibleStrings.filter(text=>/[\u4e00-\u9fff]|\{(?:word|language|item|stage|current|total|level|count)\}/.test(text)))missing.add(text);
+   }
+  }
+  assert.deepEqual([...missing],[],'untranslated commission interface');
+ }finally{setTranslator(null);}
+});
+
 test('investigation keeps inspection physical, opens evidence notes, and can be put away',()=>{
  const distant=render('done',{nearby:false,mystery:mysteryAt()});
  assert.ok(distant.find('带我去调查地点'));assert.equal(distant.find('查看泥里的草屑'),undefined);
@@ -196,12 +286,21 @@ test('the route note starts one real monster fight without theory exercises',()=
  assert.deepEqual(ui.calls,['training']);
 });
 
+test('patrol connects the note to visible combat intent without changing the saved plan or departure',()=>{
+ for(const level of [1,5])for(const plan of ['tracks','light']){
+  const ui=render('patrol',{level,plan,exchangeCompleted:['note']}),before=structuredClone(ui.save);
+  const guide=ui.all.find(n=>n.className==='forest-tactics-guide');
+  assert.ok(guide);assert.match(guide.textContent,/对手这一回合/);assert.match(guide.textContent,/下回合预告/);
+  assert.match(guide.textContent,/手中的卡牌/);assert.match(guide.textContent,/先攻、先用小招应对或保护伙伴/);
+  ui.find('出发巡逻').click();assert.deepEqual(ui.calls,['patrol']);assert.deepEqual(ui.save,before);
+ }
+});
 test('a low-level patrol gives a mainline route while a prepared character can choose the dungeon',()=>{
  const low=render('patrol',{level:4});
- const primary=low.all.find(n=>n.className==='primary');assert.equal(primary.textContent,'去升级');
+ const primary=low.all.find(n=>n.className==='primary');assert.equal(primary.textContent,'跟随主线提升等级');
  primary.click();assert.deepEqual(low.calls,['mainline']);
  assert.ok(low.all.some(n=>n.textContent.includes('进度会保留')));
- const ready=render('patrol',{level:5});assert.equal(ready.find('去升级'),undefined);
+ const ready=render('patrol',{level:5});assert.equal(ready.find('跟随主线提升等级'),undefined);
  ready.all.find(n=>n.className==='primary').click();assert.deepEqual(ready.calls,['patrol']);
 });
 
@@ -231,8 +330,15 @@ test('returning from the spark rescue recalls the actual promise and offers a re
   assert.equal(ui.find('挑战走失的火种'),undefined);
   ui.find('重访走失的火种').click();assert.deepEqual(ui.calls,['nextChallenge']);
  }
- const active=render('done',{rescue:{version:1,status:'active',method:'lamp',path:[16]}});
- assert.equal(active.all.some(n=>n.textContent.includes('守护者捎话')),false);
+ for(const method of ['lamp','shelter']){
+  const active=render('done',{level:6,rescue:{version:1,status:'active',method,path:[16,17]}}),before=structuredClone(active.save);
+  assert.equal(active.all.some(n=>n.textContent.includes('守护者捎话')),false);
+  assert.ok(active.find('火种还在等你，已走过的护送路线会保留。'));
+  assert.equal(active.find('6级就能带伙伴去找走失的火种。'),undefined);
+  assert.equal(active.find('重访走失的火种'),undefined);
+  active.find('继续护送火种').click();assert.deepEqual(active.calls,['nextChallenge']);
+  assert.deepEqual(active.save,before);
+ }
 });
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
 

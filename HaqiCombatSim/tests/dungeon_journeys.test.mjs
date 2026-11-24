@@ -127,6 +127,20 @@ test('tactical entry advice distinguishes borrowed, learned and equipped cards',
  assert.equal(dungeonTacticsPreparation(save,content,tower),null);
 });
 
+test('tactical entry explains recovery only for hungry formation pets without changing care state',()=>{
+ const dungeon=content.dungeons.find(d=>d.id==='journey:lost-spark'),save=A.createAdventure(content,{school:'fire'});
+ const advice='伙伴需有饱食才会恢复生命；饱食耗尽时，可在伙伴面板放入口粮，或先移出阵位休息恢复饱食。';
+ save.pets={active:{hunger:0,hp:10},resting:{hunger:0,hp:10}};
+ save.formation=['active',null,null,null];
+ const before=JSON.stringify(save);
+ assert.equal(dungeonTacticsPreparation(save,content,dungeon).lines.filter(line=>line===advice).length,1);
+ assert.equal(JSON.stringify(save),before);
+ save.pets.active.hunger=1;
+ assert.equal(dungeonTacticsPreparation(save,content,dungeon).lines.includes(advice),false,'hungry resting pets do not trigger the formation warning');
+ save.formation=[null,null,null,null];
+ assert.equal(dungeonTacticsPreparation(save,content,dungeon).lines.includes(advice),false);
+});
+
 test('patrol preparation includes usable equipment cards without treating unequipped gear as ready',()=>{
  const dungeon=content.dungeons.find(d=>d.id==='journey:first-watch'),save=A.createAdventure(content,{school:'fire'});
  save.xp=content.progression.xpThresholds[4];A.syncProgression(save,content);
@@ -139,6 +153,29 @@ test('patrol preparation includes usable equipment cards without treating unequi
  delete save.equipment[item.slot];
  const absent=dungeonTacticsPreparation(save,content,dungeon,A.playerSpec(save,content));
  assert.ok(absent.lines.some(line=>line.startsWith('陷阱')&&line.includes('尚未装入')));
+});
+
+test('patrol preparation directs unlearned traps to owned usable gear only',()=>{
+ const dungeon=content.dungeons.find(d=>d.id==='journey:first-watch'),save=A.createAdventure(content,{school:'life'});
+ save.xp=content.progression.xpThresholds[4];A.syncProgression(save,content);
+ const item=content.items[1248],key='Life_LifeDamageTrap';
+ assert.equal(save.cards[key]||0,0);
+ const trapLine=()=>dungeonTacticsPreparation(save,content,dungeon,A.playerSpec(save,content)).lines.find(line=>line.startsWith('陷阱'));
+ assert.match(trapLine(),/尚未学会/);
+ save.inventory[item.id]=1;
+ assert.ok(A.canEquip(save,item,content));
+ const before=JSON.stringify(save);
+ assert.match(trapLine(),/可由已拥有的装备附带/);
+ assert.equal(JSON.stringify(save),before);
+ save.equipment[item.slot]=item.id;
+ assert.match(trapLine(),/由当前装备附带/);
+ delete save.equipment[item.slot];
+ const restricted={...content,items:{...content.items,[item.id]:{...item,stats:{...item.stats,138:99}}}};
+ assert.equal(A.canEquip(save,restricted.items[item.id],restricted),false);
+ assert.match(dungeonTacticsPreparation(save,restricted,dungeon,A.playerSpec(save,restricted)).lines.find(line=>line.startsWith('陷阱')),/尚未学会/);
+ const wrongSchool={...content,items:{...content.items,[item.id]:{...item,stats:{...item.stats,137:content.schools.fire}}}};
+ assert.equal(A.canEquip(save,wrongSchool.items[item.id],wrongSchool),false);
+ assert.match(dungeonTacticsPreparation(save,wrongSchool,dungeon,A.playerSpec(save,wrongSchool)).lines.find(line=>line.startsWith('陷阱')),/尚未学会/);
 });
 
 test('new patrol keeps one selected companion and restores both new and legacy solo checkpoints',()=>{
@@ -535,13 +572,19 @@ for(const seed of [23,42,137,353])for(const opening of [false,true])for(const [s
   assert.equal(save.openingJourney.phase,'done');step('continue');roundtrip();
  }
  const act=(step,props={})=>{
-  const id=step==='accept'?FOREST_NPCS.giver:['deliver','brief','report'].includes(step)?FOREST_NPCS.receiver:step==='take-boots'?FOREST_SITES.boots:FOREST_SITES.note;
+  const id=step==='accept'?FOREST_NPCS.giver:['deliver','exchange','brief','report'].includes(step)?FOREST_NPCS.receiver:step==='take-boots'?FOREST_SITES.boots:FOREST_SITES.note;
   A.applyAction(save,content,{type:'forest-commission',step,...props},{forestTarget:{id,kind:typeof id==='number'?'npc':'landmark',...save.position}});
  };
  act('accept');act('take-boots',{object:'boots'});roundtrip();
  assert.equal(forestCommissionPouch(save)[0].id,'patrol-boots');
  act('deliver');A.applyAction(save,content,{type:'equip',itemId:gear[1]});
- act('take-note',{revealed:true});act('brief',{tactic:'focus',recalled:'boots',learning:{at:now,attempts:2,assisted:false}});roundtrip();
+ act('take-note',{revealed:true});
+ if(opening){
+  save.languageLearning={...save.languageLearning,target:'en'};
+  act('exchange',{word:'note',language:'en',input:'text',text:'Here is the note.',learning:{at:now,attempts:2,assisted:true}});roundtrip();
+  assert.equal(forestCommissionPhase(save),'briefing');assert.deepEqual(save.forestCommission.exchangeCompleted,['note']);
+ }
+ act('brief',{tactic:'focus',recalled:'boots',learning:{at:now,attempts:2,assisted:false}});roundtrip();
  assert.equal(forestCommissionPhase(save),'patrol');assert.equal(forestCommissionPouch(save)[0].id,'patrol-note');
  // Earn the entrance level through the actual first six mainline quests.
  // This also reproduces why another hat/robe would be a duplicate reward.
@@ -573,6 +616,7 @@ for(const seed of [23,42,137,353])for(const opening of [false,true])for(const [s
   }
  }
  assert.ok(save.level>=5);assert.equal(forestCommissionPhase(save),'patrol','mainline fights cannot count as a patrol clear');
+ if(opening)assert.deepEqual(save.forestCommission.exchangeCompleted,['note'],'mainline and cloud reloads retain the delivered note');
  save.deck=A.recommendedDeck(save,content);
  const dungeon=content.dungeons.find(d=>d.id==='journey:first-watch');
  now+=60000;tickCare(save,content,A.playerSpec(save,content),now);

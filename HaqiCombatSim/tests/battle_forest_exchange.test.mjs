@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {createAdventure} from '../js/adventure_core.js';
+import {createAdventure,parseSave} from '../js/adventure_core.js';
 import {persistReward} from '../js/adventure_reward_persistence.js';
-import {applyForestCommission,validateForestCommission} from '../js/forest_commission_core.js';
+import {applyForestCommission,validateForestCommission,forestCommissionPouch,forestCommissionGoal} from '../js/forest_commission_core.js';
 import {forestExchangeLines,forestExchangeMatches,forestExchangeId} from '../js/forest_exchange_core.js';
 import {forestCommissionStory} from '../js/forest_commission_story_core.js';
 import {flushForestCommissionPractice} from '../js/learning/forest_commission_learning.js';
@@ -20,6 +20,77 @@ for(const language of ['en','ja','ko','zh-CN'])test(`${language}: short handover
  const events=[];await flushForestCommissionPractice(save,{valid:()=>true,persist:()=>true,record:async e=>{events.push(e);return {persisted:true};}});
  assert.deepEqual(events.map(e=>[e.language,e.input,e.attempts,e.assisted]),[[language==='zh-CN'?'zh':language,'text',1,false]]);
  assert.equal(new Set(events.map(e=>e.id)).size,1);assert.equal(save.forestCommission.exchangePractice.length,0);
+});
+for(const language of ['en','ja','ko','zh-CN'])test(`${language}: each supported note handover can continue into the existing briefing without another reward`,()=>{
+ for(const text of forestExchangeLines(fresh(language),'note')){
+  const save=fresh(language,'briefing'),before=structuredClone(save);
+  assert.equal(forestCommissionGoal(save).label,'把路线便签拿给茜茜');
+  const result=applyForestCommission(save,content,request(save,'note',{text,input:'speech'}),access(save));
+  assert.equal(save.forestCommission.phase,'briefing');assert.equal(result.rewards,undefined);
+  assert.deepEqual(save.inventory,before.inventory);assert.equal(save.xp,before.xp);assert.equal(save.level,before.level);
+  assert.deepEqual(save.forestCommission.exchangeCompleted,['note']);
+  assert.deepEqual(save.forestCommission.exchangePractice,[{id:forestExchangeId('note',language),word:'note',language,input:'speech',at:1234,attempts:1,assisted:false}]);
+  assert.match(forestCommissionPouch(save)[0].description,/茜茜保管/);
+  const restored=parseSave(JSON.stringify(save),content);validateForestCommission(restored);
+  assert.equal(forestCommissionGoal(restored).label,'和茜茜确认巡逻路线');
+  applyForestCommission(restored,content,{step:'brief',tactic:'focus',recalled:'boots',learning:{at:1235,attempts:1,assisted:false}},access(restored));
+  assert.equal(restored.forestCommission.phase,'patrol');validateForestCommission(restored);
+ }
+});
+test('note handover rejects wrong context, intent and evidence before changing the saved state',()=>{
+ const cases=[
+  save=>{save.forestCommission.phase='note';},
+  save=>{save.forestCommission.phase='delivery';},
+  save=>{save.zone='forest';},
+  save=>{save.pendingEncounter={};},
+ ];
+ for(const change of cases){const save=fresh('en','briefing');change(save);const before=structuredClone(save);assert.throws(()=>applyForestCommission(save,content,request(save,'note'),access(save)));assert.deepEqual(save,before);}
+ for(const patch of [{word:'hat'},{text:'note'},{text:'Here are the boots.'},{text:'I did not find the note.'},{text:'Here is the note?'},{language:'ja'},{input:'read'},{learning:{at:NaN,attempts:1,assisted:false}},{learning:{at:1,attempts:1000,assisted:false}},{learning:{at:1,attempts:1,assisted:'false'}}]){
+  const save=fresh('en','briefing'),before=structuredClone(save);assert.throws(()=>applyForestCommission(save,content,request(save,'note',patch),access(save)));assert.deepEqual(save,before);
+ }
+ const save=fresh('en','briefing'),before=structuredClone(save),where=access(save);where.forestTarget.x+=111;
+ assert.throws(()=>applyForestCommission(save,content,request(save,'note'),where));assert.deepEqual(save,before);
+});
+test('legacy saves remain valid; a completed note stays completed after receipt draining and a language switch',async()=>{
+ const save=fresh('en','briefing');assert.ok(parseSave(JSON.stringify(save),content));
+ applyForestCommission(save,content,request(save,'note'),access(save));
+ await flushForestCommissionPractice(save,{valid:()=>true,persist:()=>true,record:async()=>({persisted:true})});
+ const restored=parseSave(JSON.stringify(save),content);restored.languageLearning.target='ja';const before=structuredClone(restored);
+ assert.throws(()=>applyForestCommission(restored,content,request(restored,'note'),access(restored)));assert.deepEqual(restored,before);
+ assert.deepEqual(restored.forestCommission.exchangeCompleted,['note']);assert.deepEqual(restored.forestCommission.exchangePractice,[]);
+});
+test('note completion and pending receipts reject malformed or impossible save states',()=>{
+ const good=fresh('en','briefing');applyForestCommission(good,content,request(good,'note'),access(good));
+ for(const marker of [true,{},['boots'],['note','note'],['note','boots'],Array(1)]){
+  const save=structuredClone(good);save.forestCommission.exchangeCompleted=marker;assert.throws(()=>validateForestCommission(save));
+ }
+ for(const patch of [{exchangeCompleted:undefined},{phase:'note'},{phase:'delivery'},{exchangePractice:Array(1)},{exchangePractice:[good.forestCommission.exchangePractice[0],good.forestCommission.exchangePractice[0]]}]){
+  const save=structuredClone(good);Object.assign(save.forestCommission,patch);assert.throws(()=>validateForestCommission(save));
+ }
+ const empty=fresh('en','briefing');empty.forestCommission.exchangeCompleted=[];validateForestCommission(empty);
+});
+test('boots and note receipts drain in order with their original language and input evidence',async()=>{
+ const save=fresh('ja');applyForestCommission(save,content,request(save),access(save));
+ save.forestCommission.phase='briefing';save.languageLearning.target='ko';applyForestCommission(save,content,request(save,'note',{input:'speech',learning:{at:2345,attempts:2,assisted:true}}),access(save));
+ validateForestCommission(save);const events=[];
+ await flushForestCommissionPractice(save,{valid:()=>true,persist:()=>true,record:async event=>{events.push(event);return {persisted:true};}});
+ assert.deepEqual(events.map(event=>[event.id,event.language,event.input,event.at,event.attempts,event.assisted]),[[forestExchangeId('boots','ja'),'ja','text',1234,1,false],[forestExchangeId('note','ko'),'ko','speech',2345,2,true]]);
+ assert.deepEqual(events.map(event=>event.words),[['ブーツ'],['메모']]);assert.deepEqual(save.forestCommission.exchangePractice,[]);assert.deepEqual(save.forestCommission.exchangeCompleted,['note']);
+});
+test('note save failure leaves the live role unchanged and a retry commits one receipt',()=>{
+ const save=fresh('en','briefing'),action=request(save,'note'),before=structuredClone(save);let fail=true,stored;
+ const storage={getItem:()=>null,setItem(_key,value){if(fail)throw Error('quota');stored=value;}};
+ assert.throws(()=>persistReward(save,content,action,access(save),storage));assert.deepEqual(save,before);
+ fail=false;const committed=persistReward(save,content,action,access(save),storage).save;
+ assert.ok(stored);assert.deepEqual(committed.forestCommission.exchangeCompleted,['note']);assert.equal(committed.forestCommission.exchangePractice.length,1);
+ assert.throws(()=>persistReward(committed,content,action,access(committed),storage));assert.equal(committed.forestCommission.exchangePractice.length,1);
+});
+test('an interrupted note learning write retains its receipt without inventing another exchange',async()=>{
+ const save=fresh('en','briefing');applyForestCommission(save,content,request(save,'note'),access(save));const event=save.forestCommission.exchangePractice[0];let active=true;
+ assert.equal(await flushForestCommissionPractice(save,{valid:()=>active,persist:()=>true,record:async()=>{active=false;return {persisted:true};}}),false);
+ assert.equal(save.forestCommission.exchangePractice[0],event);active=true;
+ await assert.rejects(flushForestCommissionPractice(save,{valid:()=>active,persist:()=>{throw Error('quota');},record:async()=>({persisted:true})}),/quota/);
+ assert.equal(save.forestCommission.exchangePractice[0],event);validateForestCommission(save);
 });
 test('intent matching rejects negatives, questions, wrong objects, bare labels and missing target',()=>{
  const save=fresh();for(const text of ['boots','I did not find the boots.','Where are the boots?','Here are the boots?','Here is the note.','Here are the boots, but not for you.'])assert.equal(forestExchangeMatches(save,'boots',text),false,text);

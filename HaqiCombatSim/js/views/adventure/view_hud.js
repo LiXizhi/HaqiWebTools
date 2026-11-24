@@ -279,6 +279,16 @@ export function renderHeroTitle(model, cb) {
     return status;
 }
 
+export function appendForestTracker(tracker, forestGoal, cb) {
+    if (!forestGoal) return;
+    const { phase, goal } = forestGoal;
+    const language = /^到补给帐篷按(.+)补给单选物$/.exec(goal.label);
+    const label = language ? fill('到补给帐篷按{language}补给单选物', { language: language[1] }).text : tr(goal.label);
+    tracker.append(el('div', 'tracker-tactics-goal forest-tracker',
+        button(phase === 'offer' ? tr('森林委托 · 营地急件') : fill('森林委托 · {goal}', { goal: label }).text,
+            () => cb.panel('forest-commission'), 'tracker-tactics')));
+}
+
 export function renderHud(root, model, cb) {
     // A reward can repaint while the dictionary hides the HUD. display:none
     // reports zero offsets, so measure invisibly and restore before the frame paints.
@@ -417,16 +427,7 @@ function renderHudContents(root, model, cb) {
         link.setAttribute('aria-label', tr('巡夜挑战 / 战术练习') + '：' + tr(goal.title));
         tracker.append(el('div', 'tracker-tactics-goal', link, el('small', '', '巡夜 ' + (goal.challengeDone||0) + '/3 · 练习 ' + goal.done + '/' + goal.total)));
     }
-    if (vm.forestGoal) {
-        const { phase, goal } = vm.forestGoal;
-        tracker.append(
-            el(
-                'div',
-                'tracker-tactics-goal forest-tracker',
-                button(phase === 'offer' ? '森林委托 · 营地急件' : '森林委托 · ' + goal.label, () => cb.panel('forest-commission'), 'tracker-tactics'),
-            ),
-        );
-    }
+    appendForestTracker(tracker, vm.forestGoal, cb);
     root.append(tracker);
     const nav = el('nav', 'game-nav');
     nav.setAttribute('aria-label', '游戏菜单');
@@ -536,7 +537,7 @@ function renderHudContents(root, model, cb) {
     root.append(interaction);
 }
 
-export function updateLocationLabel(hud, world, save, regionName = '') {
+export function updateLocationLabel(hud, world, save, regionName = '', destination = null) {
     if (!hud) return;
     if (world?.isEarth) {
         const location = hud.querySelector('.location-label span');
@@ -544,8 +545,10 @@ export function updateLocationLabel(hud, world, save, regionName = '') {
     }
     if (world?.layout) {
         const label = hud.querySelector('.location-label small');
-        const name = regionName || '新的故事，在这里继续';
-        if (label && label.dataset.zh !== name) setText(label, name);
+        const targetName = typeof destination?.name === 'string' ? destination.name.trim() : '';
+        const pattern = destination ? targetName ? '正在前往{name}' : '正在前往目的地' : regionName || '新的故事，在这里继续';
+        const name = targetName ? fill(pattern, { name: targetName }).zh : pattern;
+        if (label && label.dataset.zh !== name) setText(label, pattern, targetName ? { name: targetName } : undefined);
     }
 }
 

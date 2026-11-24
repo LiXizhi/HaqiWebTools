@@ -24,6 +24,13 @@ function absorbReward(target,event){
 }
 export function createRewardFeedback(root,{describe,activate,showBanner=true,onBurst=()=>{}}) {
     const queue=[];let active=null,shown=null,started=0,lastTick=null;
+    const handled=new Set();
+    function hasPendingItems(){return !!active?.items.length||queue.some(event=>event.items.some(actionable));}
+    function notifyHandled(){
+        if(hasPendingItems())return;
+        const callbacks=[...handled];handled.clear();
+        for(const callback of callbacks)callback();
+    }
     const banner=document.createElement('div');banner.className='reward-banner';banner.setAttribute('role','status');
     const popup=document.createElement('section');popup.className='reward-popup';popup.hidden=true;popup.setAttribute('aria-label',tr('新获得的物品'));
     const announcement=document.createElement('p');announcement.className='dialogue-sr';announcement.setAttribute('role','status');root.append(banner,popup,announcement);root.hidden=true;
@@ -72,12 +79,16 @@ export function createRewardFeedback(root,{describe,activate,showBanner=true,onB
         }
         popup.append(use,skip);
     }
-    function next(){active.items.shift();paint();}
+    function next(){active.items.shift();paint();notifyHandled();}
     function actionable(item){return item.kind==='honor'||item.kind==='dictionary'||item.gear||item.kind==='card'||item.kind==='pet';}
     return {
-        get hasPendingItems(){return !!active?.items.length||queue.some(event=>event.items.some(actionable));},
+        get hasPendingItems(){return hasPendingItems();},
+        afterItemsHandled(callback){
+            if(!hasPendingItems()){callback();return ()=>{};}
+            handled.add(callback);return ()=>handled.delete(callback);
+        },
         push(event){if(event.xp||event.level||event.items.length)queue.push({...event,items:[...event.items]});},
-        reset(){announcement.textContent='';queue.length=0;shown=null;dismiss();root.hidden=true;banner.replaceChildren();banner.classList.remove('reward-stack-dense');lastTick=null;},
+        reset(){handled.clear();announcement.textContent='';queue.length=0;shown=null;dismiss();root.hidden=true;banner.replaceChildren();banner.classList.remove('reward-stack-dense');lastTick=null;},
         tick(now,visible){
             if(!visible&&active&&lastTick!==null)started+=now-lastTick;
             lastTick=now;root.hidden=!visible;if(!visible)return null;

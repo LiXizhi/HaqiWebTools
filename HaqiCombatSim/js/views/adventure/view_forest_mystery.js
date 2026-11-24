@@ -1,9 +1,10 @@
 import {el,button} from './primitives.js';
+import {fill,setText} from '../../locale_runtime.js';
 import {forestMysteryStage,forestMysteryOrderCorrect,FOREST_MYSTERY_EVENTS,FOREST_MYSTERY_OBSERVATIONS} from '../../forest_mystery_core.js';
 
 export function renderForestMysteryJournal(body,m){
- const notes=el('details','forest-help');notes.append(el('summary','',`调查袋 · ${m.observed.length}/4 件物证`));
- for(const id of m.observed){const row=FOREST_MYSTERY_OBSERVATIONS[id];notes.append(el('p','',el('strong','',row.name+'：'),row.text));}
+ const notes=el('details','forest-help');notes.append(setText(el('summary'),'调查袋 · {count}/4 件物证',{count:m.observed.length}));
+ for(const id of m.observed){const row=FOREST_MYSTERY_OBSERVATIONS[id];notes.append(el('p','',setText(el('strong'),'{name}：',{name:row.name}),row.text));}
  if(m.witness)notes.append(el('p','','莫尼的证词：灯暗了，先出门查看；回程捡到草地上的靴子，放回帐篷。补给单也淋湿了。他以为放回去就好了，没有说一声。'));
  if(m.status==='solved')notes.append(el('p','','核对后的经过：巡夜灯变暗 → 莫尼出门查看 → 回程捡到靴子 → 放回帐篷，没有通知茜茜。'));
  body.append(notes);
@@ -26,7 +27,8 @@ export function renderForestMystery(body,actions,model,cb,illustration){
   const objects=el('div','forest-mystery-objects');
   for(const [id,label] of stage==='tent'?[['grass','查看泥里的草屑'],['paper','翻看湿补给单'],['hat','看看干帽子']]:[['tracks','沿着脚印观察'],['lamp','检查灯柄'],['bush','翻看灌木叶下']]){
    const found=m.observed.includes(id);
-   const inspect=button(found?'已记录 · '+label:label,()=>cb.action({step:'mystery-inspect',object:id}),'secondary');
+   const inspect=button(label,()=>cb.action({step:'mystery-inspect',object:id}),'secondary');
+   if(found)setText(inspect,'已记录 · {label}',{label});
    inspect.setAttribute('aria-pressed',String(found));objects.append(inspect);
   }
   scene.append(objects);body.append(scene);
@@ -45,10 +47,10 @@ export function renderForestMystery(body,actions,model,cb,illustration){
      const move=button(label,()=>{
       const next=index+delta;if(next<0||next>=order.length)return;
       [order[index],order[next]]=[order[next],order[index]];draw();
-      status.textContent=`已把“${describe(id)}”移到第 ${next+1} 步。`;
+      setText(status,'已把“{event}”移到第 {step} 步。',{event:describe(id),step:next+1});
       list.children[next]?.querySelector('button:not(:disabled)')?.focus({preventScroll:true});
      },'secondary');
-     move.disabled=index+delta<0||index+delta>=order.length;move.setAttribute('aria-label',`${describe(id)}，${label}`);controls.append(move);
+     move.disabled=index+delta<0||index+delta>=order.length;move.setAttribute('aria-label',fill('{event}，{action}',{event:describe(id),action:label}).text);controls.append(move);
     }
     row.append(controls);list.append(row);
    });
@@ -57,10 +59,10 @@ export function renderForestMystery(body,actions,model,cb,illustration){
   const endings=el('div','forest-mystery-endings'),choices=[];let ending=null,busy=false;
   const submit=button('把经过讲给茜茜听',()=>{
    if(!ending||busy)return;
-   if(!forestMysteryOrderCorrect(order)){status.textContent='茜茜：莫尼先去查看灯，回程才看见草地上的靴子。把这两步挪到前面，再试一次。';return;}
+   if(!forestMysteryOrderCorrect(order)){setText(status,'茜茜：莫尼先去查看灯，回程才看见草地上的靴子。把这两步挪到前面，再试一次。');return;}
    busy=true;submit.disabled=true;
    let pending;try{pending=cb.action({step:'mystery-solve',order:[...order],ending});}catch(error){pending=Promise.reject(error);}
-   Promise.resolve(pending).then(result=>{if(result===false)status.textContent='这次经过没有保存，可以重试。';}).catch(()=>{status.textContent='这次经过没有保存，可以重试。';}).finally(()=>{busy=false;submit.disabled=!ending;});
+   Promise.resolve(pending).then(result=>{if(result===false)setText(status,'这次经过没有保存，可以重试。');}).catch(()=>{setText(status,'这次经过没有保存，可以重试。');}).finally(()=>{busy=false;submit.disabled=!ending;});
   },'primary');submit.disabled=true;
   body.append(el('p','','以后送补给，你们准备怎么做？'));
   for(const [id,label] of [['sign','移动补给后，留下位置便签'],['pair','结伴送达，当面告诉对方']]){

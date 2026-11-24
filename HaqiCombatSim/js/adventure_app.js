@@ -96,7 +96,7 @@ function attachMapServers(){
 const autoSave=createAutoSave({
     eligible:()=>roleCloud.canAutoSave(),
     save:async()=>{roles.busy='正在自动保存…';try{persist();if(state.storageWarning)throw Error('本地存档失败，云端同步已暂停');await syncRoles();cloud.error='';}finally{roles.busy='';}},
-    onError:error=>{if(cloud.error!==error.message)toast('云存档暂未完成，本地进度已保留，将自动重试。');cloud.error=error.message;},
+    onError:error=>{if(cloud.error!==error.message)toast(state.storageWarning?'进度未能保存，可能是其他页面已更新。请勿关闭页面，检查存储后重试。':'云存档暂未完成，本地进度已保留，将自动重试。');cloud.error=error.message;},
 });
 function queueCloudSave(){autoSave.request();}
 
@@ -272,7 +272,7 @@ const sceneFishing=createSceneFishing(nodes.world.parentElement,{
 // HUD refresh resets steering to zero; only actual movement may dismiss a conversation.
 const touchMovement=bindTouchMovement(nodes.world,touchIndicator,{
     enabled:()=>state.stage==='world'&&!state.panel&&!state.dialog&&!languageAdventure.active,
-    steer:(x,y)=>{state.joystick={x,y};if(!x&&!y)return;languageAdventure.close();state.talkApproach=null;state.path=[];state.destination=null;state.heldPointer=null;},
+    steer:(x,y)=>{state.joystick={x,y};if(!x&&!y)return;heroNavigation.cancel();questDialogue.cancelRewardFollow();languageAdventure.close();state.talkApproach=null;state.path=[];state.destination=null;state.heldPointer=null;},
     zoom:factor=>state.renderer?.zoomBy(factor),
     tap:(x,y)=>clickWorld(x,y),
 });
@@ -308,6 +308,7 @@ const islandSocial=createIslandSocial({
 
 const localPlay=createLocalPlay({
     state:()=>({save:state.save,world:state.world,battle:state.battle,stage:state.stage,assets:state.assets,store:state.roleStore,settings:gameSettings.value,renderer:state.renderer,animating:!!state.animation,battleRoot:nodes.battle,globalPaused:!!state.panel||!!state.dialog||document.hidden||characterChat.active||getSecondCharacterChat()?.active||languageAdventure.active}),
+    onLeaderMovementIntent:()=>{heroNavigation.cancel();questDialogue.cancelRewardFollow();state.path=[];state.destination=null;state.heldPointer=null;},
     control:(...args)=>controllerAction(...args),model:()=>model(),replaceSave:value=>{state.save=value;},activate:activateRole,toast,paintHud:()=>paintHud(),track:(...args)=>track(...args),travel,interact:(...args)=>interact(...args),sound:()=>toggleSound(),login:()=>void loginRoles(),mapDialogue,
     loadPetFile:(roleId,filePath)=>state.cloudClient.petFile(roleId,filePath),
     onCoreChange:()=>{persist();queueCloudSave();},
@@ -502,6 +503,7 @@ bus.on('rewards:show',({before,actionType}={})=>showRewards(before,actionType));
 
 const worldInteraction=createWorldInteractionController({
     nodes,getContext,services,bus,
+    onMovementIntent:()=>questDialogue.cancelRewardFollow(),
     model:()=>model(),
     playRound:(decision,readyAnalysis)=>playRound(decision,readyAnalysis),
     tickAnimation:now=>tickAnimation(now),

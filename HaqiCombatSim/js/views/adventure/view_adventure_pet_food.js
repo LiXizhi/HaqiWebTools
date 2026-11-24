@@ -19,7 +19,7 @@ export function renderPetFood(parent,model,cb,{el,button,art}){
   if(current){
    dialog.body.append(el('p','',fill(`槽内：{v0} × {v1}`,{v0:String(c.items[current.itemId].name),v1:String(current.count)}).text));
    const hungry=manualFoodCandidate(save);
-   if(hungry)dialog.footer.append(button('喂养'+c.pets[hungry[1].speciesId].name,()=>{dialog.close();cb.action({type:'pet-food-feed',slot:index,petId:hungry[0]});},'primary'));
+   if(hungry)dialog.footer.append(button(fill('喂{pet}一份口粮',{pet:c.pets[hungry[1].speciesId].name}).text,()=>{dialog.close();cb.action({type:'pet-food-feed',slot:index,petId:hungry[0]});},'primary'));
    dialog.footer.append(button('全部取回背包',()=>{dialog.close();cb.action({type:'pet-food-take',slot:index});},'secondary'));
   }
   for(const id of ids){

@@ -54,16 +54,43 @@ export function createQuestDialogueController({
     onTrack,
     onStartLines,
 }) {
+    let cancelPendingFollow = () => {};
+
+    function cancelRewardFollow() {
+        cancelPendingFollow();
+        cancelPendingFollow = () => {};
+    }
+
+    function trackedIds(ctx) {
+        const content = ctx.assets.content;
+        return trackedQuestIdsFn(ctx.save, content).filter(
+            id => content.quests.some(quest => quest.id === id) || content.catalogQuests?.byId[id],
+        );
+    }
+
     function finishTrackedDialogue() {
         const ctx = getContext();
         if (!ctx.dialog?.fromQuestTracking) return false;
+        cancelRewardFollow();
         close();
-        if (rewardFeedback.hasPendingItems) return true;
-        const content = ctx.assets.content;
-        const ids = trackedQuestIdsFn(ctx.save, content).filter(
-            id => content.quests.some(quest => quest.id === id) || content.catalogQuests?.byId[id],
-        );
-        if (ids.length === 1) (onTrack || track)(ids[0], { pin: false });
+        const ids = trackedIds(ctx);
+        if (ids.length !== 1) return true;
+        if (!rewardFeedback.hasPendingItems) {
+            (onTrack || track)(ids[0], { pin: false });
+            return true;
+        }
+        const { save, roleEpoch } = ctx;
+        const zone = save.zone;
+        const position = save.position && { ...save.position };
+        cancelPendingFollow = rewardFeedback.afterItemsHandled?.(() => {
+            cancelPendingFollow = () => {};
+            const latest = getContext();
+            if (latest.save !== save || latest.roleEpoch !== roleEpoch || latest.stage !== 'world'
+                || latest.panel || latest.dialog || save.zone !== zone || latest.destination || latest.path?.length
+                || (position && (save.position?.x !== position.x || save.position?.y !== position.y))) return;
+            const currentIds = trackedIds(latest);
+            if (currentIds.length === 1 && currentIds[0] === ids[0]) (onTrack || track)(ids[0], { pin: false });
+        }) || (() => {});
         return true;
     }
 
@@ -165,6 +192,7 @@ export function createQuestDialogueController({
     }
 
     function startLines(lines, finishLabel, done, preserveReply = false) {
+        cancelRewardFollow();
         const ctx = getContext();
         ctx.dialog.lines = lines;
         ctx.dialog.index = 0;
@@ -289,6 +317,7 @@ export function createQuestDialogueController({
     }
 
     function untrack(questId) {
+        cancelRewardFollow();
         safely(() => {
             const { save, assets } = getContext();
             A.applyAction(save, assets.content, { type: 'track-catalog', questId: questId ?? null, remove: questId != null });
@@ -405,6 +434,7 @@ export function createQuestDialogueController({
     }
 
     function track(questId, options = {}) {
+        cancelRewardFollow();
         const ctx = getContext();
         if (ctx.stage !== 'world') return;
         if (questId === 'dungeon-next') {
@@ -504,6 +534,7 @@ export function createQuestDialogueController({
     }
 
     return {
+        cancelRewardFollow,
         finishTrackedDialogue,
         questStartPresentation,
         paintDialogue,

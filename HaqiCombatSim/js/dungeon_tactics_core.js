@@ -1,4 +1,5 @@
 import {isAttackCard} from './combat_cards_core.js';
+import {canEquip} from './adventure_deck_core.js';
 // Authored Web challenge arrangements. Exported monster data and old checkpoints stay intact.
 const PROFILES={
  'journey:first-watch':{version:2,recommendedLevel:5,companionSlots:2,title:'四波巡夜，四种应对',roles:['charger'],waves:[
@@ -74,22 +75,25 @@ export function dungeonTacticsPreparation(save,content,dungeon,player={deck:save
  const profile=dungeonTacticsProfile(dungeon);if(!profile)return null;
  const recommendedLevel=profile.recommendedLevel||dungeon.recommendedLevel;
  const belowLevel=(save.level||1)<recommendedLevel;
- const lines=[`当前 ${save.level||1} 级，建议 ${recommendedLevel} 级。${belowLevel?'可以先做岛上任务升级，再来挑战。':'等级建议已达到，仍需留意卡组和生命。'}`];
- if(profile.preparation)lines.push(profile.preparation);
+ const messages=[{source:belowLevel?'当前 {level} 级，建议 {recommendedLevel} 级。可以先做岛上任务升级，再来挑战。':'当前 {level} 级，建议 {recommendedLevel} 级。等级建议已达到，仍需留意卡组和生命。',vars:{level:save.level||1,recommendedLevel}}];
+ if(profile.preparation)messages.push(profile.preparation);
  const school=save.school[0].toUpperCase()+save.school.slice(1);
  let missing=belowLevel;
  for(const [suffix,label]of [['Blade','强化术'],['Trap','陷阱']]){
   const key=`${school}_${school}Damage${suffix}`,lesson=content.learn?.[save.school]?.find(row=>row.key===key);
   const learned=save.cards?.[key]>0,fixed=player.fixedCards?.some(row=>row.key===key&&row.count>0),equipped=player.deck?.some(row=>row.key===key&&row.count>0);
-  if(fixed)lines.push(label+'由当前装备附带，已可在战斗中抽到；配合相同学派的攻击使用。');
-  else if(equipped)lines.push(label+'已装入当前卡组；配合相同学派的攻击使用。');
-  else if(learned){missing=true;lines.push(label+'已学会，尚未装入当前卡组；可到卡组中加入。');}
-  else {missing=true;lines.push(label+'尚未学会'+(lesson?`，本学派 ${lesson.level} 级解锁`:'')+'；课堂借用的卡牌不会带出课堂。');}
+  if(fixed)messages.push({source:'{card}由当前装备附带，已可在战斗中抽到；配合相同学派的攻击使用。',vars:{card:label}});
+  else if(equipped)messages.push({source:'{card}已装入当前卡组；配合相同学派的攻击使用。',vars:{card:label}});
+  else if(learned){missing=true;messages.push({source:'{card}已学会，尚未装入当前卡组；可到卡组中加入。',vars:{card:label}});}
+  else if(Object.values(content.items||{}).some(item=>canEquip(save,item,content)&&[139,140,141].some(id=>content.cardItems?.[item.stats?.[id]]===key))){missing=true;messages.push({source:'{card}可由已拥有的装备附带；到背包比较并穿戴后，即可在战斗中抽到。',vars:{card:label}});}
+  else {missing=true;messages.push(lesson?{source:'{card}尚未学会，本学派 {level} 级解锁；课堂借用的卡牌不会带出课堂。',vars:{card:label,level:lesson.level}}:{source:'{card}尚未学会；课堂借用的卡牌不会带出课堂。',vars:{card:label}});}
  }
  const recovery='副本内不会自动恢复生命；可先离开副本，在岛上休息恢复，再进入继续已有进度。';
- if(save.heroHp!==null&&save.heroHp!==undefined)lines.push(`当前主角生命 ${Math.floor(save.heroHp)}；`+recovery);
- else lines.push(recovery);
- return {recommendedLevel,missing,lines};
+ if(save.heroHp!==null&&save.heroHp!==undefined)messages.push({source:'当前主角生命 {hp}；'+recovery,vars:{hp:Math.floor(save.heroHp)}});
+ else messages.push(recovery);
+ if((save.formation||[]).some(id=>id&&save.pets?.[id]?.hunger===0))messages.push('伙伴需有饱食才会恢复生命；饱食耗尽时，可在伙伴面板放入口粮，或先移出阵位休息恢复饱食。');
+ const lines=messages.map(message=>typeof message==='string'?message:message.source.replace(/\{(\w+)\}/g,(_,key)=>String(message.vars[key])));
+ return {recommendedLevel,missing,lines,messages};
 }
 export function dungeonTacticsMonsters(templates,checkpoint){
  if(checkpoint.dungeonTacticsVersion===3){

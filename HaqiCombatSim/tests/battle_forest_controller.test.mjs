@@ -7,6 +7,7 @@ import * as W from '../js/adventure_world_core.js';
 import {persistReward} from '../js/adventure_reward_persistence.js';
 import {forestCommissionPhase,FOREST_NPCS,FOREST_SITES,FOREST_PATROL_DUNGEON} from '../js/forest_commission_core.js';
 import {createOpeningController} from '../js/adventure/opening_controller.js';
+import {forestExchangeLines} from '../js/forest_exchange_core.js';
 
 const read=file=>JSON.parse(fs.readFileSync(new URL('../data/'+file,import.meta.url)));
 const content=read('adventure/chapter.json');
@@ -84,6 +85,25 @@ test('a failed delivery write preserves the carried object and retry grants the 
  assert.equal(forestCommissionPhase(A.parseSave(h.stored(),content)),'note');
 });
 
+test('route-note exchange survives the real controller persistence boundary before briefing',()=>{
+ const h=harness();h.ctx.save.languageLearning={target:'en'};
+ h.arrive().action({step:'accept'});h.arrive().action({step:'take-boots',object:'boots'});
+ h.arrive().action({step:'deliver'});h.arrive().action({step:'take-note',revealed:true});h.arrive();
+ const exchange={step:'exchange',word:'note',language:'en',input:'text',text:'Here is the note.',learning:{at:2345,attempts:2,assisted:true}};
+ const before=JSON.stringify(h.ctx.save);h.fail(true);
+ assert.equal(h.cb().action(exchange),false);assert.equal(JSON.stringify(h.ctx.save),before);
+ h.fail(false);h.cb().action(exchange);
+ let restored=A.parseSave(h.stored(),content);assert.equal(forestCommissionPhase(restored),'briefing');
+ assert.deepEqual(restored.forestCommission.exchangeCompleted,['note']);
+ assert.equal(restored.forestCommission.exchangePractice[0].word,'note');
+ h.ctx.save=restored;h.ctx.world=W.createWorld('camp',content,restored);h.arrive();
+ const handedOver=JSON.stringify(h.ctx.save);assert.equal(h.cb().action(exchange),false);
+ assert.equal(JSON.stringify(h.ctx.save),handedOver);
+ h.cb().action({step:'brief',tactic:'focus',recalled:'boots',learning:{at:3456,attempts:1,assisted:false}});
+ restored=A.parseSave(h.stored(),content);assert.equal(forestCommissionPhase(restored),'patrol');
+ assert.deepEqual(restored.forestCommission.exchangeCompleted,['note']);assert.equal(restored.inventory[1260],1);
+});
+
 test('outside the camp the same saved quest offers return travel, and onboarding closes the panel',()=>{
  const h=harness();h.ctx.save.zone='earth';h.paint();assert.equal(h.view().nearby,false);
  h.cb().go();assert.equal(h.calls.at(-2).panel,'worldmap');assert.match(h.calls.at(-1).toast,/回营地/);
@@ -113,4 +133,34 @@ test('forest controller cancels recording before a spoken hint and releases it o
  h.overlay.disposeForestCommission=()=>{disposed++;recorder.dispose();};
  await cb.listen('Here are the boots.','en');assert.ok(stops>0);
  h.ctrl.closeAll();assert.equal(disposed,1);
+});
+
+for(const language of ['en','ja','ko','zh-CN'])test(`${language}: note controller retries a failed save and retains the original receipt across target switches`,()=>{
+ const h=harness();h.ctx.save.languageLearning={target:language};
+ h.arrive().action({step:'accept'});h.arrive().action({step:'take-boots',object:'boots'});
+ h.arrive().action({step:'deliver'});h.arrive().action({step:'take-note',revealed:true});h.arrive();
+ const value={step:'exchange',word:'note',language,input:'speech',text:forestExchangeLines(h.ctx.save,'note')[0],learning:{at:2345,attempts:2,assisted:true}};
+ const before=JSON.stringify(h.ctx.save);h.fail(true);
+ assert.equal(h.cb().action(value),false);assert.equal(JSON.stringify(h.ctx.save),before);
+ h.fail(false);h.cb().action(value);
+ assert.deepEqual(h.ctx.save.forestCommission.exchangeCompleted,['note']);
+ const receipt=structuredClone(h.ctx.save.forestCommission.exchangePractice);
+ assert.equal(receipt.length,1);assert.equal(receipt[0].language,language);assert.equal(receipt[0].input,'speech');
+ for(const next of ['en','ja','ko','zh-CN'].filter(next=>next!==language)){
+  h.ctx.save.languageLearning.target=next;h.arrive();
+  const switched=JSON.stringify(h.ctx.save);
+  assert.equal(h.cb().action({...value,language:next,text:forestExchangeLines(h.ctx.save,'note')[0]}),false);
+  assert.equal(JSON.stringify(h.ctx.save),switched);assert.deepEqual(h.ctx.save.forestCommission.exchangePractice,receipt);
+ }
+});
+
+for(const language of ['en','ja','ko','zh-CN'])test(`${language}: a pre-switch note submission cannot commit against the new learning language`,()=>{
+ const h=harness();h.ctx.save.languageLearning={target:language};
+ h.arrive().action({step:'accept'});h.arrive().action({step:'take-boots',object:'boots'});
+ h.arrive().action({step:'deliver'});h.arrive().action({step:'take-note',revealed:true});
+ const stale=h.arrive(),text=forestExchangeLines(h.ctx.save,'note')[0];
+ h.ctx.save.languageLearning.target=language==='en'?'ja':'en';
+ const before=JSON.stringify(h.ctx.save);
+ assert.equal(stale.action({step:'exchange',word:'note',language,input:'text',text,learning:{at:2345,attempts:1,assisted:false}}),false);
+ assert.equal(JSON.stringify(h.ctx.save),before);
 });

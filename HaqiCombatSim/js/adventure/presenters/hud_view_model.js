@@ -153,7 +153,7 @@ export function buildHudTrackerViewModel(model) {
         && !model.localSecond
         && forestCommissionAvailable(save)
         && !campDetourGoal(save)
-        && forestCommissionPhase(save) !== 'done';
+        && (forestCommissionPhase(save) !== 'done' || save.forestCommission?.mystery?.status !== 'solved');
     const forestGoal = forestAvailable
         ? { phase: forestCommissionPhase(save), goal: forestCommissionGoal(save) }
         : null;

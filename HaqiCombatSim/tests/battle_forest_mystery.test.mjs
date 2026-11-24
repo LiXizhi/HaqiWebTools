@@ -25,6 +25,19 @@ function evidence(save,route='tracks'){
 }
 const solution={order:['dim','find','return'],ending:'sign'};
 
+test('completed patrols invite the unresolved investigation, then keep active evidence goals and solved records',()=>{
+ const save=fresh(),before=structuredClone(save);
+ assert.equal(forestCommissionGoal(save).id,FOREST_NPCS.receiver);
+ assert.match(forestCommissionGoal(save).label,/草屑与脚印/);assert.match(forestCommissionGoal(save).hint,/补给的经过还没查清/);
+ assert.deepEqual(save,before);
+ act(save,'mystery-start');assert.equal(forestCommissionPhase(save),'investigation');
+ assert.equal(forestCommissionGoal(save).id,FOREST_SITES.boots);
+ evidence(save);act(save,'mystery-question');act(save,'mystery-solve',solution);
+ const restored=A.parseSave(JSON.stringify(save),content);
+ assert.equal(forestCommissionPhase(restored),'done');assert.equal(forestCommissionGoal(restored).label,'营地急件已完成');
+ assert.match(forestCommissionGoal(restored).hint,/巡逻记录/);
+});
+
 for(const route of ['tracks','light'])test(`${route} proposal changes the first physical investigation and survives pause/load`,()=>{
  const save=fresh(route),rewards=structuredClone(save.inventory);
  act(save,'mystery-start');

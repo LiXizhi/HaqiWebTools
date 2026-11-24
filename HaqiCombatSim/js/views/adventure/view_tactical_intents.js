@@ -1,4 +1,5 @@
 import { tacticalClue } from '../../tactical_clue_core.js';
+import {setText} from '../../locale_runtime.js';
 import { button, el } from './primitives.js';
 
 export function describeIntent(battle, row, short) {
@@ -78,13 +79,14 @@ function clueForm(battle, save, answer, memory) {
     submit.type = 'submit';
     const sentence = el('q', '', clue.sentence);
     sentence.lang = clue.language;
-    const form = el('form', 'tactical-clue', sentence,
-        el('label', '', '找出口令里表示“' + clue.meaning + '”的词', input), submit, feedback);
+    const label = setText(el('label'), '找出口令里表示“{meaning}”的词', {meaning:clue.meaning});
+    label.append(input);
+    const form = el('form', 'tactical-clue', sentence, label, submit, feedback);
     form.onsubmit = async event => {
         event.preventDefault();
         if (submit.disabled || !input.value.trim()) return;
         submit.disabled = true;
-        try { feedback.textContent = memory.feedback = await answer(input.value); }
+        try { memory.feedback = await answer(input.value);setText(feedback,memory.feedback); }
         finally { submit.disabled = false; }
     };
     return form;

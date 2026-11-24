@@ -1,0 +1,936 @@
+<!doctype html>
+<!-- Hand-authored story for 小 (xiao). Standalone single-file H5 animation. -->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#18293a">
+<title>小 xiǎo · 萤点微光聚溪畔</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --silk:#efe5d0;--ink:#202326;--brook:#18293a;--gold:#f2d272;--cinnabar:#b94534;--cream:#f9f6ee;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun","WenQuanYi Micro Hei",serif;
+  --kai:"Kaiti SC","STKaiti","KaiTi","BiauKai","Kaiti TC","WenQuanYi Micro Hei",var(--serif);
+}
+html,body{margin:0;height:100%;overflow:hidden;background:#18293a}
+body{color:var(--cream);font-family:var(--serif);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+button{font:inherit;touch-action:manipulation}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+#view{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+body.act #view{cursor:pointer}
+body.trace #view{cursor:crosshair}
+#brand{position:fixed;left:max(16px,env(safe-area-inset-left));top:max(14px,env(safe-area-inset-top));display:flex;align-items:center;gap:10px;
+  font-family:var(--kai);font-size:14px;letter-spacing:.22em;color:#f2efe4;z-index:8;pointer-events:none;opacity:.94}
+#brand .seal{background:var(--cinnabar);color:#fbf4e6;border-radius:3px;padding:5px 5px 4px;font-size:15px;line-height:1;letter-spacing:0}
+#progress{position:fixed;top:max(16px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:flex;list-style:none;
+  margin:0;padding:0;gap:clamp(8px,1.8vw,22px);z-index:10;opacity:0;transition:opacity .8s;pointer-events:none}
+#progress::before{content:"";position:absolute;top:2.5px;left:12px;right:12px;height:1px;background:rgba(249,246,238,.28)}
+body.started #progress{opacity:1}
+#progress li{position:relative;font-family:var(--kai);font-size:13px;color:rgba(242,239,228,.72);letter-spacing:.08em;padding-top:12px;white-space:nowrap}
+#progress li::before{content:"";position:absolute;top:0;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:rgba(226,222,208,.42)}
+#progress li.done{color:#ece6d4}#progress li.done::before{background:#cbb066}
+#progress li.on{color:#fffcf2}#progress li.on::before{background:var(--gold);transform:scale(1.6)}
+#controls{position:fixed;right:max(14px,env(safe-area-inset-right));top:max(12px,env(safe-area-inset-top));display:flex;gap:8px;z-index:12;opacity:0;pointer-events:none;transition:opacity .6s}
+body.started #controls{opacity:1;pointer-events:auto}
+#controls button{font-family:var(--kai);font-size:14px;letter-spacing:.16em;color:#f9f6ee;background:rgba(18,34,48,.74);
+  border:1px solid rgba(242,210,114,.54);border-radius:4px;padding:7px 12px;cursor:pointer;min-height:36px}
+#hint{position:fixed;left:16px;right:16px;margin:0 auto;width:fit-content;max-width:calc(100vw - 32px);box-sizing:border-box;
+  top:max(58px,calc(env(safe-area-inset-top) + 46px));text-align:center;color:#f9f5ea;opacity:0;transition:opacity .45s;pointer-events:none;z-index:9;
+  padding:7px 20px 8px;border:1px solid rgba(242,210,114,.64);border-radius:22px;background:rgba(16,30,44,.82)}
+#hint span{font-family:var(--kai);font-size:clamp(16px,2.3vh,20px);letter-spacing:.1em}
+#hint.on{opacity:1}
+#caption{position:fixed;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translate(-50%,10px);
+  width:min(900px,calc(100vw - 24px));box-sizing:border-box;text-align:center;opacity:0;
+  transition:opacity .5s,transform .7s cubic-bezier(.2,.7,.2,1);pointer-events:none;z-index:6;padding:20px 22px 13px;
+  background:linear-gradient(to top,rgba(14,26,38,.92) 40%,rgba(14,26,38,.66) 70%,rgba(14,26,38,0) 100%)}
+body.paper #caption{background:radial-gradient(ellipse at center,rgba(248,239,222,.95) 42%,rgba(248,239,222,0) 74%)}
+#caption.on{opacity:1;transform:translate(-50%,0)}
+#capTitle{margin:0 0 7px;font-weight:400;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.38em;margin-left:.38em;color:var(--gold)}
+body.paper #capTitle{color:var(--cinnabar)}
+#capText{margin:0;font-family:var(--kai);font-size:clamp(18px,calc(1vw + 1.55vh),27px);line-height:1.68;color:var(--cream);letter-spacing:.06em;min-height:1.68em}
+body.paper #capText{color:var(--ink)}
+.haqi-sub-trans{display:block;margin-top:4px;font-family:Georgia,"Times New Roman",system-ui,sans-serif;font-size:clamp(13px,1.8vh,17px);line-height:1.45;color:#dde4ea}
+body.paper .haqi-sub-trans{color:#5e5342}
+.actions{display:flex;justify-content:center;gap:10px;margin-top:10px}
+.actions button{pointer-events:auto;cursor:pointer;font-family:var(--kai);letter-spacing:.2em;border-radius:4px;min-height:44px}
+#action{font-size:18px;padding:9px 22px;color:#182634;border:1px solid #fcf5e0;background:linear-gradient(#fcf0c8,#f2d272)}
+#demo{font-size:16px;padding:8px 16px;color:var(--ink);background:rgba(248,241,226,.92);border:1px solid rgba(32,35,38,.35)}
+[hidden]{display:none!important}
+#intro{position:fixed;inset:0;z-index:20;pointer-events:none;transition:opacity 1s,transform 1s}
+#intro.off{opacity:0;transform:scale(1.03)}
+#intro.off *{pointer-events:none!important}
+.introTop,.introBottom{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
+.introTop{top:max(18px,env(safe-area-inset-top))}
+.introBottom{bottom:max(12px,env(safe-area-inset-bottom));gap:8px;left:50%;right:auto;width:min(100%,660px);transform:translateX(-50%);box-sizing:border-box;
+  padding-top:34px;background:linear-gradient(to top,rgba(14,26,38,.93) 44%,rgba(14,26,38,.58) 72%,rgba(14,26,38,0) 100%)}
+.tag{display:flex;align-items:center;gap:10px;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.28em;color:var(--gold)}
+.tag i{display:block;width:clamp(22px,5vw,56px);height:1px;background:currentColor;opacity:.72}
+.pinyin{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:clamp(30px,5.2vh,46px);line-height:1;color:var(--cream)}
+.mean{font-family:var(--kai);font-size:clamp(17px,2.5vh,22px);letter-spacing:.18em;color:#fff9ec}
+.sub{font-family:var(--kai);font-size:clamp(15px,2.1vh,18px);color:#dee3e8;letter-spacing:.12em;margin:2px 0 0;line-height:1.7}
+.btn-main{pointer-events:auto;margin-top:8px;font-family:var(--kai);font-size:clamp(18px,2.6vh,22px);letter-spacing:.38em;padding:10px 28px 10px 34px;min-height:44px;
+  color:#182634;background:linear-gradient(#fdf2ce,#f2d272);border:1px solid #fff9ea;border-radius:4px;cursor:pointer}
+.meta{font-size:12px;color:#cdd4da;letter-spacing:.12em;margin:0}
+#note{position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom));font-size:11px;color:rgba(228,234,238,.78);letter-spacing:.08em;z-index:4;pointer-events:none}
+body.paper #note{color:#867c6a}
+body.portrait #brand,body.portrait #note{display:none}
+body.portrait #progress{top:max(8px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left));right:138px;width:auto;transform:none;justify-content:space-between;gap:0}
+body.portrait #progress li{font-size:10px;letter-spacing:0}
+@media (max-height:540px){.sub,.meta{display:none}#capText{font-size:16px}#caption{padding:8px 12px 6px}.actions{margin-top:4px}}
+</style>
+<script>
+// Haqi H5 protocol v1: independent pages remain usable without a parent.
+(()=>{let context=null,written=false,finished=false,serial=0;const callbacks=new Map(),subCache=new Map(),uiCache=new Map(),pending=new Set(),uiNodes=new Map();
+const isZh=loc=>!loc||/^zh\b/i.test(loc);
+const send=data=>{if(context)parent.postMessage({channel:'haqi-hanzi',version:1,entryId:context.entryId,sessionId:context.sessionId,...data},context.origin);};
+const refreshDom=()=>{for(const[el,zh]of uiNodes){if(!el?.isConnected){uiNodes.delete(el);continue;}const tr=!isZh(context?.locale)&&uiCache.get(zh);const next=(tr&&tr!==zh)?tr:zh;if(el.dataset.haqiKind==='seal'){const seal=el.querySelector('.seal');el.textContent=next;if(seal)el.prepend(seal);}else if(el.dataset.haqiKind==='tag'){const i1=document.createElement('i'),i2=document.createElement('i');el.replaceChildren(i1,document.createTextNode(next),i2);}else el.textContent=next;}document.querySelectorAll('[data-haqi-caption]').forEach(el=>renderCaption(el,el.dataset.haqiCaption));};
+const flushPending=()=>{if(!context||!pending.size)return;const texts=[...pending];pending.clear();window.haqiHanziTranslate(texts);};
+const ensureTexts=texts=>{const need=[];for(const t of texts){const s=typeof t==='string'?t.trim():'';if(s&&(!subCache.has(s)||!uiCache.has(s))&&!pending.has(s)){pending.add(s);need.push(s);}}if(need.length&&context)flushPending();};
+const renderCaption=(el,zh)=>{if(!el)return;el.dataset.haqiCaption=zh||'';let sub=el.querySelector('.haqi-sub-trans');if(!zh||isZh(context?.subtitleLocale||context?.locale)){sub?.remove();return;}const tr=subCache.get(zh);if(!tr||tr===zh){sub?.remove();ensureTexts([zh]);return;}if(!sub){sub=document.createElement('span');sub.className='haqi-sub-trans';const host=el.querySelector('#capText')||el;if(host!==el&&host.parentNode===el)host.insertAdjacentElement('afterend',sub);else el.appendChild(sub);}sub.textContent=tr;};
+const trackUi=(el,zh,kind='')=>{if(!el||!zh)return;if(kind)el.dataset.haqiKind=kind;uiNodes.set(el,zh);ensureTexts([zh]);};
+const scanStatic=()=>{if(!document.body)return;document.querySelectorAll('#start,#replay,#mute,#demo,#action,#progress li,#note,.introBottom .mean,.introBottom .sub,.introBottom .meta').forEach(el=>{const zh=(el.textContent||'').trim();if(zh&&!uiNodes.has(el))trackUi(el,zh);});document.querySelectorAll('#brand,.brand').forEach(el=>{if(uiNodes.has(el))return;const clone=el.cloneNode(true);clone.querySelector?.('.seal')?.remove();const zh=(clone.textContent||'').trim();if(zh)trackUi(el,zh,'seal');});document.querySelectorAll('.introTop .tag,.tag').forEach(el=>{if(uiNodes.has(el))return;const zh=(el.textContent||'').trim();if(zh)trackUi(el,zh,'tag');});refreshDom();};
+if(document.readyState==='loading')addEventListener('DOMContentLoaded',scanStatic,{once:true});else scanStatic();
+window.haqiHanziWritten=()=>{written=true;send({type:'written'});};
+window.haqiHanziComplete=()=>{if(!written){written=true;send({type:'written'});}finished=true;send({type:'completed'});};
+window.haqiHanziPrefetch=texts=>ensureTexts(Array.isArray(texts)?texts:[texts]);
+window.haqiHanziUi=(zh,el)=>{const s=typeof zh==='string'?zh.trim():'';if(!s)return zh;if(el)trackUi(el,s);else ensureTexts([s]);const tr=!isZh(context?.locale)&&uiCache.get(s);return(tr&&tr!==s)?tr:zh;};
+window.haqiHanziCaption=(el,zh)=>{const s=typeof zh==='string'?zh.trim():'';if(s)ensureTexts([s]);renderCaption(el,s);};
+window.haqiHanziTranslate=texts=>new Promise(resolve=>{const list=(Array.isArray(texts)?texts:[]).map(t=>typeof t==='string'?t.trim():'').filter(Boolean);if(!context||!list.length){resolve({});return;}const requestId=String(++serial);const timer=setTimeout(()=>{callbacks.delete(requestId);resolve({});},1500);callbacks.set(requestId,msg=>{clearTimeout(timer);const sub=msg?.translations||{},ui=msg?.uiTranslations||sub;for(const[k,v]of Object.entries(sub))if(typeof v==='string'&&v.trim())subCache.set(k,v.trim());for(const[k,v]of Object.entries(ui))if(typeof v==='string'&&v.trim())uiCache.set(k,v.trim());refreshDom();resolve(sub);});send({type:'translate',requestId,texts:list});});
+addEventListener('message',event=>{const m=event.data;if(event.source!==parent||parent===window||m?.channel!=='haqi-hanzi'||m.version!==1)return;
+if(m.type==='init'&&typeof m.sessionId==='string'&&typeof m.entryId==='string'){if(document.referrer&&event.origin!==new URL(document.referrer).origin)return;context={...m,origin:event.origin};scanStatic();flushPending();refreshDom();if(written)send({type:'written'});if(finished)send({type:'completed'});}
+else if(context&&event.origin===context.origin&&m.sessionId===context.sessionId&&m.type==='translations'){callbacks.get(m.requestId)?.(m);callbacks.delete(m.requestId);}});
+if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'ready'},'*');})();
+</script>
+</head>
+<body>
+<canvas id="view" role="img" aria-label="夜溪浅滩上，草尖垂下一缕细露，左右两粒小萤火轻轻依偎照亮纸船，聚成精巧的「小」。"></canvas>
+<div id="brand"><span class="seal">字</span>一字一故事</div>
+<ol id="progress" aria-hidden="true"><li>浅溪</li><li>垂露</li><li>萤点</li><li>成字</li><li>写字</li><li>词意</li><li>余韵</li></ol>
+<div id="controls"><button id="replay" type="button">重播</button><button id="mute" type="button">声音 开</button></div>
+<div id="hint" role="status"></div>
+<section id="caption" aria-live="polite" aria-atomic="true">
+  <h2 id="capTitle"></h2><p id="capText"></p>
+  <div class="actions"><button id="action" type="button" hidden></button><button id="demo" type="button" hidden>看示范</button></div>
+</section>
+<div id="note">古字形为艺术示意；故事为原创</div>
+<div id="intro">
+  <div class="introTop"><div class="tag"><i></i>今天认识一个汉字<i></i></div></div>
+  <div class="introBottom">
+    <div class="pinyin">xiǎo</div>
+    <div class="mean">小 · 萤点微光聚溪畔</div>
+    <p class="sub">静谧的夜溪边，细小的露珠与萤火替小纸船照路。</p>
+    <button id="start" class="btn-main" type="button">开始</button>
+    <p class="meta">约两分钟 · 轻点垂露、唤醒萤火与描字 · 建议开启声音</p>
+  </div>
+</div>
+<script>
+(() => {
+'use strict';
+
+const $ = s => document.querySelector(s);
+const TAU = Math.PI * 2;
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const ease = {
+  inOut: t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+  out: t => 1 - Math.pow(1 - t, 3),
+  sine: t => -(Math.cos(Math.PI * t) - 1) / 2,
+};
+function mulberry32(a) {
+  return () => {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const QUERY = new URLSearchParams(location.search);
+const FAST = QUERY.has('fast') ? 0.06 : 1;
+const AUTO = QUERY.has('auto');
+const M = reduceMotion ? 0.6 : 1;
+let rand = mulberry32(20261128);
+
+class Cancelled extends Error {}
+let clock = 0, DT = 16, visible = true, last = null;
+let waiters = [];
+let token = { dead: true };
+function frame(tk) { return new Promise((res, rej) => waiters.push({ tk, res, rej })); }
+async function wait(ms, tk) { ms *= FAST; const t0 = clock; while (clock - t0 < ms) await frame(tk); }
+async function tween(ms, fn, tk, ez = ease.inOut) {
+  ms *= FAST;
+  if (ms <= 0) { fn(1); return; }
+  const t0 = clock;
+  for (;;) {
+    await frame(tk);
+    const t = clamp((clock - t0) / ms);
+    fn(ez(t));
+    if (t >= 1) return;
+  }
+}
+const bg = p => p.catch(e => { if (!(e instanceof Cancelled)) console.error(e); });
+
+const PENTA = [392.00, 440.00, 523.25, 587.33, 659.25, 783.99];
+const Sound = {
+  ctx: null, master: null, muted: false,
+  init() {
+    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return;
+    try { this.ctx = new C(); } catch { return; }
+    this.master = this.ctx.createGain();
+    this.master.gain.value = this.muted ? 0 : 0.5;
+    this.master.connect(this.ctx.destination);
+  },
+  setMuted(v) { this.muted = v; if (this.master) this.master.gain.value = v ? 0 : 0.5; },
+  tone(freq, dur = 0.34, type = 'sine', gain = 0.055) {
+    if (!this.ctx || this.muted) return;
+    try {
+      const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+      o.type = type; o.frequency.value = freq;
+      const t = this.ctx.currentTime;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(gain, t + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(this.master); o.start(t); o.stop(t + dur + 0.03);
+    } catch {}
+  },
+  pluck(i) { this.tone(PENTA[i % PENTA.length], 0.38, 'triangle', 0.06); },
+  bell(freq = 659.25) { this.tone(freq, 0.85, 'sine', 0.06); },
+};
+
+const XIAO = {"strokes":["M 499 695 Q 503 661 501 132 Q 500 110 488 101 Q 478 92 448 100 Q 414 107 383 113 Q 347 123 351 112 Q 352 105 375 91 Q 456 42 479 10 Q 504 -26 523 -25 Q 538 -26 552 11 Q 568 57 564 133 Q 531 583 572 723 Q 590 754 532 778 Q 498 797 477 789 Q 459 782 475 759 Q 497 731 499 695 Z","M 266 475 Q 223 408 170 349 Q 160 339 155 320 Q 148 292 154 273 Q 158 251 185 261 Q 213 274 237 308 Q 273 357 284 404 Q 297 441 293 470 Q 289 480 283 484 Q 273 484 266 475 Z","M 706 472 Q 769 411 842 323 Q 860 299 878 293 Q 888 292 897 303 Q 913 318 900 370 Q 887 431 709 508 Q 699 515 696 500 Q 695 484 706 472 Z"],"medians":[[[484,773],[501,765],[533,730],[525,545],[532,191],[528,90],[510,54],[459,68],[358,112]],[[280,476],[254,405],[170,274]],[[709,494],[800,425],[848,380],[866,353],[879,311]]]};
+const NS = 3;
+const STROKE_NAMES = ['竖钩', '左点', '右点'];
+const WORDS = [
+  ['小船', '掌心大的折纸小船，顺着溪水轻轻漂。'],
+  ['小小', '小小的萤火虫闪着光，替伙伴照亮溪岸。'],
+  ['大小', '大礁石旁停着小纸船，一比就看出大小。'],
+];
+
+function densify(pts, step = 12) {
+  const out = [[pts[0][0], pts[0][1]]];
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i];
+    const n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / step));
+    for (let k = 1; k <= n; k++) out.push([lerp(a[0], b[0], k / n), lerp(a[1], b[1], k / n)]);
+  }
+  return out;
+}
+const GUIDE = XIAO.medians.map(pts => densify(pts));
+
+const cvs = $('#view'), ctx = cvs.getContext('2d');
+let SW = 1, SH = 1, DPR = 1, portrait = false;
+const VIEW = {
+  intro:   { x: 800, y: 540, w: 1460, h: 880, pw: 820, pcy: 0.42 },
+  brook:   { x: 800, y: 560, w: 1360, h: 840, pw: 800, pcy: 0.42 },
+  drop:    { x: 800, y: 510, w: 1180, h: 780, pw: 740, pcy: 0.41 },
+  firefly: { x: 800, y: 530, w: 1280, h: 820, pw: 780, pcy: 0.42 },
+  glyph:   { x: 800, y: 510, w: 1080, h: 920, pw: 760, pcy: 0.38 },
+  finale:  { x: 800, y: 550, w: 1420, h: 860, pw: 820, pcy: 0.42 },
+};
+const cam = { ...VIEW.intro };
+const CV = { x: 0, y: 0, k: 1, cy: 0 };
+const GL = { x: 590, y: 300, cx: 800, cy: 510, size: 420 };
+
+function placeGlyph(cx, cy, size) {
+  GL.cx = cx; GL.cy = cy; GL.size = size;
+  GL.x = cx - size / 2; GL.y = cy - size / 2;
+}
+function mmahToWorld(x, y) {
+  const s = GL.size / 1024;
+  return { x: GL.x + x * s, y: GL.y + (900 - y) * s };
+}
+function worldToMmah(wx, wy) {
+  const s = GL.size / 1024;
+  return { x: (wx - GL.x) / s, y: 900 - (wy - GL.y) / s };
+}
+function frameW(v) { return portrait ? (v.pw ?? v.w * 0.62) : v.w; }
+function updateView() {
+  const usableH = SH * (portrait ? 0.60 : 0.75);
+  CV.k = Math.min(SW / frameW(cam), usableH / cam.h);
+  CV.cy = SH * (cam.pcy ?? 0.42);
+  CV.x = cam.x; CV.y = cam.y;
+}
+function setCam(c = ctx) {
+  const k = CV.k;
+  c.setTransform(DPR * k, 0, 0, DPR * k, DPR * (SW / 2 - CV.x * k), DPR * (CV.cy - CV.y * k));
+}
+function resetTf(c = ctx) { c.setTransform(DPR, 0, 0, DPR, 0, 0); }
+function toWorld(cx, cy) { return { x: (cx - SW / 2) / CV.k + CV.x, y: (cy - CV.cy) / CV.k + CV.y }; }
+function toScreen(x, y) { return { x: (x - CV.x) * CV.k + SW / 2, y: (y - CV.y) * CV.k + CV.cy }; }
+async function camTo(v, ms, tk) {
+  const from = { x: cam.x, y: cam.y, w: cam.w, h: cam.h, pw: cam.pw, pcy: cam.pcy };
+  await tween(ms, t => {
+    cam.x = lerp(from.x, v.x, t); cam.y = lerp(from.y, v.y, t);
+    cam.w = lerp(from.w, v.w, t); cam.h = lerp(from.h, v.h, t);
+    cam.pw = lerp(from.pw, v.pw ?? v.w * 0.62, t); cam.pcy = lerp(from.pcy, v.pcy ?? 0.42, t);
+  }, tk);
+}
+function resize() {
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  SW = innerWidth; SH = innerHeight;
+  portrait = SW / SH < 0.88;
+  document.body.classList.toggle('portrait', portrait);
+  cvs.width = Math.round(SW * DPR); cvs.height = Math.round(SH * DPR);
+}
+
+const W = {};
+function resetWorld() {
+  W.dropLen = 0; // 0 = round bead at grass tip, 1 = delicate hooked silver thread
+  W.leftFly = 0;
+  W.rightFly = 0;
+  W.ripples = [];
+  W.ancient = 0;
+  W.sealStage = 0;
+  W.paper = 0;
+  W.veil = 0;
+  W.labels = 0;
+  W.glyph = { alpha: 0, ghost: 0, prog: [0, 0, 0], trace: false, words: 0 };
+  W.trace = null;
+  W.wordOn = -1;
+  placeGlyph(800, 500, 420);
+}
+
+function setPaperMode(on) { document.body.classList.toggle('paper', !!on); }
+
+function withGlyph(fn) {
+  ctx.save();
+  const s = GL.size / 1024;
+  ctx.translate(GL.x, GL.y); ctx.scale(s, s); ctx.translate(0, 900); ctx.scale(1, -1);
+  fn(ctx);
+  ctx.restore();
+}
+function paintStroke(c, i, q) {
+  const path = new Path2D(XIAO.strokes[i]);
+  if (q >= 1) { c.fill(path); return; }
+  if (q <= 0) return;
+  c.save();
+  c.clip(path);
+  c.lineWidth = 175; c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = c.fillStyle;
+  const pts = GUIDE[i], count = (pts.length - 1) * q;
+  c.beginPath();
+  c.moveTo(pts[0][0], pts[0][1]);
+  for (let j = 1; j <= Math.floor(count); j++) c.lineTo(pts[j][0], pts[j][1]);
+  const k = Math.floor(count);
+  if (k < pts.length - 1) {
+    const a = pts[k], b = pts[k + 1], f = count - k;
+    c.lineTo(lerp(a[0], b[0], f), lerp(a[1], b[1], f));
+  }
+  c.stroke();
+  c.restore();
+}
+
+function drawScene() {
+  resetTf();
+  const g = ctx.createLinearGradient(0, 0, 0, SH);
+  g.addColorStop(0, '#122030');
+  g.addColorStop(0.55, '#1f3a4d');
+  g.addColorStop(1, '#264758');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, SW, SH);
+
+  setCam();
+  ctx.save();
+  // Gentle brook surface & pebbles
+  ctx.fillStyle = '#1b3546';
+  ctx.fillRect(120, 650, 1360, 260);
+  ctx.fillStyle = '#38515e';
+  ctx.beginPath();
+  ctx.ellipse(490, 685, 62, 26, 0, 0, TAU);
+  ctx.ellipse(1120, 700, 54, 22, 0, 0, TAU);
+  ctx.fill();
+
+  // Water ripples
+  for (const r of W.ripples) {
+    const u = clamp((clock - r.t0) / 1400);
+    if (u >= 1) continue;
+    ctx.strokeStyle = `rgba(242,210,114,${(1 - u) * 0.72})`;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.ellipse(800, 715, 36 + u * 210, 12 + u * 54, 0, 0, TAU);
+    ctx.stroke();
+  }
+
+  // Arched blade of brook grass reaching above center (800, 340)
+  ctx.strokeStyle = '#53826d';
+  ctx.lineWidth = 10;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(420, 660);
+  ctx.quadraticCurveTo(580, 310, 800, 345);
+  ctx.stroke();
+
+  // Central hanging silver dew thread (1st stroke 竖钩 metaphor)
+  ctx.strokeStyle = '#dbeff8';
+  ctx.lineWidth = 12;
+  const endY = lerp(362, 608, W.dropLen);
+  ctx.beginPath();
+  ctx.moveTo(800, 352);
+  ctx.lineTo(800, endY);
+  if (W.dropLen > 0.65) {
+    const hk = (W.dropLen - 0.65) / 0.35;
+    ctx.quadraticCurveTo(800, endY + 18 * hk, 800 - 38 * hk, endY - 8 * hk);
+  }
+  ctx.stroke();
+  ctx.fillStyle = '#eefaff';
+  ctx.beginPath(); ctx.arc(800, 355, 11, 0, TAU); ctx.fill();
+
+  // Left and right firefly dots (2nd & 3rd strokes 左点 / 右点 metaphor)
+  const bob = reduceMotion ? 0 : Math.sin(clock * 0.004) * 5;
+  const drawFly = (x, y, dx, dy, prog) => {
+    if (prog <= 0.01) return;
+    ctx.save();
+    const glow = ctx.createRadialGradient(x, y + bob, 2, x, y + bob, 48 * prog + 6);
+    glow.addColorStop(0, `rgba(248,224,132,${0.85 * prog})`);
+    glow.addColorStop(1, 'rgba(248,224,132,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath(); ctx.arc(x, y + bob, 48 * prog + 6, 0, TAU); ctx.fill();
+    ctx.strokeStyle = '#f2d272';
+    ctx.lineWidth = 11;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x, y + bob);
+    ctx.lineTo(x + dx * prog, y + bob + dy * prog);
+    ctx.stroke();
+    ctx.restore();
+  };
+  drawFly(706, 468, -42, 54, W.leftFly);
+  drawFly(894, 468, 46, 52, W.rightFly);
+
+  // Tiny palm-sized folded paper boat floating on the brook
+  const drift = reduceMotion ? 0 : Math.sin(clock * 0.0025) * 8;
+  const bx = 800 + drift, by = 712;
+  ctx.fillStyle = '#f6efe0';
+  ctx.strokeStyle = '#b99b6b';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(bx - 42, by - 6);
+  ctx.lineTo(bx + 42, by - 6);
+  ctx.lineTo(bx + 26, by + 14);
+  ctx.lineTo(bx - 26, by + 14);
+  ctx.closePath();
+  ctx.fill(); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(bx - 16, by - 6);
+  ctx.lineTo(bx, by - 32);
+  ctx.lineTo(bx + 16, by - 6);
+  ctx.closePath();
+  ctx.fill(); ctx.stroke();
+  ctx.restore();
+}
+
+function drawPaperAndAncient() {
+  if (W.veil > 0.01) {
+    resetTf();
+    ctx.fillStyle = `rgba(14,24,34,${W.veil.toFixed(3)})`;
+    ctx.fillRect(0, 0, SW, SH);
+  }
+  if (W.paper > 0.01) {
+    setCam();
+    ctx.save();
+    ctx.globalAlpha = W.paper * 0.96;
+    ctx.fillStyle = '#fbf5e8';
+    ctx.strokeStyle = 'rgba(185,69,52,0.48)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.rect(GL.cx - GL.size * 0.6, GL.cy - GL.size * 0.6, GL.size * 1.2, GL.size * 1.2);
+    ctx.fill(); ctx.stroke();
+    ctx.restore();
+  }
+  if (W.ancient > 0.01) {
+    setCam();
+    ctx.save();
+    ctx.globalAlpha = W.ancient;
+    ctx.strokeStyle = '#6b3b26';
+    ctx.fillStyle = '#6b3b26';
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 13;
+    const cx = GL.cx, cy = GL.cy;
+    // Oracle: three tiny vertical sand droplets; Seal: center elongates into vertical line + two side strokes
+    const midLen = lerp(18, 128, W.sealStage);
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - midLen);
+    ctx.lineTo(cx, cy + midLen);
+    ctx.moveTo(cx - 74, cy - 18);
+    ctx.lineTo(cx - lerp(74, 102, W.sealStage), cy + lerp(14, 46, W.sealStage));
+    ctx.moveTo(cx + 74, cy - 18);
+    ctx.lineTo(cx + lerp(74, 102, W.sealStage), cy + lerp(14, 46, W.sealStage));
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+function drawGlyphLayer() {
+  const g = W.glyph;
+  if (g.alpha <= 0.001) return;
+  setCam();
+  withGlyph(c => {
+    if (g.ghost > 0.01) {
+      for (let i = 0; i < NS; i++) {
+        if (g.prog[i] >= 1) continue;
+        const on = g.trace && W.trace && W.trace.stroke === i;
+        c.globalAlpha = g.alpha * g.ghost * (on ? 0.55 : 0.28);
+        c.fillStyle = on ? '#e6b89c' : '#dfd2be';
+        c.fill(new Path2D(XIAO.strokes[i]));
+      }
+    }
+    c.globalAlpha = g.alpha;
+    c.fillStyle = '#231f1c';
+    for (let i = 0; i < NS; i++) if (g.prog[i] > 0) paintStroke(c, i, g.prog[i]);
+  });
+
+  if (g.trace && W.trace && W.trace.stroke < NS) {
+    const pts = GUIDE[W.trace.stroke];
+    withGlyph(c => {
+      c.globalAlpha = g.alpha;
+      c.strokeStyle = '#b94534';
+      c.lineWidth = 11;
+      c.setLineDash([26, 20]);
+      c.lineCap = 'round';
+      c.beginPath();
+      c.moveTo(pts[0][0], pts[0][1]);
+      for (const p of pts) c.lineTo(p[0], p[1]);
+      c.stroke();
+      c.setLineDash([]);
+      c.fillStyle = '#b94534';
+      c.beginPath(); c.arc(pts[0][0], pts[0][1], 22, 0, TAU); c.fill();
+      c.fillStyle = '#fff8ee';
+      c.beginPath(); c.arc(pts[0][0], pts[0][1], 9, 0, TAU); c.fill();
+      if (W.trace.pen) {
+        c.fillStyle = '#f2d272';
+        c.beginPath(); c.arc(W.trace.pen[0], W.trace.pen[1], 14, 0, TAU); c.fill();
+      }
+    });
+  }
+
+  if (W.labels > 0.02 && !g.trace) {
+    setCam();
+    ctx.save();
+    ctx.globalAlpha = g.alpha * W.labels;
+    ctx.fillStyle = '#b94534';
+    ctx.font = `${portrait ? 24 : 30}px "Kaiti SC","KaiTi",serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const midPos = mmahToWorld(520, 820), sidePos = mmahToWorld(820, 320);
+    ctx.fillText('先写中竖钩（垂露）', midPos.x, midPos.y - 20);
+    ctx.fillText('再点左右两点（微萤）', sidePos.x + 20, sidePos.y + 36);
+    ctx.restore();
+  }
+
+  if (g.words > 0.01) {
+    setCam();
+    const y = GL.cy + GL.size * 0.72, gap = portrait ? 150 : 210;
+    ctx.save();
+    ctx.font = `${portrait ? 32 : 40}px "Kaiti SC","KaiTi",serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    WORDS.forEach(([w], i) => {
+      const a = clamp(g.words - i) * g.alpha;
+      if (a <= 0) return;
+      ctx.globalAlpha = a * (W.wordOn === i ? 1 : 0.42);
+      ctx.fillStyle = W.wordOn === i ? '#b94534' : '#786652';
+      ctx.fillText(w, GL.cx + (i - 1) * gap, y);
+    });
+    ctx.restore();
+  }
+}
+
+function render() {
+  updateView();
+  drawScene();
+  drawPaperAndAncient();
+  drawGlyphLayer();
+}
+
+const ui = {
+  cap: $('#caption'), capT: $('#capTitle'), capP: $('#capText'), hint: $('#hint'),
+  action: $('#action'), demo: $('#demo'), prog: [...document.querySelectorAll('#progress li')],
+  mute: $('#mute'),
+};
+let capMinEnd = 0;
+function span(cls, text) { const s = document.createElement('span'); if (cls) s.className = cls; s.textContent = text; return s; }
+function showCaption(title, text) {
+  ui.capT.textContent = window.haqiHanziUi ? window.haqiHanziUi(title, ui.capT) : title;
+  ui.capP.replaceChildren(...[...text].map((ch, i) => { const s = span('ch', ch); s.style.setProperty('--i', i); return s; }));
+  window.haqiHanziCaption?.(ui.cap, text);
+  ui.cap.classList.remove('on'); void ui.cap.offsetWidth; ui.cap.classList.add('on');
+}
+async function caption(title, text, tk, hold = 0) {
+  window.haqiHanziPrefetch?.([title, text]);
+  while (clock < capMinEnd) await frame(tk);
+  ui.cap.classList.remove('on');
+  await wait(reduceMotion ? 120 : 240, tk);
+  showCaption(title, text);
+  const n = [...text].length;
+  capMinEnd = clock + (Math.max(700, n * 65 + 650) + hold) * FAST;
+}
+async function captionDone(tk) { while (clock < capMinEnd) await frame(tk); }
+function hint(text) {
+  if (text) {
+    const s = span('', '');
+    s.textContent = window.haqiHanziUi ? window.haqiHanziUi(text, s) : text;
+    ui.hint.replaceChildren(s); ui.hint.classList.add('on');
+  } else { ui.hint.classList.remove('on'); ui.hint.replaceChildren(); }
+}
+function progress(i) { ui.prog.forEach((li, j) => { li.classList.toggle('on', j === i); li.classList.toggle('done', j < i); }); }
+const S = { handler: null, demo: null, finish: null, interactions: [] };
+function mode(m) {
+  document.body.classList.remove('act', 'trace');
+  if (m) document.body.classList.add(m);
+}
+let actionFn = null;
+function setAction(label, fn) {
+  actionFn = fn;
+  if (label) { ui.action.textContent = window.haqiHanziUi ? window.haqiHanziUi(label, ui.action) : label; ui.action.hidden = false; }
+  else ui.action.hidden = true;
+}
+ui.action.addEventListener('click', () => actionFn?.());
+ui.demo.addEventListener('click', () => S.demo?.());
+
+let activePointer = null;
+cvs.addEventListener('pointerdown', e => {
+  if (!e.isPrimary || activePointer != null) return;
+  const h = S.handler; if (!h?.down) return;
+  activePointer = e.pointerId;
+  try { cvs.setPointerCapture(e.pointerId); } catch {}
+  e.preventDefault();
+  h.down(toWorld(e.clientX, e.clientY));
+});
+cvs.addEventListener('pointermove', e => {
+  if (e.pointerId !== activePointer) return;
+  S.handler?.move?.(toWorld(e.clientX, e.clientY));
+});
+function endPtr(e, cancel) {
+  if (e.pointerId !== activePointer) return;
+  activePointer = null;
+  S.handler?.up?.(toWorld(e.clientX, e.clientY), cancel);
+}
+cvs.addEventListener('pointerup', e => endPtr(e, false));
+cvs.addEventListener('pointercancel', e => endPtr(e, true));
+
+function publish(sc) { window.__xiao.scene = sc; }
+
+async function sBrook(tk) {
+  publish('sBrook');
+  progress(0);
+  bg(camTo(VIEW.brook, 1400 * M, tk));
+  await caption('浅溪', '夜溪边的鹅卵石旁，停着一只掌心大的折纸小船。', tk);
+  await captionDone(tk);
+}
+
+async function sDrop(tk) {
+  publish('sDrop');
+  progress(1);
+  bg(camTo(VIEW.drop, 1300 * M, tk));
+  await caption('垂露', '草尖凝着一滴细细的露珠，轻轻一点让它垂成银丝吧。', tk);
+  await captionDone(tk);
+
+  let dropped = false, t0 = clock;
+  const doDrop = async () => {
+    if (dropped) return;
+    dropped = true;
+    Sound.bell(783.99);
+    await tween(850 * M, t => { W.dropLen = t; }, tk);
+    W.ripples.push({ t0: clock });
+  };
+  hint('点一点草尖上的露珠，拉出细细的居中银丝');
+  mode('act');
+  setAction('轻点露珠', () => bg(doDrop()));
+  S.handler = { down() { bg(doDrop()); } };
+  while (!dropped) {
+    await frame(tk);
+    if (AUTO || clock - t0 > 3800) await doDrop();
+  }
+  S.handler = null; mode(null); setAction(null); hint(null);
+  await caption('垂露', '一缕银露垂直落下，末端轻轻挽起一个小钩。', tk);
+  await captionDone(tk);
+}
+
+async function sFirefly(tk) {
+  publish('sFirefly');
+  progress(2);
+  bg(camTo(VIEW.firefly, 1300 * M, tk));
+  await caption('萤点', '再唤醒左右两只小萤火虫，一左一右替小船掌灯。', tk);
+  await captionDone(tk);
+
+  let steps = 0, busyStep = false, idleSince = clock;
+  const wakeStep = async () => {
+    if (busyStep || steps >= 2) return;
+    busyStep = true;
+    const isLeft = steps === 0;
+    Sound.pluck(steps + 2);
+    await tween(620 * M, t => {
+      if (isLeft) W.leftFly = t;
+      else W.rightFly = t;
+    }, tk);
+    steps++;
+    idleSince = clock;
+    busyStep = false;
+  };
+  hint('点一点溪畔两次，依次点亮左右两粒小萤火');
+  mode('act');
+  setAction('唤醒萤火', () => bg(wakeStep()));
+  S.handler = { down() { bg(wakeStep()); } };
+  while (steps < 2) {
+    await frame(tk);
+    if (!busyStep && (AUTO || clock - idleSince > 4000)) await wakeStep();
+  }
+  S.handler = null; mode(null); setAction(null); hint(null);
+  await caption('萤点', '中间一缕垂露，左右两粒微萤，聚成了精巧的「小」。', tk);
+  await captionDone(tk);
+}
+
+async function sGlyph(tk) {
+  publish('sGlyph');
+  progress(3);
+  placeGlyph(800, 500, 420);
+  bg(camTo(VIEW.glyph, 1400 * M, tk));
+  setPaperMode(true);
+  await tween(1000 * M, t => { W.veil = 0.55 * t; W.paper = t; W.ancient = t; }, tk);
+  Sound.bell(523.25);
+  await caption('甲骨文', '甲骨文的「小」：用三粒细微的沙点或水滴表示微小的事物。', tk, 250);
+  await captionDone(tk);
+
+  await tween(1200 * M, t => { W.sealStage = t; }, tk);
+  Sound.pluck(3);
+  await caption('小篆', '小篆把中间一点拉长成竖线，左右各留一小笔相伴。', tk, 250);
+  await captionDone(tk);
+
+  W.glyph.alpha = 1;
+  await tween(1200 * M, t => {
+    W.ancient = 1 - t;
+    for (let i = 0; i < NS; i++) W.glyph.prog[i] = clamp((t - i * 0.22) / 0.48);
+  }, tk);
+  W.ancient = 0; W.glyph.prog = [1, 1, 1];
+  await tween(500, t => { W.labels = t; }, tk);
+  await caption('楷书', '牢记「先中间后两边」：先写竖钩，再写左点与右点。', tk, 300);
+  await captionDone(tk);
+  await tween(400, t => { W.labels = 1 - t; }, tk);
+}
+
+async function sWrite(tk) {
+  publish('sWrite');
+  progress(4);
+  await caption('写字', '「小」一共三笔。跟着起点，亲手写一个「小」。', tk);
+  await tween(600, t => { W.glyph.prog = [1 - t, 1 - t, 1 - t]; W.glyph.ghost = t; }, tk);
+  W.glyph.prog = [0, 0, 0];
+  W.glyph.trace = true;
+  W.trace = { stroke: 0, pen: null };
+
+  const showStroke = () => {
+    capMinEnd = 0;
+    const i = W.trace.stroke;
+    showCaption('写字', `第 ${i + 1} 笔，共 ${NS} 笔。`);
+    hint(`${STROKE_NAMES[i]}：从红点起笔，顺着虚线写`);
+  };
+  await captionDone(tk);
+  showStroke();
+
+  let samples = GUIDE[0], drag = null, lastInput = clock, demoing = false, completed = 0;
+  const finishStroke = () => {
+    const i = W.trace.stroke;
+    if (i >= NS) return;
+    W.glyph.prog[i] = 1;
+    Sound.pluck(i + 1);
+    W.trace.stroke++;
+    W.trace.pen = null;
+    completed++;
+    if (W.trace.stroke < NS) { samples = GUIDE[W.trace.stroke]; showStroke(); }
+  };
+  S.finish = finishStroke;
+
+  S.handler = {
+    down(p) {
+      if (demoing || W.trace.stroke >= NS) return;
+      lastInput = clock;
+      const q = worldToMmah(p.x, p.y);
+      let startIdx = 0, bestD = Infinity;
+      const limit = Math.max(1, Math.floor(samples.length * 0.4));
+      for (let j = 0; j < limit; j++) {
+        const d = Math.hypot(q.x - samples[j][0], q.y - samples[j][1]);
+        if (d < bestD) { bestD = d; startIdx = j; }
+      }
+      if (bestD > 290) { hint('请从红点起点开始落笔'); return; }
+      drag = { idx: startIdx };
+      W.glyph.prog[W.trace.stroke] = startIdx / (samples.length - 1);
+      W.trace.pen = samples[startIdx];
+    },
+    move(p) {
+      if (!drag) return;
+      lastInput = clock;
+      const q = worldToMmah(p.x, p.y);
+      const lastIdx = samples.length - 1;
+      let best = drag.idx, bd = Infinity;
+      for (let j = drag.idx; j <= Math.min(lastIdx, drag.idx + 28); j++) {
+        const d = Math.hypot(q.x - samples[j][0], q.y - samples[j][1]);
+        if (d < bd) { bd = d; best = j; }
+      }
+      if (bd <= 260 && best >= drag.idx) drag.idx = best;
+      W.glyph.prog[W.trace.stroke] = drag.idx / lastIdx;
+      W.trace.pen = samples[drag.idx];
+    },
+    up(_p, cancel) {
+      if (!drag) return;
+      const d = drag; drag = null; W.trace.pen = null;
+      const lastIdx = samples.length - 1;
+      if (!cancel && d.idx >= Math.max(2, Math.ceil(lastIdx * 0.55))) { finishStroke(); return; }
+      const i = W.trace.stroke, from = W.glyph.prog[i];
+      bg(tween(220, t => { if (W.trace.stroke === i) W.glyph.prog[i] = from * (1 - t); }, tk));
+    },
+  };
+
+  const demo = async () => {
+    if (demoing || W.trace.stroke >= NS) return;
+    demoing = true; ui.demo.disabled = true; drag = null;
+    while (W.trace.stroke < NS) {
+      const i = W.trace.stroke, pts = GUIDE[i];
+      W.glyph.prog[i] = 0;
+      await tween(720 * M, t => { W.glyph.prog[i] = t; W.trace.pen = pts[Math.round(t * (pts.length - 1))]; }, tk, ease.sine);
+      W.trace.pen = null;
+      finishStroke();
+      await wait(160, tk);
+    }
+  };
+  S.demo = () => { S.interactions.push('demo'); bg(demo()); };
+  mode('trace');
+  ui.demo.hidden = false;
+  if (AUTO) { S.interactions.push('auto'); bg(demo()); }
+
+  while (W.trace.stroke < NS) {
+    await frame(tk);
+    if (!demoing && completed === 0 && clock - lastInput > 24000) { S.interactions.push('auto'); bg(demo()); }
+  }
+  S.handler = null; S.demo = null; S.finish = null; mode(null); hint(null);
+  ui.demo.hidden = true; ui.demo.disabled = false;
+  W.glyph.trace = false;
+  window.__xiao.events.push('written');
+  window.haqiHanziWritten?.();
+
+  await tween(450, t => { W.glyph.ghost = 1 - t; }, tk);
+  Sound.bell(659.25);
+  await caption('写字', '写好了！小，细微精巧的小。', tk);
+  await captionDone(tk);
+}
+
+async function sWords(tk) {
+  publish('sWords');
+  progress(5);
+  await tween(700 * M, t => { placeGlyph(800, lerp(500, 465, t), lerp(420, 350, t)); }, tk);
+  for (let i = 0; i < WORDS.length; i++) {
+    W.wordOn = i;
+    Sound.pluck(i + 2);
+    bg(tween(480, t => { W.glyph.words = Math.max(W.glyph.words, i + t); }, tk, ease.out));
+    await caption(WORDS[i][0], WORDS[i][1], tk);
+    await captionDone(tk);
+  }
+  W.wordOn = -1;
+}
+
+async function sFinale(tk) {
+  publish('sFinale');
+  progress(6);
+  setPaperMode(false);
+  bg(camTo(VIEW.finale, 1500 * M, tk));
+  await tween(1100 * M, t => { W.glyph.alpha = 1 - t; W.paper = 1 - t; W.veil = 0.55 * (1 - t); }, tk);
+  W.glyph.alpha = 0; W.paper = 0; W.veil = 0; W.glyph.words = 0;
+  W.ripples.push({ t0: clock });
+  Sound.bell(587.33);
+  await caption('余韵', '每一粒细小的微光聚在一起，也能汇成温暖的星河。', tk);
+  await captionDone(tk);
+
+  hint('点一点溪面，再泛起一圈微光涟漪');
+  mode('act');
+  setAction('再看一次', () => { Sound.init(); begin(); });
+  S.handler = {
+    down() {
+      W.ripples.push({ t0: clock });
+      if (W.ripples.length > 6) W.ripples.shift();
+      Sound.bell(PENTA[(rand() * PENTA.length) | 0]);
+      hint(null);
+    },
+  };
+  window.__xiao.finished = true;
+  window.__xiao.events.push('completed');
+  window.haqiHanziComplete();
+}
+
+const SCENES = [sBrook, sDrop, sFirefly, sGlyph, sWrite, sWords, sFinale];
+
+async function begin() {
+  token.dead = true;
+  const tk = token = { dead: false };
+  capMinEnd = 0;
+  waiters.forEach(w => w.rej(new Cancelled())); waiters = [];
+  resetWorld();
+  setPaperMode(false);
+  Object.assign(cam, VIEW.brook);
+  S.handler = null; S.demo = null; S.finish = null; mode(null); setAction(null); hint(null);
+  ui.demo.hidden = true; ui.demo.disabled = false;
+  ui.cap.classList.remove('on');
+  rand = mulberry32(20261128);
+  S.interactions = [];
+  Object.assign(window.__xiao, { interactions: S.interactions, events: [], finished: false, state: W });
+  try {
+    for (const sc of SCENES) await sc(tk);
+  } catch (e) {
+    if (!(e instanceof Cancelled)) console.error(e);
+  }
+}
+
+async function introPlay(tk) {
+  for (;;) await frame(tk);
+}
+
+function loop(now) {
+  if (last == null) last = now;
+  const dt = Math.min(50, Math.max(0, now - last));
+  last = now;
+  if (visible) {
+    DT = dt; clock += dt;
+    W.ripples = W.ripples.filter(r => clock - r.t0 < 1500);
+    const batch = waiters; waiters = [];
+    for (const w of batch) {
+      if (w.tk.dead) w.rej(new Cancelled());
+      else w.res();
+    }
+  }
+  render();
+  requestAnimationFrame(loop);
+}
+
+resetWorld();
+Object.assign(cam, VIEW.intro);
+window.__xiao = {
+  scene: 'intro', interactions: [], events: [], finished: false, state: W,
+  medians: XIAO.medians, strokes: XIAO.strokes, toScreen, mmahToWorld,
+  completeCurrentStroke() { S.finish?.(); },
+};
+resize();
+addEventListener('resize', () => { resize(); render(); });
+document.addEventListener('visibilitychange', () => { visible = !document.hidden; last = null; });
+requestAnimationFrame(loop);
+const introTk = { dead: false };
+bg(introPlay(introTk));
+document.documentElement.dataset.fixtureReady = '1';
+
+$('#start').addEventListener('click', () => {
+  Sound.init();
+  introTk.dead = true;
+  $('#intro').classList.add('off');
+  document.body.classList.add('started');
+  begin();
+});
+$('#replay').addEventListener('click', () => { Sound.init(); begin(); });
+$('#mute').addEventListener('click', e => {
+  Sound.init();
+  Sound.setMuted(!Sound.muted);
+  const zh = Sound.muted ? '声音 关' : '声音 开';
+  e.currentTarget.textContent = window.haqiHanziUi ? window.haqiHanziUi(zh, e.currentTarget) : zh;
+});
+addEventListener('pagehide', () => { token.dead = true; void Sound.ctx?.close().catch(() => {}); }, { once: true });
+if (AUTO) $('#start').click();
+})();
+</script>
+</body>
+</html>

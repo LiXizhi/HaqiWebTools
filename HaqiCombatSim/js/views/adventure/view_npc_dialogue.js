@@ -4,6 +4,7 @@ import {currentQuest,questState,questReady,pendingQuestTalk,rewardsFor,catalogSt
 import {npcServices,npcHasActiveQuest,npcPurpose} from '../../adventure_npc_core.js';
 import {islandName} from '../../adventure_world_map_core.js';
 import {forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS} from '../../forest_commission_core.js';
+import {islandPuzzlesForNpc,islandPuzzleStatus} from '../../island_puzzles_core.js';
 import {heroPortrait} from '../../hero_renderer.js';
 import {dialogueLearningLines} from '../../locale.js';
 import {tr,setText,fill} from '../../locale_runtime.js';
@@ -85,6 +86,17 @@ export function renderDialogue(root,model,dialog,cb) {
             const phase=forestCommissionPhase(save);
             const label=phase==='offer'?'营地急件：接取寻物委托':phase==='done'?(save.forestCommission?.mystery?.status==='solved'?'查看森林委托记录':'和茜茜调查草屑和脚印'):'继续森林补给委托';
             choices.append(button(label,()=>cb.panel('forest-commission'),'secondary'));
+        }
+        if(!model.localSecond&&typeof islandPuzzlesForNpc==='function'&&typeof islandPuzzleStatus==='function'){
+            for(const puzzle of islandPuzzlesForNpc(save.zone,npc.id)){
+                const st=islandPuzzleStatus(save,puzzle);
+                if(st?.unlocked&&!st.solved){
+                    choices.append(button(fill('现场安放 · {title}（{landmark}）',{title:puzzle.title,landmark:puzzle.landmark}).text,()=>cb.panel('island-puzzle',{puzzleId:puzzle.id}),'secondary'));
+                }
+            }
+            if(save.zone==='hanzi'&&Number(npc.id)===863002){
+                choices.append(button(tr('翻阅字源碑林传拓册（9 篇象形故事）'),()=>cb.panel('hanzi-stele-scroll'),'secondary'));
+            }
         }
         if(npcServices(c,npc).length&&purpose?.panel!=='npc-services')services.append(button('查看商品与学习魔法',()=>cb.panel('npc-services',{npc}),'secondary'));
         if(npc.worldObservation){

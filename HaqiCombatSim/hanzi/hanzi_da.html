@@ -1,0 +1,954 @@
+<!doctype html>
+<!-- Hand-authored story for 大 (da). Standalone single-file H5 animation. -->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#3a2618">
+<title>大 dà · 张臂迎风顶天立</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --silk:#efe5d0;--ink:#231e19;--earth:#3a2618;--gold:#e4be6a;--cinnabar:#c24732;--cream:#fcf6ea;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun","WenQuanYi Micro Hei",serif;
+  --kai:"Kaiti SC","STKaiti","KaiTi","BiauKai","Kaiti TC","WenQuanYi Micro Hei",var(--serif);
+}
+html,body{margin:0;height:100%;overflow:hidden;background:#3a2618}
+body{color:var(--cream);font-family:var(--serif);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+button{font:inherit;touch-action:manipulation}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+#view{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+body.act #view{cursor:pointer}
+body.trace #view{cursor:crosshair}
+#brand{position:fixed;left:max(16px,env(safe-area-inset-left));top:max(14px,env(safe-area-inset-top));display:flex;align-items:center;gap:10px;
+  font-family:var(--kai);font-size:14px;letter-spacing:.22em;color:#f8f0df;z-index:8;pointer-events:none;opacity:.94}
+#brand .seal{background:var(--cinnabar);color:#fbf4e6;border-radius:3px;padding:5px 5px 4px;font-size:15px;line-height:1;letter-spacing:0}
+#progress{position:fixed;top:max(16px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:flex;list-style:none;
+  margin:0;padding:0;gap:clamp(8px,1.8vw,22px);z-index:10;opacity:0;transition:opacity .8s;pointer-events:none}
+#progress::before{content:"";position:absolute;top:2.5px;left:12px;right:12px;height:1px;background:rgba(252,246,234,.28)}
+body.started #progress{opacity:1}
+#progress li{position:relative;font-family:var(--kai);font-size:13px;color:rgba(248,240,223,.72);letter-spacing:.08em;padding-top:12px;white-space:nowrap}
+#progress li::before{content:"";position:absolute;top:0;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:rgba(238,224,198,.42)}
+#progress li.done{color:#f0e5ce}#progress li.done::before{background:#cca458}
+#progress li.on{color:#fffaf0}#progress li.on::before{background:var(--gold);transform:scale(1.6)}
+#controls{position:fixed;right:max(14px,env(safe-area-inset-right));top:max(12px,env(safe-area-inset-top));display:flex;gap:8px;z-index:12;opacity:0;pointer-events:none;transition:opacity .6s}
+body.started #controls{opacity:1;pointer-events:auto}
+#controls button{font-family:var(--kai);font-size:14px;letter-spacing:.16em;color:#fcf5e8;background:rgba(48,30,18,.74);
+  border:1px solid rgba(228,190,106,.54);border-radius:4px;padding:7px 12px;cursor:pointer;min-height:36px}
+#hint{position:fixed;left:16px;right:16px;margin:0 auto;width:fit-content;max-width:calc(100vw - 32px);box-sizing:border-box;
+  top:max(58px,calc(env(safe-area-inset-top) + 46px));text-align:center;color:#fcf5e6;opacity:0;transition:opacity .45s;pointer-events:none;z-index:9;
+  padding:7px 20px 8px;border:1px solid rgba(228,190,106,.64);border-radius:22px;background:rgba(44,28,16,.82)}
+#hint span{font-family:var(--kai);font-size:clamp(16px,2.3vh,20px);letter-spacing:.1em}
+#hint.on{opacity:1}
+#caption{position:fixed;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translate(-50%,10px);
+  width:min(900px,calc(100vw - 24px));box-sizing:border-box;text-align:center;opacity:0;
+  transition:opacity .5s,transform .7s cubic-bezier(.2,.7,.2,1);pointer-events:none;z-index:6;padding:20px 22px 13px;
+  background:linear-gradient(to top,rgba(40,25,14,.92) 40%,rgba(40,25,14,.66) 70%,rgba(40,25,14,0) 100%)}
+body.paper #caption{background:radial-gradient(ellipse at center,rgba(248,239,222,.95) 42%,rgba(248,239,222,0) 74%)}
+#caption.on{opacity:1;transform:translate(-50%,0)}
+#capTitle{margin:0 0 7px;font-weight:400;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.38em;margin-left:.38em;color:var(--gold)}
+body.paper #capTitle{color:var(--cinnabar)}
+#capText{margin:0;font-family:var(--kai);font-size:clamp(18px,calc(1vw + 1.55vh),27px);line-height:1.68;color:var(--cream);letter-spacing:.06em;min-height:1.68em}
+body.paper #capText{color:var(--ink)}
+.haqi-sub-trans{display:block;margin-top:4px;font-family:Georgia,"Times New Roman",system-ui,sans-serif;font-size:clamp(13px,1.8vh,17px);line-height:1.45;color:#e8dfd0}
+body.paper .haqi-sub-trans{color:#5e5342}
+.actions{display:flex;justify-content:center;gap:10px;margin-top:10px}
+.actions button{pointer-events:auto;cursor:pointer;font-family:var(--kai);letter-spacing:.2em;border-radius:4px;min-height:44px}
+#action{font-size:18px;padding:9px 22px;color:#281a10;border:1px solid #fcf3dc;background:linear-gradient(#fbedc8,#e4be6a)}
+#demo{font-size:16px;padding:8px 16px;color:var(--ink);background:rgba(248,241,226,.92);border:1px solid rgba(35,30,25,.35)}
+[hidden]{display:none!important}
+#intro{position:fixed;inset:0;z-index:20;pointer-events:none;transition:opacity 1s,transform 1s}
+#intro.off{opacity:0;transform:scale(1.03)}
+#intro.off *{pointer-events:none!important}
+.introTop,.introBottom{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
+.introTop{top:max(18px,env(safe-area-inset-top))}
+.introBottom{bottom:max(12px,env(safe-area-inset-bottom));gap:8px;left:50%;right:auto;width:min(100%,660px);transform:translateX(-50%);box-sizing:border-box;
+  padding-top:34px;background:linear-gradient(to top,rgba(40,25,14,.93) 44%,rgba(40,25,14,.58) 72%,rgba(40,25,14,0) 100%)}
+.tag{display:flex;align-items:center;gap:10px;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.28em;color:var(--gold)}
+.tag i{display:block;width:clamp(22px,5vw,56px);height:1px;background:currentColor;opacity:.72}
+.pinyin{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:clamp(30px,5.2vh,46px);line-height:1;color:var(--cream)}
+.mean{font-family:var(--kai);font-size:clamp(17px,2.5vh,22px);letter-spacing:.18em;color:#fff8ea}
+.sub{font-family:var(--kai);font-size:clamp(15px,2.1vh,18px);color:#e8e0d0;letter-spacing:.12em;margin:2px 0 0;line-height:1.7}
+.btn-main{pointer-events:auto;margin-top:8px;font-family:var(--kai);font-size:clamp(18px,2.6vh,22px);letter-spacing:.38em;padding:10px 28px 10px 34px;min-height:44px;
+  color:#281a10;background:linear-gradient(#fbf0d0,#e4be6a);border:1px solid #fff8e6;border-radius:4px;cursor:pointer}
+.meta{font-size:12px;color:#dad0be;letter-spacing:.12em;margin:0}
+#note{position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom));font-size:11px;color:rgba(242,232,212,.78);letter-spacing:.08em;z-index:4;pointer-events:none}
+body.paper #note{color:#867c6a}
+body.portrait #brand,body.portrait #note{display:none}
+body.portrait #progress{top:max(8px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left));right:138px;width:auto;transform:none;justify-content:space-between;gap:0}
+body.portrait #progress li{font-size:10px;letter-spacing:0}
+@media (max-height:540px){.sub,.meta{display:none}#capText{font-size:16px}#caption{padding:8px 12px 6px}.actions{margin-top:4px}}
+</style>
+<script>
+// Haqi H5 protocol v1: independent pages remain usable without a parent.
+(()=>{let context=null,written=false,finished=false,serial=0;const callbacks=new Map(),subCache=new Map(),uiCache=new Map(),pending=new Set(),uiNodes=new Map();
+const isZh=loc=>!loc||/^zh\b/i.test(loc);
+const send=data=>{if(context)parent.postMessage({channel:'haqi-hanzi',version:1,entryId:context.entryId,sessionId:context.sessionId,...data},context.origin);};
+const refreshDom=()=>{for(const[el,zh]of uiNodes){if(!el?.isConnected){uiNodes.delete(el);continue;}const tr=!isZh(context?.locale)&&uiCache.get(zh);const next=(tr&&tr!==zh)?tr:zh;if(el.dataset.haqiKind==='seal'){const seal=el.querySelector('.seal');el.textContent=next;if(seal)el.prepend(seal);}else if(el.dataset.haqiKind==='tag'){const i1=document.createElement('i'),i2=document.createElement('i');el.replaceChildren(i1,document.createTextNode(next),i2);}else el.textContent=next;}document.querySelectorAll('[data-haqi-caption]').forEach(el=>renderCaption(el,el.dataset.haqiCaption));};
+const flushPending=()=>{if(!context||!pending.size)return;const texts=[...pending];pending.clear();window.haqiHanziTranslate(texts);};
+const ensureTexts=texts=>{const need=[];for(const t of texts){const s=typeof t==='string'?t.trim():'';if(s&&(!subCache.has(s)||!uiCache.has(s))&&!pending.has(s)){pending.add(s);need.push(s);}}if(need.length&&context)flushPending();};
+const renderCaption=(el,zh)=>{if(!el)return;el.dataset.haqiCaption=zh||'';let sub=el.querySelector('.haqi-sub-trans');if(!zh||isZh(context?.subtitleLocale||context?.locale)){sub?.remove();return;}const tr=subCache.get(zh);if(!tr||tr===zh){sub?.remove();ensureTexts([zh]);return;}if(!sub){sub=document.createElement('span');sub.className='haqi-sub-trans';const host=el.querySelector('#capText')||el;if(host!==el&&host.parentNode===el)host.insertAdjacentElement('afterend',sub);else el.appendChild(sub);}sub.textContent=tr;};
+const trackUi=(el,zh,kind='')=>{if(!el||!zh)return;if(kind)el.dataset.haqiKind=kind;uiNodes.set(el,zh);ensureTexts([zh]);};
+const scanStatic=()=>{if(!document.body)return;document.querySelectorAll('#start,#replay,#mute,#demo,#action,#progress li,#note,.introBottom .mean,.introBottom .sub,.introBottom .meta').forEach(el=>{const zh=(el.textContent||'').trim();if(zh&&!uiNodes.has(el))trackUi(el,zh);});document.querySelectorAll('#brand,.brand').forEach(el=>{if(uiNodes.has(el))return;const clone=el.cloneNode(true);clone.querySelector?.('.seal')?.remove();const zh=(clone.textContent||'').trim();if(zh)trackUi(el,zh,'seal');});document.querySelectorAll('.introTop .tag,.tag').forEach(el=>{if(uiNodes.has(el))return;const zh=(el.textContent||'').trim();if(zh)trackUi(el,zh,'tag');});refreshDom();};
+if(document.readyState==='loading')addEventListener('DOMContentLoaded',scanStatic,{once:true});else scanStatic();
+window.haqiHanziWritten=()=>{written=true;send({type:'written'});};
+window.haqiHanziComplete=()=>{if(!written){written=true;send({type:'written'});}finished=true;send({type:'completed'});};
+window.haqiHanziPrefetch=texts=>ensureTexts(Array.isArray(texts)?texts:[texts]);
+window.haqiHanziUi=(zh,el)=>{const s=typeof zh==='string'?zh.trim():'';if(!s)return zh;if(el)trackUi(el,s);else ensureTexts([s]);const tr=!isZh(context?.locale)&&uiCache.get(s);return(tr&&tr!==s)?tr:zh;};
+window.haqiHanziCaption=(el,zh)=>{const s=typeof zh==='string'?zh.trim():'';if(s)ensureTexts([s]);renderCaption(el,s);};
+window.haqiHanziTranslate=texts=>new Promise(resolve=>{const list=(Array.isArray(texts)?texts:[]).map(t=>typeof t==='string'?t.trim():'').filter(Boolean);if(!context||!list.length){resolve({});return;}const requestId=String(++serial);const timer=setTimeout(()=>{callbacks.delete(requestId);resolve({});},1500);callbacks.set(requestId,msg=>{clearTimeout(timer);const sub=msg?.translations||{},ui=msg?.uiTranslations||sub;for(const[k,v]of Object.entries(sub))if(typeof v==='string'&&v.trim())subCache.set(k,v.trim());for(const[k,v]of Object.entries(ui))if(typeof v==='string'&&v.trim())uiCache.set(k,v.trim());refreshDom();resolve(sub);});send({type:'translate',requestId,texts:list});});
+addEventListener('message',event=>{const m=event.data;if(event.source!==parent||parent===window||m?.channel!=='haqi-hanzi'||m.version!==1)return;
+if(m.type==='init'&&typeof m.sessionId==='string'&&typeof m.entryId==='string'){if(document.referrer&&event.origin!==new URL(document.referrer).origin)return;context={...m,origin:event.origin};scanStatic();flushPending();refreshDom();if(written)send({type:'written'});if(finished)send({type:'completed'});}
+else if(context&&event.origin===context.origin&&m.sessionId===context.sessionId&&m.type==='translations'){callbacks.get(m.requestId)?.(m);callbacks.delete(m.requestId);}});
+if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'ready'},'*');})();
+</script>
+</head>
+<body>
+<canvas id="view" role="img" aria-label="宽广的山坡草坪上，迎风张开双臂与双腿并撑起庆典大红伞，化作顶天立地的「大」。"></canvas>
+<div id="brand"><span class="seal">字</span>一字一故事</div>
+<ol id="progress" aria-hidden="true"><li>草坪</li><li>张臂</li><li>撑伞</li><li>成字</li><li>写字</li><li>词意</li><li>余韵</li></ol>
+<div id="controls"><button id="replay" type="button">重播</button><button id="mute" type="button">声音 开</button></div>
+<div id="hint" role="status"></div>
+<section id="caption" aria-live="polite" aria-atomic="true">
+  <h2 id="capTitle"></h2><p id="capText"></p>
+  <div class="actions"><button id="action" type="button" hidden></button><button id="demo" type="button" hidden>看示范</button></div>
+</section>
+<div id="note">古字形为艺术示意；故事为原创</div>
+<div id="intro">
+  <div class="introTop"><div class="tag"><i></i>今天认识一个汉字<i></i></div></div>
+  <div class="introBottom">
+    <div class="pinyin">dà</div>
+    <div class="mean">大 · 张臂迎风顶天立</div>
+    <p class="sub">宽广的山坡草坪上，张开双臂拥抱暖风与晴阳。</p>
+    <button id="start" class="btn-main" type="button">开始</button>
+    <p class="meta">约两分钟 · 张臂稳立、撑开大伞与描字 · 建议开启声音</p>
+  </div>
+</div>
+<script>
+(() => {
+'use strict';
+
+const $ = s => document.querySelector(s);
+const TAU = Math.PI * 2;
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const ease = {
+  inOut: t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+  out: t => 1 - Math.pow(1 - t, 3),
+  sine: t => -(Math.cos(Math.PI * t) - 1) / 2,
+};
+function mulberry32(a) {
+  return () => {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const QUERY = new URLSearchParams(location.search);
+const FAST = QUERY.has('fast') ? 0.06 : 1;
+const AUTO = QUERY.has('auto');
+const M = reduceMotion ? 0.6 : 1;
+let rand = mulberry32(20261127);
+
+class Cancelled extends Error {}
+let clock = 0, DT = 16, visible = true, last = null;
+let waiters = [];
+let token = { dead: true };
+function frame(tk) { return new Promise((res, rej) => waiters.push({ tk, res, rej })); }
+async function wait(ms, tk) { ms *= FAST; const t0 = clock; while (clock - t0 < ms) await frame(tk); }
+async function tween(ms, fn, tk, ez = ease.inOut) {
+  ms *= FAST;
+  if (ms <= 0) { fn(1); return; }
+  const t0 = clock;
+  for (;;) {
+    await frame(tk);
+    const t = clamp((clock - t0) / ms);
+    fn(ez(t));
+    if (t >= 1) return;
+  }
+}
+const bg = p => p.catch(e => { if (!(e instanceof Cancelled)) console.error(e); });
+
+const PENTA = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
+const Sound = {
+  ctx: null, master: null, muted: false,
+  init() {
+    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return;
+    try { this.ctx = new C(); } catch { return; }
+    this.master = this.ctx.createGain();
+    this.master.gain.value = this.muted ? 0 : 0.5;
+    this.master.connect(this.ctx.destination);
+  },
+  setMuted(v) { this.muted = v; if (this.master) this.master.gain.value = v ? 0 : 0.5; },
+  tone(freq, dur = 0.38, type = 'triangle', gain = 0.06) {
+    if (!this.ctx || this.muted) return;
+    try {
+      const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+      o.type = type; o.frequency.value = freq;
+      const t = this.ctx.currentTime;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(gain, t + 0.018);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(this.master); o.start(t); o.stop(t + dur + 0.03);
+    } catch {}
+  },
+  pluck(i) { this.tone(PENTA[i % PENTA.length], 0.44, 'triangle', 0.07); },
+  drum() { this.tone(130.81, 0.55, 'sine', 0.085); },
+  bell(freq = 523.25) { this.tone(freq, 0.9, 'sine', 0.065); },
+};
+
+const DA = {"strokes":["M 494 476 Q 542 485 795 501 Q 817 502 822 512 Q 826 525 808 540 Q 750 580 707 569 Q 631 550 500 522 L 436 509 Q 331 490 213 469 Q 189 465 208 447 Q 241 420 294 432 Q 357 453 431 465 L 494 476 Z","M 487 437 Q 491 456 494 476 L 500 522 Q 510 711 528 763 Q 534 776 523 786 Q 501 805 459 822 Q 434 832 414 825 Q 390 816 410 796 Q 444 762 444 726 Q 445 602 436 509 L 431 465 Q 398 275 310 179 Q 303 173 297 166 Q 251 118 148 55 Q 133 48 130 43 Q 124 36 144 34 Q 195 34 300 104 Q 385 173 414 218 Q 444 266 480 396 L 487 437 Z","M 480 396 Q 501 357 575 245 Q 657 124 718 56 Q 746 22 774 22 Q 856 28 928 32 Q 959 33 959 41 Q 960 50 927 66 Q 753 144 719 174 Q 614 267 500 419 Q 493 429 487 437 C 469 461 465 422 480 396 Z"],"medians":[[[210,458],[268,453],[514,503],[719,534],[770,529],[810,517]],[[416,810],[444,799],[482,759],[469,518],[448,394],[426,320],[386,231],[361,196],[307,140],[202,67],[138,41]],[[486,430],[500,393],[576,284],[660,182],[722,118],[774,77],[953,42]]]};
+const NS = 3;
+const STROKE_NAMES = ['横', '撇', '捺'];
+const WORDS = [
+  ['大小', '大红伞配小手鼓，一比就分清大小。'],
+  ['大山', '远方连绵高耸的群峰，叫作大山。'],
+  ['长大', '双脚稳稳站立，我们一天天长大。'],
+];
+
+function densify(pts, step = 12) {
+  const out = [[pts[0][0], pts[0][1]]];
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i];
+    const n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / step));
+    for (let k = 1; k <= n; k++) out.push([lerp(a[0], b[0], k / n), lerp(a[1], b[1], k / n)]);
+  }
+  return out;
+}
+const GUIDE = DA.medians.map(pts => densify(pts));
+
+const cvs = $('#view'), ctx = cvs.getContext('2d');
+let SW = 1, SH = 1, DPR = 1, portrait = false;
+const VIEW = {
+  intro:   { x: 800, y: 540, w: 1460, h: 880, pw: 820, pcy: 0.42 },
+  meadow:  { x: 800, y: 550, w: 1380, h: 840, pw: 800, pcy: 0.42 },
+  stretch: { x: 800, y: 530, w: 1200, h: 780, pw: 740, pcy: 0.41 },
+  canopy:  { x: 800, y: 520, w: 1300, h: 820, pw: 780, pcy: 0.42 },
+  glyph:   { x: 800, y: 510, w: 1080, h: 920, pw: 760, pcy: 0.38 },
+  finale:  { x: 800, y: 540, w: 1420, h: 860, pw: 820, pcy: 0.42 },
+};
+const cam = { ...VIEW.intro };
+const CV = { x: 0, y: 0, k: 1, cy: 0 };
+const GL = { x: 590, y: 300, cx: 800, cy: 510, size: 420 };
+
+function placeGlyph(cx, cy, size) {
+  GL.cx = cx; GL.cy = cy; GL.size = size;
+  GL.x = cx - size / 2; GL.y = cy - size / 2;
+}
+function mmahToWorld(x, y) {
+  const s = GL.size / 1024;
+  return { x: GL.x + x * s, y: GL.y + (900 - y) * s };
+}
+function worldToMmah(wx, wy) {
+  const s = GL.size / 1024;
+  return { x: (wx - GL.x) / s, y: 900 - (wy - GL.y) / s };
+}
+function frameW(v) { return portrait ? (v.pw ?? v.w * 0.62) : v.w; }
+function updateView() {
+  const usableH = SH * (portrait ? 0.60 : 0.75);
+  CV.k = Math.min(SW / frameW(cam), usableH / cam.h);
+  CV.cy = SH * (cam.pcy ?? 0.42);
+  CV.x = cam.x; CV.y = cam.y;
+}
+function setCam(c = ctx) {
+  const k = CV.k;
+  c.setTransform(DPR * k, 0, 0, DPR * k, DPR * (SW / 2 - CV.x * k), DPR * (CV.cy - CV.y * k));
+}
+function resetTf(c = ctx) { c.setTransform(DPR, 0, 0, DPR, 0, 0); }
+function toWorld(cx, cy) { return { x: (cx - SW / 2) / CV.k + CV.x, y: (cy - CV.cy) / CV.k + CV.y }; }
+function toScreen(x, y) { return { x: (x - CV.x) * CV.k + SW / 2, y: (y - CV.y) * CV.k + CV.cy }; }
+async function camTo(v, ms, tk) {
+  const from = { x: cam.x, y: cam.y, w: cam.w, h: cam.h, pw: cam.pw, pcy: cam.pcy };
+  await tween(ms, t => {
+    cam.x = lerp(from.x, v.x, t); cam.y = lerp(from.y, v.y, t);
+    cam.w = lerp(from.w, v.w, t); cam.h = lerp(from.h, v.h, t);
+    cam.pw = lerp(from.pw, v.pw ?? v.w * 0.62, t); cam.pcy = lerp(from.pcy, v.pcy ?? 0.42, t);
+  }, tk);
+}
+function resize() {
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  SW = innerWidth; SH = innerHeight;
+  portrait = SW / SH < 0.88;
+  document.body.classList.toggle('portrait', portrait);
+  cvs.width = Math.round(SW * DPR); cvs.height = Math.round(SH * DPR);
+}
+
+const W = {};
+function resetWorld() {
+  W.stretch = 0; // 0 = arms down & feet close, 1 = arms wide & legs firmly apart
+  W.canopyOpen = 0;
+  W.rings = [];
+  W.ancient = 0;
+  W.sealStage = 0;
+  W.paper = 0;
+  W.veil = 0;
+  W.labels = 0;
+  W.glyph = { alpha: 0, ghost: 0, prog: [0, 0, 0], trace: false, words: 0 };
+  W.trace = null;
+  W.wordOn = -1;
+  placeGlyph(800, 500, 420);
+}
+
+function setPaperMode(on) { document.body.classList.toggle('paper', !!on); }
+
+function withGlyph(fn) {
+  ctx.save();
+  const s = GL.size / 1024;
+  ctx.translate(GL.x, GL.y); ctx.scale(s, s); ctx.translate(0, 900); ctx.scale(1, -1);
+  fn(ctx);
+  ctx.restore();
+}
+function paintStroke(c, i, q) {
+  const path = new Path2D(DA.strokes[i]);
+  if (q >= 1) { c.fill(path); return; }
+  if (q <= 0) return;
+  c.save();
+  c.clip(path);
+  c.lineWidth = 185; c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = c.fillStyle;
+  const pts = GUIDE[i], count = (pts.length - 1) * q;
+  c.beginPath();
+  c.moveTo(pts[0][0], pts[0][1]);
+  for (let j = 1; j <= Math.floor(count); j++) c.lineTo(pts[j][0], pts[j][1]);
+  const k = Math.floor(count);
+  if (k < pts.length - 1) {
+    const a = pts[k], b = pts[k + 1], f = count - k;
+    c.lineTo(lerp(a[0], b[0], f), lerp(a[1], b[1], f));
+  }
+  c.stroke();
+  c.restore();
+}
+
+function drawScene() {
+  resetTf();
+  const g = ctx.createLinearGradient(0, 0, 0, SH);
+  g.addColorStop(0, '#364d59');
+  g.addColorStop(0.52, '#c99352');
+  g.addColorStop(1, '#4c381f');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, SW, SH);
+
+  setCam();
+  ctx.save();
+  // Warm sun glow
+  const sun = ctx.createRadialGradient(800, 260, 12, 800, 260, 280);
+  sun.addColorStop(0, 'rgba(255,238,184,0.68)');
+  sun.addColorStop(1, 'rgba(255,238,184,0)');
+  ctx.fillStyle = sun;
+  ctx.beginPath(); ctx.arc(800, 260, 280, 0, TAU); ctx.fill();
+
+  // Distant mountain ridges
+  ctx.fillStyle = '#4c6563';
+  ctx.beginPath();
+  ctx.moveTo(80, 620); ctx.quadraticCurveTo(380, 410, 680, 580);
+  ctx.quadraticCurveTo(1040, 380, 1520, 620); ctx.lineTo(1520, 920); ctx.lineTo(80, 920);
+  ctx.closePath(); ctx.fill();
+
+  // Broad sunlit celebration meadow
+  ctx.fillStyle = '#8b9244';
+  ctx.beginPath();
+  ctx.ellipse(800, 770, 760, 240, 0, 0, TAU);
+  ctx.fill();
+
+  // Resonant drum rings on the meadow
+  for (const r of W.rings) {
+    const u = clamp((clock - r.t0) / 1400);
+    if (u >= 1) continue;
+    ctx.strokeStyle = `rgba(228,190,106,${(1 - u) * 0.8})`;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.ellipse(800, 690, 70 + u * 340, 28 + u * 120, 0, 0, TAU);
+    ctx.stroke();
+  }
+
+  // Wide crimson celebration parasol behind the hero when W.canopyOpen > 0
+  if (W.canopyOpen > 0.01) {
+    const k = W.canopyOpen;
+    ctx.save();
+    ctx.strokeStyle = '#6e4023';
+    ctx.lineWidth = 10;
+    ctx.beginPath();
+    ctx.moveTo(800, 690);
+    ctx.lineTo(800, lerp(520, 290, k));
+    ctx.stroke();
+
+    const span = lerp(40, 270, k), topY = lerp(500, 265, k), rimY = lerp(525, 365, k);
+    ctx.fillStyle = '#c24732';
+    ctx.strokeStyle = '#e4be6a';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(800 - span, rimY);
+    ctx.quadraticCurveTo(800, topY - 45 * k, 800 + span, rimY);
+    ctx.closePath();
+    ctx.fill(); ctx.stroke();
+
+    // Two little companions sheltering joyfully beneath the big canopy
+    for (const side of [-1, 1]) {
+      const fx = 800 + side * lerp(260, 165, k), fy = 685;
+      ctx.globalAlpha = k;
+      ctx.fillStyle = side < 0 ? '#4d7894' : '#6c8b4a';
+      ctx.beginPath(); ctx.ellipse(fx, fy - 20, 14, 21, 0, 0, TAU); ctx.fill();
+      ctx.fillStyle = '#f2cbb0';
+      ctx.beginPath(); ctx.arc(fx, fy - 48, 11, 0, TAU); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // Central hero standing tall: arms & legs stretch out into the shape of 大!
+  const st = W.stretch;
+  const cx = 800, shoulderY = 505, hipY = 585;
+  ctx.strokeStyle = '#2d1e16';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 20;
+
+  // Legs (left 撇 and right 捺)
+  const legSpread = lerp(26, 128, st);
+  ctx.beginPath();
+  ctx.moveTo(cx, hipY); ctx.quadraticCurveTo(cx - legSpread * 0.45, 645, cx - legSpread, 700);
+  ctx.moveTo(cx, hipY); ctx.quadraticCurveTo(cx + legSpread * 0.45, 645, cx + legSpread, 700);
+  ctx.stroke();
+
+  // Torso & tunic
+  ctx.fillStyle = '#b94330';
+  ctx.beginPath();
+  ctx.moveTo(cx - 26, shoulderY - 8);
+  ctx.lineTo(cx + 26, shoulderY - 8);
+  ctx.lineTo(cx + 34, hipY + 12);
+  ctx.lineTo(cx - 34, hipY + 12);
+  ctx.closePath();
+  ctx.fill();
+
+  // Arms stretching wide into horizontal stroke 横
+  const armSpan = lerp(42, 168, st), armY = lerp(568, 496, st);
+  ctx.strokeStyle = '#c24732';
+  ctx.lineWidth = 18;
+  ctx.beginPath();
+  ctx.moveTo(cx - 20, shoulderY); ctx.lineTo(cx - armSpan, armY);
+  ctx.moveTo(cx + 20, shoulderY); ctx.lineTo(cx + armSpan, armY);
+  ctx.stroke();
+
+  // Hands & smiling head
+  ctx.fillStyle = '#f3ccb0';
+  ctx.beginPath();
+  ctx.arc(cx - armSpan, armY, 10, 0, TAU);
+  ctx.arc(cx + armSpan, armY, 10, 0, TAU);
+  ctx.arc(cx, shoulderY - 38, 25, 0, TAU);
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawPaperAndAncient() {
+  if (W.veil > 0.01) {
+    resetTf();
+    ctx.fillStyle = `rgba(34,22,14,${W.veil.toFixed(3)})`;
+    ctx.fillRect(0, 0, SW, SH);
+  }
+  if (W.paper > 0.01) {
+    setCam();
+    ctx.save();
+    ctx.globalAlpha = W.paper * 0.96;
+    ctx.fillStyle = '#fbf5e8';
+    ctx.strokeStyle = 'rgba(194,71,50,0.48)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.rect(GL.cx - GL.size * 0.6, GL.cy - GL.size * 0.6, GL.size * 1.2, GL.size * 1.2);
+    ctx.fill(); ctx.stroke();
+    ctx.restore();
+  }
+  if (W.ancient > 0.01) {
+    setCam();
+    ctx.save();
+    ctx.globalAlpha = W.ancient;
+    ctx.strokeStyle = '#6b3b26';
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 14;
+    const cx = GL.cx, cy = GL.cy;
+    // Outstretched arms
+    const drop = lerp(18, 4, W.sealStage);
+    ctx.beginPath();
+    ctx.moveTo(cx - 115, cy - 22 + drop);
+    ctx.quadraticCurveTo(cx, cy - 30, cx + 115, cy - 22 + drop);
+    // Upright body + two striding legs
+    ctx.moveTo(cx, cy - 118);
+    ctx.lineTo(cx, cy + 16);
+    ctx.quadraticCurveTo(cx - 42, cy + 82, cx - 102, cy + 132);
+    ctx.moveTo(cx, cy + 16);
+    ctx.quadraticCurveTo(cx + 42, cy + 82, cx + 102, cy + 132);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+function drawGlyphLayer() {
+  const g = W.glyph;
+  if (g.alpha <= 0.001) return;
+  setCam();
+  withGlyph(c => {
+    if (g.ghost > 0.01) {
+      for (let i = 0; i < NS; i++) {
+        if (g.prog[i] >= 1) continue;
+        const on = g.trace && W.trace && W.trace.stroke === i;
+        c.globalAlpha = g.alpha * g.ghost * (on ? 0.55 : 0.28);
+        c.fillStyle = on ? '#e6b89c' : '#dfd2be';
+        c.fill(new Path2D(DA.strokes[i]));
+      }
+    }
+    c.globalAlpha = g.alpha;
+    c.fillStyle = '#231f1c';
+    for (let i = 0; i < NS; i++) if (g.prog[i] > 0) paintStroke(c, i, g.prog[i]);
+  });
+
+  if (g.trace && W.trace && W.trace.stroke < NS) {
+    const pts = GUIDE[W.trace.stroke];
+    withGlyph(c => {
+      c.globalAlpha = g.alpha;
+      c.strokeStyle = '#c24732';
+      c.lineWidth = 11;
+      c.setLineDash([26, 20]);
+      c.lineCap = 'round';
+      c.beginPath();
+      c.moveTo(pts[0][0], pts[0][1]);
+      for (const p of pts) c.lineTo(p[0], p[1]);
+      c.stroke();
+      c.setLineDash([]);
+      c.fillStyle = '#c24732';
+      ctx.beginPath();
+      c.beginPath(); c.arc(pts[0][0], pts[0][1], 22, 0, TAU); c.fill();
+      c.fillStyle = '#fff8ee';
+      c.beginPath(); c.arc(pts[0][0], pts[0][1], 9, 0, TAU); c.fill();
+      if (W.trace.pen) {
+        c.fillStyle = '#e4be6a';
+        c.beginPath(); c.arc(W.trace.pen[0], W.trace.pen[1], 14, 0, TAU); c.fill();
+      }
+    });
+  }
+
+  if (W.labels > 0.02 && !g.trace) {
+    setCam();
+    ctx.save();
+    ctx.globalAlpha = g.alpha * W.labels;
+    ctx.fillStyle = '#c24732';
+    ctx.font = `${portrait ? 24 : 30}px "Kaiti SC","KaiTi",serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const armPos = mmahToWorld(820, 540), legPos = mmahToWorld(520, 80);
+    ctx.fillText('一横（平展双臂）', armPos.x + 28, armPos.y - 26);
+    ctx.fillText('撇捺（稳立双足）', legPos.x, legPos.y + 28);
+    ctx.restore();
+  }
+
+  if (g.words > 0.01) {
+    setCam();
+    const y = GL.cy + GL.size * 0.72, gap = portrait ? 150 : 210;
+    ctx.save();
+    ctx.font = `${portrait ? 32 : 40}px "Kaiti SC","KaiTi",serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    WORDS.forEach(([w], i) => {
+      const a = clamp(g.words - i) * g.alpha;
+      if (a <= 0) return;
+      ctx.globalAlpha = a * (W.wordOn === i ? 1 : 0.42);
+      ctx.fillStyle = W.wordOn === i ? '#c24732' : '#786652';
+      ctx.fillText(w, GL.cx + (i - 1) * gap, y);
+    });
+    ctx.restore();
+  }
+}
+
+function render() {
+  updateView();
+  drawScene();
+  drawPaperAndAncient();
+  drawGlyphLayer();
+}
+
+const ui = {
+  cap: $('#caption'), capT: $('#capTitle'), capP: $('#capText'), hint: $('#hint'),
+  action: $('#action'), demo: $('#demo'), prog: [...document.querySelectorAll('#progress li')],
+  mute: $('#mute'),
+};
+let capMinEnd = 0;
+function span(cls, text) { const s = document.createElement('span'); if (cls) s.className = cls; s.textContent = text; return s; }
+function showCaption(title, text) {
+  ui.capT.textContent = window.haqiHanziUi ? window.haqiHanziUi(title, ui.capT) : title;
+  ui.capP.replaceChildren(...[...text].map((ch, i) => { const s = span('ch', ch); s.style.setProperty('--i', i); return s; }));
+  window.haqiHanziCaption?.(ui.cap, text);
+  ui.cap.classList.remove('on'); void ui.cap.offsetWidth; ui.cap.classList.add('on');
+}
+async function caption(title, text, tk, hold = 0) {
+  window.haqiHanziPrefetch?.([title, text]);
+  while (clock < capMinEnd) await frame(tk);
+  ui.cap.classList.remove('on');
+  await wait(reduceMotion ? 120 : 240, tk);
+  showCaption(title, text);
+  const n = [...text].length;
+  capMinEnd = clock + (Math.max(700, n * 65 + 650) + hold) * FAST;
+}
+async function captionDone(tk) { while (clock < capMinEnd) await frame(tk); }
+function hint(text) {
+  if (text) {
+    const s = span('', '');
+    s.textContent = window.haqiHanziUi ? window.haqiHanziUi(text, s) : text;
+    ui.hint.replaceChildren(s); ui.hint.classList.add('on');
+  } else { ui.hint.classList.remove('on'); ui.hint.replaceChildren(); }
+}
+function progress(i) { ui.prog.forEach((li, j) => { li.classList.toggle('on', j === i); li.classList.toggle('done', j < i); }); }
+const S = { handler: null, demo: null, finish: null, interactions: [] };
+function mode(m) {
+  document.body.classList.remove('act', 'trace');
+  if (m) document.body.classList.add(m);
+}
+let actionFn = null;
+function setAction(label, fn) {
+  actionFn = fn;
+  if (label) { ui.action.textContent = window.haqiHanziUi ? window.haqiHanziUi(label, ui.action) : label; ui.action.hidden = false; }
+  else ui.action.hidden = true;
+}
+ui.action.addEventListener('click', () => actionFn?.());
+ui.demo.addEventListener('click', () => S.demo?.());
+
+let activePointer = null;
+cvs.addEventListener('pointerdown', e => {
+  if (!e.isPrimary || activePointer != null) return;
+  const h = S.handler; if (!h?.down) return;
+  activePointer = e.pointerId;
+  try { cvs.setPointerCapture(e.pointerId); } catch {}
+  e.preventDefault();
+  h.down(toWorld(e.clientX, e.clientY));
+});
+cvs.addEventListener('pointermove', e => {
+  if (e.pointerId !== activePointer) return;
+  S.handler?.move?.(toWorld(e.clientX, e.clientY));
+});
+function endPtr(e, cancel) {
+  if (e.pointerId !== activePointer) return;
+  activePointer = null;
+  S.handler?.up?.(toWorld(e.clientX, e.clientY), cancel);
+}
+cvs.addEventListener('pointerup', e => endPtr(e, false));
+cvs.addEventListener('pointercancel', e => endPtr(e, true));
+
+function publish(sc) { window.__da.scene = sc; }
+
+async function sMeadow(tk) {
+  publish('sMeadow');
+  progress(0);
+  bg(camTo(VIEW.meadow, 1400 * M, tk));
+  await caption('草坪', '山坡上的庆典草坪宽广无边，暖风轻轻吹过。', tk);
+  await captionDone(tk);
+}
+
+async function sStretch(tk) {
+  publish('sStretch');
+  progress(1);
+  bg(camTo(VIEW.stretch, 1300 * M, tk));
+  await caption('张臂', '深吸一口气，把双臂和双脚大大方方张开吧。', tk);
+  await captionDone(tk);
+
+  let steps = 0, busyStep = false, idleSince = clock;
+  const doStretch = async () => {
+    if (busyStep || steps >= 2) return;
+    busyStep = true;
+    const from = W.stretch, next = (steps + 1) / 2;
+    Sound.pluck(steps + 1);
+    await tween(650 * M, t => { W.stretch = lerp(from, next, t); }, tk);
+    steps++;
+    idleSince = clock;
+    busyStep = false;
+  };
+  hint('点一点画面中的伙伴两次，张开双臂与双腿');
+  mode('act');
+  setAction('张开双臂', () => bg(doStretch()));
+  S.handler = { down() { bg(doStretch()); } };
+  while (steps < 2) {
+    await frame(tk);
+    if (!busyStep && (AUTO || clock - idleSince > 4200)) await doStretch();
+  }
+  S.handler = null; mode(null); setAction(null); hint(null);
+  await caption('张臂', '双臂平平伸展，双脚稳稳踏地，身姿顶天立地！', tk);
+  await captionDone(tk);
+}
+
+async function sCanopy(tk) {
+  publish('sCanopy');
+  progress(2);
+  bg(camTo(VIEW.canopy, 1300 * M, tk));
+  await caption('撑伞', '再撑开一把庆典大红伞，给身边的伙伴遮住烈日。', tk);
+  await captionDone(tk);
+
+  let opened = false, t0 = clock;
+  const doOpen = async () => {
+    if (opened) return;
+    opened = true;
+    W.rings.push({ t0: clock });
+    Sound.drum();
+    await tween(950 * M, t => { W.canopyOpen = t; }, tk);
+  };
+  hint('点一点草坪中央，撑开宽宽的庆典大伞');
+  mode('act');
+  setAction('撑开大伞', () => bg(doOpen()));
+  S.handler = { down() { bg(doOpen()); } };
+  while (!opened) {
+    await frame(tk);
+    if (AUTO || clock - t0 > 3800) await doOpen();
+  }
+  S.handler = null; mode(null); setAction(null); hint(null);
+  await caption('撑伞', '宽宽的伞面与舒展的身姿合在一起，这就是「大」。', tk);
+  await captionDone(tk);
+}
+
+async function sGlyph(tk) {
+  publish('sGlyph');
+  progress(3);
+  placeGlyph(800, 500, 420);
+  bg(camTo(VIEW.glyph, 1400 * M, tk));
+  setPaperMode(true);
+  await tween(1000 * M, t => { W.veil = 0.55 * t; W.paper = t; W.ancient = t; }, tk);
+  Sound.bell(440);
+  await caption('甲骨文', '甲骨文的「大」：像一个正面站立、张开双臂双腿的人形。', tk, 250);
+  await captionDone(tk);
+
+  await tween(1200 * M, t => { W.sealStage = t; }, tk);
+  Sound.pluck(3);
+  await caption('小篆', '小篆线条圆融匀称，平展的双臂渐渐化作平直的一横。', tk, 250);
+  await captionDone(tk);
+
+  W.glyph.alpha = 1;
+  await tween(1200 * M, t => {
+    W.ancient = 1 - t;
+    for (let i = 0; i < NS; i++) W.glyph.prog[i] = clamp((t - i * 0.22) / 0.48);
+  }, tk);
+  W.ancient = 0; W.glyph.prog = [1, 1, 1];
+  await tween(500, t => { W.labels = t; }, tk);
+  await caption('楷书', '先写一横张双臂，再写竖撇与长捺稳稳站立。', tk, 300);
+  await captionDone(tk);
+  await tween(400, t => { W.labels = 1 - t; }, tk);
+}
+
+async function sWrite(tk) {
+  publish('sWrite');
+  progress(4);
+  await caption('写字', '「大」一共三笔。跟着起点，亲手写一个「大」。', tk);
+  await tween(600, t => { W.glyph.prog = [1 - t, 1 - t, 1 - t]; W.glyph.ghost = t; }, tk);
+  W.glyph.prog = [0, 0, 0];
+  W.glyph.trace = true;
+  W.trace = { stroke: 0, pen: null };
+
+  const showStroke = () => {
+    capMinEnd = 0;
+    const i = W.trace.stroke;
+    showCaption('写字', `第 ${i + 1} 笔，共 ${NS} 笔。`);
+    hint(`${STROKE_NAMES[i]}：从红点起笔，顺着虚线写`);
+  };
+  await captionDone(tk);
+  showStroke();
+
+  let samples = GUIDE[0], drag = null, lastInput = clock, demoing = false, completed = 0;
+  const finishStroke = () => {
+    const i = W.trace.stroke;
+    if (i >= NS) return;
+    W.glyph.prog[i] = 1;
+    Sound.pluck(i + 1);
+    W.trace.stroke++;
+    W.trace.pen = null;
+    completed++;
+    if (W.trace.stroke < NS) { samples = GUIDE[W.trace.stroke]; showStroke(); }
+  };
+  S.finish = finishStroke;
+
+  S.handler = {
+    down(p) {
+      if (demoing || W.trace.stroke >= NS) return;
+      lastInput = clock;
+      const q = worldToMmah(p.x, p.y);
+      let startIdx = 0, bestD = Infinity;
+      const limit = Math.max(1, Math.floor(samples.length * 0.4));
+      for (let j = 0; j < limit; j++) {
+        const d = Math.hypot(q.x - samples[j][0], q.y - samples[j][1]);
+        if (d < bestD) { bestD = d; startIdx = j; }
+      }
+      if (bestD > 290) { hint('请从红点起点开始落笔'); return; }
+      drag = { idx: startIdx };
+      W.glyph.prog[W.trace.stroke] = startIdx / (samples.length - 1);
+      W.trace.pen = samples[startIdx];
+    },
+    move(p) {
+      if (!drag) return;
+      lastInput = clock;
+      const q = worldToMmah(p.x, p.y);
+      const lastIdx = samples.length - 1;
+      let best = drag.idx, bd = Infinity;
+      for (let j = drag.idx; j <= Math.min(lastIdx, drag.idx + 28); j++) {
+        const d = Math.hypot(q.x - samples[j][0], q.y - samples[j][1]);
+        if (d < bd) { bd = d; best = j; }
+      }
+      if (bd <= 260 && best >= drag.idx) drag.idx = best;
+      W.glyph.prog[W.trace.stroke] = drag.idx / lastIdx;
+      W.trace.pen = samples[drag.idx];
+    },
+    up(_p, cancel) {
+      if (!drag) return;
+      const d = drag; drag = null; W.trace.pen = null;
+      const lastIdx = samples.length - 1;
+      if (!cancel && d.idx >= Math.max(2, Math.ceil(lastIdx * 0.55))) { finishStroke(); return; }
+      const i = W.trace.stroke, from = W.glyph.prog[i];
+      bg(tween(220, t => { if (W.trace.stroke === i) W.glyph.prog[i] = from * (1 - t); }, tk));
+    },
+  };
+
+  const demo = async () => {
+    if (demoing || W.trace.stroke >= NS) return;
+    demoing = true; ui.demo.disabled = true; drag = null;
+    while (W.trace.stroke < NS) {
+      const i = W.trace.stroke, pts = GUIDE[i];
+      W.glyph.prog[i] = 0;
+      await tween(720 * M, t => { W.glyph.prog[i] = t; W.trace.pen = pts[Math.round(t * (pts.length - 1))]; }, tk, ease.sine);
+      W.trace.pen = null;
+      finishStroke();
+      await wait(160, tk);
+    }
+  };
+  S.demo = () => { S.interactions.push('demo'); bg(demo()); };
+  mode('trace');
+  ui.demo.hidden = false;
+  if (AUTO) { S.interactions.push('auto'); bg(demo()); }
+
+  while (W.trace.stroke < NS) {
+    await frame(tk);
+    if (!demoing && completed === 0 && clock - lastInput > 24000) { S.interactions.push('auto'); bg(demo()); }
+  }
+  S.handler = null; S.demo = null; S.finish = null; mode(null); hint(null);
+  ui.demo.hidden = true; ui.demo.disabled = false;
+  W.glyph.trace = false;
+  window.__da.events.push('written');
+  window.haqiHanziWritten?.();
+
+  await tween(450, t => { W.glyph.ghost = 1 - t; }, tk);
+  Sound.bell(523.25);
+  await caption('写字', '写好了！大，开阔舒展的大。', tk);
+  await captionDone(tk);
+}
+
+async function sWords(tk) {
+  publish('sWords');
+  progress(5);
+  await tween(700 * M, t => { placeGlyph(800, lerp(500, 465, t), lerp(420, 350, t)); }, tk);
+  for (let i = 0; i < WORDS.length; i++) {
+    W.wordOn = i;
+    Sound.pluck(i + 2);
+    bg(tween(480, t => { W.glyph.words = Math.max(W.glyph.words, i + t); }, tk, ease.out));
+    await caption(WORDS[i][0], WORDS[i][1], tk);
+    await captionDone(tk);
+  }
+  W.wordOn = -1;
+}
+
+async function sFinale(tk) {
+  publish('sFinale');
+  progress(6);
+  setPaperMode(false);
+  bg(camTo(VIEW.finale, 1500 * M, tk));
+  await tween(1100 * M, t => { W.glyph.alpha = 1 - t; W.paper = 1 - t; W.veil = 0.55 * (1 - t); }, tk);
+  W.glyph.alpha = 0; W.paper = 0; W.veil = 0; W.glyph.words = 0;
+  W.rings.push({ t0: clock });
+  Sound.drum();
+  await caption('余韵', '胸怀宽广、步履踏实，小小的我们也会一天天长大。', tk);
+  await captionDone(tk);
+
+  hint('点一点山坡草坪，再擂响一声庆典大鼓');
+  mode('act');
+  setAction('再看一次', () => { Sound.init(); begin(); });
+  S.handler = {
+    down() {
+      W.rings.push({ t0: clock });
+      if (W.rings.length > 6) W.rings.shift();
+      Sound.drum();
+      hint(null);
+    },
+  };
+  window.__da.finished = true;
+  window.__da.events.push('completed');
+  window.haqiHanziComplete();
+}
+
+const SCENES = [sMeadow, sStretch, sCanopy, sGlyph, sWrite, sWords, sFinale];
+
+async function begin() {
+  token.dead = true;
+  const tk = token = { dead: false };
+  capMinEnd = 0;
+  waiters.forEach(w => w.rej(new Cancelled())); waiters = [];
+  resetWorld();
+  setPaperMode(false);
+  Object.assign(cam, VIEW.meadow);
+  S.handler = null; S.demo = null; S.finish = null; mode(null); setAction(null); hint(null);
+  ui.demo.hidden = true; ui.demo.disabled = false;
+  ui.cap.classList.remove('on');
+  rand = mulberry32(20261127);
+  S.interactions = [];
+  Object.assign(window.__da, { interactions: S.interactions, events: [], finished: false, state: W });
+  try {
+    for (const sc of SCENES) await sc(tk);
+  } catch (e) {
+    if (!(e instanceof Cancelled)) console.error(e);
+  }
+}
+
+async function introPlay(tk) {
+  for (;;) await frame(tk);
+}
+
+function loop(now) {
+  if (last == null) last = now;
+  const dt = Math.min(50, Math.max(0, now - last));
+  last = now;
+  if (visible) {
+    DT = dt; clock += dt;
+    W.rings = W.rings.filter(r => clock - r.t0 < 1500);
+    const batch = waiters; waiters = [];
+    for (const w of batch) {
+      if (w.tk.dead) w.rej(new Cancelled());
+      else w.res();
+    }
+  }
+  render();
+  requestAnimationFrame(loop);
+}
+
+resetWorld();
+Object.assign(cam, VIEW.intro);
+window.__da = {
+  scene: 'intro', interactions: [], events: [], finished: false, state: W,
+  medians: DA.medians, strokes: DA.strokes, toScreen, mmahToWorld,
+  completeCurrentStroke() { S.finish?.(); },
+};
+resize();
+addEventListener('resize', () => { resize(); render(); });
+document.addEventListener('visibilitychange', () => { visible = !document.hidden; last = null; });
+requestAnimationFrame(loop);
+const introTk = { dead: false };
+bg(introPlay(introTk));
+document.documentElement.dataset.fixtureReady = '1';
+
+$('#start').addEventListener('click', () => {
+  Sound.init();
+  introTk.dead = true;
+  $('#intro').classList.add('off');
+  document.body.classList.add('started');
+  begin();
+});
+$('#replay').addEventListener('click', () => { Sound.init(); begin(); });
+$('#mute').addEventListener('click', e => {
+  Sound.init();
+  Sound.setMuted(!Sound.muted);
+  const zh = Sound.muted ? '声音 关' : '声音 开';
+  e.currentTarget.textContent = window.haqiHanziUi ? window.haqiHanziUi(zh, e.currentTarget) : zh;
+});
+addEventListener('pagehide', () => { token.dead = true; void Sound.ctx?.close().catch(() => {}); }, { once: true });
+if (AUTO) $('#start').click();
+})();
+</script>
+</body>
+</html>

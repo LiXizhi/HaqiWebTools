@@ -1,0 +1,186 @@
+/* Storybook layout for Hanzi Island and mid/late island landmark puzzles */
+.island-puzzle-modal {
+    width: min(720px, 94vw);
+    max-height: min(86vh, 760px);
+}
+
+.island-puzzle-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.island-puzzle-eyebrow {
+    margin: 0;
+    font-size: 12px;
+    color: var(--muted, #6f5534);
+    letter-spacing: 0.04em;
+}
+
+.island-puzzle-intro {
+    margin: 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(255, 248, 226, 0.85);
+    border: 1px solid var(--line, rgba(145, 108, 52, 0.35));
+    color: var(--ink, #3b2814);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.island-puzzle-slots {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.island-puzzle-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #fff9e8;
+    border: 1.5px solid rgba(154, 114, 54, 0.38);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.island-puzzle-slot.is-active {
+    border-color: #244f3b;
+    box-shadow: 0 0 0 2px rgba(36, 79, 59, 0.18);
+}
+
+.island-puzzle-slot.is-wrong {
+    border-color: #b4472f;
+    background: #fff3ee;
+}
+
+.island-puzzle-slot.is-solved {
+    border-color: #3f7a56;
+    background: #f4fbf3;
+}
+
+.island-puzzle-slot-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.island-puzzle-slot-prompt {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--ink, #3b2814);
+    font-weight: 600;
+}
+
+.island-puzzle-slot-choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.island-puzzle-option {
+    min-height: 40px;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.island-puzzle-legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: rgba(244, 231, 198, 0.55);
+}
+
+.island-puzzle-legend-item {
+    margin: 0;
+    font-size: 12px;
+    color: var(--muted, #6a5030);
+    line-height: 1.4;
+}
+
+.island-puzzle-legend-item strong {
+    color: var(--ink, #3b2814);
+    font-size: 14px;
+    margin-right: 4px;
+}
+
+.island-puzzle-status {
+    margin: 0;
+    min-height: 20px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--ink, #3b2814);
+    background: rgba(255, 243, 212, 0.72);
+}
+
+.island-puzzle-status:empty {
+    display: none;
+}
+
+.island-puzzle-status.is-error {
+    color: #8a2c17;
+    background: #fde9e2;
+    border: 1px solid rgba(180, 71, 47, 0.35);
+}
+
+.island-puzzle-status.is-success {
+    color: #1f5136;
+    background: #e9f6ec;
+    border: 1px solid rgba(63, 122, 86, 0.38);
+}
+
+.island-puzzle-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 4px;
+}
+
+.island-puzzle-rewards {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.island-puzzle-reward-label {
+    font-size: 12px;
+    color: var(--muted, #6f5534);
+}
+
+.island-puzzle-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-left: auto;
+}
+
+@media (max-width: 650px) {
+    .island-puzzle-modal {
+        width: 96vw;
+        max-height: 90vh;
+    }
+
+    .island-puzzle-legend {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .island-puzzle-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .island-puzzle-actions {
+        margin-left: 0;
+        justify-content: flex-end;
+    }
+}

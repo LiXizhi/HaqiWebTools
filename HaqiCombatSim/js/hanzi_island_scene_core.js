@@ -1,6 +1,13 @@
 // Pure scene-state derivation for Hanzi Island (字源岛).
-// Turns recovered characters and completed stories into visible world restorations
-// and context-aware resident reactions without adding save fields.
+// Turns recovered characters, completed stories, and landmark placement puzzles
+// into visible world restorations and context-aware resident reactions.
+
+import {
+    allHanziPuzzlesSolved,
+    hanziPuzzlesCompletedCount,
+    islandPuzzleForLandmark,
+    islandPuzzleStatus,
+} from './island_puzzles_core.js';
 
 export const HANZI_NPCS = {
     achu: 863000,
@@ -107,6 +114,7 @@ export function hanziIslandProgress(save, content) {
     const completedStories = rows.filter(r => r.claimed).length;
     const restoredWords = rows.reduce((sum, r) => sum + r.doneWords.length, 0);
     const trialClears = save?.dungeonChallengeRecords?.[HANZI_STELE_TRIAL_ID]?.clears || 0;
+    const solvedPuzzles = hanziPuzzlesCompletedCount(save);
     return {
         rows,
         completedStories,
@@ -115,6 +123,8 @@ export function hanziIslandProgress(save, content) {
         totalWords: pack?.memory?.words?.length || 30,
         allRestored: stories.length > 0 && completedStories >= stories.length,
         trialClears,
+        solvedPuzzles,
+        allPuzzlesSolved: allHanziPuzzlesSolved(save),
     };
 }
 
@@ -131,20 +141,33 @@ export function hanziIslandScene(save, content, world = null) {
         if (!site) continue;
         const active = row.accepted && !row.claimed;
         const restored = row.claimed;
-        const label = restored
-            ? `${site.restoredLabel}：${row.glyphs.join(' · ')}`
-            : row.doneWords.length > 0
-                ? `${row.story.title}（${row.doneWords.length}/${row.story.words.length}）`
-                : active
-                    ? site.pendingLabel
-                    : '';
+        const puzzle = islandPuzzleForLandmark('hanzi', site.landmark);
+        const puzzleState = puzzle ? islandPuzzleStatus(save, puzzle) : null;
+        const puzzleReady = !!(puzzleState?.unlocked && !puzzleState.solved);
+        const puzzleSolved = !!puzzleState?.solved;
+        const label = puzzleSolved
+            ? puzzle.restoredBadge
+            : restored
+                ? puzzleReady
+                    ? `${site.restoredLabel} · 点击安放铭牌`
+                    : `${site.restoredLabel}：${row.glyphs.join(' · ')}`
+                : row.doneWords.length > 0
+                    ? `${row.story.title}（${row.doneWords.length}/${row.story.words.length}）`
+                    : puzzleReady && active
+                        ? `${site.pendingLabel} · 可现场安放`
+                        : active
+                            ? site.pendingLabel
+                            : '';
         landmarks[site.landmark] = {
             questId: row.story.questId,
             title: row.story.title,
             effect: site.effect,
-            active,
-            ready: row.ready,
-            restored,
+            active: active || puzzleReady,
+            ready: row.ready || puzzleReady,
+            restored: restored || puzzleSolved,
+            puzzleId: puzzle?.id || null,
+            puzzleReady,
+            puzzleSolved,
             done: row.doneWords.length,
             total: row.story.words.length,
             glyphs: row.glyphs,
@@ -200,7 +223,9 @@ export function hanziIslandScene(save, content, world = null) {
                     : '天黑前总有人找不到门，也可以先去看看岛上的「字源守碑试炼」。',
         [HANZI_NPCS.achu]: progress.allRestored
             ? progress.trialClears > 0
-                ? '字源岛的故事和守碑试炼都被你点亮了，欢迎随时回来看看！'
+                ? progress.allPuzzlesSolved
+                    ? '字源岛的故事、六处铭牌和守碑试炼都被你点亮了，欢迎随时回来看看！'
+                    : '守碑试炼已破！岛上各处地标还有可以亲手挂好的字牌哦。'
                 : '六段故事都回来了！听说小灯那边的「字源守碑试炼」藏着传世法杖。'
             : qFest?.ready
                 ? '庆典的字都集齐了，快回来敲响大鼓一起庆祝！'
@@ -215,4 +240,43 @@ export function hanziIslandScene(save, content, world = null) {
         signs,
         npcs,
     };
+}
+
+const BATTLE_RESONANCE_LINES = {
+    shan: '「山」字共鸣：群峰稳立，引动厚重法术之力！',
+    shang: '「上」字共鸣：拾级登高，攻势节节攀升！',
+    xia: '「下」字共鸣：顺势而落，精准压制敌阵！',
+    zhong: '「中」字共鸣：不偏不倚，气定神闲正中目标！',
+    shi: '「石」字共鸣：坚如磐石，守住阵脚不退半步！',
+    shui: '「水」字共鸣：清渠润泽，生机流转不息！',
+    'tian-field': '「田」字共鸣：阡陌井然，魔力扎根沃土！',
+    tu: '「土」字共鸣：厚土载物，稳稳护住周身！',
+    mu: '「木」字共鸣：草木抽枝，自然灵气破土而出！',
+    sen: '「森」字共鸣：众木成林，林海之力层层叠涌！',
+    ri: '「日」字共鸣：朝阳破雾，烈光驱散暗影！',
+    yue: '「月」字共鸣：清辉映夜，静水流深凝神施法！',
+    'tian-sky': '「天」字共鸣：苍穹浩瀚，法阵气势恢宏！',
+    yun: '「云」字共鸣：流云卷舒，灵巧化解敌方来势！',
+    yu: '「雨」字共鸣：甘霖骤降，涤荡全场尘埃！',
+    huo: '「火」字共鸣：暖焰腾跃，炽烈战意瞬间点燃！',
+    guang: '「光」字共鸣：明光引路，看破守卫破绽！',
+    ming: '「明」字共鸣：日月同辉，堂堂正正破开迷障！',
+    men: '「门」字共鸣：双扉紧守，如门户般护佑同伴！',
+    xiu: '「休」字共鸣：依木小憩，平复气息重整旗鼓！',
+    ren: '「人」字共鸣：并肩而立，伙伴同心其利断金！',
+    kou: '「口」字共鸣：真言出声，咒文清朗响彻法阵！',
+    shou: '「手」字共鸣：稳握法杖，亲手开拓前行之路！',
+    'mu-eye': '「目」字共鸣：明察秋毫，一眼锁定敌方意图！',
+    xin: '「心」字共鸣：心意合一，守护之念化作力量！',
+    da: '「大」字共鸣：重鼓震天，气吞山河威不可挡！',
+    xiao: '「小」字共鸣：轻巧灵动，以小博大直击要害！',
+    er: '「耳」字共鸣：倾听风声，提前预判敌方动向！',
+    guo: '「国」字共鸣：四方同守，筑起坚不可摧的防线！',
+    wu: '「舞」字共鸣：踏节起舞，连招如鼓点般行云流水！',
+};
+
+export function hanziWordBattleResonance(wordCardId) {
+    if (typeof wordCardId !== 'string' || !wordCardId.startsWith('zh:')) return null;
+    const entryId = wordCardId.slice(3);
+    return BATTLE_RESONANCE_LINES[entryId] || null;
 }

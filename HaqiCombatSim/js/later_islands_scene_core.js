@@ -1,8 +1,14 @@
-// Pure scene-state derivation for the Lv.60/70/80 continuation trilogy
-// (潮汐岛 tide / 浮岸岛 float / 风帆岛 sail).
-// Turns story completion into visible landmark ambience and live resident bubbles.
+// Pure scene-state derivation for the mid-game elemental islands (fire / ice /
+// desert / dark) and the Lv.60/70/80 continuation trilogy (tide / float / sail).
+// Turns story completion and landmark commissions into visible ambience and live bubbles.
+
+import { islandPuzzleSolved } from './island_puzzles_core.js';
 
 export const LATER_ISLAND_NPCS = {
+    fire: { guide: 30513 },
+    ice: { guide: 30601 },
+    desert: { guide: 30702 },
+    dark: { guide: 35002 },
     tide: { alan: 860000, cenbo: 860001, xiaohe: 860002, cenning: 860003 },
     float: { lusheng: 860100, mila: 860101, hezhou: 860102, builder: 860103 },
     sail: { lifeng: 860200, keeper: 860201, xiaozhou: 860202, cenning: 860203 },
@@ -16,12 +22,105 @@ function countClaimed(save, ids) {
 }
 
 export function laterIslandScene(save, zone) {
-    if (!save || !['tide', 'float', 'sail'].includes(zone)) return null;
+    if (!save || !['fire', 'ice', 'desert', 'dark', 'tide', 'float', 'sail'].includes(zone)) return null;
+
+    if (zone === 'fire') {
+        const solved = islandPuzzleSolved(save, 'fire-brazier');
+        const clearBell = (save.dungeonChallengeRecords?.['journey:gold-bell']?.clears || 0) > 0;
+        return {
+            zone,
+            landmarks: {
+                中央岔路: {
+                    effect: 'ember',
+                    restored: solved,
+                    active: !solved,
+                    label: solved ? '引火台长明 · 矿道信号清晰' : '熄灭的引火台 · 点击检修',
+                },
+            },
+            npcs: {
+                30513: solved
+                    ? clearBell
+                        ? '矿道引火台与金库风铃都妥当了，去冲击赤焰试炼塔吧！'
+                        : '引火台重新燃起来了！15 级可以去闯「金库失窃的风铃」赢 30 格精良口袋。'
+                    : '火山风吹灭了「中央岔路」的引火台，路过时帮我检修一下吧。',
+            },
+        };
+    }
+
+    if (zone === 'ice') {
+        const solved = islandPuzzleSolved(save, 'ice-postbox');
+        const clearIce = (save.dungeonChallengeRecords?.['journey:frozen-letter']?.clears || 0) > 0;
+        return {
+            zone,
+            landmarks: {
+                浮冰通道: {
+                    effect: 'compass',
+                    restored: solved,
+                    active: !solved,
+                    label: solved ? '冰原邮路已通 · 航标长亮' : '冻住的驿站信箱 · 点击分拣',
+                },
+            },
+            npcs: {
+                30601: solved
+                    ? clearIce
+                        ? '冰原邮路和冰封回信都打通了，35 级记得试试四人风眼罗盘！'
+                        : '浮冰通道的急件全送到啦！28 级可去挑战「冰封的回信」。'
+                    : '「浮冰通道」的驿站信箱被风雪冻住了，能去帮守港人分拣急件吗？',
+            },
+        };
+    }
+
+    if (zone === 'desert') {
+        const solved = islandPuzzleSolved(save, 'desert-astrolabe');
+        const clearSand = (save.dungeonChallengeRecords?.['journey:sand-echo']?.clears || 0) > 0;
+        return {
+            zone,
+            landmarks: {
+                南部绿洲: {
+                    effect: 'water',
+                    restored: solved,
+                    active: !solved,
+                    label: solved ? '古铜盘已校准 · 绿洲泉涌' : '蒙尘的绿洲铜盘 · 点击辨向',
+                },
+            },
+            npcs: {
+                30702: solved
+                    ? clearSand
+                        ? '绿洲水脉与沙海回声都已探明，40 级去闯「绿洲的最后一把钥匙」赢 50 格口袋吧！'
+                        : '铜盘校准后商队再也不怕海市蜃楼了！准备好就去试试「沙海回声」。'
+                    : '正午热浪容易让人看错水脉，先去「南部绿洲」校准一下古铜盘吧。',
+            },
+        };
+    }
+
+    if (zone === 'dark') {
+        const solved = islandPuzzleSolved(save, 'dark-lantern');
+        const clearDark = (save.dungeonChallengeRecords?.['journey:night-promise']?.clears || 0) > 0;
+        return {
+            zone,
+            landmarks: {
+                中央幽谷: {
+                    effect: 'mist-lantern',
+                    restored: solved,
+                    active: !solved,
+                    label: solved ? '驱雾石灯已亮 · 幽谷朗澈' : '暗淡的驱雾石灯 · 点击配芯',
+                },
+            },
+            npcs: {
+                35002: solved
+                    ? clearDark
+                        ? '幽谷灯明、夜约已守，去挑战四人秘境「沼泽中的航标」赢 70 格斗士大卡包吧！'
+                        : '幽谷的瘴雾散开多了！55 级可挑战「梦魇尽头的约定」与百层幽月塔。'
+                    : '「中央幽谷」的引路石灯灭了，配齐荧光芯就能驱散谷口浓雾。',
+            },
+        };
+    }
 
     if (zone === 'tide') {
         const ids = Array.from({ length: 12 }, (_, i) => 870000 + i);
         const done = countClaimed(save, ids);
         const clearTrial = (save.dungeonChallengeRecords?.['journey:tide:elite-1']?.clears || 0) > 0;
+        const clearTrial2 = (save.dungeonChallengeRecords?.['journey:tide:elite-2']?.clears || 0) > 0;
         const n = LATER_ISLAND_NPCS.tide;
         return {
             zone,
@@ -36,9 +135,13 @@ export function laterIslandScene(save, zone) {
                 },
                 回信街: {
                     effect: 'lantern',
-                    restored: claimed(save, 870009),
-                    active: accepted(save, 870009),
-                    label: claimed(save, 870009) ? '回信街灯火渐暖' : accepted(save, 870009) ? '等待一封亲口写下的回信' : '',
+                    restored: claimed(save, 870009) || islandPuzzleSolved(save, 'tide-letters'),
+                    active: accepted(save, 870009) || !islandPuzzleSolved(save, 'tide-letters'),
+                    label: islandPuzzleSolved(save, 'tide-letters')
+                        ? '旧信已核清 · 回信街灯火渐暖'
+                        : claimed(save, 870009)
+                            ? '回信街灯火渐暖 · 可核对旧信'
+                            : '回信街木桌 · 点击核对旧信与茶杯',
                 },
                 长明灯塔: {
                     effect: 'lighthouse',
@@ -49,9 +152,11 @@ export function laterIslandScene(save, zone) {
             },
             npcs: {
                 [n.alan]: claimed(save, 870011)
-                    ? clearTrial
-                        ? '失声的潮灯也重新亮起来了，谢谢你把每一封回答都送到。'
-                        : '旧信袋终于空了。准备好后，可以去挑战「失声的潮灯」与回声试炼塔。'
+                    ? clearTrial2
+                        ? '「失声的潮灯」与「被风吹散的回信」都已平安通关，谢谢你把每一封回答都送到。'
+                        : clearTrial
+                            ? '失声的潮灯重新亮起来了！接下来可以挑战五波终极本「被风吹散的回信」赢取潘多拉终极灵盾。'
+                            : '旧信袋终于空了。准备好后，可以去挑战「失声的潮灯」与回声试炼塔。'
                     : done >= 6
                         ? '两只杯子的真相快拼齐了，别急着替他们做决定。'
                         : '灯塔里还压着一袋旧信，走近看看它们本来该寄给谁。',
@@ -72,6 +177,7 @@ export function laterIslandScene(save, zone) {
         const ids = Array.from({ length: 12 }, (_, i) => 870100 + i);
         const done = countClaimed(save, ids);
         const clearTrial = (save.dungeonChallengeRecords?.['journey:float:elite-1']?.clears || 0) > 0;
+        const clearTrial2 = (save.dungeonChallengeRecords?.['journey:float:elite-2']?.clears || 0) > 0;
         const n = LATER_ISLAND_NPCS.float;
         return {
             zone,
@@ -86,9 +192,13 @@ export function laterIslandScene(save, zone) {
                 },
                 铜星测量台: {
                     effect: 'compass',
-                    restored: claimed(save, 870105),
-                    active: accepted(save, 870105),
-                    label: claimed(save, 870105) ? '铜星仪已校准 · 旧港坐标重现' : accepted(save, 870105) ? '测量台被守卫拦住' : '',
+                    restored: claimed(save, 870105) || islandPuzzleSolved(save, 'float-charts'),
+                    active: accepted(save, 870105) || !islandPuzzleSolved(save, 'float-charts'),
+                    label: islandPuzzleSolved(save, 'float-charts')
+                        ? '双海图已合璧 · 旧港新桥同现'
+                        : claimed(save, 870105)
+                            ? '铜星仪已校准 · 可叠合双海图'
+                            : '铜星测量台 · 点击叠合两岸海图',
                 },
                 共图庭院: {
                     effect: 'festival',
@@ -99,9 +209,11 @@ export function laterIslandScene(save, zone) {
             },
             npcs: {
                 [n.lusheng]: claimed(save, 870111)
-                    ? clearTrial
-                        ? '两张图合在一起，连旧测量台的守卫都服气了。'
-                        : '新地图已经画好，有空不妨去「两岸的旧测量台」试试身手。'
+                    ? clearTrial2
+                        ? '旧测量台与瀑布空白图都被你彻底勘明了，两岸海图从此再无遗漏。'
+                        : clearTrial
+                            ? '两张图合在一起，连旧测量台的守卫都服气了；去闯五波「瀑布下的空白图」赢取亚瑟君王战甲吧！'
+                            : '新地图已经画好，有空不妨去「两岸的旧测量台」试试身手。'
                     : '同一条路从两边画出来完全不同，两张图其实都是真的。',
                 [n.mila]: claimed(save, 870109)
                     ? '旧账公开以后，桥上终于能坦坦荡荡地走过来了。'
@@ -119,6 +231,7 @@ export function laterIslandScene(save, zone) {
     const ids = Array.from({ length: 12 }, (_, i) => 870200 + i);
     const done = countClaimed(save, ids);
     const clearTrial = (save.dungeonChallengeRecords?.['journey:sail:elite-1']?.clears || 0) > 0;
+    const clearTrial2 = (save.dungeonChallengeRecords?.['journey:sail:elite-2']?.clears || 0) > 0;
     const n = LATER_ISLAND_NPCS.sail;
     return {
         zone,
@@ -137,6 +250,12 @@ export function laterIslandScene(save, zone) {
                 active: accepted(save, 870205),
                 label: claimed(save, 870205) ? '岸上名单已完整公开' : accepted(save, 870205) ? '风车下传出异常噪声' : '',
             },
+            旧名单室: {
+                effect: 'lantern',
+                restored: islandPuzzleSolved(save, 'sail-signals'),
+                active: !islandPuzzleSolved(save, 'sail-signals'),
+                label: islandPuzzleSolved(save, 'sail-signals') ? '归航名单已补全 · 双灯接应' : '旧名单室 · 点击破译红帆旗语',
+            },
             风帆塔: {
                 effect: 'festival',
                 restored: claimed(save, 870211),
@@ -146,9 +265,11 @@ export function laterIslandScene(save, zone) {
         },
         npcs: {
             [n.lifeng]: claimed(save, 870211)
-                ? clearTrial
-                    ? '档案室的守夜考验也通过了，这阵回航的风属于所有人。'
-                    : '庆典不再删去求救声了。准备好后去「只准欢呼的档案室」赢取大天使之翼吧！'
+                ? clearTrial2
+                    ? '档案室与白帆最后的守夜都已圆满通关，这阵回航的风属于所有人！'
+                    : clearTrial
+                        ? '档案室的守夜考验已经通过，去向终极五波「白帆最后的守夜」发起冲刺、赢取潘多拉毕业法杖吧！'
+                        : '庆典不再删去求救声了。准备好后去「只准欢呼的档案室」赢取大天使之翼吧！'
                 : '庆典前夕有人反挂了红帆，一定还有没被听见的求救声。',
             [n.keeper]: claimed(save, 870205)
                 ? '每个出海人的名字都写回岸上名单了，一个也没少。'

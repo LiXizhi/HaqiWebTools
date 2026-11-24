@@ -86,8 +86,8 @@
       "stats": {
         "level": 70,
         "hp": 6250,
-        "xp": 8000,
-        "coins": 320
+        "xp": 8800,
+        "coins": 355
       }
     },
     {
@@ -97,8 +97,8 @@
       "stats": {
         "level": 71,
         "hp": 6900,
-        "xp": 8000,
-        "coins": 320
+        "xp": 9600,
+        "coins": 390
       }
     },
     {
@@ -108,8 +108,8 @@
       "stats": {
         "level": 71,
         "hp": 7550,
-        "xp": 8000,
-        "coins": 320
+        "xp": 10500,
+        "coins": 430
       }
     }
   ],
@@ -141,6 +141,62 @@
       "monsterId": "pack:float:guardian-4",
       "x": 2618,
       "y": 895
+    },
+    {
+      "id": "pack:float:field-5",
+      "zone": "float",
+      "monsterId": "pack:float:guardian-1",
+      "x": 2164,
+      "y": 3783
+    },
+    {
+      "id": "pack:float:field-6",
+      "zone": "float",
+      "monsterId": "pack:float:guardian-1",
+      "x": 2606,
+      "y": 3600
+    },
+    {
+      "id": "pack:float:field-7",
+      "zone": "float",
+      "monsterId": "pack:float:guardian-2",
+      "x": 2164,
+      "y": 3385
+    },
+    {
+      "id": "pack:float:field-8",
+      "zone": "float",
+      "monsterId": "pack:float:guardian-2",
+      "x": 2348,
+      "y": 3017
+    },
+    {
+      "id": "pack:float:field-9",
+      "zone": "float",
+      "monsterId": "pack:float:guardian-3",
+      "x": 1783,
+      "y": 3228
+    },
+    {
+      "id": "pack:float:field-10",
+      "zone": "float",
+      "monsterId": "pack:float:guardian-3",
+      "x": 1506,
+      "y": 2902
+    },
+    {
+      "id": "pack:float:field-11",
+      "zone": "float",
+      "monsterId": "pack:float:guardian-4",
+      "x": 1827,
+      "y": 2596
+    },
+    {
+      "id": "pack:float:field-12",
+      "zone": "float",
+      "monsterId": "pack:float:guardian-4",
+      "x": 1438,
+      "y": 1961
     }
   ],
   "goalPaths": {

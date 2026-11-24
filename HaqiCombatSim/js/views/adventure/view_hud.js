@@ -428,6 +428,33 @@ function renderHudContents(root, model, cb) {
         tracker.append(el('div', 'tracker-tactics-goal', link, el('small', '', '巡夜 ' + (goal.challengeDone||0) + '/3 · 练习 ' + goal.done + '/' + goal.total)));
     }
     appendForestTracker(tracker, vm.forestGoal, cb);
+    if (vm.islandExplore) {
+        const ex = vm.islandExplore;
+        const summary = ex.steleTotal
+            ? fill('地标复原 {done}/{total} · 碑林传拓 {stele}/{steleTotal}', {
+                done: ex.done,
+                total: ex.total,
+                stele: ex.steleDone,
+                steleTotal: ex.steleTotal,
+            }).text
+            : fill('岛屿现场复原 {done}/{total}', { done: ex.done, total: ex.total }).text;
+        const box = el('div', 'tracker-tactics-goal island-explore-tracker');
+        if (ex.next) {
+            const label = fill('现场探索 · {landmark}（{title}）', {
+                landmark: ex.next.landmark,
+                title: ex.next.title,
+            }).text;
+            box.append(button(label, () => cb.track(`island-puzzle:${ex.next.id}`), 'tracker-tactics'));
+        } else if (ex.steleTotal && ex.steleDone < ex.steleTotal) {
+            const label = fill('字源碑林传拓册（{done}/{total}）', {
+                done: ex.steleDone,
+                total: ex.steleTotal,
+            }).text;
+            box.append(button(label, () => cb.panel('hanzi-stele-scroll'), 'tracker-tactics'));
+        }
+        box.append(el('small', '', summary));
+        tracker.append(box);
+    }
     root.append(tracker);
     const nav = el('nav', 'game-nav');
     nav.setAttribute('aria-label', '游戏菜单');

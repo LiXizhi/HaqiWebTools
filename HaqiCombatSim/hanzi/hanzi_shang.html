@@ -1,0 +1,954 @@
+<!doctype html>
+<!-- Hand-authored story for 上 (shang). Standalone single-file H5 animation. -->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a2d3d">
+<title>上 shàng · 拾级登高望远山</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --silk:#efe4cd;--ink:#212529;--slate:#1a2d3d;--pine:#2f5c52;--gold:#dfb662;--cinnabar:#b84a36;--cream:#fbf6ea;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun","WenQuanYi Micro Hei",serif;
+  --kai:"Kaiti SC","STKaiti","KaiTi","BiauKai","Kaiti TC","WenQuanYi Micro Hei",var(--serif);
+}
+html,body{margin:0;height:100%;overflow:hidden;background:#1a2d3d}
+body{color:var(--cream);font-family:var(--serif);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+button{font:inherit;touch-action:manipulation}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+#view{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+body.act #view{cursor:pointer}
+body.trace #view{cursor:crosshair}
+#brand{position:fixed;left:max(16px,env(safe-area-inset-left));top:max(14px,env(safe-area-inset-top));display:flex;align-items:center;gap:10px;
+  font-family:var(--kai);font-size:14px;letter-spacing:.22em;color:#f6efde;z-index:8;pointer-events:none;opacity:.94}
+#brand .seal{background:var(--cinnabar);color:#fbf4e6;border-radius:3px;padding:5px 5px 4px;font-size:15px;line-height:1;letter-spacing:0}
+#progress{position:fixed;top:max(16px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:flex;list-style:none;
+  margin:0;padding:0;gap:clamp(8px,1.8vw,22px);z-index:10;opacity:0;transition:opacity .8s;pointer-events:none}
+#progress::before{content:"";position:absolute;top:2.5px;left:12px;right:12px;height:1px;background:rgba(250,245,232,.28)}
+body.started #progress{opacity:1}
+#progress li{position:relative;font-family:var(--kai);font-size:13px;color:rgba(246,239,222,.72);letter-spacing:.08em;padding-top:12px;white-space:nowrap}
+#progress li::before{content:"";position:absolute;top:0;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:rgba(234,222,198,.42)}
+#progress li.done{color:#efe5ce}#progress li.done::before{background:#b89958}
+#progress li.on{color:#fffaf0}#progress li.on::before{background:var(--gold);transform:scale(1.6)}
+#controls{position:fixed;right:max(14px,env(safe-area-inset-right));top:max(12px,env(safe-area-inset-top));display:flex;gap:8px;z-index:12;opacity:0;pointer-events:none;transition:opacity .6s}
+body.started #controls{opacity:1;pointer-events:auto}
+#controls button{font-family:var(--kai);font-size:14px;letter-spacing:.16em;color:#fbf5e8;background:rgba(20,38,50,.68);
+  border:1px solid rgba(223,182,98,.52);border-radius:4px;padding:7px 12px;cursor:pointer;min-height:36px}
+#hint{position:fixed;left:16px;right:16px;margin:0 auto;width:fit-content;max-width:calc(100vw - 32px);box-sizing:border-box;
+  top:max(58px,calc(env(safe-area-inset-top) + 46px));text-align:center;color:#fbf5e6;opacity:0;transition:opacity .45s;pointer-events:none;z-index:9;
+  padding:7px 20px 8px;border:1px solid rgba(223,182,98,.62);border-radius:22px;background:rgba(18,35,46,.78)}
+#hint span{font-family:var(--kai);font-size:clamp(16px,2.3vh,20px);letter-spacing:.1em}
+#hint.on{opacity:1}
+#caption{position:fixed;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translate(-50%,10px);
+  width:min(900px,calc(100vw - 24px));box-sizing:border-box;text-align:center;opacity:0;
+  transition:opacity .5s,transform .7s cubic-bezier(.2,.7,.2,1);pointer-events:none;z-index:6;padding:20px 22px 13px;
+  background:linear-gradient(to top,rgba(14,28,38,.92) 40%,rgba(14,28,38,.66) 70%,rgba(14,28,38,0) 100%)}
+body.paper #caption{background:radial-gradient(ellipse at center,rgba(244,235,216,.95) 42%,rgba(244,235,216,0) 74%)}
+#caption.on{opacity:1;transform:translate(-50%,0)}
+#capTitle{margin:0 0 7px;font-weight:400;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.38em;margin-left:.38em;color:var(--gold)}
+body.paper #capTitle{color:var(--cinnabar)}
+#capText{margin:0;font-family:var(--kai);font-size:clamp(18px,calc(1vw + 1.55vh),27px);line-height:1.68;color:var(--cream);letter-spacing:.06em;min-height:1.68em}
+body.paper #capText{color:var(--ink)}
+.haqi-sub-trans{display:block;margin-top:4px;font-family:Georgia,"Times New Roman",system-ui,sans-serif;font-size:clamp(13px,1.8vh,17px);line-height:1.45;color:#e4dcc8}
+body.paper .haqi-sub-trans{color:#5e5342}
+.actions{display:flex;justify-content:center;gap:10px;margin-top:10px}
+.actions button{pointer-events:auto;cursor:pointer;font-family:var(--kai);letter-spacing:.2em;border-radius:4px;min-height:44px}
+#action{font-size:18px;padding:9px 22px;color:#1b2c36;border:1px solid #fbf3dc;background:linear-gradient(#f8ecc8,#dfb662)}
+#demo{font-size:16px;padding:8px 16px;color:var(--ink);background:rgba(248,241,226,.92);border:1px solid rgba(34,31,27,.35)}
+[hidden]{display:none!important}
+#intro{position:fixed;inset:0;z-index:20;pointer-events:none;transition:opacity 1s,transform 1s}
+#intro.off{opacity:0;transform:scale(1.03)}
+#intro.off *{pointer-events:none!important}
+.introTop,.introBottom{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
+.introTop{top:max(18px,env(safe-area-inset-top))}
+.introBottom{bottom:max(12px,env(safe-area-inset-bottom));gap:8px;left:50%;right:auto;width:min(100%,660px);transform:translateX(-50%);box-sizing:border-box;
+  padding-top:34px;background:linear-gradient(to top,rgba(14,28,38,.93) 44%,rgba(14,28,38,.58) 72%,rgba(14,28,38,0) 100%)}
+.tag{display:flex;align-items:center;gap:10px;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.28em;color:var(--gold)}
+.tag i{display:block;width:clamp(22px,5vw,56px);height:1px;background:currentColor;opacity:.72}
+.pinyin{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:clamp(30px,5.2vh,46px);line-height:1;color:var(--cream)}
+.mean{font-family:var(--kai);font-size:clamp(17px,2.5vh,22px);letter-spacing:.18em;color:#fff8ea}
+.sub{font-family:var(--kai);font-size:clamp(15px,2.1vh,18px);color:#e5dfd0;letter-spacing:.12em;margin:2px 0 0;line-height:1.7}
+.btn-main{pointer-events:auto;margin-top:8px;font-family:var(--kai);font-size:clamp(18px,2.6vh,22px);letter-spacing:.38em;padding:10px 28px 10px 34px;min-height:44px;
+  color:#1b2c36;background:linear-gradient(#faefd0,#dfb662);border:1px solid #fff8e6;border-radius:4px;cursor:pointer}
+.meta{font-size:12px;color:#d6cebc;letter-spacing:.12em;margin:0}
+#note{position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom));font-size:11px;color:rgba(238,230,210,.78);letter-spacing:.08em;z-index:4;pointer-events:none}
+body.paper #note{color:#867c6a}
+body.portrait #brand,body.portrait #note{display:none}
+body.portrait #progress{top:max(8px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left));right:138px;width:auto;transform:none;justify-content:space-between;gap:0}
+body.portrait #progress li{font-size:10px;letter-spacing:0}
+@media (max-height:540px){.sub,.meta{display:none}#capText{font-size:16px}#caption{padding:8px 12px 6px}.actions{margin-top:4px}}
+</style>
+<script>
+// Haqi H5 protocol v1: independent pages remain usable without a parent.
+(()=>{let context=null,written=false,finished=false,serial=0;const callbacks=new Map(),subCache=new Map(),uiCache=new Map(),pending=new Set(),uiNodes=new Map();
+const isZh=loc=>!loc||/^zh\b/i.test(loc);
+const send=data=>{if(context)parent.postMessage({channel:'haqi-hanzi',version:1,entryId:context.entryId,sessionId:context.sessionId,...data},context.origin);};
+const refreshDom=()=>{for(const[el,zh]of uiNodes){if(!el?.isConnected){uiNodes.delete(el);continue;}const tr=!isZh(context?.locale)&&uiCache.get(zh);const next=(tr&&tr!==zh)?tr:zh;if(el.dataset.haqiKind==='seal'){const seal=el.querySelector('.seal');el.textContent=next;if(seal)el.prepend(seal);}else if(el.dataset.haqiKind==='tag'){const i1=document.createElement('i'),i2=document.createElement('i');el.replaceChildren(i1,document.createTextNode(next),i2);}else el.textContent=next;}document.querySelectorAll('[data-haqi-caption]').forEach(el=>renderCaption(el,el.dataset.haqiCaption));};
+const flushPending=()=>{if(!context||!pending.size)return;const texts=[...pending];pending.clear();window.haqiHanziTranslate(texts);};
+const ensureTexts=texts=>{const need=[];for(const t of texts){const s=typeof t==='string'?t.trim():'';if(s&&(!subCache.has(s)||!uiCache.has(s))&&!pending.has(s)){pending.add(s);need.push(s);}}if(need.length&&context)flushPending();};
+const renderCaption=(el,zh)=>{if(!el)return;el.dataset.haqiCaption=zh||'';let sub=el.querySelector('.haqi-sub-trans');if(!zh||isZh(context?.subtitleLocale||context?.locale)){sub?.remove();return;}const tr=subCache.get(zh);if(!tr||tr===zh){sub?.remove();ensureTexts([zh]);return;}if(!sub){sub=document.createElement('span');sub.className='haqi-sub-trans';const host=el.querySelector('#capText')||el;if(host!==el&&host.parentNode===el)host.insertAdjacentElement('afterend',sub);else el.appendChild(sub);}sub.textContent=tr;};
+const trackUi=(el,zh,kind='')=>{if(!el||!zh)return;if(kind)el.dataset.haqiKind=kind;uiNodes.set(el,zh);ensureTexts([zh]);};
+const scanStatic=()=>{if(!document.body)return;document.querySelectorAll('#start,#replay,#mute,#demo,#action,#progress li,#note,.introBottom .mean,.introBottom .sub,.introBottom .meta').forEach(el=>{const zh=(el.textContent||'').trim();if(zh&&!uiNodes.has(el))trackUi(el,zh);});document.querySelectorAll('#brand,.brand').forEach(el=>{if(uiNodes.has(el))return;const clone=el.cloneNode(true);clone.querySelector?.('.seal')?.remove();const zh=(clone.textContent||'').trim();if(zh)trackUi(el,zh,'seal');});document.querySelectorAll('.introTop .tag,.tag').forEach(el=>{if(uiNodes.has(el))return;const zh=(el.textContent||'').trim();if(zh)trackUi(el,zh,'tag');});refreshDom();};
+if(document.readyState==='loading')addEventListener('DOMContentLoaded',scanStatic,{once:true});else scanStatic();
+window.haqiHanziWritten=()=>{written=true;send({type:'written'});};
+window.haqiHanziComplete=()=>{if(!written){written=true;send({type:'written'});}finished=true;send({type:'completed'});};
+window.haqiHanziPrefetch=texts=>ensureTexts(Array.isArray(texts)?texts:[texts]);
+window.haqiHanziUi=(zh,el)=>{const s=typeof zh==='string'?zh.trim():'';if(!s)return zh;if(el)trackUi(el,s);else ensureTexts([s]);const tr=!isZh(context?.locale)&&uiCache.get(s);return(tr&&tr!==s)?tr:zh;};
+window.haqiHanziCaption=(el,zh)=>{const s=typeof zh==='string'?zh.trim():'';if(s)ensureTexts([s]);renderCaption(el,s);};
+window.haqiHanziTranslate=texts=>new Promise(resolve=>{const list=(Array.isArray(texts)?texts:[]).map(t=>typeof t==='string'?t.trim():'').filter(Boolean);if(!context||!list.length){resolve({});return;}const requestId=String(++serial);const timer=setTimeout(()=>{callbacks.delete(requestId);resolve({});},1500);callbacks.set(requestId,msg=>{clearTimeout(timer);const sub=msg?.translations||{},ui=msg?.uiTranslations||sub;for(const[k,v]of Object.entries(sub))if(typeof v==='string'&&v.trim())subCache.set(k,v.trim());for(const[k,v]of Object.entries(ui))if(typeof v==='string'&&v.trim())uiCache.set(k,v.trim());refreshDom();resolve(sub);});send({type:'translate',requestId,texts:list});});
+addEventListener('message',event=>{const m=event.data;if(event.source!==parent||parent===window||m?.channel!=='haqi-hanzi'||m.version!==1)return;
+if(m.type==='init'&&typeof m.sessionId==='string'&&typeof m.entryId==='string'){if(document.referrer&&event.origin!==new URL(document.referrer).origin)return;context={...m,origin:event.origin};scanStatic();flushPending();refreshDom();if(written)send({type:'written'});if(finished)send({type:'completed'});}
+else if(context&&event.origin===context.origin&&m.sessionId===context.sessionId&&m.type==='translations'){callbacks.get(m.requestId)?.(m);callbacks.delete(m.requestId);}});
+if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'ready'},'*');})();
+</script>
+</head>
+<body>
+<canvas id="view" role="img" aria-label="清晨山脚石坪平铺如横线，顺着石阶一步步登到云雾之上，山顶路标立起化作「上」。"></canvas>
+<div id="brand"><span class="seal">字</span>一字一故事</div>
+<ol id="progress" aria-hidden="true"><li>山脚</li><li>登阶</li><li>望远</li><li>成字</li><li>写字</li><li>词意</li><li>余韵</li></ol>
+<div id="controls"><button id="replay" type="button">重播</button><button id="mute" type="button">声音 开</button></div>
+<div id="hint" role="status"></div>
+<section id="caption" aria-live="polite" aria-atomic="true">
+  <h2 id="capTitle"></h2><p id="capText"></p>
+  <div class="actions"><button id="action" type="button" hidden></button><button id="demo" type="button" hidden>看示范</button></div>
+</section>
+<div id="note">古字形为艺术示意；故事为原创</div>
+<div id="intro">
+  <div class="introTop"><div class="tag"><i></i>今天认识一个汉字<i></i></div></div>
+  <div class="introBottom">
+    <div class="pinyin">shàng</div>
+    <div class="mean">上 · 拾级登高望远山</div>
+    <p class="sub">山脚石坪平平铺开，云雾上面藏着清晨的朝阳。</p>
+    <button id="start" class="btn-main" type="button">开始</button>
+    <p class="meta">约两分钟 · 拾级登阶、拨云望远与描字 · 建议开启声音</p>
+  </div>
+</div>
+<script>
+(() => {
+'use strict';
+
+const $ = s => document.querySelector(s);
+const TAU = Math.PI * 2;
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const ease = {
+  inOut: t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+  out: t => 1 - Math.pow(1 - t, 3),
+  sine: t => -(Math.cos(Math.PI * t) - 1) / 2,
+  lin: t => t,
+};
+function mulberry32(a) {
+  return () => {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const QUERY = new URLSearchParams(location.search);
+const FAST = QUERY.has('fast') ? 0.06 : 1;
+const AUTO = QUERY.has('auto');
+const M = reduceMotion ? 0.6 : 1;
+let rand = mulberry32(20261124);
+
+class Cancelled extends Error {}
+let clock = 0, DT = 16, visible = true, last = null;
+let waiters = [];
+let token = { dead: true };
+function frame(tk) { return new Promise((res, rej) => waiters.push({ tk, res, rej })); }
+async function wait(ms, tk) { ms *= FAST; const t0 = clock; while (clock - t0 < ms) await frame(tk); }
+async function tween(ms, fn, tk, ez = ease.inOut) {
+  ms *= FAST;
+  if (ms <= 0) { fn(1); return; }
+  const t0 = clock;
+  for (;;) {
+    await frame(tk);
+    const t = clamp((clock - t0) / ms);
+    fn(ez(t));
+    if (t >= 1) return;
+  }
+}
+const bg = p => p.catch(e => { if (!(e instanceof Cancelled)) console.error(e); });
+
+const PENTA = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33];
+const Sound = {
+  ctx: null, master: null, muted: false,
+  init() {
+    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return;
+    try { this.ctx = new C(); } catch { return; }
+    this.master = this.ctx.createGain();
+    this.master.gain.value = this.muted ? 0 : 0.5;
+    this.master.connect(this.ctx.destination);
+  },
+  setMuted(v) { this.muted = v; if (this.master) this.master.gain.value = v ? 0 : 0.5; },
+  tone(freq, dur = 0.34, type = 'triangle', gain = 0.06) {
+    if (!this.ctx || this.muted) return;
+    try {
+      const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+      o.type = type; o.frequency.value = freq;
+      const t = this.ctx.currentTime;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(gain, t + 0.018);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(this.master); o.start(t); o.stop(t + dur + 0.03);
+    } catch { /* Audio is optional. */ }
+  },
+  pluck(i) { this.tone(PENTA[i % PENTA.length], 0.42, 'triangle', 0.075); },
+  bell(freq = 523.25) { this.tone(freq, 0.85, 'sine', 0.06); },
+};
+
+const SHANG = {"strokes":["M 520 133 Q 523 296 525 442 L 525 479 Q 525 654 543 722 Q 556 746 540 761 Q 498 792 465 802 Q 449 805 432 791 Q 425 782 432 770 Q 462 727 462 629 Q 462 394 466 128 C 466 98 519 103 520 133 Z","M 525 442 Q 573 436 682 459 Q 769 477 776 484 Q 786 493 780 503 Q 771 516 738 523 Q 704 529 670 514 Q 637 502 601 493 Q 564 484 525 479 C 495 475 495 445 525 442 Z","M 528 82 Q 582 83 633 88 Q 781 100 911 81 Q 938 78 945 88 Q 954 103 940 116 Q 907 147 859 171 Q 843 178 813 169 Q 707 150 520 133 L 466 128 Q 363 121 309 114 Q 239 104 137 106 Q 121 106 120 93 Q 119 80 139 63 Q 184 30 234 41 Q 289 56 416 71 Q 468 78 528 82 Z"],"medians":[[[446,781],[462,775],[498,734],[493,159],[472,136]],[[531,448],[551,462],[627,473],[698,493],[768,496]],[[134,92],[171,76],[212,72],[458,103],[841,132],[932,99]]]};
+const NS = 3;
+const STROKE_NAMES = ['竖', '横', '横'];
+const WORDS = [
+  ['山上', '顺着石阶往上走，山上的风景真辽阔。'],
+  ['上去', '迈开脚步走上去，云雾就在脚底下。'],
+  ['向上', '小树苗每天向着太阳努力向上生长。'],
+];
+
+function densify(pts, step = 12) {
+  const out = [[pts[0][0], pts[0][1]]];
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i];
+    const n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / step));
+    for (let k = 1; k <= n; k++) out.push([lerp(a[0], b[0], k / n), lerp(a[1], b[1], k / n)]);
+  }
+  return out;
+}
+const GUIDE = SHANG.medians.map(pts => densify(pts));
+
+const cvs = $('#view'), ctx = cvs.getContext('2d');
+let SW = 1, SH = 1, DPR = 1, portrait = false;
+const VIEW = {
+  intro:  { x: 800, y: 560, w: 1460, h: 880, pw: 820, pcy: 0.42 },
+  foot:   { x: 780, y: 610, w: 1320, h: 820, pw: 780, pcy: 0.43 },
+  climb:  { x: 800, y: 540, w: 1280, h: 820, pw: 760, pcy: 0.41 },
+  peak:   { x: 820, y: 440, w: 1180, h: 760, pw: 720, pcy: 0.40 },
+  glyph:  { x: 800, y: 510, w: 1080, h: 920, pw: 760, pcy: 0.38 },
+  finale: { x: 800, y: 530, w: 1420, h: 860, pw: 820, pcy: 0.42 },
+};
+const cam = { ...VIEW.intro };
+const CV = { x: 0, y: 0, k: 1, cy: 0 };
+const GL = { x: 590, y: 300, cx: 800, cy: 510, size: 420 };
+
+function placeGlyph(cx, cy, size) {
+  GL.cx = cx; GL.cy = cy; GL.size = size;
+  GL.x = cx - size / 2; GL.y = cy - size / 2;
+}
+function mmahToWorld(x, y) {
+  const s = GL.size / 1024;
+  return { x: GL.x + x * s, y: GL.y + (900 - y) * s };
+}
+function worldToMmah(wx, wy) {
+  const s = GL.size / 1024;
+  return { x: (wx - GL.x) / s, y: 900 - (wy - GL.y) / s };
+}
+function frameW(v) { return portrait ? (v.pw ?? v.w * 0.62) : v.w; }
+function updateView() {
+  const usableH = SH * (portrait ? 0.60 : 0.75);
+  CV.k = Math.min(SW / frameW(cam), usableH / cam.h);
+  CV.cy = SH * (cam.pcy ?? 0.42);
+  CV.x = cam.x; CV.y = cam.y;
+}
+function setCam(c = ctx) {
+  const k = CV.k;
+  c.setTransform(DPR * k, 0, 0, DPR * k, DPR * (SW / 2 - CV.x * k), DPR * (CV.cy - CV.y * k));
+}
+function resetTf(c = ctx) { c.setTransform(DPR, 0, 0, DPR, 0, 0); }
+function toWorld(cx, cy) { return { x: (cx - SW / 2) / CV.k + CV.x, y: (cy - CV.cy) / CV.k + CV.y }; }
+function toScreen(x, y) { return { x: (x - CV.x) * CV.k + SW / 2, y: (y - CV.y) * CV.k + CV.cy }; }
+async function camTo(v, ms, tk) {
+  const from = { x: cam.x, y: cam.y, w: cam.w, h: cam.h, pw: cam.pw, pcy: cam.pcy };
+  await tween(ms, t => {
+    cam.x = lerp(from.x, v.x, t); cam.y = lerp(from.y, v.y, t);
+    cam.w = lerp(from.w, v.w, t); cam.h = lerp(from.h, v.h, t);
+    cam.pw = lerp(from.pw, v.pw ?? v.w * 0.62, t); cam.pcy = lerp(from.pcy, v.pcy ?? 0.42, t);
+  }, tk);
+}
+function resize() {
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  SW = innerWidth; SH = innerHeight;
+  portrait = SW / SH < 0.88;
+  document.body.classList.toggle('portrait', portrait);
+  cvs.width = Math.round(SW * DPR); cvs.height = Math.round(SH * DPR);
+}
+
+const STEPS = [
+  { x: 520, y: 745 },
+  { x: 625, y: 625 },
+  { x: 725, y: 505 },
+  { x: 810, y: 392 },
+];
+const W = {};
+function resetWorld() {
+  W.stepProg = 0;
+  W.sunGlow = 0.25;
+  W.mistClear = 0;
+  W.postLit = 0;
+  W.ancient = 0;
+  W.sealStage = 0;
+  W.paper = 0;
+  W.veil = 0;
+  W.labels = 0;
+  W.glyph = { alpha: 0, ghost: 0, prog: [0, 0, 0], trace: false, words: 0 };
+  W.trace = null;
+  W.wordOn = -1;
+  W.kites = [];
+  placeGlyph(800, 500, 420);
+}
+
+function setPaperMode(on) { document.body.classList.toggle('paper', !!on); }
+
+function withGlyph(fn) {
+  ctx.save();
+  const s = GL.size / 1024;
+  ctx.translate(GL.x, GL.y); ctx.scale(s, s); ctx.translate(0, 900); ctx.scale(1, -1);
+  fn(ctx);
+  ctx.restore();
+}
+function paintStroke(c, i, q) {
+  const path = new Path2D(SHANG.strokes[i]);
+  if (q >= 1) { c.fill(path); return; }
+  if (q <= 0) return;
+  c.save();
+  c.clip(path);
+  c.lineWidth = 175; c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = c.fillStyle;
+  const pts = GUIDE[i], count = (pts.length - 1) * q;
+  c.beginPath();
+  c.moveTo(pts[0][0], pts[0][1]);
+  for (let j = 1; j <= Math.floor(count); j++) c.lineTo(pts[j][0], pts[j][1]);
+  const k = Math.floor(count);
+  if (k < pts.length - 1) {
+    const a = pts[k], b = pts[k + 1], f = count - k;
+    c.lineTo(lerp(a[0], b[0], f), lerp(a[1], b[1], f));
+  }
+  c.stroke();
+  c.restore();
+}
+
+function childPos() {
+  const u = clamp(W.stepProg, 0, 3);
+  const idx = Math.min(2, Math.floor(u));
+  const f = u - idx;
+  const a = STEPS[idx], b = STEPS[idx + 1];
+  return { x: lerp(a.x, b.x, f), y: lerp(a.y, b.y, f) - Math.sin(f * Math.PI) * 18 };
+}
+
+function drawScene() {
+  resetTf();
+  const g = ctx.createLinearGradient(0, 0, 0, SH);
+  g.addColorStop(0, '#182c3e');
+  g.addColorStop(0.52, '#2d5368');
+  g.addColorStop(1, '#e8cda0');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, SW, SH);
+
+  const sun = toScreen(980, lerp(310, 235, W.sunGlow));
+  const rg = ctx.createRadialGradient(sun.x, sun.y, 6, sun.x, sun.y, Math.max(40, 240 * (0.5 + W.sunGlow)));
+  rg.addColorStop(0, 'rgba(255,247,220,0.92)');
+  rg.addColorStop(0.4, 'rgba(243,205,128,0.42)');
+  rg.addColorStop(1, 'rgba(243,205,128,0)');
+  ctx.fillStyle = rg;
+  ctx.fillRect(0, 0, SW, SH);
+  ctx.fillStyle = '#fff6dc';
+  ctx.beginPath();
+  ctx.arc(sun.x, sun.y, 32, 0, TAU);
+  ctx.fill();
+
+  setCam();
+  // Distant peaks
+  ctx.save();
+  ctx.fillStyle = '#254457';
+  ctx.beginPath();
+  ctx.moveTo(100, 820); ctx.lineTo(380, 470); ctx.lineTo(640, 560); ctx.lineTo(960, 330); ctx.lineTo(1320, 520); ctx.lineTo(1540, 820);
+  ctx.closePath(); ctx.fill();
+
+  // Main mountain slope & stone baseline terrace
+  ctx.fillStyle = '#335d53';
+  ctx.beginPath();
+  ctx.moveTo(220, 820); ctx.lineTo(640, 430); ctx.lineTo(820, 375); ctx.lineTo(1060, 445); ctx.lineTo(1360, 820);
+  ctx.closePath(); ctx.fill();
+
+  // Baseline horizontal stone terrace (visual metaphor for bottom long stroke)
+  ctx.fillStyle = '#d8ceb8';
+  ctx.strokeStyle = '#6f6554';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.rect(360, 748, 880, 34);
+  ctx.fill(); ctx.stroke();
+
+  // Stone steps going upward
+  for (let i = 0; i < 9; i++) {
+    const t = i / 8;
+    const sx = lerp(500, 800, t), sy = lerp(736, 396, t);
+    ctx.fillStyle = i / 3 <= W.stepProg + 0.2 ? '#efe6d2' : '#b7ad99';
+    ctx.fillRect(sx - 42, sy - 8, 84, 16);
+  }
+
+  // Summit wooden signpost (vertical post + right-pointing upper arm = 上)
+  ctx.fillStyle = W.postLit > 0.1 ? '#b84a36' : '#6d4c38';
+  ctx.fillRect(796, 265, 18, 130);
+  ctx.fillStyle = W.postLit > 0.1 ? '#dfb662' : '#8a694e';
+  ctx.fillRect(810, 312, 68, 16);
+
+  // Traveler figure climbing
+  const p = childPos();
+  ctx.fillStyle = '#263844';
+  ctx.beginPath(); ctx.ellipse(p.x, p.y, 16, 6, 0, 0, TAU); ctx.fill();
+  ctx.fillStyle = '#c85a44';
+  ctx.beginPath();
+  ctx.moveTo(p.x - 14, p.y - 4); ctx.lineTo(p.x - 10, p.y - 48); ctx.lineTo(p.x + 10, p.y - 48); ctx.lineTo(p.x + 14, p.y - 4);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#f2cbb0';
+  ctx.beginPath(); ctx.arc(p.x, p.y - 60, 12, 0, TAU); ctx.fill();
+
+  // Cloud band below summit (fades gently as mist clears)
+  const mistA = clamp(0.68 * (1 - W.mistClear * 0.72), 0, 0.8);
+  if (mistA > 0.02) {
+    ctx.fillStyle = `rgba(246,240,226,${mistA.toFixed(3)})`;
+    for (const [mx, my, rx, ry] of [[580, 520, 150, 28], [820, 500, 180, 32], [1040, 530, 140, 26]]) {
+      ctx.beginPath(); ctx.ellipse(mx, my, rx, ry, 0, 0, TAU); ctx.fill();
+    }
+  }
+
+  // Extra kites in finale
+  for (const k of W.kites) {
+    const lift = Math.min(180, (clock - k.t0) * 0.035);
+    const kx = k.x + Math.sin((clock - k.t0) * 0.003) * 14;
+    const ky = k.y - lift;
+    ctx.fillStyle = '#dfb662';
+    ctx.beginPath();
+    ctx.moveTo(kx, ky - 16); ctx.lineTo(kx + 14, ky); ctx.lineTo(kx, ky + 16); ctx.lineTo(kx - 14, ky);
+    ctx.closePath(); ctx.fill();
+  }
+  ctx.restore();
+}
+
+function drawPaperAndAncient() {
+  if (W.veil > 0.01) {
+    resetTf();
+    ctx.fillStyle = `rgba(22,32,42,${W.veil.toFixed(3)})`;
+    ctx.fillRect(0, 0, SW, SH);
+  }
+  if (W.paper > 0.01) {
+    setCam();
+    ctx.save();
+    ctx.globalAlpha = W.paper * 0.96;
+    ctx.fillStyle = '#fbf5e8';
+    ctx.strokeStyle = 'rgba(184,74,54,0.48)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.rect(GL.cx - GL.size * 0.6, GL.cy - GL.size * 0.6, GL.size * 1.2, GL.size * 1.2);
+    ctx.fill(); ctx.stroke();
+    ctx.restore();
+  }
+  if (W.ancient > 0.01) {
+    setCam();
+    ctx.save();
+    ctx.globalAlpha = W.ancient;
+    ctx.strokeStyle = '#6b3b26';
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 14;
+    const cx = GL.cx, cy = GL.cy;
+    // Bottom curved/flat baseline
+    ctx.beginPath();
+    ctx.moveTo(cx - 135, cy + 95);
+    ctx.quadraticCurveTo(cx, cy + lerp(76, 95, W.sealStage), cx + 135, cy + 95);
+    ctx.stroke();
+    // Oracle short upper bar -> Seal vertical + short bar
+    if (W.sealStage < 0.05) {
+      ctx.beginPath();
+      ctx.moveTo(cx - 52, cy - 35);
+      ctx.lineTo(cx + 52, cy - 35);
+      ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(cx - 8, cy + 92);
+      ctx.lineTo(cx - 8, lerp(cy - 10, cy - 105, W.sealStage));
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(cx - 8, cy - 22);
+      ctx.lineTo(cx + 68, cy - 22);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+}
+
+function drawGlyphLayer() {
+  const g = W.glyph;
+  if (g.alpha <= 0.001) return;
+  setCam();
+  withGlyph(c => {
+    if (g.ghost > 0.01) {
+      for (let i = 0; i < NS; i++) {
+        if (g.prog[i] >= 1) continue;
+        const on = g.trace && W.trace && W.trace.stroke === i;
+        c.globalAlpha = g.alpha * g.ghost * (on ? 0.55 : 0.28);
+        c.fillStyle = on ? '#e6b89c' : '#dfd2be';
+        c.fill(new Path2D(SHANG.strokes[i]));
+      }
+    }
+    c.globalAlpha = g.alpha;
+    c.fillStyle = '#231f1c';
+    for (let i = 0; i < NS; i++) if (g.prog[i] > 0) paintStroke(c, i, g.prog[i]);
+  });
+
+  if (g.trace && W.trace && W.trace.stroke < NS) {
+    const pts = GUIDE[W.trace.stroke];
+    withGlyph(c => {
+      c.globalAlpha = g.alpha;
+      c.strokeStyle = '#b84a36';
+      c.lineWidth = 11;
+      c.setLineDash([26, 20]);
+      c.lineCap = 'round';
+      c.beginPath();
+      c.moveTo(pts[0][0], pts[0][1]);
+      for (const p of pts) c.lineTo(p[0], p[1]);
+      c.stroke();
+      c.setLineDash([]);
+      c.fillStyle = '#b84a36';
+      c.beginPath();
+      c.arc(pts[0][0], pts[0][1], 22, 0, TAU);
+      c.fill();
+      c.fillStyle = '#fff8ee';
+      c.beginPath();
+      c.arc(pts[0][0], pts[0][1], 9, 0, TAU);
+      c.fill();
+      if (W.trace.pen) {
+        c.fillStyle = '#dfb662';
+        c.beginPath();
+        c.arc(W.trace.pen[0], W.trace.pen[1], 14, 0, TAU);
+        c.fill();
+      }
+    });
+  }
+
+  if (W.labels > 0.02 && !g.trace) {
+    setCam();
+    ctx.save();
+    ctx.globalAlpha = g.alpha * W.labels;
+    ctx.fillStyle = '#b84a36';
+    ctx.font = `${portrait ? 24 : 30}px "Kaiti SC","KaiTi",serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const m1 = mmahToWorld(380, 620), m2 = mmahToWorld(760, 560), m3 = mmahToWorld(520, 18);
+    ctx.fillText('竖（向上立起）', m1.x - 40, m1.y);
+    ctx.fillText('短横（高处标记）', m2.x + 30, m2.y);
+    ctx.fillText('长横（平地基准）', m3.x, m3.y + 24);
+    ctx.restore();
+  }
+
+  if (g.words > 0.01) {
+    setCam();
+    const y = GL.cy + GL.size * 0.72, gap = portrait ? 150 : 210;
+    ctx.save();
+    ctx.font = `${portrait ? 32 : 40}px "Kaiti SC","KaiTi",serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    WORDS.forEach(([w], i) => {
+      const a = clamp(g.words - i) * g.alpha;
+      if (a <= 0) return;
+      ctx.globalAlpha = a * (W.wordOn === i ? 1 : 0.42);
+      ctx.fillStyle = W.wordOn === i ? '#b84a36' : '#786652';
+      ctx.fillText(w, GL.cx + (i - 1) * gap, y);
+    });
+    ctx.restore();
+  }
+}
+
+function render() {
+  updateView();
+  drawScene();
+  drawPaperAndAncient();
+  drawGlyphLayer();
+}
+
+const ui = {
+  cap: $('#caption'), capT: $('#capTitle'), capP: $('#capText'), hint: $('#hint'),
+  action: $('#action'), demo: $('#demo'), prog: [...document.querySelectorAll('#progress li')],
+  mute: $('#mute'),
+};
+let capMinEnd = 0;
+function span(cls, text) { const s = document.createElement('span'); if (cls) s.className = cls; s.textContent = text; return s; }
+function showCaption(title, text) {
+  ui.capT.textContent = window.haqiHanziUi ? window.haqiHanziUi(title, ui.capT) : title;
+  ui.capP.replaceChildren(...[...text].map((ch, i) => { const s = span('ch', ch); s.style.setProperty('--i', i); return s; }));
+  window.haqiHanziCaption?.(ui.cap, text);
+  ui.cap.classList.remove('on'); void ui.cap.offsetWidth; ui.cap.classList.add('on');
+}
+async function caption(title, text, tk, hold = 0) {
+  window.haqiHanziPrefetch?.([title, text]);
+  while (clock < capMinEnd) await frame(tk);
+  ui.cap.classList.remove('on');
+  await wait(reduceMotion ? 120 : 240, tk);
+  showCaption(title, text);
+  const n = [...text].length;
+  capMinEnd = clock + (Math.max(700, n * 65 + 650) + hold) * FAST;
+}
+async function captionDone(tk) { while (clock < capMinEnd) await frame(tk); }
+function hint(text) {
+  if (text) {
+    const s = span('', '');
+    s.textContent = window.haqiHanziUi ? window.haqiHanziUi(text, s) : text;
+    ui.hint.replaceChildren(s); ui.hint.classList.add('on');
+  } else { ui.hint.classList.remove('on'); ui.hint.replaceChildren(); }
+}
+function progress(i) { ui.prog.forEach((li, j) => { li.classList.toggle('on', j === i); li.classList.toggle('done', j < i); }); }
+const S = { handler: null, demo: null, finish: null, interactions: [] };
+function mode(m) {
+  document.body.classList.remove('act', 'trace');
+  if (m) document.body.classList.add(m);
+}
+let actionFn = null;
+function setAction(label, fn) {
+  actionFn = fn;
+  if (label) { ui.action.textContent = window.haqiHanziUi ? window.haqiHanziUi(label, ui.action) : label; ui.action.hidden = false; }
+  else ui.action.hidden = true;
+}
+ui.action.addEventListener('click', () => actionFn?.());
+ui.demo.addEventListener('click', () => S.demo?.());
+
+let activePointer = null;
+cvs.addEventListener('pointerdown', e => {
+  if (!e.isPrimary || activePointer != null) return;
+  const h = S.handler; if (!h?.down) return;
+  activePointer = e.pointerId;
+  try { cvs.setPointerCapture(e.pointerId); } catch {}
+  e.preventDefault();
+  h.down(toWorld(e.clientX, e.clientY));
+});
+cvs.addEventListener('pointermove', e => {
+  if (e.pointerId !== activePointer) return;
+  S.handler?.move?.(toWorld(e.clientX, e.clientY));
+});
+function endPtr(e, cancel) {
+  if (e.pointerId !== activePointer) return;
+  activePointer = null;
+  S.handler?.up?.(toWorld(e.clientX, e.clientY), cancel);
+}
+cvs.addEventListener('pointerup', e => endPtr(e, false));
+cvs.addEventListener('pointercancel', e => endPtr(e, true));
+
+function publish(sc) { window.__shang.scene = sc; }
+
+async function sFoot(tk) {
+  publish('sFoot');
+  progress(0);
+  bg(camTo(VIEW.foot, 1500 * M, tk));
+  await caption('山脚', '清晨的山脚有一块平平的青石坪，云雾上面藏着初升的太阳。', tk);
+  await captionDone(tk);
+}
+
+async function sClimb(tk) {
+  publish('sClimb');
+  progress(1);
+  bg(camTo(VIEW.climb, 1400 * M, tk));
+  await caption('登阶', '顺着石阶一步步往上走，去云雾上面看看吧。', tk);
+  await captionDone(tk);
+
+  let targetStep = 0, busyStep = false, idleSince = clock;
+  const stepOnce = async () => {
+    if (busyStep || targetStep >= 3) return;
+    busyStep = true;
+    const from = W.stepProg, next = targetStep + 1;
+    Sound.pluck(targetStep + 1);
+    await tween(620 * M, t => { W.stepProg = lerp(from, next, t); W.sunGlow = lerp(0.25, 0.75, next / 3 * t + (from / 3) * (1 - t)); }, tk);
+    targetStep = next;
+    idleSince = clock;
+    busyStep = false;
+  };
+  hint('点一点石阶或下方按钮，往上登高三次');
+  mode('act');
+  setAction('向上登一阶', () => bg(stepOnce()));
+  S.handler = { down() { bg(stepOnce()); } };
+  while (targetStep < 3) {
+    await frame(tk);
+    if (!busyStep && (AUTO || clock - idleSince > 4500)) await stepOnce();
+  }
+  S.handler = null; mode(null); setAction(null); hint(null);
+  await caption('登阶', '越走越高，云层已经落到了脚底下！', tk);
+  await captionDone(tk);
+}
+
+async function sPeak(tk) {
+  publish('sPeak');
+  progress(2);
+  bg(camTo(VIEW.peak, 1300 * M, tk));
+  await caption('望远', '站在山顶拨开最后一缕晨雾，高处的路标亮了起来。', tk);
+  await captionDone(tk);
+
+  let cleared = false, t0 = clock;
+  const doClear = async () => {
+    if (cleared) return;
+    cleared = true;
+    Sound.bell(587.33);
+    await tween(900 * M, t => { W.mistClear = t; W.postLit = t; W.sunGlow = lerp(0.75, 1, t); }, tk);
+  };
+  hint('点一点山顶晨光，点亮高处的木标');
+  mode('act');
+  setAction('拨开晨雾', () => bg(doClear()));
+  S.handler = { down() { bg(doClear()); } };
+  while (!cleared) {
+    await frame(tk);
+    if (AUTO || clock - t0 > 3800) await doClear();
+  }
+  S.handler = null; mode(null); setAction(null); hint(null);
+  await caption('望远', '平地是底下的基准，站在高处，就叫做「上」。', tk);
+  await captionDone(tk);
+}
+
+async function sGlyph(tk) {
+  publish('sGlyph');
+  progress(3);
+  placeGlyph(800, 500, 420);
+  bg(camTo(VIEW.glyph, 1400 * M, tk));
+  setPaperMode(true);
+  await tween(1000 * M, t => { W.veil = 0.55 * t; W.paper = t; W.ancient = t; }, tk);
+  Sound.bell(440);
+  await caption('甲骨文', '甲骨文的「上」：底下长横代表平地基准，上面一短横指明高处。', tk, 250);
+  await captionDone(tk);
+
+  await tween(1200 * M, t => { W.sealStage = t; }, tk);
+  Sound.pluck(4);
+  await caption('小篆', '后来上方标记竖立起来，《说文解字》说：“上，高也，指事。”', tk, 250);
+  await captionDone(tk);
+
+  W.glyph.alpha = 1;
+  await tween(1200 * M, t => {
+    W.ancient = 1 - t;
+    for (let i = 0; i < NS; i++) W.glyph.prog[i] = clamp((t - i * 0.22) / 0.5);
+  }, tk);
+  W.ancient = 0; W.glyph.prog = [1, 1, 1];
+  await tween(500, t => { W.labels = t; }, tk);
+  await caption('楷书', '先写中间向上的竖，再写右边短横，最后写稳稳托底的长横。', tk, 300);
+  await captionDone(tk);
+  await tween(400, t => { W.labels = 1 - t; }, tk);
+}
+
+async function sWrite(tk) {
+  publish('sWrite');
+  progress(4);
+  await caption('写字', '「上」一共三笔。跟着起点，亲手写一个「上」。', tk);
+  await tween(600, t => { W.glyph.prog = [1 - t, 1 - t, 1 - t]; W.glyph.ghost = t; }, tk);
+  W.glyph.prog = [0, 0, 0];
+  W.glyph.trace = true;
+  W.trace = { stroke: 0, pen: null };
+
+  const showStroke = () => {
+    capMinEnd = 0;
+    const i = W.trace.stroke;
+    showCaption('写字', `第 ${i + 1} 笔，共 ${NS} 笔。`);
+    hint(`${STROKE_NAMES[i]}：从红点起笔，顺着虚线写`);
+  };
+  await captionDone(tk);
+  showStroke();
+
+  let samples = GUIDE[0], drag = null, lastInput = clock, demoing = false, completed = 0;
+  const finishStroke = () => {
+    const i = W.trace.stroke;
+    if (i >= NS) return;
+    W.glyph.prog[i] = 1;
+    Sound.pluck(i + 2);
+    W.trace.stroke++;
+    W.trace.pen = null;
+    completed++;
+    if (W.trace.stroke < NS) { samples = GUIDE[W.trace.stroke]; showStroke(); }
+  };
+  S.finish = finishStroke;
+
+  S.handler = {
+    down(p) {
+      if (demoing || W.trace.stroke >= NS) return;
+      lastInput = clock;
+      const q = worldToMmah(p.x, p.y);
+      let startIdx = 0, bestD = Infinity;
+      const limit = Math.max(1, Math.floor(samples.length * 0.4));
+      for (let j = 0; j < limit; j++) {
+        const d = Math.hypot(q.x - samples[j][0], q.y - samples[j][1]);
+        if (d < bestD) { bestD = d; startIdx = j; }
+      }
+      if (bestD > 290) { hint('请从红点起点开始落笔'); return; }
+      drag = { idx: startIdx };
+      W.glyph.prog[W.trace.stroke] = startIdx / (samples.length - 1);
+      W.trace.pen = samples[startIdx];
+    },
+    move(p) {
+      if (!drag) return;
+      lastInput = clock;
+      const q = worldToMmah(p.x, p.y);
+      const lastIdx = samples.length - 1;
+      let best = drag.idx, bd = Infinity;
+      for (let j = drag.idx; j <= Math.min(lastIdx, drag.idx + 28); j++) {
+        const d = Math.hypot(q.x - samples[j][0], q.y - samples[j][1]);
+        if (d < bd) { bd = d; best = j; }
+      }
+      if (bd <= 260 && best >= drag.idx) drag.idx = best;
+      W.glyph.prog[W.trace.stroke] = drag.idx / lastIdx;
+      W.trace.pen = samples[drag.idx];
+    },
+    up(_p, cancel) {
+      if (!drag) return;
+      const d = drag; drag = null; W.trace.pen = null;
+      const lastIdx = samples.length - 1;
+      if (!cancel && d.idx >= Math.max(2, Math.ceil(lastIdx * 0.55))) { finishStroke(); return; }
+      const i = W.trace.stroke, from = W.glyph.prog[i];
+      bg(tween(220, t => { if (W.trace.stroke === i) W.glyph.prog[i] = from * (1 - t); }, tk));
+    },
+  };
+
+  const demo = async () => {
+    if (demoing || W.trace.stroke >= NS) return;
+    demoing = true; ui.demo.disabled = true; drag = null;
+    while (W.trace.stroke < NS) {
+      const i = W.trace.stroke, pts = GUIDE[i];
+      W.glyph.prog[i] = 0;
+      await tween(720 * M, t => { W.glyph.prog[i] = t; W.trace.pen = pts[Math.round(t * (pts.length - 1))]; }, tk, ease.sine);
+      W.trace.pen = null;
+      finishStroke();
+      await wait(160, tk);
+    }
+  };
+  S.demo = () => { S.interactions.push('demo'); bg(demo()); };
+  mode('trace');
+  ui.demo.hidden = false;
+  if (AUTO) { S.interactions.push('auto'); bg(demo()); }
+
+  while (W.trace.stroke < NS) {
+    await frame(tk);
+    if (!demoing && completed === 0 && clock - lastInput > 24000) { S.interactions.push('auto'); bg(demo()); }
+  }
+  S.handler = null; S.demo = null; S.finish = null; mode(null); hint(null);
+  ui.demo.hidden = true; ui.demo.disabled = false;
+  W.glyph.trace = false;
+  window.__shang.events.push('written');
+  window.haqiHanziWritten?.();
+
+  await tween(450, t => { W.glyph.ghost = 1 - t; }, tk);
+  Sound.bell(523.25);
+  await caption('写字', '写好了！上，拾级而上的上。', tk);
+  await captionDone(tk);
+}
+
+async function sWords(tk) {
+  publish('sWords');
+  progress(5);
+  await tween(700 * M, t => { placeGlyph(800, lerp(500, 465, t), lerp(420, 350, t)); }, tk);
+  for (let i = 0; i < WORDS.length; i++) {
+    W.wordOn = i;
+    Sound.pluck(i + 3);
+    bg(tween(480, t => { W.glyph.words = Math.max(W.glyph.words, i + t); }, tk, ease.out));
+    await caption(WORDS[i][0], WORDS[i][1], tk);
+    await captionDone(tk);
+  }
+  W.wordOn = -1;
+}
+
+async function sFinale(tk) {
+  publish('sFinale');
+  progress(6);
+  setPaperMode(false);
+  bg(camTo(VIEW.finale, 1500 * M, tk));
+  await tween(1100 * M, t => { W.glyph.alpha = 1 - t; W.paper = 1 - t; W.veil = 0.55 * (1 - t); }, tk);
+  W.glyph.alpha = 0; W.paper = 0; W.veil = 0; W.glyph.words = 0;
+  Sound.bell(659.25);
+  await caption('余韵', '抬头往上走，每一步都能看见更辽阔的天地。', tk);
+  await captionDone(tk);
+
+  hint('点一点山顶晴空，放飞一只纸鸢');
+  mode('act');
+  setAction('再看一次', () => { Sound.init(); begin(); });
+  S.handler = {
+    down(p) {
+      W.kites.push({ x: clamp(p.x, 420, 1180), y: clamp(p.y, 260, 560), t0: clock });
+      if (W.kites.length > 6) W.kites.shift();
+      Sound.pluck((rand() * PENTA.length) | 0);
+      hint(null);
+    },
+  };
+  window.__shang.finished = true;
+  window.__shang.events.push('completed');
+  window.haqiHanziComplete();
+}
+
+const SCENES = [sFoot, sClimb, sPeak, sGlyph, sWrite, sWords, sFinale];
+
+async function begin() {
+  token.dead = true;
+  const tk = token = { dead: false };
+  capMinEnd = 0;
+  waiters.forEach(w => w.rej(new Cancelled())); waiters = [];
+  resetWorld();
+  setPaperMode(false);
+  Object.assign(cam, VIEW.foot);
+  S.handler = null; S.demo = null; S.finish = null; mode(null); setAction(null); hint(null);
+  ui.demo.hidden = true; ui.demo.disabled = false;
+  ui.cap.classList.remove('on');
+  rand = mulberry32(20261124);
+  S.interactions = [];
+  Object.assign(window.__shang, { interactions: S.interactions, events: [], finished: false, state: W });
+  try {
+    for (const sc of SCENES) await sc(tk);
+  } catch (e) {
+    if (!(e instanceof Cancelled)) console.error(e);
+  }
+}
+
+async function introPlay(tk) {
+  for (;;) await frame(tk);
+}
+
+function loop(now) {
+  if (last == null) last = now;
+  const dt = Math.min(50, Math.max(0, now - last));
+  last = now;
+  if (visible) {
+    DT = dt; clock += dt;
+    const batch = waiters; waiters = [];
+    for (const w of batch) {
+      if (w.tk.dead) w.rej(new Cancelled());
+      else w.res();
+    }
+  }
+  render();
+  requestAnimationFrame(loop);
+}
+
+resetWorld();
+Object.assign(cam, VIEW.intro);
+window.__shang = {
+  scene: 'intro', interactions: [], events: [], finished: false, state: W,
+  medians: SHANG.medians, strokes: SHANG.strokes, toScreen, mmahToWorld,
+  completeCurrentStroke() { S.finish?.(); },
+};
+resize();
+addEventListener('resize', () => { resize(); render(); });
+document.addEventListener('visibilitychange', () => { visible = !document.hidden; last = null; });
+requestAnimationFrame(loop);
+const introTk = { dead: false };
+bg(introPlay(introTk));
+document.documentElement.dataset.fixtureReady = '1';
+
+$('#start').addEventListener('click', () => {
+  Sound.init();
+  introTk.dead = true;
+  $('#intro').classList.add('off');
+  document.body.classList.add('started');
+  begin();
+});
+$('#replay').addEventListener('click', () => { Sound.init(); begin(); });
+$('#mute').addEventListener('click', e => {
+  Sound.init();
+  Sound.setMuted(!Sound.muted);
+  const zh = Sound.muted ? '声音 关' : '声音 开';
+  e.currentTarget.textContent = window.haqiHanziUi ? window.haqiHanziUi(zh, e.currentTarget) : zh;
+});
+addEventListener('pagehide', () => { token.dead = true; void Sound.ctx?.close().catch(() => {}); }, { once: true });
+if (AUTO) $('#start').click();
+})();
+</script>
+</body>
+</html>

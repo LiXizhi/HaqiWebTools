@@ -8,7 +8,7 @@ import {parseLocaleFile} from '../js/locale_core.js';
 import {validateDictionary} from '../js/dictionary_core.js';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const dictionary=JSON.parse(read('data/adventure/dictionary/zh.json'));
-const completed = new Set(['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','men','yu','xiu','sen','guang','guo','ming','mu-eye','er','xin','tian-field','yun']);
+const completed = new Set(['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','men','yu','xiu','sen','guang','guo','ming','mu-eye','er','xin','tian-field','yun','shang','xia','zhong','da','xiao','tian-sky','wu']);
 test('all 30 words retain writing data; only completed authored stories expose an animation',()=>{
  assert.equal(dictionary.entries.length,30);assert.equal(validateDictionary(dictionary),dictionary);
  for(const entry of dictionary.entries){
@@ -18,7 +18,7 @@ test('all 30 words retain writing data; only completed authored stories expose a
   const html=read('hanzi/'+entry.animation.split('/').at(-1));
   assert.match(html,new RegExp(`<title>${entry.text} `),entry.id);assert.match(html,/haqi-hanzi/,entry.id);
  }
- assert.equal(dictionary.entries.find(e=>e.id==='wu').animation,undefined,'dance is planned, never substitute martial wu');
+ assert.equal(dictionary.entries.find(e=>e.id==='wu').animation,'hanzi/hanzi_wu_dance.html','dance uses dedicated wu_dance story, never martial wu');
  assert.match(read('hanzi/hanzi_wu.html'),/<title>武 /);
 });
 
@@ -27,7 +27,7 @@ test('animation paths admit disambiguated names but reject traversal, alternate 
 });
 test('authored replacements are standalone executable pages with writing and completion hooks',()=>{
  const mapped=read('js/hanzi/hanzi_story_animations.js');
- for(const id of ['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','mu_eye','jing','xi','er','xin','tian_field','yun','li','zhi','zhi_peak']){
+ for(const id of ['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','mu_eye','jing','xi','er','xin','tian_field','yun','li','zhi','zhi_peak','shang','xia','zhong','da','xiao','tian_sky','wu_dance']){
   const filename=`hanzi_${id}.html`,html=read('hanzi/'+filename);
   const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];
   assert.ok(scripts.length>=2,filename);for(const [,script]of scripts)new vm.Script(script,{filename});
@@ -173,7 +173,7 @@ test('jing, li, zhi and zhi_peak embed pinned makemeahanzi outlines and medians 
  }
 });
 test('authored hanzi_*.html scripts compile cleanly and use forgiving trend-based stroke tracing without permanent drag.bad locks',()=>{
- const files=['er','guang','guo','huo','jing','kou','li','men','ming','mu','mu_eye','ren','ri','sen','shan','shi','shou','shui','tian_field','tu','wu','xi','xin','xiu','yu','yue','yun','zhi','zhi_peak'];
+ const files=['da','er','guang','guo','huo','jing','kou','li','men','ming','mu','mu_eye','ren','ri','sen','shan','shang','shi','shou','shui','tian_field','tian_sky','tu','wu','wu_dance','xi','xia','xiao','xin','xiu','yu','yue','yun','zhi','zhi_peak','zhong'];
  for(const name of files){
   const html=read(`hanzi/hanzi_${name}.html`);
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]);

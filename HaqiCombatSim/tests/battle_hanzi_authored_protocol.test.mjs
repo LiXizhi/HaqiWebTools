@@ -16,7 +16,7 @@ function fixture(name,standalone=false){
  const init={channel:'haqi-hanzi',version:1,type:'init',sessionId:'session',entryId:name,locale:'en'};
  return {context,messages,send,init};
 }
-for(const name of ['shui','huo','mu','shi','tu','ren','kou','shou','mu_eye','jing','xi','er','xin','tian_field','yun','li','zhi','zhi_peak']){
+for(const name of ['shui','huo','mu','shi','tu','ren','kou','shou','mu_eye','jing','xi','er','xin','tian_field','yun','li','zhi','zhi_peak','shang','xia','zhong','da','xiao','tian_sky','wu_dance']){
  test(`${name} uses the host protocol, rejects foreign init and replays real completion on late init`,()=>{
   const f=fixture(name);
   assert.equal(f.messages.length,1);assert.equal(f.messages[0].message.type,'ready');
@@ -60,6 +60,13 @@ for(const spec of [
  {name:'zhi',key:'__zhi',words:['知道','知识','知音'],scenes:['sRiddle','sObserve','sArrow','sGlyph','sWrite','sWords','sFinale']},
  {name:'zhi_peak',key:'__zhiPeak',words:['耸峙','对峙','山岛竦峙'],scenes:['sSea','sRise','sStand','sGlyph','sWrite','sWords','sFinale']},
  {name:'jing',key:'__jing',words:['小径','径直','曲径通幽'],scenes:['sGate','sPath','sReveal','sGlyph','sWrite','sWords','sFinale'],poses:['intro','action','reveal','form','ghost','stroke1','done','finale']},
+ {name:'shang',key:'__shang',words:['山上','上去','向上'],scenes:['sFoot','sClimb','sPeak','sGlyph','sWrite','sWords','sFinale']},
+ {name:'xia',key:'__xia',words:['山下','下雨','坐下'],scenes:['sRidge','sDescend','sVillage','sGlyph','sWrite','sWords','sFinale']},
+ {name:'zhong',key:'__zhong',words:['中间','中心','正中'],scenes:['sCross','sRaise','sGather','sGlyph','sWrite','sWords','sFinale']},
+ {name:'da',key:'__da',words:['大小','大山','长大'],scenes:['sMeadow','sStretch','sCanopy','sGlyph','sWrite','sWords','sFinale']},
+ {name:'xiao',key:'__xiao',words:['小船','小小','大小'],scenes:['sBrook','sDrop','sFirefly','sGlyph','sWrite','sWords','sFinale']},
+ {name:'tian_sky',key:'__tianSky',words:['天空','蓝天','晴天'],scenes:['sHill','sPart','sHorizon','sGlyph','sWrite','sWords','sFinale']},
+ {name:'wu_dance',key:'__wuDance',words:['跳舞','歌舞','飞舞'],scenes:['sPavilion','sPlume','sStep','sGlyph','sWrite','sWords','sFinale']},
 ]){
  test(`${spec.name} story runs all seven scenes with balanced finite canvas drawing and fires written then completed`,async()=>{
   const html=readFileSync(new URL(`../hanzi/hanzi_${spec.name}.html`,import.meta.url),'utf8');

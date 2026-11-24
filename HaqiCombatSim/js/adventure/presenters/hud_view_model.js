@@ -30,6 +30,8 @@ import {
     openingJourneyMilestones,
 } from '../../opening_journey_core.js';
 import { tacticsNextGoal } from '../../tactics_progress_core.js';
+import { islandPuzzleProgress } from '../../island_puzzles_core.js';
+import { HANZI_STELE_SCROLLS, steleRubbingCount } from '../../hanzi_stele_scroll_core.js';
 
 export function computeHeroHealth(save, content) {
     const maxHp = specMaxHp(playerSpec(save, content));
@@ -159,6 +161,18 @@ export function buildHudTrackerViewModel(model) {
         : null;
     const dailyBuffLayers = Object.values(dailyBuffs(save)).reduce((a, b) => a + b, 0);
     const dailyBuffText = dailyBuffDescription(save);
+    let islandExplore = null;
+    if (!model.localSecond && !dungeon && save.zone !== 'camp') {
+        const prog = islandPuzzleProgress(save, save.zone);
+        if (prog) {
+            const isHanzi = save.zone === 'hanzi';
+            const steleDone = isHanzi ? steleRubbingCount(save) : 0;
+            const steleTotal = isHanzi ? HANZI_STELE_SCROLLS.length : 0;
+            if (prog.next || (isHanzi && steleDone < steleTotal) || prog.done > 0) {
+                islandExplore = { ...prog, steleDone, steleTotal };
+            }
+        }
+    }
 
     return {
         chapterDone,
@@ -167,6 +181,7 @@ export function buildHudTrackerViewModel(model) {
         payload,
         tacticsGoal,
         forestGoal,
+        islandExplore,
         dailyBuffLayers,
         dailyBuffText,
     };

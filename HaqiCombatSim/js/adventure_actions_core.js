@@ -9,6 +9,8 @@ import { customizeHero } from './adventure_hero_customize_core.js';
 import { applyOpeningJourney, openingJourneyActive } from './opening_journey_core.js';
 import { applyCampDetour } from './camp_detour_core.js';
 import { applyForestCommission } from './forest_commission_core.js';
+import { applyIslandPuzzle } from './island_puzzles_core.js';
+import { applySteleRubbing } from './hanzi_stele_scroll_core.js';
 import { applyCompanionWordplay } from './companion_wordplay_core.js';
 import { islandSpawn, travelStatus } from './adventure_world_map_core.js';
 import { mapInfo } from './adventure_island_layout_core.js';
@@ -113,6 +115,15 @@ export const ADVENTURE_ACTION_HANDLERS = {
         const result = applyForestCommission(save, content, action, access);
         if (result.changed === false) return { early: result };
         return { notice: result.message };
+    },
+    'island-puzzle': ({ save, content, action }) => {
+        const result = applyIslandPuzzle(save, content, action);
+        if (result.changed) syncEquipmentInstances(save, content);
+        return { early: result };
+    },
+    'stele-rubbing': ({ save, content, action }) => {
+        const result = applySteleRubbing(save, content, action);
+        return { early: result };
     },
     'language-complete': ({ save, content, action, access }) => {
         const result = recordLearningCompletion(save, content, action.completion, access);

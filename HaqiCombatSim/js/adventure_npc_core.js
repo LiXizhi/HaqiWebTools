@@ -67,10 +67,10 @@ export function npcPurpose(content,npc) {
     if(id===LATER_ISLAND_NPCS.sail.xiaozhou)return {role:'归航舵手',title:'检查满编伙伴状态',body:'确认全队战宠的等级、生命与卡组配置，在试炼塔每 5/10 层机制首领前做好准备。',panel:'pet',label:'查看战宠与出战阵容'};
     if(services.some(row=>row.kind==='mentor'))return {role:'魔法导师',title:'为下一场战斗补充打法',body:'查看可学习的魔法与所需条件。先看卡牌效果，再决定用它来进攻、布置还是保护。',panel:'npc-services',label:'查看可学习的魔法'};
     if(services.some(row=>row.kind==='shop'&&!row.gated))return {role:'商店',title:'看看这里能补充什么',body:'查看商品、价格与购买条件，再按当前需要选择。',panel:'npc-services',label:'查看商品与价格'};
-    if(id===30513)return {role:'火鸟岛向导',title:'探索赤焰试炼塔与篝火秘境',body:'火鸟岛藏着 30 层赤焰试炼塔与 50 级四人秘境「篝火守夜人」，首通与登顶均提供专属装备。',panel:'dungeons',label:'查看火鸟岛秘境与试炼塔'};
-    if(id===30601)return {role:'寒冰岛向导',title:'挑战霜晶试炼塔与冰封回信',body:'查看 50 层霜晶试炼塔与双人战术秘境「冰封的回信」，破除冰盾与虚弱即可赢取精锐装备。',panel:'dungeons',label:'查看寒冰岛秘境与试炼塔'};
-    if(id===30702)return {role:'沙漠岛向导',title:'挑战流沙试炼塔与沙海回声',body:'查看 70 层流沙试炼塔与单人战术秘境「沙海回声」，预判蓄力重击赢取牛仔帽与传说权利法杖。',panel:'dungeons',label:'查看沙漠岛秘境与试炼塔'};
-    if(id===35002)return {role:'幽暗岛向导',title:'挑战百层幽月塔与梦魇之约',body:'查看 100 层幽月试炼塔与双人高阶秘境「梦魇尽头的约定」，赢取魔晶法杖与终阶装备。',panel:'dungeons',label:'查看幽暗岛秘境与试炼塔'};
+    if(id===30513)return {role:'火鸟岛向导',title:'先探 15 级金库风铃，再闯赤焰高塔',body:'15 级可先带战宠挑战三人秘境「金库失窃的风铃」赢取 30 格精良口袋，再攀登 30 层赤焰试炼塔；满 50 级后再集结四人迎战「篝火守夜人」。',panel:'dungeons',label:'查看火鸟岛秘境与试炼塔'};
+    if(id===30601)return {role:'寒冰岛向导',title:'挑战冰封回信、风眼罗盘与霜晶塔',body:'28 级可先闯双人秘境「冰封的回信」赢精锐冠，35 级集结四人挑战「风暴中心的罗盘」赢本系艾希斯圣帽，或冲击 50 层霜晶试炼塔。',panel:'dungeons',label:'查看寒冰岛秘境与试炼塔'};
+    if(id===30702)return {role:'沙漠岛向导',title:'挑战沙海回声、绿洲钥匙与流沙塔',body:'32 级可单骑挑战「沙海回声」，40 级带队闯「绿洲的最后一把钥匙」赢 50 格精良口袋，登顶 70 层流沙塔还可获传说权利法杖。',panel:'dungeons',label:'查看沙漠岛秘境与试炼塔'};
+    if(id===35002)return {role:'幽暗岛向导',title:'挑战梦魇之约、沼泽航标与百层幽月塔',body:'55 级可挑战双人秘境「梦魇尽头的约定」赢魔晶法杖、四人秘境「沼泽中的航标」赢 70 格斗士大卡包，并冲击百层幽月试炼塔。',panel:'dungeons',label:'查看幽暗岛秘境与试炼塔'};
     return null;
 }
 export function npcOffers(content,npc) {

@@ -1,0 +1,946 @@
+<!doctype html>
+<!-- Hand-authored story for 舞 (wu, dance). Distinct from 武 (hanzi_wu.html). Standalone single-file H5 animation. -->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#281b2e">
+<title>舞 wǔ · 执羽踏鼓庆团圆</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --silk:#efe5d0;--ink:#241d20;--night:#281b2e;--gold:#e8be66;--cinnabar:#cf4d38;--cream:#fcf6ec;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun","WenQuanYi Micro Hei",serif;
+  --kai:"Kaiti SC","STKaiti","KaiTi","BiauKai","Kaiti TC","WenQuanYi Micro Hei",var(--serif);
+}
+html,body{margin:0;height:100%;overflow:hidden;background:#281b2e}
+body{color:var(--cream);font-family:var(--serif);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+button{font:inherit;touch-action:manipulation}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+#view{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+body.act #view{cursor:pointer}
+body.trace #view{cursor:crosshair}
+#brand{position:fixed;left:max(16px,env(safe-area-inset-left));top:max(14px,env(safe-area-inset-top));display:flex;align-items:center;gap:10px;
+  font-family:var(--kai);font-size:14px;letter-spacing:.22em;color:#f8f0e2;z-index:8;pointer-events:none;opacity:.94}
+#brand .seal{background:var(--cinnabar);color:#fbf4e6;border-radius:3px;padding:5px 5px 4px;font-size:15px;line-height:1;letter-spacing:0}
+#progress{position:fixed;top:max(16px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:flex;list-style:none;
+  margin:0;padding:0;gap:clamp(8px,1.8vw,22px);z-index:10;opacity:0;transition:opacity .8s;pointer-events:none}
+#progress::before{content:"";position:absolute;top:2.5px;left:12px;right:12px;height:1px;background:rgba(252,246,236,.28)}
+body.started #progress{opacity:1}
+#progress li{position:relative;font-family:var(--kai);font-size:13px;color:rgba(248,240,226,.72);letter-spacing:.08em;padding-top:12px;white-space:nowrap}
+#progress li::before{content:"";position:absolute;top:0;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:rgba(238,224,204,.42)}
+#progress li.done{color:#f0e5d2}#progress li.done::before{background:#d0a85c}
+#progress li.on{color:#fffaf2}#progress li.on::before{background:var(--gold);transform:scale(1.6)}
+#controls{position:fixed;right:max(14px,env(safe-area-inset-right));top:max(12px,env(safe-area-inset-top));display:flex;gap:8px;z-index:12;opacity:0;pointer-events:none;transition:opacity .6s}
+body.started #controls{opacity:1;pointer-events:auto}
+#controls button{font-family:var(--kai);font-size:14px;letter-spacing:.16em;color:#fcf6ec;background:rgba(38,24,44,.74);
+  border:1px solid rgba(232,190,102,.54);border-radius:4px;padding:7px 12px;cursor:pointer;min-height:36px}
+#hint{position:fixed;left:16px;right:16px;margin:0 auto;width:fit-content;max-width:calc(100vw - 32px);box-sizing:border-box;
+  top:max(58px,calc(env(safe-area-inset-top) + 46px));text-align:center;color:#fcf5e8;opacity:0;transition:opacity .45s;pointer-events:none;z-index:9;
+  padding:7px 20px 8px;border:1px solid rgba(232,190,102,.64);border-radius:22px;background:rgba(34,22,40,.84)}
+#hint span{font-family:var(--kai);font-size:clamp(16px,2.3vh,20px);letter-spacing:.1em}
+#hint.on{opacity:1}
+#caption{position:fixed;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translate(-50%,10px);
+  width:min(900px,calc(100vw - 24px));box-sizing:border-box;text-align:center;opacity:0;
+  transition:opacity .5s,transform .7s cubic-bezier(.2,.7,.2,1);pointer-events:none;z-index:6;padding:20px 22px 13px;
+  background:linear-gradient(to top,rgba(32,20,36,.92) 40%,rgba(32,20,36,.66) 70%,rgba(32,20,36,0) 100%)}
+body.paper #caption{background:radial-gradient(ellipse at center,rgba(248,239,222,.95) 42%,rgba(248,239,222,0) 74%)}
+#caption.on{opacity:1;transform:translate(-50%,0)}
+#capTitle{margin:0 0 7px;font-weight:400;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.38em;margin-left:.38em;color:var(--gold)}
+body.paper #capTitle{color:var(--cinnabar)}
+#capText{margin:0;font-family:var(--kai);font-size:clamp(18px,calc(1vw + 1.55vh),27px);line-height:1.68;color:var(--cream);letter-spacing:.06em;min-height:1.68em}
+body.paper #capText{color:var(--ink)}
+.haqi-sub-trans{display:block;margin-top:4px;font-family:Georgia,"Times New Roman",system-ui,sans-serif;font-size:clamp(13px,1.8vh,17px);line-height:1.45;color:#e8ded4}
+body.paper .haqi-sub-trans{color:#5e5342}
+.actions{display:flex;justify-content:center;gap:10px;margin-top:10px}
+.actions button{pointer-events:auto;cursor:pointer;font-family:var(--kai);letter-spacing:.2em;border-radius:4px;min-height:44px}
+#action{font-size:18px;padding:9px 22px;color:#281922;border:1px solid #fcf3dc;background:linear-gradient(#fbedc8,#e8be66)}
+#demo{font-size:16px;padding:8px 16px;color:var(--ink);background:rgba(248,241,226,.92);border:1px solid rgba(36,29,32,.35)}
+[hidden]{display:none!important}
+#intro{position:fixed;inset:0;z-index:20;pointer-events:none;transition:opacity 1s,transform 1s}
+#intro.off{opacity:0;transform:scale(1.03)}
+#intro.off *{pointer-events:none!important}
+.introTop,.introBottom{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
+.introTop{top:max(18px,env(safe-area-inset-top))}
+.introBottom{bottom:max(12px,env(safe-area-inset-bottom));gap:8px;left:50%;right:auto;width:min(100%,660px);transform:translateX(-50%);box-sizing:border-box;
+  padding-top:34px;background:linear-gradient(to top,rgba(32,20,36,.93) 44%,rgba(32,20,36,.58) 72%,rgba(32,20,36,0) 100%)}
+.tag{display:flex;align-items:center;gap:10px;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.28em;color:var(--gold)}
+.tag i{display:block;width:clamp(22px,5vw,56px);height:1px;background:currentColor;opacity:.72}
+.pinyin{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:clamp(30px,5.2vh,46px);line-height:1;color:var(--cream)}
+.mean{font-family:var(--kai);font-size:clamp(17px,2.5vh,22px);letter-spacing:.18em;color:#fff8ec}
+.sub{font-family:var(--kai);font-size:clamp(15px,2.1vh,18px);color:#e8dfd6;letter-spacing:.12em;margin:2px 0 0;line-height:1.7}
+.btn-main{pointer-events:auto;margin-top:8px;font-family:var(--kai);font-size:clamp(18px,2.6vh,22px);letter-spacing:.38em;padding:10px 28px 10px 34px;min-height:44px;
+  color:#281922;background:linear-gradient(#fbf0d0,#e8be66);border:1px solid #fff8e6;border-radius:4px;cursor:pointer}
+.meta{font-size:12px;color:#dad0c8;letter-spacing:.12em;margin:0}
+#note{position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom));font-size:11px;color:rgba(242,232,222,.78);letter-spacing:.08em;z-index:4;pointer-events:none}
+body.paper #note{color:#867c6a}
+body.portrait #brand,body.portrait #note{display:none}
+body.portrait #progress{top:max(8px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left));right:138px;width:auto;transform:none;justify-content:space-between;gap:0}
+body.portrait #progress li{font-size:10px;letter-spacing:0}
+@media (max-height:540px){.sub,.meta{display:none}#capText{font-size:16px}#caption{padding:8px 12px 6px}.actions{margin-top:4px}}
+</style>
+<script>
+// Haqi H5 protocol v1: independent pages remain usable without a parent.
+(()=>{let context=null,written=false,finished=false,serial=0;const callbacks=new Map(),subCache=new Map(),uiCache=new Map(),pending=new Set(),uiNodes=new Map();
+const isZh=loc=>!loc||/^zh\b/i.test(loc);
+const send=data=>{if(context)parent.postMessage({channel:'haqi-hanzi',version:1,entryId:context.entryId,sessionId:context.sessionId,...data},context.origin);};
+const refreshDom=()=>{for(const[el,zh]of uiNodes){if(!el?.isConnected){uiNodes.delete(el);continue;}const tr=!isZh(context?.locale)&&uiCache.get(zh);const next=(tr&&tr!==zh)?tr:zh;if(el.dataset.haqiKind==='seal'){const seal=el.querySelector('.seal');el.textContent=next;if(seal)el.prepend(seal);}else if(el.dataset.haqiKind==='tag'){const i1=document.createElement('i'),i2=document.createElement('i');el.replaceChildren(i1,document.createTextNode(next),i2);}else el.textContent=next;}document.querySelectorAll('[data-haqi-caption]').forEach(el=>renderCaption(el,el.dataset.haqiCaption));};
+const flushPending=()=>{if(!context||!pending.size)return;const texts=[...pending];pending.clear();window.haqiHanziTranslate(texts);};
+const ensureTexts=texts=>{const need=[];for(const t of texts){const s=typeof t==='string'?t.trim():'';if(s&&(!subCache.has(s)||!uiCache.has(s))&&!pending.has(s)){pending.add(s);need.push(s);}}if(need.length&&context)flushPending();};
+const renderCaption=(el,zh)=>{if(!el)return;el.dataset.haqiCaption=zh||'';let sub=el.querySelector('.haqi-sub-trans');if(!zh||isZh(context?.subtitleLocale||context?.locale)){sub?.remove();return;}const tr=subCache.get(zh);if(!tr||tr===zh){sub?.remove();ensureTexts([zh]);return;}if(!sub){sub=document.createElement('span');sub.className='haqi-sub-trans';const host=el.querySelector('#capText')||el;if(host!==el&&host.parentNode===el)host.insertAdjacentElement('afterend',sub);else el.appendChild(sub);}sub.textContent=tr;};
+const trackUi=(el,zh,kind='')=>{if(!el||!zh)return;if(kind)el.dataset.haqiKind=kind;uiNodes.set(el,zh);ensureTexts([zh]);};
+const scanStatic=()=>{if(!document.body)return;document.querySelectorAll('#start,#replay,#mute,#demo,#action,#progress li,#note,.introBottom .mean,.introBottom .sub,.introBottom .meta').forEach(el=>{const zh=(el.textContent||'').trim();if(zh&&!uiNodes.has(el))trackUi(el,zh);});document.querySelectorAll('#brand,.brand').forEach(el=>{if(uiNodes.has(el))return;const clone=el.cloneNode(true);clone.querySelector?.('.seal')?.remove();const zh=(clone.textContent||'').trim();if(zh)trackUi(el,zh,'seal');});document.querySelectorAll('.introTop .tag,.tag').forEach(el=>{if(uiNodes.has(el))return;const zh=(el.textContent||'').trim();if(zh)trackUi(el,zh,'tag');});refreshDom();};
+if(document.readyState==='loading')addEventListener('DOMContentLoaded',scanStatic,{once:true});else scanStatic();
+window.haqiHanziWritten=()=>{written=true;send({type:'written'});};
+window.haqiHanziComplete=()=>{if(!written){written=true;send({type:'written'});}finished=true;send({type:'completed'});};
+window.haqiHanziPrefetch=texts=>ensureTexts(Array.isArray(texts)?texts:[texts]);
+window.haqiHanziUi=(zh,el)=>{const s=typeof zh==='string'?zh.trim():'';if(!s)return zh;if(el)trackUi(el,s);else ensureTexts([s]);const tr=!isZh(context?.locale)&&uiCache.get(s);return(tr&&tr!==s)?tr:zh;};
+window.haqiHanziCaption=(el,zh)=>{const s=typeof zh==='string'?zh.trim():'';if(s)ensureTexts([s]);renderCaption(el,s);};
+window.haqiHanziTranslate=texts=>new Promise(resolve=>{const list=(Array.isArray(texts)?texts:[]).map(t=>typeof t==='string'?t.trim():'').filter(Boolean);if(!context||!list.length){resolve({});return;}const requestId=String(++serial);const timer=setTimeout(()=>{callbacks.delete(requestId);resolve({});},1500);callbacks.set(requestId,msg=>{clearTimeout(timer);const sub=msg?.translations||{},ui=msg?.uiTranslations||sub;for(const[k,v]of Object.entries(sub))if(typeof v==='string'&&v.trim())subCache.set(k,v.trim());for(const[k,v]of Object.entries(ui))if(typeof v==='string'&&v.trim())uiCache.set(k,v.trim());refreshDom();resolve(sub);});send({type:'translate',requestId,texts:list});});
+addEventListener('message',event=>{const m=event.data;if(event.source!==parent||parent===window||m?.channel!=='haqi-hanzi'||m.version!==1)return;
+if(m.type==='init'&&typeof m.sessionId==='string'&&typeof m.entryId==='string'){if(document.referrer&&event.origin!==new URL(document.referrer).origin)return;context={...m,origin:event.origin};scanStatic();flushPending();refreshDom();if(written)send({type:'written'});if(finished)send({type:'completed'});}
+else if(context&&event.origin===context.origin&&m.sessionId===context.sessionId&&m.type==='translations'){callbacks.get(m.requestId)?.(m);callbacks.delete(m.requestId);}});
+if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'ready'},'*');})();
+</script>
+</head>
+<body>
+<canvas id="view" role="img" aria-label="字源亭团圆夜的篝火旁，双手举起成排彩羽，双脚随着鼓点左右踏节，化作欢欣的「舞」。"></canvas>
+<div id="brand"><span class="seal">字</span>一字一故事</div>
+<ol id="progress" aria-hidden="true"><li>亭夜</li><li>执羽</li><li>踏节</li><li>成字</li><li>写字</li><li>词意</li><li>余韵</li></ol>
+<div id="controls"><button id="replay" type="button">重播</button><button id="mute" type="button">声音 开</button></div>
+<div id="hint" role="status"></div>
+<section id="caption" aria-live="polite" aria-atomic="true">
+  <h2 id="capTitle"></h2><p id="capText"></p>
+  <div class="actions"><button id="action" type="button" hidden></button><button id="demo" type="button" hidden>看示范</button></div>
+</section>
+<div id="note">古字形为艺术示意；故事为原创</div>
+<div id="intro">
+  <div class="introTop"><div class="tag"><i></i>今天认识一个汉字<i></i></div></div>
+  <div class="introBottom">
+    <div class="pinyin">wǔ</div>
+    <div class="mean">舞 · 执羽踏鼓庆团圆</div>
+    <p class="sub">字源亭的篝火亮起来了，举起彩羽、踩着鼓点一起跳舞吧。</p>
+    <button id="start" class="btn-main" type="button">开始</button>
+    <p class="meta">约两分钟 · 展开彩羽、踏响鼓点与描字 · 建议开启声音</p>
+  </div>
+</div>
+<script>
+(() => {
+'use strict';
+
+const $ = s => document.querySelector(s);
+const TAU = Math.PI * 2;
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const ease = {
+  inOut: t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+  out: t => 1 - Math.pow(1 - t, 3),
+  sine: t => -(Math.cos(Math.PI * t) - 1) / 2,
+};
+function mulberry32(a) {
+  return () => {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const QUERY = new URLSearchParams(location.search);
+const FAST = QUERY.has('fast') ? 0.06 : 1;
+const AUTO = QUERY.has('auto');
+const M = reduceMotion ? 0.6 : 1;
+let rand = mulberry32(20261130);
+
+class Cancelled extends Error {}
+let clock = 0, DT = 16, visible = true, last = null;
+let waiters = [];
+let token = { dead: true };
+function frame(tk) { return new Promise((res, rej) => waiters.push({ tk, res, rej })); }
+async function wait(ms, tk) { ms *= FAST; const t0 = clock; while (clock - t0 < ms) await frame(tk); }
+async function tween(ms, fn, tk, ez = ease.inOut) {
+  ms *= FAST;
+  if (ms <= 0) { fn(1); return; }
+  const t0 = clock;
+  for (;;) {
+    await frame(tk);
+    const t = clamp((clock - t0) / ms);
+    fn(ez(t));
+    if (t >= 1) return;
+  }
+}
+const bg = p => p.catch(e => { if (!(e instanceof Cancelled)) console.error(e); });
+
+const PENTA = [293.66, 329.63, 392.00, 440.00, 523.25, 587.33];
+const Sound = {
+  ctx: null, master: null, muted: false,
+  init() {
+    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return;
+    try { this.ctx = new C(); } catch { return; }
+    this.master = this.ctx.createGain();
+    this.master.gain.value = this.muted ? 0 : 0.5;
+    this.master.connect(this.ctx.destination);
+  },
+  setMuted(v) { this.muted = v; if (this.master) this.master.gain.value = v ? 0 : 0.5; },
+  tone(freq, dur = 0.36, type = 'triangle', gain = 0.06) {
+    if (!this.ctx || this.muted) return;
+    try {
+      const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+      o.type = type; o.frequency.value = freq;
+      const t = this.ctx.currentTime;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(gain, t + 0.016);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(this.master); o.start(t); o.stop(t + dur + 0.03);
+    } catch {}
+  },
+  pluck(i) { this.tone(PENTA[i % PENTA.length], 0.4, 'triangle', 0.065); },
+  drum() { this.tone(146.83, 0.48, 'sine', 0.085); },
+  bell(freq = 587.33) { this.tone(freq, 0.88, 'sine', 0.065); },
+};
+
+const WU_DANCE = {"strokes":["M 399 753 Q 417 777 436 791 Q 445 798 442 810 Q 441 820 420 841 Q 401 857 386 859 Q 371 859 375 841 Q 384 820 331 742 Q 306 708 272 672 Q 263 665 261 660 Q 257 651 268 652 Q 302 656 381 735 L 399 753 Z","M 381 735 Q 420 708 472 718 Q 569 733 669 748 Q 715 757 721 762 Q 730 769 726 777 Q 720 789 694 796 Q 673 802 567 775 Q 458 757 399 753 C 369 751 357 750 381 735 Z","M 713 582 Q 767 588 816 590 Q 826 587 835 599 Q 836 609 816 621 Q 783 645 727 629 L 673 619 Q 633 612 596 605 L 554 599 Q 514 595 479 589 L 443 586 Q 380 583 380 582 L 336 579 Q 299 579 262 575 Q 234 574 254 556 Q 279 531 326 537 Q 333 538 345 539 L 383 544 Q 413 548 446 553 L 479 558 Q 515 564 553 568 L 591 572 Q 648 581 666 578 L 713 582 Z","M 380 582 Q 379 603 380 610 Q 380 628 368 636 Q 349 649 327 654 Q 315 657 309 651 Q 303 647 310 634 Q 326 610 335 583 Q 335 582 336 579 L 345 539 Q 351 508 362 454 C 368 425 398 428 394 458 Q 387 507 383 544 L 380 582 Z","M 479 589 Q 479 634 481 646 Q 484 662 473 672 Q 457 685 436 692 Q 426 696 418 691 Q 412 687 418 675 Q 433 645 443 586 L 446 553 Q 447 519 452 463 C 455 433 486 437 484 467 Q 480 519 479 558 L 479 589 Z","M 596 605 Q 599 644 613 675 Q 616 682 602 694 Q 578 709 561 713 Q 551 717 544 711 Q 538 705 543 695 Q 556 674 554 599 L 553 568 Q 552 523 547 473 C 544 443 574 448 578 478 Q 584 527 591 572 L 596 605 Z","M 684 492 Q 699 538 713 582 L 727 629 Q 727 630 728 631 Q 741 664 750 678 Q 754 685 741 701 Q 716 723 698 730 Q 686 736 678 730 Q 671 726 675 712 Q 685 690 682 676 Q 678 649 673 619 L 666 578 Q 657 535 647 487 C 641 458 675 463 684 492 Z","M 335 417 Q 575 462 911 445 Q 938 445 942 453 Q 949 466 931 481 Q 868 527 799 510 Q 747 503 684 492 L 647 487 Q 613 483 578 478 L 547 473 Q 529 473 511 470 Q 496 469 484 467 L 452 463 Q 424 462 394 458 L 362 454 Q 244 445 114 431 Q 92 430 108 411 Q 123 395 141 389 Q 163 383 181 387 Q 239 403 303 412 L 335 417 Z","M 263 278 Q 285 299 312 328 L 325 341 Q 341 360 354 370 Q 361 376 359 386 Q 356 407 335 417 C 309 432 302 436 303 412 Q 310 387 246 307 Q 216 271 175 232 Q 168 226 165 222 Q 162 215 172 215 Q 193 219 247 264 L 263 278 Z","M 312 328 Q 321 316 352 319 Q 401 329 404 323 Q 408 310 384 263 Q 332 137 141 10 Q 119 -2 138 -2 Q 207 -5 315 99 Q 384 165 440 255 Q 467 298 483 310 Q 495 319 490 330 Q 486 340 438 364 Q 428 370 406 361 Q 381 349 325 341 C 296 336 296 336 312 328 Z","M 247 264 Q 250 258 259 248 Q 302 191 310 190 Q 317 189 322 197 Q 326 206 325 225 Q 322 249 263 278 C 236 291 232 290 247 264 Z","M 695 319 Q 812 346 815 348 Q 822 355 819 362 Q 812 372 787 378 Q 757 385 699 361 L 641 347 Q 601 340 556 336 Q 525 332 547 316 Q 583 295 634 308 Q 637 308 641 308 L 695 319 Z","M 690 160 Q 750 170 873 163 Q 894 162 901 172 Q 907 181 889 192 Q 832 231 780 212 Q 762 209 743 206 Q 716 203 691 198 L 639 190 Q 593 183 549 172 Q 525 165 533 186 Q 548 225 559 238 Q 569 247 565 257 Q 561 267 530 285 Q 515 295 505 291 Q 495 284 501 270 Q 510 248 496 202 Q 492 183 467 164 Q 457 155 458 143 Q 459 133 474 119 Q 487 110 499 120 Q 559 150 639 155 L 690 160 Z","M 640 -29 Q 644 -53 651 -61 Q 655 -68 663 -66 Q 687 -48 689 141 Q 689 151 690 160 L 691 198 Q 692 247 695 319 L 699 361 Q 702 376 705 387 Q 708 403 695 412 Q 665 431 652 435 Q 640 439 626 431 Q 617 424 624 414 Q 639 387 641 347 L 641 308 Q 641 256 639 190 L 639 155 Q 633 50 640 -29 Z"],"medians":[[[385,847],[404,815],[401,801],[330,710],[268,659]],[[390,735],[458,738],[688,775],[713,773]],[[256,566],[290,557],[338,558],[769,612],[825,601]],[[317,644],[352,613],[373,483],[376,471],[388,465]],[[425,684],[455,652],[466,491],[466,480],[456,472]],[[552,703],[580,674],[567,504],[554,481]],[[686,720],[714,679],[674,521],[664,502],[652,494]],[[111,421],[163,410],[432,448],[825,482],[872,478],[931,460]],[[309,409],[329,386],[313,362],[231,266],[174,224]],[[319,328],[410,342],[427,339],[441,320],[374,196],[317,128],[235,54],[143,3]],[[254,264],[267,261],[291,240],[305,223],[312,200]],[[549,327],[608,322],[705,339],[760,357],[810,357]],[[511,280],[533,250],[506,157],[538,154],[604,169],[806,192],[890,177]],[[632,422],[648,414],[670,388],[659,-59]]]};
+const NS = 14;
+const STROKE_NAMES = ['撇', '横', '横', '竖', '竖', '竖', '竖', '横', '撇', '横撇', '点', '横', '竖折', '竖'];
+const WORDS = [
+  ['跳舞', '围着字源亭的篝火，大家手拉手一起跳舞。'],
+  ['歌舞', '欢快的鼓点配上歌声，化作热闹的歌舞。'],
+  ['飞舞', '暖金色的灯火与彩带在夜风里轻轻飞舞。'],
+];
+
+function densify(pts, step = 12) {
+  const out = [[pts[0][0], pts[0][1]]];
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i];
+    const n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / step));
+    for (let k = 1; k <= n; k++) out.push([lerp(a[0], b[0], k / n), lerp(a[1], b[1], k / n)]);
+  }
+  return out;
+}
+const GUIDE = WU_DANCE.medians.map(pts => densify(pts));
+
+const cvs = $('#view'), ctx = cvs.getContext('2d');
+let SW = 1, SH = 1, DPR = 1, portrait = false;
+const VIEW = {
+  intro:    { x: 800, y: 540, w: 1460, h: 880, pw: 820, pcy: 0.42 },
+  pavilion: { x: 800, y: 550, w: 1380, h: 840, pw: 800, pcy: 0.42 },
+  plume:    { x: 800, y: 520, w: 1200, h: 780, pw: 740, pcy: 0.41 },
+  step:     { x: 800, y: 540, w: 1300, h: 820, pw: 780, pcy: 0.42 },
+  glyph:    { x: 800, y: 510, w: 1080, h: 920, pw: 760, pcy: 0.38 },
+  finale:   { x: 800, y: 540, w: 1420, h: 860, pw: 820, pcy: 0.42 },
+};
+const cam = { ...VIEW.intro };
+const CV = { x: 0, y: 0, k: 1, cy: 0 };
+const GL = { x: 590, y: 300, cx: 800, cy: 510, size: 420 };
+
+function placeGlyph(cx, cy, size) {
+  GL.cx = cx; GL.cy = cy; GL.size = size;
+  GL.x = cx - size / 2; GL.y = cy - size / 2;
+}
+function mmahToWorld(x, y) {
+  const s = GL.size / 1024;
+  return { x: GL.x + x * s, y: GL.y + (900 - y) * s };
+}
+function worldToMmah(wx, wy) {
+  const s = GL.size / 1024;
+  return { x: (wx - GL.x) / s, y: 900 - (wy - GL.y) / s };
+}
+function frameW(v) { return portrait ? (v.pw ?? v.w * 0.62) : v.w; }
+function updateView() {
+  const usableH = SH * (portrait ? 0.60 : 0.75);
+  CV.k = Math.min(SW / frameW(cam), usableH / cam.h);
+  CV.cy = SH * (cam.pcy ?? 0.42);
+  CV.x = cam.x; CV.y = cam.y;
+}
+function setCam(c = ctx) {
+  const k = CV.k;
+  c.setTransform(DPR * k, 0, 0, DPR * k, DPR * (SW / 2 - CV.x * k), DPR * (CV.cy - CV.y * k));
+}
+function resetTf(c = ctx) { c.setTransform(DPR, 0, 0, DPR, 0, 0); }
+function toWorld(cx, cy) { return { x: (cx - SW / 2) / CV.k + CV.x, y: (cy - CV.cy) / CV.k + CV.y }; }
+function toScreen(x, y) { return { x: (x - CV.x) * CV.k + SW / 2, y: (y - CV.y) * CV.k + CV.cy }; }
+async function camTo(v, ms, tk) {
+  const from = { x: cam.x, y: cam.y, w: cam.w, h: cam.h, pw: cam.pw, pcy: cam.pcy };
+  await tween(ms, t => {
+    cam.x = lerp(from.x, v.x, t); cam.y = lerp(from.y, v.y, t);
+    cam.w = lerp(from.w, v.w, t); cam.h = lerp(from.h, v.h, t);
+    cam.pw = lerp(from.pw, v.pw ?? v.w * 0.62, t); cam.pcy = lerp(from.pcy, v.pcy ?? 0.42, t);
+  }, tk);
+}
+function resize() {
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  SW = innerWidth; SH = innerHeight;
+  portrait = SW / SH < 0.88;
+  document.body.classList.toggle('portrait', portrait);
+  cvs.width = Math.round(SW * DPR); cvs.height = Math.round(SH * DPR);
+}
+
+const W = {};
+function resetWorld() {
+  W.plumeOpen = 0; // 0 = plumes lowered, 1 = 4 bright plumes held upright across arms
+  W.danceBeat = 0; // 0 -> 1 -> 2 stepping rhythm
+  W.rings = [];
+  W.ancient = 0;
+  W.sealStage = 0;
+  W.paper = 0;
+  W.veil = 0;
+  W.labels = 0;
+  W.glyph = { alpha: 0, ghost: 0, prog: new Array(NS).fill(0), trace: false, words: 0 };
+  W.trace = null;
+  W.wordOn = -1;
+  placeGlyph(800, 500, 420);
+}
+
+function setPaperMode(on) { document.body.classList.toggle('paper', !!on); }
+
+function withGlyph(fn) {
+  ctx.save();
+  const s = GL.size / 1024;
+  ctx.translate(GL.x, GL.y); ctx.scale(s, s); ctx.translate(0, 900); ctx.scale(1, -1);
+  fn(ctx);
+  ctx.restore();
+}
+function paintStroke(c, i, q) {
+  const path = new Path2D(WU_DANCE.strokes[i]);
+  if (q >= 1) { c.fill(path); return; }
+  if (q <= 0) return;
+  c.save();
+  c.clip(path);
+  c.lineWidth = 165; c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = c.fillStyle;
+  const pts = GUIDE[i], count = (pts.length - 1) * q;
+  c.beginPath();
+  c.moveTo(pts[0][0], pts[0][1]);
+  for (let j = 1; j <= Math.floor(count); j++) c.lineTo(pts[j][0], pts[j][1]);
+  const k = Math.floor(count);
+  if (k < pts.length - 1) {
+    const a = pts[k], b = pts[k + 1], f = count - k;
+    c.lineTo(lerp(a[0], b[0], f), lerp(a[1], b[1], f));
+  }
+  c.stroke();
+  c.restore();
+}
+
+function drawScene() {
+  resetTf();
+  const g = ctx.createLinearGradient(0, 0, 0, SH);
+  g.addColorStop(0, '#221628');
+  g.addColorStop(0.55, '#462326');
+  g.addColorStop(1, '#583124');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, SW, SH);
+
+  setCam();
+  ctx.save();
+  // Warm pavilion roof silhouette & hanging lanterns at top
+  ctx.strokeStyle = '#6f4232';
+  ctx.lineWidth = 10;
+  ctx.beginPath();
+  ctx.moveTo(420, 290); ctx.quadraticCurveTo(800, 210, 1180, 290);
+  ctx.stroke();
+  for (const lx of [470, 640, 960, 1130]) {
+    ctx.fillStyle = '#cf4d38';
+    ctx.beginPath(); ctx.ellipse(lx, 315, 16, 20, 0, 0, TAU); ctx.fill();
+    ctx.fillStyle = '#f8df95';
+    ctx.beginPath(); ctx.arc(lx, 315, 7, 0, TAU); ctx.fill();
+  }
+
+  // Stone plaza floor & warm bonfire glow
+  ctx.fillStyle = '#4e3730';
+  ctx.beginPath(); ctx.ellipse(800, 745, 580, 145, 0, 0, TAU); ctx.fill();
+  const fireGlow = ctx.createRadialGradient(800, 680, 10, 800, 680, 260);
+  fireGlow.addColorStop(0, 'rgba(255,204,108,0.45)');
+  fireGlow.addColorStop(1, 'rgba(255,204,108,0)');
+  ctx.fillStyle = fireGlow;
+  ctx.beginPath(); ctx.arc(800, 680, 260, 0, TAU); ctx.fill();
+
+  // Drum beat rings on the stone plaza
+  for (const r of W.rings) {
+    const u = clamp((clock - r.t0) / 1400);
+    if (u >= 1) continue;
+    ctx.strokeStyle = `rgba(232,190,102,${(1 - u) * 0.82})`;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.ellipse(800, 720, 65 + u * 310, 24 + u * 105, 0, 0, TAU);
+    ctx.stroke();
+  }
+
+  // Central dancer holding 4 aligned colorful plumes (upper 舞) and stepping feet (lower 舛)!
+  const sway = (reduceMotion || W.danceBeat <= 0) ? 0 : Math.sin(clock * 0.006 + W.danceBeat * 1.6) * 14 * clamp(W.danceBeat);
+  const cx = 800 + sway * 0.4, shoulderY = 505, hipY = 595;
+
+  // Stepping feet (舛: left and right feet stepping outward in rhythm)
+  const stepLiftL = W.danceBeat > 0 ? Math.max(0, Math.sin(W.danceBeat * Math.PI)) * 22 : 0;
+  const stepLiftR = W.danceBeat > 1 ? Math.max(0, Math.sin((W.danceBeat - 1) * Math.PI)) * 22 : 0;
+  ctx.strokeStyle = '#2d1c1e';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 18;
+  ctx.beginPath();
+  ctx.moveTo(cx - 14, hipY); ctx.lineTo(cx - 78, 705 - stepLiftL); ctx.lineTo(cx - 112, 702 - stepLiftL);
+  ctx.moveTo(cx + 14, hipY); ctx.lineTo(cx + 78, 705 - stepLiftR); ctx.lineTo(cx + 114, 702 - stepLiftR);
+  ctx.stroke();
+
+  // Festive robe
+  ctx.fillStyle = '#cf4d38';
+  ctx.beginPath();
+  ctx.moveTo(cx - 26, shoulderY);
+  ctx.lineTo(cx + 26, shoulderY);
+  ctx.lineTo(cx + 42, hipY + 18);
+  ctx.lineTo(cx - 42, hipY + 18);
+  ctx.closePath();
+  ctx.fill();
+
+  // Wide horizontal arms + long ribbon bar (8th stroke long 横)
+  const armSpan = lerp(65, 195, W.plumeOpen);
+  ctx.strokeStyle = '#e8be66';
+  ctx.lineWidth = 12;
+  ctx.beginPath();
+  ctx.moveTo(cx - armSpan, shoulderY + 12);
+  ctx.lineTo(cx + armSpan, shoulderY + 12);
+  ctx.stroke();
+
+  // Four vertical colorful plumes aligned side-by-side above the bar (strokes 4..7 four 竖!)
+  if (W.plumeOpen > 0.02) {
+    const plumeColors = ['#e8be66', '#64b39a', '#f08b6d', '#82b6e6'];
+    const xs = [-108, -38, 38, 108];
+    for (let i = 0; i < 4; i++) {
+      const px = cx + xs[i] * W.plumeOpen;
+      const topY = lerp(shoulderY + 8, shoulderY - 78, W.plumeOpen);
+      ctx.strokeStyle = plumeColors[i];
+      ctx.lineWidth = 12;
+      ctx.beginPath();
+      ctx.moveTo(px, shoulderY + 10);
+      ctx.lineTo(px, topY);
+      ctx.stroke();
+    }
+    // Top crossbar connecting the plumes
+    ctx.strokeStyle = '#f5dc96';
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    ctx.moveTo(cx - 125 * W.plumeOpen, shoulderY - 46 * W.plumeOpen);
+    ctx.lineTo(cx + 125 * W.plumeOpen, shoulderY - 46 * W.plumeOpen);
+    ctx.stroke();
+  }
+
+  // Dancer head
+  ctx.fillStyle = '#f3ccb0';
+  ctx.beginPath(); ctx.arc(cx, shoulderY - 32, 23, 0, TAU); ctx.fill();
+  ctx.restore();
+}
+
+function drawPaperAndAncient() {
+  if (W.veil > 0.01) {
+    resetTf();
+    ctx.fillStyle = `rgba(28,18,32,${W.veil.toFixed(3)})`;
+    ctx.fillRect(0, 0, SW, SH);
+  }
+  if (W.paper > 0.01) {
+    setCam();
+    ctx.save();
+    ctx.globalAlpha = W.paper * 0.96;
+    ctx.fillStyle = '#fbf5e8';
+    ctx.strokeStyle = 'rgba(207,77,56,0.48)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.rect(GL.cx - GL.size * 0.6, GL.cy - GL.size * 0.6, GL.size * 1.2, GL.size * 1.2);
+    ctx.fill(); ctx.stroke();
+    ctx.restore();
+  }
+  if (W.ancient > 0.01) {
+    setCam();
+    ctx.save();
+    ctx.globalAlpha = W.ancient;
+    ctx.strokeStyle = '#6b3b26';
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 11;
+    const cx = GL.cx, cy = GL.cy;
+    // Outstretched arms holding hanging plumes
+    ctx.beginPath();
+    ctx.moveTo(cx - 110, cy - 52); ctx.quadraticCurveTo(cx, cy - 72, cx + 110, cy - 52);
+    for (const dx of [-88, -42, 42, 88]) {
+      ctx.moveTo(cx + dx, cy - 52); ctx.lineTo(cx + dx, cy + 4);
+    }
+    // Central body
+    ctx.moveTo(cx, cy - 110); ctx.lineTo(cx, cy + 28);
+    // Seal stage adds clear left & right stepping feet (舛) below
+    const footAlpha = lerp(0.35, 1, W.sealStage);
+    ctx.stroke();
+    ctx.globalAlpha = W.ancient * footAlpha;
+    ctx.beginPath();
+    ctx.moveTo(cx - 24, cy + 48); ctx.lineTo(cx - 88, cy + 112); ctx.lineTo(cx - 42, cy + 112);
+    ctx.moveTo(cx + 24, cy + 48); ctx.lineTo(cx + 88, cy + 112); ctx.lineTo(cx + 42, cy + 112);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+function drawGlyphLayer() {
+  const g = W.glyph;
+  if (g.alpha <= 0.001) return;
+  setCam();
+  withGlyph(c => {
+    if (g.ghost > 0.01) {
+      for (let i = 0; i < NS; i++) {
+        if (g.prog[i] >= 1) continue;
+        const on = g.trace && W.trace && W.trace.stroke === i;
+        c.globalAlpha = g.alpha * g.ghost * (on ? 0.55 : 0.28);
+        c.fillStyle = on ? '#e6b89c' : '#dfd2be';
+        c.fill(new Path2D(WU_DANCE.strokes[i]));
+      }
+    }
+    c.globalAlpha = g.alpha;
+    c.fillStyle = '#231f1c';
+    for (let i = 0; i < NS; i++) if (g.prog[i] > 0) paintStroke(c, i, g.prog[i]);
+  });
+
+  if (g.trace && W.trace && W.trace.stroke < NS) {
+    const pts = GUIDE[W.trace.stroke];
+    withGlyph(c => {
+      c.globalAlpha = g.alpha;
+      c.strokeStyle = '#cf4d38';
+      c.lineWidth = 11;
+      c.setLineDash([26, 20]);
+      c.lineCap = 'round';
+      c.beginPath();
+      c.moveTo(pts[0][0], pts[0][1]);
+      for (const p of pts) c.lineTo(p[0], p[1]);
+      c.stroke();
+      c.setLineDash([]);
+      c.fillStyle = '#cf4d38';
+      c.beginPath(); c.arc(pts[0][0], pts[0][1], 22, 0, TAU); c.fill();
+      c.fillStyle = '#fff8ee';
+      c.beginPath(); c.arc(pts[0][0], pts[0][1], 9, 0, TAU); c.fill();
+      if (W.trace.pen) {
+        c.fillStyle = '#e8be66';
+        c.beginPath(); c.arc(W.trace.pen[0], W.trace.pen[1], 14, 0, TAU); c.fill();
+      }
+    });
+  }
+
+  if (W.labels > 0.02 && !g.trace) {
+    setCam();
+    ctx.save();
+    ctx.globalAlpha = g.alpha * W.labels;
+    ctx.fillStyle = '#cf4d38';
+    ctx.font = `${portrait ? 24 : 30}px "Kaiti SC","KaiTi",serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const topPos = mmahToWorld(520, 790), botPos = mmahToWorld(520, 40);
+    ctx.fillText('上部（双手执成排彩羽）', topPos.x, topPos.y - 24);
+    ctx.fillText('下部「舛」（双足踏节）', botPos.x, botPos.y + 28);
+    ctx.restore();
+  }
+
+  if (g.words > 0.01) {
+    setCam();
+    const y = GL.cy + GL.size * 0.72, gap = portrait ? 150 : 210;
+    ctx.save();
+    ctx.font = `${portrait ? 32 : 40}px "Kaiti SC","KaiTi",serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    WORDS.forEach(([w], i) => {
+      const a = clamp(g.words - i) * g.alpha;
+      if (a <= 0) return;
+      ctx.globalAlpha = a * (W.wordOn === i ? 1 : 0.42);
+      ctx.fillStyle = W.wordOn === i ? '#cf4d38' : '#786652';
+      ctx.fillText(w, GL.cx + (i - 1) * gap, y);
+    });
+    ctx.restore();
+  }
+}
+
+function render() {
+  updateView();
+  drawScene();
+  drawPaperAndAncient();
+  drawGlyphLayer();
+}
+
+const ui = {
+  cap: $('#caption'), capT: $('#capTitle'), capP: $('#capText'), hint: $('#hint'),
+  action: $('#action'), demo: $('#demo'), prog: [...document.querySelectorAll('#progress li')],
+  mute: $('#mute'),
+};
+let capMinEnd = 0;
+function span(cls, text) { const s = document.createElement('span'); if (cls) s.className = cls; s.textContent = text; return s; }
+function showCaption(title, text) {
+  ui.capT.textContent = window.haqiHanziUi ? window.haqiHanziUi(title, ui.capT) : title;
+  ui.capP.replaceChildren(...[...text].map((ch, i) => { const s = span('ch', ch); s.style.setProperty('--i', i); return s; }));
+  window.haqiHanziCaption?.(ui.cap, text);
+  ui.cap.classList.remove('on'); void ui.cap.offsetWidth; ui.cap.classList.add('on');
+}
+async function caption(title, text, tk, hold = 0) {
+  window.haqiHanziPrefetch?.([title, text]);
+  while (clock < capMinEnd) await frame(tk);
+  ui.cap.classList.remove('on');
+  await wait(reduceMotion ? 120 : 240, tk);
+  showCaption(title, text);
+  const n = [...text].length;
+  capMinEnd = clock + (Math.max(700, n * 65 + 650) + hold) * FAST;
+}
+async function captionDone(tk) { while (clock < capMinEnd) await frame(tk); }
+function hint(text) {
+  if (text) {
+    const s = span('', '');
+    s.textContent = window.haqiHanziUi ? window.haqiHanziUi(text, s) : text;
+    ui.hint.replaceChildren(s); ui.hint.classList.add('on');
+  } else { ui.hint.classList.remove('on'); ui.hint.replaceChildren(); }
+}
+function progress(i) { ui.prog.forEach((li, j) => { li.classList.toggle('on', j === i); li.classList.toggle('done', j < i); }); }
+const S = { handler: null, demo: null, finish: null, interactions: [] };
+function mode(m) {
+  document.body.classList.remove('act', 'trace');
+  if (m) document.body.classList.add(m);
+}
+let actionFn = null;
+function setAction(label, fn) {
+  actionFn = fn;
+  if (label) { ui.action.textContent = window.haqiHanziUi ? window.haqiHanziUi(label, ui.action) : label; ui.action.hidden = false; }
+  else ui.action.hidden = true;
+}
+ui.action.addEventListener('click', () => actionFn?.());
+ui.demo.addEventListener('click', () => S.demo?.());
+
+let activePointer = null;
+cvs.addEventListener('pointerdown', e => {
+  if (!e.isPrimary || activePointer != null) return;
+  const h = S.handler; if (!h?.down) return;
+  activePointer = e.pointerId;
+  try { cvs.setPointerCapture(e.pointerId); } catch {}
+  e.preventDefault();
+  h.down(toWorld(e.clientX, e.clientY));
+});
+cvs.addEventListener('pointermove', e => {
+  if (e.pointerId !== activePointer) return;
+  S.handler?.move?.(toWorld(e.clientX, e.clientY));
+});
+function endPtr(e, cancel) {
+  if (e.pointerId !== activePointer) return;
+  activePointer = null;
+  S.handler?.up?.(toWorld(e.clientX, e.clientY), cancel);
+}
+cvs.addEventListener('pointerup', e => endPtr(e, false));
+cvs.addEventListener('pointercancel', e => endPtr(e, true));
+
+function publish(sc) { window.__wuDance.scene = sc; }
+
+async function sPavilion(tk) {
+  publish('sPavilion');
+  progress(0);
+  bg(camTo(VIEW.pavilion, 1400 * M, tk));
+  await caption('亭夜', '字源亭挂满红灯，团圆夜的篝火噼啪亮了起来。', tk);
+  await captionDone(tk);
+}
+
+async function sPlume(tk) {
+  publish('sPlume');
+  progress(1);
+  bg(camTo(VIEW.plume, 1300 * M, tk));
+  await caption('执羽', '双手举起成排的彩色羽饰，迎着火光轻轻展开吧。', tk);
+  await captionDone(tk);
+
+  let opened = false, t0 = clock;
+  const doPlume = async () => {
+    if (opened) return;
+    opened = true;
+    Sound.bell(523.25);
+    await tween(880 * M, t => { W.plumeOpen = t; }, tk);
+  };
+  hint('点一点亭前舞者，高高举起四翎彩羽');
+  mode('act');
+  setAction('展开彩羽', () => bg(doPlume()));
+  S.handler = { down() { bg(doPlume()); } };
+  while (!opened) {
+    await frame(tk);
+    if (AUTO || clock - t0 > 3800) await doPlume();
+  }
+  S.handler = null; mode(null); setAction(null); hint(null);
+  await caption('执羽', '四支彩羽在双臂上方整齐排开，映着暖金火光！', tk);
+  await captionDone(tk);
+}
+
+async function sStep(tk) {
+  publish('sStep');
+  progress(2);
+  bg(camTo(VIEW.step, 1300 * M, tk));
+  await caption('踏节', '跟着鼓点拍两下节奏，左一步、右一步跳起团圆舞！', tk);
+  await captionDone(tk);
+
+  let steps = 0, busyStep = false, idleSince = clock;
+  const beatStep = async () => {
+    if (busyStep || steps >= 2) return;
+    busyStep = true;
+    const from = W.danceBeat, next = steps + 1;
+    W.rings.push({ t0: clock });
+    Sound.drum();
+    await tween(620 * M, t => { W.danceBeat = lerp(from, next, t); }, tk);
+    steps++;
+    idleSince = clock;
+    busyStep = false;
+  };
+  hint('点一点广场两次，踏响左一步、右一步的欢快鼓点');
+  mode('act');
+  setAction('踏响鼓点', () => bg(beatStep()));
+  S.handler = { down() { bg(beatStep()); } };
+  while (steps < 2) {
+    await frame(tk);
+    if (!busyStep && (AUTO || clock - idleSince > 4000)) await beatStep();
+  }
+  S.handler = null; mode(null); setAction(null); hint(null);
+  await caption('踏节', '双手执羽在上，双足踏节在下，这就是欢腾的「舞」。', tk);
+  await captionDone(tk);
+}
+
+async function sGlyph(tk) {
+  publish('sGlyph');
+  progress(3);
+  placeGlyph(800, 500, 420);
+  bg(camTo(VIEW.glyph, 1400 * M, tk));
+  setPaperMode(true);
+  await tween(1000 * M, t => { W.veil = 0.55 * t; W.paper = t; W.ancient = t; }, tk);
+  Sound.bell(440);
+  await caption('甲骨文', '甲骨文的「舞」：像人双手拿着牛尾或彩羽翩翩起舞。', tk, 250);
+  await captionDone(tk);
+
+  await tween(1200 * M, t => { W.sealStage = t; }, tk);
+  Sound.pluck(3);
+  await caption('小篆', '小篆在下方添上左右相背的双脚「舛」，踩准鼓点节拍。', tk, 250);
+  await captionDone(tk);
+
+  W.glyph.alpha = 1;
+  await tween(1400 * M, t => {
+    W.ancient = 1 - t;
+    for (let i = 0; i < NS; i++) W.glyph.prog[i] = clamp((t - i * 0.055) / 0.24);
+  }, tk);
+  W.ancient = 0; W.glyph.prog = new Array(NS).fill(1);
+  await tween(500, t => { W.labels = t; }, tk);
+  await caption('楷书', '上面四小竖加长横像成排羽饰，下面「舛」像左右踏步的双脚。', tk, 300);
+  await captionDone(tk);
+  await tween(400, t => { W.labels = 1 - t; }, tk);
+}
+
+async function sWrite(tk) {
+  publish('sWrite');
+  progress(4);
+  await caption('写字', '「舞」一共十四笔。跟着起点，亲手写一个「舞」。', tk);
+  await tween(600, t => { W.glyph.prog = W.glyph.prog.map(() => 1 - t); W.glyph.ghost = t; }, tk);
+  W.glyph.prog = new Array(NS).fill(0);
+  W.glyph.trace = true;
+  W.trace = { stroke: 0, pen: null };
+
+  const showStroke = () => {
+    capMinEnd = 0;
+    const i = W.trace.stroke;
+    showCaption('写字', `第 ${i + 1} 笔，共 ${NS} 笔。`);
+    hint(`${STROKE_NAMES[i]}：从红点起笔，顺着虚线写`);
+  };
+  await captionDone(tk);
+  showStroke();
+
+  let samples = GUIDE[0], drag = null, lastInput = clock, demoing = false, completed = 0;
+  const finishStroke = () => {
+    const i = W.trace.stroke;
+    if (i >= NS) return;
+    W.glyph.prog[i] = 1;
+    Sound.pluck(i + 1);
+    W.trace.stroke++;
+    W.trace.pen = null;
+    completed++;
+    if (W.trace.stroke < NS) { samples = GUIDE[W.trace.stroke]; showStroke(); }
+  };
+  S.finish = finishStroke;
+
+  S.handler = {
+    down(p) {
+      if (demoing || W.trace.stroke >= NS) return;
+      lastInput = clock;
+      const q = worldToMmah(p.x, p.y);
+      let startIdx = 0, bestD = Infinity;
+      const limit = Math.max(1, Math.floor(samples.length * 0.4));
+      for (let j = 0; j < limit; j++) {
+        const d = Math.hypot(q.x - samples[j][0], q.y - samples[j][1]);
+        if (d < bestD) { bestD = d; startIdx = j; }
+      }
+      if (bestD > 290) { hint('请从红点起点开始落笔'); return; }
+      drag = { idx: startIdx };
+      W.glyph.prog[W.trace.stroke] = startIdx / (samples.length - 1);
+      W.trace.pen = samples[startIdx];
+    },
+    move(p) {
+      if (!drag) return;
+      lastInput = clock;
+      const q = worldToMmah(p.x, p.y);
+      const lastIdx = samples.length - 1;
+      let best = drag.idx, bd = Infinity;
+      for (let j = drag.idx; j <= Math.min(lastIdx, drag.idx + 28); j++) {
+        const d = Math.hypot(q.x - samples[j][0], q.y - samples[j][1]);
+        if (d < bd) { bd = d; best = j; }
+      }
+      if (bd <= 260 && best >= drag.idx) drag.idx = best;
+      W.glyph.prog[W.trace.stroke] = drag.idx / lastIdx;
+      W.trace.pen = samples[drag.idx];
+    },
+    up(_p, cancel) {
+      if (!drag) return;
+      const d = drag; drag = null; W.trace.pen = null;
+      const lastIdx = samples.length - 1;
+      if (!cancel && d.idx >= Math.max(2, Math.ceil(lastIdx * 0.55))) { finishStroke(); return; }
+      const i = W.trace.stroke, from = W.glyph.prog[i];
+      bg(tween(220, t => { if (W.trace.stroke === i) W.glyph.prog[i] = from * (1 - t); }, tk));
+    },
+  };
+
+  const demo = async () => {
+    if (demoing || W.trace.stroke >= NS) return;
+    demoing = true; ui.demo.disabled = true; drag = null;
+    while (W.trace.stroke < NS) {
+      const i = W.trace.stroke, pts = GUIDE[i];
+      W.glyph.prog[i] = 0;
+      await tween(360 * M, t => { W.glyph.prog[i] = t; W.trace.pen = pts[Math.round(t * (pts.length - 1))]; }, tk, ease.sine);
+      W.trace.pen = null;
+      finishStroke();
+      await wait(80, tk);
+    }
+  };
+  S.demo = () => { S.interactions.push('demo'); bg(demo()); };
+  mode('trace');
+  ui.demo.hidden = false;
+  if (AUTO) { S.interactions.push('auto'); bg(demo()); }
+
+  while (W.trace.stroke < NS) {
+    await frame(tk);
+    if (!demoing && completed === 0 && clock - lastInput > 24000) { S.interactions.push('auto'); bg(demo()); }
+  }
+  S.handler = null; S.demo = null; S.finish = null; mode(null); hint(null);
+  ui.demo.hidden = true; ui.demo.disabled = false;
+  W.glyph.trace = false;
+  window.__wuDance.events.push('written');
+  window.haqiHanziWritten?.();
+
+  await tween(450, t => { W.glyph.ghost = 1 - t; }, tk);
+  Sound.bell(587.33);
+  await caption('写字', '写好了！舞，欢快踏节的舞。', tk);
+  await captionDone(tk);
+}
+
+async function sWords(tk) {
+  publish('sWords');
+  progress(5);
+  await tween(700 * M, t => { placeGlyph(800, lerp(500, 465, t), lerp(420, 350, t)); }, tk);
+  for (let i = 0; i < WORDS.length; i++) {
+    W.wordOn = i;
+    Sound.pluck(i + 2);
+    bg(tween(480, t => { W.glyph.words = Math.max(W.glyph.words, i + t); }, tk, ease.out));
+    await caption(WORDS[i][0], WORDS[i][1], tk);
+    await captionDone(tk);
+  }
+  W.wordOn = -1;
+}
+
+async function sFinale(tk) {
+  publish('sFinale');
+  progress(6);
+  setPaperMode(false);
+  bg(camTo(VIEW.finale, 1500 * M, tk));
+  await tween(1100 * M, t => { W.glyph.alpha = 1 - t; W.paper = 1 - t; W.veil = 0.55 * (1 - t); }, tk);
+  W.glyph.alpha = 0; W.paper = 0; W.veil = 0; W.glyph.words = 0;
+  W.rings.push({ t0: clock });
+  Sound.drum();
+  await caption('余韵', '字找齐了，灯点亮了，整座字源岛都在欢声笑语里起舞。', tk);
+  await captionDone(tk);
+
+  hint('点一点字源亭广场，再敲响一声团圆鼓点');
+  mode('act');
+  setAction('再看一次', () => { Sound.init(); begin(); });
+  S.handler = {
+    down() {
+      W.rings.push({ t0: clock });
+      if (W.rings.length > 6) W.rings.shift();
+      Sound.drum();
+      hint(null);
+    },
+  };
+  window.__wuDance.finished = true;
+  window.__wuDance.events.push('completed');
+  window.haqiHanziComplete();
+}
+
+const SCENES = [sPavilion, sPlume, sStep, sGlyph, sWrite, sWords, sFinale];
+
+async function begin() {
+  token.dead = true;
+  const tk = token = { dead: false };
+  capMinEnd = 0;
+  waiters.forEach(w => w.rej(new Cancelled())); waiters = [];
+  resetWorld();
+  setPaperMode(false);
+  Object.assign(cam, VIEW.pavilion);
+  S.handler = null; S.demo = null; S.finish = null; mode(null); setAction(null); hint(null);
+  ui.demo.hidden = true; ui.demo.disabled = false;
+  ui.cap.classList.remove('on');
+  rand = mulberry32(20261130);
+  S.interactions = [];
+  Object.assign(window.__wuDance, { interactions: S.interactions, events: [], finished: false, state: W });
+  try {
+    for (const sc of SCENES) await sc(tk);
+  } catch (e) {
+    if (!(e instanceof Cancelled)) console.error(e);
+  }
+}
+
+async function introPlay(tk) {
+  for (;;) await frame(tk);
+}
+
+function loop(now) {
+  if (last == null) last = now;
+  const dt = Math.min(50, Math.max(0, now - last));
+  last = now;
+  if (visible) {
+    DT = dt; clock += dt;
+    W.rings = W.rings.filter(r => clock - r.t0 < 1500);
+    const batch = waiters; waiters = [];
+    for (const w of batch) {
+      if (w.tk.dead) w.rej(new Cancelled());
+      else w.res();
+    }
+  }
+  render();
+  requestAnimationFrame(loop);
+}
+
+resetWorld();
+Object.assign(cam, VIEW.intro);
+window.__wuDance = {
+  scene: 'intro', interactions: [], events: [], finished: false, state: W,
+  medians: WU_DANCE.medians, strokes: WU_DANCE.strokes, toScreen, mmahToWorld,
+  completeCurrentStroke() { S.finish?.(); },
+};
+resize();
+addEventListener('resize', () => { resize(); render(); });
+document.addEventListener('visibilitychange', () => { visible = !document.hidden; last = null; });
+requestAnimationFrame(loop);
+const introTk = { dead: false };
+bg(introPlay(introTk));
+document.documentElement.dataset.fixtureReady = '1';
+
+$('#start').addEventListener('click', () => {
+  Sound.init();
+  introTk.dead = true;
+  $('#intro').classList.add('off');
+  document.body.classList.add('started');
+  begin();
+});
+$('#replay').addEventListener('click', () => { Sound.init(); begin(); });
+$('#mute').addEventListener('click', e => {
+  Sound.init();
+  Sound.setMuted(!Sound.muted);
+  const zh = Sound.muted ? '声音 关' : '声音 开';
+  e.currentTarget.textContent = window.haqiHanziUi ? window.haqiHanziUi(zh, e.currentTarget) : zh;
+});
+addEventListener('pagehide', () => { token.dead = true; void Sound.ctx?.close().catch(() => {}); }, { once: true });
+if (AUTO) $('#start').click();
+})();
+</script>
+</body>
+</html>

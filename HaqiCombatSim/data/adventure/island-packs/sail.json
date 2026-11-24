@@ -86,8 +86,8 @@
       "stats": {
         "level": 80,
         "hp": 7850,
-        "xp": 10000,
-        "coins": 420
+        "xp": 11000,
+        "coins": 465
       }
     },
     {
@@ -97,8 +97,8 @@
       "stats": {
         "level": 81,
         "hp": 8500,
-        "xp": 10000,
-        "coins": 420
+        "xp": 12000,
+        "coins": 510
       }
     },
     {
@@ -108,8 +108,8 @@
       "stats": {
         "level": 81,
         "hp": 9150,
-        "xp": 10000,
-        "coins": 420
+        "xp": 13200,
+        "coins": 560
       }
     }
   ],
@@ -141,6 +141,62 @@
       "monsterId": "pack:sail:guardian-4",
       "x": 2618,
       "y": 895
+    },
+    {
+      "id": "pack:sail:field-5",
+      "zone": "sail",
+      "monsterId": "pack:sail:guardian-1",
+      "x": 2164,
+      "y": 3783
+    },
+    {
+      "id": "pack:sail:field-6",
+      "zone": "sail",
+      "monsterId": "pack:sail:guardian-1",
+      "x": 2606,
+      "y": 3600
+    },
+    {
+      "id": "pack:sail:field-7",
+      "zone": "sail",
+      "monsterId": "pack:sail:guardian-2",
+      "x": 2164,
+      "y": 3385
+    },
+    {
+      "id": "pack:sail:field-8",
+      "zone": "sail",
+      "monsterId": "pack:sail:guardian-2",
+      "x": 2362,
+      "y": 2990
+    },
+    {
+      "id": "pack:sail:field-9",
+      "zone": "sail",
+      "monsterId": "pack:sail:guardian-3",
+      "x": 1783,
+      "y": 3228
+    },
+    {
+      "id": "pack:sail:field-10",
+      "zone": "sail",
+      "monsterId": "pack:sail:guardian-3",
+      "x": 1506,
+      "y": 2902
+    },
+    {
+      "id": "pack:sail:field-11",
+      "zone": "sail",
+      "monsterId": "pack:sail:guardian-4",
+      "x": 1827,
+      "y": 2596
+    },
+    {
+      "id": "pack:sail:field-12",
+      "zone": "sail",
+      "monsterId": "pack:sail:guardian-4",
+      "x": 1319,
+      "y": 2159
     }
   ],
   "goalPaths": {

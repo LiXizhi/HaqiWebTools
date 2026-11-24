@@ -86,8 +86,8 @@
       "stats": {
         "level": 60,
         "hp": 4850,
-        "xp": 6000,
-        "coins": 220
+        "xp": 6600,
+        "coins": 250
       }
     },
     {
@@ -97,8 +97,8 @@
       "stats": {
         "level": 61,
         "hp": 5500,
-        "xp": 6000,
-        "coins": 220
+        "xp": 7200,
+        "coins": 280
       }
     },
     {
@@ -108,8 +108,8 @@
       "stats": {
         "level": 61,
         "hp": 6150,
-        "xp": 6000,
-        "coins": 220
+        "xp": 8000,
+        "coins": 320
       }
     }
   ],
@@ -141,6 +141,62 @@
       "monsterId": "pack:tide:guardian-4",
       "x": 2618,
       "y": 895
+    },
+    {
+      "id": "pack:tide:field-5",
+      "zone": "tide",
+      "monsterId": "pack:tide:guardian-1",
+      "x": 2164,
+      "y": 3783
+    },
+    {
+      "id": "pack:tide:field-6",
+      "zone": "tide",
+      "monsterId": "pack:tide:guardian-1",
+      "x": 2606,
+      "y": 3600
+    },
+    {
+      "id": "pack:tide:field-7",
+      "zone": "tide",
+      "monsterId": "pack:tide:guardian-2",
+      "x": 2164,
+      "y": 3385
+    },
+    {
+      "id": "pack:tide:field-8",
+      "zone": "tide",
+      "monsterId": "pack:tide:guardian-2",
+      "x": 2348,
+      "y": 3017
+    },
+    {
+      "id": "pack:tide:field-9",
+      "zone": "tide",
+      "monsterId": "pack:tide:guardian-3",
+      "x": 1783,
+      "y": 3228
+    },
+    {
+      "id": "pack:tide:field-10",
+      "zone": "tide",
+      "monsterId": "pack:tide:guardian-3",
+      "x": 1506,
+      "y": 2902
+    },
+    {
+      "id": "pack:tide:field-11",
+      "zone": "tide",
+      "monsterId": "pack:tide:guardian-4",
+      "x": 1827,
+      "y": 2596
+    },
+    {
+      "id": "pack:tide:field-12",
+      "zone": "tide",
+      "monsterId": "pack:tide:guardian-4",
+      "x": 1438,
+      "y": 1961
     }
   ],
   "goalPaths": {

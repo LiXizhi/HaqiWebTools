@@ -1,4 +1,6 @@
 import {TACTICS_CHALLENGES} from './tactics_challenge_core.js';
+import {allHanziPuzzlesSolved,midLatePuzzlesCompletedCount} from './island_puzzles_core.js';
+import {steleRubbingCount} from './hanzi_stele_scroll_core.js';
 // Honors derive from persisted achievements; no currency or simulated rankings.
 const rules=[
  {id:'forest-supplies',title:'营地补给员',source:'辨认补给、送达便签，再完成巡夜灯实战并向茜茜汇报。',earned:s=>s.forestCommission?.phase==='done'},
@@ -9,17 +11,28 @@ const rules=[
  {id:'journey:lost-spark',title:'星火寻回者',source:'完整通关精英副本「走失的火种」。',earned:s=>s.dungeonChallengeRecords?.['journey:lost-spark']?.clears>0},
  {id:'journey:ember-night',title:'余烬领队',source:'完整通关精英副本「篝火守夜人」。',earned:s=>s.dungeonChallengeRecords?.['journey:ember-night']?.clears>0},
  {id:'hanzi-restorer',title:'字源守护者',source:'找回字源岛全部六段生活文字故事，让路牌、水渠、明灯与庆典重新亮起。',earned:s=>!!s.quests?.[873105]?.claimed},
+ {id:'hanzi-puzzle-master',title:'字源匠心人',source:'完成字源岛全部六处地标的现场木牌与石碑安放。',earned:s=>allHanziPuzzlesSolved(s)},
+ {id:'hanzi-stele-scholar',title:'碑林传拓人',source:'在字源岛碑林传拓册中完成至少三篇进阶象形故事描红。',earned:s=>steleRubbingCount(s)>=3},
  {id:'journey:hanzi:stele-trial',title:'守碑传薪人',source:'完整通关字源岛精英试炼「字源守碑试炼」。',earned:s=>s.dungeonChallengeRecords?.['journey:hanzi:stele-trial']?.clears>0},
  {id:'journey:vault-lamp',title:'宝库寻光者',source:'完整通关哈奇岛精英副本「宝库里的求救灯」。',earned:s=>s.dungeonChallengeRecords?.['journey:vault-lamp']?.clears>0},
+ {id:'journey:dream-feather',title:'寻羽筑梦人',source:'完整通关哈奇岛三人秘境「梦中遗落的羽毛」。',earned:s=>s.dungeonChallengeRecords?.['journey:dream-feather']?.clears>0},
+ {id:'journey:gold-bell',title:'金铃追回者',source:'完整通关火鸟岛三人秘境「金库失窃的风铃」。',earned:s=>s.dungeonChallengeRecords?.['journey:gold-bell']?.clears>0},
  {id:'journey:frozen-letter',title:'破冰信使',source:'完整通关寒冰岛精英副本「冰封的回信」。',earned:s=>s.dungeonChallengeRecords?.['journey:frozen-letter']?.clears>0},
+ {id:'journey:storm-compass',title:'风眼掌盘师',source:'完整通关寒冰岛四人秘境「风暴中心的罗盘」。',earned:s=>s.dungeonChallengeRecords?.['journey:storm-compass']?.clears>0},
  {id:'journey:sand-echo',title:'沙海聆听者',source:'完整通关沙漠岛精英副本「沙海回声」。',earned:s=>s.dungeonChallengeRecords?.['journey:sand-echo']?.clears>0},
+ {id:'journey:oasis-key',title:'绿洲执钥人',source:'完整通关沙漠岛三人秘境「绿洲的最后一把钥匙」。',earned:s=>s.dungeonChallengeRecords?.['journey:oasis-key']?.clears>0},
  {id:'journey:night-promise',title:'夜约守望者',source:'完整通关幽暗岛精英副本「梦魇尽头的约定」。',earned:s=>s.dungeonChallengeRecords?.['journey:night-promise']?.clears>0},
+ {id:'journey:marsh-beacon',title:'深沼点航人',source:'完整通关幽暗岛四人秘境「沼泽中的航标」。',earned:s=>s.dungeonChallengeRecords?.['journey:marsh-beacon']?.clears>0},
  {id:'journey:tide:elite-1',title:'潮灯引航者',source:'完整通关潮汐岛精英秘境「失声的潮灯」。',earned:s=>s.dungeonChallengeRecords?.['journey:tide:elite-1']?.clears>0},
+ {id:'journey:tide:elite-2',title:'潮信追风者',source:'完整通关潮汐岛五波终极秘境「被风吹散的回信」。',earned:s=>s.dungeonChallengeRecords?.['journey:tide:elite-2']?.clears>0},
  {id:'journey:float:elite-1',title:'双图测绘师',source:'完整通关浮岸岛精英秘境「两岸的旧测量台」。',earned:s=>s.dungeonChallengeRecords?.['journey:float:elite-1']?.clears>0},
+ {id:'journey:float:elite-2',title:'瀑下勘图师',source:'完整通关浮岸岛五波终极秘境「瀑布下的空白图」。',earned:s=>s.dungeonChallengeRecords?.['journey:float:elite-2']?.clears>0},
  {id:'journey:sail:elite-1',title:'归帆掌舵人',source:'完整通关风帆岛精英秘境「只准欢呼的档案室」。',earned:s=>s.dungeonChallengeRecords?.['journey:sail:elite-1']?.clears>0},
+ {id:'journey:sail:elite-2',title:'白帆终夜守望者',source:'完整通关风帆岛五波终极秘境「白帆最后的守夜」。',earned:s=>s.dungeonChallengeRecords?.['journey:sail:elite-2']?.clears>0},
  {id:'tide-story',title:'潮灯寄信人',source:'完成潮汐岛主线故事「没有送到的回答」。',earned:s=>!!s.quests?.[870011]?.claimed},
  {id:'float-story',title:'双图共绘者',source:'完成浮岸岛主线故事「两张图都是真的」。',earned:s=>!!s.quests?.[870111]?.claimed},
  {id:'sail-story',title:'白帆归航者',source:'完成风帆岛主线故事「庆典前的求救」。',earned:s=>!!s.quests?.[870211]?.claimed},
+ {id:'archipelago-steward',title:'群岛寻迹者',source:'在中后期群岛中完成至少四处引火台、破冰信箱、绿洲铜盘或双海图现场机关。',earned:s=>midLatePuzzlesCompletedCount(s)>=4},
  {id:'tower-climber-20',title:'高塔登阶者',source:'在任意岛屿试炼塔中突破第 20 层。',earned:s=>Object.values(s.towerRecords||{}).some(r=>(r?.floor||0)>=20)},
  {id:'tower-summit-late',title:'群岛试炼登顶者',source:'登顶任意一座 30 层及以上的中后期试炼塔。',earned:s=>[['journey:tower-fire',30],['journey:tower-ice',50],['journey:tower-desert',70],['journey:tower-dark',100],['journey:tide:tower',60],['journey:float:tower',80],['journey:sail:tower',100]].some(([id,top])=>(s.towerRecords?.[id]?.floor||0)>=top)},
  ...TACTICS_CHALLENGES.map(row=>({id:'tactical:'+row.id,title:row.honor,source:'首次战胜'+row.title+'。',earned:s=>s.tacticsChallenges?.completed?.[row.id]?.wins>0})),

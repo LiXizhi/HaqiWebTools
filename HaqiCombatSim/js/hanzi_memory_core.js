@@ -1,6 +1,100 @@
 import {createRng,hashSeed} from './rng_core.js';
 import {resolveParams} from './combat_params_core.js';
 
+export const HANZI_WORD_HABITATS = {
+    shan: { landmark: '石头路', glyph: '山', habitat: '山道石阶' },
+    shang: { landmark: '石头路', glyph: '上', habitat: '高坡石阶' },
+    xia: { landmark: '石头路', glyph: '下', habitat: '下坡归途' },
+    zhong: { landmark: '石头路', glyph: '中', habitat: '岔路界碑' },
+    shi: { landmark: '石头路', glyph: '石', habitat: '山崖石壁' },
+    shui: { landmark: '溪边小村', glyph: '水', habitat: '清溪水渠' },
+    'tian-field': { landmark: '溪边小村', glyph: '田', habitat: '村畔方田' },
+    tu: { landmark: '溪边小村', glyph: '土', habitat: '渠岸泥垄' },
+    mu: { landmark: '晨光林', glyph: '木', habitat: '林边古木' },
+    sen: { landmark: '晨光林', glyph: '森', habitat: '晨光密林' },
+    ri: { landmark: '晨光林', glyph: '日', habitat: '向阳晒场' },
+    yue: { landmark: '晨光林', glyph: '月', habitat: '林间月影' },
+    'tian-sky': { landmark: '晨光林', glyph: '天', habitat: '林间晴空' },
+    yun: { landmark: '晨光林', glyph: '云', habitat: '高坡云霭' },
+    yu: { landmark: '晨光林', glyph: '雨', habitat: '听雨树檐' },
+    huo: { landmark: '远行灯塔', glyph: '火', habitat: '灯塔火盆' },
+    guang: { landmark: '远行灯塔', glyph: '光', habitat: '引航灯晕' },
+    ming: { landmark: '远行灯塔', glyph: '明', habitat: '夜归明窗' },
+    men: { landmark: '远行灯塔', glyph: '门', habitat: '驿站木扉' },
+    xiu: { landmark: '远行灯塔', glyph: '休', habitat: '树下歇亭' },
+    ren: { landmark: '初生码头', glyph: '人', habitat: '渡口旅人' },
+    kou: { landmark: '初生码头', glyph: '口', habitat: '码头问候' },
+    shou: { landmark: '初生码头', glyph: '手', habitat: '家书石台' },
+    'mu-eye': { landmark: '初生码头', glyph: '目', habitat: '望海栈桥' },
+    xin: { landmark: '初生码头', glyph: '心', habitat: '归航信箱' },
+    da: { landmark: '字源亭', glyph: '大', habitat: '亭左重鼓' },
+    xiao: { landmark: '字源亭', glyph: '小', habitat: '亭右铃鼓' },
+    er: { landmark: '字源亭', glyph: '耳', habitat: '听鼓长廊' },
+    guo: { landmark: '字源亭', glyph: '国', habitat: '四方石坛' },
+    wu: { landmark: '字源亭', glyph: '舞', habitat: '庆典广场' },
+};
+
+export function semanticMemoryWords(save, config, review = {}) {
+    const quest = memoryQuest(save, config);
+    const storyPool = quest ? quest.words.filter(id => !review[id]?.learned) : [];
+    const restUnlearned = (config?.words || []).filter(id => !review[id]?.learned && !storyPool.includes(id));
+    const ordered = [...storyPool, ...restUnlearned];
+    if (ordered.length) return ordered;
+    return [...(quest?.words || config?.words || [])].sort(
+        (a, b) => (review[a]?.nextReviewAt || 0) - (review[b]?.nextReviewAt || 0) || a.localeCompare(b),
+    );
+}
+
+export function decorateSemanticMemoryNodes(save, config, nodes, review = {}) {
+    if (!Array.isArray(nodes) || !nodes.length) return [];
+    const pool = semanticMemoryWords(save, config, review);
+    if (!pool.length) return nodes.map((n, slot) => ({ ...n, slot }));
+    return nodes.map((n, slot) => {
+        const word = n.hintWord || pool[slot % pool.length];
+        const meta = HANZI_WORD_HABITATS[word] || null;
+        return {
+            ...n,
+            slot,
+            hintWord: word,
+            hintGlyph: meta?.glyph || '',
+            habitat: meta?.habitat || '',
+            landmark: meta?.landmark || '',
+        };
+    });
+}
+
+export function placeSemanticMemoryNodes(save, config, baseNodes, candidates, landmarks = [], review = {}) {
+    if (!Array.isArray(landmarks) || !landmarks.length || !Array.isArray(candidates) || !candidates.length) {
+        return baseNodes;
+    }
+    const pool = semanticMemoryWords(save, config, review);
+    if (!pool.length) return baseNodes;
+    const landmarkByName = new Map(landmarks.map(l => [l.name, l]));
+    const chosen = [];
+    return baseNodes.map((node, slot) => {
+        const word = pool[slot % pool.length];
+        const meta = HANZI_WORD_HABITATS[word];
+        const mark = meta && landmarkByName.get(meta.landmark);
+        if (!mark || slot === 0) {
+            chosen.push(node);
+            return { ...node, hintWord: word };
+        }
+        const nearby = candidates.filter(
+            c => Math.hypot(c.x - mark.x, c.y - mark.y) <= 950
+                && chosen.every(prev => Math.hypot(c.x - prev.x, c.y - prev.y) >= 85),
+        );
+        if (!nearby.length) {
+            chosen.push(node);
+            return { ...node, hintWord: word };
+        }
+        const rng = createRng(hashSeed(`${save.seed}:semantic:${node.key}:${node.cycle}:${word}`));
+        const pick = nearby[rng.int(0, nearby.length - 1)];
+        const placed = { ...node, x: pick.x, y: pick.y, hintWord: word };
+        chosen.push(placed);
+        return placed;
+    });
+}
+
 // Web-authored collection rules, independent of dictionary mastery and combat RNG.
 export function memoryParams(content){const params=resolveParams({version:'kids'},content?.balanceParams||{},{groups:['hanziMemory','monsterScene']});return {...params.hanziMemory,chantSeconds:Math.max(params.hanziMemory.chantSeconds,params.monsterScene.alertDelay+params.hanziMemory.guardianLeadSeconds)};}
 export function memoryCount(progress,id,required=3){

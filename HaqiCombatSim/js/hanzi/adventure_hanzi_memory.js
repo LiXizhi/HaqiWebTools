@@ -1,5 +1,5 @@
 import {learningQuestMatches} from '../learning_quest_core.js';
-import {memoryParams,memoryQuest,createMemoryNodes,advanceMemoryChant,releaseMemoryNodes} from '../hanzi_memory_core.js';
+import {memoryParams,memoryQuest,createMemoryNodes,decorateSemanticMemoryNodes,placeSemanticMemoryNodes,advanceMemoryChant,releaseMemoryNodes} from '../hanzi_memory_core.js';
 import {walkable,distance} from '../adventure_world_core.js';
 import {inMonsterTerritory} from '../adventure_monster_motion_core.js';
 import {loadDictionary} from '../learning/dictionary_loader.js';
@@ -29,7 +29,9 @@ export function createHanziMemory({root,getState,persist,show,close,toast,practi
             if(!candidates.length)candidates.push({...world.layout.spawn});
         }
         let runtime=save.hanziMemoryRuntime;
-        if(!runtime||runtime.version!==2||runtime.island!==cfg.island||!Array.isArray(runtime.nodes)){runtime=save.hanziMemoryRuntime={version:2,island:cfg.island,cycles:{},nodes:createMemoryNodes({...save,hanziMemoryRuntime:null},cfg,candidates,params)};
+        if(!runtime||runtime.version!==2||runtime.island!==cfg.island||!Array.isArray(runtime.nodes)){
+            const baseNodes=createMemoryNodes({...save,hanziMemoryRuntime:null},cfg,candidates,params);
+            runtime=save.hanziMemoryRuntime={version:2,island:cfg.island,cycles:{},nodes:placeSemanticMemoryNodes(save,cfg,baseNodes,candidates,world.landmarks||[],review)};
             // A first memory on the arrival path makes the mechanic discoverable.
             const near=candidates.find(p=>distance(p,world.layout.spawn)>70&&distance(p,world.layout.spawn)<220);
             if(near&&runtime.nodes[0])Object.assign(runtime.nodes[0],near);
@@ -38,14 +40,15 @@ export function createHanziMemory({root,getState,persist,show,close,toast,practi
         }
         return {cfg,params,runtime,save,world};
     }
-    function choose(s){
+    function choose(s,node=null){
+        if(node?.hintWord&&!review[node.hintWord]?.learned)return node.hintWord;
         const quest=memoryQuest(s.save,s.cfg);
         const words=quest?.words||s.cfg.words;
-        return words.find(id=>!review[id]?.learned)||[...words].sort((a,b)=>(review[a]?.nextReviewAt||0)-(review[b]?.nextReviewAt||0)||a.localeCompare(b))[0];
+        return words.find(id=>!review[id]?.learned)||node?.hintWord||[...words].sort((a,b)=>(review[a]?.nextReviewAt||0)-(review[b]?.nextReviewAt||0)||a.localeCompare(b))[0];
     }
     function begin(node,automatic=false){
         const s=scene();if(!s||!node)return;
-        s.runtime.pending??={...node,word:choose(s)};s.runtime.autoOpen=automatic;chant=null;persistRuntime();if(!automatic)show();
+        s.runtime.pending??={...node,word:choose(s,node)};s.runtime.autoOpen=automatic;chant=null;persistRuntime();if(!automatic)show();
     }
     function dismiss(){const world=getState().world;if(world)world.memoryGathering=null;chant=null;}
     async function open(){
@@ -62,7 +65,8 @@ export function createHanziMemory({root,getState,persist,show,close,toast,practi
                 // Rotations are local exploration state, never collection fragments.
                 current.runtime.cycles||={};current.runtime.cycles[pending.key]=(current.runtime.cycles[pending.key]||0)+1;
                 delete current.runtime.pending;delete current.runtime.autoOpen;
-                current.runtime.nodes=createMemoryNodes(current.save,current.cfg,candidates,current.params);
+                const baseNodes=createMemoryNodes(current.save,current.cfg,candidates,current.params);
+                current.runtime.nodes=placeSemanticMemoryNodes(current.save,current.cfg,baseNodes,candidates,current.world.landmarks||[],review);
                 loadedIdentity=null;persistRuntime();close();
             });
         }catch(error){toast(error.message);close();}
@@ -71,12 +75,13 @@ export function createHanziMemory({root,getState,persist,show,close,toast,practi
         tick(dt,enabled){const world=getState().world;if(world)world.memoryGathering=null;const s=scene();if(!s){chant=null;return;}if(loadedIdentity!==identity()&&!loading)void prepare().catch(()=>{});
             if(!enabled){chant=null;return;}
             if(s.runtime.autoOpen&&s.runtime.pending){delete s.runtime.autoOpen;show();return;}
-            const node=s.runtime.nodes.filter(n=>distance(n,s.save.position)<=s.params.collectRadius).sort((a,b)=>distance(a,s.save.position)-distance(b,s.save.position))[0];
+            const decorated=decorateSemanticMemoryNodes(s.save,s.cfg,s.runtime.nodes,review);
+            const node=decorated.filter(n=>distance(n,s.save.position)<=s.params.collectRadius).sort((a,b)=>distance(a,s.save.position)-distance(b,s.save.position))[0];
             // Standard monster warning/chase/contact owns combat. A guarded memory cannot finish first.
             const guardian=node&&s.world.encounters.some(e=>inMonsterTerritory(s.world,e,node)||inMonsterTerritory(s.world,e,s.save.position));
             chant=advanceMemoryChant(chant,node,s.save.position,dt,enabled,s.params);if(chant?.ready&&!guardian){if(s.runtime.pending)show();else begin(node);}
             if(chant?.progress>0)s.world.memoryGathering={x:node.x,y:node.y,progress:Math.min(guardian ? .99 : 1,chant.progress)};
-            s.world.memoryNodes=s.runtime.nodes.map((n,slot)=>({...n,slot}));
+            s.world.memoryNodes=decorated;
             s.world.memorySigns=[];
         },
         target(){const s=scene();return s?.runtime.nodes.reduce((best,n)=>!best||distance(n,s.save.position)<distance(best,s.save.position)?n:best,null);},

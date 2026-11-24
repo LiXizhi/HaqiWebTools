@@ -14,6 +14,7 @@ import {
     trackedQuestIds,
 } from '../adventure_catalog_quests_core.js';
 import { dungeonFor } from '../adventure_dungeons_core.js';
+import { islandPuzzleById } from '../island_puzzles_core.js';
 import { rewardSnapshot } from '../adventure_reward_feedback_core.js';
 import * as A from '../adventure_core.js';
 import * as W from '../adventure_world_core.js';
@@ -465,6 +466,22 @@ export function createQuestDialogueController({
         }
         if (questId === 'opening-journey-plan') {
             opening.trackOpeningJourney(true);
+            return;
+        }
+        if (typeof questId === 'string' && questId.startsWith('island-puzzle:')) {
+            const puzzle = islandPuzzleById(questId.slice('island-puzzle:'.length));
+            if (!puzzle) return;
+            if (ctx.save.zone !== puzzle.zone) {
+                travel(puzzle.zone);
+                if (getContext().save.zone !== puzzle.zone) return;
+            }
+            const latest = getContext();
+            const mark = latest.world?.landmarks?.find(l => l.name === puzzle.landmark);
+            if (mark) {
+                walkTo({ ...mark, kind: 'landmark' }, true);
+            } else {
+                openPanel('island-puzzle', { puzzleId: puzzle.id });
+            }
             return;
         }
         if (isLanguageCourseId(questId)) {

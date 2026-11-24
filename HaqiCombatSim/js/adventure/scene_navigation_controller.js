@@ -9,6 +9,7 @@ import {fishingSpot} from '../adventure_fishing_spot_core.js';
 import {monsterInteractionTargets,monsterScenePositions} from '../adventure_monster_motion_core.js';
 import {campDetour,campDetourGoal} from '../camp_detour_core.js';
 import {forestCommissionAvailable} from '../forest_commission_core.js';
+import {islandPuzzleForLandmark,islandPuzzleStatus} from '../island_puzzles_core.js';
 import {learningParams} from '../language_adventure_core.js';
 import {openingJourney,openingJourneyActive,openingJourneyScene,openingJourneyTarget} from '../opening_journey_core.js';
 
@@ -138,6 +139,18 @@ export function createSceneNavigationController({
             return;
         }
         if(target.kind==='landmark'){
+            const puzzle=islandPuzzleForLandmark(ctx.save.zone,target.name);
+            if(puzzle&&!lp.active){
+                const st=islandPuzzleStatus(ctx.save,puzzle);
+                if(st?.unlocked){
+                    openPanel('island-puzzle',{puzzleId:puzzle.id});
+                    return;
+                }
+                if(st?.lockReason){
+                    toast('{name}：{reason}',{name:target.name,reason:st.lockReason});
+                    return;
+                }
+            }
             toast('{name}：{description}',{name:target.name,description:target.description});
         }
         if(target.kind==='encounter'){

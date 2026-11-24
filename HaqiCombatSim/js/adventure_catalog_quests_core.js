@@ -15,6 +15,22 @@ const num = (value, fallback = 0) => {
     return Number.isFinite(parsed) ? parsed : fallback;
 };
 const STAT_IDS = new Set([214, 79030, 79031, 79032, 79033, 79034]);
+const STAT_LABELS = {
+    214: '等级',
+    79030: '魔法值',
+    79031: '等级',
+    79032: '超魔生成率',
+    79033: '本系攻击力',
+    79034: '最大防御力',
+};
+const CAPTURE_PET_GOALS = {
+    10162: '火鸟战士',
+    10143: '炫冰穿天兽',
+    10158: '小米粒',
+    10163: '雪狼首领',
+    10177: '沙漠巨蜥',
+    10172: '火岩甲虫统帅',
+};
 const EVENT_IDS = new Set([79016, 79017, 79019, 79025, 79026, 79037, 20046, 20048, 52212]);
 const BLOCKED = {
     79035: '充值次数在单人冒险中不计数',
@@ -93,6 +109,11 @@ const progressKey = (kind, id) => `${kind}:${id}`;
 function questRecord(save, id) { return save.quests[id] || { accepted: false, claimed: false, progress: {} }; }
 function customLive(save, content, id, stats) {
     if (STAT_IDS.has(id)) return { support: 'stat', value: stats?.[id] ?? (id === 214 || id === 79031 ? save.level : 0) };
+    if (CAPTURE_PET_GOALS[id]) {
+        const target = CAPTURE_PET_GOALS[id];
+        const owned = Object.values(save.pets || {}).some(p => content.pets?.[p.speciesId || p.id]?.name === target || p.name === target);
+        return { support: 'pet', value: owned ? 1 : 0 };
+    }
     if ([20046, 20048, 52212].includes(id)) return { support: 'event', value: null };
     if (content.items?.[id]) return { support: 'item', value: save.inventory[id] || 0 };
     if (EVENT_IDS.has(id)) return { support: 'event', value: null };
@@ -135,22 +156,38 @@ export function requirementValue(save, content, id, stats = {}) {
 function isUnsupportedLegacyRechargeQuest(quest) {
     return (quest?.groups || []).some(group => group.kind === 'custom' && (group.items || []).some(item => String(item?.name || '').includes('充值魔豆')));
 }
+function unsupportedServerGoalReason(quest) {
+    for (const group of quest?.groups || []) {
+        if (group.kind !== 'custom') continue;
+        for (const item of group.items || []) {
+            if (BLOCKED[item.id]) return BLOCKED[item.id];
+        }
+    }
+    return '';
+}
 export function catalogAcceptBlock(save, content, quest, stats = {}) {
     const state = questRecord(save, quest.id);
     if (!learningQuestMatches(save,quest)) return '请切换到此任务的学习语言';
     if (quest.retired) return '请寻找新的祖先记忆任务';
     if (isUnsupportedLegacyRechargeQuest(quest)) return '原服充值活动暂未开放';
+    const serverBlock = unsupportedServerGoalReason(quest);
+    if (serverBlock) return serverBlock;
     if (state.accepted && !state.claimed) return '已经接取';
     if (state.claimed && !quest.repeat) return '已经完成';
     for (const prerequisite of quest.prerequisites) if (prerequisite.value === 1 && !save.quests[prerequisite.id]?.claimed) return '请先完成前置任务';
     for (const requirement of quest.requirements) {
         const value = requirementValue(save, content, requirement.id, stats);
-        if (value === null) return requirement.id === 965 ? `需要魔法战斗力 ${requirement.min}` : `条件 ${requirement.id} 尚未接入`;
+        if (value === null) return requirement.id === 965 ? `需要魔法战斗力 ${requirement.min}` : `条件 ${STAT_LABELS[requirement.id] || requirement.id} 尚未接入`;
         // Web quests keep the minimum (including the existing level-cap adaptation), but ignore level maxima.
         const isLevel = requirement.id === 214 || requirement.id === 79031;
         const cap = content.progression?.levelCap;
         const min = isLevel && Number.isInteger(cap) && requirement.min > cap ? cap : requirement.min;
-        if (value < min || (!isLevel && requirement.max !== null && value > requirement.max)) return isLevel ? `需要等级 ${min}` : `条件不足：${requirement.id}`;
+        if (value < min || (!isLevel && requirement.max !== null && value > requirement.max)) {
+            if (isLevel) return `需要等级 ${min}`;
+            const label = STAT_LABELS[requirement.id];
+            if (!label) return `条件不足：${requirement.id}`;
+            return value < min ? `需要${label}达到 ${min}` : `${label}高于任务上限 ${requirement.max}`;
+        }
     }
     return '';
 }

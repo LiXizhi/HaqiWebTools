@@ -3222,7 +3222,6 @@ VIP专用仙豆礼盒||VIP Fairy Bean Gift Box
 造梦灵狐||Dreammaking Fox
 尤诺的雪地车||Yuno Snowmobile
 抱抱龙||Cuddle Dragon
-蓝晶神龟||Blue Crystal Turtle
 
 # pet shop schools, price line, and Magic Star
 风暴系||Storm
@@ -3235,9 +3234,6 @@ VIP专用仙豆礼盒||VIP Fairy Bean Gift Box
 角色 {level} 级||Hero level {level}
 有效期至 {date}||Valid until {date}
 剩余能量：{days} 天||Energy left: {days} days
-会员有效，剩余天数待确认||Membership is active; remaining days are not confirmed yet
-有效日期待确认||Expiry date not confirmed yet
-升级会员，点亮魔法星||Upgrade membership to light your Magic Star
 会员天数已兑换至 {year}年{month}月{day}日。之后只兑换更晚的到期日，每天 10 魔豆。||Membership days are exchanged through {year}/{month}/{day}. After that, only a later expiry is exchanged, 10 magic beans a day.
 战斗结束后自动兑换 {days} 天，获得 {beans} 魔豆。||After battle, {days} days are exchanged for {beans} magic beans.
 可兑换 {days} 天，共 {beans} 魔豆。登录后会自动放入背包。||{days} days can be exchanged for {beans} magic beans. They go into your bag after you sign in.
@@ -5022,7 +5018,6 @@ VIP7级专属的甜蜜糖果，14天有效期。||Sweet candy exclusive to VIP l
 穿戴此手套 必将披荆斩棘，所向披靡！||Wear these gloves and cut through every obstacle
 陈旧的杖柄，但似乎有用…… （需将杖柄装备在“玩具”栏中，打败秘境55层BOSS后淬炼成真火杖柄）||An old wand haft that still seems useful. Equip it in the toy slot and defeat the realm floor 55 boss to temper it into a true-fire haft
 经过真火燃烧淬炼而成的杖柄，还在发烫…… （需将杖柄装备在“玩具”栏中，打败秘境65层BOSS后淬炼成冰晶杖柄）||A haft tempered in true fire, still hot. Equip it in the toy slot and defeat the realm floor 65 boss to temper it into an ice-crystal haft
-丝绸口袋||Silk pocket
 这句表达通过了，我们再说一句。||That answer passed. Let's say one more.
 该语言暂不支持剧情评估||Story assessment is not available for this language yet.
 该语言暂不支持朗读||Read-aloud is not available for this language yet.
@@ -5776,7 +5771,6 @@ S4死亡装供货商||S4 Death gear supplier
 工具与链接||Tools & links
 已开启||On
 已关闭||Off
-语言学习||Language learning
 语音陪伴||Voice companion
 中文释义||Chinese glosses
 回到开始画面，选择或创建新的冒险角色。||Return to the title to choose or create a character.
@@ -6361,7 +6355,6 @@ PvP 切磋||PvP duel
 角色足迹与拖尾||Character footprints and trails
 自动||Auto
 开启||On
-关闭||Off
 自动：为保持流畅，已关闭||Auto: disabled to keep gameplay smooth
 自动：已开启||Auto: enabled
 操作||Controls
@@ -10132,7 +10125,6 @@ VIP 有效期由账号下所有角色共享；魔豆放入当前角色背包，�
 返回冒险||Return to adventure
 回到角色||Find my character
 点击土地行走 · 拖动探索 · 建造你的世界||Click to walk · Drag to explore · Build your world
-我||Me
 出生点传送装置：打开哈奇世界地图||Spawn teleporter: open the Haqi world map
 更新于||Updated
 已游玩||Time played
@@ -10149,7 +10141,6 @@ VIP 有效期由账号下所有角色共享；魔豆放入当前角色背包，�
 散雾||Clearing the Mist
 照耀||Shining Forth
 日光||Sunlight
-白昼||Daylight
 一日||One Day
 古文字||Ancient Script
 说文解字||Shuowen Jiezi
@@ -10374,7 +10365,6 @@ VIP 有效期由账号下所有角色共享；魔豆放入当前角色背包，�
 第 1 / 4 笔 · 点||Stroke 1 / 4 · Dot
 第 2 / 4 笔 · 撇||Stroke 2 / 4 · Short Sweep
 第 3 / 4 笔 · 竖撇||Stroke 3 / 4 · Vertical Sweep
-第 4 / 4 笔 · 捺||Stroke 4 / 4 · Right-Falling
 寒夜的森林又黑又冷，干松柴静静堆在营地中央。||The winter night forest is dark and cold; dry pine logs wait in the camp.
 柴堆下藏着火绒，按住擦出金亮火星，把干柴点燃吧！||Hold to strike bright sparks and ignite the dry firewood!
 噼啪！金红的小火苗在松柴上欢快地跳起来了！||Crackle! A golden-red little flame leaps up on the pine logs!
@@ -11078,7 +11068,6 @@ Word · 回忆拼写||Word · Recall Spelling
 游戏服务器||Game Server
 游戏服务器地址||Game Server Address
 切换服务器||Switch Server
-重新连接||Reconnect
 恢复默认服务器||Restore Default Server
 游戏服未连接||Game server disconnected
 默认连接美国一区。可填写其他已开通的 Keepwork 游戏服 HTTPS 地址；切换不改变角色存档。||Connects to US Region 1 by default. Enter another available Keepwork game server HTTPS address to switch without changing your character save.
@@ -12383,3 +12372,251 @@ Word · 回忆拼写||Word · Recall Spelling
 # Dungeon preparation: available cards and owned equipment
 看清敌人意图：手中有对应卡牌时，可在重击前给进攻者挂虚弱，或给受击队友加盾；也可以抢先攻击。||Read enemy intent: with the right cards in hand, you can weaken the attacker or shield the target before a heavy hit. You can also attack first.
 {card}可由已拥有的装备附带；到背包比较并穿戴后，即可在战斗中抽到。||Equipment you already own can grant {card}. Compare and equip it from your backpack to draw this card in battle.
+山脚||Foothill
+登阶||Climbing Steps
+望远||Looking Afar
+上 · 拾级登高望远山||Up · Climb the Steps to See Far Mountains
+山脚石坪平平铺开，云雾上面藏着清晨的朝阳。||A flat stone terrace spreads at the mountain foot, with the morning sun hidden above the mist.
+约两分钟 · 拾级登阶、拨云望远与描字 · 建议开启声音||About 2 minutes · Climb steps, clear mist & trace · Sound recommended
+清晨的山脚有一块平平的青石坪，云雾上面藏着初升的太阳。||At dawn, a flat bluestone terrace rests at the mountain foot while the rising sun hides above the mist.
+顺着石阶一步步往上走，去云雾上面看看吧。||Walk up the stone steps one by one and take a look above the clouds.
+点一点石阶或下方按钮，往上登高三次||Tap the stone steps or the button below three times to climb up
+向上登一阶||Climb One Step Up
+越走越高，云层已经落到了脚底下！||Higher and higher—the clouds now rest beneath your feet!
+站在山顶拨开最后一缕晨雾，高处的路标亮了起来。||Standing at the summit, brush away the last morning mist and watch the high signpost glow.
+点一点山顶晨光，点亮高处的木标||Tap the morning light at the summit to light up the high wooden sign
+拨开晨雾||Clear the Morning Mist
+平地是底下的基准，站在高处，就叫做「上」。||With the flat ground as the baseline below, standing high above is called "Up" (shang).
+甲骨文的「上」：底下长横代表平地基准，上面一短横指明高处。||Oracle-bone "shang": a long bottom line marks the ground baseline, and a short line above points to the high place.
+后来上方标记竖立起来，《说文解字》说：“上，高也，指事。”||Later the upper mark stood upright; Shuowen Jiezi notes: "Shang means high, an indicative character."
+先写中间向上的竖，再写右边短横，最后写稳稳托底的长横。||Write the central vertical stroke first, then the short right stroke, and finally the steady bottom horizontal stroke.
+「上」一共三笔。跟着起点，亲手写一个「上」。||"Shang" has three strokes. Follow the starting dot to trace it yourself.
+请从红点起点开始落笔||Please start your stroke at the red starting dot
+写好了！上，拾级而上的上。||Well written! Shang—climbing upward step by step.
+山上||On the Mountain
+顺着石阶往上走，山上的风景真辽阔。||Walking up the stone steps, the view on the mountain is vast and clear.
+上去||Go Up
+迈开脚步走上去，云雾就在脚底下。||Step forward and go up—the mist now floats beneath your feet.
+小树苗每天向着太阳努力向上生长。||Little saplings grow upward toward the sun every day.
+抬头往上走，每一步都能看见更辽阔的天地。||Look up and walk onward—every step reveals a wider world.
+点一点山顶晴空，放飞一只纸鸢||Tap the clear sky above the summit to fly a paper kite
+山岗||Mountain Ridge
+下坡||Going Downhill
+归村||Returning Home
+下 · 顺阶归村灯火暖||Down · Follow the Steps Home to Warm Lanterns
+太阳快落山了，村子就在山坡下面亮着灯。||The sun is setting, and the village glows with lanterns below the slope.
+约两分钟 · 顺阶归村、听雨点灯与描字 · 建议开启声音||About 2 minutes · Walk downhill, light the lantern & trace · Sound recommended
+暮色降临在平平的山岗石栏上，坡底的村子亮起了温暖的灯。||Dusk settles over the flat stone parapet on the ridge while warm lamps light up in the village below.
+沿着石阶一步步往下走，回家的路就在脚下延伸。||Walk down the stone steps one by one as the path home stretches beneath your feet.
+点一点石阶或下方按钮，顺坡往下走三次||Tap the steps or the button below three times to walk downhill
+向下走一阶||Step One Flight Down
+顺坡往下，很快就走到了村口的屋檐旁。||Walking down the slope, you soon arrive beside the village eaves.
+屋檐挂着一滴晶莹的春雨，门前的红灯笼正等着归人。||A crystal drop of spring rain hangs from the eaves while a red lantern awaits by the door.
+点一点屋檐或灯笼，听雨滴落下、暖灯点亮||Tap the eaves or lantern to hear the raindrop fall and brighten the lamp
+点亮门灯||Light the Door Lantern
+高岗在顶上，归人与雨滴落在低处，这就是「下」。||With the high ridge above, travelers and raindrops resting below form "Down" (xia).
+甲骨文的「下」：上面长横是基准线，下面一短横标明低处。||Oracle-bone "xia": a long upper line marks the baseline, and a short line beneath marks the lower side.
+后来下方生出向下的竖笔与点画，《说文解字》说：“下，底也。”||Later a downward vertical stroke and dot emerged beneath; Shuowen Jiezi says: "Xia means below."
+先写顶上一长横，再写中间向下的竖，最后在右旁点下一滴小点。||Write the long top horizontal stroke first, then the downward vertical stroke, and finish with a small dot on the right.
+「下」一共三笔。跟着起点，亲手写一个「下」。||"Xia" has three strokes. Follow the starting dot to trace it yourself.
+写好了！下，顺坡回家的下。||Well written! Xia—walking down the slope toward home.
+山下||Foot of the Mountain
+顺着石阶往下走，温暖的小村就在山下。||Follow the stone steps down—the warm little village rests at the foot of the mountain.
+屋檐滴答落下水珠，外面开始下雨了。||Drops patter down from the eaves—it has started raining outside.
+坐下||Sit Down
+推门回到家里，在暖灯旁安心坐下休息。||Push open the door, step home, and sit down peacefully beside the warm lamp.
+顺着石阶往下走，温暖的灯火总在山下等你归来。||Walk down the stone steps—warm lights are always waiting for your return below.
+点一点村口夜色，唤起几只归家流萤||Tap the evening glow by the village to summon fireflies heading home
+四路||Crossroads
+立旗||Raising the Banner
+汇聚||Gathering
+中 · 立旗广场聚四方||Center · Raise the Banner Where Four Paths Meet
+四条小路在广场交汇，大家约好在最中间见面。||Four paths meet at the plaza, where everyone promised to gather right in the middle.
+约两分钟 · 扶正旗杆、敲响铜钲与描字 · 建议开启声音||About 2 minutes · Straighten the pole, ring the bronze chime & trace · Sound recommended
+东南西北四条小路在广场交汇，大家约好在最中间见面。||Paths from north, south, east, and west meet at the plaza, where friends gather right in the center.
+石坛里的木旗杆歪向了一边，快来把它扶回正中央吧。||The wooden flagpole in the stone altar tilted to one side—help set it upright dead center.
+点一点旗杆或下方按钮两次，把旗杆稳稳立在正中||Tap the flagpole or the button below twice to stand it right in the center
+扶正旗杆||Straighten the Flagpole
+不偏左也不偏右，红旗在方坛正中央迎风展开！||Neither leaning left nor right—the red banner unfurls in the breeze dead center!
+敲响石坛中心的铜钲，把四面八方的伙伴都唤来吧。||Sound the bronze chime at the altar center to call companions from every direction.
+点一点中心石坛，敲响汇聚四方的铜钲||Tap the central stone altar to ring the bronze chime across all four directions
+敲响铜钲||Ring the Bronze Chime
+方坛围在四周，旗杆立在正中，这就是「中」。||With the square altar around and the flagpole standing right in the middle, this is "Center" (zhong).
+甲骨文的「中」：像一面竖立在营地正中央、上下飘带的旗杆。||Oracle-bone "zhong": shaped like a flagpole with streamers standing dead center in a camp.
+小篆省去飘带，只留端正的方框与贯穿上下的中竖。||Small-seal script simplified the streamers into a neat frame pierced straight through by a central vertical line.
+先写扁扁的「口」框，最后一笔长竖从正中间稳稳穿过去。||Draw the wide rectangular frame first, then pass the final long vertical stroke straight through the middle.
+「中」一共四笔。跟着起点，亲手写一个「中」。||"Zhong" has four strokes. Follow the starting dot to trace it yourself.
+写好了！中，不偏不倚的正中。||Well written! Zhong—balanced right in the center.
+中间||In the Middle
+四条小路交汇的地方，就在广场最中间。||Where the four paths meet lies right in the middle of the plaza.
+中心||Center
+旗杆稳稳立在石坛中心，四方都能望见。||The flagpole stands steady at the center of the stone altar, visible from all sides.
+正中||Dead Center
+不偏左也不偏右，一笔长竖穿过正中。||Neither left nor right—a single long vertical stroke pierces dead center.
+心有准星、不偏不倚，四面八方的朋友都能在正中重逢。||Steady and centered at heart, friends from every direction can reunite right in the middle.
+点一点广场石坛，再放出一圈金色回响||Tap the plaza altar to send out another golden chime ripple
+张臂||Stretch Wide
+撑伞||Open the Parasol
+大 · 张臂迎风顶天立||Big · Stretch Wide Under the Sky
+宽广的山坡草坪上，张开双臂拥抱暖风与晴阳。||On the wide hillside meadow, open your arms to warm breeze and sunshine.
+约两分钟 · 张臂稳立、撑开大伞与描字 · 建议开启声音||About 2 minutes · Stretch wide, open the big parasol & trace · Sound recommended
+大小||Size
+大红伞配小手鼓，一比就分清大小。||A big red parasol beside a small drum—compare them and size is clear.
+大山||Great Mountain
+远方连绵高耸的群峰，叫作大山。||The towering mountain range in the distance is a great mountain.
+长大||Grow Up
+双脚稳稳站立，我们一天天长大。||Standing tall on steady feet, we grow bigger day by day.
+一横（平展双臂）||Horizontal Stroke (Outstretched Arms)
+撇捺（稳立双足）||Left & Right Strokes (Steady Stance)
+山坡上的庆典草坪宽广无边，暖风轻轻吹过。||The festival meadow on the hillside stretches wide as a warm breeze drifts by.
+深吸一口气，把双臂和双脚大大方方张开吧。||Take a deep breath and stretch your arms and legs out wide.
+点一点画面中的伙伴两次，张开双臂与双腿||Tap the friend on screen twice to stretch arms and legs wide
+张开双臂||Stretch Arms Wide
+双臂平平伸展，双脚稳稳踏地，身姿顶天立地！||Arms stretched level, feet planted firm—standing tall between sky and earth!
+再撑开一把庆典大红伞，给身边的伙伴遮住烈日。||Now open a big red festival parasol to shade the friends beside you.
+点一点草坪中央，撑开宽宽的庆典大伞||Tap the center of the meadow to open the wide festival parasol
+撑开大伞||Open the Big Parasol
+宽宽的伞面与舒展的身姿合在一起，这就是「大」。||The broad canopy and outstretched stance come together as "Big" (da).
+甲骨文的「大」：像一个正面站立、张开双臂双腿的人形。||Oracle-bone "da": a person standing facing forward with arms and legs spread wide.
+小篆线条圆融匀称，平展的双臂渐渐化作平直的一横。||Small-seal curves grew balanced as the outstretched arms straightened into a level stroke.
+先写一横张双臂，再写竖撇与长捺稳稳站立。||Write the horizontal stroke for wide arms first, then the left and right strokes for a firm stance.
+「大」一共三笔。跟着起点，亲手写一个「大」。||"Da" has three strokes. Follow the starting dot to trace it yourself.
+写好了！大，开阔舒展的大。||Well written! Da—open, broad, and bold.
+胸怀宽广、步履踏实，小小的我们也会一天天长大。||With an open heart and steady steps, even our small selves grow tall day by day.
+点一点山坡草坪，再擂响一声庆典大鼓||Tap the hillside meadow to beat the festival drum once more
+浅溪||Shallow Brook
+垂露||Hanging Dew
+萤点||Firefly Dots
+小 · 萤点微光聚溪畔||Small · Tiny Dew & Fireflies by the Brook
+静谧的夜溪边，细小的露珠与萤火替小纸船照路。||By the quiet night brook, a tiny dewdrop and fireflies light the path for a paper boat.
+约两分钟 · 轻点垂露、唤醒萤火与描字 · 建议开启声音||About 2 minutes · Tap the dew, wake fireflies & trace · Sound recommended
+左点||Left Dot
+右点||Right Dot
+小船||Little Boat
+掌心大的折纸小船，顺着溪水轻轻漂。||A palm-sized folded paper boat drifts gently down the brook.
+小小||Tiny
+小小的萤火虫闪着光，替伙伴照亮溪岸。||Tiny fireflies glow softly, lighting the bank for their friends.
+大礁石旁停着小纸船，一比就看出大小。||A little paper boat rests beside a big boulder—size is clear at a glance.
+先写中竖钩（垂露）||Center Hook First (Hanging Dew)
+再点左右两点（微萤）||Then Left & Right Dots (Fireflies)
+夜溪边的鹅卵石旁，停着一只掌心大的折纸小船。||Beside the pebbles of the night brook rests a palm-sized paper boat.
+草尖凝着一滴细细的露珠，轻轻一点让它垂成银丝吧。||A tiny dewdrop clings to a grass tip—tap gently to let it draw into a silver thread.
+点一点草尖上的露珠，拉出细细的居中银丝||Tap the dewdrop on the grass tip to draw a fine center silver thread
+轻点露珠||Tap the Dewdrop
+一缕银露垂直落下，末端轻轻挽起一个小钩。||A slender thread of silver dew hangs straight down with a tiny hook at its tip.
+再唤醒左右两只小萤火虫，一左一右替小船掌灯。||Now wake two tiny fireflies on left and right to hold lanterns for the little boat.
+点一点溪畔两次，依次点亮左右两粒小萤火||Tap the brook twice to light the left and right fireflies in turn
+唤醒萤火||Wake the Fireflies
+中间一缕垂露，左右两粒微萤，聚成了精巧的「小」。||One slender dewdrop in the middle and two tiny fireflies at its sides form "Small" (xiao).
+甲骨文的「小」：用三粒细微的沙点或水滴表示微小的事物。||Oracle-bone "xiao": three tiny grains of sand or droplets representing small things.
+小篆把中间一点拉长成竖线，左右各留一小笔相伴。||Small-seal stretched the middle dot into a vertical stroke flanked by two small strokes.
+牢记「先中间后两边」：先写竖钩，再写左点与右点。||Remember center first, then both sides: draw the vertical hook, then left and right dots.
+「小」一共三笔。跟着起点，亲手写一个「小」。||"Xiao" has three strokes. Follow the starting dot to trace it yourself.
+写好了！小，细微精巧的小。||Well written! Xiao—delicate, tiny, and bright.
+每一粒细小的微光聚在一起，也能汇成温暖的星河。||Even the tiniest sparks of light, gathered together, can form a warm river of stars.
+点一点溪面，再泛起一圈微光涟漪||Tap the brook to send out another glowing ripple
+左点：从红点起笔，顺着虚线写||Left dot: start at the red dot and follow the dashed guide
+右点：从红点起笔，顺着虚线写||Right dot: start at the red dot and follow the dashed guide
+高坡||High Hill
+拨云||Part the Clouds
+望天||Gaze at the Sky
+天 · 仰望苍穹一横高||Sky · One High Line Above the Head
+站在高坡上张开双臂，一抬头，就是无边无际的蓝天。||Stand on the high hill with arms wide—look up and the boundless blue sky stretches overhead.
+约两分钟 · 拨开流云、点亮天际与描字 · 建议开启声音||About 2 minutes · Part clouds, light the sky & trace · Sound recommended
+天空||The Sky
+高高在头顶的蔚蓝苍穹，叫作天空。||The vast blue dome high above our heads is the sky.
+蓝天||Blue Sky
+流云拨开以后，露出一望无际的蓝天。||Once the drifting clouds part, a boundless blue sky shines through.
+晴天||Sunny Day
+阳光明媚、清风舒爽的日子是晴天。||A bright day with sunshine and gentle breeze is a sunny day.
+上横（头顶苍穹）||Top Stroke (Sky Above)
+下部「大」（张臂立人）||Lower "Big" (Standing Figure)
+走上岛北高坡，头顶飘着厚厚的晨雾与流云。||Climbing the northern hill, thick morning mist and clouds drift overhead.
+轻轻拨开两朵流云，看看头顶最高的地方有什么。||Gently part the two drifting clouds to see what lies highest overhead.
+点一点头顶的流云两次，把云层向两边拨开||Tap the clouds overhead twice to part them to either side
+拨开流云||Part the Clouds
+云朵向两边散开，露出了澄澈高远的苍穹！||The clouds drift apart, revealing the crystal-clear sky high above!
+抬头望向最高处，点亮横亘在头顶的天际线吧。||Look up to the very top and light up the high skyline stretching overhead.
+点一点高空，点亮头顶至高的一横天际线||Tap the high sky to light the highest horizontal line overhead
+仰望苍穹||Gaze at the Sky
+「大」字头顶再添高高的一横，这就是无边的「天」。||Add one high line above "Big" (da), and you have the boundless "Sky" (tian).
+甲骨文的「天」：在正面站立的人形上方标示头顶至高之处。||Oracle-bone "tian": a standing figure with a mark above the head pointing to the highest sky.
+小篆将顶部的标记化为平正的一横，覆盖在「大」字上方。||Small-seal turned that top mark into a level bar resting above "da".
+上横稍短高悬头顶，下横舒展连接一撇一捺。||The shorter top stroke floats high above; the wider lower stroke joins the left and right legs.
+「天」一共四笔。跟着起点，亲手写一个「天」。||"Tian" has four strokes. Follow the starting dot to trace it yourself.
+写好了！天，辽阔高远的天。||Well written! Tian—vast, clear, and high.
+抬头有蓝天，脚下有大地，愿你像飞鸟一样自在远航。||With blue sky above and solid earth below, may you journey free as a bird.
+点一点晴空，再唤起一圈明亮的天光||Tap the clear sky to summon another ring of bright sky-light
+亭夜||Pavilion Night
+执羽||Lift the Plumes
+踏节||Step to the Beat
+舞 · 执羽踏鼓庆团圆||Dance · Lift Plumes & Step to the Drum
+字源亭的篝火亮起来了，举起彩羽、踩着鼓点一起跳舞吧。||The bonfire at Hanzi Pavilion glows bright—lift your plumes and dance to the drums!
+约两分钟 · 展开彩羽、踏响鼓点与描字 · 建议开启声音||About 2 minutes · Fan plumes, step to the drum & trace · Sound recommended
+竖折||Vertical-Turn
+围着字源亭的篝火，大家手拉手一起跳舞。||Around the pavilion bonfire, everyone joins hands to dance together.
+歌舞||Song and Dance
+欢快的鼓点配上歌声，化作热闹的歌舞。||Joyful drumbeats blend with song into lively song and dance.
+飞舞||Flutter & Dance
+暖金色的灯火与彩带在夜风里轻轻飞舞。||Warm golden lights and ribbons flutter and dance in the night breeze.
+上部（双手执成排彩羽）||Top Part (Hands Holding Plumes)
+下部「舛」（双足踏节）||Lower Part (Two Feet Stepping)
+字源亭挂满红灯，团圆夜的篝火噼啪亮了起来。||Red lanterns line Hanzi Pavilion as the reunion bonfire crackles bright.
+双手举起成排的彩色羽饰，迎着火光轻轻展开吧。||Lift the row of bright feathered plumes in both hands and fan them open by the firelight.
+点一点亭前舞者，高高举起四翎彩羽||Tap the dancer before the pavilion to lift all four bright plumes
+展开彩羽||Fan Out the Plumes
+四支彩羽在双臂上方整齐排开，映着暖金火光！||Four bright plumes stand lined up above the outstretched arms, shining in golden firelight!
+跟着鼓点拍两下节奏，左一步、右一步跳起团圆舞！||Beat the rhythm twice—left step, right step—and begin the reunion dance!
+点一点广场两次，踏响左一步、右一步的欢快鼓点||Tap the plaza twice to beat a joyful left-step, right-step rhythm
+踏响鼓点||Step to the Drum
+双手执羽在上，双足踏节在下，这就是欢腾的「舞」。||Plumes held high above, feet stepping in rhythm below—this is joyful "Dance" (wu).
+甲骨文的「舞」：像人双手拿着牛尾或彩羽翩翩起舞。||Oracle-bone "wu": a figure holding plumes or streamers in both hands while dancing.
+小篆在下方添上左右相背的双脚「舛」，踩准鼓点节拍。||Small-seal added a pair of opposing feet underneath to mark the stepping beat.
+上面四小竖加长横像成排羽饰，下面「舛」像左右踏步的双脚。||Four short vertical strokes over the long bar recall lined plumes; the base shows two stepping feet.
+「舞」一共十四笔。跟着起点，亲手写一个「舞」。||"Wu" has fourteen strokes. Follow the starting dot to trace it yourself.
+写好了！舞，欢快踏节的舞。||Well written! Wu—a joyful dance in rhythm.
+字找齐了，灯点亮了，整座字源岛都在欢声笑语里起舞。||Every character is found, every lantern is lit, and all of Hanzi Island dances in joy.
+点一点字源亭广场，再敲响一声团圆鼓点||Tap the pavilion plaza to sound another joyous reunion drumbeat
+关闭现场互动||Close Landmark Interaction
+请先向附近居民了解情况后再来操作。||Ask nearby residents first before setting this up.
+{badge}（已完成现场复原，奖励已发放）||{badge} (Restored, rewards granted)
+已获回礼||Rewards Claimed
+现场回礼||Landmark Rewards
+确认安放||Confirm Placement
+请先为每一处位置选好对应的牌签。||Please choose a sign for every slot first.
+有一处位置还不太贴切，再试一次吧。||One placement does not quite fit yet—try again.
+稍后再试||Try Later
+返回岛屿||Return to Island
+字源碑林传拓册||Hanzi Stele Rubbing Scroll
+关闭碑林传拓册||Close Stele Rubbing Scroll
+石伯珍藏 · 已传拓 {done} / {total} 篇||Shibo's Collection · {done} / {total} Rubbings Done
+除了岛上散落的三十枚生活字迹，字源亭古碑还刻着九段完整的象形与会意故事。点选任意碑帖观看互动动画并亲手描红，每篇首次完成可获 40 奇豆，每满 3 篇再赠战宠口粮。||Beyond the thirty daily characters scattered on the island, nine full stories are carved on the ancient pavilion steles. Watch and trace any stele to earn 40 Beans each, plus Pet Food every 3 steles.
+已传拓||Completed
+待描红||Ready to Trace
+重温「{glyph}」字故事动画||Replay "{glyph}" Story Animation
+展开「{glyph}」字故事并描红||Open "{glyph}" Story & Trace
+驿灯相传||Passing the Relay Lantern
+风雪山道上一驿接一驿，把温暖的灯火传下去。||Along the snowy mountain trail, pass the warm lantern from post to post.
+烟雨竹林里踩着青石寻路，拨开翠竹忽见幽亭。||Step along mossy stones in the misty bamboo grove to uncover a quiet pavilion.
+石上清泉||Clear Mountain Spring
+明月松间叩开山岩细缝，看白水涓涓涌成清泉。||Under pines and moonlight, tap the rocky cleft to watch clear spring water well forth.
+倦鸟归巢||Birds Returning West
+日落西山时，小雀顺着晚霞飞回枝头温暖的巢。||As the sun sets in the west, a little bird follows the glow back to its warm nest.
+矢口为知||Arrow True to the Mark
+细察风向后引弓发矢一语中的，领悟求知之理。||Observe the wind, draw the bow true to the mark, and grasp the essence of knowing.
+桃李成蹊||Plum Trees Forming a Path
+春花如雪、夏果满枝，树下自然踏出一条小路。||Snow-white blossoms in spring and ripe plums in summer draw a path beneath the tree.
+双峰对峙||Twin Peaks Facing Across the Sea
+两座青峰隔海相望，稳稳立在翻涌的沧海之上。||Two verdant peaks face one another steadily above the surging sea.
+灯下系丝||Spinning Silk by Lamplight
+暖灯下缫丝不断，一根细丝连起代代相传的牵挂。||Spinning silk beneath a warm lamp, one unbroken thread links generation to generation.
+止戈守护||Laying Down Arms to Guard
+迈步巡守四方安宁，领会古人止息干戈的本意。||Patrol to keep peace on all sides and understand the ancient meaning of stopping strife.
+现场安放 · {title}（{landmark}）||Landmark Task · {title} ({landmark})
+翻阅字源碑林传拓册（9 篇象形故事）||Open Hanzi Stele Rubbing Scroll (9 Stories)
+地标复原 {done}/{total} · 碑林传拓 {stele}/{steleTotal}||Landmarks {done}/{total} · Steles {stele}/{steleTotal}
+岛屿现场复原 {done}/{total}||Island Restoration {done}/{total}
+现场探索 · {landmark}（{title}）||Explore · {landmark} ({title})
+字源碑林传拓册（{done}/{total}）||Hanzi Stele Scroll ({done}/{total})
+带我去看看||Take Me There
+翻阅传拓册||Open Stele Scroll

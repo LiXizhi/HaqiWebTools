@@ -9,12 +9,20 @@ const rewards={
  'journey:ember-night':{items:[1829,1825,1842,1854,1850],purpose:'50 级魔石项链，增加 600 生命与 10% 全学派伤害；在背包中比较现有装备后穿戴。'},
  'journey:hanzi:stele-trial':{items:[1272,1273,1274,1276,1275],purpose:'10 级本学派法杖，附带 6 张专属法杖攻击牌；穿戴后可显著提升前期出牌节奏。'},
  'journey:vault-lamp':{itemId:1453,purpose:'8 级全学派通用圣徒衣，增加 60 生命与多系攻防属性；在背包中比较后穿戴。'},
+ 'journey:dream-feather':{items:[1445,1446,1447,1449,1448],purpose:'10 级本学派伯爵法杖，附带 6 张专属进阶法杖攻击牌，助力启程前往火鸟岛。'},
+ 'journey:gold-bell':{itemId:24012,purpose:'15 级精良口袋，将卡包容量扩充至 30 格、同卡上限提升至 4 张，让强化与主攻配比更从容。'},
  'journey:frozen-letter':{itemId:1345,purpose:'25 级全学派精锐冠，增加 100 生命、5% 全伤害与 2% 暴击。'},
+ 'journey:storm-compass':{items:[1534,1535,1536,1537,1538],purpose:'35 级本学派艾希斯圣帽，大幅提升生命、6% 本系伤害、4% 全抗性与暴击。'},
  'journey:sand-echo':{itemId:1532,purpose:'32 级荒漠牛仔帽，增加 130 生命，帮助稳住中后期高伤回合。'},
+ 'journey:oasis-key':{itemId:24015,purpose:'40 级精良口袋，提供 50 格容量与同卡 5 张上限，满足中后期多段战术构筑。'},
  'journey:night-promise':{itemId:1788,purpose:'45 级魔晶法杖，提供 10% 攻击加成与多系魔晶附卡。'},
+ 'journey:marsh-beacon':{itemId:24021,purpose:'48 级斗士大卡包，额外增加 880 最大生命并提供 70 格超大容量（同卡上限 5 张）。'},
  'journey:tide:elite-1':{itemId:1906,purpose:'高阶魔晶中级短裤，增加 1500 生命与 7% 攻防，助力潮汐岛后续挑战。'},
+ 'journey:tide:elite-2':{items:[2212,2213,2214,2216,2215],purpose:'本学派「潘多拉·终极进化灵盾」，提供 1020–1380 生命、10% 全伤害、高额抗性与 2 张高阶护盾附卡。'},
  'journey:float:elite-1':{itemId:1907,purpose:'高阶魔晶高级短裤，增加 2000 生命与 9% 伤害、10% 抗性。'},
- 'journey:sail:elite-1':{itemId:2223,purpose:'终章大天使之翼，增加 500 生命与高额输出加成，见证完整通关。'}
+ 'journey:float:elite-2':{itemId:2414,purpose:'全学派「亚瑟君王战甲」，增加 2000 生命、4% 全伤害、4% 暴击与 3% 抗性，构筑终局防线。'},
+ 'journey:sail:elite-1':{itemId:2223,purpose:'终章大天使之翼，增加 500 生命与高额输出加成，见证完整通关。'},
+ 'journey:sail:elite-2':{items:[2304,2305,2306,2308,2307],purpose:'52 级本学派毕业「潘多拉五系法杖」，提供 1700–2300 生命、50% 本系伤害与 10% 暴击加成。'}
 };
 export function dungeonFirstReward(content,id,school){
  const row=rewards[id];if(!row)return null;

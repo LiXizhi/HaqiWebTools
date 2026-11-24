@@ -9,12 +9,22 @@ export function drawLaterIslandRestoration(ctx, landmark, state, t, { reduced = 
     const pulse = reduced ? 0.5 : Math.sin(t * 2.2 + x * 0.01) * 0.5 + 0.5;
     ctx.save();
     if (state.restored) {
-        if (state.effect === 'lighthouse' || state.effect === 'lantern' || state.effect === 'bridge') {
-            const radius = state.effect === 'lighthouse' ? 70 : 52;
+        if (state.effect === 'lighthouse' || state.effect === 'lantern' || state.effect === 'bridge' || state.effect === 'ember' || state.effect === 'mist-lantern') {
+            const radius = state.effect === 'lighthouse' ? 70 : 54;
             const glow = ctx.createRadialGradient(x, y - 22, 4, x, y - 22, radius);
-            glow.addColorStop(0, `rgba(255, 224, 134, ${0.44 + pulse * 0.16})`);
-            glow.addColorStop(0.6, `rgba(245, 184, 92, ${0.15 + pulse * 0.08})`);
-            glow.addColorStop(1, 'rgba(245, 184, 92, 0)');
+            if (state.effect === 'ember') {
+                glow.addColorStop(0, `rgba(255, 196, 112, ${0.48 + pulse * 0.16})`);
+                glow.addColorStop(0.6, `rgba(232, 108, 62, ${0.18 + pulse * 0.08})`);
+                glow.addColorStop(1, 'rgba(232, 108, 62, 0)');
+            } else if (state.effect === 'mist-lantern') {
+                glow.addColorStop(0, `rgba(164, 245, 204, ${0.44 + pulse * 0.16})`);
+                glow.addColorStop(0.6, `rgba(88, 198, 168, ${0.16 + pulse * 0.08})`);
+                glow.addColorStop(1, 'rgba(88, 198, 168, 0)');
+            } else {
+                glow.addColorStop(0, `rgba(255, 224, 134, ${0.44 + pulse * 0.16})`);
+                glow.addColorStop(0.6, `rgba(245, 184, 92, ${0.15 + pulse * 0.08})`);
+                glow.addColorStop(1, 'rgba(245, 184, 92, 0)');
+            }
             ctx.fillStyle = glow;
             ctx.beginPath();
             ctx.arc(x, y - 22, radius, 0, TAU);

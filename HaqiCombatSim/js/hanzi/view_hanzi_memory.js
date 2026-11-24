@@ -56,6 +56,22 @@ export function createMemoryView(root,cb){
 export function drawMemoryNode(ctx,node,time,art){
     ctx.save();
     if(art){const frame=art.frames[node.slot%art.frames.length];ctx.drawImage(art.image,...frame,node.x-30,node.y-36,60,72);}
+    if(node.hintGlyph){
+        const bob=Math.sin((time||0)/520+(node.slot||0))*2;
+        const y=node.y-46+bob;
+        ctx.fillStyle='rgba(255, 245, 214, 0.9)';
+        ctx.strokeStyle='#8c6230';
+        ctx.lineWidth=1.4;
+        ctx.beginPath();
+        ctx.roundRect(node.x-28,y-11,56,22,6);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle='#4a2d13';
+        ctx.font='bold 13px KaiTi, STKaiti, serif';
+        ctx.textAlign='center';
+        ctx.textBaseline='middle';
+        ctx.fillText(`字迹·${node.hintGlyph}`,node.x,y);
+    }
     ctx.restore();
 }
 export function flyMemoryToDictionary(copy,rect){

@@ -3,6 +3,8 @@ import { shopNavigationState, equipmentNavigationState } from '../adventure_shop
 import { recommendedLanguageQuest } from '../language_quest_core.js';
 import { wordLanguage } from '../word_lexicon_core.js';
 import { renderDungeonJourney } from '../views/adventure/view_dungeon_journey.js';
+import { renderIslandPuzzle } from '../views/adventure/view_island_puzzle.js';
+import { renderHanziSteleScroll } from '../hanzi/view_hanzi_stele_scroll.js';
 import { dungeonFor } from '../adventure_dungeons_core.js';
 import { renderDungeons } from '../views/adventure/view_adventure_dungeons.js';
 import { initialStrengtheningSelection } from '../adventure_strengthening_core.js';
@@ -75,6 +77,7 @@ export function createPanelController(options) {
     let selectedQuestId = null;
     let pinJournalQuest = false;
     let returnPanel = null;
+    let activePuzzleId = null;
 
     const closeOrReturn = opts => {
         if (!opts?.silent && returnPanel) {
@@ -212,6 +215,48 @@ export function createPanelController(options) {
         if (activePanel === 'dungeon-story') return;
         if (activePanel === 'spark-rescue') {
             dungeon.paintSparkRescue();
+            return;
+        }
+        if (activePanel === 'hanzi-stele-scroll') {
+            renderHanziSteleScroll(nodes.overlay, model(), {
+                close,
+                complete: steleAction => {
+                    const result = performAction(steleAction);
+                    if (result?.changed) {
+                        spellSound.play('heal');
+                        const rewardSummary = (result.rewards || []).map(r => `${r.name}×${r.count}`).join('、');
+                        toast(rewardSummary ? `${result.message} 获得：${rewardSummary}` : result.message);
+                        hud.paintHud();
+                        if (getContext().panel === 'hanzi-stele-scroll') paintPanel();
+                    }
+                    return result;
+                },
+            });
+            return;
+        }
+        if (activePanel === 'island-puzzle') {
+            renderIslandPuzzle(
+                nodes.overlay,
+                { ...model(), puzzleId: activePuzzleId },
+                {
+                    close,
+                    submit: puzzleAction => {
+                        const result = performAction(puzzleAction);
+                        if (result && result.ok) {
+                            spellSound.play('heal');
+                            if (result.rewards?.length) {
+                                const rewardSummary = result.rewards.map(r => `${r.name}×${r.count}`).join('、');
+                                toast(`${result.message} 获得：${rewardSummary}`);
+                            } else if (result.message) {
+                                toast(result.message);
+                            }
+                            hud.paintHud();
+                            paintPanel();
+                        }
+                        return result;
+                    },
+                },
+            );
             return;
         }
         if (activePanel === 'dungeon-journey') {
@@ -386,6 +431,9 @@ export function createPanelController(options) {
         if (kind === 'npc-services') {
             ctx.setServiceNpc(openOptions.npc);
             Object.assign(ctx.npcServiceView, { query: '', page: 0, kind: '', category: '' });
+        }
+        if (kind === 'island-puzzle' && openOptions.puzzleId) {
+            activePuzzleId = openOptions.puzzleId;
         }
         if (kind === 'quests') {
             pinJournalQuest = openOptions.questId != null;

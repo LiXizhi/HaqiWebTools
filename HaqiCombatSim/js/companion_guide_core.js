@@ -5,6 +5,8 @@ import {STARTERS} from './adventure_pets_core.js';
 import {campDetourGoal,campDetourAvailable} from './camp_detour_core.js';
 import {wordplayGoal} from './companion_wordplay_core.js';
 import {recommendedLanguageQuest} from './language_quest_core.js';
+import {nextAvailableIslandPuzzle} from './island_puzzles_core.js';
+import {HANZI_STELE_SCROLLS,steleRubbingCount} from './hanzi_stele_scroll_core.js';
 
 // Read-only advice: no rewards, progress writes or invented world targets.
 export function guidePet(save,content){
@@ -31,6 +33,18 @@ export function companionWorldGuide(save,content,{languageTasks=[]}={}){
   const monster=goal?.kind==='defeat'?Object.values(content.monsters||{}).find(row=>row.goalId===goal.id):null;
   const text=name?'和'+name+'聊聊。':monster?'再击败'+Math.max(0,goal.count-goal.value)+'只'+monster.name+'。':'继续「'+q.name+'」。';
   return {text,label:'带我去',track:q.id};
+ }
+ if(save.zone!=='camp'){
+  const puzzle=nextAvailableIslandPuzzle(save,save.zone);
+  if(puzzle){
+   return {text:`「${puzzle.landmark}」有现场机关「${puzzle.title}」等你处理。`,label:'带我去看看',track:`island-puzzle:${puzzle.id}`};
+  }
+  if(save.zone==='hanzi'){
+   const left=HANZI_STELE_SCROLLS.length-steleRubbingCount(save);
+   if(left>0){
+    return {text:`石伯的碑林传拓册还有 ${left} 篇象形故事等你描红！`,label:'翻阅传拓册',panel:'hanzi-stele-scroll'};
+   }
+  }
  }
  return {text:'挑个任务，一起出发！',label:'看任务',panel:'quests'};
 }

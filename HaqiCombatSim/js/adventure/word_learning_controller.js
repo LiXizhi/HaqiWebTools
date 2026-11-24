@@ -11,7 +11,7 @@ import { createDictionaryStore } from '../learning/dictionary_store.js';
 import { validateWordCards, makeWordCardSnapshot, activateWordCard, syncDictionaryQuestProgress } from '../word_cards_core.js';
 import { resolveParams } from '../combat_params_core.js';
 import { createHanziMemory } from '../hanzi/adventure_hanzi_memory.js';
-import { hanziMemoryContext } from '../hanzi_island_scene_core.js';
+import { hanziMemoryContext, hanziWordBattleResonance } from '../hanzi_island_scene_core.js';
 import { DAILY_BUFF_NAMES } from '../language_daily_buff_core.js';
 import { validTargets } from '../combat_arena_core.js';
 import { castBlockedMessage } from '../adventure_cast_feedback_core.js';
@@ -170,6 +170,8 @@ export function createWordLearningController({
                 if (!snapshot.activated.includes(row.id)) snapshot.activated.push(row.id);
                 if (audio) wordRecordings.set(row.id, audio);
                 persist();
+                const resonance = hanziWordBattleResonance(row.id);
+                if (resonance) toast?.(resonance);
             },
             cast: pending => playRound(pending),
         });

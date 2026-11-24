@@ -16,24 +16,32 @@ const PROFILES={
   {role:'breaker',cycle:['blade','trap','attack']}
  ],steps:['第一波炽壳墨蟹会先强化再重击：可抢先压血，或留好护盾、虚弱接下重击。','第二波石甲守碑虫会举盾护身：先用低费小招破盾，再释放强化后的主力法术。','第三波古林灵穿山会连续布置强化与陷阱：抓紧准备回合进攻，重击前务必防护。']},
  'journey:vault-lamp':{recommendedLevel:12,title:'宝库双人阵：先破守护',roles:['charger','warden'],steps:['主攻交替强化与重击，守护会为队友套盾。优先用小招破盾并集火守护，再集中击败主攻。']},
+ 'journey:dream-feather':{recommendedLevel:10,title:'梦境三影：破盾清弱',roles:['warden','hexer','charger'],preparation:'建议携带两位出战战宠或伙伴组成三人阵容。留意敌方护盾与虚弱的消耗顺序。',steps:['梦境敌阵分别负责架起护盾、施加虚弱与蓄力强攻：先用低费小招清理虚弱和护盾，再集火击败蓄力位。']},
+ 'journey:gold-bell':{recommendedLevel:15,title:'金鬃三卫：断蓄与破防',roles:['charger','warden','breaker'],preparation:'火鸟岛进阶三人挑战，建议先编排两位战宠或伙伴同行；完整通关可赢取 30 格精良口袋。',steps:['金鬃守卫与头目分别负责强化蓄力、套盾掩护与布置陷阱：趁准备回合集火陷阱主攻位，并在重击回合前留好护盾或虚弱。']},
  'journey:frozen-letter':{recommendedLevel:28,title:'霜原双人阵：解弱破冰盾',roles:['warden','hexer'],steps:['寒冰守护频繁施盾，同伴会施加虚弱。用低费攻击消耗虚弱与护盾后，再打出强化组合。']},
+ 'journey:storm-compass':{recommendedLevel:35,title:'风眼四人阵：分工与集火',roles:['charger','warden','hexer','breaker'],preparation:'寒冰岛高阶四人敌阵，敌方四系协同出战。建议满编四位单位，兼顾破盾、减伤与集火输出。',steps:['敌方四人分别负责强化、护盾、虚弱与陷阱：安排队友保护后排，先用小招拆掉护盾和虚弱，再集中击破陷阱与主攻位。']},
  'journey:sand-echo':{recommendedLevel:32,title:'沙海回声：预判双倍蓄力',roles:['breaker'],steps:['沙海守卫会先设陷阱再重击。利用准备回合叠好强化，在敌人挥出重击前留出护盾或虚弱。']},
+ 'journey:oasis-key':{recommendedLevel:40,title:'古墓三卫：拆陷阱与防爆发',roles:['breaker','hexer','warden'],preparation:'沙漠岛高阶三人秘境，完整通关可获 50 格精良口袋。建议携带两位高成长战宠或伙伴协同应战。',steps:['古墓守卫交替布置陷阱、施加虚弱并架盾拖延：及时用低费法术清掉自身虚弱与敌方护盾，在陷阱爆发回合前留盾减伤。']},
  'journey:night-promise':{recommendedLevel:55,title:'幽暗双影：抗压与反击',roles:['hexer','breaker'],steps:['一名敌人用虚弱压制输出，另一名布置陷阱准备爆发。及时清理虚弱状态并优先击倒陷阱手。']},
+ 'journey:marsh-beacon':{recommendedLevel:55,title:'深沼四领主：抗弱破防决战',roles:['warden','hexer','breaker','charger'],preparation:'幽暗岛终阶四人秘境，敌方领主生命与爆发极高。建议满编高等级阵容并备足护盾或恢复卡牌。',steps:['铁壳王与瘟疫领主轮流架盾、施放虚弱并叠陷阱强攻：稳住全队血线，优先集火击倒陷阱手与蓄力领主。']},
  'journey:tide:elite-1':{version:2,recommendedLevel:60,companionSlots:2,title:'潮灯三波：看清意图再出手',roles:['charger'],waves:[
   {role:'charger',cycle:['blade','attack']},
   {role:'warden',cycle:['shield','attack','attack']},
   {role:'breaker',cycle:['blade','trap','attack']}
  ],steps:['第一波守卫强化后重击，注意防御窗口。','第二波举盾连攻，用小招破盾后再打高伤。','第三波叠加强化与陷阱，准备回合抢攻并留盾接大招。']},
+ 'journey:tide:elite-2':{recommendedLevel:60,title:'潮信五波：双守卫协防与强攻',preparation:'潮汐岛 60 级终阶五波双敌挑战，完整通关可获本系「潘多拉·终极进化灵盾」。建议携带高成长战宠并备足破盾与护盾卡牌。',roles:['charger','warden'],steps:['每波两名潮汐守卫分别负责强化重击与全体护盾：先用低费法术破除护盾，再集中火力击倒主攻位。','后半程海灯守卫伤害极高，在双敌蓄力回合提前架盾或施加虚弱。']},
  'journey:float:elite-1':{version:2,recommendedLevel:70,companionSlots:2,title:'双图测量台：控场与破防',roles:['hexer'],waves:[
   {role:'hexer',cycle:['weakness','attack','attack']},
   {role:'warden',cycle:['shield','attack','attack']},
   {role:'breaker',cycle:['blade','trap','attack']}
  ],steps:['第一波以虚弱开场，先用低费牌清掉虚弱再爆发。','第二波高盾驻守，避免直接交主力大招。','第三波先强化后设陷阱，把握两回合准备期反制。']},
+ 'journey:float:elite-2':{recommendedLevel:70,title:'瀑下空白图：双敌压制与破阵',preparation:'浮岸岛 70 级终阶五波双敌挑战，完整通关可获全学派「亚瑟君王战甲」（+2000 生命）。建议满编高阶阵容并留意虚弱与陷阱叠加。',roles:['hexer','breaker'],steps:['两名守卫轮流施加虚弱并布置陷阱准备重击：及时用小招清掉自身虚弱，避免主力大招被压低伤害。','优先集火布置陷阱的一侧，并在敌人重击回合前为前排留出护盾。']},
  'journey:sail:elite-1':{version:2,recommendedLevel:80,companionSlots:2,title:'风帆档案室：终章守夜考验',roles:['charger'],waves:[
   {role:'charger',cycle:['blade','attack']},
   {role:'hexer',cycle:['weakness','attack','attack']},
   {role:'breaker',cycle:['blade','trap','attack']}
- ],steps:['第一波蓄力爆发，注意留盾或提前压血。','第二波施放虚弱干扰输出，先清减益再集中攻势。','第三波强化与陷阱连发，利用双单位配合完成收割。']}
+ ],steps:['第一波蓄力爆发，注意留盾或提前压血。','第二波施放虚弱干扰输出，先清减益再集中攻势。','第三波强化与陷阱连发，利用双单位配合完成收割。']},
+ 'journey:sail:elite-2':{recommendedLevel:80,title:'白帆终夜：五波双敌巅峰对决',preparation:'风帆岛 80 级最高难度五波双敌秘境，完整通关可获本系毕业「潘多拉五系法杖」（+50% 本系伤害与 10% 暴击）。建议穿齐高阶装备并满编四位单位应战。',roles:['breaker','warden'],steps:['每波双敌分别负责布置陷阱强攻与高频护盾掩护：先用小招破盾，再借队友强化与陷阱组合快速减员。','末波归帆塔双守卫续航能力极强，稳住血线后逐个击破即可登顶。']}
 };
 const TOWER_MILESTONE_MODES=[
  {role:'charger',title:'蓄力守层者',cycle:['blade','attack'],tip:'会先强化再挥出重击；趁蓄力回合抢攻，或留好护盾、虚弱接下重击。'},
@@ -120,14 +128,16 @@ export function dungeonTacticPick(template,round,cards){
  const keys=[...(template.pool||[]).map(row=>row.key),...(template.sequences||[]).flat().map(row=>row.card),...(template.genes||[]).map(row=>row.card),...Object.values(template.cardsets||{}).flat().map(row=>row.key)];
  const attacks=[...new Set(keys)].map(key=>cards[key]).filter(c=>c&&isAttackCard(c));
  const attack=attacks.find(c=>c.spellSchool===template.school)||attacks[0];
- if(!attack)throw Error('战术副本缺少可用攻击：'+template.id);
+ const support=!attack&&[...new Set(keys)].map(key=>cards[key]).find(c=>c&&(c.key==='Ice_GlobalShield'||String(c.key).includes('Heal')));
+ if(!attack&&!support)throw Error('战术副本缺少可用攻击：'+template.id);
  if(tactic.version===2||tactic.version===3){
+  const fallbackKey=(attack||support).key;
   const action=tactic.cycle[(round-1)%tactic.cycle.length];
-  let planned={blade:`${school}_${school}DamageBlade`,trap:`${school}_${school}DamageTrap`,shield:'Ice_GlobalShield',weakness:'Death_AreaDamageWeakness',attack:attack.key}[action];
+  let planned={blade:`${school}_${school}DamageBlade`,trap:`${school}_${school}DamageTrap`,shield:'Ice_GlobalShield',weakness:'Death_AreaDamageWeakness',attack:fallbackKey}[action];
   let actualAction=action;
   if(!cards[planned]){
    if(tactic.version===3){
-    planned=action==='blade'?'Ice_GlobalShield':action==='trap'?'Death_AreaDamageWeakness':attack.key;
+    planned=action==='blade'?'Ice_GlobalShield':action==='trap'?'Death_AreaDamageWeakness':fallbackKey;
     actualAction=planned==='Ice_GlobalShield'?'shield':planned==='Death_AreaDamageWeakness'?'weakness':'attack';
    }
    if(!cards[planned])throw Error('巡夜战术缺少卡牌：'+planned);
@@ -138,6 +148,14 @@ export function dungeonTacticPick(template,round,cards){
  }
  const preparing=round%2===1;
  const planned={charger:`${school}_${school}DamageBlade`,breaker:`${school}_${school}DamageTrap`,warden:'Ice_GlobalShield',hexer:'Death_AreaDamageWeakness'}[role];
+ if(!attack){
+  const useRole=preparing&&cards[planned];
+  const key=useRole?planned:support.key;
+  const heal=String(key).includes('Heal');
+  return {key,scripted:true,target_hostile:'threat_highest',target_friendly:heal?'min_hp':key==='Ice_GlobalShield'?'max_max_hp':'self',
+   speak:useRole?`${LABELS[role]}准备！下一回合支援同伴。`:'守护同伴！',
+   tacticLabel:useRole?LABELS[role]:(heal?'恢复':'护盾')};
+ }
  const key=preparing&&cards[planned]?planned:attack.key;
  return {key,scripted:true,target_hostile:'threat_highest',target_friendly:role==='warden'?'max_max_hp':'self',
   speak:preparing&&key===planned?`${LABELS[role]}准备！下一回合进攻。`:'接招！',

@@ -160,12 +160,20 @@ test('later island elite dungeons expose valid tactical profiles, live intents, 
     const { content, dataset } = setup();
     const ids = [
         'journey:vault-lamp',
+        'journey:dream-feather',
+        'journey:gold-bell',
         'journey:frozen-letter',
+        'journey:storm-compass',
         'journey:sand-echo',
+        'journey:oasis-key',
         'journey:night-promise',
+        'journey:marsh-beacon',
         'journey:tide:elite-1',
+        'journey:tide:elite-2',
         'journey:float:elite-1',
+        'journey:float:elite-2',
         'journey:sail:elite-1',
+        'journey:sail:elite-2',
     ];
     for (const id of ids) {
         const dungeon = content.dungeons.find(d => d.id === id);
@@ -176,16 +184,18 @@ test('later island elite dungeons expose valid tactical profiles, live intents, 
         for (const school of ['fire', 'ice', 'storm', 'death', 'life']) {
             assert.ok(dungeonFirstReward(content, id, school)?.item, `${id}:${school}`);
         }
-        const templates = dungeonTacticsMonsters(
-            dungeon.arenas[0].monsterIds.map(mid => content.monsters[mid]),
-            { dungeonTacticsId: id, dungeonTacticsVersion: profile.version || 1, encounterId: dungeon.arenas[0].id },
-        );
-        const battle = P.createPveBattle({
-            dataset,
-            player: { id: 'hero', school: 'fire', level: dungeon.recommendedLevel, deck: [{ key: 'Fire_SingleAttack_Level0_60', count: 4 }] },
-            monsters: templates,
-            seed: 11,
-        });
-        assert.ok(dungeonEnemyIntentInfo(battle)?.label, `${id} live intent`);
+        for (const arena of dungeon.arenas) {
+            const templates = dungeonTacticsMonsters(
+                arena.monsterIds.map(mid => content.monsters[mid]),
+                { dungeonTacticsId: id, dungeonTacticsVersion: profile.version || 1, encounterId: arena.id },
+            );
+            const battle = P.createPveBattle({
+                dataset,
+                player: { id: 'hero', school: 'fire', level: dungeon.recommendedLevel, deck: [{ key: 'Fire_SingleAttack_Level0_60', count: 4 }] },
+                monsters: templates,
+                seed: 11,
+            });
+            assert.ok(dungeonEnemyIntentInfo(battle)?.label, `${id}:${arena.id} live intent`);
+        }
     }
 });

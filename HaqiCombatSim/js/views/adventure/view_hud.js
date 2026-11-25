@@ -6,7 +6,7 @@ import { syncLocaleChrome } from '../../locale.js';
 import { tr, setText, fill } from '../../locale_runtime.js';
 import { translatedGoal } from './view_adventure_quests.js';
 import { socialHudButton, teamHudButton, bindDungeonMenu } from './view_adventure_social_hud.js';
-import { renderCompanionGuide } from './view_companion_guide.js';
+import { captureCompanionGuide, renderCompanionGuide } from './view_companion_guide.js';
 import { objectiveProgress } from './view_objective_progress.js';
 import {
     buildCatalogTrackLines,
@@ -279,6 +279,17 @@ export function renderHeroTitle(model, cb) {
     return status;
 }
 
+export function appendDungeonWatchStory(tracker,story){
+    if(!story)return;
+    const journal=el('details','dungeon-watch-journal',
+        el('summary','',fill('巡夜手记 · {title}',{title:tr(story.title)}).text),
+        el('p','',tr(story.line)),
+    );
+    journal.dataset.storyId=story.id;
+    if(story.remembered)journal.append(el('p','muted',tr(story.remembered)));
+    if(story.tip)journal.append(el('p','dungeon-watch-tip',tr(story.tip)));
+    tracker.append(el('blockquote','dungeon-watch-reply',tr(story.reply)),journal);
+}
 export function appendForestTracker(tracker, forestGoal, cb) {
     if (!forestGoal) return;
     const { phase, goal } = forestGoal;
@@ -295,12 +306,24 @@ export function renderHud(root, model, cb) {
     const hidden = root.hidden;
     const visibility = root.style.getPropertyValue('visibility');
     const priority = root.style.getPropertyPriority('visibility');
+    const previousJournal = root.querySelector('.dungeon-watch-journal');
+    const journalState = previousJournal ? {
+        id: previousJournal.dataset.storyId,
+        open: previousJournal.open,
+        focused: previousJournal.querySelector('summary') === previousJournal.ownerDocument?.activeElement,
+    } : null;
     if (hidden) {
         root.style.setProperty('visibility', 'hidden', 'important');
         root.hidden = false;
     }
     try {
-        return renderHudContents(root, model, cb);
+        const rendered = renderHudContents(root, model, cb);
+        const nextJournal = root.querySelector('.dungeon-watch-journal');
+        if (journalState && nextJournal?.dataset.storyId === journalState.id) {
+            nextJournal.open = journalState.open;
+            if (journalState.focused) nextJournal.querySelector('summary')?.focus({ preventScroll: true });
+        }
+        return rendered;
     } finally {
         if (hidden) {
             root.hidden = true;
@@ -311,6 +334,7 @@ export function renderHud(root, model, cb) {
 }
 
 function renderHudContents(root, model, cb) {
+    const guideState = captureCompanionGuide(root);
     const { assets, save } = model;
     const c = assets.content;
     root.replaceChildren();
@@ -385,17 +409,18 @@ function renderHudContents(root, model, cb) {
             el('p', '', side?.description || step?.name || (chapter ? '本章完成。和伙伴继续探索吧。' : '靠近居民，了解这座城市的故事。')),
         );
     } else if (vm.mode === 'dungeon') {
-        const { dungeon, cleared, remaining, towerBlessings = [], towerBlessingPending = null } = vm.payload;
+        const { dungeon, cleared, remaining, nextIndex, watchStory, towerBlessings = [], towerBlessingPending = null } = vm.payload;
         tracker.replaceChildren(
             el('div', 'tracker-top', el('span', 'eyebrow', '副本探索'), el('span', 'chapter-count', `清怪 ${cleared} / ${dungeon.arenas.length}`)),
             el('h3', '', dungeon.name),
-            el('p', '', cleared === dungeon.arenas.length ? '营地已清理完毕，可以退出副本。' : remaining ? `下一站：第 ${cleared + 1} 处营地。沿道路前进，接近怪物后开始战斗。` : '前路暂未开放，可以退出副本。'),
+            el('p', '', cleared === dungeon.arenas.length ? '营地已清理完毕，可以退出副本。' : remaining ? `下一站：第 ${nextIndex + 1} 处营地。沿道路前进，接近怪物后开始战斗。` : '前路暂未开放，可以退出副本。'),
             el('p', 'muted', '副本中不会自动回血，请用现有生命通关。'),
         );
         if (towerBlessings.length) {
             const line = towerBlessings.map(b => `${tr(b.name)}×${b.stacks}`).join(' · ');
             tracker.append(el('p', 'muted', fill('已激活赐福：{blessings}', { blessings: line }).text));
         }
+        appendDungeonWatchStory(tracker,watchStory);
         const actions = el('div', 'opening-tracker-actions dungeon-tracker-actions');
         if (towerBlessingPending) {
             actions.append(button(tr('挑选试炼塔赐福'), () => cb.panel('tower-blessing'), 'track-button'));
@@ -528,7 +553,7 @@ function renderHudContents(root, model, cb) {
         nav.append(button([icon(key), el('span', '', label)], () => cb.panel(id), 'nav-button'));
     }
     root.append(nav);
-    renderCompanionGuide(root, model, cb);
+    renderCompanionGuide(root, model, cb, { state: guideState });
     if (save.mountId || model.localSecond) {
         const mountItem = c.items[save.mountId];
         const mountMark = el('span', 'mount-mark');

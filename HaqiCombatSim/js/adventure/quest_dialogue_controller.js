@@ -15,6 +15,7 @@ import {
 } from '../adventure_catalog_quests_core.js';
 import { dungeonFor } from '../adventure_dungeons_core.js';
 import { islandPuzzleById } from '../island_puzzles_core.js';
+import { dungeonProgress } from '../adventure_coop_core.js';
 import { rewardSnapshot } from '../adventure_reward_feedback_core.js';
 import * as A from '../adventure_core.js';
 import * as W from '../adventure_world_core.js';
@@ -438,9 +439,15 @@ export function createQuestDialogueController({
         cancelRewardFollow();
         const ctx = getContext();
         if (ctx.stage !== 'world') return;
+        if (questId === 'dungeon-exit') {
+            if (!dungeonFor(ctx.assets.content, ctx.save.zone) || ctx.world?.zone !== ctx.save.zone || !ctx.world.portal) return;
+            walkTo({ ...ctx.world.portal, kind: 'portal' }, true);
+            return;
+        }
         if (questId === 'dungeon-next') {
-            if (!dungeonFor(ctx.assets.content, ctx.save.zone)) return;
-            const next = ctx.world?.encounters?.find(encounter => !encounter.hidden && !encounter.blocked?.length);
+            if (!dungeonFor(ctx.assets.content, ctx.save.zone) || ctx.world?.zone !== ctx.save.zone) return;
+            const cleared = dungeonProgress(ctx.save)?.[ctx.save.zone]?.cleared || [];
+            const next = ctx.world.encounters?.find(encounter => !encounter.hidden && !encounter.blocked?.length && !cleared.includes(encounter.id));
             if (next) walkTo({ ...next, kind: 'encounter' }, true);
             return;
         }

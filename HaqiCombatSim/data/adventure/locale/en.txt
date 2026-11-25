@@ -13058,3 +13058,316 @@ Word · 回忆拼写||Word · Recall Spelling
 当前随进度展示最高荣誉。所有已获得的荣誉称号都可以自由佩戴。||Currently displaying your latest honor. Any earned honor title can now be freely equipped.
 已佩戴||Equipped
 恢复随进度展示||Auto-Show Latest Honor
+
+风口正在起大风。先停步护灯，等风缓下来再走。||Strong wind is blowing through the gap. Stop and shield the lamp until it eases.
+这段护送沿用原来的石路，继续选路就好。||This escort uses the original stone path. Keep choosing your route.
+你把灯护在身前。风又大了，先看清下一步。||You shield the lamp in front of you. The wind grows stronger. Look carefully before your next step.
+你们停稳脚步，护住灯芯。风停了，可以重新选路。||You stand still and protect the wick. The wind has stopped. You can choose your next step.
+你们停稳脚步，护住灯芯。微风吹过，火种仍紧紧跟着你。||You stand still and protect the wick. A breeze passes, and the spark stays close.
+风停了||Calm
+微风||Breeze
+大风||Strong wind
+石路风势||Wind on the stone path
+现在：{wind}||Now: {wind}
+行动后：{wind}||After your action: {wind}
+大风不能进风口。停步护灯，或改走干石。||Do not enter a wind gap in strong wind. Stop and shield the lamp, or take the dry stones.
+先看风，再选路。移动或停步护灯都会改变风势。||Check the wind before choosing a route. Moving or stopping to shield the lamp advances the wind.
+停步护灯||Stop and shield the lamp
+途中对话||Along the way
+你想起营地的位置便签，先指给火种看：灯台在那里，我们一起走过去。||You remember the location note at camp and point it out to the spark: the lamp stand is over there. Let us walk there together.
+你想起营地的约定：结伴走，送到后当面说一声。你放慢脚步，等火种跟上。||You remember the camp promise: travel together and tell each other when you arrive. You slow down and wait for the spark.
+我在洞口看着你们。先让它看清要去哪里，再一起走。||I will watch from the cave entrance. Show it where you are going, then walk together.
+刚才灯一晃，我还以为你要先走。我们真的可以一起回去吗？||When the lamp swayed, I thought you were leaving me behind. Can we really go back together?
+灯台就在前面。我看着你的灯，已经能跟上你的脚步了。||The lamp stand is just ahead. By watching your lamp, I can keep up with you now.
+风好大。先别走，我想和你一起等一等。||The wind is so strong. Do not go yet. I want to wait here with you.
+我看着你的灯。你走一步，我就跟一步。||I am watching your lamp. When you take a step, I will take one too.
+别急着赶路。它还在跟着你，回头看看它。||There is no need to hurry. It is still following you. Look back and check on it.
+火种正在等你回应。看清灯光的顺序，慢慢来。||The spark is waiting for your reply. Watch the light sequence and take your time.
+火种亮一下、暗一下，又亮一下：“这是我还在这里。你也这样回应，好吗？”||The spark glows, dims, then glows again. “That means I am still here. Will you reply the same way?”
+先和火种约好用灯光回应。||First agree with the spark to reply using your lamp.
+火种还在看着你。这一步亮起灯，让它知道你在。||The spark is still watching you. Light the lamp for this step so it knows you are here.
+先遮一下灯，再亮起来。火种会看懂这段回应。||Cover the lamp briefly, then light it again. The spark will understand your reply.
+你亮起灯。火种靠近了一些，等着下一拍。||You light the lamp. The spark comes closer and waits for the next part.
+你遮住灯光。火种没有跑开，它知道你还在。||You cover the light. The spark stays close. It knows you are still here.
+你再亮起灯，火种也亮了起来。守护者接过提灯：“看见了，我们一起回去。”||You light the lamp again, and the spark glows too. The guardian takes the lantern. “I see you. Let us go back together.”
+先和火种用灯光互相回应，再一起回去。||Reply to each other with the lamp first, then return together.
+看看走过的石路||Review the path you took
+灯光回应||Lamp response
+灯光回应 · {done}/3||Lamp response · {done}/3
+亮灯||Light
+遮灯||Cover
+亮起灯||Light the lamp
+遮住灯||Cover the lamp
+不用抢拍。看清顺序，一次回应一步。||There is no time limit. Follow the sequence, one step at a time.
+到补给帐篷留下清楚的位置便签||Leave a clear location note at the supply tent
+备用灯芯已经收进帐篷。便签要让没在场的人也能找到。||The spare wick is in the tent. Help someone who was away find it.
+和莫尼当面确认出发约定||Confirm the departure plan with Moni
+先问清同伴的准备情况，不替别人答应。||Ask whether your companions are ready. Let them answer for themselves.
+请莫尼照着便签找补给||Ask Moni to find the supplies using your note
+向茜茜确认，等得到回应再出发||Ask Qianqian and wait for her reply before leaving
+让对方说出收到的消息，才能知道这一次有没有说清。||Ask them to repeat the message to check that it was clear.
+先查清补给的经过，再试试你们的新约定。||Find out what happened to the supplies before trying your new agreement.
+这次约定已经用过了，营地里的人都记得。||You already tried this agreement. The people at camp remember.
+约定还在继续，按眼前的提醒去找同伴。||Your agreement is still in progress. Follow the hint to find your companion.
+茜茜：备用灯芯收在帐篷里了。这次留张写清位置的便签，请莫尼照着找找看。||Qianqian: The spare wick is in the tent. Leave a note with its location, then ask Moni to follow it.
+茜茜：新约定，先在营地试一次。去问问莫尼，再回来和我确认；没有回应之前，谁都不用急着走。||Qianqian: Let us try our agreement at camp. Ask Moni, then come back and check with me. Nobody needs to leave before getting a reply.
+先和茜茜约好试一次新的送达办法。||Arrange with Qianqian to try the new delivery agreement first.
+这次回访先记下。便签和说好的事都会保留，回来找茜茜就能继续。||Your visit is saved for later. The note and your progress will stay. Find Qianqian when you return.
+先按当前约定找到对应的地方。||Go to the place in your current agreement first.
+先选一句准备留在便签上的话。||Choose what to write on the note first.
+“已经收好”没有写位置。莫尼没看见刚才的事，还是不知道去哪里找。把帐篷写进去试试。||“Put away” does not say where. Moni was away and still cannot find it. Try naming the tent.
+你把“备用灯芯在补给帐篷里”压在帐篷入口。还差一步：请莫尼说说，他读到的是什么。||You leave “The spare wick is in the supply tent” by the entrance. One step remains: ask Moni what the note told him.
+先按当前约定找到对应的人。||Find the person in your current agreement first.
+先选一句准备对莫尼说的话。||Choose what to say to Moni first.
+莫尼：谢谢你来叫我。不过茜茜有没有准备好，要听她自己说。我们等她回一句再走。||Moni: Thanks for coming. But Qianqian should tell us whether she is ready. Let us wait for her reply.
+莫尼：我这边准备好了。你去问问茜茜，我会等她回应。这一次，不让谁追着背影跑。||Moni: I am ready. Ask Qianqian; I will wait for her reply. This time nobody has to run after us.
+先把位置写清，或和莫尼问清约定。||Write the location clearly, or check the agreement with Moni first.
+莫尼：便签写着补给帐篷，我照着找到了灯芯。这回不用猜了。你们留下的不只是一张纸，还有一句说清楚的话。||Moni: The note said “supply tent,” and I found the wick. No guessing this time. You left a clear message as well as a piece of paper.
+茜茜：我也准备好了。谢谢你回来问我。莫尼听见回应，才放下心来；这次大家都知道，出发前要先等齐。||Qianqian: I am ready too. Thanks for coming back to ask. Moni relaxes when he hears her reply. This time everyone knows to wait for each other.
+这次约定没有保存，可以重试。||The agreement was not saved. You can try again.
+把约定用一次||Put your agreement into practice
+营地回访 · {current}/2||Camp visit · {current}/2
+备用灯芯已经收进补给帐篷。这次，留给不在场的人一条能照着找到的位置消息。||The spare wick is in the supply tent. Leave a location message that someone who was away can follow.
+莫尼和茜茜说好了结伴出发。这次先问清，再等对方回应；不用抢着替谁答应。||Moni and Qianqian agreed to travel together. Ask first, then wait for a reply. Let each person answer for themselves.
+走到约好的地方再继续。已经写下或说清的内容会保留。||Reach the agreed place to continue. Your note and progress will stay.
+带我去落实约定||Take me to try the agreement
+帐篷入口有一张空便签。要让没看见刚才那一幕的人也能找到灯芯，该写哪一句？||A blank note waits by the tent entrance. What should you write so someone who was away can find the wick?
+写：备用灯芯已经收好了||Write: The spare wick has been put away
+写：备用灯芯在补给帐篷里||Write: The spare wick is in the supply tent
+莫尼：我这边已经备好了。茜茜那边呢？你有听见她说准备好了吗？||Moni: I am ready. What about Qianqian? Did you hear her say she was ready?
+去问茜茜，听她自己回应||Ask Qianqian and hear her reply
+替茜茜说：她肯定准备好了||Answer for Qianqian: She must be ready
+莫尼看见了便签。问问他会去哪里找，看看你留下的消息有没有说清。||Moni has seen the note. Ask where he will look to check that your message is clear.
+茜茜听见你回来问她，抬起了头。先等她回应，再确认大家是否都准备好了。||Qianqian looks up when you return to ask. Wait for her reply before confirming that everyone is ready.
+请莫尼读回便签的位置||Ask Moni to repeat the location on the note
+等茜茜回应，再确认出发||Wait for Qianqian, then confirm departure
+这次先记下，稍后继续||Save this visit for later
+消息写清或说清了吗？让我也来回应你。||Was the message clear? Let me reply too.
+准备出发前，先问问彼此。你来得正好。||Before leaving, let us ask each other. You came at the right time.
+这次不赶时间。问清、等齐，比谁先出发更重要。||There is no hurry. Asking and waiting for everyone matters more than leaving first.
+位置便签：备用灯芯在补给帐篷里||Location note: The spare wick is in the supply tent
+同行约定：先问清，再等齐||Travel agreement: Ask first, then wait for everyone
+我照着便签找到了备用灯芯。这次不用满营地猜了。||I followed the note and found the spare wick. No more guessing around camp.
+这次我会等到大家都回应，再一起出发。||This time I will wait for every reply before we leave together.
+巡逻之后 · 把约定用一次||After patrol · Put your agreement into practice
+这次，约定真的用上了||This time, your agreement made a difference
+莫尼照着位置便签找到了备用灯芯。帐篷旁的提醒也保留下来了。||Moni followed your location note and found the spare wick. The reminder stays by the tent.
+莫尼和茜茜都亲口回应过。这一次，没有人替别人答应，也没有人急着独自出发。||Moni and Qianqian each replied for themselves. Nobody answered for someone else or rushed off alone.
+约定之后，还有一次小回访||One small visit after your agreement
+回到营地，试试你们刚才商量的新办法。回访不会重复领取巡逻奖励。||Return to camp to try your new agreement. This visit does not repeat patrol rewards.
+继续这次营地回访||Continue this camp visit
+和茜茜试一次新约定||Try the new agreement with Qianqian
+装备与练习||Equipment and practice
+前面没有能继续走的石头了。撤回一步，换个方向；火种会和你一起退回来。||There is no open stone ahead. Undo one step and try another direction. The spark will step back with you.
+现在相邻的风口都在起大风。停步护灯，等风缓下来再选路。||The nearby wind gaps are gusting. Pause to shield the lamp, then choose a path when the wind eases.
+靴底的草屑是从哪里来的？||Where did the grass on the boots come from?
+莫尼：我回程经过湿草地，靴子就掉在那里。我把它捡起来，走回帐篷，草屑也一起带回来了。||Moni: On my way back, I found the boots in the wet grass. I picked them up and carried them to the tent, bringing bits of grass with me.
+你为什么先去看巡夜灯？||Why did you check the patrol lantern first?
+莫尼：灯变暗了，我先出去查看。捡到靴子是在回程，不是在出门以前。||Moni: The lantern grew dim, so I went out to check it. I found the boots on my way back, after I had gone out.
+补给单湿了，为什么帽子还是干的？||Why is the supply note wet while the hat is dry?
+莫尼：帽子一直放在帐篷里。另一半补给单跟着我出去了，被雨淋湿；回来后，我把它放回干帽子旁边。||Moni: The hat stayed in the tent. I took the other half of the supply note outside and it got wet in the rain. When I returned, I put it beside the dry hat.
+脚印为什么一来一回？||Why do the footprints go both ways?
+莫尼：我把靴子放回帐篷，又回到路线桌。我以为东西放回去就好了，忘了告诉茜茜位置变了。||Moni: I put the boots in the tent, then went back to the route desk. I thought returning them was enough, and forgot to tell Sissy where they were.
+拿一件物证问问莫尼。想清楚以后，再把他的经过记进调查袋。||Ask Moni about a piece of evidence. When you are ready, record his account in the evidence bag.
+物证：{name}||Evidence: {name}
+把莫尼的经过记下来||Record Moni's account
+再看一遍莫尼的证词||Review Moni's testimony
+直接递交物品||Hand over the item directly
+先结束或取消录音，再继续交付。||Finish or cancel the recording before handing over the item.
+本轮进度||Current run
+已清理 {cleared} / {total} 处营地||Camps cleared: {cleared} / {total}
+接下来：第 {wave} 波||Next: wave {wave}
+查看完整敌情||View all enemy details
+查看伙伴出战说明||View companion formation tips
+查看首通奖励||View first-clear reward
+查看整轮战术||View tactics for the whole run
+查看挑战实绩||View challenge records
+查看配合与出牌建议||View teamwork and card tips
+正在保存，请稍候。||Saving. Please wait.
+我们绕开了风口。路远一点也没关系，我没有掉队。||We went around the wind. A longer path is all right. I stayed with you.
+你停下来时也护着灯。我知道，你还在这里等我。||You kept the lamp safe when you stopped. I knew you were still here, waiting for me.
+你替我挡住了风。每走一步，我都能看见前面的灯。||You sheltered me from the wind. With every step, I could see the lamp ahead.
+你没有催我走近风口。沿着干石，我也能慢慢跟上。||You did not rush me toward the wind. On the dry stones, I could follow at my own pace.
+灯台旁的回应||Words beside the lamp stand
+这次走过的路线||The path we took
+护送手记||Escort journal
+经过暖石时，提灯的暖意又回来了。||The warm stones restored the warmth of the lamp.
+{terrain}（第{row}行第{column}列）||{terrain} (row {row}, column {column})
+查找当前视野的地点||Find places in this view
+输入地点名称查找，选中后再确认传送。||Search by place name, select a place, then confirm travel.
+当前视野的地点（{count}）||Places in this view ({count})
+找到 {count} 个地点，显示 {first}—{last}||Found {count} places; showing {first}–{last}
+没有找到这个地点。试试其他名称，或移动地图。||No matching place. Try another name or move the map.
+已选中：{name}。确认后传送。||Selected: {name}. Confirm to travel.
+经度 {lon}，纬度 {lat}||Longitude {lon}, latitude {lat}
+雾里的第一盏灯||The first lamp in the mist
+灯光照出第二段路||The lamp reveals another stretch
+风把灯影拉长了||The wind stretches the lamplight
+最后一段巡夜路||The final stretch of the night watch
+一起走完的巡夜路||The watch we finished together
+雾把前面的道路遮住了。茜茜停在灯旁，没有催你向前。||Mist hides the road ahead. Qianqian stops beside the lamp and lets you take your time.
+茜茜：先看清对手准备做什么。走累了就告诉我，我们可以回去。||Qianqian: First, watch what the opponent is preparing. Tell me if you get tired. We can head back.
+第一处营地安静下来。更远处传来盾牌相碰的声音，灯光只照亮脚边的一小段路。||The first camp falls quiet. Farther away, shields clash. The lamp lights only a short stretch at your feet.
+茜茜：下一处的对手会保护自己。别急，我们先看它的盾。||Qianqian: The next opponent will protect itself. Take your time. Let us look at its shield first.
+第二处营地已经通过。前方的灯影在风里摇晃，茜茜回头确认你还在。||The second camp is cleared. Lamplight sways in the wind ahead. Qianqian looks back to check that you are still there.
+茜茜：你跟上了。下一处要留意虚弱，先看看自己的状态再出手。||Qianqian: You made it. Watch for weakness at the next camp. Check your condition before acting.
+第三处营地已经通过。最后一处灯台就在道路尽头，对手正在那里准备。||The third camp is cleared. The last lamp stand is at the end of the road. An opponent is preparing there.
+茜茜：还有最后一段。它会强化、布置陷阱，再发起攻击；我们先看清准备过程。||Qianqian: One stretch remains. It will strengthen itself, set traps, then attack. Let us watch its preparations first.
+四处营地都已通过。来时看不清的道路，如今一段一段连在了身后。||All four camps are cleared. The road that was hidden when you arrived now stretches behind you, piece by piece.
+茜茜：我们都走到这里了。回营地歇一歇，再把这趟巡逻的经过说清楚。||Qianqian: We both made it here. Let us rest at camp, then explain what happened on this patrol.
+你们约好沿路留意脚印；巡逻结束后，再回营地核对线索。||You agreed to watch for footprints along the way and compare clues at camp after the patrol.
+你们约好先守好巡夜灯；巡逻结束后，再回营地核对线索。||You agreed to keep the watch lamp safe and compare clues at camp after the patrol.
+巡夜手记 · {title}||Night-watch journal · {title}
+茜茜：莫尼说靴子是在回程捡到的。对照灯柄和证词，想想出门查看灯该放在哪里？||Qianqian: Moni said he found the boots on his way back. Compare the lamp handle with his account. Where does going out to check the lamp belong?
+茜茜：帐篷边和靴底都有湿草屑。靴子要怎样从草地回到帐篷？看看这两张卡的先后。||Qianqian: There is wet grass beside the tent and on the boot soles. How did the boots get from the grass to the tent? Check the order of these two cards.
+补给单湿了，帽子却是干的。哪件物证最适合核对“它们一起淋了雨”的猜想？||The supply note is wet, but the hat is dry. Which clue best checks the idea that they were both out in the rain?
+茜茜：湿补给单和干帽子就在一起。再对照莫尼的证词，帽子留在帐篷里，补给单跟着他出去了。||Qianqian: The wet note and dry hat were together. Compare that with Moni’s account: the hat stayed in the tent, while the note went outside with him.
+茜茜：先找能直接比较“湿”和“干”的物证。别急着猜是谁拿走了东西。||Qianqian: Find the clue that lets us compare wet and dry directly. We do not need to guess who moved things yet.
+想核对“有人把东西送回帐篷，又回路线桌”的经过，先看哪件物证？||Which clue should we check first to test whether someone returned things to the tent, then went back to the route table?
+茜茜：脚印通向帐篷，又折回路线桌。鞋底缺口相同，能和莫尼说的来回路线互相核对。||Qianqian: The tracks lead to the tent and back to the route table. The same notch in the soles lets us compare them with the route Moni described.
+茜茜：这次要找的是来回的方向。哪件物证能让我们沿着路线看一看？||Qianqian: This time we need the direction of the return trip. Which clue lets us follow the route?
+和茜茜核对物证（可选）||Check the clues with Qianqian (optional)
+先选能支持猜想的物证，再回到经过卡。这里的讨论不会替你排列卡片。||Choose a clue that supports the idea, then return to the event cards. This discussion will not arrange the cards for you.
+再核对一个猜想||Check another idea
+回到经过卡||Return to the event cards
+两条猜想都核对过了。现在用物证和证词检查经过卡。||Both ideas have been checked. Now compare the event cards with the clues and Moni’s account.
+查看下一步||See the next step
+走向出口||Walk to the exit
+继续巡逻||Continue the watch
+去照看火种||Check on the spark
+火种还在等你。到洞口看看它，再一起离开。||The spark is still waiting. Check on it at the cave entrance, then leave together.
+抱抱龙随行助手||Dragon companion guide
+抱抱龙 · 战术提示||Dragon · Battle tips
+抱抱龙 · 带我玩||Dragon · Show me around
+收起抱抱龙引导||Close the dragon guide
+继续主线||Return to the main adventure
+继续寻宝||Continue the treasure hunt
+营地寻宝||Camp treasure hunt
+我的伙伴||My companions
+和伙伴做点别的||More activities together
+和茜茜想想下一步||Plan the next step with Qianqian
+茜茜：这一处的对手会先强化，再发起攻击。下一次，我们留意它准备重击的回合。||Qianqian: This opponent powers up before attacking. Next time, let’s watch for the turn when it prepares a heavy strike.
+茜茜：它加盾之后还会连续进攻。下一次，先看盾还在不在，再安排主攻。||Qianqian: It keeps attacking after adding a shield. Next time, check whether the shield is still there before planning your main attack.
+茜茜：虚弱还在时，主攻也会受影响。下一次，先看看自己身上的状态。||Qianqian: Weakness can affect your main attack too. Next time, check your own status effects first.
+茜茜：它会先强化、布置陷阱，再攻击。下一次，我们把准备的回合也算进去。||Qianqian: It powers up and lays a trap before attacking. Next time, let’s include those preparation turns in our plan.
+副本内不会自动恢复生命。需要休息时，可以先离开副本，到岛上恢复，再回来继续。||Health does not recover automatically inside a dungeon. If you need a rest, leave the dungeon, recover on the island, then return to continue.
+已通过的营地会保留；重新开启副本会清空本轮进度。||Cleared camps stay cleared. Restarting the dungeon resets progress for this run.
+护送完成，返回岛上||Escort complete, return to the island
+你已倒下，伙伴还在战斗。可以观看，也可以撤退。||You are down, but your companions are still fighting. Watch them or retreat.
+这一回合暂时无法行动。点“跳过本回合”，继续观察对手。||You cannot act this turn. Choose “Pass this turn” and keep watching your opponent.
+这张牌已准备弃掉。点“重新选择”，换一张牌。||This card is marked for discard. Choose “Reselect” to pick another card.
+这张牌没有可选目标。点“重新选择”，换一张牌。||This card has no valid target. Choose “Reselect” to pick another card.
+② 点亮起的角色，确认施放群体魔法。||② Select a highlighted character to confirm the group spell.
+② 点自己施法，也可以点“对自己施法”。||② Select yourself, or choose “Cast on yourself”.
+② 点亮起的自己或伙伴，给它施法。||② Select a highlighted ally or yourself to cast the spell.
+② 点亮起的对手出招。选错牌可以重新选择。||② Select a highlighted opponent. You can reselect if you picked the wrong card.
+① 先选一张亮着的牌，再选择施法目标。||① Pick a lit-up card, then select its target.
+这一页暂时没有能用的牌。切换玩家手牌或宠物卡，也可以跳过本回合。||No card on this page can be played. Switch between your hand and pet cards, or pass this turn.
+暂时没有能用的牌。点“跳过本回合”，等下一回合再选。||No cards can be played right now. Choose “Pass this turn” and pick again next turn.
+请输入你的冒险名字。||Please enter your adventurer’s name.
+队伍已满。可以先放入宠物背包，之后再安排上场。||Your team is full. Keep your new companion in the pet bag and choose when to bring them along.
+队伍已满，先在宠物面板留出一个位置。||Your team is full. Free a slot in the pet panel first.
+打开宠物面板||Open pet panel
+这一回合暂时无法行动。请跳过本回合，继续观察对手。||You cannot act this turn. Pass this turn and keep watching your opponent.
+先安排咕噜噜上场，再一起挑战。||Bring Gululu into your team, then take on the challenge together.
+这段旅程还在继续||Your journey continues
+返回营地后可以再次挑战，也可以找莫尼，换个办法帮助咕噜噜。||Back at camp, try again or ask Moni for another way to help Gululu.
+返回营地后，先检查自己和伙伴的生命，再决定何时重试。||Back at camp, check your health and your companion’s health before trying again.
+咕噜噜可以进入营地了||Gululu can enter the camp
+收下奖励后，回去找莫尼，邀请咕噜噜成为搭档。||Collect your rewards, then find Moni and invite Gululu to be your companion.
+第一次搭档挑战成功||First team challenge complete
+收下奖励后，你和咕噜噜就完成了这段搭档旅程。回到营地，看看新的冒险目标吧。||Collect your rewards to complete this journey with Gululu. Back at camp, check your next adventure goal.
+挑战赢了，搭档还没上场||A win, but your companion was absent
+先安排咕噜噜加入队伍，再一起挑战寒冰侦查兵，完成搭档旅程。||Add Gululu to your team, then challenge the Ice Scout together to complete your journey.
+正在结算…||Finishing battle…
+本场精力不足，不会获得经验和奇豆。||You have no stamina for this battle’s experience or beans.
+结束战斗||Finish battle
+返回营地||Return to camp
+离开战斗||Leave battle
+结算暂未完成，请重试。||Settlement could not finish. Please try again.
+它也在向你打招呼！||It is greeting you too!
+跳起来啦！它听懂你了。||It jumped! It understood you.
+它跑过来了，想和你一起走。||It came running over to join you.
+和伙伴说句话||Talk to your companion
+伙伴动作现场||Your companion in action
+按住说话，松开发送；也可点一下开始，再点一下结束||Hold to speak and release to send, or tap once to start and again to finish.
+告诉它||Tell your companion
+不方便说话？打字也可以||Prefer typing? That works too.
+改一下再告诉它||Edit before telling your companion
+听到的话：||Heard:
+继续玩||Keep playing
+取消等待，改用打字||Cancel and type instead
+先用{language}和它打个招呼。||First, greet your companion in {language}.
+试着用{language}请它跳一下。||Try asking your companion to jump in {language}.
+用{language}叫它到你身边来。||Ask your companion to come here in {language}.
+用{language}和伙伴说话||Talk to your companion in {language}
+结束并发送||Finish and send
+开始说话||Start speaking
+一起继续冒险||Continue adventuring together
+再和它玩一句||Try another phrase together
+正在听你说…||Listening…
+允许麦克风后就能说话，也可以取消后打字。||Allow microphone access to speak, or cancel and type instead.
+正在识别，最多等待 8 秒；也可以取消后打字。||Recognizing speech, up to 8 seconds. You can cancel and type instead.
+试试说：{example}||Try saying: {example}
+新伙伴！||A new companion!
+抱抱龙发现了什么？||What did Cuddle Dragon find?
+新伙伴：咕噜噜||New companion: Gululu
+初战告捷||First challenge complete
+第一次搭档||Your first team adventure
+咕噜噜||Gululu
+第一次冒险的目标||First adventure goals
+已完成：{goal}||Completed: {goal}
+这次冒险 · 已完成 {count}/3||This adventure · {count}/3 complete
+青龙刚说完，莫尼那边有个小家伙被拦住了，我们去看看！||A little creature has been stopped near Moni. Let’s go and see!
+带抱抱龙去看看||Go and see with Cuddle Dragon
+咕噜噜想进营地。你愿意带它一起走吗？||Gululu wants to enter camp. Will you bring it along?
+让它跟我们走||Let it come with us
+先问问咕噜噜想做什么||Ask what Gululu wants to do first
+咕噜噜：我想找个搭档，一起去营地外看看。你们愿意带上我吗？||Gululu: I want a partner to explore outside camp. Can I come with you?
+先和侦查兵切磋||Try a match with the scout first
+它是和你们一起的吗？||Is it with you?
+告诉莫尼我们是朋友||Tell Moni we are friends
+告诉莫尼||Tell Moni
+我想自己输入||I want to type my own reply
+换成战斗的办法||Try the battle route instead
+告诉我你们是朋友，或和侦查兵切磋一次。||Tell me you are friends, or try a match with the scout.
+我和抱抱龙去挑战||Cuddle Dragon and I will try the match
+我想先解释一下||I would like to explain first
+侦查兵在营地外等你。和抱抱龙配合，赢一场切磋，就能帮咕噜噜进来。||The scout is waiting outside camp. Win a match with Cuddle Dragon to help Gululu enter.
+带我去找侦查兵||Take me to the scout
+带上我吧，下一场我来帮你！||Bring me along. I will help in the next match!
+一起上场||Join the team
+放入宠物背包||Keep in pet bag
+咕噜噜 · 棉花啾兔||Gululu · Cotton Bunny
+以后，我陪你冒险！||From now on, I will adventure with you!
+让我加入队伍吧！||Let me join your team!
+加入队伍||Join the team
+带它出发||Set off together
+和伙伴玩口令||Play with companion commands
+先去找青龙||Find Qinglong first
+新伙伴||New companion
+我们是朋友||We are friends
+用{language}写一句，也可以先听示范。||Write a sentence in {language}, or listen to an example first.
+用{language}告诉莫尼你们是朋友。可以说：{example}||Tell Moni you are friends in {language}. Try: {example}
+说“我们是朋友”，friend 要加 s：We are friends.||For “we are friends”, add s to friend: We are friends.
+莫尼明白了。咕噜噜可以进来了。||Moni understands. Gululu can enter the camp.
+抱抱龙想和你玩口令，试试用{language}指挥它！||Cuddle Dragon wants to play! Try giving it a command in {language}.
+帮咕噜噜进入营地||Help Gululu enter the camp
+邀请咕噜噜成为搭档||Invite Gululu to join your team
+和搭档赢得一次挑战||Win a challenge with your companion
+没听清，可以再说一次，也可以输入。||I did not catch that. Try speaking again, or type your answer.
+它也向你打招呼啦！||It says hello back!
+它跳起来了！||It jumped!
+它跑过来了！||It ran over to you!
+跟抱抱龙打个招呼。||Say hello to Cuddle Dragon.
+让抱抱龙跳一下。||Ask Cuddle Dragon to jump.
+叫抱抱龙到身边来。||Ask Cuddle Dragon to come to you.
+进度还没保存好，点一次发送重试。||Your progress has not been saved yet. Send your answer again to retry.
+正在准备示范…||Preparing the example…
+正在播放示范…||Playing the example…
+暂时听不到示范。可以直接选句子，或自己输入。||The example is unavailable. You can choose the sentence or type your own.
+魔力点不足：需要 {required} 点，当前可用 {available} 点。请重新选择低消耗卡牌，或跳过本回合积攒魔力。||Not enough pips: {required} needed, {available} available. Choose a lower-cost card, or pass this turn to build up pips.
+卡牌冷却中：还需 {cooldown} 回合。请重新选择卡牌或跳过本回合。||Card on cooldown: {cooldown} turns remaining. Choose another card or pass this turn.
+这张牌没有可选目标。请重新选择一张牌。||This card has no valid target. Choose another card.
+暂时听不到示范。可以直接说，或用打字告诉它。||The example is unavailable. You can speak or type your answer.
+暂时没能返回场景，请再点一次重试。||We could not return to the scene. Tap again to retry.

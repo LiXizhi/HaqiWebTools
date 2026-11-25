@@ -3,13 +3,14 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import {guidanceCard} from '../js/views/adventure/view_adventure_guidance.js';
-import {dungeonTacticsProfile,dungeonTacticsPreparation} from '../js/dungeon_tactics_core.js';
+import {dungeonTacticsProfile,dungeonTacticsPreparation,nextTowerMilestone} from '../js/dungeon_tactics_core.js';
 import {dungeonChallengeLines,dungeonChallengeMessages} from '../js/dungeon_challenge_core.js';
-import {dungeonEnemyIntel} from '../js/adventure_dungeon_journeys_core.js';
+import {dungeonEnemyIntel,towerMilestoneBonus} from '../js/adventure_dungeon_journeys_core.js';
 import {dungeonProgress} from '../js/adventure_coop_core.js';
 import {dungeonHonorTitle} from '../js/adventure_honors_core.js';
 import {dungeonFirstReward} from '../js/dungeon_first_rewards_core.js';
 import {SPARK_DUNGEON} from '../js/spark_rescue_core.js';
+import {dungeonWatchStory} from '../js/dungeon_watch_story_core.js';
 import {tr,fill,setTranslator} from '../js/locale_runtime.js';
 import {parseLocaleFile,lookup} from '../js/locale_core.js';
 
@@ -87,7 +88,7 @@ for(const locale of ['en','ja','ko']){
   assert.equal(legacy.children[3].children[0].textContent,'legacy step 42');
  }));
  test(`actual journey view wires dynamic guidance and progress: ${locale}`,()=>withLocale(locale,fixture=>{
-  const context=vm.createContext({...fixture,tr,fill,guidanceCard,dungeonTacticsProfile,dungeonTacticsPreparation,dungeonEnemyIntel,dungeonChallengeMessages,dungeonProgress,dungeonHonorTitle,dungeonFirstReward,SPARK_DUNGEON,playerSpec:s=>({deck:s.deck}),createCloseButton:click=>fixture.button('',click)});
+  const context=vm.createContext({...fixture,tr,fill,guidanceCard,dungeonTacticsProfile,dungeonTacticsPreparation,dungeonEnemyIntel,dungeonChallengeMessages,dungeonProgress,nextTowerMilestone,towerMilestoneBonus,dungeonHonorTitle,dungeonFirstReward,SPARK_DUNGEON,dungeonWatchStory,playerSpec:s=>({deck:s.deck}),createCloseButton:click=>fixture.button('',click)});
   vm.runInContext(read('js/views/adventure/view_dungeon_journey.js').replace(/^import .*;\r?\n/gm,'').replace('export function','function'),context);
   for(const id of ['journey:first-watch','journey:lost-spark'])for(const firstRewarded of [false,true]){
    fixture.all.length=0;

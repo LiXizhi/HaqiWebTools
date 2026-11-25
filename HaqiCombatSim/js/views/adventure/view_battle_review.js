@@ -8,3 +8,11 @@ export function defeatReviewNotes(review,winner){
         review.presentation?.detail,
     ].filter(text=>typeof text==='string'&&text.trim()).map(text=>text.trim()))];
 }
+
+export function renderDungeonWatchRetry(story,el){
+    if(!story)return null;
+    const details=el('details','battle-watch-retry',el('summary','','和茜茜想想下一步'),
+        el('p','',story.reply),el('p','',story.tip),el('p','',story.recovery),el('p','',story.progress));
+    details.dataset.storyId=story.id;
+    return details;
+}

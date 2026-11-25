@@ -108,6 +108,7 @@ export function renderDialogue(root,model,dialog,cb) {
                 choices.append(button(fill('进入{stall}与本岛风物探索',{stall:tr(stall)}).text,()=>cb.panel('archipelago-chronicle',{tab:'trilogy',islandId:trilogyId}),'secondary'));
             }
         }
+
         if(npcServices(c,npc).length&&purpose?.panel!=='npc-services')services.append(button('查看商品与学习魔法',()=>cb.panel('npc-services',{npc}),'secondary'));
         if(npc.worldObservation){
             services.append(button(npc.worldObservation.label,()=>cb.panel('earthmap'),'secondary'));

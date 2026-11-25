@@ -26,6 +26,8 @@ installDungeonIndex(content,read('adventure/dungeon-index'));
 installDungeons(content,dataset,read('adventure/dungeons'),read('kids/cards'));
 import {forestExchangeLines} from '../js/forest_exchange_core.js';
 import {forestCommissionGoal} from '../js/forest_commission_core.js';
+import {dungeonWatchStory} from '../js/dungeon_watch_story_core.js';
+import {companionWorldGuide} from '../js/companion_guide_core.js';
 
 // Core fixtures position interaction targets and choose decks; this is not browser navigation.
 // All levels, quest phases, clear records and story progress use real actions.
@@ -109,7 +111,10 @@ for(const scenario of [
  const dungeon=content.dungeons.find(d=>d.id==='journey:first-watch');
  now+=60000;tickCare(save,content,A.playerSpec(save,content),now);
  enterDungeon(save,content,dungeon.id);
+ const watchStory=()=>dungeonWatchStory(save,dungeon,save.dungeonRuns[dungeon.id]?.cleared||[]);
+ assert.equal(watchStory().stage,0);assert.match(watchStory().remembered,plan==='tracks'?/脚印/:/巡夜灯/);
  for(const [index,arena]of dungeon.arenas.entries()){
+  assert.equal(watchStory().stage,index);assert.equal(companionWorldGuide(save,content).track,'dungeon-next');
   A.beginEncounter(save,content,arena.id);const battle=P.restorePveBattle(dataset,content,save.pendingEncounter);
   for(let turn=0;turn<60&&!battle.finished;turn++){
    const playback=P.playPveRound(battle,{...bot.pick(battle,battle.sides.near[0]),aiVersion:1});
@@ -118,6 +123,8 @@ for(const scenario of [
   assert.equal(battle.winner,'near',arena.id);A.settleEncounter(save,content,battle);roundtrip();
   assert.equal(forestCommissionPhase(save),index===dungeon.arenas.length-1?'report':'patrol');
   assert.equal(forestCommissionPouch(save)[0].id,'patrol-note');
+  assert.equal(watchStory().stage,index+1);assert.equal(companionWorldGuide(save,content).text,watchStory().reply);
+  assert.equal(companionWorldGuide(save,content).track,index===dungeon.arenas.length-1?'dungeon-exit':'dungeon-next');
   if(index<dungeon.arenas.length-1){leaveDungeon(save,content);now+=60000;tickCare(save,content,A.playerSpec(save,content),now);enterDungeon(save,content,dungeon.id);}
  }
  leaveDungeon(save,content);act('report');roundtrip();
@@ -138,6 +145,18 @@ for(const scenario of [
  assert.throws(()=>act('exchange',{word:'note',language,input:'text',text:forestExchangeLines(save,'note')[0]}));
  assert.deepEqual(save,afterInvestigation,'reopened investigation and stale handovers cannot repeat rewards or receipts');
  assert.deepEqual(save.forestCommission.exchangePractice.map(p=>[p.word,p.language]),[['boots',language],['note',language]]);
+ const beforeVisit={inventory:structuredClone(save.inventory),exp:save.exp};
+ investigate('promise-start');roundtrip();
+ assert.equal(forestCommissionPhase(save),'promise');
+ if(ending==='sign')investigate('promise-mark',{place:'tent'});
+ else investigate('promise-invite',{response:'ask'});
+ roundtrip();investigate('promise-pause');roundtrip();
+ assert.equal(forestCommissionPhase(save),'done','an optional paused visit never blocks the main adventure');
+ investigate('promise-start');roundtrip();
+ assert.equal(save.forestCommission.mystery.promise.stage,'confirm','resume preserves the actual interaction');
+ investigate('promise-confirm');roundtrip();
+ assert.equal(forestCommissionPhase(save),'done');
+ assert.deepEqual(save.inventory,beforeVisit.inventory);assert.equal(save.exp,beforeVisit.exp);
  {
   // The first reward should lead to an attainable second challenge with owned
   // companions, not a fixture that invents levels, pets or combat stats.
@@ -181,8 +200,14 @@ for(const scenario of [
   const beforeEscort=structuredClone(save.inventory);
   applySparkRescue(save,content,{step:'start',method});roundtrip();
   const path=method==='lamp'?[16,17,12,7,2,3,4]:[16,15,10,5,0,1,2,3,4];
-  for(const to of path.slice(1)){applySparkRescue(save,content,{step:'move',to});roundtrip();}
-  applySparkRescue(save,content,{step:'finish',promise});roundtrip();
+  for(const to of path.slice(1)){
+   if(method==='lamp'&&to===7){applySparkRescue(save,content,{step:'wait'});roundtrip();}
+   applySparkRescue(save,content,{step:'move',to});roundtrip();
+  }
+  if(promise==='signal'){
+   applySparkRescue(save,content,{step:'signal-start'});roundtrip();
+   for(const lit of [true,false,true]){applySparkRescue(save,content,{step:'signal-pulse',lit});roundtrip();}
+  }else{applySparkRescue(save,content,{step:'finish',promise});roundtrip();}
   assert.equal(save.sparkRescue.status,'safe');assert.deepEqual(save.sparkRescue.path,path);
   assert.deepEqual(save.inventory,beforeEscort,'escort adds no duplicate equipment reward');
   const safeState=structuredClone(save);
@@ -192,6 +217,7 @@ for(const scenario of [
   assert.equal(save.forestCommission.mystery.route,plan);
   assert.equal(save.sparkRescue.promise,promise);
   assert.equal(save.forestCommission.mystery.ending,ending);
+  assert.equal(save.forestCommission.mystery.promise.status,'done');
   assert.deepEqual(save.forestCommission.exchangePractice.map(p=>[p.word,p.language]),[['boots',language],['note',language]]);
  }
 });

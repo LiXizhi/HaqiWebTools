@@ -9,6 +9,7 @@ import {openingJourneyTarget,openingJourneyWon,openingJourneyMilestones,openingF
 import {checkedProgress} from '../js/adventure_cloud_core.js';
 import {persistReward} from '../js/adventure_reward_persistence.js';
 import {initializePetWorld} from '../js/adventure_pet_world_core.js';
+import {openingResultGuidance} from '../js/opening_result_guidance_core.js';
 const read=file=>JSON.parse(fs.readFileSync(new URL('../data/'+file,import.meta.url)));
 test('guide leads toward Moni only during the outdoor guide step without changing the save',()=>{
  const save={zone:'camp',position:{x:0,y:0},openingJourney:{version:1,phase:'guide'}};
@@ -99,8 +100,9 @@ function fight(save,id,now=1000000){
   P.playPveRound(battle,pick);A.recordDecision(save,pick,battle);
  }
  assert.equal(battle.finished,true);
+ const guidance=openingResultGuidance(save,battle);
  A.settleEncounter(save,content,battle,{now});
- return {winner:battle.winner,rounds};
+ return {winner:battle.winner,rounds,guidance};
 }
 test('English route recruits one usable companion and a real second fight completes the journey',()=>{
  const save=fresh();guide(save,'talk');
@@ -119,19 +121,48 @@ test('English route recruits one usable companion and a real second fight comple
  assert.equal(openingJourneyTarget(save).id,'ice-scout');
  const result=fight(save,'ice-scout');
  assert.equal(result.winner,'near');
+ assert.equal(result.guidance.title,'第一次搭档挑战成功');
  assert.equal(save.openingJourney.phase,'done');
 });
 test('battle route requires an actual matching victory and survives a saved checkpoint',()=>{
  let save=fresh();guide(save,'battle');
  assert.throws(()=>act(save,'rescue'),/先帮/);
  assert.throws(()=>A.applyAction(save,content,{type:'claim',questId:63000,npcId:36211}),/先和莫尼/);
- assert.equal(fight(save,'fire-scout').winner,'near');
+ const victory=fight(save,'fire-scout');
+ assert.equal(victory.winner,'near');
+ assert.match(victory.guidance.body,/回去找莫尼/);
  assert.equal(save.openingJourney.phase,'rescue');
  save=checkedProgress(JSON.stringify(save),content,dataset).save;
  act(save,'rescue',{join:false});
  assert.equal(save.formation.includes('legacy_gululu'),false);
+ assert.equal(openingJourneyTarget(save).id,36201);
+ assert.match(openingJourneyTarget(save).objective,/上场/);
  act(save,'join');assert.ok(save.formation.includes('legacy_gululu'));
+ assert.equal(openingJourneyTarget(save).id,'ice-scout');
 });
+test('retreating from either opening fight preserves the route and resumes a real retry after reload',()=>{
+ for(const phase of ['challenge','showcase']){
+  let save=fresh();guide(save,'battle');
+  if(phase==='showcase'){fight(save,'fire-scout');act(save,'rescue',{join:true});}
+  const encounterId=phase==='challenge'?'fire-scout':'ice-scout';
+  const before={journey:JSON.stringify(save.openingJourney),pets:JSON.stringify(save.pets),inventory:JSON.stringify(save.inventory),quests:JSON.stringify(save.quests)};
+  A.beginEncounter(save,content,encounterId,{now:1000000});
+  const battle=P.restorePveBattle(dataset,content,save.pendingEncounter);
+  const pick=new SimpleBot().pick(battle,battle.sides.near[0]);
+  P.playPveRound(battle,pick);A.recordDecision(save,pick,battle);
+  assert.equal(battle.finished,false);
+  assert.equal(A.applyAction(save,content,{type:'retreat'}).changed,true);
+  assert.equal(save.pendingEncounter,null);
+  for(const [key,value]of Object.entries(before))assert.equal(JSON.stringify(save[key==='journey'?'openingJourney':key]),value,key);
+  save=checkedProgress(JSON.stringify(save),content,dataset).save;
+  assert.equal(save.openingJourney.phase,phase);
+  assert.equal(openingJourneyTarget(save).id,encounterId);
+  const result=fight(save,encounterId,1031000);
+  assert.equal(result.winner,'near');
+  assert.equal(save.openingJourney.phase,phase==='challenge'?'rescue':'done');
+ }
+});
+
 test('unrelated encounters do not finish a journey and interactions require proximity',()=>{
  const save=fresh();
  assert.throws(()=>A.applyAction(save,content,{type:'opening-journey',step:'accept'}),/走到/);

@@ -1,6 +1,7 @@
 import {forestCommissionLesson,forestLabelMatches,forestLabelWritten,forestPracticeId,forestPracticeLanguage,FOREST_LEARNING_LANGUAGES} from './forest_commission_language_core.js';
 import {forestExchangeMatches,forestExchangeId} from './forest_exchange_core.js';
 import {applyForestMystery,forestMysteryGoal,validateForestMystery} from './forest_mystery_core.js';
+import {applyForestPromise,forestPromiseGoal} from './forest_promise_core.js';
 // A carried-object commission. The selected language changes scene decisions;
 // progress, reward ownership and the real dungeon record remain independent.
 export const FOREST_COMMISSION_ID='camp-patrol-supplies';
@@ -14,7 +15,7 @@ const check=(ok,message)=>{if(!ok)throw Error(message);};
 const count=s=>s.dungeonChallengeRecords?.[FOREST_PATROL_DUNGEON]?.clears||0;
 export function forestCommissionAvailable(save){return !save.openingJourney||save.openingJourney.phase==='done';}
 export function forestCommission(save){return save.forestCommission||null;}
-export function forestCommissionPhase(save){const s=forestCommission(save);return s?.phase==='done'&&s.mystery?.status==='active'?'investigation':s?.phase==='patrol'&&count(save)>s.clearBaseline?'report':s?.phase||'offer';}
+export function forestCommissionPhase(save){const s=forestCommission(save);return s?.phase==='done'&&s.mystery?.status==='active'?'investigation':s?.phase==='done'&&s.mystery?.promise?.status==='active'?'promise':s?.phase==='patrol'&&count(save)>s.clearBaseline?'report':s?.phase||'offer';}
 export function forestCommissionPouch(save){
  const phase=forestCommissionPhase(save);
  if(phase==='delivery')return [{id:'patrol-boots',name:'待送达的巡逻靴',description:'从帐篷旁找到的营地补给。交给茜茜，不可出售或穿戴。',artItem:GEAR[save.school]?.[2]}];
@@ -24,6 +25,7 @@ export function forestCommissionPouch(save){
 export function forestCommissionGoal(save){
  const phase=forestCommissionPhase(save),lesson=forestCommissionLesson(save),common={phase,zone:'camp'};
  if(phase==='investigation')return {...common,...forestMysteryGoal(save)};
+ if(phase==='promise')return {...common,...forestPromiseGoal(save)};
  const rows={
   offer:{id:FOREST_NPCS.giver,kind:'npc',label:'找莫尼接取营地急件',hint:`巡夜灯忽然熄灭，茜茜出发前还缺一份补给。${lesson.name}补给单上留着线索。`},
   boots:{id:FOREST_SITES.boots,kind:'landmark',label:`到补给帐篷按${lesson.name}补给单选物`,hint:lesson.clues.boots},
@@ -61,6 +63,16 @@ export function forestCommissionScene(save){
  if(phase==='done'&&save.sparkRescue?.status==='safe'){
   scene.npcs[FOREST_NPCS.receiver]=save.sparkRescue.promise==='signal'?'守护者捎话来了：火种回到课堂了。它还记得你教的灯光信号，路上一直有人回应。':'守护者捎话来了：火种回到课堂了。这回他们等齐才走，谁也没有掉队。';
  }
+ if(phase==='promise'){
+  if(scene.sites[goal.id]){scene.sites[goal.id].active=true;scene.sites[goal.id].label=goal.label;}
+  scene.npcs[FOREST_NPCS.giver]=save.forestCommission.mystery.promise.stage==='confirm'?'消息写清或说清了吗？让我也来回应你。':'准备出发前，先问问彼此。你来得正好。';
+  scene.npcs[FOREST_NPCS.receiver]='这次不赶时间。问清、等齐，比谁先出发更重要。';
+ }
+ if(save.forestCommission?.mystery?.promise?.status==='done'){
+  const sign=save.forestCommission.mystery.ending==='sign';
+  scene.sites[FOREST_SITES.boots].label=sign?'位置便签：备用灯芯在补给帐篷里':'同行约定：先问清，再等齐';
+  scene.npcs[FOREST_NPCS.giver]=sign?'我照着便签找到了备用灯芯。这次不用满营地猜了。':'这次我会等到大家都回应，再一起出发。';
+ }
  return scene;
 }
 export function forestCommissionRewards(save,content,step){
@@ -89,6 +101,7 @@ export function applyForestCommission(save,content,action,access={}){
  }
  check(s,'先找莫尼接取营地急件。');
  if(typeof action.step==='string'&&action.step.startsWith('mystery-'))return applyForestMystery(save,action,(id,kind)=>nearby(save,access,id,kind));
+ if(typeof action.step==='string'&&action.step.startsWith('promise-'))return applyForestPromise(save,action,(id,kind)=>nearby(save,access,id,kind));
  if(action.step==='plan'){
   nearby(save,access,FOREST_NPCS.receiver,'npc');check(phase==='briefing','拿回便签后，再和茜茜商量。');
   check(['light','tracks'].includes(action.plan),'先选一个巡逻提议。');

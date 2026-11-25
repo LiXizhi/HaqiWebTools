@@ -8,6 +8,17 @@ import {recommendedLanguageQuest} from './language_quest_core.js';
 import {nextAvailableIslandPuzzle} from './island_puzzles_core.js';
 import {HANZI_STELE_SCROLLS,steleRubbingCount} from './hanzi_stele_scroll_core.js';
 import {HANZI_FORGE_RECIPES,hanziForgeCount} from './hanzi_forge_core.js';
+import {forestCommissionAvailable,forestCommissionPhase,forestCommissionGoal} from './forest_commission_core.js';
+import {dungeonFor} from './adventure_dungeons_core.js';
+import {dungeonProgress} from './adventure_coop_core.js';
+import {dungeonWatchStory} from './dungeon_watch_story_core.js';
+import {sparkRescueReady} from './spark_rescue_core.js';
+
+function forestGuideGoal(save){
+ if(save.zone!=='camp'||!forestCommissionAvailable(save)||!save.forestCommission)return null;
+ if(forestCommissionPhase(save)==='done'&&save.forestCommission.mystery?.status==='solved')return null;
+ return forestCommissionGoal(save);
+}
 
 // Read-only advice: no rewards, progress writes or invented world targets.
 export function guidePet(save,content){
@@ -17,7 +28,18 @@ export function guidePet(save,content){
 export function companionWorldGuide(save,content,{languageTasks=[]}={}){
  const outing=campDetourGoal(save);
  if(outing)return {text:outing.text,label:'带我找找',track:'camp-detour'};
- if(campDetourAvailable(save)&&!wordplayGoal(save).done)return {text:`用${learningLesson(save).name}叫我跳一跳！`,label:'玩口令',track:'companion-wordplay'};
+ const forest=forestGuideGoal(save);
+ if(forest)return {text:forest.label,label:'查看下一步',panel:'forest-commission'};
+ const dungeon=dungeonFor(content,save.zone);
+ if(sparkRescueReady(save,content))return save.sparkRescue?.status==='safe'
+  ?{text:'火种已经在避风灯台安顿好了。',label:'走向出口',track:'dungeon-exit'}
+  :{text:'火种还在等你。到洞口看看它，再一起离开。',label:'去照看火种',track:'dungeon-exit'};
+ const watch=dungeonWatchStory(save,dungeon,dungeonProgress(save)?.[save.zone]?.cleared||[]);
+ if(watch)return {text:watch.reply,label:watch.complete?'走向出口':'继续巡逻',track:watch.complete?'dungeon-exit':'dungeon-next'};
+ if(campDetourAvailable(save)&&!wordplayGoal(save).done){
+  const key=['先用{language}和它打个招呼。','试着用{language}请它跳一下。','用{language}叫它到你身边来。'][wordplayGoal(save).step],vars={language:learningLesson(save).name};
+  return {text:key.replace('{language}',vars.language),textKey:key,vars,label:'玩口令',track:'companion-wordplay'};
+ }
  if(save.zone==='camp'&&openingJourneyActive(save)){
   const goal=openingJourneyTarget(save);
   return {text:goal.objective,label:'带我去',track:'opening-journey'};
@@ -56,9 +78,25 @@ export function companionWorldGuide(save,content,{languageTasks=[]}={}){
 
 // Same authoritative objective as the tracker; no nearest-NPC guess and no progress writes.
 export function companionWorldTarget(save,content,world){
+ if(save.zone===world.zone&&dungeonFor(content,save.zone)){
+  if(sparkRescueReady(save,content))return world.portal?{...world.portal,kind:'portal'}:null;
+  const watch=dungeonWatchStory(save,dungeonFor(content,save.zone),dungeonProgress(save)?.[save.zone]?.cleared||[]);
+  if(watch?.complete)return world.portal?{...world.portal,kind:'portal'}:null;
+  const cleared=dungeonProgress(save)?.[save.zone]?.cleared||[];
+  const next=watch&&world.encounters?.find(row=>!row.hidden&&!row.blocked?.length&&!cleared.includes(row.id));
+  return next?{...next,kind:'encounter'}:null;
+ }
  if(save.zone!=='camp'||world.zone!=='camp')return null;
  const outing=campDetourGoal(save);
  if(outing)return world.campToyTargets?.find(row=>row.id===outing.id)||null;
+ const forest=forestGuideGoal(save);
+ if(forest){
+  const rows=forest.kind==='npc'?world.npcs:world.landmarks;
+  const target=rows?.find(row=>!row.hidden&&String(row.id)===String(forest.id));
+  return target?{...target,kind:forest.kind,forestCommission:true}:null;
+ }
+ // Wordplay opens beside the player; do not send them to an unrelated quest NPC.
+ if(campDetourAvailable(save)&&!wordplayGoal(save).done)return null;
  let goal=openingJourneyActive(save)?openingJourneyTarget(save):null;
  if(!goal){
   const q=currentQuest(save,content);if(!q)return null;

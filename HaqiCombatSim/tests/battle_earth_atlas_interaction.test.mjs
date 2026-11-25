@@ -7,9 +7,10 @@ import {setTranslator} from '../js/locale_runtime.js';
 async function withAtlas(model,run,callbacks={}){
     const previous=globalThis.document,requests=[],travels=[],painted=[],measured=[];
     class Element{
-        constructor(tag){this.tag=tag;this.children=[];this.style={};this.dataset={};this.className='';this.classList={add(){},remove(){}};}
+        constructor(tag){this.tag=tag;this.ownerDocument=globalThis.document;this.children=[];this.style={};this.dataset={};this.className='';this.classList={add(){},remove(){}};}
+        focus(){this.ownerDocument.activeElement=this;}
         append(...nodes){this.children.push(...nodes);}replaceChildren(...nodes){this.children=nodes;}
-        setAttribute(){}removeAttribute(){}setPointerCapture(){}
+        setAttribute(key,value){(this.attributes??={})[key]=String(value);}getAttribute(key){return this.attributes?.[key]??null;}removeAttribute(){}setPointerCapture(){}
         getBoundingClientRect(){return {left:0,top:0,width:900,height:470};}
         getContext(){return new Proxy({strokeText:text=>painted.push(text),fillText:text=>painted.push(text),measureText:text=>{measured.push(text);return {width:text.length*13};}},{get:(target,key)=>target[key]||(()=>{})});}
         querySelector(selector){return this.children.find(n=>n.className?.split(' ').includes(selector.slice(1)))||this.children.map(n=>n.querySelector?.(selector)).find(Boolean);}
@@ -157,4 +158,74 @@ test('atlas travel lock covers city selection, saved stars and rows, then restor
         for(const node of [popup.children[1],star,row]){assert.equal(node.disabled,true);node.onclick();}
         assert.equal(view.selectCity('first'),false);assert.equal(travels.length,3);
     });
+});
+
+test('atlas directory searches translated names and keeps complete city identity until explicit travel',async()=>{
+    const first={id:'one',name:'北京',lon:0,lat:12.5,chapter:'first'},other={id:'two',name:'其他城市',lon:90,lat:12.5};
+    setTranslator(text=>text==='北京'?'Beijing':text);
+    try{await withAtlas({},async({root,popup,travels})=>{
+        const directory=root.querySelector('.earth-place-directory'),search=root.querySelector('.earth-place-search'),results=root.querySelector('.earth-place-results');
+        assert.ok(!directory.open);assert.equal(search.type,'search');assert.equal(search.getAttribute('aria-label'),'查找当前视野的地点');
+        assert.equal(results.children.length,2);search.value='  BEIJING ';search.oninput();assert.equal(results.children.length,1);assert.equal(results.children[0].textContent,'Beijing');
+        results.children[0].onclick();assert.equal(results.children[0].getAttribute('aria-pressed'),'true');assert.equal(popup.children[0].textContent,'Beijing');assert.equal(travels.length,0);
+        popup.children[1].onclick();assert.equal(travels[0],first);
+        search.value='不存在';search.oninput();assert.equal(results.children.length,0);assert.match(directory.children[3].textContent,/没有找到/);assert.equal(travels.length,1);
+    },{viewport:async()=>({cities:[first,other],tiles:[]})});}finally{setTranslator(null);}
+});
+
+test('atlas directory pages all locations, deduplicates shared sources and keeps same-name coordinates distinct',async()=>{
+    const cities=Array.from({length:53},(_,i)=>({id:`city-${i}`,name:i<2?'同名城':`城市${i}`,lon:-150+i*5,lat:12.5}));
+    await withAtlas({index:{hotspots:[cities[0],{id:'bad',name:'坏坐标',lon:NaN,lat:0}]}},async({root,popup,travels})=>{
+        const results=root.querySelector('.earth-place-results'),pages=root.querySelector('.earth-place-pages'),search=root.querySelector('.earth-place-search');
+        assert.equal(results.children.length,24);assert.equal(pages.children[0].disabled,true);assert.equal(pages.children[1].disabled,false);
+        const visited=[];for(let page=0;page<3;page++){for(const node of results.children){node.onclick();assert.equal(travels.length,visited.length);popup.children[1].onclick();visited.push(travels.at(-1));}if(page<2)pages.children[1].onclick();}
+        assert.deepEqual(visited,cities);assert.equal(pages.children[1].disabled,true);assert.equal(results.children.length,5);
+        pages.children[0].onclick();assert.equal(results.children.length,24);
+        search.value='同名城';search.oninput();assert.equal(results.children.length,2);assert.equal(pages.hidden,true);assert.equal(pages.children[0].disabled,true);
+    },{viewport:async()=>({cities,tiles:[]})});
+});
+
+test('directory paging focuses its new results and viewport refresh preserves a focused place',async()=>{
+    const cities=Array.from({length:26},(_,i)=>({id:`city-${i}`,name:`地点${i}`,lon:-120+i*8,lat:12.5}));
+    await withAtlas({current:{lon:0,lat:12.5},index:{hotspots:cities}},async({root,view,travels})=>{
+        const results=root.querySelector('.earth-place-results'),pages=root.querySelector('.earth-place-pages'),search=root.querySelector('.earth-place-search'),doc=root.ownerDocument;
+        pages.children[1].focus();pages.children[1].onclick();assert.equal(results.children.length,2);
+        assert.equal(doc.activeElement,results.children[0]);assert.equal(travels.length,0);
+        results.children[1].focus();await view.focus({lon:0,lat:12.5},360);
+        assert.equal(doc.activeElement,results.children[1]);assert.equal(doc.activeElement.textContent,'地点25');
+        await view.focus({lon:-120,lat:12.5},1);
+        assert.equal(doc.activeElement,search);assert.equal(travels.length,0);
+        search.focus();await view.focus({lon:0,lat:12.5},360);assert.equal(doc.activeElement,search);
+        pages.children[0].onclick();assert.equal(doc.activeElement,results.children[0]);
+    });
+});
+
+test('atlas directory filters locations outside the current viewport across the date line',async()=>{
+    const cities=[{id:'east',name:'东岸',lon:179.8,lat:12.5},{id:'west',name:'西岸',lon:-179.8,lat:12.5},{id:'outside',name:'远方',lon:90,lat:12.5}];
+    await withAtlas({focus:{lon:180,lat:12.5}},async({root,view})=>{
+        const results=root.querySelector('.earth-place-results');assert.deepEqual(results.children.map(n=>n.textContent),['东岸','西岸']);
+        await view.focus({lon:90,lat:12.5},1);assert.deepEqual(results.children.map(n=>n.textContent),['远方']);
+    },{viewport:async()=>({cities,tiles:[]})});
+});
+
+test('late viewport responses preserve travel status and every directory/navigation control stays locked',async()=>{
+    let resolve;const pending=new Promise(done=>{resolve=done;});
+    await withAtlas({index:{hotspots:[{id:'first',name:'第一站',lon:0,lat:12.5}]}},async({root,view,canvas,status,zoom,requests,travels})=>{
+        const results=root.querySelector('.earth-place-results'),search=root.querySelector('.earth-place-search');results.children[0].onclick();view.busy('正在准备目的地');
+        const before=view.getState();canvas.onkeydown({key:'ArrowRight',preventDefault(){}});zoom.children[0].onclick();await view.focus({lon:90,lat:0},1);status.onclick();
+        assert.deepEqual(view.getState().center,before.center);assert.equal(view.getState().span,before.span);assert.equal(search.disabled,true);
+        resolve({cities:[{id:'late',name:'晚到城市',lon:20,lat:12.5}],tiles:[]});await pending;await Promise.resolve();
+        assert.equal(status.textContent,'正在准备目的地');for(const node of results.children){assert.equal(node.disabled,true);node.onclick();}assert.equal(travels.length,0);
+        assert.equal(requests.length,0);view.error('连接失败，请重试');assert.equal(search.disabled,false);for(const node of results.children)assert.equal(node.disabled,false);
+        view.dispose();for(const node of results.children){assert.equal(node.disabled,true);node.onclick();}assert.equal(travels.length,0);
+    },{viewport:()=>pending});
+});
+
+test('favorite placement locks directory and canceling restores it without selecting a city',async()=>{
+    const city={id:'first',name:'第一站',lon:0,lat:12.5};
+    await withAtlas({index:{hotspots:[city]}},async({root,popup,travels})=>{
+        const tools=root.querySelector('.earth-map-tools'),results=root.querySelector('.earth-place-results'),search=root.querySelector('.earth-place-search');
+        tools.children[0].onclick();assert.equal(search.disabled,true);assert.equal(results.children[0].disabled,true);results.children[0].onclick();assert.equal(popup.hidden,true);assert.equal(travels.length,0);
+        tools.children[0].onclick();assert.equal(search.disabled,false);results.children[0].onclick();assert.equal(popup.children[0].textContent,city.name);assert.equal(travels.length,0);
+    },{addFavorite:async()=>({favorites:[]})});
 });

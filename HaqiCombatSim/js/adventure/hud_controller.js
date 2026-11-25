@@ -89,7 +89,10 @@ export function createHudController({
     function departCampArrival() {
         const ctx = getContext();
         ctx.save.tips.campArrivalSeen = true;
-        persist();
+        try { persist(); } catch {
+            delete ctx.save.tips.campArrivalSeen;
+            return false;
+        }
         if (getContext().storageWarning) {
             delete ctx.save.tips.campArrivalSeen;
             return false;
@@ -120,7 +123,10 @@ export function createHudController({
         const ctx = getContext();
         const pending = ctx.save.tips.pendingCompanionWelcome;
         ctx.save.tips.pendingCompanionWelcome = null;
-        persist();
+        try { persist(); } catch {
+            ctx.save.tips.pendingCompanionWelcome = pending;
+            return false;
+        }
         if (getContext().storageWarning) {
             ctx.save.tips.pendingCompanionWelcome = pending;
             return false;
@@ -148,9 +154,11 @@ export function createHudController({
                         return;
                     }
                     slots[slot] = firstWelcomePetId;
-                    if (performAction({ type: 'formation', slots, heroSlot: nowSave.heroSlot }) === false) return;
+                    if (performAction({ type: 'formation', slots, heroSlot: nowSave.heroSlot }) === false) return false;
                 }
-                if (leaveFirstPetWelcome()) track();
+                if (!leaveFirstPetWelcome()) return false;
+                track();
+                return true;
             },
         });
     }

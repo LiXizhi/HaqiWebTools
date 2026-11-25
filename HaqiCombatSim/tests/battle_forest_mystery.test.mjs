@@ -5,9 +5,18 @@ import * as A from '../js/adventure_core.js';
 import {checkedProgress} from '../js/adventure_cloud_core.js';
 import {persistReward} from '../js/adventure_reward_persistence.js';
 import {forestCommissionPhase,forestCommissionGoal,forestCommissionScene,FOREST_NPCS,FOREST_SITES} from '../js/forest_commission_core.js';
-import {forestMysteryStage} from '../js/forest_mystery_core.js';
+import {forestMysteryStage,forestMysteryOrderFeedback} from '../js/forest_mystery_core.js';
 const read=file=>JSON.parse(fs.readFileSync(new URL('../data/adventure/'+file,import.meta.url)));
 const content=read('chapter.json'),dataset=read('combat.json');
+test('reconstruction feedback identifies an actual inverted pair for every ordering without altering it',()=>{
+ for(const order of [['dim','find','return'],['dim','return','find'],['find','dim','return'],['find','return','dim'],['return','dim','find'],['return','find','dim']]){
+  const before=JSON.stringify(order),reply=forestMysteryOrderFeedback(order);
+  assert.equal(reply.correct,order.join(',')==='dim,find,return');
+  if(!reply.correct){assert.equal(reply.events.length,2);assert.ok(order.indexOf(reply.events[0])>order.indexOf(reply.events[1]));assert.ok(['grass','lamp'].includes(reply.evidence));}
+  assert.equal(JSON.stringify(order),before);
+ }
+ for(const invalid of [null,{},[],['dim','dim','return'],['dim','find','bogus']])assert.deepEqual(forestMysteryOrderFeedback(invalid),{correct:false,events:[],message:'先把三张经过卡各放一次。'});
+});
 function fresh(plan='tracks'){
  const save=A.createAdventure(content,{school:'fire',seed:231});
  save.forestCommission={version:1,phase:'done',clearBaseline:0,plan};

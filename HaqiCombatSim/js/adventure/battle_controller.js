@@ -17,12 +17,13 @@ import { battleEventSound } from '../audio/game_sound_core.js';
 import { cardsInHand, selectableCards, PET_CARD_SEQ_BASE } from '../combat_unit_core.js';
 import { validTargets } from '../combat_arena_core.js';
 import { resolveHandSwipe } from '../adventure_hand_core.js';
-import { castBlockedMessage } from '../adventure_cast_feedback_core.js';
+import { castBlockedFeedback } from '../adventure_cast_feedback_core.js';
 import { openingStrategyCue } from '../opening_training_core.js';
 import { openingCompanionEvent } from '../opening_journey_core.js';
 import { playTacticsFieldRound } from '../tactics_field_battle_core.js';
 import { createLearningVoice } from '../audio/language_adventure_voice.js';
 import { displayLocale, textFor } from '../locale.js';
+import { fill } from '../locale_runtime.js';
 import * as A from '../adventure_core.js';
 import * as P from '../combat_pve_core.js';
 import { battleSpeechController, eventLabel, renderBattle, setCastAnnouncement } from '../views/adventure/view_battle_layer.js';
@@ -70,6 +71,7 @@ export function createBattleController({
     const canWatchPartner = battle => !!battle.tacticalEncounter && !battle.finished
         && battle.sides.near[0].hp <= 0 && battle.sides.near.slice(1).some(unit => unit.hp > 0);
     const finishingBattles = new WeakSet();
+    const settledBattleOutcomes = new WeakMap();
     const answerTacticalClue = createTacticalClueHandler({ getContext, paintBattle, spellSound });
     const battleChatVoice = createLearningVoice({ getSettings: () => getContext().save?.languageLearning || {} });
     let battleChatAbort = null;
@@ -171,23 +173,33 @@ export function createBattleController({
         try {
             if (battle.tacticsField) return await finishTacticsFight();
             if (battle.redMushroom) return leaveArenaCombat();
-            const outcome = await settleFinishedEncounter({
-                battle, save, content: assets.content, loadPet,
-                completeLanguageTask: ticket => getLanguageTasks().won(ticket),
-                isCurrent: () => {
-                    const ctx = getContext();
-                    return ctx.stage === 'battle' && ctx.roleEpoch === roleEpoch && ctx.battle === battle && ctx.save === save;
-                },
-            });
-            if (!outcome || getContext().battle !== battle || getContext().save !== save) return;
-            const { before, settle, encounterId } = outcome;
-            if (battle.winner === 'near') getHanziMemory().won(encounterId);
-            islandSocial().settled(battle, settle);
-            if (battle.winner === 'near') islandSocial().activity('battle');
+            let completion = settledBattleOutcomes.get(battle);
+            if (completion && (completion.save !== save || completion.roleEpoch !== roleEpoch)) return;
+            if (!completion) {
+                const outcome = await settleFinishedEncounter({
+                    battle, save, content: assets.content, loadPet,
+                    completeLanguageTask: ticket => getLanguageTasks().won(ticket),
+                    isCurrent: () => {
+                        const ctx = getContext();
+                        return ctx.stage === 'battle' && ctx.roleEpoch === roleEpoch && ctx.battle === battle && ctx.save === save;
+                    },
+                });
+                if (!outcome || getContext().battle !== battle || getContext().save !== save) return;
+                // Settlement clears the checkpoint. Keep its result if returning to the world needs a retry.
+                completion = { save, roleEpoch, outcome, notified: false };
+                settledBattleOutcomes.set(battle, completion);
+            }
+            const { before, settle, encounterId } = completion.outcome;
+            if (!completion.notified) {
+                if (battle.winner === 'near') getHanziMemory().won(encounterId);
+                islandSocial().settled(battle, settle);
+                if (battle.winner === 'near') islandSocial().activity('battle');
+                completion.notified = true;
+            }
             save.careAt = Date.now();
             await enterWorld(save, null, { announceBeans: false });
             const ctx = getContext();
-            if (ctx.roleEpoch !== roleEpoch || ctx.stage !== 'world') return;
+            if (ctx.roleEpoch !== roleEpoch || ctx.save !== save || ctx.stage !== 'world') return;
             if (!bus?.emit('rewards:show', { before })) showRewards?.(before);
             if (settle?.insufficientStamina) toast('你的精力值不足，无法得到这场战斗的战利品。');
             bus?.emit('battle:settled', { settle });
@@ -209,7 +221,10 @@ export function createBattleController({
                 }
             }
         } catch (error) {
-            toast(error.message);
+            const ctx = getContext();
+            if (ctx.roleEpoch !== roleEpoch || ctx.save !== save) return;
+            const canRetryReturn = ctx.stage === 'battle' && ctx.battle === battle && settledBattleOutcomes.has(battle);
+            toast(canRetryReturn ? '暂时没能返回场景，请再点一次重试。' : error.message);
         } finally {
             finishingBattles.delete(battle);
         }
@@ -312,7 +327,7 @@ export function createBattleController({
                     if (intent.decision) playRound(intent.decision);
                     else {
                         paintBattle();
-                        toast(intent.message);
+                        toast(intent.feedback ? fill(intent.feedback.key, intent.feedback.vars).text : intent.message);
                     }
                 },
                 reselect: () => {
@@ -350,9 +365,10 @@ export function createBattleController({
                     const nowCtx = getContext();
                     if (!nowCtx.selected || nowCtx.animation || nowCtx.battle.finished) return;
                     const card = nowCtx.battle.resolved.cards[nowCtx.selected.key];
+                    const feedback = castBlockedFeedback(hero, card, nowCtx.battle.resolved);
                     const message = nowCtx.discarded.includes(nowCtx.selected.seq)
                         ? '这张卡牌已弃掉'
-                        : castBlockedMessage(hero, card, nowCtx.battle.resolved);
+                        : feedback ? fill(feedback.key, feedback.vars).text : '';
                     if (message) {
                         toast(message);
                         return;
@@ -382,6 +398,8 @@ export function createBattleController({
                 adjustChallenge: () => safely(() => finishTacticsFight({ adjust: true })),
                 retreat: () => {
                     const nowCtx = getContext();
+                    if (nowCtx.stage !== 'battle' || nowCtx.battle !== currentBattle || nowCtx.roleEpoch !== ctx.roleEpoch || finishingBattles.has(currentBattle)) return;
+                    if (currentBattle.finished) return finishBattle(currentBattle);
                     if (nowCtx.battle.tacticsField) return safely(() => finishTacticsFight());
                     if (nowCtx.battle.redMushroom) {
                         leaveArenaCombat();

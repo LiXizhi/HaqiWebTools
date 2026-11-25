@@ -50,13 +50,17 @@ test('lost spark aftermath uses the real cleared exit and survives local and clo
  save.position={x:content.worldMaps[id].portal.x,y:content.worldMaps[id].portal.y};
  assert.equal(W.createWorld(id,content,save).portal.name,'照看火种 · 离开副本');
  applySparkRescue(save,content,{step:'start',method:'lamp'});
- for(const to of [17,12,7,2,3,4])applySparkRescue(save,content,{step:'move',to});
+ for(const to of [17,12,7,2,3,4]){
+  if(to===7)applySparkRescue(save,content,{step:'wait'});
+  applySparkRescue(save,content,{step:'move',to});
+ }
  const parts=splitRoleSave(save,content),local=A.parseSave(joinRoleSave(parts.state,parts,content),content);
  assert.deepEqual(local.sparkRescue,save.sparkRescue);
  const cloud=makeCloudSnapshot(save,content,dataset,'2026-11-23T04:00:00.000Z','12345678-1234-1234-1234-123456789abc');
  const restored=parseCloudSnapshot(JSON.stringify(cloud),content,dataset).save;
  assert.deepEqual(restored.sparkRescue,save.sparkRescue);
- applySparkRescue(restored,content,{step:'finish',promise:'signal'});
+ applySparkRescue(restored,content,{step:'signal-start'});
+ for(const lit of [true,false,true])applySparkRescue(restored,content,{step:'signal-pulse',lit});
  assert.equal(W.createWorld(id,content,restored).portal.name,'火种已安顿 · 离开副本');
  leaveDungeon(restored,content);assert.ok(A.parseSave(restored,content));assert.equal(restored.sparkRescue.status,'safe');
  const forged=structuredClone(restored);forged.sparkRescue.path=[16,4];assert.throws(()=>A.parseSave(forged,content),/火种/);

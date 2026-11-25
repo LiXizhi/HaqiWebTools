@@ -13,6 +13,7 @@ import {tr,fill,setText,setTranslator} from '../js/locale_runtime.js';
 import {lookup,parseLocaleFile} from '../js/locale_core.js';
 const source=fs.readFileSync(new URL('../js/views/adventure/view_forest_commission.js',import.meta.url),'utf8');
 const mysterySource=fs.readFileSync(new URL('../js/views/adventure/view_forest_mystery.js',import.meta.url),'utf8');
+const promiseSource=fs.readFileSync(new URL('../js/views/adventure/view_forest_promise.js',import.meta.url),'utf8');
 const content=JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json',import.meta.url)));
 const exportedItems=JSON.parse(fs.readFileSync(new URL('../data/adventure/shop-candidates.json',import.meta.url)));
 for(const id of [1415,1416,1417,1418,1419])content.items[id]=exportedItems[id];
@@ -31,6 +32,7 @@ function render(phase,{nearby=true,level=1,language='en',target=language,recorde
  const context=vm.createContext({tr,fill,setText,document,Date:{now:()=>1234},watchTreeText:()=>{},...forest,...forestLanguage,...forestExchange,...forestStory,...forestMystery,monsterArtBinding,bindSceneDrag,pointInsideElement,forestCommissionRewardPreviews:(save,c,step)=>forest.forestCommissionRewards(save,c,step).map(row=>({...row,changes:[]})),equipmentComparison:()=>el('section','equipment-comparison'),el,button:(label,action,cls='')=>Object.assign(el('button',cls,label),{click:action}),
   art:(assets,value)=>Object.assign(el('canvas'),{drawnArt:value}),createCloseButton:click=>Object.assign(el('button','close-button'),{click})});
  vm.runInContext(mysterySource.replace(/^import .*;\r?\n/gm,'').replace(/export function/g,'function'),context);
+ vm.runInContext(promiseSource.replace(/^import .*;\r?\n/gm,'').replace(/export function/g,'function'),context);
  vm.runInContext(source.replace(/^import .*;\r?\n/gm,'').replace('export function','function'),context);
  const save={school:'fire',level,inventory:{},...(phase==='offer'?{}:{forestCommission:{version:1,phase:phase==='report'?'patrol':phase,...(['patrol','report','done'].includes(phase)?{clearBaseline:0}:{})}})};
  if(rescue)save.sparkRescue=structuredClone(rescue);
@@ -47,6 +49,41 @@ function render(phase,{nearby=true,level=1,language='en',target=language,recorde
 }
 
 const mysteryAt=(observed=[],witness=false)=>({version:1,status:'active',route:'tracks',observed,witness});
+test('witness questions reveal distinct clue-linked replies without writing progress or choosing a conclusion',()=>{
+ const ui=render('done',{mystery:mysteryAt(['grass','paper','tracks','lamp'])}),before=JSON.stringify(ui.save);
+ const reply=ui.all.find(n=>n.className==='forest-mystery-reply');
+ const questions=ui.all.filter(n=>n.attributes['aria-pressed']==='false'&&n.children?.some(c=>c?.className==='forest-mystery-evidence'));
+ assert.equal(questions.length,4);assert.equal(reply.attributes.role,'status');
+ for(const row of forestMystery.FOREST_MYSTERY_QUESTIONS){
+  const choice=ui.find(row.question);assert.ok(choice);choice.click();assert.equal(reply.textContent,row.reply);
+  assert.deepEqual(questions.filter(n=>n.attributes['aria-pressed']==='true'),[choice]);
+  assert.ok(choice.children.some(c=>c?.textContent===`物证：${forestMystery.FOREST_MYSTERY_OBSERVATIONS[row.evidence].name}`));
+ }
+ assert.deepEqual(ui.calls,[]);assert.equal(JSON.stringify(ui.save),before);
+ const distant=render('done',{nearby:false,mystery:mysteryAt(['grass','paper','tracks','lamp'])});
+ assert.equal(distant.find(forestMystery.FOREST_MYSTERY_QUESTIONS[0].question),undefined);
+ assert.ok(distant.find('带我去调查地点'));
+});
+
+for(const [label,mystery,expected]of [
+ ['查看泥里的草屑',mysteryAt(),{step:'mystery-inspect',object:'grass'}],
+ ['把莫尼的经过记下来',mysteryAt(['grass','paper','tracks','lamp']),{step:'mystery-question'}],
+ ['先收好调查袋',mysteryAt(['grass']),{step:'mystery-pause'}],
+])for(const mode of ['false','throw','reject'])test(`${label} blocks duplicate commits and recovers after ${mode}`,async()=>{
+ let finish,attempts=0;const pending=new Promise(resolve=>{finish=resolve;});
+ const ui=render('done',{mystery,action:value=>{
+  assert.deepEqual(JSON.parse(JSON.stringify(value)),expected);attempts++;
+  if(attempts===1)return pending;
+  if(mode==='throw')throw Error('quota');
+  if(mode==='reject')return Promise.reject(Error('quota'));
+  return false;
+ }});
+ const submit=ui.find(label),pause=ui.find('先收好调查袋');
+ submit.click();submit.click();pause.click();assert.equal(attempts,1);assert.equal(submit.disabled,true);
+ finish(false);await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(submit.disabled,undefined);assert.ok(ui.find('这一步没有保存，可以重试。'));
+ await submit.click();assert.equal(attempts,2);assert.equal(submit.disabled,undefined);
+});
 test('the route note can be spoken once while optional tactics remain available',()=>{
  const ui=render('briefing'),field=ui.all.find(n=>n.tag==='input'&&n.maxLength===120);
  assert.ok(field);field.value='Here are the boots.';ui.find('说好了，交给她').click();assert.deepEqual(ui.calls,[]);
@@ -133,14 +170,14 @@ test('English commission guidance renders each stage without Chinese fallback or
  }finally{setTranslator(null);}
 });
 
-test('investigation keeps inspection physical, opens evidence notes, and can be put away',()=>{
+test('investigation keeps inspection physical, opens evidence notes, and can be put away',async()=>{
  const distant=render('done',{nearby:false,mystery:mysteryAt()});
  assert.ok(distant.find('带我去调查地点'));assert.equal(distant.find('查看泥里的草屑'),undefined);
  distant.find('带我去调查地点').click();distant.find('先收好调查袋').click();
  assert.deepEqual(distant.calls,['go',{step:'mystery-pause'}]);
  const ui=render('done',{mystery:mysteryAt(['grass'])});
  assert.ok(ui.find('调查袋 · 1/4 件物证'));assert.ok(ui.find('已记录 · 查看泥里的草屑'));
- ui.find('翻看湿补给单').click();ui.find('看看干帽子').click();
+ await ui.find('翻看湿补给单').click();await ui.find('看看干帽子').click();
  assert.deepEqual(ui.calls,[{step:'mystery-inspect',object:'paper'},{step:'mystery-inspect',object:'hat'}]);
 });
 
@@ -148,14 +185,48 @@ test('ordering cards gives local feedback without losing the chosen agreement, t
  const ui=render('done',{mystery:mysteryAt(['grass','paper','tracks','lamp'],true)});
  const submit=ui.find('把经过讲给茜茜听');assert.equal(submit.disabled,true);
  ui.find('移动补给后，留下位置便签').click();assert.equal(submit.disabled,false);
- submit.click();assert.deepEqual(ui.calls,[]);assert.ok(ui.all.some(n=>n.textContent.includes('把这两步挪到前面')));
+ submit.click();assert.deepEqual(ui.calls,[]);assert.ok(ui.all.some(n=>n.textContent.includes('看看这两张卡的先后')));
  const list=ui.all.find(n=>n.className==='forest-mystery-order');
  const front=index=>list.children[index].children.find(n=>n?.className==='forest-mystery-move').children[0];
+ assert.equal(list.children.filter(n=>n.className==='forest-mystery-conflict').length,2);
  front(1).click();front(2).click();
+ assert.equal(list.children.filter(n=>n.className==='forest-mystery-conflict').length,0);
  assert.match(ui.document.activeElement.attributes['aria-label'],/往前移|往后移/);
  submit.click();submit.click();assert.equal(ui.calls.length,1,'double click while a commit is pending is ignored');
  assert.deepEqual(ui.calls[0],{step:'mystery-solve',order:['dim','find','return'],ending:'sign'});
  await Promise.resolve();await Promise.resolve();
+});
+
+test('optional evidence reasoning accepts retries and never arranges cards, grants progress or selects an ending',()=>{
+ const ui=render('done',{mystery:mysteryAt(['grass','paper','tracks','lamp'],true)}),before=JSON.stringify(ui.save);
+ const panel=ui.all.find(n=>n.className==='forest-help forest-mystery-reasoning');
+ const options=panel.children.find(n=>n?.className==='forest-mystery-questions'),reply=panel.children.find(n=>n?.className==='forest-mystery-reply'),next=panel.children.at(-1);
+ const order=ui.all.find(n=>n.className==='forest-mystery-order');
+ assert.equal(next.hidden,true);next.click();assert.equal(next.hidden,true);
+ for(const puzzle of forestMystery.FOREST_MYSTERY_REASONING){
+  assert.equal(options.children.length,4);
+  for(const id of ['grass','paper','tracks','lamp'].filter(id=>id!==puzzle.answer)){
+   options.children.find(n=>n.textContent===forestMystery.FOREST_MYSTERY_OBSERVATIONS[id].name).click();
+   assert.equal(reply.textContent,puzzle.retry);assert.equal(next.hidden,true);
+  }
+  options.children.find(n=>n.textContent===forestMystery.FOREST_MYSTERY_OBSERVATIONS[puzzle.answer].name).click();
+  assert.equal(reply.textContent,puzzle.reply);assert.equal(next.hidden,false);assert.ok(options.children.every(n=>n.disabled));
+  assert.equal(ui.document.activeElement,next,'correct reasoning hands keyboard focus to the enabled next step');
+  options.children[0].click();assert.equal(reply.textContent,puzzle.reply);
+  next.click();assert.ok(ui.document.activeElement);
+ }
+ assert.equal(options.children.length,0);assert.equal(next.hidden,true);
+ assert.deepEqual(order.children.map(n=>n.dataset.event),['return','dim','find']);
+ assert.equal(ui.find('把经过讲给茜茜听').disabled,true);assert.deepEqual(ui.calls,[]);assert.equal(JSON.stringify(ui.save),before);
+ assert.equal(render('done',{nearby:false,mystery:mysteryAt(['grass','paper','tracks','lamp'],true)}).all.some(n=>n.className==='forest-help forest-mystery-reasoning'),false);
+});
+
+test('evidence reasoning and ordering feedback are translated in all three interface dictionaries',()=>{
+ for(const language of ['en','ja','ko']){
+  const dictionary=parseLocaleFile(fs.readFileSync(new URL(`../data/adventure/locale/${language}.txt`,import.meta.url),'utf8'));
+  const keys=[...forestMystery.FOREST_MYSTERY_REASONING.flatMap(row=>[row.question,row.reply,row.retry]),...[['find','dim','return'],['return','dim','find']].map(order=>forestMystery.forestMysteryOrderFeedback(order).message),'和茜茜核对物证（可选）','再核对一个猜想','回到经过卡','两条猜想都核对过了。现在用物证和证词检查经过卡。'];
+  for(const key of keys){const translated=lookup(key,language,{[language]:dictionary});assert.notEqual(translated,key,language+': '+key);assert.doesNotMatch(translated,/\{[^}]+\}/);}
+ }
 });
 
 test('failed reconstruction persistence allows retry without discarding the event order',async()=>{
@@ -400,4 +471,170 @@ test('the saved proposal is visible and remembered by world NPCs',()=>{
  ui.find('先守住灯，一起前进。').click();assert.deepEqual(ui.calls,[{step:'plan',plan:'light'}]);
  ui.save.forestCommission.phase='patrol';ui.save.forestCommission.clearBaseline=0;
  assert.match(forest.forestCommissionScene(ui.save).npcs[forest.FOREST_NPCS.receiver],/脚印/);
+});
+
+test('patrol and completed panels keep one next action with practice still reachable',()=>{
+ for(const [phase,level,label] of [['patrol',4,'跟随主线提升等级'],['patrol',5,'出发巡逻'],['done',5,'升到6级'],['done',6,'挑战走失的火种']]){
+  const ui=render(phase,{level}),footer=ui.modal.children.at(-1);
+  assert.deepEqual(footer.children.map(n=>n.textContent),[label]);
+  assert.equal(footer.children[0].className,'primary');
+  const extra=ui.all.find(n=>n.className==='forest-extra-actions');
+  assert.equal(extra.tag,'details');assert.equal(Boolean(extra.open),false);
+  assert.ok(extra.querySelectorAll('button').length>=2);
+  ui.find(phase==='patrol'?'整理装备':'查看装备').click();assert.deepEqual(ui.calls,['equipment']);
+  assert.equal(ui.document.activeElement.textContent,label);
+ }
+});
+
+for(const kind of ['investigation','promise'])test(`${kind} invitation waits for saving, reports failure and retries`,async()=>{
+ const mystery=kind==='promise'?{version:1,status:'solved',route:'tracks',observed:['grass','paper','tracks','lamp'],witness:true,ending:'sign'}:undefined;
+ let settle,attempts=0;
+ const ui=render('done',{level:6,mystery,action:()=>{attempts++;return new Promise(resolve=>{settle=resolve;});}});
+ const node=ui.find(kind==='promise'?'和茜茜试一次新约定':'一起查草屑和脚印');
+ node.click();node.click();assert.equal(attempts,1);assert.equal(node.disabled,true);
+ settle(false);await tick();assert.equal(node.disabled,undefined);assert.ok(ui.find('这一步没有保存，可以重试。'));
+ node.click();assert.equal(attempts,2);settle({message:'正在确认约定'});await tick();assert.ok(ui.find('正在确认约定'));
+ assert.equal(ui.save.forestCommission.mystery?.promise,undefined);
+});
+
+test('language delivery has one primary action and keeps direct object delivery in a closed section',()=>{
+ const ui=render('delivery'),direct=ui.all.find(n=>n.className==='forest-direct-handover');
+ assert.equal(direct.tag,'details');assert.ok(!direct.open);
+ assert.equal(direct.children[0].textContent,'直接递交物品');
+ assert.ok(direct.querySelectorAll('button').some(n=>n.className==='forest-carried-object'));
+ assert.deepEqual(ui.all.filter(n=>n.className==='primary').map(n=>n.textContent),['说好了，交给她']);
+ const legacy=render('delivery',{target:null});
+ assert.ok(!legacy.all.some(n=>n.className==='forest-direct-handover'));
+ assert.deepEqual(legacy.all.filter(n=>n.className==='primary').map(n=>n.textContent),['交付靴子']);
+});
+
+const commitCases=[
+ ['accept','offer',ui=>ui.find('接下补给单'),()=>{}],
+ ['take-boots','boots',ui=>ui.find('装进袋子'),ui=>ui.object('一双靴子').click()],
+ ['deliver','delivery',ui=>ui.find('交付靴子'),()=>{}],
+ ['label','delivery',ui=>ui.find('写到标签上'),ui=>{ui.all.find(n=>n.tag==='input'&&n.maxLength===24).value='boots';}],
+ ['take-note','note',ui=>ui.object('拾取巡逻路线便签'),ui=>ui.object('挪开石头').click()],
+ ['plan','briefing',ui=>ui.find('先守住灯，一起前进。'),()=>{}],
+ ['brief','briefing',ui=>ui.all.filter(n=>n.className==='forest-tactic-choice')[1],ui=>ui.object('靴子').click()],
+ ['report','report',ui=>ui.find('领取披风'),()=>{}],
+];
+for(const [step,phase,submit,prepare] of commitCases)for(const failure of ['false','throw','reject'])test(`${step}: pending save blocks competing scene actions; ${failure} preserves the choice for retry`,async()=>{
+ let settle,attempts=0;const seen=[];
+ const ui=render(phase,{action:value=>{
+  attempts++;seen.push(JSON.parse(JSON.stringify(value)));
+  assert.equal(value.step,step);
+  if(attempts===1)return new Promise(resolve=>{settle=resolve;});
+  if(failure==='throw')throw Error('storage');
+  if(failure==='reject')return Promise.reject(Error('storage'));
+  return false;
+ }});
+ prepare(ui);const before=structuredClone(ui.save),node=submit(ui),wasDisabled=node.disabled;
+ node.click();node.click();assert.equal(attempts,1);assert.equal(ui.modal.attributes['aria-busy'],'true');
+ assert.equal(node.disabled,true);
+ if(phase==='delivery'){
+  const field=exchangeField(ui);field.value='Here are the boots.';ui.find('说好了，交给她').click();
+  ui.all.find(n=>n.className==='forest-carried-object').click();assert.equal(attempts,1);
+ }
+ if(phase==='boots'){ui.object('一顶帽子').click();assert.equal(ui.object('一双靴子').attributes['aria-pressed'],'true');}
+ settle(false);await tick();
+ assert.equal(node.disabled,wasDisabled);assert.equal(ui.modal.attributes['aria-busy'],'false');
+ assert.ok(ui.find('这一步没有保存，可以重试。'));assert.deepEqual(ui.save,before);
+ await node.click();assert.equal(attempts,2);assert.equal(node.disabled,wasDisabled);
+ assert.deepEqual({...seen[1],learning:undefined},{...seen[0],learning:undefined});
+});
+
+test('recording cannot race a direct handover; cancelling allows the same scene action',()=>{
+ let callbacks;
+ const ui=render('delivery',{recorder:c=>{callbacks=c;return {start(){c.onState('recording');},cancel(){c.onState('idle');},dispose(){}};}});
+ ui.find('用麦克风说').click();ui.find('交付靴子').click();
+ assert.deepEqual(ui.calls,[]);assert.ok(ui.find('先结束或取消录音，再继续交付。'));
+ callbacks.onState('idle');ui.find('交付靴子').click();assert.deepEqual(ui.calls,[{step:'deliver'}]);
+});
+
+test('a pending phrase save also blocks the physical handover, labels and microphone without losing typed text',async()=>{
+ let settle,starts=0;
+ const ui=render('delivery',{action:value=>{ui.calls.push(value);return new Promise(resolve=>{settle=resolve;});},recorder:c=>({start(){starts++;c.onState('recording');},cancel(){},dispose(){}})});
+ const field=exchangeField(ui);field.value='Here are the boots.';
+ ui.find('说好了，交给她').click();ui.find('交付靴子').click();
+ ui.all.find(n=>n.tag==='input'&&n.maxLength===24).value='boots';ui.find('写到标签上').click();ui.find('用麦克风说').click();
+ assert.equal(ui.calls.length,1);assert.equal(starts,0);
+ settle(false);await tick();assert.equal(field.value,'Here are the boots.');assert.ok(ui.find('这次交付没有保存，请稍后重试。'));
+ ui.find('说好了，交给她').click();assert.equal(ui.calls.length,2);assert.equal(ui.calls[1].learning.attempts,2);
+ settle(false);await tick();
+});
+
+const activePromise=ending=>({version:1,status:'solved',route:'tracks',observed:['grass','paper','tracks','lamp'],witness:true,ending,promise:{version:1,status:'active',stage:ending==='sign'?'mark':'invite'}});
+test('promise dialogue starts at a usable choice without answering or navigating',()=>{
+ for(const [ending,label] of [['sign','写：备用灯芯已经收好了'],['pair','去问茜茜，听她自己回应']]){
+  const mystery=activePromise(ending),before=structuredClone(mystery),ui=render('done',{mystery});
+  assert.equal(ui.document.activeElement,ui.find(label));
+  assert.deepEqual(ui.calls,[]);assert.deepEqual(ui.save.forestCommission.mystery,before);
+  const distant=render('done',{nearby:false,mystery});
+  assert.equal(distant.document.activeElement,distant.find('带我去落实约定'));assert.deepEqual(distant.calls,[]);
+  mystery.promise.stage='confirm';const confirmed=render('done',{mystery});
+  assert.equal(confirmed.document.activeElement,confirmed.find(ending==='sign'?'请莫尼读回便签的位置':'等茜茜回应，再确认出发'));
+  assert.deepEqual(confirmed.calls,[]);
+ }
+});
+for(const [kind,mystery,label] of [
+ ['investigation',mysteryAt(),'查看泥里的草屑'],
+ ['promise-sign',activePromise('sign'),'写：备用灯芯在补给帐篷里'],
+ ['promise-pair',activePromise('pair'),'去问茜茜，听她自己回应'],
+])test(`${kind} shares the window save lock and ignores disposed controls`,async()=>{
+ let settle,attempts=0;const ui=render('done',{mystery,action:()=>{attempts++;return new Promise(resolve=>{settle=resolve;});}});
+ const submit=ui.find(label),close=ui.all.find(n=>n.className==='close-button');
+ submit.click();close.click();submit.click();assert.equal(attempts,1);assert.deepEqual(ui.calls,[]);assert.equal(ui.modal.attributes['aria-busy'],'true');
+ let prevented=0,stopped=0;ui.modal.events.keydown({key:'Escape',preventDefault(){prevented++;},stopPropagation(){stopped++;}});
+ assert.equal(prevented,1);assert.equal(stopped,1);assert.deepEqual(ui.calls,[]);assert.equal(ui.modal.attributes['aria-busy'],'true');
+ settle(false);await tick();assert.equal(ui.modal.attributes['aria-busy'],'false');assert.ok(!submit.disabled);
+ submit.click();assert.equal(attempts,2);ui.root.disposeForestCommission();
+ const before=ui.all.map(n=>n.textContent);settle({message:'late result must be ignored'});await tick();
+ assert.deepEqual(ui.all.map(n=>n.textContent),before);submit.click();close.click();assert.equal(attempts,2);assert.deepEqual(ui.calls,[]);
+ const distant=render('done',{nearby:false,mystery});distant.root.disposeForestCommission();
+ distant.find(kind==='investigation'?'带我去调查地点':'带我去落实约定').click();assert.deepEqual(distant.calls,[]);
+});
+
+test('closing an idle investigation disposes questions and local reasoning choices',()=>{
+ const ui=render('done',{mystery:mysteryAt(['grass','paper','tracks','lamp'],true)});
+ const choice=ui.all.find(n=>n.attributes['aria-pressed']==='false'&&n.textContent===forestMystery.FOREST_MYSTERY_OBSERVATIONS.paper.name);
+ assert.ok(choice);const before=ui.all.map(n=>n.textContent);
+ ui.all.find(n=>n.className==='close-button').click();choice.click();
+ ui.find('移动补给后，留下位置便签').click();ui.find('先收好调查袋').click();
+ assert.deepEqual(ui.calls,['close']);assert.deepEqual(ui.all.map(n=>n.textContent),before);
+});
+
+test('Escape closes and disposes an idle commission exactly once',()=>{
+ let disposed=0;const ui=render('delivery',{recorder:()=>({dispose(){disposed++;}})});
+ const escape=()=>ui.modal.events.keydown({key:'Escape',preventDefault(){},stopPropagation(){}});
+ escape();escape();ui.all.find(n=>n.className==='close-button').click();ui.find('听线索').click();
+ assert.deepEqual(ui.calls,['close']);assert.equal(disposed,1);
+});
+
+for(const phase of ['offer','boots','delivery','note','briefing','patrol','report','done'])test(`${phase} ignores all retained button callbacks after disposal`,()=>{
+ const ui=render(phase,{level:6});ui.root.disposeForestCommission();
+ for(const control of ui.all)if(typeof control.click==='function')control.click();
+ assert.deepEqual(ui.calls,[]);
+});
+
+test('a pending label save blocks listening and equipment navigation, then restores both on failure',async()=>{
+ let settle;const ui=render('note',{action:()=>new Promise(resolve=>{settle=resolve;})});
+ ui.object('挪开石头').click();ui.object('拾取巡逻路线便签').click();
+ ui.find('听线索').click();ui.find('穿上新靴子').click();assert.deepEqual(ui.calls,[]);
+ settle(false);await tick();ui.find('听线索').click();ui.find('穿上新靴子').click();
+ assert.equal(ui.calls.length,2);assert.ok(ui.calls[0].listen);assert.equal(ui.calls[1],'equipment');
+});
+
+test('late saves and stale scene controls cannot act after the commission panel is disposed',async()=>{
+ let settle,attempts=0;const ui=render('note',{action:()=>{attempts++;return new Promise(resolve=>{settle=resolve;});}});
+ ui.object('挪开石头').click();ui.object('拾取巡逻路线便签').click();
+ ui.root.disposeForestCommission();settle(false);await tick();ui.object('拾取巡逻路线便签').click();assert.equal(attempts,1);
+ assert.ok(!ui.find('这一步没有保存，可以重试。'));
+});
+
+test('a paused camp visit stays resumable alongside the next adventure',()=>{
+ const mystery={version:1,status:'solved',route:'tracks',observed:['grass','paper','tracks','lamp'],witness:true,ending:'pair',promise:{version:1,status:'paused',stage:'confirm'}};
+ const ui=render('done',{level:6,mystery});
+ ui.find('继续这次营地回访').click();assert.deepEqual(ui.calls,[{step:'promise-start'}]);
+ ui.find('挑战走失的火种').click();assert.deepEqual(ui.calls,[{step:'promise-start'},'nextChallenge']);
+ assert.equal(ui.save.forestCommission.mystery.promise.stage,'confirm');
 });

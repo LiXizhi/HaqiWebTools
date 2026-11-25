@@ -659,6 +659,9 @@
 .forest-ui .result-card>button:is(.primary,.secondary){display:block;width:min(340px,100%);min-height:60px;box-sizing:border-box;margin:22px auto 0;padding:16px 38px;font-size:var(--gui-text-size);line-height:1.5;white-space:normal;overflow-wrap:anywhere;}
 .forest-ui .result-card>button:is(.primary,.secondary)::before{border-image-width:14px 34px;}
 .forest-ui .result-card>details{text-align:left;margin-top:12px;line-height:1.6;}
+.forest-ui .battle-watch-retry>summary{min-height:48px;box-sizing:border-box;padding:12px 4px;cursor:pointer;overflow-wrap:anywhere;}
+.forest-ui .battle-watch-retry>summary:focus-visible{outline:3px solid #547951;outline-offset:3px;border-radius:6px;}
+.forest-ui .result-card .battle-watch-retry p{font-size:var(--gui-text-size);padding:8px 12px;margin:8px 0;}
 .forest-ui .reward-popup{width:400px;max-width:calc(100vw - 24px);padding:28px 30px;gap:12px;box-shadow:0 10px 32px #19372b55;}
 .forest-ui .reward-popup::after{display:none;}
 .forest-ui .reward-popup>button:is(.primary,.secondary){min-width:0;width:100%;min-height:56px;padding:14px 28px;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;font-size:15px;line-height:1.5;}
@@ -700,8 +703,15 @@
 .storybook-ui .quest-tracker:has(.opening-tracker-actions)>p { margin-right:0; }
 
 /* Dungeon navigation and exit need separate, non-overlapping touch targets. */
-.storybook-ui .dungeon-tracker-actions { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
-.storybook-ui .dungeon-tracker-actions .track-button { position:static; flex:1 1 auto; min-height:44px; margin:0; font-size:12px; }
+.storybook-ui .dungeon-tracker-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+.storybook-ui .dungeon-tracker-actions .track-button { position:static; flex:1 1 150px; min-height:48px; margin:0; font-size:12px; white-space:normal; overflow-wrap:anywhere; }
+.storybook-ui .dungeon-tracker-actions .track-button:first-child { flex-basis:100%; }
+.storybook-ui .dungeon-watch-journal { margin-top:10px; border-top:1px solid #c9b886; min-width:0; }
+.storybook-ui .dungeon-watch-journal summary { display:flex; align-items:center; min-height:48px; padding:6px 2px; cursor:pointer; color:#355c47; font-weight:700; overflow-wrap:anywhere; }
+.storybook-ui .dungeon-watch-journal summary:focus-visible { outline:2px solid #32624b; outline-offset:2px; }
+.storybook-ui .dungeon-watch-journal p { margin:8px 0; line-height:1.65; overflow-wrap:anywhere; }
+.storybook-ui .dungeon-watch-reply { margin:10px 0 0; padding-left:10px; border-left:3px solid #b4924f; font-size:13px; line-height:1.65; overflow-wrap:anywhere; }
+.storybook-ui .dungeon-watch-tip { padding:8px; background:#eee9d5; border-radius:8px; }
 .storybook-ui .quest-tracker:has(.dungeon-tracker-actions)>p { margin-right:0; }
 
 @media (max-width:420px) and (max-height:740px) {

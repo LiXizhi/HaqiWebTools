@@ -41,6 +41,7 @@ import { earthTimeMilestoneSummary } from '../../earth_time_rewards_core.js';
 import { TRILOGY_ISLAND_IDS, TRILOGY_ISLANDS, trilogyDailyRemaining } from '../../trilogy_curios_core.js';
 import { wordLanguage } from '../../word_lexicon_core.js';
 import { activeTowerBlessingRows, towerBlessingPendingOffer } from '../../tower_blessings_core.js';
+import { dungeonWatchStory } from '../../dungeon_watch_story_core.js';
 
 export function computeHeroHealth(save, content) {
     const maxHp = specMaxHp(playerSpec(save, content));
@@ -139,11 +140,13 @@ export function buildHudTrackerViewModel(model) {
     } else if (dungeon) {
         mode = 'dungeon';
         const clearedList = dungeonProgress(save)?.[save.zone]?.cleared || [];
-        const cleared = clearedList.length;
-        const remaining = dungeon.arenas.filter(a => !a.blocked.length && !clearedList.includes(a.id)).length;
+        const clearedIds = new Set(clearedList);
+        const cleared = dungeon.arenas.filter(a => clearedIds.has(a.id)).length;
+        const nextIndex = dungeon.arenas.findIndex(a => !a.blocked?.length && !clearedIds.has(a.id));
+        const remaining = dungeon.arenas.filter(a => !a.blocked?.length && !clearedIds.has(a.id)).length;
         const towerBlessings = dungeon.kind === 'tower' ? activeTowerBlessingRows(save, dungeon.id) : [];
         const towerBlessingPending = dungeon.kind === 'tower' ? towerBlessingPendingOffer(save, dungeon.id) : null;
-        payload = { dungeon, cleared, remaining, towerBlessings, towerBlessingPending };
+        payload = { dungeon, cleared, remaining, nextIndex, towerBlessings, towerBlessingPending, watchStory:dungeonWatchStory(save,dungeon,clearedList) };
     } else {
         const ids = trackedQuestIds(save, c).filter(
             id => c.quests.some(quest => quest.id === id) || c.catalogQuests?.byId[id],

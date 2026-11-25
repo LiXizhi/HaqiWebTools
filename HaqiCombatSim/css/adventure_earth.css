@@ -41,3 +41,12 @@
 .earth-saved-row{display:flex;gap:4px;max-width:100%}
 .earth-saved-row button{min-width:0;overflow-wrap:anywhere}
 .earth-map-tools span{align-self:center;font-size:13px}
+.earth-place-directory{margin:14px 0;padding:0 14px 14px;border:1px solid #c9ad74;border-radius:12px;background:#fff8e8;color:#263e32}
+.earth-place-directory>summary{min-height:48px;display:list-item;align-content:center;cursor:pointer;font-weight:700;line-height:1.6;padding:10px 0}
+.earth-place-directory label{display:grid;gap:8px;font-weight:600;line-height:1.6}
+.earth-place-directory .earth-place-search{box-sizing:border-box;width:100%;min-width:0;min-height:48px;padding:10px 12px;border:1px solid #b99e69;border-radius:8px;background:#fffdf6;color:inherit;font:inherit}
+.earth-place-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:10px}
+.earth-place-results .earth-place-choice{min-width:0;min-height:48px;padding:10px 12px;white-space:normal;overflow-wrap:anywhere;text-align:left;line-height:1.5}
+.earth-place-choice[aria-pressed=true]{outline:2px solid #437353;outline-offset:1px;background:#e9f0d9}
+.earth-place-pages{display:flex;justify-content:space-between;gap:12px;margin-top:14px}.earth-place-pages[hidden]{display:none}.earth-place-pages button{min-height:48px;padding:10px 18px}
+.earth-place-directory :is(summary,input,button):focus-visible{outline:3px solid #437353;outline-offset:3px}

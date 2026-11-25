@@ -1,11 +1,12 @@
 // adventure/presenters/battle_view_model.js — 战斗界面视图模型派生（汇总目标校验、捕捉概率与结算摘要）。
-import { castBlockedMessage } from '../../adventure_cast_feedback_core.js';
+import { castBlockedFeedback } from '../../adventure_cast_feedback_core.js';
 import { dungeonProgress } from '../../adventure_coop_core.js';
 import { dungeonFor } from '../../adventure_dungeons_core.js';
+import { dungeonWatchRetryStory } from '../../dungeon_watch_story_core.js';
 import { ownedPetRecords } from '../../adventure_pet_files_core.js';
 import { petTraitImprovements, mergePetTraits } from '../../adventure_pet_traits_core.js';
 import { catchProbability } from '../../adventure_runes_core.js';
-import { readStamina, encounterStaminaCost } from '../../adventure_stamina_core.js';
+import { previewCombatStamina, encounterStaminaCost } from '../../adventure_stamina_core.js';
 import { tacticsReportLines, TACTICS_MILESTONES } from '../../battle_tactics_journal_core.js';
 import { validTargets } from '../../combat_arena_core.js';
 import { cardTargetKind } from '../../combat_cards_core.js';
@@ -14,6 +15,7 @@ import { dungeonChallengePreview } from '../../dungeon_challenge_core.js';
 import { dungeonFirstReward } from '../../dungeon_first_rewards_core.js';
 import { dungeonEnemyIntentInfo, towerFloorNumber } from '../../dungeon_tactics_core.js';
 import { openingEnemyIntentInfo } from '../../opening_training_core.js';
+import { openingResultGuidance } from '../../opening_result_guidance_core.js';
 import { examinerEnemyIntentInfo } from '../../examiner_intent_core.js';
 import { tacticsFieldCue } from '../../tactics_field_battle_core.js';
 import { rollMonsterDrops } from '../../monster_loot_core.js';
@@ -23,7 +25,17 @@ import { campfireBuffDetail } from '../../campfire_cooking_core.js';
 import { PET_SYNERGY_DEFS } from '../../pet_synergy_core.js';
 
 export function buildBattleHandViewModel({ battle, hero, selected, discarded, assets }) {
-    const blockedMessage = selected ? castBlockedMessage(hero, battle.resolved.cards[selected.key], battle.resolved) : '';
+    const cardBlockedFeedback = card => {
+        const blocked = castBlockedFeedback(hero, card, battle.resolved);
+        if (blocked) return blocked;
+        if (!validTargets(battle, hero, card).length) {
+            const key = '这张牌没有可选目标。请重新选择一张牌。';
+            return { key, vars: {}, message: key };
+        }
+        return null;
+    };
+    const blockedFeedback = selected ? cardBlockedFeedback(battle.resolved.cards[selected.key]) : null;
+    const blockedMessage = blockedFeedback?.message || '';
     const legalTargets = selected ? validTargets(battle, hero, battle.resolved.cards[selected.key]) : [];
     const kind = selected && cardTargetKind(battle.resolved.cards[selected.key]);
     const canPlay = selected && !discarded.includes(selected.seq) && U.isAlive(hero) && !blockedMessage;
@@ -32,6 +44,8 @@ export function buildBattleHandViewModel({ battle, hero, selected, discarded, as
     const intent = battle.tacticalEncounter ? null : tacticsFieldCue(battle) || openingEnemyIntentInfo(battle) || dungeonEnemyIntentInfo(battle) || examinerEnemyIntentInfo(battle);
     return {
         blockedMessage,
+        blockedFeedback,
+        cardBlockedFeedback,
         legalTargets,
         kind,
         canPlay,
@@ -41,25 +55,26 @@ export function buildBattleHandViewModel({ battle, hero, selected, discarded, as
         intent,
         petHand: U.petCardsInHand(hero),
         playerHand: (U.cardsInHand(hero) || []).filter(h => !discarded.includes(h.seq)),
-        isCardAvailable: card => U.isAlive(hero) && U.canCast(hero, card, battle.resolved),
+        isCardAvailable: card => !cardBlockedFeedback(card),
         catchChanceText: unit =>
             catchCard && legalTargets.includes(unit) ? (catchProbability(battle, catchCard, unit) * 100).toFixed(1) : '',
     };
 }
 
-export function buildBattleResultViewModel({ save, battle, assets }) {
+export function buildBattleResultViewModel({ save, battle, assets, now = Date.now() }) {
     const won = battle.winner === 'near';
     const activeCampfireBuff = campfireBuffDetail(battle.campfireBuff || save.pendingEncounter?.campfireBuff);
     const xpMult = ((save.pendingEncounter?.magicStarExperiencePercent ?? 100) + (activeCampfireBuff?.xpBonusPct || 0)) / 100;
-    const xp = won
+    const rewardExhausted = won && !battle.redMushroom && !battle.tacticsField &&
+        previewCombatStamina(save, assets.content, encounterStaminaCost(assets.content, save.pendingEncounter?.encounterId), now).insufficient;
+    const xp = won && !rewardExhausted
         ? battle.monsterTemplates.reduce(
               (sum, m) => sum + Math.ceil(m.xp * xpMult),
               0,
           )
         : 0;
-    const coins = won ? battle.monsterTemplates.reduce((sum, m) => sum + m.coins, 0) : 0;
-    const staminaBlocked = encounterStaminaCost(assets.content, save.pendingEncounter?.encounterId) > 0 && readStamina(save, assets.content) <= 0;
-    const droppedItems = won && !battle.redMushroom && !battle.tacticsField && !staminaBlocked
+    const coins = won && !rewardExhausted ? battle.monsterTemplates.reduce((sum, m) => sum + m.coins, 0) : 0;
+    const droppedItems = won && !battle.redMushroom && !battle.tacticsField && !rewardExhausted
         ? rollMonsterDrops(save, assets.content, save.pendingEncounter, battle.monsterTemplates)
         : [];
 
@@ -76,8 +91,7 @@ export function buildBattleResultViewModel({ save, battle, assets }) {
             dungeonChallengePreview(save, activeDungeon, dungeonProgress(save)?.[save.zone], save.pendingEncounter, battle);
         if (challenge?.complete && !save.dungeonChallengeRecords?.[save.zone]?.firstRewarded) {
             firstReward = dungeonFirstReward(assets.content, save.zone, save.school);
-            firstRewardExhausted =
-                encounterStaminaCost(assets.content, save.pendingEncounter?.encounterId) > 0 && readStamina(save, assets.content) <= 0;
+            firstRewardExhausted = rewardExhausted;
         }
         const report = save.pendingEncounter?.tactics;
         tacticsReport = tacticsReportLines(report);
@@ -134,11 +148,14 @@ export function buildBattleResultViewModel({ save, battle, assets }) {
         activeHanziSeal,
         activeCampfireBuff,
         activePetSynergies,
+        rewardExhausted,
         challenge,
         firstReward,
         firstRewardExhausted,
         tacticsReport,
         firstMilestones,
         captures,
+        openingGuidance: openingResultGuidance(save, battle),
+        retryStory: dungeonWatchRetryStory(save, dungeonFor(assets.content, save.zone), battle),
     };
 }

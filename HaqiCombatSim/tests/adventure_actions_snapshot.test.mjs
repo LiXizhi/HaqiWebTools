@@ -317,7 +317,8 @@ const GOLDEN = {
     'forest-commission': '2fc154831722883d',
     'language-complete': '1e875c7cfb96bdd7',
     'npc-purchase': 'f03f41a4e06672fe',
-    fish: '21489e43335db363',
+    // A dated catch also initializes the daily bounty ledger; catch rewards are unchanged.
+    fish: 'f1ab201790778b61',
     'stamina-potion': '40a02e0f9dc236a6',
     'magic-star-claim': '18def34c85d07b00',
     'choose-totem': '10074ac4a90fb2b6',

@@ -9,7 +9,7 @@ const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve
 function setup(language='en'){
  let save={zone:'camp',languageLearning:{target:language},openingJourney:{phase:'done'}},active=true,cb,frame,commits=0,drains=0,done=0,closed=0,cancelled=0,failSave=false;
  const start=deferred(),finish=deferred(),speak=deferred();
- const spoken=[];const voice={start:()=>start.promise,finish:()=>finish.promise,speak:(text,locale)=>{spoken.push({text,locale});return speak.promise;},cancel:()=>{cancelled++;}};
+ const spoken=[];const voice={start:()=>start.promise,finish:()=>finish.promise,speak:(text,locale,signal,_character,options)=>{spoken.push({text,locale,signal,options});return speak.promise;},cancel:()=>{cancelled++;}};
  const context=vm.createContext({learningLanguage,wordplayGoal,wordplayAnswer,wordplayReaction,AbortController,crypto,Date});vm.runInContext(source,context);
  const session=context.openCompanionWordplay({root:{},getState:()=>({save,active}),voice,
  viewFactory:(_root,callbacks)=>{cb=callbacks;return {render:m=>frame=m,dispose(){}};},
@@ -50,7 +50,7 @@ test('other valid commands animate without advancing or claiming practice',()=>{
 });
 
 test('Japanese practice demo and accepted answers use the selected language',async()=>{
- const t=setup('ja'),demo=t.cb.listen();assert.deepEqual(t.spoken,[{text:'こんにちは！',locale:'ja'}]);t.speak.resolve();await demo;
+ const t=setup('ja'),demo=t.cb.listen();assert.deepEqual(t.spoken.map(({text,locale})=>({text,locale})),[{text:'こんにちは！',locale:'ja'}]);t.speak.resolve();await demo;
  t.cb.submit('Hello!');assert.equal(t.commits,0);t.cb.submit('こんにちは！');assert.equal(t.commits,1);
 });
 test('recognition timeout returns to ready and permits a typed answer without another recording',async()=>{
@@ -59,4 +59,59 @@ test('recognition timeout returns to ready and permits a typed answer without an
  t.finish.reject(Error('语音服务超时，请重试'));await finishing;
  assert.equal(t.frame.phase,'ready');assert.match(t.frame.message,/超时/);assert.equal(t.commits,0);
  t.cb.submit('こんにちは！');assert.equal(t.commits,1);
+});
+
+test('speech correction retains the recognized words but never counts a rejected answer',async()=>{
+ const t=setup(),starting=t.cb.startRecording();t.start.resolve();await starting;
+ const finishing=t.cb.finishRecording();t.finish.resolve('goodbye');await finishing;
+ assert.equal(t.frame.inputMode,'speech');assert.equal(t.frame.transcript,'goodbye');
+ assert.equal(t.frame.phase,'ready');assert.equal(t.commits,0);assert.equal(t.drains,0);
+ t.cb.submit('hello');assert.equal(t.frame.inputMode,'text');assert.equal(t.commits,1);
+ t.cb.next();assert.equal(t.frame.transcript,'');assert.equal(t.frame.inputMode,null);
+});
+
+
+test('a recognized command for another round explains the remaining task and recovery clears that feedback',async()=>{
+ const t=setup();t.cb.submit('Jump!');
+ assert.deepEqual(Array.from(t.frame.messageParts),['它跳起来了！','跟抱抱龙打个招呼。']);
+ assert.equal(t.commits,0);assert.equal(t.drains,0);
+ const pending=t.cb.startRecording();assert.equal(t.frame.messageParts,null);
+ t.start.reject(Error('microphone unavailable'));await pending;
+ assert.equal(t.frame.messageParts,null);assert.match(t.frame.message,/microphone/);
+ t.cb.submit('hello');t.cb.next();t.cb.submit('hello');
+ assert.deepEqual(Array.from(t.frame.messageParts),['它也向你打招呼啦！','让抱抱龙跳一下。']);
+ assert.equal(t.commits,1);t.cb.submit('Jump!');assert.equal(t.frame.messageParts,null);
+});
+
+test('demo waits for actual playback, blocks duplicate requests and clears its own status',async()=>{
+ const t=setup(),pending=t.cb.listen();assert.equal(t.frame.demoState,'preparing');t.cb.listen();assert.equal(t.spoken.length,1);
+ t.spoken[0].options.onPlaying();assert.equal(t.frame.demoState,'playing');assert.equal(t.commits,0);assert.equal(t.drains,0);
+ t.speak.resolve();await pending;assert.equal(t.frame.demoState,'');assert.equal(t.frame.phase,'ready');
+});
+
+test('starting the microphone stops the demo before recording and ignores its late callbacks',async()=>{
+ const t=setup(),demo=t.cb.listen(),spoken=t.spoken[0],starting=t.cb.startRecording();
+ assert.equal(spoken.signal.aborted,true);assert.equal(t.frame.demoState,'');assert.equal(t.frame.phase,'connecting');
+ spoken.options.onPlaying();assert.equal(t.frame.phase,'connecting');assert.equal(t.frame.demoState,'');
+ t.speak.reject(Error('stopped demo'));await demo;t.start.resolve();await starting;assert.equal(t.frame.phase,'recording');assert.equal(t.frame.message,'');
+ t.cb.cancelRecording();
+});
+
+test('typed answers stop demo playback and stale playback never overwrites the next round',async()=>{
+ const t=setup(),demo=t.cb.listen(),spoken=t.spoken[0];t.cb.submit('hello');assert.equal(spoken.signal.aborted,true);assert.equal(t.frame.phase,'success');
+ t.cb.next();assert.equal(t.frame.step,1);spoken.options.onPlaying();t.speak.resolve();await demo;
+ assert.equal(t.frame.step,1);assert.equal(t.frame.demoState,'');assert.equal(t.frame.message,'');assert.equal(t.commits,1);
+});
+
+for(const action of ['dispose','role','language'])test('demo cannot repaint after '+action,async()=>{
+ const t=setup(),pending=t.cb.listen(),previous=t.frame;
+ if(action==='dispose')t.session.dispose();else if(action==='role')t.active=false;else t.save.languageLearning.target='ja';
+ t.spoken[0].options.onPlaying();t.speak.reject(Error('late'));await pending;assert.equal(t.frame,previous);assert.equal(t.commits,0);
+ if(action==='dispose')assert.equal(t.spoken[0].signal.aborted,true);
+});
+
+test('demo failure offers speaking and typing and permits another playback attempt',async()=>{
+ const t=setup(),pending=t.cb.listen();t.speak.reject(Error('network'));await pending;
+ assert.equal(t.frame.demoState,'');assert.equal(t.frame.phase,'ready');assert.equal(t.frame.message,'暂时听不到示范。可以直接说，或用打字告诉它。');
+ await t.cb.listen();assert.equal(t.spoken.length,2);assert.equal(t.commits,0);t.cb.submit('hello');assert.equal(t.commits,1);
 });

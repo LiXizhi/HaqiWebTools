@@ -343,10 +343,10 @@
  .entry-screen.role-screen.entry-wizard .entry-layout{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
 }
 /* 首页语言：第一行母语按钮，第二行第二语言下拉。标签颜色随深色题头或纸色角色卡继承。 */
-.entry-locale-stack{display:grid;grid-template-columns:max-content minmax(0,max-content);column-gap:10px;row-gap:8px;align-items:center;margin-top:14px;max-width:100%;}
+.entry-locale-stack{display:grid;grid-template-columns:max-content minmax(0,1fr);column-gap:10px;row-gap:8px;align-items:center;margin-top:14px;width:100%;max-width:100%;box-sizing:border-box;}
 .entry-locale-stack .entry-locale{display:contents;}
 .entry-locale-label{font-size:var(--gui-meta-size);color:inherit;white-space:nowrap;}
-.entry-locale-stack .locale-choices{margin:0;}
+.entry-locale-stack .locale-choices{margin:0;min-width:0;max-width:100%;}
 .entry-second-locale{font:inherit;font-size:var(--gui-text-size);color:#345d50;background:#f3eedc;border:1px solid #d9d1b9;border-radius:7px;padding:7px 28px 7px 12px;min-height:32px;min-width:7.5em;max-width:100%;}
 .entry-second-locale:focus-visible{outline:3px solid #d9bc65;outline-offset:3px;}
 .entry-wizard .creation-form{width:100%;margin:0;padding:26px;min-width:0;}
@@ -486,6 +486,12 @@
 /* Classic battle corners: enemy roster above left, friendly roster below right. */
 .battle-roster-heading{align-items:flex-start;gap:16px;z-index:4}
 .battle-roster-heading>div:first-child{width:min(68%,760px);min-width:0}
+.battle-active-buffs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.battle-buff-chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;border:1px solid #d5bd7e88;background:#123836cc;color:#fff4d2;font-size:11px;line-height:1.35;box-shadow:0 2px 6px #07202655;white-space:nowrap}
+.battle-buff-chip.is-seal{border-color:#e8c46acc;background:#2f3a1fcc}
+.battle-buff-chip.is-meal{border-color:#88c796cc;background:#1a4734cc}
+.battle-buff-chip.is-blessing{border-color:#e5b25acc;background:#442c1bcc}
+.battle-buff-chip.is-synergy{border-color:#8bbfe0cc;background:#1b3850cc}
 .battle-roster{display:flex;flex-wrap:wrap;gap:7px;align-items:stretch;justify-content:flex-start}
 .roster-near{justify-content:flex-end}
 .combatant-status{box-sizing:border-box;flex:0 0 184px;width:184px;min-width:0;max-width:100%;padding:7px 9px;text-align:left;color:#4b3826;border:2px solid #b88a43;border-radius:6px;background:linear-gradient(#fff3d1,#dfc58e);box-shadow:inset 0 0 0 1px #fff5d7,inset 0 -3px 0 #b88a4333,0 3px 8px #092b3566;cursor:default}

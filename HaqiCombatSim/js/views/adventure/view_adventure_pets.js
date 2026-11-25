@@ -10,6 +10,8 @@ import { createPetStatus } from './view_adventure_pet_status.js';
 import { ItemDetails } from './view_adventure_item_details.js';
 import { drawSchoolIcon } from '../../card_renderer.js';
 import { STARTERS,petAppearanceStage,petParams,FOOD_ID } from '../../adventure_pets_core.js';
+import { formationSynergyPreview } from '../../pet_synergy_core.js';
+import { ensureStylesheet } from '../../ui/dom.js';
 const SCHOOL_NAMES={fire:'烈火',ice:'寒冰',storm:'风暴',life:'生命',death:'死亡',balance:'平衡'};
 function petSchoolIcon(school,el){
  const name=SCHOOL_NAMES[school]||'魔法';
@@ -30,7 +32,8 @@ export function petPortrait(assets,id,stage=0,size=96){
 export function starterPicker(assets,onSelect,{el,button}){
  const row=el('div','starter-choices');for(const id of STARTERS){const b=button([petPortrait(assets,id,0,72),el('span','',assets.content.pets[id].name)],()=>{for(const child of row.children){child.classList.remove('selected');child.setAttribute('aria-pressed','false');}b.classList.add('selected');b.setAttribute('aria-pressed','true');onSelect(id);},'secondary');b.dataset.petId=id;b.setAttribute('aria-pressed',String(id===STARTERS[0]));if(id===STARTERS[0])b.classList.add('selected');row.append(b);}return row;
 }
-export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon,art}){
+ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon,art}){
+ if(typeof document?.getElementById==='function')ensureStylesheet('campfire-cooking-style', new URL('../../../css/campfire-cooking.css', import.meta.url).href);
  const {save,assets}=model,c=assets.content,p=petParams(c);
  const modal=body.closest('.modal');
  modal.classList.add('pet-collection-modal');
@@ -149,6 +152,20 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
   }
   slot.append(stand);formation.append(slot);
  }
+ const synergy=formationSynergyPreview(save,c);
+ const synergyBar=el('section','pet-synergy-bar');
+ synergyBar.setAttribute('aria-label',tr('战宠阵型羁绊'));
+ const pills=el('div','pet-synergy-pills');
+ if(synergy.active.length){
+  for(const item of synergy.active){
+   pills.append(el('span','pet-synergy-pill',`${tr(item.label)} · ${tr(item.effectText)}`));
+  }
+ }else{
+  pills.append(el('span','muted',tr('阵型羁绊：暂未激活')));
+ }
+ synergyBar.append(pills);
+ if(synergy.nextHint)synergyBar.append(el('p','pet-synergy-hint',tr(synergy.nextHint)));
+ body.append(synergyBar);
  if(!save.starterChosen)body.append(el('h3','','领取初始抱抱龙（选择后立即领取）'),starterPicker(assets,id=>cb.action({type:'starter',petId:id}),{el,button}));
  const query=el('input','pet-search');
  const previous=button('‹',()=>shelf.scrollBy({left:-shelf.clientWidth,behavior:'smooth'}),'pet-page-arrow'),next=button('›',()=>shelf.scrollBy({left:shelf.clientWidth,behavior:'smooth'}),'pet-page-arrow');
@@ -207,7 +224,7 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
   dialog.body.append(el('p','muted',tr('伙伴需有饱食才会恢复生命；饱食耗尽时，可在伙伴面板放入口粮，或先移出阵位休息恢复饱食。')));
   dialog.open(notes);
  },'secondary');
- const footer=el('footer','pet-collection-footer',button('图鉴与商店',()=>cb.panel('shop',{category:state.tab==='mount'?'mount':'pet'}),'secondary'),notes);
+ const footer=el('footer','pet-collection-footer',button('图鉴与商店',()=>cb.panel('shop',{category:state.tab==='mount'?'mount':'pet'}),'secondary'),button('营火烹饪锅',()=>cb.panel('campfire-cooking'),'secondary'),notes);
  footer.append(renderPetFood(body,model,cb,{el,button,art}));
  {const link=el('button','pet-home-link',icon('shop'),el('span','','前往家园'));link.type='button';link.onclick=()=>cb.panel('home');footer.append(link);}
  body.append(footer);

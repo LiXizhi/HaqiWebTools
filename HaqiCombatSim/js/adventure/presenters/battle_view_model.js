@@ -12,10 +12,15 @@ import { cardTargetKind } from '../../combat_cards_core.js';
 import * as U from '../../combat_unit_core.js';
 import { dungeonChallengePreview } from '../../dungeon_challenge_core.js';
 import { dungeonFirstReward } from '../../dungeon_first_rewards_core.js';
-import { dungeonEnemyIntentInfo } from '../../dungeon_tactics_core.js';
+import { dungeonEnemyIntentInfo, towerFloorNumber } from '../../dungeon_tactics_core.js';
 import { openingEnemyIntentInfo } from '../../opening_training_core.js';
 import { examinerEnemyIntentInfo } from '../../examiner_intent_core.js';
 import { tacticsFieldCue } from '../../tactics_field_battle_core.js';
+import { rollMonsterDrops } from '../../monster_loot_core.js';
+import { isTowerBlessingFloor, TOWER_BLESSING_BY_ID } from '../../tower_blessings_core.js';
+import { HANZI_SEAL_BY_ID } from '../../hanzi_seal_core.js';
+import { campfireBuffDetail } from '../../campfire_cooking_core.js';
+import { PET_SYNERGY_DEFS } from '../../pet_synergy_core.js';
 
 export function buildBattleHandViewModel({ battle, hero, selected, discarded, assets }) {
     const blockedMessage = selected ? castBlockedMessage(hero, battle.resolved.cards[selected.key], battle.resolved) : '';
@@ -44,23 +49,31 @@ export function buildBattleHandViewModel({ battle, hero, selected, discarded, as
 
 export function buildBattleResultViewModel({ save, battle, assets }) {
     const won = battle.winner === 'near';
+    const activeCampfireBuff = campfireBuffDetail(battle.campfireBuff || save.pendingEncounter?.campfireBuff);
+    const xpMult = ((save.pendingEncounter?.magicStarExperiencePercent ?? 100) + (activeCampfireBuff?.xpBonusPct || 0)) / 100;
     const xp = won
         ? battle.monsterTemplates.reduce(
-              (sum, m) => sum + Math.ceil(m.xp * (save.pendingEncounter?.magicStarExperiencePercent ?? 100) / 100),
+              (sum, m) => sum + Math.ceil(m.xp * xpMult),
               0,
           )
         : 0;
     const coins = won ? battle.monsterTemplates.reduce((sum, m) => sum + m.coins, 0) : 0;
+    const staminaBlocked = encounterStaminaCost(assets.content, save.pendingEncounter?.encounterId) > 0 && readStamina(save, assets.content) <= 0;
+    const droppedItems = won && !battle.redMushroom && !battle.tacticsField && !staminaBlocked
+        ? rollMonsterDrops(save, assets.content, save.pendingEncounter, battle.monsterTemplates)
+        : [];
 
     let challenge = null;
     let firstReward = null;
     let firstRewardExhausted = false;
     let tacticsReport = [];
     let firstMilestones = [];
+    let towerNext = null;
     if (!battle.redMushroom && !battle.tacticsField) {
+        const activeDungeon = dungeonFor(assets.content, save.zone);
         challenge =
             save.dungeonRuns?.[save.zone]?.challenge &&
-            dungeonChallengePreview(save, dungeonFor(assets.content, save.zone), dungeonProgress(save)?.[save.zone], save.pendingEncounter, battle);
+            dungeonChallengePreview(save, activeDungeon, dungeonProgress(save)?.[save.zone], save.pendingEncounter, battle);
         if (challenge?.complete && !save.dungeonChallengeRecords?.[save.zone]?.firstRewarded) {
             firstReward = dungeonFirstReward(assets.content, save.zone, save.school);
             firstRewardExhausted =
@@ -69,7 +82,29 @@ export function buildBattleResultViewModel({ save, battle, assets }) {
         const report = save.pendingEncounter?.tactics;
         tacticsReport = tacticsReportLines(report);
         firstMilestones = won ? TACTICS_MILESTONES.filter(row => report?.[row.id] && !save.tacticsRecord?.[row.id]) : [];
+        if (won && activeDungeon?.kind === 'tower' && !save.coopRun && battle.sides.near.some(u => u.hp > 0)) {
+            const currentFloor = towerFloorNumber(save.pendingEncounter?.encounterId);
+            const nextArena = currentFloor > 0 && currentFloor < activeDungeon.floors ? activeDungeon.arenas[currentFloor] : null;
+            if (nextArena) {
+                towerNext = {
+                    dungeonId: activeDungeon.id,
+                    currentFloor,
+                    nextFloor: currentFloor + 1,
+                    nextEncounterId: nextArena.id,
+                    offersBlessing: isTowerBlessingFloor(currentFloor, activeDungeon.floors),
+                };
+            }
+        }
     }
+
+    const activeTowerBlessings = Object.entries(battle.towerBlessings?.picks || {})
+        .filter(([, n]) => n > 0)
+        .map(([id, stacks]) => (TOWER_BLESSING_BY_ID[id] ? { ...TOWER_BLESSING_BY_ID[id], stacks } : null))
+        .filter(Boolean);
+    const activeHanziSeal = battle.hanziSeal?.id ? HANZI_SEAL_BY_ID[battle.hanziSeal.id] || null : null;
+    const activePetSynergies = (battle.petSynergies?.ids || [])
+        .map(id => PET_SYNERGY_DEFS[id] || null)
+        .filter(Boolean);
 
     const captures = [];
     if (battle.captured?.length) {
@@ -93,6 +128,12 @@ export function buildBattleResultViewModel({ save, battle, assets }) {
         won,
         xp,
         coins,
+        droppedItems,
+        towerNext,
+        activeTowerBlessings,
+        activeHanziSeal,
+        activeCampfireBuff,
+        activePetSynergies,
         challenge,
         firstReward,
         firstRewardExhausted,

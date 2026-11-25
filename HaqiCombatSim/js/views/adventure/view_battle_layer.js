@@ -17,6 +17,11 @@ import { bindBattleTargeting } from './view_battle_targeting.js';
 import { renderCompanionGuide } from './view_companion_guide.js';
 import { createPetTraitBadges, traitUpgradeText } from './view_pet_traits.js';
 import { buildBattleHandViewModel, buildBattleResultViewModel } from '../../adventure/presenters/battle_view_model.js';
+import { TOWER_BLESSING_BY_ID } from '../../tower_blessings_core.js';
+import { HANZI_SEAL_BY_ID } from '../../hanzi_seal_core.js';
+import { campfireBuffDetail } from '../../campfire_cooking_core.js';
+import { PET_SYNERGY_DEFS } from '../../pet_synergy_core.js';
+import { wordCardLevelBonus } from '../../word_cards_core.js';
 import { el, button, icon, badge, spellFace } from './primitives.js';
 
 export { updateBattleRoster, updateBattlePetHint, updateBattleSpeech, battleSpeechController };
@@ -69,13 +74,69 @@ function renderBattleContent(root, model, cb) {
     sound.title = model.soundEnabled ? '关闭音效' : '开启音效';
     sound.setAttribute('aria-label', sound.title);
     sound.setAttribute('aria-pressed', String(!!model.soundEnabled));
+    const speedOn = (model.battleSpeed || save?.battleSpeed) === 2;
+    const speedBtn = cb.toggleSpeed
+        ? button(speedOn ? '2x 加速' : '1x 速度', cb.toggleSpeed, 'secondary small battle-speed-toggle')
+        : null;
+    if (speedBtn) {
+        speedBtn.title = tr('切换战斗演出倍速（1x / 2x）');
+        speedBtn.setAttribute('aria-label', tr('切换战斗演出倍速（1x / 2x）'));
+        speedBtn.setAttribute('aria-pressed', String(speedOn));
+    }
+    const activeBuffPills = [];
+    const activeBlessingEntries = Object.entries(battle.towerBlessings?.picks || {})
+        .filter(([id, n]) => n > 0 && TOWER_BLESSING_BY_ID[id])
+        .map(([id, n]) => ({ def: TOWER_BLESSING_BY_ID[id], stacks: n }));
+    if (activeBlessingEntries.length) {
+        const text = activeBlessingEntries.map(({ def, stacks }) => `${tr(def.name)}×${stacks}`).join(' · ');
+        activeBuffPills.push({
+            kind: 'blessing',
+            label: fill('试炼赐福 · {blessings}', { blessings: text }).text,
+            title: activeBlessingEntries.map(({ def, stacks }) => `${tr(def.name)}×${stacks}：${tr(def.summary)}`).join('\n'),
+        });
+    }
+    const activeSeal = battle.hanziSeal?.id ? HANZI_SEAL_BY_ID[battle.hanziSeal.id] : null;
+    if (activeSeal) {
+        activeBuffPills.push({
+            kind: 'seal',
+            label: fill('战印「{glyph}」', { glyph: activeSeal.glyph }).text,
+            title: `${tr(activeSeal.name)}：${tr(activeSeal.effectText)}`,
+        });
+    }
+    const activeMeal = campfireBuffDetail(battle.campfireBuff);
+    if (activeMeal) {
+        activeBuffPills.push({
+            kind: 'meal',
+            label: fill('料理「{name}」', { name: tr(activeMeal.name) }).text,
+            title: `${tr(activeMeal.name)}：${tr(activeMeal.description)}`,
+        });
+    }
+    const activeSynergyDefs = (battle.petSynergies?.ids || [])
+        .map(id => PET_SYNERGY_DEFS[id] || null)
+        .filter(Boolean);
+    if (activeSynergyDefs.length) {
+        activeBuffPills.push({
+            kind: 'synergy',
+            label: fill('羁绊：{list}', { list: activeSynergyDefs.map(d => tr(d.name)).join('·') }).text,
+            title: activeSynergyDefs.map(d => `${tr(d.name)}：${tr(d.summary)}`).join('\n'),
+        });
+    }
+    const activeBuffTags = activeBuffPills.map(item => item.label);
     const top = el(
         'div',
         'battle-heading',
         el(
             'div',
             '',
-            el('p', 'eyebrow', battle.tacticsField ? '借用' + (SCHOOL_NAMES[hero.school] || '') + '卡组 · ' + battle.sides.near.length + ' 对 ' + battle.sides.far.length : '魔法对决'),
+            el(
+                'p',
+                'eyebrow',
+                battle.tacticsField
+                    ? '借用' + (SCHOOL_NAMES[hero.school] || '') + '卡组 · ' + battle.sides.near.length + ' 对 ' + battle.sides.far.length
+                    : activeBuffTags.length
+                        ? activeBuffTags.join(' ｜ ')
+                        : '魔法对决',
+            ),
             el(
                 'h2',
                 '',
@@ -88,6 +149,7 @@ function renderBattleContent(root, model, cb) {
             'div',
             'battle-heading-actions',
             sound,
+            speedBtn,
             (() => {
                 const turn = el('span', 'badge');
                 const resolvingTurn = battle.tacticalEncounter && animating ? model.resolvingTurn : null;
@@ -225,6 +287,17 @@ function renderBattleContent(root, model, cb) {
             if (battle.tacticalEncounter && handVm.drawPileCount === 0 && !petCardsOpen && !runeCardsOpen) {
                 brief.append(el('br'), el('small', '', tr('待抽牌已用完，弃掉后手牌会变少。')));
             }
+            if (hero.wordCards?.[h.seq] && battle.wordCardScalingVersion === 1 && battle.heroLevel > 1) {
+                const wb = wordCardLevelBonus(battle.heroLevel);
+                brief.append(
+                    el('br'),
+                    el('small', '', fill('词卡等级成长：伤害与治疗 +{pct}% · 命中 +{acc}%（Lv.{level}）', {
+                        pct: wb.damagePct,
+                        acc: wb.accuracyPct,
+                        level: battle.heroLevel,
+                    }).text),
+                );
+            }
             const detailBody = el(
                 'div',
                 'battle-card-detail-body',
@@ -324,7 +397,18 @@ function renderBattleContent(root, model, cb) {
     const allies = createBattleRoster(battle, 'near', rosterOptions);
     root.battleStatusEntries = [...foes.entries, ...allies.entries];
     updateBattleRoster(root.battleStatusEntries, model.presentation);
-    top.firstChild.replaceChildren(foes.roster);
+    const activeBuffBar = !battle.tacticsField && activeBuffPills.length
+        ? el(
+              'div',
+              'battle-active-buffs',
+              ...activeBuffPills.map(item => {
+                  const chip = el('span', `battle-buff-chip is-${item.kind}`, item.label);
+                  chip.title = item.title;
+                  return chip;
+              }),
+          )
+        : null;
+    top.firstChild.replaceChildren(foes.roster, ...(activeBuffBar ? [activeBuffBar] : []));
     top.classList.add('battle-roster-heading');
     bottom.classList.add('battle-roster-controls');
     const targets = el('div', 'battle-party-controls', allies.roster);
@@ -489,13 +573,30 @@ function renderBattleContent(root, model, cb) {
         } else {
             setText(rewardLine, '已保留你的物品与任务进度。');
         }
+        const towerContinueBtn = won && resultVm.towerNext && cb.continueTower
+            ? button(
+                resultVm.towerNext.offersBlessing
+                    ? fill('挑选赐福并进第 {floor} 层', { floor: resultVm.towerNext.nextFloor }).text
+                    : fill('直进第 {floor} 层', { floor: resultVm.towerNext.nextFloor }).text,
+                () => cb.continueTower(resultVm.towerNext),
+                'primary',
+            )
+            : null;
         const result = el(
             'div',
             'result-card',
             el('p', 'eyebrow', won ? '对决胜利' : '继续加油'),
             el('h2', '', won ? '我们赢了！' : '休息一下，再来挑战'),
             rewardLine,
-            button(battle.redMushroom ? '返回红蘑菇赛场' : won ? '收下奖励' : '回到安全地点', cb.finish, 'primary'),
+            ...(won && resultVm.droppedItems?.length
+                ? [el('p', 'battle-loot-line', fill('战利品掉落：{drops}', { drops: resultVm.droppedItems.map(d => `${tr(d.name)}×${d.count}`).join(' · ') }).text)]
+                : []),
+            towerContinueBtn,
+            button(
+                battle.redMushroom ? '返回红蘑菇赛场' : won ? (towerContinueBtn ? '返回塔内地图' : '收下奖励') : '回到安全地点',
+                cb.finish,
+                towerContinueBtn ? 'secondary' : 'primary',
+            ),
         );
         root.append(result);
         if (!battle.redMushroom) {

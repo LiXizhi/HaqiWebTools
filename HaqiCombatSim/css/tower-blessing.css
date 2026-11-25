@@ -1,0 +1,138 @@
+/* Storybook 3-card Trial Tower blessing chooser styling */
+.tower-blessing-modal {
+    width: min(820px, 94vw);
+    max-height: min(88vh, 760px);
+}
+
+.tower-blessing-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tower-blessing-intro {
+    margin: 0;
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: rgba(255, 248, 226, 0.88);
+    border: 1px solid var(--line, rgba(145, 108, 52, 0.36));
+    color: var(--ink, #3b2814);
+    font-size: 13.5px;
+    line-height: 1.5;
+}
+
+.tower-blessing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.tower-blessing-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #fffdf5 0%, #f7e8c4 100%);
+    border: 2px solid rgba(154, 114, 54, 0.55);
+    box-shadow: 0 4px 12px rgba(56, 36, 12, 0.14);
+    transition: transform 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+}
+
+.tower-blessing-card:hover {
+    transform: translateY(-2px);
+    border-color: #244f3b;
+    box-shadow: 0 6px 16px rgba(36, 79, 59, 0.2);
+}
+
+.tower-blessing-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.tower-blessing-tag {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #244f3b;
+    color: #fff8df;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.tower-blessing-stack {
+    font-size: 11.5px;
+    color: var(--muted, #6f5534);
+    font-weight: 600;
+}
+
+.tower-blessing-name {
+    margin: 0;
+    font-size: 17px;
+    color: var(--ink, #3b2814);
+}
+
+.tower-blessing-summary {
+    margin: 0;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #1f5136;
+    line-height: 1.45;
+}
+
+.tower-blessing-detail {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--muted, #6a5030);
+    flex: 1;
+}
+
+.tower-blessing-pick {
+    width: 100%;
+    margin-top: 4px;
+}
+
+.tower-blessing-active {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 9px;
+    background: rgba(244, 231, 198, 0.65);
+    border: 1px solid rgba(145, 108, 52, 0.3);
+}
+
+.tower-blessing-active-label {
+    font-size: 12px;
+    color: var(--muted, #6f5534);
+    font-weight: 600;
+}
+
+.tower-blessing-chip {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #eef7ef;
+    border: 1px solid rgba(47, 110, 73, 0.4);
+    color: #1f5136;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.tower-blessing-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 720px) {
+    .tower-blessing-modal {
+        width: 96vw;
+        max-height: 90vh;
+    }
+
+    .tower-blessing-grid {
+        grid-template-columns: 1fr;
+    }
+}

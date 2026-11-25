@@ -89,6 +89,27 @@ export function drawHanziLandmarkRestoration(ctx, landmark, state, t, { reduced 
         ctx.ellipse(x, y + 4, 30, 14, 0, 0, TAU);
         ctx.stroke();
     }
+    if (state.effect === 'festival' && Array.isArray(state.forgedGlyphs) && state.forgedGlyphs.length && !low) {
+        const shown = state.forgedGlyphs.slice(-6);
+        const radius = 56;
+        shown.forEach((glyph, i) => {
+            const angle = (reduced ? 0 : t * 0.45) + (i * TAU) / shown.length;
+            const gx = x + Math.cos(angle) * radius;
+            const gy = y - 46 + Math.sin(angle) * 18;
+            ctx.fillStyle = 'rgba(255, 245, 210, 0.92)';
+            ctx.strokeStyle = '#c58a2e';
+            ctx.lineWidth = 1.4;
+            ctx.beginPath();
+            ctx.arc(gx, gy, 11, 0, TAU);
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = '#4a2b10';
+            ctx.font = 'bold 12px KaiTi, STKaiti, serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(glyph, gx, gy + 0.5);
+        });
+    }
     ctx.restore();
     if (state.label && drawPlate) {
         drawPlate(state.label, x, y - 40, state.restored || state.ready);

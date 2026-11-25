@@ -29,6 +29,7 @@ import { battleSpeechController, eventLabel, renderBattle, setCastAnnouncement }
 import { createBattleAdvisorBridge } from './battle_advisor_bridge.js';
 import { createTacticalClueHandler } from './tactical_clue_controller.js';
 import { settleFinishedEncounter } from './encounter_settlement.js';
+import { towerBlessingPendingOffer } from '../tower_blessings_core.js';
 
 export function createBattleController({
     nodes,
@@ -41,6 +42,7 @@ export function createBattleController({
     openPanel = services?.navigation?.openPanel,
     enterWorld = services?.navigation?.enterWorld,
     loadPet,
+    interact,
     finishTacticsFight,
     showRewards,
     updateMusic,
@@ -162,7 +164,7 @@ export function createBattleController({
         }
     }
 
-    async function finishBattle(battle, destination) {
+    async function finishBattle(battle, destination, { towerNext = null } = {}) {
         const { stage, battle: activeBattle, save, roleEpoch, assets } = getContext();
         if (stage !== 'battle' || activeBattle !== battle || !battle.finished || finishingBattles.has(battle)) return;
         finishingBattles.add(battle);
@@ -189,7 +191,23 @@ export function createBattleController({
             if (!bus?.emit('rewards:show', { before })) showRewards?.(before);
             if (settle?.insufficientStamina) toast('你的精力值不足，无法得到这场战斗的战利品。');
             bus?.emit('battle:settled', { settle });
-            if (destination) openPanel(destination);
+            if (destination) {
+                openPanel(destination);
+                return;
+            }
+            const blessingOffer = towerBlessingPendingOffer(save, save.zone);
+            if (blessingOffer) {
+                openPanel('tower-blessing', towerNext ? { nextEncounterId: towerNext.nextEncounterId, nextFloor: towerNext.nextFloor } : {});
+                return;
+            }
+            if (towerNext?.nextEncounterId && interact) {
+                const nextEnc = ctx.world?.encounters?.find(e => e.id === towerNext.nextEncounterId && !e.hidden);
+                if (nextEnc) {
+                    const pos = ctx.world.layout?.encounterPositions?.[towerNext.nextEncounterId];
+                    if (pos) save.position = { x: pos[0], y: Math.max(80, pos[1] - 70) };
+                    interact({ ...nextEnc, kind: 'encounter' });
+                }
+            }
         } catch (error) {
             toast(error.message);
         } finally {
@@ -230,6 +248,7 @@ export function createBattleController({
             nodes.battle,
             {
                 ...model(),
+                battleSpeed: ctx.save?.battleSpeed === 2 ? 2 : 1,
                 fastChallengePlayback,
                 canWatchPartner: canWatchPartner(currentBattle),
                 resolvingTurn: latest.animation?.turn,
@@ -276,6 +295,13 @@ export function createBattleController({
                     paintBattle();
                 },
                 sound: toggleSound,
+                toggleSpeed: () => {
+                    const nowCtx = getContext();
+                    if (!nowCtx.save) return;
+                    nowCtx.save.battleSpeed = nowCtx.save.battleSpeed === 2 ? 1 : 2;
+                    persist();
+                    paintBattle();
+                },
                 cloud: openCloud,
                 swipePlay: h => {
                     const nowCtx = getContext();
@@ -367,6 +393,7 @@ export function createBattleController({
                     enterWorld(nowCtx.save);
                     toast(result?.message || '你撤到了怪物附近。已保留物品与任务进度。');
                 },
+                continueTower: nextInfo => finishBattle(currentBattle, null, { towerNext: nextInfo }),
                 finish: () => finishBattle(currentBattle),
             },
         );
@@ -519,7 +546,8 @@ export function createBattleController({
             reducedMotion,
             briskTraining: !!currentBattle.tacticalEncounter || currentBattle.monsterTemplates?.some(m => m.openingTrainingVersion === 3),
         });
-        const speed = watchedChallenges.has(currentBattle) ? 4 : currentBattle.tacticalEncounter && fastChallengePlayback ? 1.5 : 1;
+        const userSpeed = ctx.save?.battleSpeed === 2 ? 2 : 1;
+        const speed = watchedChallenges.has(currentBattle) ? 4 : Math.max(userSpeed, currentBattle.tacticalEncounter && fastChallengePlayback ? 1.5 : 1);
         const linear = duration > 0 ? Math.min(1, (now - a.start) * speed / duration) : 1;
         const progress = presentationEventProgress(e, linear, {
             effects: ctx.assets.effects,

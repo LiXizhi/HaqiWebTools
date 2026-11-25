@@ -7,6 +7,7 @@ import {wordplayGoal} from './companion_wordplay_core.js';
 import {recommendedLanguageQuest} from './language_quest_core.js';
 import {nextAvailableIslandPuzzle} from './island_puzzles_core.js';
 import {HANZI_STELE_SCROLLS,steleRubbingCount} from './hanzi_stele_scroll_core.js';
+import {HANZI_FORGE_RECIPES,hanziForgeCount} from './hanzi_forge_core.js';
 
 // Read-only advice: no rewards, progress writes or invented world targets.
 export function guidePet(save,content){
@@ -43,6 +44,10 @@ export function companionWorldGuide(save,content,{languageTasks=[]}={}){
    const left=HANZI_STELE_SCROLLS.length-steleRubbingCount(save);
    if(left>0){
     return {text:`石伯的碑林传拓册还有 ${left} 篇象形故事等你描红！`,label:'翻阅传拓册',panel:'hanzi-stele-scroll'};
+   }
+   const forgeLeft=HANZI_FORGE_RECIPES.length-hanziForgeCount(save);
+   if(forgeLeft>0){
+    return {text:`字源合字坊还有 ${forgeLeft} 枚会意汉字等你亲手合出来！`,label:'去合字坊',panel:'hanzi-forge'};
    }
   }
  }

@@ -230,7 +230,7 @@
 @media (hover:hover) {
     .storybook-ui button:hover:not(:disabled) .icon { filter:brightness(.92); }
 }
-.storybook-ui .quest-tracker { top:82px; right:12px; width:238px; padding:8px 10px 12px; min-height:69px; max-height:min(380px,calc(100dvh - 168px)); overflow:auto; border-radius:5px 9px 7px 4px; }
+.storybook-ui .quest-tracker { top:82px; right:12px; width:238px; padding:8px 10px 16px; min-height:69px; max-height:min(540px,calc(100dvh - 176px)); overflow:auto; scrollbar-width:thin; border-radius:5px 9px 7px 4px; }
 .storybook-ui .tracker-top { position:absolute; right:10px; top:10px; margin:0; }
 .storybook-ui .tracker-top .eyebrow { display:none; }
 .storybook-ui .chapter-count { font-size:9px; }

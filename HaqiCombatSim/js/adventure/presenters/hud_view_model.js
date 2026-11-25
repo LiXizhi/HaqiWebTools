@@ -32,6 +32,15 @@ import {
 import { tacticsNextGoal } from '../../tactics_progress_core.js';
 import { islandPuzzleProgress } from '../../island_puzzles_core.js';
 import { HANZI_STELE_SCROLLS, steleRubbingCount } from '../../hanzi_stele_scroll_core.js';
+import { HANZI_FORGE_RECIPES, hanziForgeCount } from '../../hanzi_forge_core.js';
+import { equippedHanziSeal } from '../../hanzi_seal_core.js';
+import { campfireBuffDetail } from '../../campfire_cooking_core.js';
+import { fishingAlbumSummary } from '../../fishing_bounties_core.js';
+import { dailyBountySummary } from '../../daily_bounties_core.js';
+import { earthTimeMilestoneSummary } from '../../earth_time_rewards_core.js';
+import { TRILOGY_ISLAND_IDS, TRILOGY_ISLANDS, trilogyDailyRemaining } from '../../trilogy_curios_core.js';
+import { wordLanguage } from '../../word_lexicon_core.js';
+import { activeTowerBlessingRows, towerBlessingPendingOffer } from '../../tower_blessings_core.js';
 
 export function computeHeroHealth(save, content) {
     const maxHp = specMaxHp(playerSpec(save, content));
@@ -132,7 +141,9 @@ export function buildHudTrackerViewModel(model) {
         const clearedList = dungeonProgress(save)?.[save.zone]?.cleared || [];
         const cleared = clearedList.length;
         const remaining = dungeon.arenas.filter(a => !a.blocked.length && !clearedList.includes(a.id)).length;
-        payload = { dungeon, cleared, remaining };
+        const towerBlessings = dungeon.kind === 'tower' ? activeTowerBlessingRows(save, dungeon.id) : [];
+        const towerBlessingPending = dungeon.kind === 'tower' ? towerBlessingPendingOffer(save, dungeon.id) : null;
+        payload = { dungeon, cleared, remaining, towerBlessings, towerBlessingPending };
     } else {
         const ids = trackedQuestIds(save, c).filter(
             id => c.quests.some(quest => quest.id === id) || c.catalogQuests?.byId[id],
@@ -168,10 +179,38 @@ export function buildHudTrackerViewModel(model) {
             const isHanzi = save.zone === 'hanzi';
             const steleDone = isHanzi ? steleRubbingCount(save) : 0;
             const steleTotal = isHanzi ? HANZI_STELE_SCROLLS.length : 0;
-            if (prog.next || (isHanzi && steleDone < steleTotal) || prog.done > 0) {
-                islandExplore = { ...prog, steleDone, steleTotal };
+            const forgeDone = isHanzi ? hanziForgeCount(save) : 0;
+            const forgeTotal = isHanzi ? HANZI_FORGE_RECIPES.length : 0;
+            const hanziSeal = isHanzi ? equippedHanziSeal(save) : null;
+            const canToggleHanziStories = isHanzi && wordLanguage(save.languageLearning?.target) !== 'zh';
+            const hanziStoryExplore = !!save.hanziStoryExplore;
+            if (prog.next || (isHanzi && (steleDone < steleTotal || forgeDone < forgeTotal || canToggleHanziStories)) || prog.done > 0) {
+                islandExplore = { ...prog, steleDone, steleTotal, forgeDone, forgeTotal, hanziSeal, canToggleHanziStories, hanziStoryExplore };
             }
         }
+    }
+
+    const campfireSummary = !model.localSecond && !dungeon && save.zone !== 'camp'
+        ? {
+            activeBuff: campfireBuffDetail(save.campfireBuff),
+            fishingClaimable: fishingAlbumSummary(save, c).claimableCount,
+        }
+        : null;
+
+    let chronicleSummary = null;
+    if (!model.localSecond && !dungeon && save.zone !== 'camp') {
+        const now = model.now ?? Date.now();
+        const daily = dailyBountySummary(save, c, now);
+        const earth = earthTimeMilestoneSummary(save, c);
+        const isTrilogy = TRILOGY_ISLAND_IDS.includes(save.zone);
+        chronicleSummary = {
+            claimableCount: daily.claimableCount + earth.claimableCount,
+            dailyClaimable: daily.claimableCount,
+            earthClaimable: earth.claimableCount,
+            isTrilogy,
+            stallName: isTrilogy ? TRILOGY_ISLANDS[save.zone].stallName : '',
+            trilogyDailyLeft: isTrilogy ? trilogyDailyRemaining(save, save.zone, now) : 0,
+        };
     }
 
     return {
@@ -182,6 +221,8 @@ export function buildHudTrackerViewModel(model) {
         tacticsGoal,
         forestGoal,
         islandExplore,
+        campfireSummary,
+        chronicleSummary,
         dailyBuffLayers,
         dailyBuffText,
     };

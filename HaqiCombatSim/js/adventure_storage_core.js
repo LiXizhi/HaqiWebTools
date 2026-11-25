@@ -7,13 +7,13 @@ import { petMaxHp } from './adventure_pets_core.js';
 import { mapInfo } from './adventure_island_layout_core.js';
 
 const copy = value => JSON.parse(JSON.stringify(value));
-const localFields = ['hanziMemoryRuntime','positionCoordinateVersion','timeScrollRuntime','cityFallback','cityReturnStack','earthReturn','heroHp','careAt','careLog','position','facing','pendingEncounter','encounterRespawns','petTraitEncounters','stamina','staminaRefillDay','coopRun','dungeonExploration','dungeonMode','dungeonLanguageBuff'];
+const localFields = ['hanziMemoryRuntime','positionCoordinateVersion','timeScrollRuntime','cityFallback','cityReturnStack','earthReturn','heroHp','careAt','careLog','position','facing','pendingEncounter','encounterRespawns','petTraitEncounters','stamina','staminaRefillDay','coopRun','dungeonExploration','dungeonMode','dungeonLanguageBuff','towerRunBlessings'];
 // Cosmetic preferences stay on this device only: stripped from durable/cloud saves,
 // kept in the role's IndexedDB runtime record and restored regardless of revision.
-const prefFields = ['magicStarFollow','mountHidden'];
+const prefFields = ['magicStarFollow','mountHidden','battleSpeed','hanziStoryExplore'];
 const itemFields = ['petMergedIds','petPages','petFileRefs','petWorld','pets','equipmentInstances','nextEquipmentGuid','upgrades','cards','pet'];
 const battleFields = ['inventory','petFoodSlots','equipment','equipmentGuids','mountId','formation','heroSlot','deck'];
-const recordFields = ['languageTreeClaims','timeScrollProgress','hanzi','islandPuzzles','earthProgress','earthCityProgress','transactions','rewardedEncounters','fishingRecords','learnerMemory','socialActivity','socialPvpRecords','socialChallenges','relationshipEvents'];
+const recordFields = ['languageTreeClaims','timeScrollProgress','hanzi','islandPuzzles','hanziSeal','fishingBounties','gatherPantry','campfireBuff','campfireCookedCount','trilogyExplore','earthTimeClaims','dailyBounties','equippedHonor','earthProgress','earthCityProgress','transactions','rewardedEncounters','fishingRecords','learnerMemory','socialActivity','socialPvpRecords','socialChallenges','relationshipEvents'];
 export const storageParts = ['items','battle','records','towers'];
 
 export function stableJson(value) {

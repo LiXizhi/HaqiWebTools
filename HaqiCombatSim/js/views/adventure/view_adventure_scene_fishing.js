@@ -1,4 +1,5 @@
 import {fishingTuning as tuning,fishWeight,fishingSpecies,fishSize} from '../../adventure_fishing_records_core.js';
+import {fishingAlbumSummary} from '../../fishing_bounties_core.js';
 import {createRng,hashSeed} from '../../rng_core.js';
 import { readStamina } from '../../adventure_fishing_core.js';
 import { createCloseButton } from '../../ui/controls.js';
@@ -52,16 +53,32 @@ export function createSceneFishing(root, cb, { el, button }) {
     function pulse(pattern){if(!reduced.matches)cb.vibrate?.(pattern);}
     function refreshRecords(){
         const id=Number(species.value)||fishingSpecies[0],rows=model.save.fishingRecords?.byFish[id]||[];
+        const album=fishingAlbumSummary(model.save,model.assets.content);
+        const spRow=album.speciesRows.find(r=>r.id===id);
         recordList.replaceChildren();
         if(!rows.length)recordList.append(el('p','','还没有这条鱼的纪录，去试试吧。'));
         rows.forEach((row,i)=>recordList.append(el('div','fishing-record-row',el('span','',fill(`第 {v0} 名`,{v0:String(i+1)}).text),el('strong','',fishWeight(row.grams)))));
+        if(spRow){
+            for(const tier of spRow.tiers){
+                const bountyRow=el('div','fishing-record-row fishing-bounty-row',el('span','',tier.label));
+                const claim=button(tier.claimed?'已领':tier.claimable?'领赏金':'未达标',()=>{
+                    if(busy()||!tier.claimable)return;
+                    const res=cb.action({type:'fishing-bounty',bountyId:tier.id});
+                    if(res?.changed){say(res.message||'已领取钓鱼赏金！');lastInventory='';refresh();}
+                },tier.claimable?'primary small':'secondary small');
+                claim.disabled=!tier.claimable||busy();
+                bountyRow.append(claim);
+                recordList.append(bountyRow);
+            }
+        }
+        setText(recordsButton,album.claimableCount>0?fill('纪录 · 赏金 {n}',{n:album.claimableCount}).text:'纪录');
     }
     function say(text){setText(status,text);}
     function net(){return model.assets.content.fishing.nets.find(row=>row.id===netId);}
     function busy(){return !['idle','show'].includes(phase);}
     function refresh(){
         const {save,assets:{content}}=model,catalog=content.fishing;
-        const signature=JSON.stringify([catalog.nets.map(n=>save.inventory[n.id]),catalog.potions.map(p=>save.inventory[p.id]),save.stamina,save.fishingRecords?.total]);
+        const signature=JSON.stringify([catalog.nets.map(n=>save.inventory[n.id]),catalog.potions.map(p=>save.inventory[p.id]),save.stamina,save.fishingRecords?.total,save.fishingBounties?.length]);
         if(signature===lastInventory)return;
         lastInventory=signature;refreshRecords();
         const owned=catalog.nets.filter(n=>save.inventory[n.id]>0);

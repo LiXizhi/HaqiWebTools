@@ -7,16 +7,9 @@ import { islandStoryAnimations } from './hanzi_story_animations.js';
 import { showHanziAnimation } from './view_hanzi_animation.js';
 import { connectHanziAnimation } from './hanzi_animation_bridge.js';
 import { createCloseButton } from '../ui/controls.js';
-import { ensureStylesheet } from '../ui/dom.js';
+import { el, ensureStylesheet } from '../ui/dom.js';
 import { displayLocale, learningPair, textFor } from '../locale.js';
 import { tr, fill } from '../locale_runtime.js';
-
-const el = (tag, cls = '', text = '') => {
-    const n = document.createElement(tag);
-    if (cls) n.className = cls;
-    if (text) n.textContent = text;
-    return n;
-};
 
 const button = (text, fn, cls = 'secondary') => {
     const b = el('button', cls, text);

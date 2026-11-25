@@ -29,6 +29,27 @@ export function drawLaterIslandRestoration(ctx, landmark, state, t, { reduced = 
             ctx.beginPath();
             ctx.arc(x, y - 22, radius, 0, TAU);
             ctx.fill();
+            if (state.effect === 'ember' && !low) {
+                for (let i = 0; i < 4; i++) {
+                    const phase = reduced ? 0.5 : (t * 0.8 + i * 0.25) % 1;
+                    const sx = x + Math.sin(i * 2.1 + phase * 4) * 14;
+                    const sy = y - 10 - phase * 38;
+                    ctx.fillStyle = `rgba(255, 198, 92, ${(1 - phase) * 0.85})`;
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, 2.5, 0, TAU);
+                    ctx.fill();
+                }
+            } else if (state.effect === 'mist-lantern' && !low) {
+                for (let i = 0; i < 4; i++) {
+                    const angle = (reduced ? 0 : t * 1.1) + (i * TAU) / 4;
+                    const fx = x + Math.cos(angle) * 32;
+                    const fy = y - 26 + Math.sin(angle * 2) * 10;
+                    ctx.fillStyle = 'rgba(164, 248, 206, 0.88)';
+                    ctx.beginPath();
+                    ctx.arc(fx, fy, 3.2, 0, TAU);
+                    ctx.fill();
+                }
+            }
         }
         if (state.effect === 'water') {
             ctx.strokeStyle = `rgba(110, 208, 232, ${0.52 + pulse * 0.25})`;
@@ -37,6 +58,14 @@ export function drawLaterIslandRestoration(ctx, landmark, state, t, { reduced = 
             ctx.beginPath();
             ctx.ellipse(x, y + 6, r, r * 0.45, 0, 0, TAU);
             ctx.stroke();
+            if (!low) {
+                const r2 = 12 + (reduced ? 4 : ((t * 13 + 9) % 18));
+                ctx.strokeStyle = `rgba(154, 232, 248, ${0.38 + pulse * 0.2})`;
+                ctx.lineWidth = 1.4;
+                ctx.beginPath();
+                ctx.ellipse(x, y + 6, r2, r2 * 0.45, 0, 0, TAU);
+                ctx.stroke();
+            }
         }
         if (state.effect === 'compass') {
             ctx.strokeStyle = `rgba(164, 214, 252, ${0.52 + pulse * 0.25})`;

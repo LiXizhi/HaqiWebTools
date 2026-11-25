@@ -125,6 +125,7 @@ export function enterDungeon(save,content,id,{restart=false}={}){
         if(at){const idx=layout.route.findIndex(p=>p.x===at[0]&&p.y===at[1]);runs[id].position={...layout.route[Math.max(1,idx-1)]};}
     }
     delete save.dungeonLanguageBuff;
+    if (d.kind !== 'tower' || restart || save.towerRunBlessings?.dungeonId !== id) delete save.towerRunBlessings;
     save.zone=id;save.position={...(runs[id].position||layout.spawn)};
     // Re-entry must not immediately trigger the portal used to leave last time.
     if([layout.entrancePortal,layout.portal].some(p=>p&&Math.hypot(p.x-save.position.x,p.y-save.position.y)<90))save.position={...layout.spawn};
@@ -137,6 +138,7 @@ export function leaveDungeon(save,content){
     const target=save.dungeonReturn||{zone:'camp',position:content.worldMaps.camp.spawn,coordinateVersion:mapCoordinateVersion('camp',content)};
     migrateLocationCoordinates(target,content);
     delete save.dungeonLanguageBuff;
+    delete save.towerRunBlessings;
     save.zone=target.zone;save.position={...target.position};save.positionCoordinateVersion=mapCoordinateVersion(target.zone,content);save.dungeonReturn=null;delete save.coopRun;save.revision++;
 }
 export function validateDungeons(save,content){

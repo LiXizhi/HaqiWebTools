@@ -71,6 +71,11 @@ export function createHudController({
             leaveDungeon: dungeon.exitDungeon,
             interact: interactNearest,
             mountToggle: () => performAction({ type: 'mount-visibility', hidden: !getContext().save?.mountHidden }),
+            toggleHanziStories: () => {
+                const res = performAction({ type: 'toggle-hanzi-story-explore' });
+                if (res?.message) services?.feedback?.toast?.(res.message);
+                paintHud();
+            },
         });
     }
 

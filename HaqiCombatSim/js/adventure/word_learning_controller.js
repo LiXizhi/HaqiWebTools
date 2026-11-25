@@ -18,6 +18,7 @@ import { castBlockedMessage } from '../adventure_cast_feedback_core.js';
 import { restoreVisibleFocus } from '../ui/controls.js';
 import { ensureStylesheet } from '../ui/dom.js';
 import { renderOverlayCard } from '../views/adventure/view_panel_modal.js';
+import { battleSpeechController } from '../views/adventure/view_battle_layer.js';
 
 export function createWordLearningController({
     nodes,
@@ -171,7 +172,11 @@ export function createWordLearningController({
                 if (audio) wordRecordings.set(row.id, audio);
                 persist();
                 const resonance = hanziWordBattleResonance(row.id);
-                if (resonance) toast?.(resonance);
+                if (resonance) {
+                    toast?.(resonance);
+                    battleSpeechController(current).say(hero.id, resonance, { duration: 4200 });
+                    spellSound?.play?.('reward');
+                }
             },
             cast: pending => playRound(pending),
         });

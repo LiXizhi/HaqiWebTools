@@ -1,0 +1,464 @@
+/* Storybook Ink-Stone Alchemy styling for Hanzi Island Compound Forge */
+.hanzi-forge-modal {
+    width: min(740px, 94vw);
+    max-height: min(88vh, 790px);
+}
+
+.hanzi-forge-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hanzi-forge-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.hanzi-forge-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hanzi-forge-eyebrow {
+    margin: 0;
+    font-size: 12px;
+    color: var(--muted, #6f5534);
+    line-height: 1.45;
+}
+
+/* Ink-stone combining altar */
+.hanzi-forge-altar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    background: radial-gradient(circle at 50% 20%, #fffaf0 0%, #efe0bb 100%);
+    border: 2px solid rgba(138, 99, 44, 0.55);
+    box-shadow: inset 0 0 18px rgba(84, 54, 18, 0.12);
+}
+
+.hanzi-forge-altar.is-success {
+    border-color: #3f7a56;
+    background: radial-gradient(circle at 50% 20%, #f6fdf5 0%, #e5f3e2 100%);
+}
+
+.hanzi-forge-equation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.hanzi-forge-op {
+    font-size: 18px;
+    font-weight: 700;
+    color: #8c6230;
+}
+
+.hanzi-forge-op.is-optional {
+    opacity: 0.45;
+}
+
+.hanzi-forge-op.is-arrow {
+    font-size: 20px;
+    color: #244f3b;
+}
+
+.hanzi-forge-slot {
+    width: 74px;
+    height: 76px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    border-radius: 11px;
+    border: 2px dashed rgba(138, 99, 44, 0.52);
+    background: rgba(255, 251, 239, 0.85);
+    color: var(--ink, #3b2814);
+    cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hanzi-forge-slot.is-filled {
+    border-style: solid;
+    border-color: #a66d24;
+    background: #fff7dd;
+    box-shadow: 0 3px 8px rgba(72, 46, 16, 0.16);
+}
+
+.hanzi-forge-slot.is-filled:hover {
+    transform: translateY(-2px);
+    border-color: #b4472f;
+}
+
+.hanzi-forge-slot.is-optional {
+    opacity: 0.6;
+}
+
+.hanzi-forge-slot-glyph {
+    font-size: 28px;
+    line-height: 1.05;
+    font-family: KaiTi, STKaiti, serif;
+}
+
+.hanzi-forge-slot.is-empty .hanzi-forge-slot-glyph {
+    font-size: 17px;
+    color: #9b7a4a;
+}
+
+.hanzi-forge-slot-cue {
+    font-size: 11px;
+    color: var(--muted, #6f5534);
+}
+
+.hanzi-forge-medallion {
+    min-width: 96px;
+    min-height: 82px;
+    padding: 6px 12px;
+    border-radius: 14px;
+    border: 2px solid #9f702b;
+    background: linear-gradient(180deg, #fffdf4 0%, #f5e2b5 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    box-shadow: 0 4px 12px rgba(76, 48, 16, 0.18);
+}
+
+.hanzi-forge-medallion.is-revealed {
+    border-color: #2f6e49;
+    background: linear-gradient(180deg, #fffef8 0%, #e4f7e8 100%);
+    box-shadow: 0 0 0 3px rgba(244, 202, 105, 0.65), 0 4px 14px rgba(36, 79, 59, 0.24);
+}
+
+.hanzi-forge-medallion-pinyin {
+    font-size: 11px;
+    color: #244f3b;
+    font-weight: 600;
+}
+
+.hanzi-forge-medallion-glyph {
+    font-size: 34px;
+    line-height: 1.05;
+    font-family: KaiTi, STKaiti, serif;
+    color: #3a200d;
+}
+
+.hanzi-forge-medallion-glyph.is-mystery {
+    color: #9d7942;
+}
+
+.hanzi-forge-medallion-title {
+    font-size: 11px;
+    color: #6a4f2d;
+}
+
+.hanzi-forge-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.hanzi-forge-feedback {
+    padding: 9px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(145, 108, 52, 0.35);
+    background: #fff7e1;
+    color: var(--ink, #3b2814);
+}
+
+.hanzi-forge-feedback.is-success {
+    background: #e9f6ec;
+    border-color: rgba(63, 122, 86, 0.45);
+    color: #1f5136;
+}
+
+.hanzi-forge-feedback.is-hint {
+    background: #f5f0dc;
+    border-color: rgba(140, 104, 48, 0.42);
+}
+
+.hanzi-forge-feedback-main {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.5;
+    font-weight: 600;
+}
+
+.hanzi-forge-feedback-sub {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: #315f44;
+}
+
+.hanzi-forge-riddle-bar {
+    margin: 0;
+    padding: 8px 11px;
+    border-radius: 9px;
+    background: rgba(255, 248, 226, 0.85);
+    border: 1px solid rgba(154, 114, 54, 0.34);
+    font-size: 13px;
+    color: var(--ink, #3b2814);
+}
+
+.hanzi-forge-riddle-bar.is-complete {
+    background: #ebf7ed;
+    border-color: rgba(63, 122, 86, 0.38);
+    color: #1f5136;
+}
+
+.hanzi-forge-tray-label {
+    margin: 0;
+    font-size: 12px;
+    color: var(--muted, #6f5534);
+}
+
+.hanzi-forge-tray {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 7px;
+}
+
+.hanzi-forge-radical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    padding: 6px 4px;
+    min-height: 64px;
+    border-radius: 10px;
+    border: 1.5px solid rgba(145, 108, 52, 0.48);
+    background: linear-gradient(180deg, #fffbf0 0%, #f5e6c3 100%);
+    color: var(--ink, #3b2814);
+    cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.hanzi-forge-radical:hover:not(:disabled) {
+    transform: translateY(-2px);
+    border-color: #244f3b;
+    box-shadow: 0 3px 8px rgba(36, 79, 59, 0.16);
+}
+
+.hanzi-forge-radical:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.hanzi-forge-radical-pinyin {
+    font-size: 10.5px;
+    color: #7c5c34;
+    line-height: 1.1;
+}
+
+.hanzi-forge-radical-glyph {
+    font-size: 24px;
+    line-height: 1.1;
+    font-family: KaiTi, STKaiti, serif;
+}
+
+.hanzi-forge-radical-cue {
+    font-size: 10.5px;
+    color: #6a4f2d;
+    line-height: 1.1;
+}
+
+/* Codex grid */
+.hanzi-forge-codex {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+}
+
+.hanzi-forge-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px 11px;
+    border-radius: 10px;
+    border: 1.5px solid rgba(154, 114, 54, 0.36);
+    background: #fff9e8;
+}
+
+.hanzi-forge-card.is-discovered {
+    border-color: #3f7a56;
+    background: #f4fbf3;
+}
+
+.hanzi-forge-card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hanzi-forge-card-glyph {
+    width: 44px;
+    height: 44px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-family: KaiTi, STKaiti, serif;
+    background: #fef3d3;
+    border: 1.5px solid #b57b2a;
+    color: #3b220d;
+    flex-shrink: 0;
+}
+
+.hanzi-forge-card-glyph.is-locked {
+    background: #f0e6cc;
+    border-style: dashed;
+    color: #997947;
+}
+
+.hanzi-forge-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.hanzi-forge-card-pinyin {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink, #3b2814);
+}
+
+.hanzi-forge-card-formula {
+    font-size: 11.5px;
+    color: var(--muted, #6f5534);
+}
+
+.hanzi-forge-card-story {
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--ink, #3b2814);
+}
+
+.hanzi-forge-card-words {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #244f3b;
+}
+
+@media (max-width: 650px) {
+    .hanzi-forge-modal {
+        width: 96vw;
+        max-height: 90vh;
+    }
+
+    .hanzi-forge-slot {
+        width: 60px;
+        height: 64px;
+    }
+
+    .hanzi-forge-slot-glyph {
+        font-size: 22px;
+    }
+
+    .hanzi-forge-medallion {
+        min-width: 82px;
+        min-height: 68px;
+    }
+
+    .hanzi-forge-medallion-glyph {
+        font-size: 28px;
+    }
+
+    .hanzi-forge-tray {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .hanzi-forge-codex {
+        grid-template-columns: 1fr;
+    }
+}
+
+.hanzi-forge-seal-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(145, 108, 52, 0.36);
+    background: linear-gradient(135deg, #fff8e4 0%, #f4e6c2 100%);
+}
+
+.hanzi-forge-seal-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hanzi-forge-seal-info strong {
+    display: block;
+    font-size: 13.5px;
+    color: var(--ink, #3b2814);
+}
+
+.hanzi-forge-seal-info small {
+    display: block;
+    font-size: 12px;
+    color: #24533c;
+}
+
+.hanzi-forge-seal-glyph {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: #244f3b;
+    color: #fff8e6;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.hanzi-forge-seal-empty {
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--muted, #6f5534);
+}
+
+.hanzi-forge-feedback-seal {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(63, 122, 86, 0.35);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 12.5px;
+}
+
+.hanzi-forge-card-seal {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(145, 108, 52, 0.22);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.hanzi-forge-card-seal small {
+    color: #24533c;
+    font-size: 12px;
+    font-weight: 600;
+}

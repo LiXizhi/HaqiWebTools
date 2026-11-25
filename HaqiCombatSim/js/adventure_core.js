@@ -1,4 +1,10 @@
-import {dungeonTacticsProfile,dungeonTacticsVersion,towerFloorTactic} from './dungeon_tactics_core.js';
+import {dungeonTacticsProfile,dungeonTacticsVersion,towerFloorTactic,towerFloorNumber} from './dungeon_tactics_core.js';
+import {grantMonsterDrops} from './monster_loot_core.js';
+import {recordTowerBlessingOffer,towerBlessingsSnapshot} from './tower_blessings_core.js';
+import {hanziSealSnapshot} from './hanzi_seal_core.js';
+import {campfireBuffSnapshot,consumeCampfireBuffOnVictory} from './campfire_cooking_core.js';
+import {petSynergiesSnapshot} from './pet_synergy_core.js';
+import {recordDailyBountyProgress} from './daily_bounties_core.js';
 import {settleTacticsRecord} from './battle_tactics_journal_core.js';
 import {settleDungeonChallenge} from './dungeon_challenge_core.js';
 import {grantDungeonFirstReward} from './dungeon_first_rewards_core.js';
@@ -125,7 +131,7 @@ export function beginEncounter(save,content,encounterId,access={}) {
     if(initialParty)assert(initialParty.some(u=>u.hp>0),'伙伴们需要休息恢复生命');
     const serial = ++save.encounterSerial;
     save.pendingEncounter = { id: `${save.seed}:${serial}`, encounterId,
-        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 2, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1, dispelRulesVersion:1, specialCardRulesVersion:1, captureRulesVersion:1 };
+        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 2, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1, dispelRulesVersion:1, specialCardRulesVersion:1, captureRulesVersion:1, monsterLootVersion:1, wordCardScalingVersion:1 };
     if(save.openingJourney?.version===1&&save.zone==='camp'&&OPENING_TRAINING_IDS.includes(encounterId))save.pendingEncounter.openingTrainingVersion=3;
     if(dungeonTacticsProfile(dungeon))Object.assign(save.pendingEncounter,{dungeonTacticsVersion:dungeonTacticsVersion(dungeon),dungeonTacticsId:dungeon.id});
     else if(towerFloorTactic(dungeon,encounterId))Object.assign(save.pendingEncounter,{dungeonTacticsVersion:3,dungeonTacticsId:dungeon.id});
@@ -148,6 +154,16 @@ export function beginEncounter(save,content,encounterId,access={}) {
     const languageBuff=save.dailyLanguageBuff?dailyBuffs(save):dungeonLanguageBuff(save,content);
     if(save.dailyLanguageBuff)save.pendingEncounter.dailyLanguageVersion=1;
     if(languageBuff)save.pendingEncounter.languageBuff=languageBuff;
+    const towerBlessings=towerBlessingsSnapshot(save,dungeon);
+    if(towerBlessings)save.pendingEncounter.towerBlessings=towerBlessings;
+    if(!save.pendingEncounter.openingTrainingVersion){
+        const hanziSeal=hanziSealSnapshot(save);
+        if(hanziSeal)save.pendingEncounter.hanziSeal=hanziSeal;
+        const campfireBuff=campfireBuffSnapshot(save);
+        if(campfireBuff)save.pendingEncounter.campfireBuff=campfireBuff;
+        const petSynergies=initialParty?.length>=2?petSynergiesSnapshot(initialParty):null;
+        if(petSynergies)save.pendingEncounter.petSynergies=petSynergies;
+    }
     save.pendingEncounter.runes = runeInventory(save,content);
     save.pendingEncounter.deferredRuneSettlement = true;
     save.pendingEncounter.runeUsed = {};
@@ -202,7 +218,7 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
     const encounter = content.encounters.find(e => e.id === pending.encounterId)||specialEncounter(save,content,pending.encounterId), monster = pending.monster || content.monsters[encounter.monsterId];
     settleRunes(save,battle);
     if(content.pets)settleParty(save,content,battle);
-    let insufficientStamina=false,staminaSpent=0;
+    let insufficientStamina=false,staminaSpent=0,droppedItems=[];
     if (battle.winner === 'near') {
         openingJourneyWon(save,pending);
         if(save.petTraitEncounters)delete save.petTraitEncounters[pending.encounterId];
@@ -220,13 +236,30 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
         staminaSpent=gate.cost;
         if(gate.rewarded){
             const defeated=pending.dungeonMonsterIds?pending.dungeonMonsterIds.map(id=>content.monsters[id]):[monster];
-            save.xp += defeated.reduce((n,m)=>n+Math.ceil(m.xp*(pending.magicStarExperiencePercent??100)/100),0);
+            const campfireResult=consumeCampfireBuffOnVictory(save,content,pending,pending.player);
+            const xpMult=((pending.magicStarExperiencePercent??100)+campfireResult.xpBonusPct)/100;
+            save.xp += defeated.reduce((n,m)=>n+Math.ceil(m.xp*xpMult),0);
+            if(campfireResult.xpBonusPct>0&&content.pets){
+                const bonusPetXp=Math.ceil((pending.dungeonMonsterIds?battle.monsterTemplates.reduce((sum,m)=>sum+m.xp,0):battle.monsterTemplates[0].xp)*campfireResult.xpBonusPct/100);
+                for(const id of pending.petIds||[]){const pet=save.pets[id];if(pet){pet.xp+=bonusPetXp;pet.level=Pets.petXpLevel(pet.xp,content);}}
+            }
             save.inventory[100] = (save.inventory[100] || 0) + defeated.reduce((n,m)=>n+m.coins,0);
             // Original water-bubble loot1 = {[17114,1]=20}; draw remains on the encounter's seeded RNG.
             if (monster.id === 'water-bubble' && battle.rng.int(1,100) <= 20) save.inventory[17114] = (save.inventory[17114] || 0) + 1;
+            droppedItems = grantMonsterDrops(save, content, pending, defeated);
+        }else if(pending.campfireBuff){
+            consumeCampfireBuffOnVictory(save,content,pending,pending.player);
         }
-        if(pending.dungeonMonsterIds && dungeonFor(content,save.zone))dungeonProgress(save)[save.zone].cleared.push(encounter.id);
-        recordTowerWin(save,dungeonFor(content,save.zone),encounter?.id);
+        const activeDungeon=dungeonFor(content,save.zone);
+        if(pending.dungeonMonsterIds && activeDungeon)dungeonProgress(save)[save.zone].cleared.push(encounter.id);
+        recordTowerWin(save,activeDungeon,encounter?.id);
+        const towerFloor=activeDungeon?.kind==='tower'?towerFloorNumber(encounter?.id):0;
+        if(towerFloor>0)recordTowerBlessingOffer(save,activeDungeon,towerFloor);
+        if(now>0&&!pending.openingTrainingVersion&&save.zone!=='camp'){
+            recordDailyBountyProgress(save,'battle-win',1,now);
+            if(activeDungeon)recordDailyBountyProgress(save,'dungeon-step',1,now);
+            if((pending.petIds||[]).length>0)recordDailyBountyProgress(save,'pet-care',1,now);
+        }
         if (monster.goalId) signal(save,content,'defeat',monster.goalId);
         noteCatalogKills(save,content,pending.dungeonMonsterIds?pending.dungeonMonsterIds.map(id=>content.monsters[id]):[monster],createRng(hashSeed(`${save.seed}:quest:${pending.id}`)));
         syncProgression(save,content);
@@ -242,7 +275,7 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
     const firstReward=grantDungeonFirstReward(save,content,save.zone,{complete:!!challenge,rewarded:battle.winner==='near'&&!insufficientStamina});
     const tacticsMilestones=settleTacticsRecord(save,pending,battle);
     save.rewardedEncounters.push(pending.id); save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); migrateBagRules(save,content); migrateDefaultPocket(save,content); syncEquipmentInstances(save,content); save.revision++;
-    return {settled:true,insufficientStamina,staminaSpent,relationshipEvents,tacticsMilestones,challenge,firstReward};
+    return {settled:true,insufficientStamina,staminaSpent,droppedItems,relationshipEvents,tacticsMilestones,challenge,firstReward};
 }
 function settleCapturedPets(save,content,battle){
     const pending=save.pendingEncounter;if(!pending||pending.petCapturesSettled)return;
@@ -262,7 +295,7 @@ export function settleParty(save,content,battle,{retreat=false}={}){
     if(save.coopRun){settleCoopHealth(save,battle);if(!retreat)settleCapturedPets(save,content,battle);return;}
     save.heroHp=dungeonLanguageBaseHp(battle.unitsById.hero);
     if(battle.winner!=='near'||retreat)save.heroHp=Math.max(save.heroHp,Math.ceil((battle.unitsById.hero.languageBaseMaxHp||battle.unitsById.hero.maxHp)*p.defeatHp));
-    for(const u of battle.sides.near)if(u.speciesId){const pet=save.pets[save.petInstanceVersion===1?u.id:u.speciesId];if(pet)pet.hp=u.hp;}
+    for(const u of battle.sides.near)if(u.speciesId){const pet=save.pets[save.petInstanceVersion===1?u.id:u.speciesId];if(pet)pet.hp=dungeonLanguageBaseHp(u);}
     save.inventory[Pets.CAPTURE_ID]=Math.max(0,(save.inventory[Pets.CAPTURE_ID]||0)-(battle.captureUsed||0));
     Pets.retireCaptureCrystals(save,content,{keepActiveBattle:false});
     if(!retreat){

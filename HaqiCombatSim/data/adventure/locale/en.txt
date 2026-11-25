@@ -12620,3 +12620,441 @@ Word · 回忆拼写||Word · Recall Spelling
 字源碑林传拓册（{done}/{total}）||Hanzi Stele Scroll ({done}/{total})
 带我去看看||Take Me There
 翻阅传拓册||Open Stele Scroll
+现场实景机关舞台||Interactive Landmark Stage
+待安放||Unplaced
+撤下此牌||Remove
+点选下方牌签，直接安放到实景中闪烁的当前位置：||Pick a plaque below to place it onto the glowing spot in the scene:
+往高处石阶||Uphill Steps
+往村口低处||Downhill Path
+岔路正中央||Center Fork
+东侧方格田||East Fields
+西侧大树林||West Forest
+渠边泥堤岸||Canal Bank
+清晨晒谷||Morning Sun
+午后聚云||Noon Clouds
+落雨收谷||Rain Harvest
+灯塔火盆||Beacon Brazier
+避风木门||Shelter Door
+树下歇脚||Tree Rest
+五指小泥印||Clay Handprint
+码头远望窗||Harbor Gaze
+牵挂落款印||Heart Seal
+震天重鼓||Grand Drum
+掌心铃鼓||Hand Drum
+压轴欢舞||Finale Dance
+岩浆主道||Lava Trail
+强风山口||Windy Pass
+浓烟岔路||Smoky Fork
+南岸货栈||South Depot
+冰原航标||Ice Beacon
+守港急件||Harbor Mail
+正午辨位||Noon Bearing
+暗流泉脉||Spring Vein
+入夜商道||Night Caravan
+潮湿谷口||Damp Valley
+驱雾主灯||Mist Lamp
+沼泽暗道||Marsh Path
+木桌两只杯||Two Teacups
+迟到旧信||Late Letters
+灯塔交接||Lighthouse Handover
+瀑布旧港||Old Falls Port
+双图叠合||Overlay Charts
+高桥通途||High Bridge
+反挂红帆||Inverted Sail
+旧名单册||Old Roster
+塔顶回灯||Twin Beacon
+字源合字坊||Hanzi Compound Forge
+字源合字坊 · 会意造字炉||Hanzi Compound Forge · Ideograph Hearth
+关闭字源合字坊||Close Hanzi Compound Forge
+合字砚台||Forge Bench
+造字图谱（{done} / {total}）||Ideograph Codex ({done} / {total})
+象形合意 · 已发现 {done} / {total} 枚会意汉字（每新造 1 字获 35 奇豆与 60 经验，每满 3 字赠额外好礼）||Ideograph Forge · {done} / {total} discovered (+35 Qidou & +60 XP each, bonus gift every 3)
+移除砚台第 {idx} 槽的「{glyph}」||Remove {glyph} from slot {idx}
+第三槽（可选，用于三字合意）||Slot 3 (optional, for 3-part characters)
+砚台第 {idx} 槽（空）||Slot {idx} (empty)
+三连可选||Optional 3rd
+点选字块||Pick Tile
+会意成字||Forge Char
+以意合字||Forge Character
+清空砚台||Clear Bench
+灵感提示||Hint
+图谱线索：{hint}||Codex Clue: {hint}
+常用词语：{words}||Common Words: {words}
+今日造字灵感：{hint}||Next Forge Clue: {hint}
+十二枚会意汉字已全部点亮！你可以随时重新组合，重温象形会意之趣。||All 12 ideograph characters discovered! Feel free to combine tiles anytime.
+点选基础象形字块放入砚台（同字可重复放入，如木+木、火+火）：||Tap pictograph tiles to place on the bench (duplicates allowed, e.g. Wood+Wood):
+已点亮 {done} / {total} 枚会意汉字 · 集齐 6 枚获「会意造字师」，集齐 12 枚获「万象造字宗师」||{done} / {total} discovered · 6 unlocks Ideograph Alchemist, 12 unlocks Grand Character Smith
+{n} 枚字块合成||Combine {n} tiles
+待发现会意字||Undiscovered Character
+放入首枚字块去试试||Try with 1st tile
+已放入首枚字块，对照线索试试：{hint}||First tile placed! Try with this clue: {hint}
+请先从下方字块盘中点选 2 至 3 枚象形字块放进砚台。||Select 2 to 3 pictograph tiles from the tray first.
+进入字源合字坊（会意造字 · {done}/{total}）||Open Hanzi Compound Forge ({done}/{total})
+地标复原 {done}/{total} · 合字 {forge}/{forgeTotal} · 碑林 {stele}/{steleTotal}||Landmarks {done}/{total} · Forge {forge}/{forgeTotal} · Steles {stele}/{steleTotal}
+字源合字坊（{done}/{total}）||Hanzi Forge ({done}/{total})
+去合字坊||Open Forge
+会意造字师||Ideograph Alchemist
+万象造字宗师||Grand Character Smith
+太阳||Sun
+行人||Person
+山峰||Peak
+岩石||Rock
+溪水||Stream
+农田||Field
+火苗||Flame
+屋门||Door
+手掌||Hand
+眼睛||Eye
+内心||Heart
+宽大||Big
+细小||Small
+日月同辉||Sun and Moon Bright
+白天的太阳与夜晚的明月并肩发光，合起来就是驱散昏暗的「明」。||Daylight sun and night moon shine together to form Ming (bright).
+把白天的太阳和夜晚的弯月放在一起，天色立刻亮堂起来。||Place the daytime sun beside the nighttime moon to brighten the sky.
+明亮||Bright
+明天||Tomorrow
+荫下歇脚||Rest Under Shade
+赶路的人停在浓密的大树旁乘凉歇息，正是「休」字的来历。||A traveler leaning beside a leafy tree to rest forms Xiu (rest).
+旅人走累了，最想靠在什么高大的植物旁歇一会儿？||A tired traveler wants to lean against what tall plant to rest?
+午休||Noon Nap
+双木成荫||Twin Trees Grove
+两棵大树并肩而立、枝叶相连，汇成一片清凉的小树林。||Two trees standing side by side with linked leaves form Lin (woods).
+一棵树太孤单，把两棵相同的树摆在一起试试看。||One tree is lonely—try putting two identical trees together.
+竹林||Bamboo Grove
+三木成海||Three Trees Forest
+三棵大树层层叠起，化作遮天蔽日、鸟鸣不断的大森林。||Three trees layered together become Sen, a dense forest full of birdsong.
+如果两棵树还不够茂密，再添上第三棵放进三连砚槽呢？||If two trees aren't dense enough, add a third tree into the 3rd slot!
+森然||Dense & Towering
+山崖巨石||Mountain Cliff Rock
+高山峻岭间突兀坚硬的大石，山在下石相依，合为「岩」。||Mountain peaks paired with hard stone form Yan (cliff rock).
+高峰之上立着坚硬的石头，山与石相合会造出什么字？||Hard stone rising on a mountain peak—combine mountain and stone!
+山岩||Crag
+举手远望||Shade Eyes to Gaze
+古人眺望远方时常抬起手掌遮在眼眉上挡住刺眼阳光，这便是「看」。||Placing a hand above the eye to shade the sun while gazing forms Kan (look).
+把一只手搭在眼睛上方遮住阳光，就能望得更远。||Raise a hand above your eye to shade the glare and look afar.
+看见||See
+看望||Visit
+倚门细听||Listen at the Door
+把耳朵轻轻贴近门扉，听见门外传来的风声与归人脚步，是为「闻」。||Pressing an ear close to the door to hear footsteps outside forms Wen (hear).
+站在门里，用什么器官去听门外传来的动静？||Standing inside a door, what do you use to listen outside?
+见闻||Knowledge
+耳闻||Hear With Ears
+叩门求教||Ask at the Door
+来到门前轻声开口请教主人，门中藏口，正是礼貌的「问」。||Opening your mouth at a doorway to politely inquire forms Wen (ask).
+走到别家门前，想要请教问题必须用什么来出声？||At someone's doorway, what do you use to speak up and ask?
+问候||Greeting
+学问||Learning
+上小下大||Small Top Big Base
+底部宽大厚实、顶端收成细小一点，就像山峰与针尖一样锐利。||Broad at the base and tiny at the tip forms Jian (sharp point).
+上面细细小小、下面宽宽大大，把一对反义字叠在一起！||Small on top, big underneath—combine an opposite pair!
+山尖||Peak Tip
+尖角||Sharp Horn
+微土轻扬||Fine Floating Dust
+极其细小的泥土微粒在阳光里轻轻飘浮，正是「尘」字。||Tiny specks of soil floating softly in sunlight form Chen (dust).
+细小到几乎看不见的泥土颗粒，会合出哪个字？||What character comes from combining tiny and soil?
+尘土||Dust
+灰尘||Ash Dust
+心系故田||Heart on Home Fields
+心里装着远方的家田与亲人，牵挂反复萦绕，便是深情的「思」。||Holding home fields inside the heart forms Si (miss / think deeply).
+离家远行时，胸口那颗心一直挂念着脚下的方格农田。||Far from home, the heart keeps longing for the checkered fields.
+思念||Longing
+思考||Thinking
+双火腾跃||Blazing Twin Flames
+两团跳动的火焰上下相叠，热浪滚滚，这就是盛夏的「炎」。||Two dancing flames stacked high form Yan (blazing heat).
+一簇火苗已经够暖和了，把两簇火苗叠在一起会怎样？||One flame is already warm—what happens if you stack two flames?
+炎热||Scorching
+烈炎||Fierce Flame
+选||Opt
+空||Empty
+战利品掉落：{drops}||Loot Dropped: {drops}
+幽谷守灯人||Hollow Lantern Keeper
+前线观察者||Frontline Scout
+沼泽探路者||Marsh Pathfinder
+石脊哨长||Ridge Watch Captain
+守夜药师||Nightwatch Herbalist
+整理装备与强化材料||Check Gear & Upgrade Materials
+2x 加速||2x Fast
+1x 速度||1x Speed
+切换战斗演出倍速（1x / 2x）||Toggle battle playback speed (1x / 2x)
+试炼赐福 · {blessings}||Tower Blessings · {blessings}
+挑选赐福并进第 {floor} 层||Pick Blessing & Enter Floor {floor}
+直进第 {floor} 层||Continue to Floor {floor}
+返回塔内地图||Back to Tower Map
+已激活赐福：{blessings}||Active Blessings: {blessings}
+挑选试炼塔赐福||Choose Tower Blessing
+第 {floor} 层通关 · 挑选试炼塔赐福||Floor {floor} Cleared · Choose a Tower Blessing
+关闭赐福选择||Close Blessing Picker
+从三项塔内赐福中挑选一项，本轮攀登期间对全队持续生效（离开高塔后重置）。||Pick one of three blessings to empower your party for the rest of this tower climb (resets upon leaving).
+第 {cur} / {max} 层||Stack {cur} / {max}
+选此赐福并进第 {floor} 层||Pick & Enter Floor {floor}
+选择此赐福||Choose Blessing
+本轮已激活赐福：||Active in This Climb:
+稍后再选，先回塔内||Choose Later
+攻势||Offense
+防线||Defense
+续航||Vitality
+魔力||Pips
+先手||Tempo
+破甲||Pierce
+灵巧||Agility
+均衡||Balance
+破阵锋芒||Breaker's Edge
+全队全系法术伤害 +12%||Party All-School Damage +12%
+越往高层越需要一击定胜负的爆发力，每层叠加强化全队所有学派的输出。||Higher floors reward decisive bursts; each stack boosts all party spell damage.
+磐石护壁||Bedrock Bulwark
+全队全系伤害抗性 +10%||Party All-School Resist +10%
+稳步压低高层守关首领的爆发重击，适合持久消耗与双人/四人推进。||Steadily blunts heavy boss hits—ideal for sustained climbs and multi-unit squads.
+生机涌泉||Vital Spring
+全队最大生命 +15%，并立即回复 18% 最大生命||Party Max HP +15% & heal 18% Max HP now
+试炼塔内不自动回血，涌泉既能抬高血线容错，也能立刻为全队喘一口气。||Since towers do not auto-heal, Vital Spring raises max HP and restores health immediately.
+超魔涌流||Power Pip Surge
+全队超级魔力生成率 +18%||Party Power Pip Chance +18%
+让高费大招与强化组合更频繁上手，大幅加快每层通关节奏。||Brings high-cost finishers and buff combos online faster each floor.
+明察秋毫||Keen Sight
+全队暴击率 +10% · 命中率 +6%||Party Crit +10% · Accuracy +6%
+减少关键回合失误，并让每次暴击都更具压制力。||Cuts painful fizzles on key turns while sharpening critical strikes.
+先手魔晶||First-Turn Spark
+全队开场额外获得 +1 点超级魔力||Party starts combat with +1 extra Power Pip
+首回合就能直接打出高阶起手或双段配合，抢先建立场面优势。||Enables strong opening plays or two-unit combos from Round 1.
+微风愈合||Mending Breeze
+全队治疗效果 +20% · 受疗效果 +12%||Party Outgoing Heal +20% · Incoming Heal +12%
+与生命系或带治疗牌的战宠配合极佳，让队伍轻松熬过百层连战。||Shines with Life wizards or healer pets across long 100-floor gauntlets.
+穿甲灵矛||Pierce Lance
+全队全系法术穿透 +10% · 暴击倍率 +12%||Party Pierce +10% · Crit Damage +12%
+专克高层高抗与铁壁守关首领，强行撕开敌方防线。||Cuts straight through high-resist guardians and Iron Bulwark bosses.
+踏风闪步||Windstep Evasion
+全队闪避率 +10% · 韧性 +8%||Party Dodge +10% · Resilience +8%
+灵巧躲开致命重击并降低被敌人暴击的风险。||Sidesteps lethal swings and lowers enemy critical hits.
+星辰法印||Astral Balance Seal
+全队全系伤害 +8% · 全系抗性 +6%||Party Damage +8% · Resist +6%
+攻守兼备的稳健赐福，任何阵容和学派都能稳定受益。||A balanced offensive and defensive boost that fits every school and squad.
+石脊哨兵||Ridge Watch Guard
+明·光华战印||Ming Seal: Radiance
+全系伤害 +6% · 命中 +6%||All Damage +6% · Accuracy +6%
+休·调息战印||Xiu Seal: Restful Breath
+最大生命 +8% · 治疗效果 +12%||Max HP +8% · Healing +12%
+林·连枝战印||Lin Seal: Linked Branches
+全系减伤 +6% · 最大生命 +5%||All Resist +6% · Max HP +5%
+森·深林战印||Sen Seal: Deep Forest
+全系减伤 +9% · 最大生命 +8%||All Resist +9% · Max HP +8%
+岩·磐石战印||Yan Seal: Bedrock
+全系减伤 +10% · 闪避 +4%||All Resist +10% · Dodge +4%
+看·明察战印||Kan Seal: Keen Sight
+暴击 +8% · 命中 +8%||Crit +8% · Accuracy +8%
+闻·听风战印||Wen Seal: Listening Wind
+闪避 +8% · 超级魔力 +8%||Dodge +8% · Power Pip +8%
+问·求知战印||Wen Seal: Inquiring Mind
+超级魔力 +12% · 命中 +5%||Power Pip +12% · Accuracy +5%
+尖·锋芒战印||Jian Seal: Sharp Edge
+全系穿透 +10% · 暴击 +5%||All Pierce +10% · Crit +5%
+尘·轻扬战印||Chen Seal: Light Dust
+闪避 +10% · 全系减伤 +4%||Dodge +10% · All Resist +4%
+思·凝神战印||Si Seal: Focused Heart
+开局 +1 强力魔力球 · 治疗效果 +6%||Start +1 Power Pip · Healing +6%
+炎·烈焰战印||Yan Seal: Blazing Flame
+全系伤害 +10% · 暴击 +5%||All Damage +10% · Crit +5%
+当前战印：{name}||Equipped Seal: {name}
+卸下战印||Unequip Seal
+字源战印：未佩戴（造出任意会意字后，可在图谱中佩戴为战斗被动增益）||Hanzi Seal: None equipped (forge any compound character to equip a passive combat buff in the Codex)
+字源战印「{name}」：{effect}||Hanzi Seal "{name}": {effect}
+已佩戴此战印||Seal Equipped
+立即佩戴战印||Equip Seal Now
+佩戴战印||Equip Seal
+字源合字坊（{done}/{total} · 战印「{glyph}」）||Hanzi Forge ({done}/{total} · Seal "{glyph}")
+战印「{glyph}」||Seal "{glyph}"
+汉字故事探索：已开启（不改英语）||Hanzi Story Explore: On (Keeps Primary Language)
+顺便游览 30 个汉字故事||Also Explore 30 Hanzi Stories
+词卡等级成长：伤害与治疗 +{pct}% · 命中 +{acc}%（Lv.{level}）||Word Card Level Growth: Damage & Heal +{pct}% · Accuracy +{acc}% (Lv.{level})
+战前料理||Battle Meal
+战宠美食||Pet Feast
+魔药炼成||Alchemy Brew
+料理||Cooking
+巨物||Giant
+大鱼||Large
+普通||Normal
+未上岸||Uncaught
+野花||Wildflower
+草药||Herb
+砾石||Pebble
+原矿||Ore
+首次上岸||First Catch
+大鱼纪录||Large Record
+巨物纪录||Giant Record
+初识海味（收集 3 种渔获）||Coastal Taste (Catch 3 Species)
+全海图鉴（集齐 6 种渔获）||Complete Catch Album (All 6 Species)
+传奇钓手（达成 3 种巨物纪录）||Legendary Angler (3 Giant Records)
+鲜鱼暖汤||Warm Fish Soup
+持续 4 场战斗 · 经验 +25% · 全队生命 +8%||4 Battles · XP +25% · Party Max HP +8%
+任一常见渔获（水母/泥鳅/大头鱼）×1 +（草药×2 或 30 奇豆）||Any common catch (Jellyfish/Loach/Bighead) ×1 + (2 Herbs or 30 Beans)
+炙烤蟹钳||Roasted Crab Claw
+持续 4 场战斗 · 全队伤害 +10% · 暴击 +5%||4 Battles · Party Damage +10% · Crit +5%
+大个头螃蟹×1 +（原矿/砾石×2 或 50 奇豆）||Giant Crab ×1 + (2 Ore/Stone or 50 Beans)
+皇冠海鲜宴||Crown Seafood Banquet
+持续 5 场战斗 · 全队攻防 +10% · 经验 +35% · 开局 +1 强力球||5 Battles · Party ATK/DEF +10% · XP +35% · Start +1 Power Pip
+闪闪皇冠鱼×1 +（野花/草药×2 或 80 奇豆）||Sparkling Crown Fish ×1 + (2 Flower/Herb or 80 Beans)
+草本轻露茶||Herbal Dew Tea
+持续 3 场战斗 · 全队减伤 +8% · 治疗 +15% · 战后自动回满生命||3 Battles · Party Resist +8% · Heal +15% · Full Heal After Win
+野花/草药×3（或 40 奇豆直接向营地采购配料）||3 Flower/Herb (or 40 Beans for camp supplies)
+秘制海味宠粮||Secret Seafood Pet Banquet
+出战战宠饱食与生命全满 · 每只 +150 经验 · 另赠营养餐 ×2||Full Hunger & HP for Active Pets · +150 XP Each · +2 Pet Meals
+任一常见渔获×1 +（草药/野花×1 或 25 奇豆）||Any common catch ×1 + (1 Herb/Flower or 25 Beans)
+旧靴炼符法||Old Boot Rune Alchemy
+变废为宝：炼成抓宠符文 ×1 + 捕鱼网 ×1||Upcycle: Brew 1 Catch Rune + 1 Fishing Net
+臭脚丫马靴×1 +（砾石/原矿×2 或 25 奇豆）||Stinky Boot ×1 + (2 Stone/Ore or 25 Beans)
+晶石祝福露||Crystal Blessing Brew
+炼成祝福魔珠 ×1 + 宠物营养餐 ×3||Brew 1 Blessing Pearl + 3 Pet Meals
+大个头螃蟹或大头鱼×1 +（原矿/砾石×3 或 1 仙豆）||Giant Crab or Bighead Fish ×1 + (3 Ore/Stone or 1 Fairy Bean)
+营火烹饪锅||Campfire Cauldron
+营火烹饪与渔获图鉴||Campfire Cooking & Fishing Album
+营火烹饪锅 · 渔获赏金||Campfire Cauldron & Fishing Bounties
+关闭营火烹饪锅||Close Campfire Cauldron
+钓鱼巨物图鉴（可领 {n}）||Fishing Trophy Album ({n} Ready)
+钓鱼巨物图鉴（{caught}/{total}）||Fishing Trophy Album ({caught}/{total})
+当前营火料理生效中：{name}（剩余 {n} 场）||Active Campfire Meal: {name} ({n} battles left)
+营火正旺，随时可以下锅||The campfire is glowing — ready to cook anytime
+海边渔获与野外采集草药/矿石都能直接烹饪成战前增益、战宠大餐或实用符文。||Turn coastal catches and gathered herbs or ores into battle meals, pet feasts, or useful runes.
+投入炼成||Brew Now
+生火烹饪||Cook Now
+将优先消耗采集食材||Uses gathered ingredients first
+自动使用 {n} 奇豆补齐配料||Uses {n} Beans to top up ingredients
+自动使用 {n} 仙豆补齐配料||Uses {n} Fairy Beans to top up ingredients
+已收录 {caught}/{total} 种海产 · 大鱼 {large} 种 · 巨物 {huge} 种（点击可领赏金立即入包）||Logged {caught}/{total} species · {large} Large · {huge} Giant (tap to claim rewards)
+领取里程碑||Claim Milestone
+未达成||Locked
+个人最重：{weight} · 背包余量：{bag}||Personal Best: {weight} · In Bag: {bag}
+尚未钓获，前往任意岛屿海边抛竿吧||Not caught yet — cast a line along any island shore
+待达标||Not Yet
+已领||Claimed
+领赏金||Claim
+未达标||Locked
+已领取钓鱼赏金！||Fishing bounty claimed!
+纪录 · 赏金 {n}||Records · {n} Ready
+营火烹饪 · 渔获赏金（可领 {n}）||Campfire & Fishing ({n} Ready)
+营火烹饪 · {name}（余 {n} 场）||Campfire · {name} ({n} left)
+营火烹饪锅 · 渔获图鉴||Campfire Cooking & Fishing Album
+料理「{name}」||Meal "{name}"
+战宠阵型羁绊||Pet Formation Synergies
+阵型羁绊：暂未激活||Formation Synergies: None Active
+双星同调||Twin Star Resonance
+全队伤害 +6%||Party Damage +6%
+三曜同鸣||Tri-Star Harmony
+全队伤害 +10% · 暴击 +5%||Party Damage +10% · Crit +5%
+元素交响||Elemental Symphony
+全队减伤 +6% · 超级魔力 +10%||Party Resist +6% · Power Pip +10%
+铁壁护卫||Iron Guard Bond
+全队最大生命 +8% · 治疗 +10%||Party Max HP +8% · Healing +10%
+满编协战||Full Squad Cohesion
+全队命中 +6% · 伤害 +5%||Party Accuracy +6% · Damage +5%
+羁绊：{list}||Synergy: {list}
+上阵 1 只伙伴即可触发阵型羁绊（同系触发「双星同调」，3 系触发「元素交响」）。||Deploy 1 pet to unlock formation synergies (2 same school: Twin Star; 3 schools: Elemental Symphony).
+再上阵不同学派伙伴满 3 系可激活「元素交响」（减伤 +6% · 超级魔力 +10%）。||Add pets to reach 3 distinct schools for Elemental Symphony (Resist +6% · Power Pip +10%).
+3 人以上阵容带 1 只生命或寒冰系战宠可激活「铁壁护卫」（生命 +8% · 治疗 +10%）。||Field 3+ units with a Life or Ice pet for Iron Guard Bond (Max HP +8% · Healing +10%).
+上阵满 3 只伙伴凑齐 4 席可激活「满编协战」（命中 +6% · 伤害 +5%）。||Deploy 3 pets to fill all 4 seats for Full Squad Cohesion (Accuracy +6% · Damage +5%).
+海滨巨物猎手||Coastal Trophy Angler
+在钓鱼图鉴中集齐全部 6 种渔获，或达成至少 3 种巨物纪录。||Catch all 6 coastal species in the Fishing Album or record at least 3 Giant catches.
+营火料理师||Campfire Chef
+在营火烹饪锅中完成至少 5 次料理或魔药炼成。||Cook or brew at least 5 recipes at the Campfire Cauldron.
+阿澜的海风货栈||Alan's Sea-Breeze Stall
+高桥集市双图工坊||Highbridge Twin-Chart Stall
+归帆港远航补给站||Homeward Sail Outfitter
+趁退潮拾贝||Low-Tide Shell Combing
+每日最多 2 次：在浅滩搜寻潮汐贝壳与漂流补给，带回奇豆、渔获与野外食材。||Up to 2x daily: comb the tidal shallows for shells and driftwood supplies, bringing back Beans, fish, and pantry herbs.
+比对新旧海图||Compare Old & New Charts
+每日最多 2 次：对照旧测绘稿与新航图标记暗礁，赢取奇豆、仙豆与原矿砾石。||Up to 2x daily: compare old surveys with new sea charts to mark hidden reefs for Beans, Fairy Beans, and ore.
+校准顺风帆缆||Trim the Tailwind Rigging
+每日最多 2 次：协助归帆港调整风向缆绳，收获奇豆、战宠口粮与草药原矿。||Up to 2x daily: help trim the tailwind rigging at Homeward Harbor for Beans, pet meals, and herbs or ore.
+潮汐漂流瓶||Tidal Drift Bottle
+退潮露出的礁石缝里卡着一只蜡封旧玻璃瓶，里面卷着半张写满潮位刻度的渔船日志。||Wedged in a low-tide crevice sits a wax-sealed glass bottle holding half a fishing log marked with tidal scales.
+珊瑚旧铁锚||Coral-Crusted Anchor
+船坞浅水下的铁锚长满发光海藻，轻拂泥沙后露出一小袋保存完好的深海渔网线。||Beneath the old dock sits an anchor draped in glowing kelp, hiding a dry pouch of deep-sea netting.
+灯塔贝壳匣||Lighthouse Shell Casket
+灯塔石阶背风处嵌着一只贝壳小匣，记载着历代守灯人在风浪夜里互相照应的暗号。||Tucked behind the lighthouse steps is a shell casket recording generations of storm-night lamp signals.
+旧航道水纹碑||Old Channel Ripple Stone
+井沿内侧刻着两套互不相同的岛名与潮线，对着阳光看才发现它们拼成了同一条古航道。||Two different island names and tide lines are carved inside the well rim—in sunlight they align into one ancient route.
+偏移铜星盘||Offset Brass Astrolabe
+转动生锈的铜星刻度环，指针停在一处被新图略去的礁石暗湾，弹出藏在底座的测绘奖章。||Turning the rusted brass ring points to a cove omitted from new charts and pops open a hidden surveyor's medal.
+瀑下隐秘渡口印||Hidden Waterfall Ferry Mark
+水雾背后的石壁留着老渡工的木桩扣环，顺手清点旧缆绳时找到了遗落的祝福魔珠。||Behind the waterfall mist remain old ferryman rings, where a stray Blessing Pearl rests among coiled ropes.
+旧帆风向标||Patched-Sail Weathervane
+广场旗杆顶端缝着七块不同颜色的旧帆布，每块布角都记着一次平安归港的风力口诀。||Seven colored sail patches fly atop the plaza pole, each corner stitched with a safe-homecoming wind chant.
+顺风传信台||Tailwind Signal Relay
+风车叶片借着海风带动铜铃轻响，调准风闸后，传信筒里滑出一卷远航补给凭证。||Sea breezes chime the windmill bells; aligning the wind-gate slides a voyage supply voucher from the relay tube.
+彼岸旋涡航标灯||Vortex Shore Beacon
+风帆塔顶的蓝晶航标正对海面旋涡，点亮它后星图映出另一端的现代海岸——现实世界深圳正向你敞开！||The azure beacon atop Sail Tower faces the sea vortex; lighting it reveals a modern coast across the rift—Shenzhen awaits!
+时光初痕（发现 1 条时光长卷线索）||First Trace of Time (1 Time Scroll Clue)
+在现实世界城市打开「时光长卷」，沿时光道路走到线索旁探索。||Open the Time Scroll in an Earth city and inspect a clue along the timeline.
+岁月拾遗（累计发现 3 条时光长卷线索）||Gleaner of Years (3 Time Scroll Clues)
+在时光长卷中收集 3 个不同年代的线索记录。||Collect 3 era clues inside the Time Scroll.
+跨时对话（完成 1 段时光旅人故事）||Across the Eras (1 Time Traveler Story)
+在时光长卷中与任意一位旅人交谈并完成三轮语言对话。||Talk to any Time Scroll traveler and complete their 3-turn dialogue.
+光阴知音（完成 3 段时光旅人故事）||Confidant of Time (3 Time Traveler Stories)
+在时光长卷中完成 3 位不同年代旅人的故事对话。||Complete stories with 3 travelers from different eras.
+穿越旋涡（抵达现实世界 · 深圳）||Through the Vortex (Visit Earth · Shenzhen)
+打开世界地图切换至现实世界，踏上深圳海湾与街区。||Switch to Earth on the World Map and step onto Shenzhen's bay and streets.
+街区历练（完成 1 处现实城市街区挑战）||City District Trial (Clear 1 Earth City Encounter)
+在深圳的蛇口、华强北、深圳湾或南头街区完成至少 1 场城市副本战斗。||Win at least 1 city dungeon encounter in Shekou, Huaqiangbei, Shenzhen Bay, or Nantou.
+群岛巡战||Archipelago Skirmish
+赢得 2 场正式冒险战斗||Win 2 formal adventure battles
+秘境试锋||Dungeon & Tower Trial
+在任意副本或试炼塔中赢得 1 场战斗||Win 1 battle in any dungeon or Trial Tower
+海滨抛竿||Coastal Cast
+在岛屿水域成功钓起 2 次渔获||Land 2 catches while fishing on any island
+营火生香||Campfire Aroma
+在营火烹饪锅完成 1 次料理或魔药炼成||Cook or brew 1 recipe at the Campfire Cauldron
+群岛拾遗||Archipelago Curio
+完成 1 次后三岛彩蛋发现或每日拾贝/测绘||Complete 1 Tide/Float/Sail curio or daily island exploration
+字源悟意||Ideograph Insight
+在字源合字坊尝试或合出 1 次会意汉字||Forge or experiment with 1 compound character at the Hanzi Forge
+伙伴同行||Side by Side
+携战宠赢得 1 场战斗或烹饪 1 次战宠美食||Win 1 battle with pets or cook 1 Pet Feast
+后三岛巡航者||Trilogy Archipelago Voyager
+发掘潮汐、浮岸与风帆三岛全部 9 处隐藏风物与航标彩蛋。||Discover all 9 hidden curios and beacons across Tide, Float, and Sail Islands.
+双界时光行者||Cross-World Time Chronicler
+在双世界与时光长卷中领取至少 3 项探索里程碑赏金。||Claim at least 3 Earth & Time Scroll exploration milestones.
+群岛行纪||Archipelago Chronicle
+群岛行纪 · 悬赏、小摊与荣誉||Archipelago Chronicle · Bounties, Stalls & Honors
+关闭群岛行纪||Close Archipelago Chronicle
+每日悬赏（可领 {n}）||Daily Bounties ({n} Ready)
+每日悬赏||Daily Bounties
+后三岛风物与小摊||Trilogy Curios & Stalls
+双界时光（可领 {n}）||Earth & Time ({n} Ready)
+双界时光||Earth & Time
+荣誉称号（{done}/{total}）||Honor Titles ({done}/{total})
+今日群岛悬赏（{day}）· 已达标 {done} / 3||Daily Bounties ({day}) · {done} / 3 Complete
+完成全部 3 项可领总赏：{rewards}||Complete all 3 for the Daily Bonus: {rewards}
+今日总赏已领||Daily Bonus Claimed
+领取今日总赏||Claim Daily Bonus
+待完成 3 项||Complete All 3
+奖励：{rewards}||Rewards: {rewards}
+领取悬赏||Claim Bounty
+{island} · {title}（今日余 {n} 次）||{island} · {title} ({n} left today)
+立即探索一次||Explore Once Now
+今日次数已满||Done for Today
+{island}隐藏风物与彩蛋（{done}/3）||{island} Hidden Curios ({done}/3)
+首探奖励：{rewards}||First Discovery: {rewards}
+已收录||Discovered
+勘察并收下发现||Inspect & Collect
+{stall} · 拥有奇豆 {beans} / 仙豆 {fairy}||{stall} · Beans {beans} / Fairy Beans {fairy}
+兑换消耗：{cost}||Cost: {cost}
+立即兑换||Exchange Now
+材料不足||Not Enough
+双界时光探索进度：时光线索 {clues} · 旅人故事 {stories} · 深圳街区挑战 {clears}||Cross-World Progress: {clues} Time Clues · {stories} Traveler Stories · {clears} Shenzhen Clears
+在现实世界深圳打开「时光长卷」探索历史线索与旅人对话，或完成街区挑战，即可在此领取冒险赏金。||Explore historical clues and traveler stories in Shenzhen's Time Scroll, or clear city encounters to claim bounties here.
+查看现实世界地图||Open Earth Map
+赏金：{rewards}||Bounty: {rewards}
+领取赏金||Claim Bounty
+待达成||Not Yet
+当前展示荣誉：{title}||Equipped Honor: {title}
+尚未解锁荣誉称号||No Honor Titles Unlocked Yet
+所有已获得的岛屿、副本、钓鱼、烹饪与造字荣誉都可以自由选择佩戴展示。||Freely equip and display any honor you have earned from islands, dungeons, fishing, cooking, or Hanzi forging.
+佩戴中||Equipped
+已获得||Earned
+待解锁||Locked
+佩戴此荣誉||Equip Honor
+群岛行纪 · 悬赏可领（{n}）||Chronicle · {n} Bounties Ready
+本岛风物与小摊 · {stall}||Island Curios & {stall}
+群岛行纪 · 每日悬赏与荣誉||Archipelago Chronicle · Bounties & Honors
+进入{stall}与本岛风物探索||Visit {stall} & Island Curios
+当前随进度展示最高荣誉。所有已获得的荣誉称号都可以自由佩戴。||Currently displaying your latest honor. Any earned honor title can now be freely equipped.
+已佩戴||Equipped
+恢复随进度展示||Auto-Show Latest Honor

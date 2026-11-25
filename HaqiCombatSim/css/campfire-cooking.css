@@ -1,0 +1,322 @@
+/* Campfire Cooking & Fishing Trophy Album modal styles */
+.campfire-modal {
+    width: min(880px, calc(100vw - 24px));
+    max-height: min(88vh, 760px);
+    display: flex;
+    flex-direction: column;
+}
+
+.campfire-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    padding: 12px 16px 18px;
+}
+
+.campfire-status-banner {
+    padding: 11px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(154, 114, 54, 0.38);
+    background: linear-gradient(135deg, #fff9ea 0%, #f5e6c6 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.campfire-status-banner.is-active {
+    background: linear-gradient(135deg, #ecf9ef 0%, #d8f0df 100%);
+    border-color: rgba(46, 125, 78, 0.45);
+}
+
+.campfire-status-banner strong {
+    font-size: 14px;
+    color: var(--ink, #3b2814);
+}
+
+.campfire-status-banner small {
+    font-size: 12.5px;
+    color: var(--muted, #6b5231);
+}
+
+.campfire-stock-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.campfire-stock-chip {
+    font-size: 12px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    border: 1px solid rgba(130, 102, 62, 0.28);
+    background: rgba(255, 251, 240, 0.72);
+    color: #826e52;
+}
+
+.campfire-stock-chip.has-stock {
+    background: #fff6d9;
+    border-color: rgba(182, 128, 38, 0.5);
+    color: #543710;
+    font-weight: 600;
+}
+
+.campfire-stock-chip.is-pantry.has-stock {
+    background: #eaf6ec;
+    border-color: rgba(58, 130, 82, 0.45);
+    color: #1f5335;
+}
+
+.campfire-recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 10px;
+}
+
+.campfire-recipe-card {
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(145, 108, 52, 0.32);
+    background: #fffdf6;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campfire-recipe-card.is-ready {
+    border-color: rgba(68, 138, 88, 0.55);
+    box-shadow: 0 3px 10px rgba(45, 105, 65, 0.08);
+}
+
+.campfire-recipe-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.campfire-cat-tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.campfire-cat-tag.is-meal {
+    background: #ffe9c7;
+    color: #7c4212;
+}
+
+.campfire-cat-tag.is-pet {
+    background: #e2f4e9;
+    color: #1f5e39;
+}
+
+.campfire-cat-tag.is-alchemy {
+    background: #ebe4f8;
+    color: #4f2c80;
+}
+
+.campfire-recipe-effect {
+    margin: 0;
+    font-size: 12.5px;
+    color: #214f36;
+    font-weight: 600;
+}
+
+.campfire-recipe-cost {
+    margin: 0;
+    font-size: 12px;
+    color: var(--muted, #6f5534);
+    line-height: 1.45;
+}
+
+.campfire-recipe-foot {
+    margin-top: auto;
+    padding-top: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.campfire-recipe-foot button {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.campfire-reason {
+    font-size: 11.5px;
+    color: #9b4a2b;
+}
+
+.campfire-pantry-note {
+    font-size: 11.5px;
+    color: #2d6a46;
+}
+
+.campfire-album-summary {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted, #6b5231);
+}
+
+.campfire-milestone-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 8px;
+}
+
+.campfire-milestone-card {
+    padding: 10px 12px;
+    border-radius: 11px;
+    border: 1px solid rgba(145, 108, 52, 0.3);
+    background: #fffaf0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campfire-milestone-card.is-claimable {
+    border-color: #c8861e;
+    background: #fff4d2;
+}
+
+.campfire-milestone-card.is-claimed {
+    opacity: 0.78;
+}
+
+.campfire-milestone-card strong {
+    font-size: 13px;
+}
+
+.campfire-milestone-card small {
+    font-size: 12px;
+    color: #4d3a1f;
+}
+
+.campfire-species-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+    gap: 10px;
+}
+
+.campfire-species-card {
+    padding: 11px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(145, 108, 52, 0.3);
+    background: #fffdf7;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.campfire-species-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.campfire-size-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+.campfire-size-badge.is-huge {
+    background: #ffdf8c;
+    color: #703e06;
+}
+
+.campfire-size-badge.is-large {
+    background: #d8f1e1;
+    color: #1c5b37;
+}
+
+.campfire-size-badge.is-normal {
+    background: #e8edf2;
+    color: #3f5266;
+}
+
+.campfire-size-badge.is-none {
+    background: #f0ece4;
+    color: #8a7b66;
+}
+
+.campfire-species-meta {
+    margin: 0;
+    font-size: 12px;
+    color: var(--muted, #6f5534);
+}
+
+.campfire-tier-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.campfire-tier-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 5px 8px;
+    border-radius: 8px;
+    background: rgba(244, 236, 217, 0.55);
+}
+
+.campfire-tier-row.is-claimable {
+    background: #fff3cb;
+    border: 1px solid rgba(196, 134, 30, 0.48);
+}
+
+.campfire-tier-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    font-size: 12px;
+}
+
+.campfire-tier-info small {
+    font-size: 11px;
+    color: #5b482c;
+}
+
+/* Pet formation synergy strip (shared styling when rendered inside Pet modal) */
+.pet-synergy-bar {
+    margin: 8px 0 10px;
+    padding: 9px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(145, 108, 52, 0.34);
+    background: linear-gradient(135deg, #fff9ea 0%, #f5ebd2 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pet-synergy-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.pet-synergy-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: #24533c;
+    color: #fff8e6;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.pet-synergy-hint {
+    margin: 0;
+    font-size: 12px;
+    color: var(--muted, #6f5534);
+}

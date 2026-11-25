@@ -11,6 +11,20 @@ import { applyCampDetour } from './camp_detour_core.js';
 import { applyForestCommission } from './forest_commission_core.js';
 import { applyIslandPuzzle } from './island_puzzles_core.js';
 import { applySteleRubbing } from './hanzi_stele_scroll_core.js';
+import { applyHanziForge } from './hanzi_forge_core.js';
+import { equipHanziSeal } from './hanzi_seal_core.js';
+import { toggleHanziStoryExplore } from './learning_quest_core.js';
+import { cookCampfireRecipe } from './campfire_cooking_core.js';
+import { claimFishingBounty } from './fishing_bounties_core.js';
+import {
+    discoverTrilogyCurio,
+    performTrilogyDailyActivity,
+    buyTrilogyStallOffer,
+} from './trilogy_curios_core.js';
+import { claimEarthTimeMilestone } from './earth_time_rewards_core.js';
+import { claimDailyBounty, recordDailyBountyProgress } from './daily_bounties_core.js';
+import { equipAdventureHonor } from './adventure_honors_core.js';
+import { applyTowerBlessingChoice } from './tower_blessings_core.js';
 import { applyCompanionWordplay } from './companion_wordplay_core.js';
 import { islandSpawn, travelStatus } from './adventure_world_map_core.js';
 import { mapInfo } from './adventure_island_layout_core.js';
@@ -47,7 +61,7 @@ import {
     petLevel,
     grantQuestRewards,
 } from './adventure_quests_core.js';
-import { catalogStatSnapshot } from './adventure_save_core.js';
+import { catalogStatSnapshot, playerSpec } from './adventure_save_core.js';
 import {
     acceptCatalogQuest,
     claimCatalogQuest,
@@ -125,6 +139,81 @@ export const ADVENTURE_ACTION_HANDLERS = {
         const result = applySteleRubbing(save, content, action);
         return { early: result };
     },
+    'hanzi-forge': ({ save, content, action }) => {
+        const result = applyHanziForge(save, content, action);
+        if (result.changed) syncEquipmentInstances(save, content);
+        if (result.ok && action.now !== 0) recordDailyBountyProgress(save, 'hanzi-forge', 1, action.now ?? Date.now());
+        return { early: result };
+    },
+    'equip-hanzi-seal': ({ save, action }) => {
+        const result = equipHanziSeal(save, action.sealId ?? null);
+        return { early: result };
+    },
+    'toggle-hanzi-story-explore': ({ save, action }) => {
+        const result = toggleHanziStoryExplore(save, action.enabled);
+        return { early: result };
+    },
+    'campfire-cook': ({ save, content, action }) => {
+        const result = cookCampfireRecipe(save, content, action.recipeId);
+        if (result.changed) {
+            syncEquipmentInstances(save, content);
+            if (action.now !== 0) {
+                const now = action.now ?? Date.now();
+                recordDailyBountyProgress(save, 'campfire-cook', 1, now);
+                if (result.recipe?.petFeast) recordDailyBountyProgress(save, 'pet-care', 1, now);
+            }
+        }
+        return { early: result };
+    },
+    'fishing-bounty': ({ save, content, action }) => {
+        const result = claimFishingBounty(save, content, action.bountyId);
+        if (result.changed) syncEquipmentInstances(save, content);
+        return { early: result };
+    },
+    'trilogy-curio': ({ save, content, action }) => {
+        const result = discoverTrilogyCurio(save, content, action.curioId);
+        if (result.changed) {
+            syncEquipmentInstances(save, content);
+            if (action.now !== 0) recordDailyBountyProgress(save, 'trilogy-explore', 1, action.now ?? Date.now());
+        }
+        return { early: result };
+    },
+    'trilogy-daily': ({ save, content, action }) => {
+        const now = action.now ?? Date.now();
+        const result = performTrilogyDailyActivity(save, content, action.islandId, now);
+        if (result.changed) {
+            syncEquipmentInstances(save, content);
+            recordDailyBountyProgress(save, 'trilogy-explore', 1, now);
+        }
+        return { early: result };
+    },
+    'trilogy-buy': ({ save, content, action }) => {
+        const result = buyTrilogyStallOffer(save, content, action.offerId);
+        if (result.changed) syncEquipmentInstances(save, content);
+        return { early: result };
+    },
+    'earth-time-claim': ({ save, content, action }) => {
+        const result = claimEarthTimeMilestone(save, content, action.milestoneId);
+        if (result.changed) syncEquipmentInstances(save, content);
+        return { early: result };
+    },
+    'daily-bounty-claim': ({ save, content, action }) => {
+        const result = claimDailyBounty(save, content, action.targetId, action.now ?? Date.now());
+        if (result.changed) syncEquipmentInstances(save, content);
+        return { early: result };
+    },
+    'equip-honor': ({ save, action }) => {
+        const result = equipAdventureHonor(save, action.id ?? null);
+        return { early: result };
+    },
+    'tower-blessing': ({ save, content, action }) => {
+        const heroMaxHp = Pets.specMaxHp(playerSpec(save, content));
+        const result = applyTowerBlessingChoice(save, content, action, {
+            heroMaxHp,
+            petMaxHpFn: Pets.petMaxHp,
+        });
+        return { early: result };
+    },
     'language-complete': ({ save, content, action, access }) => {
         const result = recordLearningCompletion(save, content, action.completion, access);
         save.revision++;
@@ -135,6 +224,9 @@ export const ADVENTURE_ACTION_HANDLERS = {
     },
     fish: ({ save, content, action }) => {
         const result = castFishing(save, content, action, createRng(hashSeed(`${save.revision}:fish:${action.netId}`)));
+        if (result.caught && Number.isFinite(action.now) && action.now > 0) {
+            recordDailyBountyProgress(save, 'fishing-catch', 1, action.now);
+        }
         save.revision++;
         return { early: { ...result, changed: true } };
     },

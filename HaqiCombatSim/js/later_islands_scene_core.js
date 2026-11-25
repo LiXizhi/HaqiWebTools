@@ -96,6 +96,9 @@ export function laterIslandScene(save, zone) {
     if (zone === 'dark') {
         const solved = islandPuzzleSolved(save, 'dark-lantern');
         const clearDark = (save.dungeonChallengeRecords?.['journey:night-promise']?.clears || 0) > 0;
+        const storyDone = claimed(save, 874005);
+        const ridgeSafe = claimed(save, 874003);
+        const tombSafe = claimed(save, 874004);
         return {
             zone,
             landmarks: {
@@ -105,13 +108,42 @@ export function laterIslandScene(save, zone) {
                     active: !solved,
                     label: solved ? '驱雾石灯已亮 · 幽谷朗澈' : '暗淡的驱雾石灯 · 点击配芯',
                 },
+                东北石脊: {
+                    effect: 'lantern',
+                    restored: ridgeSafe,
+                    active: accepted(save, 874003),
+                    label: ridgeSafe ? '石脊烽火长明 · 补给畅通' : accepted(save, 874003) ? '石脊雾重 · 待巡查哨点' : '',
+                },
+                西北禁地: {
+                    effect: 'ember',
+                    restored: tombSafe,
+                    active: accepted(save, 874004),
+                    label: tombSafe ? '古墓余烬已平 · 暗雾退散' : accepted(save, 874004) ? '禁地暗影涌动 · 待迎战强敌' : '',
+                },
+                南部旧广场: {
+                    effect: 'festival',
+                    restored: storyDone,
+                    active: accepted(save, 874005),
+                    label: storyDone ? '幽月誓约灯火通明' : '',
+                },
             },
             npcs: {
                 35002: solved
                     ? clearDark
                         ? '幽谷灯明、夜约已守，去挑战四人秘境「沼泽中的航标」赢 70 格斗士大卡包吧！'
-                        : '幽谷的瘴雾散开多了！55 级可挑战「梦魇尽头的约定」与百层幽月塔。'
+                        : storyDone
+                            ? '全岛防线已经点亮！55 级可挑战「梦魇尽头的约定」与百层幽月塔。'
+                            : '幽谷的瘴雾散开多了！40 级起可接「幽谷雾起」六章防线故事，55 级挑战「梦魇尽头的约定」与百层幽月塔。'
                     : '「中央幽谷」的引路石灯灭了，配齐荧光芯就能驱散谷口浓雾。',
+                35003: claimed(save, 874001)
+                    ? '安卓婆婆的萤光灯油真管用，谷口夜晚明亮多了。'
+                    : '北边林子雾气很重，记得先帮智慧星把驱雾石灯与灯油备齐。',
+                35006: tombSafe
+                    ? '古墓强敌已退，沼泽深处的航标正等着最强小队去点亮。'
+                    : '西北禁地潜伏着一万血的古墓强敌，整备好战宠再出发。',
+                35011: storyDone
+                    ? '星光重新照进幽暗岛了，谢谢你一直守到这里。'
+                    : '干苔草配萤光孢子，能让石灯在浓雾里稳稳亮到天明。',
             },
         };
     }

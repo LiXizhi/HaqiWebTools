@@ -1,4 +1,4 @@
-import {installWordCards,activateWordCard} from './word_cards_core.js';
+import {installWordCards,activateWordCard,applyWordCardLevelScaling} from './word_cards_core.js';
 import {configureTacticalEncounter,applyTacticalBalance,lockTacticalIntents,tacticalMonsterPick,recordTacticalResolution,recordTacticalStatus,recordTacticalResources} from './tactical_encounter_core.js';
 import {applyPetTraitStats,validatePetTraits} from './adventure_pet_traits_core.js';
 import {monsterCombatStats} from './combat_power_core.js';
@@ -6,6 +6,10 @@ import {chatSupportPick,BATTLE_CHAT} from './battle_chat_core.js';
 import {earthEncounter} from './adventure_earth_core.js';
 import {dailyBuffParams} from './language_daily_buff_core.js';
 import {applyDungeonLanguageBuff,dungeonLanguageParams} from './adventure_dungeon_language_core.js';
+import {applyTowerBlessingsToParty} from './tower_blessings_core.js';
+import {applyHanziSealToHero} from './hanzi_seal_core.js';
+import {applyCampfireBuffToParty} from './campfire_cooking_core.js';
+import {applyPetSynergiesToParty} from './pet_synergy_core.js';
 import { SimpleBot } from './combat_policy_core.js';
 import {dungeonTacticsMonsters,dungeonTacticPick} from './dungeon_tactics_core.js';
 import {openingTrainingMonsters} from './opening_training_core.js';
@@ -30,7 +34,7 @@ export function runeCardsInHand(battle,unitId=null) {
     if(unitId&&battle.localHumans?.[unitId])return runeCardsInHand({...battle,...battle.localHumans[unitId],localHumans:null});
     return (battle.runes||[]).filter(row=>row.count>(battle.runeUsed[row.itemId]||0)&&runeCardReady(battle,row)).map(row=>({key:row.key,runeId:row.itemId,seq:-row.itemId,count:row.count-(battle.runeUsed[row.itemId]||0)}));
 }
-export function createPveBattle({ dataset, player, monsters, monsterSlots = null, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null, runes = [], ownedPets = [], threatRulesVersion = 0, reflectionRulesVersion = 0, stealthRulesVersion = 0, dispelRulesVersion = 0, specialCardRulesVersion = 0, captureRulesVersion = 0, petTraitRulesVersion = 0, monsterTraits = [], petTraitParams = null, monsterStatsVersion = 1, languageBuff = null, languageBuffLimits = null, localHumans = null, wordCards = null, tacticalEncounter = null }) {
+export function createPveBattle({ dataset, player, monsters, monsterSlots = null, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null, runes = [], ownedPets = [], threatRulesVersion = 0, reflectionRulesVersion = 0, stealthRulesVersion = 0, dispelRulesVersion = 0, specialCardRulesVersion = 0, captureRulesVersion = 0, petTraitRulesVersion = 0, monsterTraits = [], petTraitParams = null, monsterStatsVersion = 1, languageBuff = null, languageBuffLimits = null, localHumans = null, wordCards = null, wordCardScalingVersion = 0, tacticalEncounter = null, towerBlessings = null, hanziSeal = null, campfireBuff = null, petSynergies = null }) {
     if(![0,1].includes(petTraitRulesVersion))throw Error('宠物标签规则版本无效');
     if(petTraitRulesVersion===1){
         if(monsterTraits.length!==monsters.length)throw Error('怪物标签记录无效');
@@ -124,9 +128,13 @@ export function createPveBattle({ dataset, player, monsters, monsterSlots = null
         const amount=Math.ceil(heal*arena.resolved.adventure.singleHealThreatRatio);
         for(const mob of arena.sides.far)if(U.isAlive(mob))appendThreat(mob,caster,amount,[],threatWeight(caster));
     };
-    arena.monsterTemplates = monsters;arena.captureStock=captureStock;arena.captureUsed=0;arena.captured=[];arena.ownedPets=[...ownedPets];arena.heroLevel=heroLevel;
+    arena.monsterTemplates = monsters;arena.captureStock=captureStock;arena.captureUsed=0;arena.captured=[];arena.ownedPets=[...ownedPets];arena.heroLevel=heroLevel;arena.wordCardScalingVersion=wordCardScalingVersion;
     for(const [i,spec] of (party||[player]).entries()){const unit=arena.sides.near[i];unit.slot=spec.slot??i;unit.speciesId=spec.speciesId;if(localHumans&&!spec.speciesId)unit.arenaProfile={name:spec.name,appearance:spec.appearance,bodyId:spec.bodyId,headId:spec.headId,customHead:spec.customHead,school:spec.school,mountId:spec.mountId};if(spec.passiveTraits)unit.passiveTraits={...spec.passiveTraits};if(spec.supportPetTraits)unit.supportPetTraits={...spec.supportPetTraits};if(Number.isFinite(spec.hp))unit.hp=Math.max(0,Math.min(unit.maxHp,Math.floor(spec.hp)));}
     applyDungeonLanguageBuff(arena.sides.near[0],languageBuff,languageBuffLimits||resolved.dungeonLanguage);
+    applyTowerBlessingsToParty(arena,towerBlessings);
+    applyHanziSealToHero(arena,hanziSeal);
+    applyCampfireBuffToParty(arena,campfireBuff);
+    applyPetSynergiesToParty(arena,petSynergies);
     monsters.forEach((m,i) => {
         const u = arena.sides.far[i]; if(monsterSlots)u.slot=monsterSlots[i]; u.isMob = true; u.maxHp = Number(m.maxHp||m.hp); u.hp = Math.min(u.maxHp, Number(m.hp));
         if(petTraitRulesVersion===1){const hpPct=applyPetTraitStats({},m.passiveTraits,resolved.petTraits).hpPct;u.hp=applyHpStats(u.hp,hpPct,0,'kids');u.maxHp=applyHpStats(u.maxHp,hpPct,0,'kids');u.passiveTraits={...m.passiveTraits};}
@@ -354,6 +362,7 @@ function playPveRoundInternal(a,decision) {
                 try{
                     if(decision.seq>=U.PET_CARD_SEQ_BASE&&u.supportPetTraits)u.stats=applyPetTraitStats(u.stats,Object.fromEntries(Object.entries(u.supportPetTraits).filter(([key])=>['attack','critical','accuracy','healing'].includes(key))),a.resolved.petTraits);
                     a.wordCardCast=u.wordCards?.[decision.seq]?{...u.wordCards[decision.seq],seq:decision.seq,caster:u.id}:null;
+                    if(a.wordCardCast&&a.wordCardScalingVersion===1&&a.heroLevel>1)u.stats=applyWordCardLevelScaling(u.stats,a.heroLevel);
                     useCard(a,u,card,target,rune?undefined:decision.seq);
                 }finally{u.stats=originalStats;a.wordCardCast=null;}
                 if(rune&&a.events.slice(start).some(event=>event.type==='cast'&&event.caster===u.id&&event.card===rune.key))resources.runeUsed[rune.itemId]=(resources.runeUsed[rune.itemId]||0)+1;
@@ -407,7 +416,7 @@ export function restorePveBattle(dataset,content,checkpoint) {
     const encounter=content.encounters.find(e=>e.id===checkpoint.encounterId)||earthEncounter(content,checkpoint.encounterId);
     if(!encounter&&!checkpoint.monster)throw new Error('存档中的战斗地点不存在');
     const templates=dungeonTacticsMonsters(openingTrainingMonsters(checkpoint.dungeonMonsterIds?checkpoint.dungeonMonsterIds.map(id=>content.monsters[id]):[checkpoint.monster||content.monsters[encounter.monsterId]],checkpoint),checkpoint);
-    const a=createPveBattle({dataset,tacticalEncounter:checkpoint.tacticalEncounter,wordCards:checkpoint.wordCards,localHumans:checkpoint.localHumans,player:checkpoint.player,monsters:stampBattleMonsters(templates,content,dataset),monsterSlots:checkpoint.dungeonMonsterSlots,seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,ownedPets:checkpoint.ownedPets||[],threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion,dispelRulesVersion:checkpoint.dispelRulesVersion,specialCardRulesVersion:checkpoint.specialCardRulesVersion,captureRulesVersion:checkpoint.captureRulesVersion,petTraitRulesVersion:checkpoint.petTraitRulesVersion,monsterTraits:checkpoint.monsterTraits,petTraitParams:checkpoint.petTraitParams,monsterStatsVersion:checkpoint.equipmentStatsVersion>=2?1:0,languageBuff:checkpoint.languageBuff,languageBuffLimits:checkpoint.dailyLanguageVersion===1?dailyBuffParams(content):dungeonLanguageParams(content)});
+    const a=createPveBattle({dataset,tacticalEncounter:checkpoint.tacticalEncounter,towerBlessings:checkpoint.towerBlessings,hanziSeal:checkpoint.hanziSeal,campfireBuff:checkpoint.campfireBuff,petSynergies:checkpoint.petSynergies,wordCards:checkpoint.wordCards,wordCardScalingVersion:checkpoint.wordCardScalingVersion||0,localHumans:checkpoint.localHumans,player:checkpoint.player,monsters:stampBattleMonsters(templates,content,dataset),monsterSlots:checkpoint.dungeonMonsterSlots,seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,ownedPets:checkpoint.ownedPets||[],threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion,dispelRulesVersion:checkpoint.dispelRulesVersion,specialCardRulesVersion:checkpoint.specialCardRulesVersion,captureRulesVersion:checkpoint.captureRulesVersion,petTraitRulesVersion:checkpoint.petTraitRulesVersion,monsterTraits:checkpoint.monsterTraits,petTraitParams:checkpoint.petTraitParams,monsterStatsVersion:checkpoint.equipmentStatsVersion>=2?1:0,languageBuff:checkpoint.languageBuff,languageBuffLimits:checkpoint.dailyLanguageVersion===1?dailyBuffParams(content):dungeonLanguageParams(content)});
     a.replaying=true;for(const decision of checkpoint.decisions)playPveRound(a,decision);a.replaying=false;
     for(const [seq,row] of Object.entries(a.sides.near[0].wordCards||{}))if(a.sides.near[0].deckMap[seq]===1&&checkpoint.wordCards.activated.includes(row.id))activateWordCard(a.sides.near[0],Number(seq));
     return a;

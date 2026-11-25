@@ -36,12 +36,12 @@
 .entry-wizard .entry-description{font-size:13px;line-height:2;color:#c6d8ce;margin-top:22px;max-width:350px}
 .entry-wizard .entry-tags{margin-top:18px;gap:8px}
 .entry-wizard .entry-tags .badge{font-size:11px;letter-spacing:.06em;border-radius:20px;padding:5px 12px;background:#0a2e3533}
-.entry-wizard .entry-locale-stack{margin-top:28px;padding-top:20px;border-top:1px solid #d9c48d33;width:fit-content;row-gap:10px}
+.entry-wizard .entry-locale-stack{margin-top:28px;padding-top:20px;border-top:1px solid #d9c48d33;width:100%;max-width:100%;row-gap:10px}
 .entry-wizard .entry-locale-label{color:#b8cdc2;letter-spacing:0}
 .entry-wizard .entry-locale-note{grid-column:1/-1;margin:2px 0 0;color:#b8cdc2;font-size:var(--gui-meta-size);line-height:1.5}
 .entry-wizard .entry-second-locale{min-height:40px;background:#f4f0e2}
 .entry-wizard .locale-choices>button{min-height:44px}
-.entry-wizard .character-form{border-radius:20px;border-color:#e2ca8c;background:linear-gradient(145deg,#fffaf0,#f5efdc);box-shadow:0 24px 64px #051f3555,inset 0 0 0 5px #f9f3e3}
+.entry-wizard .character-form{position:relative;z-index:1;border-radius:20px;border-color:#e2ca8c;background:linear-gradient(145deg,#fffaf0,#f5efdc);box-shadow:0 24px 64px #051f3555,inset 0 0 0 5px #f9f3e3}
 .entry-wizard .creation-form{padding:30px}
 .entry-wizard .character-form>.eyebrow{color:#82704b;margin-bottom:8px}
 .entry-account-choices{gap:8px;margin-top:24px}

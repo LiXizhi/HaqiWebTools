@@ -5,6 +5,10 @@ import { wordLanguage } from '../word_lexicon_core.js';
 import { renderDungeonJourney } from '../views/adventure/view_dungeon_journey.js';
 import { renderIslandPuzzle } from '../views/adventure/view_island_puzzle.js';
 import { renderHanziSteleScroll } from '../hanzi/view_hanzi_stele_scroll.js';
+import { renderHanziForge } from '../hanzi/view_hanzi_forge.js';
+import { renderTowerBlessing } from '../views/adventure/view_tower_blessing.js';
+import { renderCampfireCooking } from '../views/adventure/view_campfire_cooking.js';
+import { renderArchipelagoChronicle } from '../views/adventure/view_archipelago_chronicle.js';
 import { dungeonFor } from '../adventure_dungeons_core.js';
 import { renderDungeons } from '../views/adventure/view_adventure_dungeons.js';
 import { initialStrengtheningSelection } from '../adventure_strengthening_core.js';
@@ -78,6 +82,9 @@ export function createPanelController(options) {
     let pinJournalQuest = false;
     let returnPanel = null;
     let activePuzzleId = null;
+    let towerBlessingContinue = null;
+    let campfireInitialTab = 'cook';
+    let chronicleOptions = { tab: null, islandId: null };
 
     const closeOrReturn = opts => {
         if (!opts?.silent && returnPanel) {
@@ -234,16 +241,141 @@ export function createPanelController(options) {
             });
             return;
         }
+        if (activePanel === 'tower-blessing') {
+            renderTowerBlessing(
+                nodes.overlay,
+                { ...model(), nextFloor: towerBlessingContinue?.nextFloor ?? null },
+                {
+                    close: () => {
+                        towerBlessingContinue = null;
+                        close();
+                    },
+                    pick: (blessingId, { continueTower = false } = {}) => {
+                        const pendingNext = towerBlessingContinue;
+                        const result = performAction({ type: 'tower-blessing', blessingId });
+                        if (result?.changed) {
+                            spellSound.play('quest');
+                            toast(result.message);
+                            towerBlessingContinue = null;
+                            close({ silent: true });
+                            hud.paintHud();
+                            if (continueTower && pendingNext?.nextEncounterId) {
+                                const nowCtx = getContext();
+                                const nextEnc = nowCtx.world?.encounters?.find(e => e.id === pendingNext.nextEncounterId && !e.hidden);
+                                if (nextEnc && nowCtx.stage === 'world') {
+                                    const pos = nowCtx.world.layout?.encounterPositions?.[pendingNext.nextEncounterId];
+                                    if (pos) nowCtx.save.position = { x: pos[0], y: Math.max(80, pos[1] - 70) };
+                                    interact?.({ ...nextEnc, kind: 'encounter' });
+                                }
+                            }
+                        }
+                    },
+                },
+            );
+            return;
+        }
+        if (activePanel === 'hanzi-forge') {
+            renderHanziForge(nodes.overlay, model(), {
+                close,
+                getSave: () => getContext().save,
+                onPick: () => spellSound.play('select'),
+                equipSeal: sealId => {
+                    const result = performAction({ type: 'equip-hanzi-seal', sealId });
+                    if (result?.changed) {
+                        spellSound.play('quest');
+                        if (result.message) toast(result.message);
+                        hud.paintHud();
+                    }
+                    return result;
+                },
+                forge: forgeAction => {
+                    const result = performAction(forgeAction);
+                    if (result?.changed) {
+                        spellSound.play('quest');
+                        const rewardSummary = (result.rewards || []).map(r => `${r.name}×${r.count}`).join('、');
+                        toast(rewardSummary ? `${result.message} 获得：${rewardSummary}` : result.message);
+                        hud.paintHud();
+                    } else if (result?.ok) {
+                        spellSound.play('paper');
+                    } else {
+                        spellSound.play('stone');
+                    }
+                    return result;
+                },
+            });
+            return;
+        }
+        if (activePanel === 'campfire-cooking') {
+            renderCampfireCooking(
+                nodes.overlay,
+                { ...model(), initialTab: campfireInitialTab },
+                {
+                    close,
+                    getSave: () => getContext().save,
+                    cook: recipeId => {
+                        const result = performAction({ type: 'campfire-cook', recipeId });
+                        if (result?.changed) {
+                            spellSound.play('heal');
+                            const rewardSummary = (result.rewards || []).map(r => `${r.name}×${r.count}`).join('、');
+                            toast(rewardSummary ? `${result.message} 获得：${rewardSummary}` : result.message);
+                            hud.paintHud();
+                        }
+                        return result;
+                    },
+                    claimBounty: bountyId => {
+                        const result = performAction({ type: 'fishing-bounty', bountyId });
+                        if (result?.changed) {
+                            spellSound.play('quest');
+                            const rewardSummary = (result.rewards || []).map(r => `${r.name}×${r.count}`).join('、');
+                            toast(rewardSummary ? `${result.message} 获得：${rewardSummary}` : result.message);
+                            hud.paintHud();
+                        }
+                        return result;
+                    },
+                },
+            );
+            return;
+        }
+        if (activePanel === 'archipelago-chronicle') {
+            const toastResult = result => {
+                if (result?.changed) {
+                    spellSound.play('quest');
+                    const rewardSummary = (result.rewards || []).map(r => `${r.name}×${r.count}`).join('、');
+                    toast(rewardSummary ? `${result.message} 获得：${rewardSummary}` : result.message);
+                    hud.paintHud();
+                } else if (result?.message) {
+                    toast(result.message);
+                }
+                return result;
+            };
+            renderArchipelagoChronicle(
+                nodes.overlay,
+                { ...model(), initialTab: chronicleOptions.tab, initialIslandId: chronicleOptions.islandId },
+                {
+                    close,
+                    getSave: () => getContext().save,
+                    claimDaily: targetId => toastResult(performAction({ type: 'daily-bounty-claim', targetId })),
+                    trilogyCurio: curioId => toastResult(performAction({ type: 'trilogy-curio', curioId })),
+                    trilogyDaily: islandId => toastResult(performAction({ type: 'trilogy-daily', islandId })),
+                    trilogyBuy: offerId => toastResult(performAction({ type: 'trilogy-buy', offerId })),
+                    claimEarthTime: milestoneId => toastResult(performAction({ type: 'earth-time-claim', milestoneId })),
+                    equipHonor: id => toastResult(performAction({ type: 'equip-honor', id })),
+                    openEarthMap: () => openPanel('earthmap'),
+                },
+            );
+            return;
+        }
         if (activePanel === 'island-puzzle') {
             renderIslandPuzzle(
                 nodes.overlay,
                 { ...model(), puzzleId: activePuzzleId },
                 {
                     close,
+                    onPick: () => spellSound.play('select'),
                     submit: puzzleAction => {
                         const result = performAction(puzzleAction);
                         if (result && result.ok) {
-                            spellSound.play('heal');
+                            spellSound.play('quest');
                             if (result.rewards?.length) {
                                 const rewardSummary = result.rewards.map(r => `${r.name}×${r.count}`).join('、');
                                 toast(`${result.message} 获得：${rewardSummary}`);
@@ -252,6 +384,8 @@ export function createPanelController(options) {
                             }
                             hud.paintHud();
                             paintPanel();
+                        } else if (result && result.ok === false) {
+                            spellSound.play('stone');
                         }
                         return result;
                     },
@@ -396,7 +530,7 @@ export function createPanelController(options) {
             return;
         }
         if (kind === 'hanzi' && ctx.assets.content.islandPacks?.some(p => p.island.id === ctx.save.zone && p.memory)) {
-            if (wordLanguage(ctx.save.languageLearning?.target) !== 'zh') {
+            if (wordLanguage(ctx.save.languageLearning?.target) !== 'zh' && !ctx.save.hanziStoryExplore) {
                 openPanel('quests');
                 return;
             }
@@ -434,6 +568,20 @@ export function createPanelController(options) {
         }
         if (kind === 'island-puzzle' && openOptions.puzzleId) {
             activePuzzleId = openOptions.puzzleId;
+        }
+        if (kind === 'tower-blessing') {
+            towerBlessingContinue = openOptions.nextEncounterId
+                ? { nextEncounterId: openOptions.nextEncounterId, nextFloor: openOptions.nextFloor ?? null }
+                : null;
+        }
+        if (kind === 'campfire-cooking') {
+            campfireInitialTab = openOptions.tab === 'album' ? 'album' : 'cook';
+        }
+        if (kind === 'archipelago-chronicle') {
+            chronicleOptions = {
+                tab: openOptions.tab || null,
+                islandId: openOptions.islandId || null,
+            };
         }
         if (kind === 'quests') {
             pinJournalQuest = openOptions.questId != null;

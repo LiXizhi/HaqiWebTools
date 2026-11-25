@@ -5,6 +5,8 @@ import {npcServices,npcHasActiveQuest,npcPurpose} from '../../adventure_npc_core
 import {islandName} from '../../adventure_world_map_core.js';
 import {forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS} from '../../forest_commission_core.js';
 import {islandPuzzlesForNpc,islandPuzzleStatus} from '../../island_puzzles_core.js';
+import {HANZI_FORGE_RECIPES,hanziForgeCount} from '../../hanzi_forge_core.js';
+import {TRILOGY_ISLANDS,trilogyNpcIslandId} from '../../trilogy_curios_core.js';
 import {heroPortrait} from '../../hero_renderer.js';
 import {dialogueLearningLines} from '../../locale.js';
 import {tr,setText,fill} from '../../locale_runtime.js';
@@ -96,6 +98,14 @@ export function renderDialogue(root,model,dialog,cb) {
             }
             if(save.zone==='hanzi'&&Number(npc.id)===863002){
                 choices.append(button(tr('翻阅字源碑林传拓册（9 篇象形故事）'),()=>cb.panel('hanzi-stele-scroll'),'secondary'));
+            }
+            if(save.zone==='hanzi'&&[863000,863002].includes(Number(npc.id))){
+                choices.append(button(fill('进入字源合字坊（会意造字 · {done}/{total}）',{done:hanziForgeCount(save),total:HANZI_FORGE_RECIPES.length}).text,()=>cb.panel('hanzi-forge'),'secondary'));
+            }
+            const trilogyId=typeof trilogyNpcIslandId==='function'?trilogyNpcIslandId(npc.id):null;
+            if(trilogyId&&save.zone===trilogyId&&typeof TRILOGY_ISLANDS!=='undefined'){
+                const stall=TRILOGY_ISLANDS[trilogyId].stallName;
+                choices.append(button(fill('进入{stall}与本岛风物探索',{stall:tr(stall)}).text,()=>cb.panel('archipelago-chronicle',{tab:'trilogy',islandId:trilogyId}),'secondary'));
             }
         }
         if(npcServices(c,npc).length&&purpose?.panel!=='npc-services')services.append(button('查看商品与学习魔法',()=>cb.panel('npc-services',{npc}),'secondary'));

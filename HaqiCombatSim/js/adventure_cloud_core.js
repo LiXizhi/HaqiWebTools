@@ -15,7 +15,7 @@ export function checkedProgress(raw, content, dataset) {
     // durableSave() removes them before every durable or cloud write, so they never
     // leave the device. Ordinary pet meetings are not long-term memories.
     const keys=[...Object.keys(createAdventure(content)),'towerRecords','dungeonMode','petFoodSlots','headId','bodyId','customHead','magicStarClaims','languageSpeechClaims','languageTreeClaims','checkin','fishingRecords','magicStarFollow','mountHidden','petMeetings','dungeonExploration','coopRun','socialActivity','socialPvpRecords','socialChallenges','relationshipEvents','petInstanceVersion','petOwnerId','petWorld','petFileRefs','petPages'];
-    keys.push('timeScrollProgress','timeScrollRuntime','hanzi','earthProgress','earthCityProgress','earthReturn','cityReturnStack','cityFallback','openingJourney','tacticsTraining','tacticsChallenges','tacticsRecord','dungeonChallengeRecords','forestCommission','sparkRescue','islandPuzzles');
+    keys.push('timeScrollProgress','timeScrollRuntime','hanzi','hanziSeal','hanziStoryExplore','fishingBounties','gatherPantry','campfireBuff','campfireCookedCount','trilogyExplore','earthTimeClaims','dailyBounties','equippedHonor','earthProgress','earthCityProgress','earthReturn','cityReturnStack','cityFallback','openingJourney','tacticsTraining','tacticsChallenges','tacticsRecord','dungeonChallengeRecords','forestCommission','sparkRescue','islandPuzzles','towerRunBlessings','battleSpeed');
     const save = Object.fromEntries(keys.filter(key=>parsed[key]!==undefined).map(key => [key, parsed[key]]));
     const battle = save.pendingEncounter ? restorePveBattle(dataset, content, save.pendingEncounter) : null;
     for(const rune of save.pendingEncounter?.runes||[]){

@@ -8,6 +8,7 @@ import {
     islandPuzzleForLandmark,
     islandPuzzleStatus,
 } from './island_puzzles_core.js';
+import { HANZI_FORGE_RECIPES, hanziForgeCount, hanziForgedRecipes } from './hanzi_forge_core.js';
 
 export const HANZI_NPCS = {
     achu: 863000,
@@ -115,6 +116,7 @@ export function hanziIslandProgress(save, content) {
     const restoredWords = rows.reduce((sum, r) => sum + r.doneWords.length, 0);
     const trialClears = save?.dungeonChallengeRecords?.[HANZI_STELE_TRIAL_ID]?.clears || 0;
     const solvedPuzzles = hanziPuzzlesCompletedCount(save);
+    const forgedRecipes = hanziForgedRecipes(save);
     return {
         rows,
         completedStories,
@@ -125,6 +127,9 @@ export function hanziIslandProgress(save, content) {
         trialClears,
         solvedPuzzles,
         allPuzzlesSolved: allHanziPuzzlesSolved(save),
+        forgedCount: hanziForgeCount(save),
+        forgedTotal: HANZI_FORGE_RECIPES.length,
+        forgedGlyphs: forgedRecipes.map(r => r.glyph),
     };
 }
 
@@ -171,6 +176,7 @@ export function hanziIslandScene(save, content, world = null) {
             done: row.doneWords.length,
             total: row.story.words.length,
             glyphs: row.glyphs,
+            forgedGlyphs: site.landmark === '字源亭' ? progress.forgedGlyphs : [],
             label,
         };
         const worldMark = world?.landmarks?.find(m => m.name === site.landmark);

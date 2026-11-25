@@ -61,20 +61,20 @@ export function renderEquipment(body,model,cb,ui) {
     honorList.append(honorSummary);
     for(const row of honors){
         const item=el('p',row.earned?'honor-earned':'muted',(row.earned?'已获得 · ':'待挑战 · ')+row.title+'：'+row.source);
-        if(row.earned&&row.id.startsWith('tactical:')){
-            const id=row.id.slice('tactical:'.length),selected=save.tacticsChallenges?.equipped===id;
-            const wear=button(selected?'已佩戴':'佩戴',()=>cb.action({type:'equip-tactics-honor',id}),'secondary');
+        if(row.earned){
+            const selected=save.equippedHonor===row.id||(!save.equippedHonor&&row.id==='tactical:'+save.tacticsChallenges?.equipped);
+            const wear=button(selected?'已佩戴':'佩戴',()=>cb.action({type:'equip-honor',id:row.id}),'secondary');
             wear.setAttribute('aria-label',(selected?'已佩戴':'佩戴')+row.title);
             wear.disabled=selected||!!save.pendingEncounter;
             item.append(wear);
         }
         honorList.append(item);
     }
-    if(save.tacticsChallenges?.equipped){
-        const reset=button('恢复随进度展示',()=>cb.action({type:'equip-tactics-honor',id:null}),'secondary');
+    if(save.equippedHonor||save.tacticsChallenges?.equipped){
+        const reset=button('恢复随进度展示',()=>cb.action({type:'equip-honor',id:null}),'secondary');
         reset.disabled=!!save.pendingEncounter;
         honorList.append(reset);
-    }else honorList.append(el('p','muted','当前随进度展示最高荣誉。已获得的巡夜称号可以自行佩戴。'));
+    }else honorList.append(el('p','muted','当前随进度展示最高荣誉。所有已获得的荣誉称号都可以自由佩戴。'));
     identity.append(honorList);
     function openCustomize(trigger){
         const draft={name:save.name,appearance:save.appearance==='girl'?'girl':'boy',headId:resolvedHeadId(save),bodyId:save.bodyId,customHead:save.customHead};

@@ -1,6 +1,10 @@
 import {TACTICS_CHALLENGES} from './tactics_challenge_core.js';
 import {allHanziPuzzlesSolved,midLatePuzzlesCompletedCount} from './island_puzzles_core.js';
 import {steleRubbingCount} from './hanzi_stele_scroll_core.js';
+import {HANZI_FORGE_RECIPES,hanziForgeCount} from './hanzi_forge_core.js';
+import {fishingAlbumSummary} from './fishing_bounties_core.js';
+import {campfireCountCooked} from './campfire_cooking_core.js';
+import {ALL_TRILOGY_CURIOS,trilogyCurioCount} from './trilogy_curios_core.js';
 // Honors derive from persisted achievements; no currency or simulated rankings.
 const rules=[
  {id:'forest-supplies',title:'营地补给员',source:'辨认补给、送达便签，再完成巡夜灯实战并向茜茜汇报。',earned:s=>s.forestCommission?.phase==='done'},
@@ -13,6 +17,8 @@ const rules=[
  {id:'hanzi-restorer',title:'字源守护者',source:'找回字源岛全部六段生活文字故事，让路牌、水渠、明灯与庆典重新亮起。',earned:s=>!!s.quests?.[873105]?.claimed},
  {id:'hanzi-puzzle-master',title:'字源匠心人',source:'完成字源岛全部六处地标的现场木牌与石碑安放。',earned:s=>allHanziPuzzlesSolved(s)},
  {id:'hanzi-stele-scholar',title:'碑林传拓人',source:'在字源岛碑林传拓册中完成至少三篇进阶象形故事描红。',earned:s=>steleRubbingCount(s)>=3},
+ {id:'hanzi-alchemist',title:'会意造字师',source:'在字源合字坊中合出至少六个会意汉字，领悟象形组合之妙。',earned:s=>hanziForgeCount(s)>=6},
+ {id:'hanzi-forge-master',title:'万象造字宗师',source:'点亮字源合字坊全部十二枚会意汉字图谱。',earned:s=>hanziForgeCount(s)>=HANZI_FORGE_RECIPES.length},
  {id:'journey:hanzi:stele-trial',title:'守碑传薪人',source:'完整通关字源岛精英试炼「字源守碑试炼」。',earned:s=>s.dungeonChallengeRecords?.['journey:hanzi:stele-trial']?.clears>0},
  {id:'journey:vault-lamp',title:'宝库寻光者',source:'完整通关哈奇岛精英副本「宝库里的求救灯」。',earned:s=>s.dungeonChallengeRecords?.['journey:vault-lamp']?.clears>0},
  {id:'journey:dream-feather',title:'寻羽筑梦人',source:'完整通关哈奇岛三人秘境「梦中遗落的羽毛」。',earned:s=>s.dungeonChallengeRecords?.['journey:dream-feather']?.clears>0},
@@ -30,16 +36,46 @@ const rules=[
  {id:'journey:sail:elite-1',title:'归帆掌舵人',source:'完整通关风帆岛精英秘境「只准欢呼的档案室」。',earned:s=>s.dungeonChallengeRecords?.['journey:sail:elite-1']?.clears>0},
  {id:'journey:sail:elite-2',title:'白帆终夜守望者',source:'完整通关风帆岛五波终极秘境「白帆最后的守夜」。',earned:s=>s.dungeonChallengeRecords?.['journey:sail:elite-2']?.clears>0},
  {id:'tide-story',title:'潮灯寄信人',source:'完成潮汐岛主线故事「没有送到的回答」。',earned:s=>!!s.quests?.[870011]?.claimed},
+ {id:'dark-story',title:'幽谷守灯人',source:'完成幽暗岛防线故事「幽月誓约」，点亮幽谷、石脊与禁地灯火。',earned:s=>!!s.quests?.[874005]?.claimed},
  {id:'float-story',title:'双图共绘者',source:'完成浮岸岛主线故事「两张图都是真的」。',earned:s=>!!s.quests?.[870111]?.claimed},
  {id:'sail-story',title:'白帆归航者',source:'完成风帆岛主线故事「庆典前的求救」。',earned:s=>!!s.quests?.[870211]?.claimed},
  {id:'archipelago-steward',title:'群岛寻迹者',source:'在中后期群岛中完成至少四处引火台、破冰信箱、绿洲铜盘或双海图现场机关。',earned:s=>midLatePuzzlesCompletedCount(s)>=4},
  {id:'tower-climber-20',title:'高塔登阶者',source:'在任意岛屿试炼塔中突破第 20 层。',earned:s=>Object.values(s.towerRecords||{}).some(r=>(r?.floor||0)>=20)},
  {id:'tower-summit-late',title:'群岛试炼登顶者',source:'登顶任意一座 30 层及以上的中后期试炼塔。',earned:s=>[['journey:tower-fire',30],['journey:tower-ice',50],['journey:tower-desert',70],['journey:tower-dark',100],['journey:tide:tower',60],['journey:float:tower',80],['journey:sail:tower',100]].some(([id,top])=>(s.towerRecords?.[id]?.floor||0)>=top)},
+ {id:'fishing-trophy-master',title:'海滨巨物猎手',source:'在钓鱼图鉴中集齐全部 6 种渔获，或达成至少 3 种巨物纪录。',earned:s=>{const a=fishingAlbumSummary(s);return a.caughtSpecies>=a.totalSpecies||a.hugeSpecies>=3;}},
+ {id:'campfire-chef',title:'营火料理师',source:'在营火烹饪锅中完成至少 5 次料理或魔药炼成。',earned:s=>campfireCountCooked(s)>=5},
+ {id:'trilogy-explorer',title:'后三岛巡航者',source:'发掘潮汐、浮岸与风帆三岛全部 9 处隐藏风物与航标彩蛋。',earned:s=>trilogyCurioCount(s)>=ALL_TRILOGY_CURIOS.length},
+ {id:'cross-world-chronicler',title:'双界时光行者',source:'在双世界与时光长卷中领取至少 3 项探索里程碑赏金。',earned:s=>(s.earthTimeClaims?.length||0)>=3},
  ...TACTICS_CHALLENGES.map(row=>({id:'tactical:'+row.id,title:row.honor,source:'首次战胜'+row.title+'。',earned:s=>s.tacticsChallenges?.completed?.[row.id]?.wins>0})),
 ];
+const ALL_HONOR_IDS=new Set(rules.map(r=>r.id));
 export function adventureHonors(save){return rules.map(({earned,...row})=>({...row,earned:earned(save)}));}
 export function activeAdventureHonor(save){
  const earned=adventureHonors(save).filter(row=>row.earned);
- return earned.find(row=>row.id==='tactical:'+save.tacticsChallenges?.equipped)||earned.at(-1)||null;
+ if(save?.equippedHonor){
+  const match=earned.find(row=>row.id===save.equippedHonor);
+  if(match)return match;
+ }
+ return earned.find(row=>row.id==='tactical:'+save?.tacticsChallenges?.equipped)||earned.at(-1)||null;
+}
+export function validateEquippedHonor(save){
+ if(save?.equippedHonor===undefined||save?.equippedHonor===null)return;
+ if(typeof save.equippedHonor!=='string'||!ALL_HONOR_IDS.has(save.equippedHonor))throw Error('佩戴的冒险荣誉编号无效');
+}
+export function equipAdventureHonor(save,honorId){
+ if(save?.pendingEncounter)throw Error('战斗中无法更换荣誉称号');
+ if(honorId===null||honorId===undefined||honorId===''){
+  delete save.equippedHonor;
+  if(save.tacticsChallenges?.equipped)delete save.tacticsChallenges.equipped;
+  save.revision=(save.revision||0)+1;
+  return {changed:true,honor:activeAdventureHonor(save),message:'已恢复随进度自动展示最高荣誉。'};
+ }
+ const row=adventureHonors(save).find(r=>r.id===honorId);
+ if(!row)throw Error('未知荣誉称号');
+ if(!row.earned)throw Error('尚未获得这项荣誉称号');
+ save.equippedHonor=row.id;
+ if(row.id.startsWith('tactical:')&&save.tacticsChallenges)save.tacticsChallenges.equipped=row.id.slice('tactical:'.length);
+ save.revision=(save.revision||0)+1;
+ return {changed:true,honor:row,message:`已佩戴荣誉称号「${row.title}」。`};
 }
 export function dungeonHonorTitle(id){return rules.find(row=>row.id===id)?.title||null;}

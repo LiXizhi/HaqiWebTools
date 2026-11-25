@@ -47,6 +47,23 @@ export function activateWordCard(unit,seq){
     if(unit.deckMap[seq]!==1||!unit.wordCards?.[seq])throw Error('文字卡不在手中');
     unit.wordCards[seq].activated=true;
 }
+export function wordCardLevelBonus(level){
+    const lv=Number.isFinite(level)?Math.max(1,Math.floor(level)):1;
+    if(lv<=1)return {damagePct:0,outputHealPct:0,accuracyPct:0};
+    const growth=Math.min(180,(lv-1)*3);
+    return {damagePct:growth,outputHealPct:growth,accuracyPct:lv>=15?15:Math.min(14,lv-1)};
+}
+export function applyWordCardLevelScaling(stats,level){
+    const bonus=wordCardLevelBonus(level);
+    if(!bonus.damagePct&&!bonus.outputHealPct&&!bonus.accuracyPct)return stats;
+    const next=structuredClone(stats);
+    next.damagePct??={all:0};
+    next.damagePct.all=(next.damagePct.all||0)+bonus.damagePct;
+    next.outputHealPct=(next.outputHealPct||0)+bonus.outputHealPct;
+    next.accuracyPct??={all:0};
+    next.accuracyPct.all=(next.accuracyPct.all||0)+bonus.accuracyPct;
+    return next;
+}
 export function wordReadingMatches(actual,expected){
     const normalize=v=>String(v||'').normalize('NFKC').toLowerCase().replace(/[\s\p{P}\p{S}]/gu,'');
     return !!normalize(actual)&&normalize(actual)===normalize(expected);

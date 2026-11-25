@@ -71,6 +71,8 @@ export const HANZI_LANDMARK_PUZZLES = [
         landmark: '溪边小村',
         npcId: 863001,
         questId: 873101,
+        altQuestId: 873001,
+        prevPuzzleId: 'hanzi-road',
         title: '双闸水渠分流',
         eyebrow: '字源岛 · 溪边小村现场安放',
         intro: '旧水渠的分水闸前散落着几块木牌。分清耕地、深林与堤岸，溪禾才能提闸把溪水准确引到干涸的禾苗旁。',
@@ -125,6 +127,8 @@ export const HANZI_LANDMARK_PUZZLES = [
         landmark: '晨光林',
         npcId: 863001,
         questId: 873102,
+        altQuestId: 873002,
+        prevPuzzleId: 'hanzi-canal',
         title: '农事天气木牍',
         eyebrow: '字源岛 · 晨光林现场安放',
         intro: '晒谷场边的天气木牍缺了三枚字签。按一天里天象的变化补齐记录，大家晒谷和收谷就有了依据。',
@@ -178,6 +182,8 @@ export const HANZI_LANDMARK_PUZZLES = [
         landmark: '远行灯塔',
         npcId: 863003,
         questId: 873103,
+        altQuestId: 873003,
+        prevPuzzleId: 'hanzi-weather',
         title: '夜归旅人门牌',
         eyebrow: '字源岛 · 远行灯塔现场安放',
         intro: '灯塔驿站外挂着三块夜归指引牌。帮小灯把暖焰、入口与歇脚处的字牌挂好，夜里赶路的人就能安心进屋。',
@@ -230,6 +236,8 @@ export const HANZI_LANDMARK_PUZZLES = [
         landmark: '初生码头',
         npcId: 863000,
         questId: 873104,
+        altQuestId: 873004,
+        prevPuzzleId: 'hanzi-lantern',
         title: '小手印家书破译',
         eyebrow: '字源岛 · 初生码头现场安放',
         intro: '初生码头的石台上摊开着那封浸过海风的旧家书。对照信上的图案与句意补齐三枚字印，替阿初读懂远方家人的心意。',
@@ -282,6 +290,8 @@ export const HANZI_LANDMARK_PUZZLES = [
         landmark: '字源亭',
         npcId: 863000,
         questId: 873105,
+        altQuestId: 873005,
+        prevPuzzleId: 'hanzi-letter',
         title: '字源庆典节目单',
         eyebrow: '字源岛 · 字源亭现场安放',
         intro: '字源亭前的庆典木架已经搭好，只差把大鼓、小鼓与压轴群舞的名牌挂上节目架，全岛就能敲响欢庆的鼓点！',
@@ -734,6 +744,11 @@ export function islandPuzzleUnlocked(save, puzzle) {
     if (islandPuzzleSolved(save, puzzle.id)) return true;
     if (puzzle.openWithoutQuest) return true;
     if (puzzle.minLevel && (save.level || 1) < puzzle.minLevel) return false;
+    if (puzzle.prevPuzzleId && islandPuzzleSolved(save, puzzle.prevPuzzleId)) return true;
+    if (puzzle.altQuestId != null) {
+        const alt = save.quests?.[puzzle.altQuestId];
+        if (alt?.accepted || alt?.claimed) return true;
+    }
     if (puzzle.questId != null) {
         const q = save.quests?.[puzzle.questId];
         return !!(q?.accepted || q?.claimed);
@@ -750,6 +765,11 @@ export function islandPuzzleStatus(save, puzzleOrId) {
     if (!unlocked) {
         if (puzzle.minLevel && (save?.level || 1) < puzzle.minLevel) {
             lockReason = `建议达到 ${puzzle.minLevel} 级后再来探索此处机关。`;
+        } else if (puzzle.prevPuzzleId) {
+            const prev = islandPuzzleById(puzzle.prevPuzzleId);
+            lockReason = prev
+                ? `先完成上一处地标「${prev.landmark}」的现场复原，或向居民了解故事即可开启。`
+                : '先向岛上负责这段故事的居民了解来龙去脉，再来现场安放。';
         } else if (puzzle.questId != null) {
             lockReason = '先向岛上负责这段故事的居民了解来龙去脉，再来现场安放。';
         }

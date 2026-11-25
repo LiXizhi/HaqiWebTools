@@ -385,14 +385,21 @@ function renderHudContents(root, model, cb) {
             el('p', '', side?.description || step?.name || (chapter ? '本章完成。和伙伴继续探索吧。' : '靠近居民，了解这座城市的故事。')),
         );
     } else if (vm.mode === 'dungeon') {
-        const { dungeon, cleared, remaining } = vm.payload;
+        const { dungeon, cleared, remaining, towerBlessings = [], towerBlessingPending = null } = vm.payload;
         tracker.replaceChildren(
             el('div', 'tracker-top', el('span', 'eyebrow', '副本探索'), el('span', 'chapter-count', `清怪 ${cleared} / ${dungeon.arenas.length}`)),
             el('h3', '', dungeon.name),
             el('p', '', cleared === dungeon.arenas.length ? '营地已清理完毕，可以退出副本。' : remaining ? `下一站：第 ${cleared + 1} 处营地。沿道路前进，接近怪物后开始战斗。` : '前路暂未开放，可以退出副本。'),
             el('p', 'muted', '副本中不会自动回血，请用现有生命通关。'),
         );
+        if (towerBlessings.length) {
+            const line = towerBlessings.map(b => `${tr(b.name)}×${b.stacks}`).join(' · ');
+            tracker.append(el('p', 'muted', fill('已激活赐福：{blessings}', { blessings: line }).text));
+        }
         const actions = el('div', 'opening-tracker-actions dungeon-tracker-actions');
+        if (towerBlessingPending) {
+            actions.append(button(tr('挑选试炼塔赐福'), () => cb.panel('tower-blessing'), 'track-button'));
+        }
         if (remaining) actions.append(button('前往下一处营地', () => cb.track('dungeon-next'), 'track-button'));
         actions.append(button('退出副本', () => cb.leaveDungeon?.(), 'track-button'));
         tracker.append(actions);
@@ -431,9 +438,11 @@ function renderHudContents(root, model, cb) {
     if (vm.islandExplore) {
         const ex = vm.islandExplore;
         const summary = ex.steleTotal
-            ? fill('地标复原 {done}/{total} · 碑林传拓 {stele}/{steleTotal}', {
+            ? fill('地标复原 {done}/{total} · 合字 {forge}/{forgeTotal} · 碑林 {stele}/{steleTotal}', {
                 done: ex.done,
                 total: ex.total,
+                forge: ex.forgeDone || 0,
+                forgeTotal: ex.forgeTotal || 0,
                 stele: ex.steleDone,
                 steleTotal: ex.steleTotal,
             }).text
@@ -452,8 +461,59 @@ function renderHudContents(root, model, cb) {
             }).text;
             box.append(button(label, () => cb.panel('hanzi-stele-scroll'), 'tracker-tactics'));
         }
+        if (ex.forgeTotal) {
+            const forgeLabel = ex.hanziSeal
+                ? fill('字源合字坊（{done}/{total} · 战印「{glyph}」）', {
+                    done: ex.forgeDone || 0,
+                    total: ex.forgeTotal,
+                    glyph: ex.hanziSeal.glyph,
+                }).text
+                : fill('字源合字坊（{done}/{total}）', {
+                    done: ex.forgeDone || 0,
+                    total: ex.forgeTotal,
+                }).text;
+            box.append(button(forgeLabel, () => cb.panel('hanzi-forge'), 'tracker-tactics'));
+        }
+        if (ex.canToggleHanziStories && cb.toggleHanziStories) {
+            const storyToggle = button(
+                tr(ex.hanziStoryExplore ? '汉字故事探索：已开启（不改英语）' : '顺便游览 30 个汉字故事'),
+                () => cb.toggleHanziStories(),
+                'tracker-tactics',
+            );
+            storyToggle.setAttribute('aria-pressed', String(!!ex.hanziStoryExplore));
+            box.append(storyToggle);
+        }
         box.append(el('small', '', summary));
         tracker.append(box);
+    }
+    if (vm.campfireSummary) {
+        const cf = vm.campfireSummary;
+        const cfLabel = cf.fishingClaimable > 0
+            ? fill('营火烹饪 · 渔获赏金（可领 {n}）', { n: cf.fishingClaimable }).text
+            : cf.activeBuff
+                ? fill('营火烹饪 · {name}（余 {n} 场）', { name: tr(cf.activeBuff.name), n: cf.activeBuff.remainingBattles }).text
+                : tr('营火烹饪锅 · 渔获图鉴');
+        const cfBox = el('div', 'tracker-tactics-goal campfire-tracker');
+        cfBox.append(button(cfLabel, () => cb.panel('campfire-cooking', cf.fishingClaimable > 0 ? { tab: 'album' } : {}), 'tracker-tactics'));
+        tracker.append(cfBox);
+    }
+    if (vm.chronicleSummary) {
+        const ch = vm.chronicleSummary;
+        const chLabel = ch.claimableCount > 0
+            ? fill('群岛行纪 · 悬赏可领（{n}）', { n: ch.claimableCount }).text
+            : ch.isTrilogy
+                ? fill('本岛风物与小摊 · {stall}', { stall: tr(ch.stallName) }).text
+                : tr('群岛行纪 · 每日悬赏与荣誉');
+        const targetTab = ch.dailyClaimable > 0
+            ? 'daily'
+            : ch.earthClaimable > 0
+                ? 'earth'
+                : ch.isTrilogy
+                    ? 'trilogy'
+                    : 'daily';
+        const chBox = el('div', 'tracker-tactics-goal chronicle-tracker');
+        chBox.append(button(chLabel, () => cb.panel('archipelago-chronicle', { tab: targetTab, islandId: ch.isTrilogy ? save.zone : null }), 'tracker-tactics'));
+        tracker.append(chBox);
     }
     root.append(tracker);
     const nav = el('nav', 'game-nav');

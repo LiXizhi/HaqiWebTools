@@ -179,6 +179,7 @@ const battleController=createBattleController({
     nodes,getContext,services,bus,
     model:()=>model(),
     loadPet:id=>loadPet(id),
+    interact:target=>interact(target),
     finishTacticsFight:options=>finishTacticsFight(options),
     updateMusic:()=>updateMusic(),
     toggleSound:()=>toggleSound(),

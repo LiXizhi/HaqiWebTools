@@ -1,5 +1,6 @@
 import {learningQuestMatches} from './learning_quest_core.js';
 import {memoryCount,memoryParams,memoryBatch} from './hanzi_memory_core.js';
+import {DARK_ISLAND_STORY_QUESTS} from './dark_island_story_core.js';
 // Kids quest_list progress for every non-obsolete quest outside the 14 chapter lessons.
 // QuestProvider.lua TryAccept/CanFinished and QuestHelp.lua Table_Add / Table_Add_Item.
 // Story text is projected without executing source scripts or transform rewards.
@@ -99,8 +100,11 @@ export function projectQuestRuntime(catalog, chapterIds = []) {
 
 export function installCatalogQuests(content, runtime) {
     assert(runtime?.version === 1 && Array.isArray(runtime.quests) && runtime.paths, '全岛任务数据无效');
-    content.catalogQuests = { paths: runtime.paths, quests: runtime.quests, byId: Object.fromEntries(runtime.quests.map(q => [q.id, q])) };
-    for (const quest of runtime.quests) for (const group of quest.rewards) for (const item of group.items) {
+    const existingIds = new Set(runtime.quests.map(q => q.id));
+    const darkAddon = DARK_ISLAND_STORY_QUESTS.filter(q => !existingIds.has(q.id)).map(q => structuredClone(q));
+    const quests = darkAddon.length ? [...runtime.quests, ...darkAddon] : runtime.quests;
+    content.catalogQuests = { paths: runtime.paths, quests, byId: Object.fromEntries(quests.map(q => [q.id, q])) };
+    for (const quest of quests) for (const group of quest.rewards) for (const item of group.items) {
         if (item.id !== 113 && !content.items[item.id]) content.items[item.id] = { id: item.id, name: item.name, description: '任务奖励', stats: {}, kind: 0 };
     }
 }

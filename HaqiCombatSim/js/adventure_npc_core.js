@@ -25,7 +25,10 @@ export function npcItemLimits(item) {
 export function installNpcCatalog(content,catalog) {
     const chapterNpcIds=new Set(Object.keys(content.npcs).map(Number));
     content.npcCatalog=catalog;
-    for(const [id,item] of Object.entries(catalog.items))content.items[id]??=structuredClone(item);
+    for(const [id,item] of Object.entries(catalog.items)){
+        const cur=content.items[id];
+        if(!cur||(cur.kind===0&&cur.description==='任务奖励'&&!Object.keys(cur.stats||{}).length))content.items[id]=structuredClone(item);
+    }
     for(const npc of catalog.npcs){
         npc.hidden??=npc.zone==='town'&&!chapterNpcIds.has(npc.id)&&!npcServices(content,npc).length;
         content.npcs[npc.id]??=structuredClone(npc);
@@ -70,7 +73,10 @@ export function npcPurpose(content,npc) {
     if(id===30513)return {role:'火鸟岛向导',title:'先探 15 级金库风铃，再闯赤焰高塔',body:'15 级可先带战宠挑战三人秘境「金库失窃的风铃」赢取 30 格精良口袋，再攀登 30 层赤焰试炼塔；满 50 级后再集结四人迎战「篝火守夜人」。',panel:'dungeons',label:'查看火鸟岛秘境与试炼塔'};
     if(id===30601)return {role:'寒冰岛向导',title:'挑战冰封回信、风眼罗盘与霜晶塔',body:'28 级可先闯双人秘境「冰封的回信」赢精锐冠，35 级集结四人挑战「风暴中心的罗盘」赢本系艾希斯圣帽，或冲击 50 层霜晶试炼塔。',panel:'dungeons',label:'查看寒冰岛秘境与试炼塔'};
     if(id===30702)return {role:'沙漠岛向导',title:'挑战沙海回声、绿洲钥匙与流沙塔',body:'32 级可单骑挑战「沙海回声」，40 级带队闯「绿洲的最后一把钥匙」赢 50 格精良口袋，登顶 70 层流沙塔还可获传说权利法杖。',panel:'dungeons',label:'查看沙漠岛秘境与试炼塔'};
-    if(id===35002)return {role:'幽暗岛向导',title:'挑战梦魇之约、沼泽航标与百层幽月塔',body:'55 级可挑战双人秘境「梦魇尽头的约定」赢魔晶法杖、四人秘境「沼泽中的航标」赢 70 格斗士大卡包，并冲击百层幽月试炼塔。',panel:'dungeons',label:'查看幽暗岛秘境与试炼塔'};
+    if(id===35002)return {role:'幽暗岛向导',title:'挑战梦魇之约、沼泽航标与百层幽月塔',body:'40 级起可先推进幽暗岛「幽谷雾起」六章防线任务赢取宝石与祝福魔珠，55 级挑战双人秘境「梦魇尽头的约定」、四人秘境「沼泽中的航标」并冲击百层幽月试炼塔。',panel:'dungeons',label:'查看幽暗岛秘境与试炼塔'};
+    if(id===35003)return {role:'前线观察者',title:'比较幽暗旅途收获的新装备与宝石',body:'整理战利品掉落的晶石与任务装备，穿戴并对比生命、抗性与攻击提升后再深入密林。',panel:'inventory',label:'比较并穿戴装备'};
+    if(id===35006)return {role:'沼泽探路者',title:'编排抗压与集火战宠阵容',body:'面对法老王与深沼领主时，先确认出战战宠的生命、饱食度与破盾/治疗技能配置。',panel:'pet',label:'查看战宠与出战阵容'};
+    if(id===35004||id===35005)return {role:'石脊哨兵',title:'查看幽暗前线秘境与试炼塔',body:'整备完毕后可由此直接查看幽暗岛精英秘境与百层幽月试炼塔进度。',panel:'dungeons',label:'查看幽暗岛秘境与试炼塔'};
     return null;
 }
 export function npcOffers(content,npc) {

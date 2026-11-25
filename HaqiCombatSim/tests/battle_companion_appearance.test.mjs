@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
+import {tr} from '../js/locale_runtime.js';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 import {OPENING_PET} from '../js/opening_journey_core.js';
 import {createCompanionPractice,selectCompanionPractice,castCompanionPractice} from '../js/companion_practice_core.js';
@@ -17,7 +18,7 @@ for(const mode of ['local','cdn'])test(`practice and first-pet welcome share the
    replaceChildren(...items){this.children=items;},addEventListener(){},querySelector(){return null;}};
   nodes.push(n);return n;
  }
- const context=vm.createContext({OPENING_PET,el,document:{createElement:tag=>el(tag)},
+ const context=vm.createContext({OPENING_PET,tr,el,document:{createElement:tag=>el(tag)},
   button:(label,action,cls)=>el('button',cls,label),modal:root=>root,
   art:()=>el('canvas'),spellFace:()=>el('div'),spellHint:()=>'',createCloseButton:()=>el('button')});
  const portrait=source('views/adventure/view_adventure_pets.js');

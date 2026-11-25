@@ -29,8 +29,15 @@ export function settleDungeonChallenge(save,dungeon,run,pending,battle){
  return {first,newBest,turns:next.turns,defeats:next.defeats};
 }
 export function dungeonChallengeLines(record){
+ return dungeonChallengeMessages(record).map(message=>typeof message==='string'?message:message.source.replace(/\{(\w+)\}/g,(_,key)=>String(message.vars[key])));
+}
+export function dungeonChallengeMessages(record){
  if(!record)return ['尚未完成整轮挑战；从头进入副本后开始记录。'];
- return ['完整通关 '+record.clears+' 次','最快通关 '+record.bestTurns+' 回合 · 期间失利 '+record.bestDefeats+' 次','最近通关 '+record.lastTurns+' 回合 · 期间失利 '+record.lastDefeats+' 次'];
+ return [
+  {source:'完整通关 {count} 次',vars:{count:record.clears}},
+  {source:'最快通关 {turns} 回合 · 期间失利 {defeats} 次',vars:{turns:record.bestTurns,defeats:record.bestDefeats}},
+  {source:'最近通关 {turns} 回合 · 期间失利 {defeats} 次',vars:{turns:record.lastTurns,defeats:record.lastDefeats}}
+ ];
 }
 export function validateDungeonChallenges(save,content){
  const object=v=>v&&typeof v==='object'&&!Array.isArray(v);

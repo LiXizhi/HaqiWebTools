@@ -30,6 +30,7 @@ import {
     openingJourneyMilestones,
 } from '../../opening_journey_core.js';
 import { tacticsNextGoal } from '../../tactics_progress_core.js';
+import { dungeonWatchStory } from '../../dungeon_watch_story_core.js';
 
 export function computeHeroHealth(save, content) {
     const maxHp = specMaxHp(playerSpec(save, content));
@@ -128,9 +129,11 @@ export function buildHudTrackerViewModel(model) {
     } else if (dungeon) {
         mode = 'dungeon';
         const clearedList = dungeonProgress(save)?.[save.zone]?.cleared || [];
-        const cleared = clearedList.length;
-        const remaining = dungeon.arenas.filter(a => !a.blocked.length && !clearedList.includes(a.id)).length;
-        payload = { dungeon, cleared, remaining };
+        const clearedIds = new Set(clearedList);
+        const cleared = dungeon.arenas.filter(a => clearedIds.has(a.id)).length;
+        const nextIndex = dungeon.arenas.findIndex(a => !a.blocked?.length && !clearedIds.has(a.id));
+        const remaining = dungeon.arenas.filter(a => !a.blocked?.length && !clearedIds.has(a.id)).length;
+        payload = { dungeon, cleared, remaining, nextIndex, watchStory:dungeonWatchStory(save,dungeon,clearedList) };
     } else {
         const ids = trackedQuestIds(save, c).filter(
             id => c.quests.some(quest => quest.id === id) || c.catalogQuests?.byId[id],
@@ -153,7 +156,7 @@ export function buildHudTrackerViewModel(model) {
         && !model.localSecond
         && forestCommissionAvailable(save)
         && !campDetourGoal(save)
-        && forestCommissionPhase(save) !== 'done';
+        && (forestCommissionPhase(save) !== 'done' || save.forestCommission?.mystery?.status !== 'solved');
     const forestGoal = forestAvailable
         ? { phase: forestCommissionPhase(save), goal: forestCommissionGoal(save) }
         : null;

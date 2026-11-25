@@ -47,6 +47,7 @@ export function createSceneNavigationController({
     battleIntro,
     perf,
     onInteract,
+    onMovementIntent=()=>{},
     beginEncounter=A.beginEncounter,
     restorePveBattle=P.restorePveBattle,
 }){
@@ -312,6 +313,7 @@ export function createSceneNavigationController({
     }
 
     function walkTo(target,autoInteract=false){
+        onMovementIntent();
         if(autoInteract&&target.kind==='encounter'){
             target={...target,explicitChallenge:true};
             target=liveEncounterTarget(getContext().world,target)||target;
@@ -324,8 +326,13 @@ export function createSceneNavigationController({
             return;
         }
         requestHeroPath(target,route=>{
-            getContext().setPath(route);
-            if(!route.length)toast('这里暂时走不过去，试试旁边的小路。');
+            const ctx=getContext();
+            if(autoInteract&&ctx.destination!==target)return;
+            ctx.setPath(route);
+            if(!route.length){
+                if(autoInteract)ctx.setDestination(null);
+                toast('这里暂时走不过去，试试旁边的小路。');
+            }
         });
     }
 
@@ -422,12 +429,16 @@ export function createSceneNavigationController({
     function clickWorld(clientX,clientY){
         const ctx=getContext();
         framePacer.wake();
-        heroNavigation.cancel();
-        ctx.bumpFishingLoadEpoch();
         const lp=localPlay();
         if(lp.paused)return false;
         const {p,target}=pickWorldTarget(clientX,clientY);
         ctx.renderer.interactionFeedback?.click(p,target,performance.now());
+        if(lp.active&&lp.mouseOwner!==0){
+            if(!lp.interceptSocial(p))lp.routePointer(p,target);
+            return false;
+        }
+        heroNavigation.cancel();
+        ctx.bumpFishingLoadEpoch();
         if(target?.kind==='companion-guide'){
             ctx.clearMovementPath();
             nodes.hud.guideOpen=true;

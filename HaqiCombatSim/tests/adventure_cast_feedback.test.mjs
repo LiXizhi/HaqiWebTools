@@ -14,3 +14,13 @@ test('cast feedback follows school-specific power pip costs and never mutates th
     hero.cooldowns.spell=2;
     assert.match(castBlockedMessage(hero,card,{version:'kids'}),/冷却中：还需 2 回合/);
 });
+
+test('incapacitation is explained before mana and cooldown without changing the turn', () => {
+    const hero = { hp: 100, school: 'ice', pips: { normal: 0, power: 0 }, cooldowns: { spell: 2 } };
+    const card = { type: 'SingleAttack', spellName: 'spell', spellSchool: 'ice', pipcost: 2 };
+    for (const state of [{ stunned: true }, { freezeRounds: 1 }]) {
+        const unit = { ...hero, ...state }, before = JSON.stringify(unit);
+        assert.match(castBlockedMessage(unit, card, { version: 'kids' }), /无法行动.*跳过/);
+        assert.equal(JSON.stringify(unit), before);
+    }
+});

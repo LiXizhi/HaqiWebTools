@@ -81,7 +81,11 @@ export function renderDialogue(root,model,dialog,cb) {
             content.append(guidanceCard({eyebrow:purpose.role,title:purpose.title,body:purpose.body,footnote:available?'':'请在单人冒险中和茜茜出发打怪。'}));
             if(available)choices.append(button(purpose.label,()=>purpose.action==='tactics'?cb.tactics():cb.panel(purpose.panel,{npc}),'secondary'));
         }
-        if(forestCommissionAvailable(save)&&[FOREST_NPCS.giver,FOREST_NPCS.receiver].includes(npc.id)&&!model.localSecond)choices.append(button(forestCommissionPhase(save)==='offer'?'营地急件：接取寻物委托':forestCommissionPhase(save)==='done'?'营地补给员：查看下一场挑战':'继续森林补给委托',()=>cb.panel('forest-commission'),'secondary'));
+        if(forestCommissionAvailable(save)&&[FOREST_NPCS.giver,FOREST_NPCS.receiver].includes(npc.id)&&!model.localSecond){
+            const phase=forestCommissionPhase(save);
+            const label=phase==='offer'?'营地急件：接取寻物委托':phase==='done'?(save.forestCommission?.mystery?.status==='solved'?'查看森林委托记录':'和茜茜调查草屑和脚印'):'继续森林补给委托';
+            choices.append(button(label,()=>cb.panel('forest-commission'),'secondary'));
+        }
         if(npcServices(c,npc).length&&purpose?.panel!=='npc-services')services.append(button('查看商品与学习魔法',()=>cb.panel('npc-services',{npc}),'secondary'));
         if(npc.worldObservation){
             services.append(button(npc.worldObservation.label,()=>cb.panel('earthmap'),'secondary'));

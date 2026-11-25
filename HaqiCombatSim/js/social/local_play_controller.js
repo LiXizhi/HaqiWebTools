@@ -419,6 +419,7 @@ export function createLocalPlay(api) {
             return true;
         }
         if (['up', 'down', 'left', 'right'].includes(action)) {
+            if (owner === 0) api.onLeaderMovementIntent?.();
             pressed[owner].add(action);
             following[owner] = false;
             paths[owner] = [];

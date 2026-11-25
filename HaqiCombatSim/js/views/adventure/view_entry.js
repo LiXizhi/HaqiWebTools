@@ -60,17 +60,25 @@ export function renderEntry(root,assets,stored,cb,error='') {
     root.append(el('div','entry-layout',intro,form));
     const footer=createEntryFooter();if(footer)root.append(footer);
     introPane.fit();
-    function paint() {
+    let paintVersion=0,previewVersion=0,composing=false,nameError=false;
+    function operationFeedback(){
+        form.setAttribute('aria-busy',String(!!cb.busy));
+        if(cb.busy){const status=el('p','creation-caption');setText(status,cb.busy);status.setAttribute('role','status');form.append(status);}
+        if(error){const status=el('p','error-text',error);status.setAttribute('role','alert');form.append(status);}
+        if(cb.busy)for(const node of root.querySelectorAll('button,input,select'))node.disabled=true;
+    }
+    function paint(focus='') {
+        const version=++paintVersion;composing=false;
         cb.stopPreview?.();form.replaceChildren();
         if(accountChoice&&draft.account!=='guest'){
             root.classList.remove('school-step','companion-step');
             const choices=el('div','entry-account-choices',
                 button('登录 Keepwork',()=>cb.login?.(),'primary entry-account-choice'),
                 el('p','entry-account-hint','登录后，角色与旅途进度可跨设备同步。'),
-                button('本地访客',()=>{draft.account='guest';paint();root.scrollTop=0;},'secondary entry-account-choice'),
+                button('本地访客',()=>{draft.account='guest';error='';paint('step');root.scrollTop=0;},'secondary entry-account-choice'),
                 el('p','entry-account-hint','仅保存在此设备，不同步到云端。'));
             form.append(el('p','eyebrow','开启旅程'),el('h2','','选择进入方式'),el('p','creation-caption','你的魔法世界，正在等你。'),choices);
-            if(cb.busy)for(const node of form.querySelectorAll('button'))node.disabled=true;
+            operationFeedback();
             return;
         }
         root.classList.toggle('school-step',draft.step===3);root.classList.toggle('companion-step',draft.step===2);
@@ -87,9 +95,18 @@ export function renderEntry(root,assets,stored,cb,error='') {
         if(captions[draft.step-1]) form.append(el('p','creation-caption',captions[draft.step-1]));
         if(draft.step===1) {
             const preview=createHeroPicker(assets,draft);
-            const name=el('input','name-input');name.id='hero-name';name.name='name';name.value=draft.name;name.maxLength=16;name.autocomplete='off';name.required=true;name.placeholder='';name.oninput=()=>{draft.name=name.value;};
+            const name=el('input','name-input');name.id='hero-name';name.name='name';name.value=draft.name;name.maxLength=16;name.autocomplete='off';name.required=true;name.placeholder='';
+            name.enterKeyHint='next';
+            name.oncompositionstart=()=>{composing=true;};
+            name.oncompositionend=()=>{composing=false;draft.name=name.value;};
+            name.onkeydown=e=>{if(e.key==='Enter'&&(composing||e.isComposing||e.keyCode===229))e.preventDefault();};
+            name.oninput=()=>{draft.name=name.value;nameError=false;name.removeAttribute('aria-invalid');name.removeAttribute('aria-describedby');form.querySelector('#hero-name-error')?.remove();};
             const label=el('label','field-label','你的名字');label.htmlFor=name.id;
             form.append(preview,label,name);
+            if(nameError){
+                const message=el('p','error-text','请输入你的冒险名字。');message.id='hero-name-error';message.setAttribute('role','alert');
+                name.setAttribute('aria-invalid','true');name.setAttribute('aria-describedby',message.id);form.append(message);
+            }
         } else if(draft.step===2) {
             const scene=el('div','companion-scene');
             const hero=el('div','companion-hero',heroPortrait(assets,draft,100,120),el('span','companion-name',draft.name));
@@ -109,7 +126,7 @@ export function renderEntry(root,assets,stored,cb,error='') {
         } else {
             const schools=el('div','school-choices');
             for(const [key,label]of Object.entries(SCHOOL_NAMES)){
-                const b=button([el('i','school-gem'),el('span','',label)],()=>{draft.school=key;draft.previewKey=null;paint();},`school-choice ${draft.school===key?'selected':''}`);
+                const b=button([el('i','school-gem'),el('span','',label)],()=>{draft.school=key;draft.previewKey=null;paint(`[data-school="${key}"]`);},`school-choice ${draft.school===key?'selected':''}`);
                 b.dataset.school=key;b.style.setProperty('--school',COLORS[key]);b.setAttribute('aria-pressed',String(draft.school===key));schools.append(b);
             }
             const canvas=el('canvas','creation-preview');canvas.setAttribute('role','img');canvas.setAttribute('aria-label',fill('{school}系技能动画预览',{school:SCHOOL_NAMES[draft.school]}).text);
@@ -117,7 +134,17 @@ export function renderEntry(root,assets,stored,cb,error='') {
             const choices=cb.previewChoices(draft.school),cards=el('div','creation-skill-choices');
             if(!choices.some(c=>c.key===draft.previewKey))draft.previewKey=choices[0]?.key;
             let pause;
-            const play=(key,automatic=false)=>{draft.previewKey=key;for(const b of cards.children){const on=b.dataset.key===key;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',String(on));}setText(pause,'暂停');if(!cb.busy)cb.preview(canvas,key,{appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId,customHead:draft.customHead},text=>{setText(status,text);},automatic?()=>{const index=choices.findIndex(c=>c.key===key);play(choices[(index+1)%choices.length].key,true);}:undefined);};
+            const play=(key,automatic=false)=>{
+                if(version!==paintVersion||!canvas.isConnected)return;
+                const revision=++previewVersion,current=()=>version===paintVersion&&revision===previewVersion&&canvas.isConnected;
+                draft.previewKey=key;
+                for(const b of cards.children){const on=b.dataset.key===key;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',String(on));}
+                setText(pause,'暂停');
+                if(!cb.busy)cb.preview(canvas,key,{appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId,customHead:draft.customHead},text=>{if(current())setText(status,text);},automatic?()=>{
+                    if(!current()||!choices.length)return;
+                    const index=choices.findIndex(c=>c.key===key);play(choices[(index+1)%choices.length].key,true);
+                }:undefined);
+            };
             for(const choice of choices){
                 const face=el('canvas','creation-skill-card');face.width=112;face.height=112;face.setAttribute('aria-hidden','true');
                 const base=assets.effects.cards[choice.key]?.base;
@@ -140,16 +167,19 @@ export function renderEntry(root,assets,stored,cb,error='') {
             if(cb.playPrologue)form.append(button('播放开场动画',cb.playPrologue,'text-button entry-prologue-replay'));
             form.append(button('导入魔法哈奇角色',cb.importOriginal,'text-button creation-import'));
         }
-        if(draft.step>1)form.append(button('上一步',()=>{draft.step--;paint();root.scrollTop=0;},'text-button creation-back'));
-        else if(accountChoice)form.append(button('返回',()=>{draft.account=undefined;paint();root.scrollTop=0;},'text-button creation-back'));
+        if(draft.step>1)form.append(button('上一步',()=>{draft.step--;paint('step');root.scrollTop=0;},'text-button creation-back'));
+        else if(accountChoice)form.append(button('返回',()=>{draft.account=undefined;paint();form.querySelector('button')?.focus();root.scrollTop=0;},'text-button creation-back'));
         if(cb.roles)form.append(button('返回我的角色',cb.roles,'text-button creation-back'));
-        if(error){const status=el('p','error-text',error);status.setAttribute('role','alert');form.append(status);}
-        if(cb.busy)for(const node of root.querySelectorAll('button,input,select'))node.disabled=true;
+        operationFeedback();
+        if(!cb.busy&&focus){
+            const selector=focus==='step'?draft.step===1?'#hero-name':draft.step===2?'.starter-choices [aria-pressed="true"]':'.school-choices [aria-pressed="true"]':focus;
+            form.querySelector(selector)?.focus();
+        }
     }
     form.onsubmit=e=>{
-        e.preventDefault();if(cb.busy)return;
-        if(draft.step===1){draft.name=draft.name.trim();if(!draft.name){paint();root.querySelector('#hero-name')?.focus();return;}}
-        if(draft.step<3){draft.step++;paint();root.scrollTop=0;}
+        e.preventDefault();if(cb.busy||composing||e.isComposing||(accountChoice&&draft.account!=='guest'))return;
+        if(draft.step===1){draft.name=draft.name.trim();if(!draft.name){nameError=true;paint('step');return;}}
+        if(draft.step<3){draft.step++;paint('step');root.scrollTop=0;}
         else cb.create({name:draft.name.trim(),school:draft.school,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId,customHead:draft.customHead,starter:draft.starter});
     };
     paint();

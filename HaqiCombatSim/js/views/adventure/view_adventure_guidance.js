@@ -1,13 +1,14 @@
 import {setText} from '../../locale_runtime.js';
 
-// Shared presentation only. Callers supply facts and actions from their own model.
+// Shared presentation only. Text is a string or {source,vars} for translated templates.
 export function guidanceCard({eyebrow='',title='',body='',steps=[],footnote='',className=''}={}){
     const card=document.createElement('section');card.className=['adventure-guidance',className].filter(Boolean).join(' ');
-    function add(tag,kind,text){if(!text)return;const node=document.createElement(tag);node.className=kind;setText(node,text);card.append(node);return node;}
+    function write(node,message){if(typeof message==='object'&&message!==null)setText(node,message.source,message.vars);else setText(node,message);}
+    function add(tag,kind,text){if(!text)return;const node=document.createElement(tag);node.className=kind;write(node,text);card.append(node);return node;}
     add('small','adventure-guidance-eyebrow',eyebrow);
     add('strong','adventure-guidance-title',title);
     add('p','adventure-guidance-body',body);
-    if(steps.length){const list=document.createElement('ol');list.className='adventure-guidance-steps';for(const text of steps){const row=document.createElement('li');setText(row,text);list.append(row);}card.append(list);}
+    if(steps.length){const list=document.createElement('ol');list.className='adventure-guidance-steps';for(const text of steps){const row=document.createElement('li');write(row,text);list.append(row);}card.append(list);}
     add('small','adventure-guidance-footnote',footnote);
     return card;
 }

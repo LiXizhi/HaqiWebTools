@@ -10,11 +10,13 @@ import { bindHandGesture } from './view_adventure_hand.js';
 import { attachStatusTooltips } from './view_adventure_status_tooltip.js';
 import { createBattleChat } from './view_battle_chat.js';
 import { createBattlePetHint, updateBattlePetHint, updateBattleSpeech, battleSpeechController } from './view_battle_pet_hint.js';
-import { defeatReviewNotes } from './view_battle_review.js';
+import { defeatReviewNotes, renderDungeonWatchRetry } from './view_battle_review.js';
 import { tacticalIntentPanel } from './view_tactical_intents.js';
 import { tacticalReview } from '../../tactical_review_core.js';
+import { openingTurnGuidance } from '../../opening_turn_guidance_core.js';
+import { bindResultSettlement } from './view_battle_result_action.js';
 import { bindBattleTargeting } from './view_battle_targeting.js';
-import { renderCompanionGuide } from './view_companion_guide.js';
+import { captureCompanionGuide, renderCompanionGuide } from './view_companion_guide.js';
 import { createPetTraitBadges, traitUpgradeText } from './view_pet_traits.js';
 import { buildBattleHandViewModel, buildBattleResultViewModel } from '../../adventure/presenters/battle_view_model.js';
 import { el, button, icon, badge, spellFace } from './primitives.js';
@@ -46,6 +48,7 @@ export function renderBattle(root, model, cb) {
 }
 
 function renderBattleContent(root, model, cb) {
+    const guideState = captureCompanionGuide(root);
     const retainedCanvas = root.handBattle === model.battle ? root.querySelector('#battle-canvas') : null;
     root.disposeStatusTooltips?.();
     root.disposeHandGesture?.();
@@ -112,7 +115,7 @@ function renderBattleContent(root, model, cb) {
     bindBattleTargeting(canvas, cb.target);
 
     const handVm = buildBattleHandViewModel({ battle, hero, selected, discarded, assets });
-    const blockedMessage = handVm.blockedMessage;
+    const blockedMessage = handVm.blockedFeedback ? fill(handVm.blockedFeedback.key, handVm.blockedFeedback.vars).text : '';
     const status = el('div', 'cast-announcement');
     status.id = 'cast-announcement';
     status.setAttribute('aria-live', 'polite');
@@ -133,6 +136,11 @@ function renderBattleContent(root, model, cb) {
     root.runePage = Math.min(Math.max(0, root.runePage || 0), runePages - 1);
     const playerHand = model.hand ? model.hand.filter(h => !discarded.includes(h.seq)) : handVm.playerHand;
     const visibleHand = runeCardsOpen ? runeHand.slice(root.runePage * runePageSize, root.runePage * runePageSize + runePageSize) : petCardsOpen ? petHand : playerHand;
+    const turnGuidance = model.localDuo ? null : openingTurnGuidance({ battle, hero, selected, visibleHand, discarded, animating });
+    if (turnGuidance && !selected) {
+        setText(status, turnGuidance.text);
+        status.classList.add('opening-turn-guidance');
+    }
     hand.setAttribute('aria-label', petCardsOpen ? '宠物卡牌' : '玩家手牌');
     const togglePets = button(
         petCardsOpen
@@ -178,7 +186,8 @@ function renderBattleContent(root, model, cb) {
         const artCard = hero.wordCards?.[h.seq]
             ? { ...assets.dataset.cards[h.key], name: hero.wordCards[h.seq].title, wordDescription: hero.wordCards[h.seq].description }
             : assets.dataset.cards[h.key];
-        const available = handVm.isCardAvailable(card);
+        const unavailable = handVm.cardBlockedFeedback(card);
+        const available = !unavailable;
         const isSelected = selected?.seq === h.seq;
         const node = el('div', `hand-card ${isSelected ? 'selected' : ''} ${available ? '' : 'unavailable'}`);
         node.dataset.seq = h.seq;
@@ -196,7 +205,10 @@ function renderBattleContent(root, model, cb) {
             select.append(el('span', 'tactical-hand-caption', el('span', '', artCard.name), el('b', '', cost)));
         }
         select.disabled = animating || battle.finished;
-        select.setAttribute('aria-label', fill(available ? '选择{name}' : '选择{name}（魔力不足或冷却中）', { name: artCard.name }).text);
+        const selectionLabel = fill('选择{name}', { name: artCard.name }).text;
+        const unavailableReason = unavailable ? fill(unavailable.key, unavailable.vars).text : '';
+        select.setAttribute('aria-label', unavailableReason ? selectionLabel + ' — ' + unavailableReason : selectionLabel);
+        if (unavailableReason) select.title = unavailableReason;
         select.setAttribute('aria-pressed', String(isSelected));
         const drop = button('弃牌', () => cb.discard(h.seq), 'secondary discard-button');
         if (battle.tacticalEncounter) {
@@ -279,13 +291,13 @@ function renderBattleContent(root, model, cb) {
         const instruction = el(
             'p',
             'battle-target-instruction',
-            blockedMessage
-                ? blockedMessage.split('。')[0] + '。'
+            blockedMessage || (turnGuidance?.text
+                ? turnGuidance.text
                 : !legalTargets.length
                   ? '暂时没有可选目标。'
                   : kind === 'friendly' || kind === 'self'
                     ? '点自己或伙伴施法'
-                    : '点亮着的对手出招',
+                    : '点亮着的对手出招'),
         );
         instruction.setAttribute('role', 'status');
         const chosen = hand.querySelector('.hand-card.selected');
@@ -407,7 +419,7 @@ function renderBattleContent(root, model, cb) {
         notice.setAttribute('aria-label', intent.label);
         top.append(notice);
     }
-    if (!battle.tacticsField && !model.aiHintsMuted) renderCompanionGuide(root, model, cb, { battle: true });
+    if (!battle.tacticsField && !model.aiHintsMuted) renderCompanionGuide(root, model, cb, { battle: true, state: guideState });
     attachStatusTooltips(root, canvas);
     root.oncontextmenu = e => {
         if (petCardsOpen || runeCardsOpen || animating || battle.finished || e.pointerType === 'touch' || !matchMedia('(pointer:fine)').matches) return;
@@ -484,20 +496,34 @@ function renderBattleContent(root, model, cb) {
         const rewardLine = el('p', '');
         if (battle.redMushroom) {
             setText(rewardLine, battle.winner == null ? '本场平局，战绩已更新。' : '比赛结束，战绩已更新。');
+        } else if (resultVm.rewardExhausted) {
+            setText(rewardLine, '本场精力不足，不会获得经验和奇豆。');
         } else if (won) {
             setText(rewardLine, '获得 {xp} 经验 · {coins} 奇豆', { xp: resultVm.xp, coins: resultVm.coins });
         } else {
             setText(rewardLine, '已保留你的物品与任务进度。');
         }
+        const finishLabel = battle.redMushroom ? '返回红蘑菇赛场' : won ? (resultVm.rewardExhausted ? '结束战斗' : '收下奖励') : save.zone === 'camp' ? '返回营地' : '离开战斗';
+        const finishControl = button(finishLabel, null, 'primary');
+        const finishError = el('p', 'battle-result-error');
+        finishError.setAttribute('role', 'alert');
+        bindResultSettlement(finishControl, cb.finish, setText, () => setText(finishError, '结算暂未完成，请重试。'), () => { finishError.textContent = ''; });
         const result = el(
             'div',
             'result-card',
             el('p', 'eyebrow', won ? '对决胜利' : '继续加油'),
             el('h2', '', won ? '我们赢了！' : '休息一下，再来挑战'),
             rewardLine,
-            button(battle.redMushroom ? '返回红蘑菇赛场' : won ? '收下奖励' : '回到安全地点', cb.finish, 'primary'),
+            finishError,
+            finishControl,
         );
         root.append(result);
+        if(resultVm.openingGuidance){
+            const {title,body,lesson}=resultVm.openingGuidance;
+            result.insertBefore(guidanceCard({eyebrow:'第一次搭档',title,body,footnote:lesson}),result.lastChild);
+        }
+        const retryStory=renderDungeonWatchRetry(resultVm.retryStory,el);
+        if(retryStory)result.insertBefore(retryStory,result.lastChild);
         if (!battle.redMushroom) {
             const { challenge, firstReward, firstRewardExhausted, tacticsReport, firstMilestones } = resultVm;
             if (challenge?.complete) {

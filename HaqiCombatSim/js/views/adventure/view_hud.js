@@ -6,7 +6,7 @@ import { syncLocaleChrome } from '../../locale.js';
 import { tr, setText, fill } from '../../locale_runtime.js';
 import { translatedGoal } from './view_adventure_quests.js';
 import { socialHudButton, teamHudButton, bindDungeonMenu } from './view_adventure_social_hud.js';
-import { renderCompanionGuide } from './view_companion_guide.js';
+import { captureCompanionGuide, renderCompanionGuide } from './view_companion_guide.js';
 import { objectiveProgress } from './view_objective_progress.js';
 import {
     buildCatalogTrackLines,
@@ -279,18 +279,52 @@ export function renderHeroTitle(model, cb) {
     return status;
 }
 
+export function appendDungeonWatchStory(tracker,story){
+    if(!story)return;
+    const journal=el('details','dungeon-watch-journal',
+        el('summary','',fill('巡夜手记 · {title}',{title:tr(story.title)}).text),
+        el('p','',tr(story.line)),
+    );
+    journal.dataset.storyId=story.id;
+    if(story.remembered)journal.append(el('p','muted',tr(story.remembered)));
+    if(story.tip)journal.append(el('p','dungeon-watch-tip',tr(story.tip)));
+    tracker.append(el('blockquote','dungeon-watch-reply',tr(story.reply)),journal);
+}
+
+export function appendForestTracker(tracker, forestGoal, cb) {
+    if (!forestGoal) return;
+    const { phase, goal } = forestGoal;
+    const language = /^到补给帐篷按(.+)补给单选物$/.exec(goal.label);
+    const label = language ? fill('到补给帐篷按{language}补给单选物', { language: language[1] }).text : tr(goal.label);
+    tracker.append(el('div', 'tracker-tactics-goal forest-tracker',
+        button(phase === 'offer' ? tr('森林委托 · 营地急件') : fill('森林委托 · {goal}', { goal: label }).text,
+            () => cb.panel('forest-commission'), 'tracker-tactics')));
+}
+
 export function renderHud(root, model, cb) {
     // A reward can repaint while the dictionary hides the HUD. display:none
     // reports zero offsets, so measure invisibly and restore before the frame paints.
     const hidden = root.hidden;
     const visibility = root.style.getPropertyValue('visibility');
     const priority = root.style.getPropertyPriority('visibility');
+    const previousJournal = root.querySelector('.dungeon-watch-journal');
+    const journalState = previousJournal ? {
+        id: previousJournal.dataset.storyId,
+        open: previousJournal.open,
+        focused: previousJournal.querySelector('summary') === previousJournal.ownerDocument?.activeElement,
+    } : null;
     if (hidden) {
         root.style.setProperty('visibility', 'hidden', 'important');
         root.hidden = false;
     }
     try {
-        return renderHudContents(root, model, cb);
+        const rendered = renderHudContents(root, model, cb);
+        const nextJournal = root.querySelector('.dungeon-watch-journal');
+        if (journalState && nextJournal?.dataset.storyId === journalState.id) {
+            nextJournal.open = journalState.open;
+            if (journalState.focused) nextJournal.querySelector('summary')?.focus({ preventScroll: true });
+        }
+        return rendered;
     } finally {
         if (hidden) {
             root.hidden = true;
@@ -301,6 +335,7 @@ export function renderHud(root, model, cb) {
 }
 
 function renderHudContents(root, model, cb) {
+    const guideState = captureCompanionGuide(root);
     const { assets, save } = model;
     const c = assets.content;
     root.replaceChildren();
@@ -375,13 +410,14 @@ function renderHudContents(root, model, cb) {
             el('p', '', side?.description || step?.name || (chapter ? '本章完成。和伙伴继续探索吧。' : '靠近居民，了解这座城市的故事。')),
         );
     } else if (vm.mode === 'dungeon') {
-        const { dungeon, cleared, remaining } = vm.payload;
+        const { dungeon, cleared, remaining, nextIndex, watchStory } = vm.payload;
         tracker.replaceChildren(
             el('div', 'tracker-top', el('span', 'eyebrow', '副本探索'), el('span', 'chapter-count', `清怪 ${cleared} / ${dungeon.arenas.length}`)),
             el('h3', '', dungeon.name),
-            el('p', '', cleared === dungeon.arenas.length ? '营地已清理完毕，可以退出副本。' : remaining ? `下一站：第 ${cleared + 1} 处营地。沿道路前进，接近怪物后开始战斗。` : '前路暂未开放，可以退出副本。'),
+            el('p', '', cleared === dungeon.arenas.length ? '营地已清理完毕，可以退出副本。' : remaining ? `下一站：第 ${nextIndex + 1} 处营地。沿道路前进，接近怪物后开始战斗。` : '前路暂未开放，可以退出副本。'),
             el('p', 'muted', '副本中不会自动回血，请用现有生命通关。'),
         );
+        appendDungeonWatchStory(tracker,watchStory);
         const actions = el('div', 'opening-tracker-actions dungeon-tracker-actions');
         if (remaining) actions.append(button('前往下一处营地', () => cb.track('dungeon-next'), 'track-button'));
         actions.append(button('退出副本', () => cb.leaveDungeon?.(), 'track-button'));
@@ -417,16 +453,7 @@ function renderHudContents(root, model, cb) {
         link.setAttribute('aria-label', tr('巡夜挑战 / 战术练习') + '：' + tr(goal.title));
         tracker.append(el('div', 'tracker-tactics-goal', link, el('small', '', '巡夜 ' + (goal.challengeDone||0) + '/3 · 练习 ' + goal.done + '/' + goal.total)));
     }
-    if (vm.forestGoal) {
-        const { phase, goal } = vm.forestGoal;
-        tracker.append(
-            el(
-                'div',
-                'tracker-tactics-goal forest-tracker',
-                button(phase === 'offer' ? '森林委托 · 营地急件' : '森林委托 · ' + goal.label, () => cb.panel('forest-commission'), 'tracker-tactics'),
-            ),
-        );
-    }
+    appendForestTracker(tracker, vm.forestGoal, cb);
     root.append(tracker);
     const nav = el('nav', 'game-nav');
     nav.setAttribute('aria-label', '游戏菜单');
@@ -440,7 +467,7 @@ function renderHudContents(root, model, cb) {
         nav.append(button([icon(key), el('span', '', label)], () => cb.panel(id), 'nav-button'));
     }
     root.append(nav);
-    renderCompanionGuide(root, model, cb);
+    renderCompanionGuide(root, model, cb, { state: guideState });
     if (save.mountId || model.localSecond) {
         const mountItem = c.items[save.mountId];
         const mountMark = el('span', 'mount-mark');
@@ -536,7 +563,7 @@ function renderHudContents(root, model, cb) {
     root.append(interaction);
 }
 
-export function updateLocationLabel(hud, world, save, regionName = '') {
+export function updateLocationLabel(hud, world, save, regionName = '', destination = null) {
     if (!hud) return;
     if (world?.isEarth) {
         const location = hud.querySelector('.location-label span');
@@ -544,8 +571,10 @@ export function updateLocationLabel(hud, world, save, regionName = '') {
     }
     if (world?.layout) {
         const label = hud.querySelector('.location-label small');
-        const name = regionName || '新的故事，在这里继续';
-        if (label && label.dataset.zh !== name) setText(label, name);
+        const targetName = typeof destination?.name === 'string' ? destination.name.trim() : '';
+        const pattern = destination ? targetName ? '正在前往{name}' : '正在前往目的地' : regionName || '新的故事，在这里继续';
+        const name = targetName ? fill(pattern, { name: targetName }).zh : pattern;
+        if (label && label.dataset.zh !== name) setText(label, pattern, targetName ? { name: targetName } : undefined);
     }
 }
 

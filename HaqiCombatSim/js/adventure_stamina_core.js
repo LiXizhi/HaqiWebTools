@@ -61,6 +61,11 @@ export function applyCombatStamina(save, content, cost, now = Date.now()) {
     return { rewarded: true, insufficient: false, cost, stamina: save.stamina };
 }
 
+// Preview the very same daily-refill and reward gate without changing the save.
+export function previewCombatStamina(save, content, cost, now = Date.now()) {
+    return applyCombatStamina({ ...save }, content, cost, now);
+}
+
 export function dungeonStaminaHint(dungeon) {
     const costs = (dungeon?.arenas || []).map(parseArenaStaminaCost).filter(c => c > 0);
     if (!costs.length) return null;

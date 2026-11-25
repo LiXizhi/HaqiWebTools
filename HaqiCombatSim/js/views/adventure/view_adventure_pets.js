@@ -204,6 +204,7 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
   const dialog=careDialog??=new DetailDialog(body,{el,title:'照料与自动进食'});
   dialog.body.replaceChildren();
   dialog.body.append(el('p','muted',fill(`新获得的口粮会自动放入空食槽，可点击食槽取回。岛屿上非战斗时角色每秒恢复 {v0}% 生命，宠物每分钟恢复 {v1}%。副本中不会自动回血。携带伙伴每分钟减少 {v2} 饱食，低于 {v3} 时按左、右食槽顺序自动进食，不会消耗背包中未放入的口粮。未上阵的收藏宠物不消耗饱食和口粮，每分钟恢复 {v4} 饱食（离线也恢复，最多24小时）。离线生命恢复仅限岛屿。`,{v0:String(p.heroRegenPerSecond*100),v1:String(p.regenPerMinute*100),v2:String(p.hungerPerMinute),v3:String(p.feedThreshold),v4:String(p.restingHungerPerMinute)}).text),...save.careLog.slice(-3).map(text=>el('p','muted',text)));
+  dialog.body.append(el('p','muted',tr('伙伴需有饱食才会恢复生命；饱食耗尽时，可在伙伴面板放入口粮，或先移出阵位休息恢复饱食。')));
   dialog.open(notes);
  },'secondary');
  const footer=el('footer','pet-collection-footer',button('图鉴与商店',()=>cb.panel('shop',{category:state.tab==='mount'?'mount':'pet'}),'secondary'),notes);

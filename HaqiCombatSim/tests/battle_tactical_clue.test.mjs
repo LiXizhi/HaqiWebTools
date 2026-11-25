@@ -8,7 +8,9 @@ import { createTacticsFieldBattle, playTacticsFieldRound } from '../js/tactics_f
 import { grantTacticalClueWard, matchesTacticalClue, tacticalClue } from '../js/tactical_clue_core.js';
 import { createTacticalClueHandler } from '../js/adventure/tactical_clue_controller.js';
 import { tacticalReview } from '../js/tactical_review_core.js';
-import { describeIntent } from '../js/views/adventure/view_tactical_intents.js';
+import { describeIntent, tacticalIntentPanel } from '../js/views/adventure/view_tactical_intents.js';
+import {parseLocaleFile, lookup} from '../js/locale_core.js';
+import {setTranslator} from '../js/locale_runtime.js';
 
 const files = ['adventure/chapter.json', 'adventure/combat.json', 'adventure/pets.json',
     'adventure/shop-candidates.json', 'kids/cards.json', 'kids/charms.json'];
@@ -17,14 +19,65 @@ const { content, dataset } = installExpansion(...files.map(file =>
 const create = (id = 'normal') => createTacticsChallenge(dataset, content, { id, seed: 82 });
 const learner = target => ({ languageLearning: { target } });
 const receipt = id => ({ persisted: true, state: { practiceReceipts: { [id]: true } } });
-function clueSession(record) {
-    const battle = create();
-    const state = { battle, save: learner('ko'), roleEpoch: 1, stage: 'battle', animation: false };
+function clueSession(record, { encounter = 'normal', target = 'ko' } = {}) {
+    const battle = create(encounter);
+    const state = { battle, save: learner(target), roleEpoch: 1, stage: 'battle', animation: false };
     const updates = [];
     const answer = createTacticalClueHandler({ getContext: () => state, record,
         paintBattle: () => updates.push('paint'), spellSound: { play: type => updates.push(type) } });
     return { battle, state, answer: word => answer(battle, word), updates };
 }
+
+// Only DOM storage is simulated: rendering, clue matching, persistence outcomes,
+// translation lookup and the one-time combat ward all use production code.
+function clueDom() {
+    const nodes=[];
+    class Element {
+        constructor(tag) { this.tag=tag;this.childNodes=[];this.dataset={};this.className='';this.nodeType=1;nodes.push(this); }
+        append(...children) { this.childNodes.push(...children); }
+        setAttribute(name,value) { this[name]=String(value); }
+        set textContent(value) { this.childNodes=[];this.text=String(value); }
+        get textContent() { return this.text??this.childNodes.map(node=>node.textContent).join(''); }
+        focus() {}
+    }
+    return {nodes,Node:Element,document:{createElement:tag=>new Element(tag),createTextNode:text=>{const node=new Element('#text');node.nodeType=3;node.textContent=text;return node;}}};
+}
+
+for(const language of ['en','ja','ko'])test(`${language}: all target languages preserve clues and translate feedback through a failed save and retry`,async()=>{
+    const dict=parseLocaleFile(readFileSync(new URL(`../data/adventure/locale/${language}.txt`,import.meta.url),'utf8'));
+    const translate=text=>lookup(text,language,{[language]:dict});
+    const previous={document:globalThis.document,Node:globalThis.Node};
+    const dom=clueDom();globalThis.document=dom.document;globalThis.Node=dom.Node;setTranslator(translate,language);
+    try {
+        for(const target of ['en','ja','ko','zh-CN'])for(const encounter of ['normal','elite','boss']) {
+            let writes=0;
+            const session=clueSession(async evidence=>{if(++writes===1)throw Error('quota');return receipt(evidence.id);},{target,encounter});
+            const clue=tacticalClue(session.battle,session.state.save);
+            const memory={answer:'',feedback:'',open:true};
+            const render=()=>{
+                dom.nodes.length=0;
+                tacticalIntentPanel({battle:session.battle,save:session.state.save},{answerTacticalClue:session.answer},memory);
+                return {form:dom.nodes.find(node=>node.tag==='form'),input:dom.nodes.find(node=>node.tag==='input'&&node.type==='text'),feedback:dom.nodes.find(node=>node.className==='tactical-clue-feedback')};
+            };
+            const submit=async(view,text)=>{view.input.value=text;view.input.oninput();await view.form.onsubmit({preventDefault(){}});};
+            const expectFeedback=(view,source)=>{const expected=translate(source);assert.notEqual(expected,source,'real dictionary must contain feedback');assert.equal(memory.feedback,source);assert.equal(view.feedback.textContent,expected);assert.equal(view.feedback.dataset.zh,source);};
+            const wards=session.battle.sides.near[0].wards,before=wards.length;
+            let view=render();
+            assert.ok(dom.nodes.some(node=>node.tag==='q'&&node.textContent===clue.sentence&&node.lang===target),'learning sentence must retain its target language');
+            assert.ok(dom.nodes.some(node=>node.tag==='label'&&node.textContent===translate('找出口令里表示“{meaning}”的词').replace('{meaning}',translate(clue.meaning))));
+            assert.ok(dom.nodes.some(node=>node.tag==='button'&&node.textContent===translate('领一次护盾')));
+            await submit(view,'wrong');expectFeedback(view,'再读一遍口令，从中找出对应的词。');assert.equal(writes,0);
+            await submit(view,clue.word);expectFeedback(view,'词树暂时无法保存，护盾次数已保留。');assert.equal(wards.length,before);
+            view=render();expectFeedback(view,'词树暂时无法保存，护盾次数已保留。');assert.equal(view.input.value,clue.word);
+            await submit(view,clue.word);expectFeedback(view,'口令已记入词树，你获得了一层护盾。');assert.equal(wards.length,before+1);assert.equal(writes,2);
+            render();assert.ok(dom.nodes.some(node=>node.textContent===translate('本场口令已解读，护盾已领取。')));
+            }
+    } finally {
+        setTranslator();
+        if(previous.document===undefined)delete globalThis.document;else globalThis.document=previous.document;
+        if(previous.Node===undefined)delete globalThis.Node;else globalThis.Node=previous.Node;
+    }
+});
 
 test('all twelve clues use the saved language, expose a word in the prompt, and normalize the answer', () => {
     for (const id of ['normal', 'elite', 'boss']) {

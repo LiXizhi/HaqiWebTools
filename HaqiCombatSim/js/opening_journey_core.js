@@ -44,8 +44,10 @@ export function openingJourneyMilestones(save){
 export function openingFriendAnswer(text,language='en'){
  const lesson=learningLesson(language),normalized=normalizeLearningAnswer(text,language),introduction=language==='en'?normalized.replace(/^yes[,，]?\s+/,''):normalized;
  const accepted=String(text||'').length<=100&&lesson.friends.some(line=>normalizeLearningAnswer(line,language)===introduction);
- const message=language==='en'&&/^(we are|we're) friend$/.test(introduction)?'说“我们是朋友”，friend 要加 s：We are friends.':`用${lesson.name}告诉莫尼你们是朋友。可以说：${lesson.friend}`;
- return {accepted,message:accepted?'莫尼明白了。咕噜噜可以进来了。':message};
+ const plural=language==='en'&&/^(we are|we're) friend$/.test(introduction);
+ const messageKey=accepted?'莫尼明白了。咕噜噜可以进来了。':plural?'说“我们是朋友”，friend 要加 s：We are friends.':'用{language}告诉莫尼你们是朋友。可以说：{example}';
+ const message=messageKey.replaceAll('{language}',lesson.name).replaceAll('{example}',lesson.friend);
+ return {accepted,message,messageKey};
 }
 export function openingJourneyScene(save,npc){
  const state=openingJourney(save);
@@ -79,6 +81,7 @@ export function validateOpeningJourney(save){
 export function openingJourneyTarget(save){
  const state=openingJourney(save);
  if(!state||state.phase==='done')return null;
+ if(state.phase==='showcase'&&!save.formation?.includes(state.petId))return {id:36201,kind:'npc',objective:'先安排咕噜噜上场，再一起挑战。'};
  const rows={
   offer:[36211,'去找青龙。'],
   guide:[36201,'去莫尼身边看看。'],

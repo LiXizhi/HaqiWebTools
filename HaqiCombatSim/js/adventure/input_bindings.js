@@ -35,7 +35,14 @@ export function createInputBindings({
     interactNearest,
     pickWorldTarget,
     clickWorld,
+    heroNavigation,
+    onMovementIntent=()=>{},
 }){
+    function movementIntent(){
+        heroNavigation?.cancel();
+        onMovementIntent();
+    }
+
     function controllerAction(action,down,repeat=false){
         const ctx=getContext();
         const direction=['up','down','left','right'].includes(action);
@@ -72,6 +79,7 @@ export function createInputBindings({
             return;
         }
         if(direction){
+            movementIntent();
             ctx.keys.add(action);
             ctx.clearMovementPath();
             ctx.setHeldPointer(null);
@@ -122,6 +130,7 @@ export function createInputBindings({
             const ctx=getContext();
             const key=e.key.toLowerCase();
             if(DIRECTION_KEYS[key]&&ctx.stage==='world'&&!ctx.panel&&!ctx.dialog){
+                movementIntent();
                 e.preventDefault();
                 languageAdventure.close();
                 ctx.setTalkApproach(null);
@@ -212,6 +221,7 @@ export function createInputBindings({
                 clickWorld(e.clientX,e.clientY);
                 return;
             }
+            movementIntent();
             // Defer target picking and pathfinding until release, after gesture detection.
             if(e.pointerType==='mouse'){
                 ctx.setHeldPointer({

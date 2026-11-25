@@ -44,3 +44,26 @@ test('feeding lesson exposes one real action and hides it in combat or after cla
  delete save.pendingEncounter;save.quests[63009].progress={'action:79019':1};box.refresh();assert.equal(guided.children.length,0);
  save.quests[63009].progress={};save.quests[63009].claimed=true;box.refresh();assert.equal(guided.children.length,0);
 });
+
+
+test('food slot detail translates the feed action and keeps the selected slot and pet',()=>{
+ const originalDocument=globalThis.document;
+ function node(tag,className='',...children){
+  return {...el(tag,className,...children),addEventListener(){},focus(){},showModal(){this.open=true;},close(){this.open=false;}};
+ }
+ globalThis.document={createElement:tag=>node(tag),createElementNS:(_ns,tag)=>node(tag)};
+ try{
+  for(const language of ['en','ja','ko']){
+   const table=parseLocaleFile(fs.readFileSync(new URL('../data/adventure/locale/'+language+'.txt',import.meta.url),'utf8'));
+   setTranslator(text=>table[text]||text);
+   const parent=node('main'),calls=[];
+   const save={inventory:{},pets:{companion:{hunger:99,speciesId:'gululu'}},petFoodSlots:[null,{itemId:17172,count:5}]};
+   const box=renderPetFood(parent,{save,assets:{content:{items:{17172:{name:'口粮'}},pets:{gululu:{name:'咕噜噜'}}}}},{action:a=>calls.push(a)},{el:node,button:(text,run,cls)=>({...node('button',cls,text),run}),art:()=>node('canvas')});
+   box.children.find(n=>n.className==='pet-food-slots').children[1].run();
+   const dialog=parent.children[0],footer=dialog.children.find(n=>n.className==='equipment-detail-footer'),feed=footer.children[0];
+   assert.ok(table['喂{pet}一份口粮']);
+   assert.equal(feed.children[0],table['喂{pet}一份口粮'].replace('{pet}',table['咕噜噜']||'咕噜噜'));
+   feed.run();assert.deepEqual(calls,[{type:'pet-food-feed',slot:1,petId:'companion'}]);assert.equal(dialog.open,false);
+  }
+ }finally{globalThis.document=originalDocument;setTranslator(null);}
+});

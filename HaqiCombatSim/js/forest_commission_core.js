@@ -1,6 +1,7 @@
 import {forestCommissionLesson,forestLabelMatches,forestLabelWritten,forestPracticeId,forestPracticeLanguage,FOREST_LEARNING_LANGUAGES} from './forest_commission_language_core.js';
 import {forestExchangeMatches,forestExchangeId} from './forest_exchange_core.js';
 import {applyForestMystery,forestMysteryGoal,validateForestMystery} from './forest_mystery_core.js';
+import {applyForestPromise,forestPromiseGoal} from './forest_promise_core.js';
 // A carried-object commission. The selected language changes scene decisions;
 // progress, reward ownership and the real dungeon record remain independent.
 export const FOREST_COMMISSION_ID='camp-patrol-supplies';
@@ -14,25 +15,26 @@ const check=(ok,message)=>{if(!ok)throw Error(message);};
 const count=s=>s.dungeonChallengeRecords?.[FOREST_PATROL_DUNGEON]?.clears||0;
 export function forestCommissionAvailable(save){return !save.openingJourney||save.openingJourney.phase==='done';}
 export function forestCommission(save){return save.forestCommission||null;}
-export function forestCommissionPhase(save){const s=forestCommission(save);return s?.phase==='done'&&s.mystery?.status==='active'?'investigation':s?.phase==='patrol'&&count(save)>s.clearBaseline?'report':s?.phase||'offer';}
+export function forestCommissionPhase(save){const s=forestCommission(save);return s?.phase==='done'&&s.mystery?.status==='active'?'investigation':s?.phase==='done'&&s.mystery?.promise?.status==='active'?'promise':s?.phase==='patrol'&&count(save)>s.clearBaseline?'report':s?.phase||'offer';}
 export function forestCommissionPouch(save){
  const phase=forestCommissionPhase(save);
  if(phase==='delivery')return [{id:'patrol-boots',name:'待送达的巡逻靴',description:'从帐篷旁找到的营地补给。交给茜茜，不可出售或穿戴。',artItem:GEAR[save.school]?.[2]}];
- if(['briefing','patrol','report'].includes(phase))return [{id:'patrol-note',name:'巡逻路线便签',description:forestCommissionLesson(save).clues.briefing+' 茜茜标出了巡夜灯的位置；任务结束后归还。'}];
+ if(['briefing','patrol','report'].includes(phase))return [{id:'patrol-note',name:'巡逻路线便签',description:save.forestCommission?.exchangeCompleted?.includes('note')?'便签由茜茜保管，你们可以一起查看路线和巡夜灯的位置。':forestCommissionLesson(save).clues.briefing+' 茜茜标出了巡夜灯的位置；任务结束后归还。'}];
  return [];
 }
 export function forestCommissionGoal(save){
  const phase=forestCommissionPhase(save),lesson=forestCommissionLesson(save),common={phase,zone:'camp'};
  if(phase==='investigation')return {...common,...forestMysteryGoal(save)};
+ if(phase==='promise')return {...common,...forestPromiseGoal(save)};
  const rows={
   offer:{id:FOREST_NPCS.giver,kind:'npc',label:'找莫尼接取营地急件',hint:`巡夜灯忽然熄灭，茜茜出发前还缺一份补给。${lesson.name}补给单上留着线索。`},
   boots:{id:FOREST_SITES.boots,kind:'landmark',label:`到补给帐篷按${lesson.name}补给单选物`,hint:lesson.clues.boots},
   delivery:{id:FOREST_NPCS.receiver,kind:'npc',label:'把巡逻靴交给茜茜',hint:'靴子已经放进旅行背包的委托袋。'},
   note:{id:FOREST_SITES.note,kind:'landmark',label:'到营地路线桌寻找便签',hint:lesson.clues.note},
-  briefing:{id:FOREST_NPCS.receiver,kind:'npc',label:'把路线便签拿给茜茜',hint:'先听巡逻分工，再去实战。'},
+  briefing:{id:FOREST_NPCS.receiver,kind:'npc',label:save.forestCommission?.exchangeCompleted?.includes('note')?'和茜茜确认巡逻路线':'把路线便签拿给茜茜',hint:'先听巡逻分工，再去实战。'},
   patrol:{id:FOREST_PATROL_DUNGEON,kind:'landmark',label:'完整挑战晨雾中的巡夜灯',hint:'5级精英副本；先准备卡组、穿戴装备。可随时回来继续。'},
   report:{id:FOREST_NPCS.receiver,kind:'npc',label:'回营地向茜茜汇报',hint:'整轮巡逻已经完成，领取装备与补给员荣誉。'},
-  done:{id:FOREST_NPCS.receiver,kind:'npc',label:'营地急件已完成',hint:'装备、语言线索与巡逻记录都保留在冒险中。'},
+  done:save.forestCommission?.mystery?.status==='solved'?{id:FOREST_NPCS.receiver,kind:'npc',label:'营地急件已完成',hint:'装备、语言线索与巡逻记录都保留在冒险中。'}:{id:FOREST_NPCS.receiver,kind:'npc',label:'和茜茜查看草屑与脚印',hint:'巡逻已经结束，补给的经过还没查清。回营地和茜茜一起看看。'},
  };
  return {...common,...rows[phase]};
 }
@@ -60,6 +62,16 @@ export function forestCommissionScene(save){
  }
  if(phase==='done'&&save.sparkRescue?.status==='safe'){
   scene.npcs[FOREST_NPCS.receiver]=save.sparkRescue.promise==='signal'?'守护者捎话来了：火种回到课堂了。它还记得你教的灯光信号，路上一直有人回应。':'守护者捎话来了：火种回到课堂了。这回他们等齐才走，谁也没有掉队。';
+ }
+ if(phase==='promise'){
+  if(scene.sites[goal.id]){scene.sites[goal.id].active=true;scene.sites[goal.id].label=goal.label;}
+  scene.npcs[FOREST_NPCS.giver]=save.forestCommission.mystery.promise.stage==='confirm'?'消息写清或说清了吗？让我也来回应你。':'准备出发前，先问问彼此。你来得正好。';
+  scene.npcs[FOREST_NPCS.receiver]='这次不赶时间。问清、等齐，比谁先出发更重要。';
+ }
+ if(save.forestCommission?.mystery?.promise?.status==='done'){
+  const sign=save.forestCommission.mystery.ending==='sign';
+  scene.sites[FOREST_SITES.boots].label=sign?'位置便签：备用灯芯在补给帐篷里':'同行约定：先问清，再等齐';
+  scene.npcs[FOREST_NPCS.giver]=sign?'我照着便签找到了备用灯芯。这次不用满营地猜了。':'这次我会等到大家都回应，再一起出发。';
  }
  return scene;
 }
@@ -89,6 +101,7 @@ export function applyForestCommission(save,content,action,access={}){
  }
  check(s,'先找莫尼接取营地急件。');
  if(typeof action.step==='string'&&action.step.startsWith('mystery-'))return applyForestMystery(save,action,(id,kind)=>nearby(save,access,id,kind));
+ if(typeof action.step==='string'&&action.step.startsWith('promise-'))return applyForestPromise(save,action,(id,kind)=>nearby(save,access,id,kind));
  if(action.step==='plan'){
   nearby(save,access,FOREST_NPCS.receiver,'npc');check(phase==='briefing','拿回便签后，再和茜茜商量。');
   check(['light','tracks'].includes(action.plan),'先选一个巡逻提议。');
@@ -98,13 +111,15 @@ export function applyForestCommission(save,content,action,access={}){
  }
  if(action.step==='exchange'){
   const {word,language,input}=action,{at,attempts,assisted}=action.learning||{};
-  check(word==='boots'&&phase==='delivery','物品已经交付，或还没有找到。');
+  check((word==='boots'&&phase==='delivery')||(word==='note'&&phase==='briefing'&&!s.exchangeCompleted?.includes('note')),'物品已经交付，或还没有找到。');
+  nearby(save,access,FOREST_NPCS.receiver,'npc');
   check(FOREST_LEARNING_LANGUAGES.includes(language)&&save.languageLearning?.target===language,'目标语言已改变，请用当前语言重新交流。');
   check(['text','speech'].includes(input)&&Number.isFinite(at)&&at>=0&&Number.isSafeInteger(attempts)&&attempts>=1&&attempts<=999&&typeof assisted==='boolean','交流记录无效，请重新试试。');
   check(forestExchangeMatches(save,word,action.text),'茜茜还没听明白。试试提示中的短句，也可以直接递交物品。');
-  const result=applyForestCommission(save,content,{step:'deliver'},access);
+  const result=word==='boots'?applyForestCommission(save,content,{step:'deliver'},access):{message:'茜茜听懂了，接过便签。现在可以一起确认路线和巡逻分工。'};
+  if(word==='note')s.exchangeCompleted=['note'];
   (s.exchangePractice||=[]).push({id:forestExchangeId(word,language),word,language,input,at,attempts,assisted});
-  return {...result,message:`茜茜听懂了，接过${word==='boots'?'靴子':'便签'}。${result.message}`};
+  return word==='note'?result:{...result,message:`茜茜听懂了，接过靴子。${result.message}`};
  }
  if(action.step==='label'){
   const word=action.word;
@@ -164,7 +179,7 @@ export function applyForestCommission(save,content,action,access={}){
   check(Number.isFinite(at)&&at>=0&&Number.isSafeInteger(attempts)&&attempts>=1&&attempts<=999&&typeof assisted==='boolean','巡逻分工练习记录无效');
   check(count(save)<999999,'巡逻实绩已达到当前记录上限，请保留便签，稍后再确认路线。');
   s.briefingPractice={language:forestCommissionLesson(save).language,at,attempts,assisted};
-  s.clearBaseline=count(save);s.phase='patrol';return {message:'路线已确认：巡逻时集中攻击同一个敌人。先练习配合、穿好装备，再完整挑战晨雾中的巡夜灯；撤退后仍可重试。'};
+  s.clearBaseline=count(save);s.phase='patrol';return {message:save.level<5?'路线已确认，便签和巡逻准备会保留。先沿当前主线完成任务、提升到5级，再回来和茜茜出发；练习配合本身不提供升级经验。':'路线已确认：巡逻时集中攻击同一个敌人。先练习配合、穿好装备，再完整挑战晨雾中的巡夜灯；撤退后仍可重试。'};
  }
  if(action.step==='report'){
   nearby(save,access,FOREST_NPCS.receiver,'npc');check(phase==='report','先在接到巡逻安排后，完整完成一轮巡夜灯挑战。');
@@ -178,10 +193,11 @@ export function validateForestCommission(save){
  check(s&&typeof s==='object'&&!Array.isArray(s)&&s.version===1&&PHASES.includes(s.phase),'营地委托记录无效');
  const late=['patrol','done'].includes(s.phase);
  check(late?Number.isSafeInteger(s.clearBaseline)&&s.clearBaseline>=0&&s.clearBaseline<=999999:s.clearBaseline===undefined,'营地委托巡逻记录无效');
- check(Object.keys(s).every(k=>['version','phase','clearBaseline','practice','notePractice','briefingPractice','findAttempts','labels','localizedLabels','labelPractice','exchangePractice','plan','mystery'].includes(k)),'营地委托记录包含未知字段');
+ check(Object.keys(s).every(k=>['version','phase','clearBaseline','practice','notePractice','briefingPractice','findAttempts','labels','localizedLabels','labelPractice','exchangePractice','exchangeCompleted','plan','mystery'].includes(k)),'营地委托记录包含未知字段');
  validateForestMystery(save);
  check(s.plan===undefined||(['briefing','patrol','done'].includes(s.phase)&&['light','tracks'].includes(s.plan)),'营地巡逻提议无效');
- if(s.exchangePractice!==undefined)check(Array.isArray(s.exchangePractice)&&s.exchangePractice.length<=1&&new Set(s.exchangePractice.map(p=>p?.word)).size===s.exchangePractice.length&&s.exchangePractice.every(p=>p&&FOREST_LEARNING_LANGUAGES.includes(p.language)&&(p.word==='boots'&&['note','briefing','patrol','done'].includes(s.phase))&&p.id===forestExchangeId(p.word,p.language)&&['text','speech'].includes(p.input)&&Number.isFinite(p.at)&&p.at>=0&&Number.isSafeInteger(p.attempts)&&p.attempts>=1&&p.attempts<=999&&typeof p.assisted==='boolean'&&Object.keys(p).every(k=>['id','word','language','input','at','attempts','assisted'].includes(k))),'营地交流练习记录无效');
+ if(s.exchangeCompleted!==undefined)check(Array.isArray(s.exchangeCompleted)&&(s.exchangeCompleted.length===0||(s.exchangeCompleted.length===1&&s.exchangeCompleted[0]==='note'))&&(s.exchangeCompleted.length===0||['briefing','patrol','done'].includes(s.phase)),'营地交流完成记录无效');
+ if(s.exchangePractice!==undefined)check(Array.isArray(s.exchangePractice)&&s.exchangePractice.length<=2&&new Set(s.exchangePractice.map(p=>p?.word)).size===s.exchangePractice.length&&Array.from(s.exchangePractice).every(p=>p&&FOREST_LEARNING_LANGUAGES.includes(p.language)&&((p.word==='boots'&&['note','briefing','patrol','done'].includes(s.phase))||(p.word==='note'&&['briefing','patrol','done'].includes(s.phase)&&s.exchangeCompleted?.includes('note')))&&p.id===forestExchangeId(p.word,p.language)&&['text','speech'].includes(p.input)&&Number.isFinite(p.at)&&p.at>=0&&Number.isSafeInteger(p.attempts)&&p.attempts>=1&&p.attempts<=999&&typeof p.assisted==='boolean'&&Object.keys(p).every(k=>['id','word','language','input','at','attempts','assisted'].includes(k))),'营地交流练习记录无效');
  const labelAllowed=word=>word==='boots'?['delivery','note','briefing','patrol','done'].includes(s.phase):word==='note'&&['briefing','patrol','done'].includes(s.phase);
  if(s.labels!==undefined)check(Array.isArray(s.labels)&&s.labels.length<=2&&new Set(s.labels).size===s.labels.length&&s.labels.every(labelAllowed),'营地物品标签无效');
  if(s.localizedLabels!==undefined)check(s.localizedLabels&&typeof s.localizedLabels==='object'&&!Array.isArray(s.localizedLabels)&&Object.entries(s.localizedLabels).every(([language,labels])=>language!=='en'&&FOREST_LEARNING_LANGUAGES.includes(language)&&Array.isArray(labels)&&labels.length<=2&&new Set(labels).size===labels.length&&labels.every(labelAllowed)),'营地多语言标签无效');

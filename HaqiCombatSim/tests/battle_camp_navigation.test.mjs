@@ -32,6 +32,90 @@ test('missing, failed and timed-out workers use cancellable short fallback slice
 test('late worker replies cannot race an active fallback or disposed scene',()=>{const h=harness();h.request();const first=h.messages.at(-1);h.worker.onerror();h.nav.dispose();h.reply(first);h.drain();assert.deepEqual(h.results,[]);assert.equal(h.scheduled.size,0);});
 
 import { createWorldInteractionController } from '../js/adventure/world_interaction_controller.js';
+import { createInputBindings } from '../js/adventure/input_bindings.js';
+
+function inputNavigationHarness(t){
+    const h=harness(),originalDocument=globalThis.document,originalWindow=globalThis.window;
+    globalThis.document=Object.assign(new EventTarget(),{hidden:false});
+    globalThis.window=new EventTarget();
+    t.after(()=>{h.nav.dispose();globalThis.document=originalDocument;globalThis.window=originalWindow;});
+    const state={world:h.world,save:{position:{x:0,y:0}},roleEpoch:1,roleStore:{owner:'guest',catalog:{activeId:'a'}},path:[],keys:new Set(),joystick:{x:0,y:0},heldPointer:null,stage:'world',panel:null,dialog:null,encounterStarting:false,characterChat:{active:false},secondCharacterChat:null,
+        setPath(next){this.path=next;},clearMovementPath(){this.path=[];this.destination=null;},setHeldPointer(next){this.heldPointer=next;},setTalkApproach(next){this.talkApproach=next;}};
+    const surface=Object.assign(new EventTarget(),{focus(){},getBoundingClientRect:()=>({left:0,top:0}),setPointerCapture(){},hasPointerCapture:()=>false});
+    const ctrl=createWorldInteractionController({nodes:{world:surface},getContext:()=>state,heroNavigation:h.nav,languageAdventure:{active:false,close(){}},localPlay:()=>({paused:false,key:()=>false}),framePacer:{wake(){}},sceneLoading:{active:false},sceneFishing:{key:()=>false}});
+    ctrl.bindEvents();
+    const dispatch=(target,type,properties)=>{const event=new Event(type,{cancelable:true});Object.assign(event,properties);target.dispatchEvent(event);};
+    return {...h,state,ctrl,surface,dispatch};
+}
+
+for(const input of ['gamepad tap','keyboard tap','desktop pointer down','desktop pointer cancellation']){
+    test(`actual ${input} permanently cancels an older worker route before the hero moves`,t=>{
+        const h=inputNavigationHarness(t),destination={x:300,y:0};
+        h.ctrl.requestHeroPath(destination);
+        const pending=h.messages.at(-1);
+        assert.equal(pending.type,'hero-path');
+        if(input==='gamepad tap'){
+            h.ctrl.controllerAction('right',true);h.ctrl.controllerAction('right',false);
+        }else if(input==='keyboard tap'){
+            h.dispatch(window,'keydown',{key:'d'});h.dispatch(window,'keyup',{key:'d'});
+        }else{
+            const pointer={pointerType:'mouse',pointerId:1,button:0,clientX:300,clientY:100};
+            h.dispatch(h.surface,'pointerdown',pointer);
+            assert.equal(h.state.heldPointer.active,false);
+            if(input==='desktop pointer cancellation')h.dispatch(h.surface,'pointercancel',pointer);
+        }
+        assert.deepEqual(h.state.save.position,{x:0,y:0});
+        assert.equal(h.state.keys.size,0);
+        h.reply(pending,[destination]);
+        assert.deepEqual(h.state.path,[],'old worker route must not revive after a new input intent');
+        if(h.state.heldPointer)h.dispatch(h.surface,'pointercancel',{pointerId:1});
+        const next={x:400,y:0};h.ctrl.requestHeroPath(next);h.reply(h.messages.at(-1),[next]);
+        assert.deepEqual(h.state.path,[next],'a fresh route still works after manual cancellation');
+    });
+}
+
+test('second-player mouse routing leaves the main hero pending worker route intact',t=>{
+    const h=inputNavigationHarness(t),surface=Object.assign(new EventTarget(),{focus(){}});
+    let routed=0;
+    const input=createInputBindings({nodes:{world:surface},getContext:()=>h.state,
+        heroNavigation:h.nav,framePacer:{wake(){}},localPlay:()=>({active:true,mouseOwner:1}),
+        clickWorld:()=>{routed++;},languageAdventure:{active:false}});
+    input.bindEvents();
+    const destination={x:300,y:0};h.ctrl.requestHeroPath(destination);const pending=h.messages.at(-1);
+    h.dispatch(surface,'pointerdown',{pointerType:'mouse',pointerId:1,button:0,clientX:300,clientY:100});
+    assert.equal(routed,1);assert.equal(h.state.heldPointer,null);
+    h.reply(pending,[destination]);assert.deepEqual(h.state.path,[destination]);
+});
+
+for(const scenario of ['ground','unhandled ground','memory node','social interception','main hero social interception']){
+    test(`actual scene click preserves pointer ownership: ${scenario}`,t=>{
+        const h=inputNavigationHarness(t),calls=[],mainHero=scenario.startsWith('main hero');
+        const p={x:200,y:100},destination={x:300,y:0};
+        Object.assign(h.world,{npcs:[],encounters:[],portal:{x:900,y:900},memoryNodes:scenario==='memory node'?[{...p,id:'memory-a'}]:[]});
+        // Projection and local-play routing are boundary fixtures; clickWorld and worker navigation are real.
+        Object.assign(h.state,{renderer:{screenToWorld:(x,y)=>({x,y})},bumpFishingLoadEpoch(){},setDestination(next){this.destination=next;}});
+        const clear=h.state.clearMovementPath;
+        h.state.clearMovementPath=function(){calls.push('clear');clear.call(this);};
+        const lp={active:true,mouseOwner:mainHero?0:1,paused:false,
+            interceptSocial(point){assert.deepEqual(point,p);calls.push('social');return scenario.includes('social interception');},
+            routePointer(point){assert.deepEqual(point,p);calls.push('route');return scenario!=='unhandled ground';},
+            collectClick(){calls.push('collect');return true;}};
+        const ctrl=createWorldInteractionController({nodes:{world:h.surface},getContext:()=>h.state,heroNavigation:h.nav,localPlay:()=>lp,
+            languageAdventure:{active:false},framePacer:{wake(){}},close:()=>calls.push('close'),onMovementIntent:()=>calls.push('walk')});
+        ctrl.requestHeroPath(destination);const pending=h.messages.at(-1),messageCount=h.messages.length;
+        const existing=[{x:50,y:0}];h.state.path=existing;
+        ctrl.clickWorld(p.x,p.y);
+        if(mainHero){
+            assert.deepEqual(calls,['social','clear']);
+            h.reply(pending,[destination]);assert.deepEqual(h.state.path,[]);
+        }else{
+            assert.deepEqual(calls,scenario==='social interception'?['social']:['social','route']);
+            assert.equal(h.messages.length,messageCount,'second-player memory nodes must not start a main-hero route');
+            assert.equal(h.state.path,existing,'second-player clicks must not clear the main-hero path');
+            h.reply(pending,[destination]);assert.deepEqual(h.state.path,[destination]);
+        }
+    });
+}
 
 test('actual controller accepts a delayed route after a same-role pet save commit',()=>{
  const h=harness();

@@ -6,12 +6,19 @@ import { createWorldInteractionController } from '../js/adventure/world_interact
 
 function setup(x = 300) {
     const monster = { id: 'ice-scout', monsterId: 'ice', x: 300, y: 300 };
-    const world = { zone: 'frost', encounters: [monster] };
+    const world = {
+        zone: 'frost',
+        encounters: [monster],
+        layout: {
+            coast: [[0, 0], [800, 0], [800, 600], [0, 600]],
+            rivers: [],
+            bridges: [],
+        },
+    };
     const save = { position: { x, y: 300 } };
     let destination = null;
     let path = [];
     let entered = 0;
-    const origFindPath = W.findPath;
     const ctrl = createWorldInteractionController({
         nodes: {},
         getContext: () => ({
@@ -31,8 +38,6 @@ function setup(x = 300) {
         heroNavigation: { cancel() {}, request() {} },
         onInteract: () => entered++,
     });
-    // Stub world.layout so W.findPath returns a non-empty route when called in distant tracking test.
-    world.findPathStub = origFindPath;
     return {
         ctrl,
         world,

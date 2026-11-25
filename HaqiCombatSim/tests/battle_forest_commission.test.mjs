@@ -25,6 +25,18 @@ function toBriefing(save){act(save,'accept');act(save,'take-boots',{object:'boot
 const briefing=()=>({tactic:'focus',recalled:'boots',learning:{at:20,attempts:2,assisted:false}});
 const record=clears=>({version:1,clears,bestTurns:8,bestDefeats:0,lastTurns:8,lastDefeats:0});
 
+test('briefing sends low levels to the mainline while preserving the same patrol gate and preparation',()=>{
+ for(const level of [1,4,5]){
+  const save=fresh();save.level=level;toBriefing(save);const xp=save.xp,inventory=structuredClone(save.inventory);
+  const result=act(save,'brief',briefing());
+  assert.equal(save.forestCommission.phase,'patrol');assert.equal(save.forestCommission.clearBaseline,0);
+  assert.equal(save.xp,xp);assert.deepEqual(save.inventory,inventory);
+  assert.match(forestCommissionGoal(save).hint,/5级/);
+  if(level<5){assert.match(result.message,/当前主线/);assert.match(result.message,/准备会保留/);assert.match(result.message,/不提供升级经验/);}
+  else assert.match(result.message,/集中攻击同一个敌人/);
+ }
+});
+
 test('world props and NPC responses follow carried objects and persisted progress',()=>{
  const save=fresh(),before=JSON.stringify(save);
  const offer=forestCommissionScene(save);

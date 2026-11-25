@@ -94,6 +94,7 @@ export function createOpeningController({
     let openingWelcomeKey = null;
     let openingSpeech = null;
     let forestPracticeTask = null;
+    let forestPracticeRequested = false;
 
     function openTacticsTraining(options) {
         const ctx = getContext();
@@ -482,7 +483,11 @@ export function createOpeningController({
         const ctx = getContext();
         const current = ctx.save;
         const role = ctx.roleStore.catalog.activeId;
-        if ((!current?.forestCommission?.practice && !current?.forestCommission?.notePractice && !current?.forestCommission?.labelPractice?.length && !current?.forestCommission?.exchangePractice?.length) || forestPracticeTask) return;
+        if (!current?.forestCommission?.practice && !current?.forestCommission?.notePractice && !current?.forestCommission?.labelPractice?.length && !current?.forestCommission?.exchangePractice?.length) return;
+        if (forestPracticeTask) {
+            forestPracticeRequested = true;
+            return;
+        }
         const valid = () => {
             const nowCtx = getContext();
             return nowCtx.save === current && nowCtx.roleStore.catalog.activeId === role;
@@ -499,11 +504,14 @@ export function createOpeningController({
                 },
             });
         } catch {
-            if (valid()) toast('语言练习记录暂未保存，稍后会重试；补给和奖励会保留。');
+            if (valid()) toast('语言练习记录暂未保存，重新打开森林委托时会重试；补给和奖励会保留。');
         } finally {
             forestPracticeTask = null;
+            // Consume an explicit reopen request once; a failed write alone must not loop.
+            const requested = forestPracticeRequested;
+            forestPracticeRequested = false;
             const nowCtx = getContext();
-            if (nowCtx.save !== current && (nowCtx.save?.forestCommission?.practice || nowCtx.save?.forestCommission?.notePractice || nowCtx.save?.forestCommission?.labelPractice?.length || nowCtx.save?.forestCommission?.exchangePractice?.length)) {
+            if ((requested || nowCtx.save !== current) && (nowCtx.save?.forestCommission?.practice || nowCtx.save?.forestCommission?.notePractice || nowCtx.save?.forestCommission?.labelPractice?.length || nowCtx.save?.forestCommission?.exchangePractice?.length)) {
                 void drainForestPractice();
             }
         }
@@ -609,7 +617,10 @@ export function createOpeningController({
             const nowCtx = getContext();
             if (openingJourney(nowCtx.save)?.phase === 'showcase' && !nowCtx.save.openingJourney.welcomeSeen) {
                 nowCtx.save.openingJourney.welcomeSeen = true;
-                persist();
+                try { persist(); } catch {
+                    delete nowCtx.save.openingJourney.welcomeSeen;
+                    return false;
+                }
                 if (getContext().storageWarning) {
                     delete nowCtx.save.openingJourney.welcomeSeen;
                     return false;
@@ -626,27 +637,46 @@ export function createOpeningController({
         renderOpeningJourneyView(nodes.overlay, model(), {
             close: leave,
             continue: () => {
-                if (leave()) track();
+                if (!leave()) return false;
+                track();
             },
             wordplay: () => {
-                if (leave()) startCompanionWordplay();
+                if (!leave()) return false;
+                startCompanionWordplay();
             },
             explore: () => {
-                if (leave() && performAction({ type: 'camp-detour', step: 'start' }) !== false) trackCampDetour();
+                if (!leave()) return false;
+                if (performAction({ type: 'camp-detour', step: 'start' }) !== false) trackCampDetour();
             },
             pets: () => {
-                if (leave()) openPanel('pet');
+                if (!leave()) return false;
+                openPanel('pet');
             },
-            listen: () =>
-                safely(async () => {
-                    openingSpeech?.abort();
-                    const controller = new AbortController();
-                    openingSpeech = controller;
-                    const lesson = learningLesson(getContext().save);
-                    await dialogueVoice().speak(lesson.friend, lesson.language, controller.signal);
-                }),
+            listen: async ({ onPlaying } = {}) => {
+                openingSpeech?.abort();
+                const controller = new AbortController();
+                openingSpeech = controller;
+                const currentContext = getContext();
+                const epoch = currentContext.roleEpoch, owner = currentContext.roleStore?.owner, role = currentContext.roleStore?.catalog?.activeId;
+                const lesson = learningLesson(currentContext.save);
+                const active = () => {
+                    const current = getContext();
+                    return !controller.signal.aborted && openingSpeech === controller && current.stage === 'world' && current.panel === 'opening-journey' && current.roleEpoch === epoch && current.roleStore?.owner === owner && current.roleStore?.catalog?.activeId === role;
+                };
+                try {
+                    await dialogueVoice().speak(lesson.friend, lesson.language, controller.signal, undefined, {
+                        onPlaying: () => { if (active()) onPlaying?.(); }
+                    });
+                    return active();
+                } catch {
+                    return false;
+                } finally {
+                    if (openingSpeech === controller) openingSpeech = null;
+                }
+            },
             go: () => {
-                if (leave()) routeOpening();
+                if (!leave()) return false;
+                routeOpening();
             },
             action: value => {
                 const result = performAction({ type: 'opening-journey', ...value, receipt: crypto.randomUUID(), at: Date.now() });

@@ -140,7 +140,7 @@
 .storybook-ui .companion-conversation .dialogue-chat{left:164px;top:auto;bottom:264px;}
 .storybook-ui .companion-conversation>.close-button{right:14px;top:14px;}
 .dialogue-services{order:5;font-size:14px;margin:8px 0 0;color:#626349;}
-.dialogue-services summary{cursor:pointer;min-height:32px;line-height:32px;}
+.dialogue-services summary{cursor:pointer;min-height:48px;line-height:1.5;display:flex;align-items:center;justify-content:center;padding:8px 4px;box-sizing:border-box;}
 .dialogue-service-choices{display:flex;flex-wrap:wrap;gap:8px;padding:5px 0;}
 .storybook-ui .companion-conversation .dialogue-service-choices button{min-height:44px;padding:8px 22px;font-size:14px;}
 @media(max-width:650px){
@@ -191,11 +191,12 @@
 .forest-ui .opening-character-dialogue .modal-body>.opening-spoken-line{font-size:21px;line-height:1.6;margin:4px 0 14px;}
 .forest-ui .opening-character-dialogue .cloud-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px;}
 .forest-ui .opening-character-dialogue .cloud-actions>button:only-child{grid-column:1/-1;justify-self:end;width:min(360px,100%);}
-.forest-ui .opening-character-dialogue :is(.cloud-actions,.opening-replies)>button{min-height:50px;padding:10px 30px;font-size:15px;line-height:1.5;}
+.forest-ui .opening-character-dialogue :is(.cloud-actions,.opening-replies)>button{min-height:50px;min-width:0;padding:10px 30px;font-size:15px;line-height:1.5;white-space:normal;overflow-wrap:anywhere;}
 .forest-ui .opening-character-dialogue .opening-progress{font-size:13px;margin-top:8px;line-height:1.6;}
-.forest-ui .opening-character-dialogue .opening-progress>summary{min-height:32px;line-height:32px;cursor:pointer;}
+.forest-ui .opening-character-dialogue .opening-progress>summary{min-height:48px;box-sizing:border-box;padding:12px 0;line-height:1.6;cursor:pointer;overflow-wrap:anywhere;}
 .forest-ui .opening-character-dialogue .opening-progress form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:6px 0;}
-.forest-ui .opening-character-dialogue .opening-progress form .name-input{min-width:0;width:100%;margin:0;}
+.forest-ui .opening-character-dialogue .opening-progress form .name-input{min-width:0;width:100%;min-height:48px;margin:0;}
+.forest-ui .opening-character-dialogue .opening-progress form button{min-height:48px;white-space:normal;overflow-wrap:anywhere;}
 .forest-ui .opening-character-dialogue .opening-progress form p{grid-column:1/-1;margin:0;}
 .forest-ui .opening-character-dialogue .opening-replies{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;}
 @media(max-width:650px){
@@ -211,7 +212,7 @@
  .forest-ui .opening-character-dialogue .modal-body>.opening-spoken-line{font-size:18px;margin-bottom:10px;}
  .forest-ui .opening-character-dialogue :is(.cloud-actions,.opening-replies){grid-template-columns:1fr;gap:6px;}
  .forest-ui .opening-character-dialogue :is(.cloud-actions,.opening-replies)>button{min-height:48px;padding:10px 26px;font-size:14px;}
- .forest-ui .opening-character-dialogue .opening-replies>.secondary{justify-self:start;min-height:36px;padding:6px 24px;}
+ .forest-ui .opening-character-dialogue .opening-replies>.secondary{justify-self:start;min-height:48px;padding:10px 24px;}
  .forest-ui .opening-character-dialogue .opening-progress form{grid-template-columns:1fr;}
 }
 @media(max-height:540px) and (min-width:651px){
@@ -225,7 +226,7 @@
  .forest-ui .opening-character-dialogue .modal-header h2{font-size:20px;}
  .forest-ui .opening-character-dialogue .modal-body{max-height:calc(100dvh - 105px);}
  .forest-ui .opening-character-dialogue .modal-body>.opening-spoken-line{font-size:17px;margin:4px 0 8px;}
- .forest-ui .opening-character-dialogue :is(.cloud-actions,.opening-replies)>button{min-height:44px;padding:8px 26px;font-size:14px;}
+ .forest-ui .opening-character-dialogue :is(.cloud-actions,.opening-replies)>button{min-height:48px;padding:10px 26px;font-size:14px;}
 }
 /* The world is the play space; paper holds only the current spoken action. */
 .forest-ui .companion-wordplay-layer{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:0;padding:14px 16px max(18px,env(safe-area-inset-bottom));background:linear-gradient(transparent 30%,#10251f40);backdrop-filter:none;}
@@ -246,12 +247,17 @@
 .forest-ui .companion-wordplay .wordplay-controls>button{width:100%;min-width:0;min-height:50px;padding:10px 28px;font-size:16px;white-space:normal;line-height:1.4;}
 .wordplay-mic{touch-action:none;user-select:none;-webkit-user-select:none;}
 .wordplay-typing{margin-top:6px;text-align:left;font-size:14px;color:#68714c;}
-.wordplay-typing summary{cursor:pointer;text-align:center;min-height:32px;line-height:32px;}
+.wordplay-typing summary{cursor:pointer;text-align:center;min-height:48px;padding:12px 4px;line-height:1.6;box-sizing:border-box;overflow-wrap:anywhere;touch-action:manipulation;}
+.wordplay-typing summary:focus-visible{outline:3px solid #52724d;outline-offset:2px;border-radius:8px;}
 .wordplay-input{display:flex;gap:8px;align-items:center;margin-top:4px;}
-.wordplay-input .name-input{min-width:0;flex:1;margin:0;width:100%;font-size:17px;}
-.forest-ui .companion-wordplay .wordplay-input>button{min-width:90px;min-height:44px;padding:8px 24px;font-size:15px;}
+.wordplay-input .name-input{min-width:0;min-height:48px;flex:1;margin:0;width:100%;font-size:17px;}
+.forest-ui .companion-wordplay .wordplay-input>button{min-width:90px;min-height:48px;padding:8px 24px;font-size:15px;}
 .wordplay-status{font-size:14px;line-height:1.5;color:#6e613e;margin:6px 0 0;min-height:0;}
 .wordplay-status:empty{display:none;}
+.wordplay-heard{margin:10px 0;padding:10px 12px;border-radius:12px;background:#f4ecd2;text-align:left;overflow-wrap:anywhere;}
+.wordplay-heard p{margin:0 0 8px;line-height:1.5;}
+.wordplay-heard-text{margin-inline-start:.3em;}
+.forest-ui .companion-wordplay .wordplay-edit-heard{min-height:48px;max-width:100%;white-space:normal;}
 .forest-ui .companion-wordplay .wordplay-next{width:min(320px,100%);min-height:50px;padding:10px 30px;margin:5px auto 0;font-size:16px;}
 .companion-wordplay [hidden]{display:none!important;}
 .response-greet .wordplay-actor{animation:wordplay-greet .7s ease-in-out;}
@@ -276,8 +282,8 @@
  .forest-ui .companion-wordplay .modal-body{max-height:calc(100dvh - 100px);}
  .forest-ui .companion-wordplay .wordplay-intent{font-size:17px;margin:4px 0 8px;}
  .forest-ui .companion-wordplay .wordplay-controls{grid-template-columns:1fr;gap:6px;}
- .forest-ui .companion-wordplay .wordplay-controls>button{min-height:44px;font-size:14px;padding:8px 24px;}
- .wordplay-typing{margin-top:4px;font-size:13px;}.wordplay-input .name-input{font-size:15px;}
+ .forest-ui .companion-wordplay .wordplay-controls>button{min-height:48px;font-size:14px;padding:8px 24px;}
+ .wordplay-typing{margin-top:4px;font-size:13px;}.wordplay-input .name-input{font-size:16px;}
  .wordplay-input{flex-wrap:wrap;}.wordplay-input .name-input{flex-basis:100%;}.wordplay-input>button{margin-left:auto;}
 }
 @media(prefers-reduced-motion:reduce){.wordplay-stage .wordplay-actor{animation:none!important;}.response-jump .wordplay-actor{left:18%;}.response-come .wordplay-actor{left:var(--come-left);}}

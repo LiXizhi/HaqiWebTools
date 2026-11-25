@@ -19,9 +19,9 @@ import {localBuffDay} from '../language_daily_buff_core.js';
 import {TELEPORT_EFFECT_MS} from '../views/adventure/view_adventure_teleport.js';
 import {hanziAnimationActive} from '../hanzi/view_hanzi_animation.js';
 
-export function updateLocationLabel(world,save,hud){
+export function updateLocationLabel(world,save,hud,destination=null){
     const regionName = world?.layout ? regionAt(world, save.position)?.name || '' : '';
-    renderLocationLabel(hud, world, save, regionName);
+    renderLocationLabel(hud, world, save, regionName, destination);
 }
 
 export function stepWorldMovement(nowCtx,nodes,dt,now,languageAdventure,requestHeroPath){
@@ -305,7 +305,9 @@ export function createFrameLoopController({
                 else trackMovingEncounter(nowCtx);
             }
             const near=nearbySceneInteraction();
-            updateLocationLabel(nowCtx.world,nowCtx.save,nodes.hud);
+            const locationCtx=getContext();
+            updateLocationLabel(locationCtx.world,locationCtx.save,nodes.hud,
+                !locationCtx.dialog&&!locationCtx.panel?locationCtx.destination:null);
             syncInteractPrompt(nodes.hud,near,nowCtx.assets.content);
         }
         const fCtx=getContext();

@@ -1007,8 +1007,14 @@
 
 
 /* A static, opaque stage: the map renderer is paused by the shared scene gate. */
-.dungeon-entry-confirm{width:min(480px,100%)}
-.dungeon-entry-confirm .modal-body{display:grid;gap:18px}.journey-entry-rewards{font-size:13px}.journey-entry-rewards summary{cursor:pointer}
+.dungeon-entry-confirm{width:min(560px,100%)}
+.dungeon-entry-confirm .modal-body{display:grid;gap:16px;min-width:0}.journey-entry-rewards{font-size:13px}.journey-entry-rewards summary{cursor:pointer}
+.journey-entry-progress{display:grid;gap:10px;padding:18px;border:1px solid #a1b79b;border-radius:12px;background:#edf4e5;color:#284835}.journey-entry-progress strong{font-size:20px}.journey-entry-progress p{margin:0;line-height:1.75;overflow-wrap:anywhere}
+.journey-entry-reference{display:grid;gap:10px}.dungeon-entry-confirm .journey-entry-rewards{border:1px solid #d7c8a5;border-radius:10px;background:#fffaf0;padding:0 12px;min-width:0}.dungeon-entry-confirm .journey-entry-rewards summary{min-height:48px;padding:12px 4px;box-sizing:border-box;line-height:1.65;overflow-wrap:anywhere}.dungeon-entry-confirm .journey-entry-rewards[open]{padding-bottom:12px}.dungeon-entry-confirm .journey-entry-rewards summary:focus-visible{outline:3px solid #437c65;outline-offset:2px}
+.journey-entry-warning{margin:0;padding:14px;border-left:4px solid #af721c;background:#fff0cf;line-height:1.7}
+.journey-entry-story{display:grid;gap:10px;min-width:0;padding:18px;border:1px solid #d7c8a5;border-radius:12px;background:#fffaf0;color:#493c28;line-height:1.75;overflow-wrap:anywhere}.journey-entry-story strong{font-size:17px}.journey-entry-story p,.journey-entry-story blockquote{margin:0}.journey-entry-story blockquote{padding-left:14px;border-left:3px solid #698b62;color:#31533a}
+.opening-save-status{line-height:1.7;color:#725124}.opening-save-status:empty{display:none}
+.dungeon-entry-confirm .dungeon-actions{display:flex;flex-wrap:wrap;gap:10px;margin:0}.dungeon-entry-confirm .dungeon-actions button,.storybook-ui .dungeon-entry-confirm .dungeon-actions :is(.primary,.secondary){min-width:0;min-height:48px;padding:12px 16px;font-size:15px;line-height:1.5;white-space:normal;overflow-wrap:anywhere;flex:1 1 160px}.dungeon-entry-confirm .dungeon-actions .primary,.storybook-ui .dungeon-entry-confirm .dungeon-actions .primary{flex-basis:100%;order:-1}
 .overlay.dungeon-story-overlay{position:fixed;inset:0;z-index:90;display:block;padding:0;background:#112831;backdrop-filter:none}
 .dungeon-story-screen{position:relative;isolation:isolate;display:flex;flex-direction:column;width:100%;height:100%;overflow:hidden;color:#edf5f3;background:radial-gradient(ellipse at 48% 36%,#44717a 0,#233e48 44%,#101d2b 100%);outline:none}
 .dungeon-story-screen.story-island-fire{background:radial-gradient(ellipse at 48% 36%,#965332,#412a30 50%,#1c1a29)}
@@ -1146,7 +1152,12 @@
 .companion-guide-toggle{display:flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border-radius:38px;background:var(--paper,#fff4d4);color:var(--ink,#433824);border:2px solid var(--gold,#c5a15d);min-height:56px}
 .companion-guide-card{position:absolute;bottom:76px;left:0;width:min(290px,calc(100vw - 28px));box-sizing:border-box;padding:16px;background:var(--paper,#fff4d4);border:2px solid var(--gold,#c5a15d);border-radius:16px;box-shadow:0 5px 20px #0003}
 .companion-guide-speaker{display:flex;align-items:center;gap:8px;padding-right:36px}.companion-guide-speaker .pet-sheet{flex-shrink:0}.companion-guide-speaker strong{font-size:18px}.companion-guide-card>.close-button{position:absolute;right:4px;top:4px}
-.companion-guide-card p{font-size:16px;line-height:1.5;margin:12px 0}.companion-guide-card>button:not(.close-button){display:block;min-height:44px;width:100%;margin-top:8px}
+.companion-guide-card p{font-size:16px;line-height:1.6;margin:12px 0;overflow-wrap:anywhere}.companion-guide-card>button:not(.close-button){display:block;min-height:48px;width:100%;margin-top:12px;white-space:normal}
+.companion-guide-more{margin-top:12px;border-top:1px solid var(--gold,#c5a15d);padding-top:4px}
+.companion-guide-more>summary{min-height:48px;box-sizing:border-box;padding:12px 4px;cursor:pointer;line-height:1.5;overflow-wrap:anywhere}
+.companion-guide-more>button{display:block;width:100%;min-height:48px;margin-top:8px;white-space:normal}
+.companion-guide:not(.in-battle) .close-button{min-width:48px;min-height:48px}
+.companion-guide :is(button,summary):focus-visible{outline:3px solid var(--gold,#c5a15d);outline-offset:3px}
 .companion-guide-highlight{outline:4px solid #ffe165!important;outline-offset:5px;box-shadow:0 0 0 8px #865b2b!important}
 .companion-guide-card{max-height:calc(100dvh - 230px);overflow:auto}
 .battle-controls>.companion-guide.in-battle{position:relative;inset:auto;grid-column:1 / -1;justify-self:center;max-width:100%;z-index:1}
@@ -1176,7 +1187,7 @@
 .opening-enemy-intent .intent-art{width:48px;height:48px;flex-shrink:0;}
 .opening-enemy-intent.intent-heavy{border:2px solid #a44b35;background:#fff0df;}
 
- .battle-target-instruction{margin:0;padding:4px 10px;border-radius:12px;background:#fff7dfed;color:#425332;font-size:15px;line-height:1.4;text-align:center;pointer-events:none;max-width:min(340px,82vw);}
+ .battle-target-instruction{overflow-wrap:anywhere;margin:0;padding:4px 10px;border-radius:12px;background:#fff7dfed;color:#425332;font-size:15px;line-height:1.4;text-align:center;pointer-events:none;max-width:min(340px,82vw);}
 @media(max-width:650px),(max-height:550px){.battle-target-instruction{font-size:13px;}}
 @media(max-height:500px){.battle-layer.has-selected-card .opening-enemy-intent{display:none;}.battle-hand.hand-focused .hand-card.selected{gap:5px;}}
 
@@ -1231,7 +1242,8 @@
  .companion-guide-card .companion-guide-speaker .pet-sheet{width:44px!important;height:44px!important}
  .companion-guide-card .companion-guide-speaker strong{font-size:12px}
  .companion-guide-card>p{grid-column:2;margin:0;padding-right:24px;font-size:14px;line-height:1.4}
- .forest-ui .companion-guide-card>button:not(.close-button){grid-column:2;min-height:36px;margin:0;padding:6px 24px;font-size:13px;line-height:1.4}
+ .forest-ui .companion-guide-card>button:not(.close-button){grid-column:2;min-height:48px;margin:0;padding:8px 16px;font-size:14px;line-height:1.4}
+ .companion-guide-card>.companion-guide-more{grid-column:2;min-width:0;margin-top:4px}
  .forest-ui .companion-guide.in-battle .companion-guide-card{max-height:calc(64dvh - 80px);bottom:64px}
 }
 
@@ -1339,6 +1351,10 @@
 .forest-actions>button{flex:1 1 180px}
 .forest-commission-modal>.forest-actions{flex:none;margin:0;padding:12px 24px 18px;border-top:1px solid #c6b98e;background:#f5eed8}
 .forest-reward-details>summary{cursor:pointer;padding:8px 0;font-size:14px;color:#536544}
+.forest-extra-actions{margin-top:18px;border-top:1px solid #c6b98e;padding-top:4px}
+.forest-extra-actions>summary{cursor:pointer;min-height:44px;padding:12px 0;color:#536544;line-height:1.5;overflow-wrap:anywhere}
+.forest-extra-actions>.forest-actions{margin-top:4px}
+.forest-extra-actions button{min-width:0;min-height:44px;white-space:normal;overflow-wrap:anywhere;padding:12px 16px}
 @media(max-width:520px){.forest-commission-modal>.forest-actions{padding:10px 14px 14px;gap:8px}}
 .forest-status:empty{display:none}
 .forest-scene.forest-handover{height:auto;min-height:220px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;padding:16px;align-items:center;justify-items:center}
@@ -1436,6 +1452,9 @@
 .forest-exchange-examples .forest-clue{flex-wrap:wrap}
 .forest-exchange-examples p{overflow-wrap:anywhere;min-width:0}
 .forest-exchange-controls [hidden]{display:none}
+.forest-direct-handover{margin:16px 0;border-top:1px solid #c8b68f;padding-top:8px}
+.forest-direct-handover>summary{display:list-item;box-sizing:border-box;min-height:48px;padding:10px 4px;cursor:pointer;color:#536544;text-decoration:underline;text-underline-offset:4px;line-height:1.6}
+.forest-direct-handover>.secondary{min-height:48px;white-space:normal;margin:4px 0 12px}
 @media(max-width:520px){.forest-exchange{padding:10px}.forest-exchange-controls button,.forest-story-choices button{flex:1 1 145px}.forest-story-choices{width:100%}}
 .tactical-intent-panel{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:4px;width:max-content;max-width:min(490px,90vw);box-sizing:border-box;background:#fff4d9;color:#3d3024;border:1px solid #b79251;border-radius:9px;padding:5px 12px;box-shadow:0 3px 10px #25221540;font-size:13px;line-height:1.35;text-align:left;pointer-events:none}
 .tactical-intent-row{display:flex;align-items:baseline;gap:8px}.tactical-intent-row b{flex:none;color:#705426}.tactical-intent-row:nth-child(2) b{color:#994227}.tactical-intent-row span{overflow-wrap:anywhere}
@@ -1470,10 +1489,26 @@
 .forest-mystery-scene{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:12px;border:1px solid #bca77b;border-radius:12px;background:#fffaf0;min-width:0}
 .forest-mystery-scene canvas{max-width:100%;height:auto;flex:0 1 auto}
 .forest-mystery-objects{display:grid;gap:8px;flex:1 1 190px;min-width:0}
+.forest-mystery-questions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+.forest-mystery-questions button{min-width:0;min-height:84px;padding:14px;text-align:left;white-space:normal;overflow-wrap:anywhere;line-height:1.5;touch-action:manipulation}
+.forest-mystery-questions [aria-pressed=true]{background:#e6f0d5;border-color:#617745}
+.forest-mystery-evidence{display:block;margin-top:8px;color:#5c654d;font-weight:normal;font-size:.85em}
+.forest-mystery-reply{padding:14px 16px;border-left:4px solid #657b4e;background:#f1eddd;line-height:1.7;overflow-wrap:anywhere}
+.forest-mystery-reply:empty{display:none}
+@media(max-width:520px){.forest-mystery-questions{grid-template-columns:1fr}}
+.forest-promise-card{margin:16px 0;padding:16px;border:1px solid #bca77b;border-radius:12px;background:#fffaf0;overflow-wrap:anywhere}
+.forest-promise-card p{margin:8px 0 12px}.forest-promise-card button{width:100%;white-space:normal}
+.forest-promise-choices{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0}
+.forest-promise-choices>button{flex:1 1 190px;min-width:0;padding:12px;text-align:left;white-space:normal;line-height:1.5}
+.forest-promise-note{flex:1 1 190px;min-width:0;line-height:1.6}
+.forest-promise-speech{margin:12px 0;padding:14px 16px;border-left:4px solid #527559;border-radius:0 10px 10px 0;background:#f7f1df;line-height:1.65}
 .forest-mystery-objects button,.forest-mystery-move button,.forest-mystery-endings button{min-height:48px;white-space:normal;touch-action:manipulation}
 .forest-mystery-objects [aria-pressed=true],.forest-mystery-endings [aria-pressed=true]{background:#e6f0d5;border-color:#617745}
 .forest-mystery-order{padding-left:28px;display:grid;gap:10px}
 .forest-mystery-order li{padding:10px;border:1px solid #bca77b;border-radius:10px;background:#fffaf0;overflow-wrap:anywhere}
+.forest-mystery-order li.forest-mystery-conflict{border:2px dashed #8c6332;background:#fff2cc}
+.forest-mystery-reasoning-question{font-weight:700;line-height:1.7;overflow-wrap:anywhere}
+.forest-mystery-reasoning>button{min-height:48px;white-space:normal;overflow-wrap:anywhere}
 .forest-mystery-move,.forest-mystery-endings{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .forest-mystery-endings button{flex:1 1 190px}
 @media(max-width:520px){.forest-mystery-scene{padding:8px}.forest-mystery-move button{flex:1 1 100px}.forest-mystery-order{padding-left:24px}}
@@ -1497,4 +1532,24 @@
 .spark-rescue-status{position:sticky;top:0;z-index:1;min-height:1.5em;color:#345c55;background:var(--paper)}
 .spark-rescue-status:not(:empty){padding:10px 12px;border:1px solid #b9cdc2;border-radius:10px;box-shadow:0 3px 8px #294c4420}
 .spark-restart{margin:12px 0}.spark-restart summary{min-height:44px;cursor:pointer}
+.spark-wind{padding:12px 16px;border:1px solid var(--line);border-radius:12px;background:var(--paper);overflow-wrap:anywhere}
+.spark-wind p{margin:6px 0 0}.spark-wind[data-wind="gust"]{border-color:#aa7541;background:#fff1da}
+.spark-route-hint{padding:12px 16px;border-left:4px solid #718f74;border-radius:6px;background:#edf3e8;line-height:1.6;overflow-wrap:anywhere}
+.spark-wait{display:block;width:100%;margin:12px 0}
+.spark-dialogue{padding:12px 16px;border-left:3px solid var(--green);border-radius:0 12px 12px 0;background:#eef4e8;overflow-wrap:anywhere}
+.spark-dialogue p{margin:6px 0 0}.spark-memory{color:var(--muted);line-height:1.6}
+.spark-journal{margin:16px 0;border:1px solid var(--line);border-radius:12px;padding:0 14px;background:var(--paper);overflow-wrap:anywhere}
+.spark-journal summary{display:list-item;min-height:48px;padding:12px 0;cursor:pointer;font-weight:700}
+.spark-journal summary:focus-visible{outline:3px solid #245f88;outline-offset:2px;border-radius:6px}
+.spark-route-memory{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px 24px;padding-left:28px;line-height:1.7}
+.spark-signal{padding:16px;border:1px solid var(--line);border-radius:12px;background:#fff8e7;overflow-wrap:anywhere}
+.spark-signal-beats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;list-style-position:inside;padding:0}
+.spark-signal-beats li{padding:12px 8px;border:2px solid var(--line);border-radius:10px;background:var(--paper);overflow-wrap:anywhere}
+.spark-signal-beats [data-state="done"]{background:#e6f0d5;border-color:#617745}
+.spark-signal-beats [aria-current="step"]{border-color:#9d7a24;font-weight:700}
+.spark-methods>button{flex:1 1 190px;min-width:0}
+.cast-announcement.opening-turn-guidance{font-size:14px;line-height:1.5;letter-spacing:0;max-width:min(680px,calc(100% - 32px));overflow-wrap:anywhere;pointer-events:none}
+.battle-result-error:empty{display:none}
+.result-card>.adventure-guidance{margin:16px 0;text-align:left;overflow-wrap:anywhere}
+.opening-join-hint{line-height:1.6;overflow-wrap:anywhere}
 @media(max-width:380px){.spark-route-grid{gap:4px}.spark-route-cell{font-size:13px}}

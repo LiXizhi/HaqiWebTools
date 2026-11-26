@@ -1,0 +1,1498 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0f1a">
+<title>游 yóu · 水边的孩子，撑一条小船去看远方</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --bg:#0a0f1a;--paper:#f4ead6;--lamp:#ffb347;--ember:#ff6b35;--cinnabar:#c8402f;--jade:#4ec9b0;--frost:#cfe0f5;--muted:#8b98ad;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  --kai:"Kaiti SC","STKaiti","KaiTi","BiauKai","Kaiti TC",var(--serif);
+}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg)}
+body{color:var(--paper);font-family:var(--serif);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+button{font:inherit;touch-action:manipulation}
+button:focus-visible{outline:2px solid var(--lamp);outline-offset:4px}
+#glView,#inkView{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#glView{z-index:1}
+#inkView{z-index:3}
+body.hold #inkView{cursor:pointer}
+body.drag #inkView{cursor:grab}
+body.drag.dragging #inkView{cursor:grabbing}
+body.trace #inkView{cursor:crosshair}
+body.orbit #inkView{cursor:grab}
+body.orbit.dragging #inkView{cursor:grabbing}
+
+#brand{position:fixed;left:max(16px,env(safe-area-inset-left));top:max(14px,env(safe-area-inset-top));display:flex;align-items:center;gap:10px;
+  font-family:var(--kai);font-size:14px;letter-spacing:.22em;color:#c9bda6;z-index:8;pointer-events:none;opacity:.9}
+#brand .seal{background:var(--cinnabar);color:#fbecd0;border-radius:3px;padding:5px 5px 4px;font-size:15px;line-height:1;letter-spacing:0;box-shadow:0 2px 8px rgba(200,64,47,.45)}
+
+#progress{position:fixed;top:max(16px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:flex;list-style:none;
+  margin:0;padding:0;gap:clamp(8px,1.8vw,22px);z-index:10;opacity:0;transition:opacity .8s;pointer-events:none}
+#progress::before{content:"";position:absolute;top:2.5px;left:12px;right:12px;height:1px;background:rgba(244,234,214,.18)}
+body.started #progress{opacity:1}
+#progress li{position:relative;font-family:var(--kai);font-size:13px;color:#5f6b80;letter-spacing:.08em;padding-top:12px;transition:color .6s;white-space:nowrap}
+#progress li::before{content:"";position:absolute;top:0;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#2c3648;transition:background .6s,transform .6s,box-shadow .6s}
+#progress li.done{color:#a9b4c6}#progress li.done::before{background:#8fa0b8}
+#progress li.on{color:var(--paper)}#progress li.on::before{background:var(--lamp);transform:scale(1.65);box-shadow:0 0 10px 2px rgba(255,179,71,.65)}
+
+#controls{position:fixed;right:max(14px,env(safe-area-inset-right));top:max(12px,env(safe-area-inset-top));display:flex;gap:8px;z-index:12;opacity:0;pointer-events:none;transition:opacity .6s}
+body.started #controls{opacity:1;pointer-events:auto}
+#controls button{font-family:var(--kai);font-size:14px;letter-spacing:.16em;color:#eadfc7;background:rgba(12,18,30,.68);
+  border:1px solid rgba(255,179,71,.38);border-radius:4px;padding:6px 10px 6px 12px;cursor:pointer;backdrop-filter:blur(4px)}
+#controls button:hover{background:rgba(30,40,60,.88)}
+#controls button[aria-pressed="true"]{border-color:rgba(139,152,173,.6);color:#aeb9cb}
+
+#moodBar{position:fixed;left:max(14px,env(safe-area-inset-left));top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:11;opacity:0;pointer-events:none;transition:opacity .5s}
+#moodBar.on{opacity:1;pointer-events:auto}
+#moodBar button{font-family:var(--kai);font-size:13px;letter-spacing:.14em;color:#dccfb6;background:rgba(12,18,30,.7);
+  border:1px solid rgba(255,179,71,.35);border-radius:16px;padding:5px 14px;cursor:pointer;backdrop-filter:blur(4px);writing-mode:vertical-rl;text-orientation:upright}
+#moodBar button.active{color:#1a1206;background:var(--lamp);border-color:var(--lamp);font-weight:600}
+
+#hint{position:fixed;left:16px;right:16px;margin:0 auto;width:fit-content;max-width:calc(100vw - 32px);box-sizing:border-box;
+  top:max(60px,calc(env(safe-area-inset-top) + 46px));text-align:center;color:#ffe9c9;opacity:0;transition:opacity .45s;pointer-events:none;z-index:9;
+  padding:7px 20px 8px;border:1px solid rgba(255,179,71,.5);border-radius:22px;background:rgba(9,13,22,.78);backdrop-filter:blur(4px)}
+#hint span{font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.12em}
+#hint.on{opacity:1;animation:breathe 1.8s ease-in-out infinite}
+@keyframes breathe{50%{box-shadow:0 0 0 6px rgba(255,179,71,.12),0 0 24px rgba(255,179,71,.24)}}
+
+#caption{position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translate(-50%,10px);
+  width:min(900px,calc(100vw - 24px));box-sizing:border-box;text-align:center;opacity:0;
+  transition:opacity .5s,transform .7s cubic-bezier(.2,.7,.2,1);pointer-events:none;z-index:6;padding:20px 22px 14px;
+  background:radial-gradient(ellipse at center,rgba(6,9,16,.84) 38%,rgba(6,9,16,0) 74%)}
+#caption.on{opacity:1;transform:translate(-50%,0)}
+#capTitle{margin:0 0 8px;font-weight:400;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.42em;margin-left:.42em;color:var(--lamp)}
+#caption.on #capTitle{animation:sealIn .8s cubic-bezier(.2,.7,.2,1) both}
+#capText{margin:0;font-family:var(--kai);font-size:clamp(19px,calc(1vw + 1.6vh),28px);line-height:1.7;color:var(--paper);letter-spacing:.06em;min-height:1.7em;
+  text-shadow:0 1px 12px rgba(0,0,0,.8)}
+#capText .ch{animation:inkIn 1.1s ease-out both;animation-delay:calc(var(--i) * 65ms + 100ms)}
+.haqi-sub-trans{display:block;margin-top:4px;font-family:Georgia,"Times New Roman",system-ui,sans-serif;font-size:clamp(13px,1.8vh,17px);line-height:1.45;color:#b3bfd2;letter-spacing:.02em}
+@keyframes inkIn{from{opacity:0;color:var(--paper);text-shadow:0 0 16px rgba(255,179,71,.95)}45%{opacity:1}to{opacity:1;color:var(--paper);text-shadow:0 1px 12px rgba(0,0,0,.8)}}
+@keyframes sealIn{from{opacity:0;letter-spacing:.9em;filter:blur(4px)}to{opacity:1;letter-spacing:.42em;filter:none}}
+
+.actions{margin-top:12px;display:flex;justify-content:center;gap:12px;pointer-events:auto;min-height:38px}
+.actions button{font-family:var(--kai);font-size:clamp(15px,2.1vh,18px);letter-spacing:.2em;padding:7px 20px 7px 24px;border-radius:20px;cursor:pointer;
+  color:#1a1206;background:linear-gradient(135deg,#ffd08a,#ff9e3d);border:none;box-shadow:0 4px 16px rgba(255,158,61,.35);transition:transform .2s,box-shadow .2s}
+.actions button:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(255,158,61,.5)}
+.actions button.holding{transform:scale(.96);background:linear-gradient(135deg,#ff8a4c,#e0492a);color:#fff2e2}
+#demo{background:rgba(12,18,30,.8);color:var(--paper);border:1px solid rgba(255,179,71,.45);box-shadow:none}
+#demo:hover{background:rgba(30,40,60,.92)}
+
+#note{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(8px,env(safe-area-inset-bottom));
+  font-size:11px;color:rgba(206,196,176,.44);letter-spacing:.08em;z-index:5;pointer-events:none}
+
+#intro{position:fixed;inset:0;z-index:20;pointer-events:none;transition:opacity .9s,transform .9s}
+#intro.off{opacity:0;transform:scale(1.04)}
+#intro.off *{pointer-events:none!important}
+.introTop,.introBottom{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
+.introTop{bottom:calc(100% - var(--gTop,140px) + 12px);gap:6px}
+.introBottom{top:calc(var(--gBottom,540px) + 12px);gap:7px}
+.introTop .tag{display:flex;align-items:center;gap:10px;font-family:var(--kai);font-size:clamp(14px,2.1vh,18px);letter-spacing:.3em;color:var(--lamp)}
+.introTop .tag i{display:block;width:clamp(24px,5vw,60px);height:1px;background:currentColor;opacity:.55}
+.pinyin{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:clamp(28px,4.8vh,44px);line-height:1;color:var(--paper);letter-spacing:.06em}
+.mean{font-family:var(--kai);font-size:clamp(16px,2.4vh,21px);letter-spacing:.22em;color:var(--jade)}
+.sub{font-size:clamp(13px,1.9vh,16px);color:#b3bfd2;letter-spacing:.1em;margin:2px 0 0;line-height:1.6}
+.btn-main{pointer-events:auto;margin-top:6px;font-family:var(--kai);font-size:clamp(18px,2.5vh,22px);letter-spacing:.4em;padding:10px 26px 10px 34px;
+  color:#1a1206;background:linear-gradient(135deg,#ffd08a,#ff9e3d);border:none;border-radius:24px;cursor:pointer;
+  box-shadow:0 6px 20px rgba(255,158,61,.4);transition:transform .2s,box-shadow .2s;animation:btnGlow 2.4s ease-in-out infinite}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(255,158,61,.55)}
+@keyframes btnGlow{50%{box-shadow:0 6px 20px rgba(255,158,61,.4),0 0 0 8px rgba(255,179,71,.14)}}
+.meta{font-size:12px;color:#7f8ca1;letter-spacing:.12em;margin:0}
+.rise{opacity:0;transform:translateY(12px);animation:rise .85s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--d,0s)}
+@keyframes rise{to{opacity:1;transform:none}}
+
+@media (max-width:640px){
+  #brand{font-size:0;letter-spacing:0;gap:0}
+  #brand .seal{font-size:13px;padding:4px}
+  #progress{top:max(46px,calc(env(safe-area-inset-top) + 36px));gap:7px;width:calc(100vw - 20px);justify-content:center}
+  #progress::before{left:16px;right:16px}
+  #progress li{font-size:10px;padding-top:9px;letter-spacing:0}
+  #hint{top:max(84px,calc(env(safe-area-inset-top) + 74px));padding:6px 14px}
+  #hint span{font-size:14px;letter-spacing:.06em}
+  #moodBar{left:auto;right:max(10px,env(safe-area-inset-right));top:50%;transform:translateY(-50%);gap:6px}
+  #moodBar button{font-size:12px;padding:6px 9px;letter-spacing:.1em}
+  #controls button{font-size:12px;padding:5px 8px;letter-spacing:.08em}
+  #capText{font-size:17px;line-height:1.6}
+  #note{display:none}
+}
+@media (max-height:560px){
+  .sub,.meta{display:none}
+  .introBottom{gap:4px}
+}
+@media (prefers-reduced-motion:reduce){
+  #hint.on,.btn-main{animation:none}
+  #capText .ch{animation-duration:.25s;animation-delay:0s}
+}
+</style>
+<style>
+/* 游 · 三维江上行（在夜驿篇样式基础上的增量） */
+:root{--river:#6fb7d6;--mist:#a9c6d8;--gold:#ffd98a}
+#caption{padding:4px 22px 8px}
+body.tap #inkView{cursor:pointer}
+#progress li{transition:opacity .6s}
+body:not(.moods) #moodBar{display:none}
+#stamp{position:fixed;left:50%;top:46%;width:clamp(74px,13vh,132px);aspect-ratio:1;transform:translate(-50%,-50%) scale(2.4) rotate(-14deg);opacity:0;z-index:14;pointer-events:none;
+  border-radius:9px;background:linear-gradient(145deg,#c8402f,#9c2a1e);box-shadow:inset 0 0 0 3px rgba(251,236,208,.86),inset 0 0 0 6px rgba(156,42,30,.9),0 10px 34px rgba(200,64,47,.5);
+  display:grid;place-items:center;font-family:var(--kai);font-size:clamp(46px,8.4vh,86px);line-height:1;color:#fbecd0;text-shadow:0 1px 0 rgba(80,10,4,.5)}
+#stamp.on{animation:stampIn .62s cubic-bezier(.2,1.1,.3,1) forwards}
+@keyframes stampIn{0%{opacity:0;transform:translate(-50%,-50%) scale(2.4) rotate(-14deg)}60%{opacity:1;transform:translate(-50%,-50%) scale(.94) rotate(-7deg)}100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-7deg)}}
+#rowMeter{position:fixed;left:50%;bottom:max(128px,calc(env(safe-area-inset-bottom) + 120px));transform:translateX(-50%);width:min(240px,60vw);height:5px;border-radius:3px;
+  background:rgba(244,234,214,.16);z-index:9;opacity:0;transition:opacity .4s;pointer-events:none;overflow:hidden}
+#rowMeter.on{opacity:1}
+#rowMeter i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,#6fb7d6,#ffd98a);box-shadow:0 0 10px rgba(255,217,138,.6)}
+.strokeTag{position:fixed;left:50%;top:max(96px,calc(env(safe-area-inset-top) + 88px));transform:translateX(-50%);z-index:9;opacity:0;transition:opacity .3s;pointer-events:none;
+  font-family:var(--kai);font-size:clamp(14px,2vh,18px);letter-spacing:.3em;color:var(--gold);text-shadow:0 0 14px rgba(255,217,138,.5);white-space:nowrap}
+.strokeTag.on{opacity:1}
+body.portrait #rowMeter{bottom:max(176px,calc(env(safe-area-inset-bottom) + 168px))}
+body.portrait #stamp{top:42%}
+@media (prefers-reduced-motion:reduce){#stamp.on{animation-duration:.25s}}
+</style>
+<script>
+// Haqi H5 protocol v1: independent pages remain usable without a parent.
+(()=>{let context=null,written=false,finished=false,serial=0;const callbacks=new Map(),subCache=new Map(),uiCache=new Map(),pending=new Set(),uiNodes=new Map();
+const isZh=loc=>!loc||/^zh\b/i.test(loc);
+const send=data=>{if(context)parent.postMessage({channel:'haqi-hanzi',version:1,entryId:context.entryId,sessionId:context.sessionId,...data},context.origin);};
+const refreshDom=()=>{for(const[el,zh]of uiNodes){if(!el?.isConnected){uiNodes.delete(el);continue;}const tr=!isZh(context?.locale)&&uiCache.get(zh);const next=(tr&&tr!==zh)?tr:zh;if(el.dataset.haqiKind==='seal'){const seal=el.querySelector('.seal');el.textContent=next;if(seal)el.prepend(seal);}else if(el.dataset.haqiKind==='tag'){const i1=document.createElement('i'),i2=document.createElement('i');el.replaceChildren(i1,document.createTextNode(next),i2);}else el.textContent=next;}document.querySelectorAll('[data-haqi-caption]').forEach(el=>renderCaption(el,el.dataset.haqiCaption));};
+const flushPending=()=>{if(!context||!pending.size)return;const texts=[...pending];pending.clear();window.haqiHanziTranslate(texts);};
+const ensureTexts=texts=>{const need=[];for(const t of texts){const s=typeof t==='string'?t.trim():'';if(s&&(!subCache.has(s)||!uiCache.has(s))&&!pending.has(s)){pending.add(s);need.push(s);}}if(need.length&&context)flushPending();};
+const renderCaption=(el,zh)=>{if(!el)return;el.dataset.haqiCaption=zh||'';let sub=el.querySelector('.haqi-sub-trans');if(!zh||isZh(context?.subtitleLocale||context?.locale)){sub?.remove();return;}const tr=subCache.get(zh);if(!tr||tr===zh){sub?.remove();ensureTexts([zh]);return;}if(!sub){sub=document.createElement('span');sub.className='haqi-sub-trans';const host=el.querySelector('#capText')||el;if(host!==el&&host.parentNode===el)host.insertAdjacentElement('afterend',sub);else el.appendChild(sub);}sub.textContent=tr;};
+const trackUi=(el,zh,kind='')=>{if(!el||!zh)return;if(kind)el.dataset.haqiKind=kind;uiNodes.set(el,zh);ensureTexts([zh]);};
+const scanStatic=()=>{if(!document.body)return;document.querySelectorAll('#start,#replay,#mute,#pause,#demo,#action,#progress li,#moodBar button,#note,.introBottom .mean,.introBottom .sub,.introBottom .meta').forEach(el=>{const zh=(el.textContent||'').trim();if(zh&&!uiNodes.has(el))trackUi(el,zh);});document.querySelectorAll('#brand,.brand').forEach(el=>{if(uiNodes.has(el))return;const clone=el.cloneNode(true);clone.querySelector?.('.seal')?.remove();const zh=(clone.textContent||'').trim();if(zh)trackUi(el,zh,'seal');});document.querySelectorAll('.introTop .tag,.tag').forEach(el=>{if(uiNodes.has(el))return;const zh=(el.textContent||'').trim();if(zh)trackUi(el,zh,'tag');});refreshDom();};
+if(document.readyState==='loading')addEventListener('DOMContentLoaded',scanStatic,{once:true});else scanStatic();
+window.haqiHanziWritten=()=>{written=true;send({type:'written'});};
+window.haqiHanziComplete=()=>{if(!written){written=true;send({type:'written'});}finished=true;send({type:'completed'});};
+window.haqiHanziPrefetch=texts=>ensureTexts(Array.isArray(texts)?texts:[texts]);
+window.haqiHanziUi=(zh,el)=>{const s=typeof zh==='string'?zh.trim():'';if(!s)return zh;if(el)trackUi(el,s);else ensureTexts([s]);const tr=!isZh(context?.locale)&&uiCache.get(s);return(tr&&tr!==s)?tr:zh;};
+window.haqiHanziCaption=(el,zh)=>{const s=typeof zh==='string'?zh.trim():'';if(s)ensureTexts([s]);renderCaption(el,s);};
+window.haqiHanziTranslate=texts=>new Promise(resolve=>{const list=(Array.isArray(texts)?texts:[]).map(t=>typeof t==='string'?t.trim():'').filter(Boolean);if(!context||!list.length){resolve({});return;}const requestId=String(++serial);const timer=setTimeout(()=>{callbacks.delete(requestId);resolve({});},1500);callbacks.set(requestId,msg=>{clearTimeout(timer);const sub=msg?.translations||{},ui=msg?.uiTranslations||sub;for(const[k,v]of Object.entries(sub))if(typeof v==='string'&&v.trim())subCache.set(k,v.trim());for(const[k,v]of Object.entries(ui))if(typeof v==='string'&&v.trim())uiCache.set(k,v.trim());refreshDom();resolve(sub);});send({type:'translate',requestId,texts:list});});
+addEventListener('message',event=>{const m=event.data;if(event.source!==parent||parent===window||m?.channel!=='haqi-hanzi'||m.version!==1)return;
+if(m.type==='init'&&typeof m.sessionId==='string'&&typeof m.entryId==='string'){if(document.referrer&&event.origin!==new URL(document.referrer).origin)return;context={...m,origin:event.origin};scanStatic();flushPending();refreshDom();if(written)send({type:'written'});if(finished)send({type:'completed'});}
+else if(context&&event.origin===context.origin&&m.sessionId===context.sessionId&&m.type==='translations'){callbacks.get(m.requestId)?.(m);callbacks.delete(m.requestId);}});
+if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'ready'},'*');})();
+</script>
+</head>
+<body>
+<canvas id="glView" aria-hidden="true"></canvas>
+<canvas id="inkView" role="img" aria-label="月色江面上三滴水跃出水面，一条小船撑篙而行，孩子举旗跳上船头；水滴、小船、旗帜与孩子化作立体的楷书「游」，再逐笔描红"></canvas>
+
+<div id="brand"><span class="seal">字</span>一字一故事 · 三维江上行</div>
+<ol id="progress" aria-hidden="true"><li>江水</li><li>轻舟</li><li>孩子</li><li>成字</li><li>写字</li><li>遨游</li></ol>
+<div id="controls">
+  <button id="mute" type="button" aria-pressed="false">声音 开</button>
+  <button id="pause" type="button" aria-pressed="false">暂停</button>
+  <button id="replay" type="button">重播</button>
+</div>
+<div id="moodBar" role="group" aria-label="四种江上意境">
+  <button type="button" data-mood="0" class="active">月夜</button>
+  <button type="button" data-mood="1">晨雾</button>
+  <button type="button" data-mood="2">晚霞</button>
+  <button type="button" data-mood="3">晴川</button>
+</div>
+<div id="hint" role="status"></div>
+<div id="rowMeter" aria-hidden="true"><i></i></div>
+<div id="strokeTag" class="strokeTag" aria-hidden="true"></div>
+<section id="caption" aria-live="polite" aria-atomic="true">
+  <h2 id="capTitle"></h2><p id="capText"></p>
+  <div class="actions"><button id="action" type="button" hidden></button><button id="demo" type="button" hidden>看示范</button></div>
+</section>
+<div id="note">古字形为艺术示意 · 笔画轮廓与中线核对自 Make Me a Hanzi (Arphic Public License)</div>
+<div id="stamp" aria-hidden="true">游</div>
+
+<div id="intro">
+  <div class="introTop"><div class="tag rise" style="--d:.2s"><i></i>今天认识一个汉字<i></i></div></div>
+  <div class="introBottom">
+    <div class="pinyin rise" style="--d:1.8s">yóu</div>
+    <div class="mean rise" style="--d:2.0s">氵 · 方 · 子</div>
+    <p class="sub rise" style="--d:2.2s">水边的孩子，撑一条小船去看远方</p>
+    <button id="start" class="btn-main rise" style="--d:2.4s" type="button">开始</button>
+    <p class="meta rise" style="--d:2.6s">3D 江上立体剧场 · 三次互动与十二笔描字 · 建议开启声音</p>
+  </div>
+</div>
+<script type="module">
+// Three.js 动态加载：CDN 慢或不可达时页面照常运行（2D 保底），不让静态 import 卡死首页。
+const THREE_CDN = 'https://cdn.keepwork.com/keepwork/cdn/vendor/three/three.module.js';
+let THREE = null, threeDone = false;
+const threeReady = new Promise(resolve => {
+  const done = ok => { if (!threeDone) { threeDone = true; resolve(ok); } };
+  setTimeout(() => done(!!THREE), 7000);
+  import(/* @vite-ignore */ THREE_CDN).then(m => { THREE = m; done(true); }, err => { console.warn('three.js 不可达，启用 2D 保底:', err); done(false); });
+});
+
+const $ = s => document.querySelector(s);
+const TAU = Math.PI * 2;
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = t => { t = clamp(t); return t * t * (3 - 2 * t); };
+const ease = {
+  inOut: t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+  out: t => 1 - Math.pow(1 - t, 3),
+  sine: t => -(Math.cos(Math.PI * t) - 1) / 2,
+  lin: t => t,
+};
+function mulberry32(a) {
+  return () => {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const hex = h => { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+function mixHex(a, b, t) {
+  const A = hex(a), B = hex(b), e = clamp(t);
+  return '#' + A.map((v, i) => Math.round(lerp(v, B[i], e)).toString(16).padStart(2, '0')).join('');
+}
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const Q = new URLSearchParams(location.search);
+const FAST = Q.has('fast') ? 0.06 : 1;
+const AUTO = Q.has('auto');
+let rand = mulberry32(20261208);
+let visible = true, paused = false;
+
+/* ---------- 虚拟时钟：页面隐藏 / 手动暂停时冻结，支持 ?fast 快进 ---------- */
+class Cancelled extends Error {}
+let clock = 0, DT = 16;
+let waiters = [];
+let token = { dead: true };
+function frame(tk) { return new Promise((res, rej) => waiters.push({ tk, res, rej })); }
+async function wait(ms, tk) { ms *= FAST; const t0 = clock; while (clock - t0 < ms) await frame(tk); }
+async function tween(ms, fn, tk, ez = ease.inOut) {
+  ms *= FAST;
+  if (ms <= 0) { fn(1); return; }
+  const t0 = clock;
+  for (;;) {
+    await frame(tk);
+    const t = clamp((clock - t0) / ms);
+    fn(ez(t));
+    if (t >= 1) return;
+  }
+}
+const bg = p => p.catch(e => { if (!(e instanceof Cancelled)) console.error(e); });
+
+/* ---------- WebAudio 实时合成：古筝五声、水滴、摇橹、江风、印章 ---------- */
+const NOTE = { G3: 196.00, A3: 220.00, C4: 261.63, D4: 293.66, E4: 329.63, G4: 392.00, A4: 440.00, C5: 523.25, D5: 587.33, E5: 659.26, G5: 783.99, A5: 880.00, C6: 1046.50, D6: 1174.66 };
+const PENTA = [NOTE.C4, NOTE.D4, NOTE.E4, NOTE.G4, NOTE.A4, NOTE.C5, NOTE.D5, NOTE.E5, NOTE.G5, NOTE.A5, NOTE.C6, NOTE.D6];
+const Sound = {
+  ctx: null, master: null, wet: null, noise: null, muted: false, lapG: null, padOsc: [],
+  init() {
+    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return;
+    try { this.ctx = new C(); } catch { return; }
+    const c = this.ctx;
+    this.master = c.createGain();
+    this.master.gain.value = this.muted ? 0 : 0.6;
+    this.master.connect(c.destination);
+    const d = c.createDelay(1); d.delayTime.value = 0.31;
+    const fb = c.createGain(); fb.gain.value = 0.34;
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2400;
+    this.wet = c.createGain(); this.wet.gain.value = 0.3;
+    this.wet.connect(d); d.connect(lp); lp.connect(fb); fb.connect(d); lp.connect(this.master);
+    const len = c.sampleRate * 2;
+    const buf = c.createBuffer(1, len, c.sampleRate);
+    const data = buf.getChannelData(0);
+    const r = mulberry32(7);
+    for (let i = 0; i < len; i++) data[i] = (r() * 2 - 1) * (0.6 + 0.4 * Math.sin(i / c.sampleRate * TAU * 0.7));
+    this.noise = buf;
+    // 江水底噪：低通白噪 + 缓慢起伏，像浪花一遍遍拍着船底
+    const s = c.createBufferSource(); s.buffer = buf; s.loop = true;
+    const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 520; f.Q.value = 0.4;
+    this.lapG = c.createGain(); this.lapG.gain.value = 0.0001;
+    const lfo = c.createOscillator(); lfo.frequency.value = 0.17;
+    const lg = c.createGain(); lg.gain.value = 0.05;
+    lfo.connect(lg); lg.connect(this.lapG.gain);
+    s.connect(f); f.connect(this.lapG); this.lapG.connect(this.master);
+    s.start(); lfo.start();
+  },
+  setMuted(m) {
+    this.muted = m;
+    if (this.master) this.master.gain.setTargetAtTime(m ? 0 : 0.6, this.ctx.currentTime, 0.05);
+  },
+  lap(on) { if (this.lapG) this.lapG.gain.setTargetAtTime(on ? 0.16 : 0.0001, this.ctx.currentTime, 0.6); },
+  out(node, wet = true) { node.connect(this.master); if (wet) node.connect(this.wet); },
+  pluck(f, vol = 0.14, dur = 2.2) {
+    const c = this.ctx; if (!c) return;
+    const t = c.currentTime;
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(f * 6, t);
+    lp.frequency.exponentialRampToValueAtTime(f * 1.3, t + dur * 0.6);
+    lp.connect(g); this.out(g);
+    for (const [m, type, a] of [[1, 'triangle', 1], [2.003, 'sine', 0.3], [4.01, 'sine', 0.08]]) {
+      const o = c.createOscillator(); o.type = type;
+      o.frequency.setValueAtTime(f * m * 1.012, t);
+      o.frequency.exponentialRampToValueAtTime(f * m, t + 0.09);
+      const og = c.createGain(); og.gain.value = a;
+      o.connect(og); og.connect(lp); o.start(t); o.stop(t + dur + 0.05);
+    }
+  },
+  bell(f, vol = 0.08, dur = 3.4) {
+    const c = this.ctx; if (!c) return;
+    const t = c.currentTime;
+    for (const [m, a, dd] of [[1, 1, 1], [2.76, 0.3, 0.5], [5.4, 0.1, 0.25], [0.5, 0.22, 1.2]]) {
+      const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f * m;
+      const g = c.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol * a, t + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur * dd);
+      o.connect(g); this.out(g); o.start(t); o.stop(t + dur * dd + 0.05);
+    }
+  },
+  plink(f = 880, vol = 0.16) {
+    // 水滴：高频正弦快速下滑，像「叮咚」落进水里
+    const c = this.ctx; if (!c) return;
+    const t = c.currentTime;
+    const o = c.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(f * 1.9, t);
+    o.frequency.exponentialRampToValueAtTime(f * 0.7, t + 0.17);
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.006);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.32);
+    o.connect(g); this.out(g); o.start(t); o.stop(t + 0.36);
+    this.splash(0.2, 0.09);
+  },
+  splash(dur = 0.5, vol = 0.1, freq = 1500) {
+    const c = this.ctx; if (!c || !this.noise) return;
+    const t = c.currentTime;
+    const s = c.createBufferSource(); s.buffer = this.noise;
+    const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 0.8;
+    bp.frequency.setValueAtTime(freq, t);
+    bp.frequency.exponentialRampToValueAtTime(freq * 0.4, t + dur);
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + dur * 0.15);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(bp); bp.connect(g); this.out(g);
+    s.start(t, rand() * 1.2); s.stop(t + dur + 0.05);
+  },
+  whoosh(dur = 1.1, vol = 0.12) {
+    const c = this.ctx; if (!c || !this.noise) return;
+    const t = c.currentTime;
+    const s = c.createBufferSource(); s.buffer = this.noise;
+    const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 1.6;
+    bp.frequency.setValueAtTime(240, t);
+    bp.frequency.exponentialRampToValueAtTime(2600, t + dur * 0.5);
+    bp.frequency.exponentialRampToValueAtTime(500, t + dur);
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + dur * 0.3);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(bp); bp.connect(g); this.out(g);
+    s.start(t, rand() * 0.8); s.stop(t + dur + 0.05);
+  },
+  thud(vol = 0.22) {
+    const c = this.ctx; if (!c) return;
+    const t = c.currentTime;
+    const o = c.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(170, t);
+    o.frequency.exponentialRampToValueAtTime(52, t + 0.24);
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.42);
+    o.connect(g); this.out(g, false); o.start(t); o.stop(t + 0.46);
+    this.splash(0.12, 0.16, 900);
+  },
+};
+
+/* ---------- 字形：楷书「游」十二笔 → 立体笔画（带弧长属性的挤出几何 + 着色器逐笔书写） ---------- */
+// 楷书「游」十二笔：氵(1-3) · 方(4-7) · 𠂉(8-9) · 子(10-12)
+// 笔画轮廓 d 与中线 m 取自 Make Me a Hanzi (Arphic Public License)，坐标 1024 见方、y 轴向下。
+const STROKES = [
+  { d: "M 221 721 Q 243 699 267 673 Q 280 660 296 659 Q 306 660 313 673 Q 317 688 310 717 Q 306 736 277 750 Q 207 777 196 771 Q 192 767 192 754 Q 195 744 221 721 Z", m: [[200,765],[278,710],[294,676]], p: "dot", part: "氵", name: "点" },
+  { d: "M 122 551 Q 164 505 197 490 Q 210 489 219 501 Q 225 513 222 528 Q 210 565 133 587 Q 117 591 109 588 Q 103 587 106 575 Q 107 565 122 551 Z", m: [[115,580],[186,531],[200,508]], p: "dot", part: "氵", name: "点" },
+  { d: "M 112 215 Q 102 212 103 195 Q 115 128 149 109 Q 156 103 165 105 Q 172 106 173 130 Q 179 176 270 414 Q 276 429 275 435 Q 274 444 266 438 Q 250 426 150 255 Q 138 236 112 215 Z", m: [[161,114],[147,152],[146,190],[269,432]], p: "ti", part: "氵", name: "提" },
+  { d: "M 414 758 Q 448 704 480 686 Q 493 682 503 693 Q 510 703 510 720 Q 501 766 431 790 L 430 791 Q 415 798 406 795 Q 400 795 401 783 Q 401 773 414 758 Z", m: [[412,786],[466,738],[487,706]], p: "dot", part: "方", name: "点" },
+  { d: "M 421 556 Q 544 595 549 598 Q 556 605 552 614 Q 545 624 517 628 Q 489 631 463 618 Q 427 602 388 589 Q 345 576 293 567 Q 260 558 286 545 Q 325 527 378 544 L 380 544 L 421 556 Z", m: [[287,557],[333,555],[395,569],[499,605],[544,606]], p: "h", part: "方", name: "横" },
+  { d: "M 424 464 Q 472 457 481 440 Q 487 431 478 394 Q 474 337 451 262 Q 430 187 401 177 Q 389 173 341 193 Q 310 206 306 202 Q 302 195 317 184 Q 365 151 376 114 Q 380 101 391 95 Q 403 91 430 111 Q 469 145 496 256 Q 523 397 545 417 Q 555 421 557 429 Q 558 436 538 458 Q 511 485 470 484 Q 448 487 436 491 C 407 498 394 469 424 464 Z", m: [[436,467],[448,474],[477,467],[499,456],[516,434],[479,272],[453,196],[430,159],[406,140],[309,198]], p: "hzg", part: "方", name: "横折钩" },
+  { d: "M 436 491 Q 442 512 450 521 Q 454 525 452 534 Q 445 552 421 556 C 392 564 374 569 380 544 Q 402 474 315 324 Q 312 323 311 319 Q 286 276 215 190 Q 209 184 218 184 Q 260 193 343 305 Q 385 374 424 464 L 436 491 Z", m: [[388,541],[414,520],[400,463],[372,394],[324,304],[273,239],[221,189]], p: "pie", part: "方", name: "撇" },
+  { d: "M 654 651 Q 673 681 687 712 Q 706 752 724 786 Q 733 799 717 813 Q 666 840 646 833 Q 636 829 639 815 Q 661 743 587 619 Q 575 609 556 572 Q 549 556 564 563 Q 591 572 636 628 L 654 651 Z", m: [[652,820],[682,786],[666,730],[617,631],[565,572]], p: "pie", part: "𠂉", name: "撇" },
+  { d: "M 636 628 Q 685 607 738 625 Q 790 640 845 656 Q 870 663 874 667 Q 881 676 876 684 Q 869 696 838 700 Q 807 704 777 689 Q 749 677 719 667 Q 689 660 654 651 C 625 644 608 639 636 628 Z", m: [[645,630],[724,644],[806,673],[864,677]], p: "h", part: "𠂉", name: "横" },
+  { d: "M 706 414 Q 800 510 822 518 Q 838 525 832 539 Q 828 552 768 579 Q 749 588 655 542 Q 607 526 576 522 Q 555 521 564 504 Q 571 494 589 486 Q 617 473 645 493 Q 717 545 736 535 Q 748 529 743 517 Q 721 475 695 425 C 681 398 685 393 706 414 Z", m: [[572,512],[590,505],[618,506],[712,551],[743,556],[767,548],[780,534],[777,527],[708,427]], p: "hp", part: "子", name: "横撇" },
+  { d: "M 733 360 Q 727 384 706 414 L 695 425 Q 686 435 674 440 Q 664 447 659 439 Q 655 435 662 422 Q 678 391 687 351 L 694 315 Q 709 210 696 141 Q 689 92 676 80 Q 669 74 588 93 Q 578 96 572 92 Q 568 91 582 79 Q 636 31 666 -8 Q 684 -27 700 -18 Q 722 -6 739 47 Q 767 159 742 321 L 733 360 Z", m: [[667,434],[681,419],[706,370],[726,258],[728,179],[715,84],[700,50],[686,37],[576,91]], p: "wg", part: "子", name: "弯钩" },
+  { d: "M 742 321 Q 808 331 938 332 Q 956 333 960 341 Q 964 351 949 363 Q 898 397 847 383 Q 801 374 733 360 L 687 351 Q 620 341 543 328 Q 524 327 538 311 Q 551 299 567 295 Q 586 291 600 295 Q 643 308 694 315 L 742 321 Z", m: [[540,320],[591,314],[777,348],[871,359],[950,346]], p: "h", part: "子", name: "横" },
+];
+
+const NS = 64;
+const gx = x => x / 102.4 - 5.1;          // 1024 字面 → 10 个世界单位，字面中心落在 x≈0
+const gy = y => y / 102.4 + 4.21;         // Make Me a Hanzi 的路径是 y 朝上的原始坐标（<g scale(1,-1) translate(0,-900)> 之前），字底离水面约 3 个单位
+const glyphBox = () => ({ x0: gx(100), x1: gx(960), y0: gy(50), y1: gy(930) });
+
+// 把 Make Me a Hanzi 的轮廓路径（M/L/Q/C/Z）读成 THREE.Shape（含自动识别的孔洞）
+function strokeShapes(d) {
+  const sp = new THREE.ShapePath();
+  const tok = d.match(/[MLQCZ]|-?\d+(?:\.\d+)?/g) || [];
+  let i = 0, cx = 0, cy = 0;
+  const num = () => parseFloat(tok[i++]);
+  const pt = () => { const x = num(), y = num(); return [gx(x), gy(y)]; };
+  while (i < tok.length) {
+    const k = tok[i++];
+    if (k === 'M') { [cx, cy] = pt(); sp.moveTo(cx, cy); }
+    else if (k === 'L') { [cx, cy] = pt(); sp.lineTo(cx, cy); }
+    else if (k === 'Q') { const [ax, ay] = pt(); [cx, cy] = pt(); sp.quadraticCurveTo(ax, ay, cx, cy); }
+    else if (k === 'C') { const [ax, ay] = pt(); const [bx, by] = pt(); [cx, cy] = pt(); sp.bezierCurveTo(ax, ay, bx, by, cx, cy); }
+    else if (k === 'Z') { sp.currentPath?.closePath(); }
+  }
+  return sp.toShapes(true);
+}
+
+let glyph = null;
+const strokes = [];
+let brush = null;
+
+function buildGlyph() {
+  const glowTex = radialTexture();
+  glyph = new THREE.Group();
+  STROKES.forEach((s, idx) => {
+    const ctrl = s.m.map(([x, y]) => new THREE.Vector3(gx(x), gy(y), 0));
+    const curve = new THREE.CatmullRomCurve3(ctrl, false, 'centripetal');
+    const pts = curve.getSpacedPoints(NS - 1);
+    const st = { i: idx, d: s.d, p: s.p, part: s.part, name: s.name, pts, prog: 0, lit: 0, meshes: [], uProg: { value: 0 }, uLit: { value: 0 } };
+    const geo = new THREE.ExtrudeGeometry(strokeShapes(s.d), { depth: 0.34, bevelEnabled: true, bevelThickness: 0.07, bevelSize: 0.06, bevelSegments: 3, curveSegments: 12 });
+    geo.translate(0, 0, -0.17);
+    // 每个顶点记录「离中线起点多远」（0~1），着色器据此像毛笔一样沿笔顺写出这一笔
+    const pos = geo.attributes.position, aT = new Float32Array(pos.count);
+    for (let v = 0; v < pos.count; v++) {
+      const x = pos.getX(v), y = pos.getY(v);
+      let best = 0, bd = 1e9;
+      for (let k = 0; k < NS; k++) { const dx = pts[k].x - x, dy = pts[k].y - y, dd = dx * dx + dy * dy; if (dd < bd) { bd = dd; best = k; } }
+      aT[v] = best / (NS - 1);
+    }
+    geo.setAttribute('aT', new THREE.BufferAttribute(aT, 1));
+    const z = 0.03 * idx + 0.05 * (idx % 3);   // 各笔前后错落，像层叠的浮雕
+    const mat = new THREE.MeshStandardMaterial({
+      color: '#f3e9d2', roughness: 0.46, metalness: 0.06, emissive: '#f0b45a', emissiveIntensity: 0.2,
+      transparent: true, opacity: 0, depthWrite: true, side: THREE.FrontSide,
+    });
+    mat.onBeforeCompile = sh => {
+      sh.uniforms.uProg = st.uProg; sh.uniforms.uLit = st.uLit;
+      sh.vertexShader = 'attribute float aT; varying float vT;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nvT = aT;');
+      sh.fragmentShader = 'uniform float uProg; uniform float uLit; varying float vT;\n' + sh.fragmentShader
+        .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>\nif (vT > uProg) discard;')
+        .replace('#include <opaque_fragment>', [
+          'float tipBand = (1.0 - smoothstep(0.0, 0.055, uProg - vT)) * step(0.001, uProg) * step(uProg, 0.995);',
+          'outgoingLight += vec3(1.0, 0.8, 0.46) * tipBand * 1.5;',
+          'outgoingLight = mix(outgoingLight, vec3(1.0, 0.72, 0.3) * 0.95 + outgoingLight * 0.32, uLit * 0.8);',
+          '#include <opaque_fragment>',
+        ].join('\n'));
+    };
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.z = z;
+    mesh.visible = false;
+    mesh.renderOrder = 3;
+    glyph.add(mesh);
+    st.meshes.push({ mesh, mat });
+    strokes.push(st);
+  });
+  brush = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: '#ffd27a', transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
+  brush.scale.set(1.5, 1.5, 1);
+  brush.visible = false;
+  brush.renderOrder = 6;
+  glyph.add(brush);
+}
+function setStroke(st, prog, opacity, lit = st.lit) {
+  st.prog = prog; st.lit = lit;
+  st.uProg.value = prog; st.uLit.value = lit;
+  for (const { mesh, mat } of st.meshes) {
+    mesh.visible = opacity > 0.002 && prog > 0.002;
+    mat.opacity = opacity;
+  }
+  if (st === strokes[st.i] && brush) {
+    brush.visible = prog > 0.002 && prog < 0.998;
+    if (brush.visible) {
+      const f = prog * (NS - 1), k = Math.min(NS - 2, Math.floor(f)), p = st.pts[k].clone().lerp(st.pts[k + 1], f - k);
+      brush.position.copy(p); brush.position.z = 0.35;
+    }
+  }
+}
+function hideBrush() { if (brush) brush.visible = false; }
+// 字形外框与中线在「世界 → 屏幕」上的投影，描字命中与示范都用它
+function strokeScreen(st, project) {
+  const out = [];
+  for (const k of [0, 10, 21, 32, 43, 53, NS - 1]) { const p = project(st.pts[k].x, st.pts[k].y, 0.3); out.push(p); }
+  return out;
+}
+function glowTexture(color = '255,210,140') {
+  const c = document.createElement('canvas'); c.width = c.height = 64;
+  const g = c.getContext('2d'), r = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  r.addColorStop(0, `rgba(${color},1)`); r.addColorStop(0.35, `rgba(${color},.42)`); r.addColorStop(1, `rgba(${color},0)`);
+  g.fillStyle = r; g.fillRect(0, 0, 64, 64);
+  return c;
+}
+function radialTexture() {
+  if (!THREE) return null;
+  if (!radialTexture.tex) radialTexture.tex = new THREE.CanvasTexture(glowTexture());
+  return radialTexture.tex;
+}
+
+/* ---------- 三维江上世界：月、山、水、灯、舟、子 ---------- */
+const glCanvas = $('#glView'), cvs = $('#inkView'), ctx2d = cvs.getContext('2d');
+let renderer = null, scene = null, camera = null, world = null, rig = null;
+let SW = innerWidth, SH = innerHeight, DPR = 1, portrait = false, aspect = 1.6;
+
+// 四种江上意境：颜色在两套调色板之间连续插值
+const MOODS = [
+  { name: '月夜', skyTop: '#050a16', skyBot: '#17334b', horizon: '#2c5d78', fog: '#0d2032', fogD: 0.016, deep: '#071a2c', shallow: '#2f7fa6', glint: '#ffe2a8', moon: 1, stars: 0.9, lamp: 1, key: '#cfe3ff', keyI: 1.7, hemiSky: '#9fc4e8', hemiGround: '#0b1a28', ridge: ['#0f2436', '#163a52', '#21536e'], waterA: 0.9 },
+  { name: '晨雾', skyTop: '#557386', skyBot: '#c9bca9', horizon: '#e8dcc6', fog: '#a9b6ba', fogD: 0.027, deep: '#42687a', shallow: '#a9c6cc', glint: '#fff3d6', moon: 0.25, stars: 0, lamp: 0.4, key: '#ffe9c9', keyI: 2.4, hemiSky: '#f3ead9', hemiGround: '#5f6b6c', ridge: ['#647c89', '#8399a2', '#a5b5b9'], waterA: 0.86 },
+  { name: '晚霞', skyTop: '#1c1538', skyBot: '#a8475a', horizon: '#ffa66b', fog: '#5a2f45', fogD: 0.015, deep: '#231a3c', shallow: '#c86c6c', glint: '#ffd08a', moon: 0.1, stars: 0.25, lamp: 1, key: '#ffb27a', keyI: 2.2, hemiSky: '#c98aa0', hemiGround: '#2a1530', ridge: ['#2a1d3d', '#54304f', '#8a4a5c'], waterA: 0.88 },
+  { name: '晴川', skyTop: '#1a5f9f', skyBot: '#86c1dc', horizon: '#c9e7f0', fog: '#aecfe0', fogD: 0.012, deep: '#1a6795', shallow: '#74c8de', glint: '#ffffff', moon: 0, stars: 0, lamp: 0.3, key: '#fff7e0', keyI: 3.1, hemiSky: '#dff3ff', hemiGround: '#5c7f8f', ridge: ['#4a8cb0', '#78b0c9', '#9fcddd'], waterA: 0.9 },
+];
+function mixMood(a, b, t) {
+  const e = smooth(t), o = { name: t < 0.5 ? a.name : b.name };
+  for (const k of Object.keys(a)) {
+    if (k === 'name') continue;
+    o[k] = Array.isArray(a[k]) ? a[k].map((c, i) => mixHex(c, b[k][i], e)) : typeof a[k] === 'string' ? mixHex(a[k], b[k], e) : lerp(a[k], b[k], e);
+  }
+  return o;
+}
+
+let matSky = null, matWater = null, matMoon = null, matStars = null, ridgeMats = [], lampGlows = [], lampBodies = [];
+let hemiL = null, keyL = null, rimL = null;
+let boat = null, mastG = null, flag = null, flagBase = null, oar = null, child = null, dropObjs = [], rings = [], fish = [];
+let inkPts = null, inkData = null, fireflies = null, lanterns = [];
+const W = { mood: 0, moodTarget: 0, pal: MOODS[0], orbit: { yaw: 0, pitch: 0 }, glyphYaw: 0, row: 0, flagOpen: 0, scene: 'intro' };
+
+function ridgeGeo(w, h, seed) {
+  const r = mulberry32(seed), ph = [r() * TAU, r() * TAU, r() * TAU];
+  const sh = new THREE.Shape();
+  sh.moveTo(-w / 2, -3);
+  const n = 44;
+  for (let i = 0; i <= n; i++) {
+    const u = i / n;
+    const y = h * (0.42 + 0.3 * Math.sin(u * 5.1 + ph[0]) + 0.2 * Math.sin(u * 11.3 + ph[1]) + 0.12 * Math.sin(u * 23.7 + ph[2])) * Math.sin(Math.PI * u) ** 0.6;
+    sh.lineTo(-w / 2 + u * w, Math.max(0.3, y));
+  }
+  sh.lineTo(w / 2, -3);
+  return new THREE.ExtrudeGeometry(sh, { depth: 3, bevelEnabled: false });
+}
+
+function init3D() {
+  renderer = new THREE.WebGLRenderer({ canvas: glCanvas, antialias: true, alpha: false });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.12;
+  scene = world = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(MOODS[0].fog, MOODS[0].fogD);
+  camera = new THREE.PerspectiveCamera(38, 1.6, 0.1, 900);
+
+  hemiL = new THREE.HemisphereLight(MOODS[0].hemiSky, MOODS[0].hemiGround, 1.5);
+  keyL = new THREE.DirectionalLight(MOODS[0].key, MOODS[0].keyI);
+  keyL.position.set(-6, 18, 12);
+  rimL = new THREE.DirectionalLight('#7fd0e6', 0.9);
+  rimL.position.set(10, 6, -10);
+  world.add(hemiL, keyL, rimL);
+
+  // 天幕：竖向渐变的大平面，远处山影与雾色都从同一套调色板取色
+  matSky = new THREE.ShaderMaterial({
+    uniforms: { uTop: { value: new THREE.Color(MOODS[0].skyTop) }, uBot: { value: new THREE.Color(MOODS[0].skyBot) }, uHor: { value: new THREE.Color(MOODS[0].horizon) } },
+    vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+    fragmentShader: 'uniform vec3 uTop,uBot,uHor; varying vec2 vUv; void main(){ float h = vUv.y; vec3 c = mix(uHor, uBot, smoothstep(0.0, 0.42, h)); c = mix(c, uTop, smoothstep(0.36, 1.0, h)); gl_FragColor = vec4(c, 1.0); }',
+    depthWrite: false, fog: false,
+  });
+  const sky = new THREE.Mesh(new THREE.PlaneGeometry(620, 300), matSky);
+  sky.position.set(0, 92, -150);
+  world.add(sky);
+
+  // 团扇满月：径向发光贴图做的精灵，月夜里是江面碎金的来处
+  matMoon = new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(glowTexture('255,241,214')), transparent: true, opacity: 1, depthWrite: false, fog: false });
+  const moon = new THREE.Sprite(matMoon);
+  moon.scale.set(86, 86, 1);
+  world.add(moon);
+  const moonCore = new THREE.Mesh(new THREE.CircleGeometry(13, 56), new THREE.MeshBasicMaterial({ color: '#fbf1d9', fog: false, transparent: true, opacity: 1 }));
+  world.add(moonCore);
+  matMoon.core = moonCore.material;
+  matMoon.core.pos = moonCore.position; matMoon.pos = moon.position; W.placeMoon = () => { const D = 640, az = Math.tan(portrait ? -0.2 : -0.42), el = Math.tan(0.15); moon.position.set(az * D, 5 + el * D, -D); moonCore.position.set(az * D, 5 + el * D, -D + 2); };
+
+  // 星子
+  {
+    const n = 260, p = new Float32Array(n * 3), rr = mulberry32(99);
+    for (let i = 0; i < n; i++) { p[i * 3] = (rr() - 0.5) * 420; p[i * 3 + 1] = 22 + rr() * 130; p[i * 3 + 2] = -145 + rr() * 3; }
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(p, 3));
+    matStars = new THREE.PointsMaterial({ color: '#f4f0e4', size: 0.9, transparent: true, opacity: 0.9, depthWrite: false, fog: false });
+    world.add(new THREE.Points(g, matStars));
+  }
+
+  // 三重水墨远山（挤出多边形剪影），越远越淡
+  [[150, 13, 11, -70, 3], [120, 10, 23, -52, 2], [96, 7, 37, -36, 1]].forEach(([w, h, seed, z, layer]) => {
+    const m = new THREE.MeshBasicMaterial({ color: MOODS[0].ridge[layer - 1], fog: true });
+    const mesh = new THREE.Mesh(ridgeGeo(w, h, seed), m);
+    mesh.position.set(0, -0.4, z);
+    world.add(mesh);
+    ridgeMats.push(m);
+  });
+
+  // 江水：顶点叠加三组行波与点击涟漪；片元按视角混深浅，并撒上月光碎金
+  matWater = new THREE.ShaderMaterial({
+    uniforms: Object.assign(THREE.UniformsUtils.clone(THREE.UniformsLib.fog), {
+      uTime: { value: 0 }, uDeep: { value: new THREE.Color(MOODS[0].deep) }, uShallow: { value: new THREE.Color(MOODS[0].shallow) },
+      uGlint: { value: new THREE.Color(MOODS[0].glint) }, uAlpha: { value: MOODS[0].waterA }, uMoonX: { value: -6 }, uRip: { value: Array.from({ length: 8 }, () => new THREE.Vector3(0, 0, -99)) },
+    }),
+    vertexShader: [
+      'uniform float uTime; uniform vec3 uRip[8]; varying vec3 vW; varying float vCrest;',
+      '#include <fog_pars_vertex>',
+      'float wave(vec2 p, float t){',
+      '  float h = sin(p.x*0.55 + t*0.9)*0.07 + sin(p.x*0.31 + p.y*0.83 + t*1.3)*0.05 + sin(p.y*1.7 - t*1.7)*0.025;',
+      '  for (int i = 0; i < 8; i++) { float age = t - uRip[i].z; if (age > 0.0 && age < 6.0) { float d = distance(p, uRip[i].xy); float r = age * 3.4; h += sin((d - r) * 5.0) * 0.2 * exp(-abs(d - r) * 1.3) * exp(-age * 0.8); } }',
+      '  return h;}',
+      'void main(){ vec3 p = position; p.z = wave(position.xy, uTime); vCrest = p.z; vec4 w = modelMatrix * vec4(p, 1.0); vW = w.xyz;',
+      '  vec4 mvPosition = viewMatrix * w; gl_Position = projectionMatrix * mvPosition;',
+      '#include <fog_vertex>\n}',
+    ].join('\n'),
+    fragmentShader: [
+      'uniform vec3 uDeep,uShallow,uGlint; uniform float uAlpha,uMoonX,uTime; varying vec3 vW; varying float vCrest;',
+      '#include <fog_pars_fragment>',
+      'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }',
+      'void main(){ vec3 V = normalize(cameraPosition - vW); float fr = pow(1.0 - max(V.y, 0.0), 2.4);',
+      '  vec3 col = mix(uDeep, uShallow, fr * 0.8 + vCrest * 2.4);',
+      '  float band = exp(-abs(vW.x - uMoonX) * (0.12 + 0.5 * (1.0 - fr)));',
+      '  float g = hash(floor(vW.xz * vec2(16.0, 52.0)) + floor(uTime * 2.5) * 0.37);',
+      '  col += uGlint * band * pow(g, 20.0) * 1.35 * (0.1 + 0.9 * fr);',
+      '  gl_FragColor = vec4(col, uAlpha - fr * 0.22);',
+      '#include <fog_fragment>\n}',
+    ].join('\n'),
+    transparent: true, fog: true, depthWrite: false,
+  });
+  const water = new THREE.Mesh(new THREE.PlaneGeometry(300, 300, 120, 120), matWater);
+  water.rotation.x = -Math.PI / 2;
+  water.renderOrder = 0;
+  world.add(water);
+  W.water = water;
+  initActors();
+}
+
+function initActors() {
+  buildGlyph();
+  // 小船「方」：俯视两头尖的船身 + 船舱 + 桅杆 + 横杆 + 旗 + 橹
+  boat = new THREE.Group();
+  const hullShape = new THREE.Shape();
+  const outline = [[-2.5, 0], [-1.7, 0.44], [0, 0.62], [1.7, 0.44], [2.5, 0], [1.7, -0.44], [0, -0.62], [-1.7, -0.44]];
+  hullShape.moveTo(outline[0][0], outline[0][1]);
+  hullShape.splineThru(outline.slice(1).map(p => new THREE.Vector2(p[0], p[1])));
+  hullShape.closePath();
+  // 船舷：外轮廓挖去一圈内轮廓，立起来的窄边让船身有厚度
+  const hp = hullShape.getPoints(56);
+  const rimShape = new THREE.Shape(hp.map(p => p.clone()));
+  rimShape.holes.push(new THREE.Path(hp.map(p => new THREE.Vector2(p.x * 0.86, p.y * 0.8))));
+  const wood = new THREE.MeshStandardMaterial({ color: '#7a5535', roughness: 0.82, metalness: 0.03, transparent: true });
+  const woodDark = new THREE.MeshStandardMaterial({ color: '#2a1c13', roughness: 0.9, transparent: true });
+  const hull = new THREE.Mesh(new THREE.ExtrudeGeometry(hullShape, { depth: 0.5, bevelEnabled: true, bevelThickness: 0.05, bevelSize: 0.05, bevelSegments: 2, curveSegments: 16 }), wood);
+  hull.rotation.x = -Math.PI / 2;
+  hull.position.y = 0.02;
+  const cabin = new THREE.Mesh(new THREE.ExtrudeGeometry(hullShape, { depth: 0.36, bevelEnabled: false, curveSegments: 16 }), woodDark);
+  cabin.rotation.x = -Math.PI / 2;
+  cabin.scale.set(0.8, 0.8, 1);
+  cabin.position.y = 0.2;
+  const rim = new THREE.Mesh(new THREE.ExtrudeGeometry(rimShape, { depth: 0.14, bevelEnabled: false, curveSegments: 16 }), wood);
+  rim.rotation.x = -Math.PI / 2;
+  rim.position.y = 0.5;
+  boat.add(hull, cabin, rim);
+  mastG = new THREE.Group();
+  mastG.position.set(1.25, 0.4, 0);
+  const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.08, 5.3, 8), wood);
+  mast.position.y = 2.65;
+  const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 1.9, 8), wood);
+  bar.rotation.z = Math.PI / 2;
+  bar.position.set(-0.55, 4.35, 0);
+  const flagGeo = new THREE.PlaneGeometry(1.3, 0.86, 12, 8);
+  flagGeo.translate(-0.65, -0.43, 0);
+  flagBase = flagGeo.attributes.position.array.slice();
+  flag = new THREE.Mesh(flagGeo, new THREE.MeshStandardMaterial({ color: '#c8402f', emissive: '#7a1d12', emissiveIntensity: 0.4, roughness: 0.7, side: THREE.DoubleSide, transparent: true }));
+  flag.position.set(0.38, 4.33, 0);
+  mastG.add(mast, bar, flag);
+  boat.add(mastG);
+  oar = new THREE.Group();
+  oar.position.set(-0.5, 0.6, 0.55);
+  const oarM = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.05, 2.8, 6), wood);
+  oarM.position.y = -1.2;
+  oar.add(oarM);
+  oar.rotation.z = 0.55;
+  oar.rotation.x = -0.5;
+  boat.add(oar);
+  boat.position.set(-9.2, 0, 2.4);
+  world.add(boat);
+  boat.userData.mats = [wood, woodDark, mast.material, flag.material];
+
+  // 孩子「子」：朱衣、斗笠，站在岸石上等船
+  child = new THREE.Group();
+  const robe = new THREE.Mesh(new THREE.ConeGeometry(0.34, 1.0, 12), new THREE.MeshStandardMaterial({ color: '#b8452f', roughness: 0.75, transparent: true }));
+  robe.position.y = 0.5;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 14, 12), new THREE.MeshStandardMaterial({ color: '#f2d5b8', roughness: 0.7, transparent: true }));
+  head.position.y = 1.22;
+  const hat = new THREE.Mesh(new THREE.ConeGeometry(0.5, 0.24, 14), new THREE.MeshStandardMaterial({ color: '#cfa968', roughness: 0.85, transparent: true }));
+  hat.position.y = 1.42;
+  const sash = new THREE.Mesh(new THREE.TorusGeometry(0.27, 0.04, 6, 16), new THREE.MeshStandardMaterial({ color: '#4ec9b0', roughness: 0.5, transparent: true }));
+  sash.rotation.x = Math.PI / 2;
+  sash.position.y = 0.52;
+  child.add(robe, head, hat, sash);
+  child.position.set(7.4, 0.62, 2.4);
+  world.add(child);
+  child.userData.mats = [robe.material, head.material, hat.material, sash.material];
+  const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(0.9, 0), new THREE.MeshStandardMaterial({ color: '#3c4654', roughness: 0.95, transparent: true }));
+  rock.scale.set(1.3, 0.75, 1);
+  rock.position.set(7.4, 0.1, 2.4);
+  world.add(rock);
+  child.userData.rock = rock;
+
+  // 三滴水「氵」与江面上的涟漪靶心
+  const glow = new THREE.CanvasTexture(glowTexture('150,220,255'));
+  strokes.forEach((st, i) => {
+    if (i > 2) return;
+    const home = new THREE.Vector3(-4.0 + [0.2, -0.9, -0.1][i], [2.5, 3.9, 5.5][i], 1.3);
+    // 水珠：旋成的水滴形（下圆上尖）
+    const prof = [[0, -0.36], [0.17, -0.3], [0.26, -0.12], [0.27, 0.04], [0.2, 0.22], [0.1, 0.38], [0.03, 0.5], [0, 0.56]].map(([r, y]) => new THREE.Vector2(r, y));
+    const mesh = new THREE.Mesh(new THREE.LatheGeometry(prof, 20), new THREE.MeshStandardMaterial({ color: '#a6e2ff', emissive: '#3fb4ea', emissiveIntensity: 0.8, roughness: 0.08, transparent: true, opacity: 0 }));
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
+    sp.scale.set(1.25, 1.25, 1);
+    mesh.add(sp);
+    world.add(mesh);
+    dropObjs.push({ mesh, sp, home, ring: [new THREE.Vector3(-5.2, 0, 5.0), new THREE.Vector3(-3.0, 0, 3.2), new THREE.Vector3(-5.9, 0, 1.0)][i], done: false });
+  });
+  const ringGeo = new THREE.RingGeometry(0.62, 0.72, 56);
+  dropObjs.forEach(d => {
+    const ring = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ color: '#bfe8ff', transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }));
+    ring.rotation.x = -Math.PI / 2;
+    ring.position.copy(d.ring); ring.position.y = 0.05;
+    world.add(ring);
+    rings.push(ring);
+  });
+
+  // 河灯：顺流漂向观众的小纸灯，远处在雾里只剩一点暖光
+  const lampGeo = new THREE.BoxGeometry(0.42, 0.3, 0.42);
+  const lampTex = new THREE.CanvasTexture(glowTexture('255,170,90'));
+  for (let i = 0; i < 18; i++) {
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(lampGeo, new THREE.MeshBasicMaterial({ color: '#ffb45a', transparent: true }));
+    const glowSp = new THREE.Sprite(new THREE.SpriteMaterial({ map: lampTex, transparent: true, opacity: 0.6, depthWrite: false, blending: THREE.AdditiveBlending }));
+    glowSp.scale.set(1.9, 1.9, 1);
+    const petal = new THREE.Mesh(new THREE.ConeGeometry(0.42, 0.17, 6, 1, true), new THREE.MeshStandardMaterial({ color: '#e7a3ad', roughness: 0.8, emissive: '#b85a6a', emissiveIntensity: 0.3, side: THREE.DoubleSide, transparent: true }));
+    petal.position.y = -0.08;
+    g.add(body, glowSp, petal);
+    const L = { g, body, glowSp, seed: rand() * 100, speed: 0.32 + rand() * 0.4, x: (rand() - 0.5) * 40, z: -40 + rand() * 46 };
+    if (Math.abs(L.x + 5) < 2.2 && L.z > -2 && L.z < 7) L.x += 7;
+    g.position.set(L.x, 0.14, L.z);
+    world.add(g);
+    lanterns.push(L);
+    lampBodies.push(body.material); lampGlows.push(glowSp.material);
+  }
+
+  // 江上流萤 / 雾中微尘
+  {
+    const n = 260, p = new Float32Array(n * 3), rr = mulberry32(41);
+    for (let i = 0; i < n; i++) { p[i * 3] = (rr() - 0.5) * 40; p[i * 3 + 1] = 0.4 + rr() * 10; p[i * 3 + 2] = -16 + rr() * 24; }
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(p, 3));
+    fireflies = new THREE.Points(g, new THREE.PointsMaterial({ color: '#ffe6a8', size: 0.11, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending }));
+    fireflies.userData.base = p.slice();
+    world.add(fireflies);
+  }
+
+  // 化墨粒子：舟、子、水滴碎成墨点，沿笔顺汇成立体的「游」
+  {
+    const n = 900, p = new Float32Array(n * 3);
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(p, 3));
+    inkPts = new THREE.Points(g, new THREE.PointsMaterial({ color: '#ffc766', map: new THREE.CanvasTexture(glowTexture('255,214,150')), size: 0.26, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
+    inkPts.visible = false; inkPts.renderOrder = 7;
+    world.add(inkPts);
+    inkData = { n, from: new Float32Array(n * 3), to: new Float32Array(n * 3), delay: new Float32Array(n), t: -1 };
+  }
+
+  // 锦鲤：遨游一幕绕着字游动
+  const koi = [['#f08a3c', '#fff3e0'], ['#f4f1ea', '#d9482b'], ['#e8b04b', '#fff8e7']];
+  for (let i = 0; i < 10; i++) {
+    const [c1, c2] = koi[i % 3];
+    const g = new THREE.Group();
+    const m1 = new THREE.MeshStandardMaterial({ color: c1, roughness: 0.5, emissive: c1, emissiveIntensity: 0.22 });
+    const m2 = new THREE.MeshStandardMaterial({ color: c2, roughness: 0.5, emissive: c2, emissiveIntensity: 0.2, side: THREE.DoubleSide });
+    const bodyM = new THREE.Mesh(new THREE.SphereGeometry(0.3, 12, 10), m1);
+    bodyM.scale.set(2.0, 0.78, 0.6);
+    const patch = new THREE.Mesh(new THREE.SphereGeometry(0.2, 10, 8), m2);
+    patch.scale.set(1.3, 0.6, 0.75); patch.position.set(0.18, 0.14, 0);
+    // 尾鳍：燕尾形的薄片，左右摆动
+    const tailShape = new THREE.Shape();
+    tailShape.moveTo(0.12, 0);
+    tailShape.quadraticCurveTo(-0.3, 0.44, -0.82, 0.38);
+    tailShape.quadraticCurveTo(-0.56, 0, -0.82, -0.38);
+    tailShape.quadraticCurveTo(-0.3, -0.44, 0.12, 0);
+    const tail = new THREE.Mesh(new THREE.ShapeGeometry(tailShape, 8), m2);
+    tail.position.x = -0.52;
+    const finL = new THREE.Mesh(new THREE.PlaneGeometry(0.36, 0.22), m2); finL.position.set(0.12, -0.02, 0.2); finL.rotation.x = -0.7;
+    const finR = finL.clone(); finR.position.z = -0.2; finR.rotation.x = 0.7;
+    g.add(bodyM, patch, tail, finL, finR);
+    g.visible = false;
+    g.userData = { tail, finL, finR, ph: rand() * TAU, sp: 0.22 + rand() * 0.16, ax: 5.4 + rand() * 2.2, ay: 1.6 + rand() * 2.2, az: 2.2 + rand() * 2.6, cy: 6.2 + rand() * 2.6, dir: i % 2 ? 1 : -1 };
+    world.add(g);
+    fish.push(g);
+  }
+
+  // 字影：悬在江面上的字，在水里洇开一团暖光
+  W.pool = new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(glowTexture('255,196,120')), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, fog: false });
+  const pool = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), W.pool);
+  pool.rotation.x = -Math.PI / 2; pool.scale.set(12, 3.6, 1); pool.position.set(0.1, 0.09, 0.3); pool.renderOrder = 2;
+  world.add(pool);
+  W.poolOn = 0;
+  rig = new THREE.Group();
+  rig.add(glyph);
+  world.add(rig);
+  W.rig = rig;
+}
+
+/* ---------- 镜头、取景适配、投影与每一帧的世界更新 ---------- */
+const CAM = {
+  river:  { tx: -0.6, ty: 2.7, tz: 0.4, yaw: 0, pitch: 0.04, dist: 13.5, fov: 44, halfW: 8.8, halfH: 6.3, pw: 6.6, pfov: 58 },
+  meet:   { tx: -0.2, ty: 2.9, tz: 0.4, yaw: 0, pitch: 0.05, dist: 13.5, fov: 44, halfW: 8.8, halfH: 6.5, pw: 6.6, pfov: 58 },
+  glyph:  { tx: 0.1, ty: 7.4, tz: 0, yaw: 0, pitch: 0.02, dist: 17, fov: 38, halfW: 7.2, halfH: 7.6, pw: 5.5, pfov: 46 },
+  write:  { tx: 0.1, ty: 7.4, tz: 0, yaw: 0, pitch: 0, dist: 15.5, fov: 38, halfW: 6.6, halfH: 6.9, pw: 5.1, pfov: 44 },
+  finale: { tx: 0.1, ty: 6.6, tz: 0, yaw: 0, pitch: 0.03, dist: 19, fov: 40, halfW: 8.2, halfH: 8.4, pw: 6.6, pfov: 52 },
+};
+const curCam = { ...CAM.river };
+let parX = 0, parY = 0;
+const V3 = { a: null, b: null };
+function camDist(c) {
+  const t = Math.tan(c.fov * Math.PI / 360);
+  return Math.max(c.dist, c.halfH / t, c.halfW / (t * Math.max(0.3, aspect)));
+}
+function applyCamera() {
+  const c = curCam;
+  const d = camDist(c);
+  const yaw = c.yaw + parX * 0.035 + (W.drift || 0), pitch = c.pitch + parY * 0.02;
+  camera.fov = c.fov; camera.aspect = aspect; camera.updateProjectionMatrix();
+  camera.setViewOffset(SW, SH, 0, Math.round(SH * (portrait ? 0.1 : 0.08)), SW, SH);
+  camera.position.set(c.tx + Math.sin(yaw) * Math.cos(pitch) * d, c.ty + Math.sin(pitch) * d, c.tz + Math.cos(yaw) * Math.cos(pitch) * d);
+  camera.lookAt(c.tx, c.ty, c.tz);
+  camera.updateMatrixWorld();
+}
+function camPreset(name) {
+  const c = CAM[name];
+  return portrait ? { ...c, halfW: c.pw, fov: c.pfov } : c;
+}
+async function camTo(name, ms, tk, ez = ease.inOut) {
+  const from = { ...curCam }, to = camPreset(name);
+  await tween(ms, t => { for (const k of Object.keys(to)) curCam[k] = lerp(from[k], to[k], t); }, tk, ez);
+}
+function resize() {
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  SW = innerWidth; SH = innerHeight;
+  aspect = SW / Math.max(1, SH);
+  portrait = aspect < 0.85;
+  W.placeMoon?.();
+  document.body.classList.toggle('portrait', portrait);
+  cvs.width = Math.round(SW * DPR); cvs.height = Math.round(SH * DPR);
+  if (renderer && camera) renderer.setSize(SW, SH, false);
+  inkDirty = true;
+}
+addEventListener('resize', resize);
+// 世界坐标 → 屏幕像素。three 可用时走透视投影；不可用时用等距平面投影（2D 保底）。
+function project(x, y, z = 0) {
+  if (!THREE || !camera) {
+    const k = Math.min(SW * 0.86 / 10.4, SH * (portrait ? 0.5 : 0.64) / 10.4);
+    return { x: SW / 2 + (x - 0.1) * k, y: SH * (portrait ? 0.44 : 0.46) - (y - 7.3) * k };
+  }
+  if (!V3.a) { V3.a = new THREE.Vector3(); V3.b = new THREE.Vector3(); }
+  V3.a.set(x, y, z).applyMatrix4(rig.matrixWorld);
+  V3.b.copy(V3.a).project(camera);
+  return { x: (V3.b.x * 0.5 + 0.5) * SW, y: (-V3.b.y * 0.5 + 0.5) * SH };
+}
+
+/* ---------- 意境调色板应用 ---------- */
+function applyMood(p) {
+  W.pal = p;
+  matSky.uniforms.uTop.value.set(p.skyTop); matSky.uniforms.uBot.value.set(p.skyBot); matSky.uniforms.uHor.value.set(p.horizon);
+  scene.fog.color.set(p.fog); scene.fog.density = p.fogD;
+  matWater.uniforms.uDeep.value.set(p.deep); matWater.uniforms.uShallow.value.set(p.shallow); matWater.uniforms.uGlint.value.set(p.glint); matWater.uniforms.uAlpha.value = p.waterA;
+  hemiL.color.set(p.hemiSky); hemiL.groundColor.set(p.hemiGround);
+  keyL.color.set(p.key); keyL.intensity = p.keyI;
+  ridgeMats.forEach((m, i) => m.color.set(p.ridge[i]));
+  matMoon.opacity = 0.75 * p.moon; matMoon.core.opacity = p.moon;
+  matStars.opacity = p.stars;
+  for (const m of lampBodies) m.opacity = 0.35 + 0.65 * p.lamp;
+  for (const m of lampGlows) m.opacity = 0.62 * p.lamp;
+  fireflies.material.opacity = 0.18 + 0.42 * p.lamp;
+}
+
+/* ---------- 每帧更新：水波、舟、旗、灯、萤、鱼、化墨粒子 ---------- */
+let flagPos = null;
+function updateWorld(dt) {
+  const t = clock / 1000;
+  if (!flagPos && flag) { flagPos = flag.geometry.attributes.position; lanterns.forEach(L => { L.body.renderOrder = 2; L.glowSp.renderOrder = 2; }); dropObjs.forEach(d => { d.sp.renderOrder = 5; }); }
+  matWater.uniforms.uTime.value = t;
+  if (Math.abs(W.moodT - W.moodTarget) > 0.0005) {
+    W.moodT += clamp(W.moodTarget - W.moodT, -dt * 0.9, dt * 0.9);
+    const a = Math.floor(W.moodT), b = Math.min(MOODS.length - 1, a + 1);
+    applyMood(mixMood(MOODS[a], MOODS[b], W.moodT - a));
+  }
+  matStars.opacity = W.pal.stars * (0.72 + 0.28 * Math.sin(t * 1.7));
+  const bob = Math.sin(t * 1.1) * 0.06;
+  if (boat.visible) {
+    boat.position.y = bob; boat.rotation.z = Math.sin(t * 0.8) * 0.022; boat.rotation.x = Math.sin(t * 0.63) * 0.016;
+    oar.rotation.x = -0.5 + Math.sin(t * 5.2) * (W.rowing ? 0.36 : 0.04);
+    if (W.flagOpen > 0.001) {
+      flag.visible = true;
+      flag.scale.x = Math.max(0.001, W.flagOpen);
+      const arr = flagPos.array;
+      for (let i = 0; i < arr.length; i += 3) {
+        const u = -flagBase[i] / 1.3;
+        arr[i + 2] = Math.sin(u * 5.2 - t * 5.6) * 0.17 * u + Math.sin(u * 2.3 - t * 3.1) * 0.08 * u;
+        arr[i + 1] = flagBase[i + 1] + Math.sin(u * 3.4 - t * 4.2) * 0.07 * u;
+      }
+      flagPos.needsUpdate = true;
+    } else flag.visible = false;
+  }
+  dropObjs.forEach((d, i) => {
+    if (!W.dropsHome || !d.mesh.visible) return;
+    d.mesh.position.y = d.home.y + Math.sin(t * 1.8 + i * 1.3) * 0.13;
+    d.mesh.position.x = d.home.x + Math.sin(t * 1.1 + i) * 0.05;
+  });
+  rings.forEach((r, i) => {
+    if (!W.ringsOn || dropObjs[i].done) return;
+    const pulse = 1 + 0.14 * Math.sin(t * 3.4 + i * 1.1);
+    r.scale.set(pulse, pulse, 1);
+    r.material.opacity = 0.55 + 0.3 * Math.sin(t * 3.4 + i * 1.1);
+  });
+  for (const L of lanterns) {
+    L.z += L.speed * dt;
+    L.x += Math.sin(t * 0.3 + L.seed) * 0.12 * dt;
+    if (L.z > 13) { L.z = -44; L.x = (rand() - 0.5) * 40; if (Math.abs(L.x + 5) < 2.2) L.x += 7; }
+    L.g.position.set(L.x, 0.14 + Math.sin(t * 1.3 + L.seed) * 0.05, L.z);
+    L.body.renderOrder = 2; L.glowSp.renderOrder = 2;
+  }
+  {
+    const p = fireflies.geometry.attributes.position, base = fireflies.userData.base;
+    for (let i = 0; i < p.count; i++) {
+      p.array[i * 3] = base[i * 3] + Math.sin(t * 0.37 + i) * 0.8;
+      p.array[i * 3 + 1] = base[i * 3 + 1] + Math.sin(t * 0.53 + i * 1.7) * 0.5;
+      p.array[i * 3 + 2] = base[i * 3 + 2] + Math.cos(t * 0.29 + i * 0.7) * 0.6;
+    }
+    p.needsUpdate = true;
+  }
+  if (inkData.t >= 0) {
+    const { n, from, to, delay } = inkData, p = inkPts.geometry.attributes.position;
+    let alive = false;
+    for (let i = 0; i < n; i++) {
+      const u = clamp((inkData.t - delay[i]) / (1 - 0.45));
+      const e = ease.inOut(u);
+      p.array[i * 3] = lerp(from[i * 3], to[i * 3], e) + Math.sin(e * 6 + i) * 0.5 * e * (1 - e);
+      p.array[i * 3 + 1] = lerp(from[i * 3 + 1], to[i * 3 + 1], e) + Math.cos(e * 5 + i * 0.7) * 0.6 * e * (1 - e);
+      p.array[i * 3 + 2] = lerp(from[i * 3 + 2], to[i * 3 + 2], e);
+      if (u < 1) alive = true;
+    }
+    p.needsUpdate = true;
+    inkPts.material.opacity = clamp(inkData.t * 4) * (alive ? 1 : clamp((1.35 - inkData.t) * 2.5));
+    if (inkData.t > 1.4) { inkData.t = -1; inkPts.visible = false; } else inkData.t += DT * 0.00062;
+  }
+  for (const f of fish) {
+    if (!f.visible) continue;
+    const u = f.userData, th = t * u.sp * u.dir + u.ph;
+    const at = a => [u.ax * Math.sin(a), u.cy + u.ay * Math.sin(a * 2 + u.ph), -1 + u.az * Math.cos(a)];
+    const p0 = at(th), p1 = at(th + 0.03);
+    const dx = p1[0] - p0[0], dy = p1[1] - p0[1], dz = p1[2] - p0[2];
+    f.position.set(p0[0], p0[1], p0[2]);
+    f.rotation.set(0, Math.atan2(-dz, dx), Math.atan2(dy, Math.hypot(dx, dz)));
+    u.tail.rotation.y = Math.sin(t * 9 + u.ph) * 0.5;
+    u.finL.rotation.z = Math.sin(t * 7 + u.ph) * 0.3; u.finR.rotation.z = -Math.sin(t * 7 + u.ph) * 0.3;
+  }
+  if (rig) {
+    rig.rotation.y = W.glyphBaseYaw + W.glyphYaw + W.orbit.yaw + Math.sin(t * 0.35) * 0.06 * W.idleSpin;
+    rig.rotation.x = W.orbit.pitch;
+    rig.updateMatrixWorld();
+  }
+  if (W.pool) W.pool.opacity = W.poolOn * (0.3 + 0.06 * Math.sin(t * 1.3));
+}
+
+/* ---------- 描红层（2D 画布叠在三维画面上）与 2D 保底 ---------- */
+Object.assign(W, { moodT: 0, dropsHome: false, ringsOn: false, rowing: false, idleSpin: 0, glyphBaseYaw: 0, poolOn: 0, drift: 0 });
+let inkDirty = true;
+const T = { on: false, stroke: 0, idx: 0, prog: new Array(12).fill(0), head: null, done: false };
+const PATH2D = { list: null, k: 0, ox: 0, oy: 0 };
+function fallbackFrame() {
+  const k = Math.min(SW * 0.86 / 10.4, SH * (portrait ? 0.5 : 0.64) / 10.4);
+  PATH2D.k = k / 102.4; PATH2D.ox = SW / 2 - 5.2 * k; PATH2D.oy = SH * (portrait ? 0.44 : 0.46) + 11.4 * k;
+}
+function drawFallback() {
+  fallbackFrame();
+  const g = ctx2d.createLinearGradient(0, 0, 0, SH), p = W.pal;
+  g.addColorStop(0, p.skyTop); g.addColorStop(0.62, p.horizon); g.addColorStop(1, p.deep);
+  ctx2d.fillStyle = g; ctx2d.fillRect(0, 0, SW, SH);
+  if (!PATH2D.list) PATH2D.list = strokes.map(s => new Path2D(s.d));
+  const { k, ox, oy } = PATH2D;
+  for (const st of strokes) {
+    if (st.prog <= 0.002) continue;
+    if (st.prog >= 0.998) {
+      ctx2d.setTransform(DPR * k, 0, 0, -DPR * k, DPR * ox, DPR * oy);
+      ctx2d.fillStyle = st.lit > 0.5 ? '#ffd98a' : `rgba(243,233,210,${0.3 + 0.7 * st.lit})`;
+      ctx2d.fill(PATH2D.list[st.i]);
+    } else drawTrail(st, st.prog, '#ffe2a0', true);
+  }
+  ctx2d.setTransform(DPR, 0, 0, DPR, 0, 0);
+}
+function drawTrail(st, pr, color, force = false) {
+  if (!force && pr >= 1) return;
+  const lim = pr * (NS - 1);
+  ctx2d.lineCap = 'round'; ctx2d.lineJoin = 'round';
+  ctx2d.lineWidth = clamp(SW * 0.011, 4, 9);
+  for (const [w, c, blur] of [[ctx2d.lineWidth * 2.2, 'rgba(255,190,90,.28)', 0], [ctx2d.lineWidth, color, 14]]) {
+    ctx2d.strokeStyle = c; ctx2d.shadowColor = 'rgba(255,190,90,.9)'; ctx2d.shadowBlur = blur;
+    ctx2d.beginPath();
+    let started = false;
+    for (let i2 = 0; i2 <= Math.min(NS - 1, lim); i2++) {
+      const k = Math.floor(i2), f = i2 - k, a = st.pts[k], b = st.pts[Math.min(NS - 1, k + 1)];
+      const p = project(lerp(a.x, b.x, f), lerp(a.y, b.y, f), 0.3);
+      if (!started) { ctx2d.moveTo(p.x, p.y); started = true; } else ctx2d.lineTo(p.x, p.y);
+    }
+    if (T.head && st === strokes[T.stroke]) ctx2d.lineTo(T.head.x, T.head.y);
+    ctx2d.stroke();
+  }
+  ctx2d.shadowBlur = 0;
+}
+function drawInk() {
+  ctx2d.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx2d.clearRect(0, 0, SW, SH);
+  if (!renderer) { drawFallback(); return; }
+  if (!T.on) return;
+  const st = strokes[T.stroke];
+  if (st && T.prog[st.i] > 0.004) drawTrail(st, T.prog[st.i], '#fff6e0');
+  for (let i = 0; i < 12; i++) if (i !== T.stroke && T.prog[i] > 0.004 && T.prog[i] < 1) drawTrail(strokes[i], T.prog[i], '#fff6e0');
+}
+
+/* ---------- 手势：点一点 / 按住摇橹 / 拖动转字 / 描红 ---------- */
+const gesture = { mode: null, hit: null };
+const ptr = { down: false, id: null, x: 0, y: 0, sx: 0, sy: 0, ox: 0, oy: 0, moved: 0 };
+const R2 = () => clamp(SW * 0.075, 34, 64);
+function traceAdvance(x, y) {
+  const st = strokes[T.stroke];
+  if (!st) return;
+  const R = R2();
+  let next = T.idx;
+  for (let k = T.idx; k < Math.min(NS, T.idx + 10); k++) {
+    const p = project(st.pts[k].x, st.pts[k].y, 0.3);
+    if (Math.hypot(p.x - x, p.y - y) <= R) next = k + 1;
+  }
+  T.idx = next; T.head = { x, y };
+  T.prog[st.i] = Math.max(T.prog[st.i], (T.idx - 1) / (NS - 1));
+  if (T.idx >= NS) strokeTraced(st);
+}
+cvs.addEventListener('pointerdown', e => {
+  Sound.init();
+  if (ptr.down) return;
+  Object.assign(ptr, { down: true, id: e.pointerId, x: e.clientX, y: e.clientY, sx: e.clientX, sy: e.clientY, ox: W.orbit.yaw, oy: W.orbit.pitch, moved: 0 });
+  cvs.setPointerCapture?.(e.pointerId);
+  if (gesture.mode === 'tap' && gesture.hit) gesture.hit(e.clientX, e.clientY);
+  else if (gesture.mode === 'orbit') document.body.classList.add('dragging');
+  else if (gesture.mode === 'trace' && !T.done) {
+    const st = strokes[T.stroke], p = project(st.pts[Math.max(0, T.idx - 1)].x, st.pts[Math.max(0, T.idx - 1)].y, 0.3);
+    if (Math.hypot(p.x - e.clientX, p.y - e.clientY) <= R2() * 1.5) traceAdvance(e.clientX, e.clientY);
+  }
+});
+cvs.addEventListener('pointermove', e => {
+  parX = (e.clientX / SW - 0.5) * 2; parY = (0.5 - e.clientY / SH) * 2;
+  if (!ptr.down || e.pointerId !== ptr.id) return;
+  ptr.moved += Math.hypot(e.clientX - ptr.x, e.clientY - ptr.y);
+  ptr.x = e.clientX; ptr.y = e.clientY;
+  if (gesture.mode === 'orbit') {
+    W.orbit.yaw = clamp(ptr.ox + (e.clientX - ptr.sx) * 0.0045, -0.85, 0.85);
+    W.orbit.pitch = clamp(ptr.oy - (e.clientY - ptr.sy) * 0.0025, -0.3, 0.3);
+  } else if (gesture.mode === 'trace' && !T.done) traceAdvance(e.clientX, e.clientY);
+});
+function ptrUp(e) {
+  if (!ptr.down || (e.pointerId !== undefined && e.pointerId !== ptr.id)) return;
+  ptr.down = false; T.head = null;
+  document.body.classList.remove('dragging');
+}
+cvs.addEventListener('pointerup', ptrUp); cvs.addEventListener('pointercancel', ptrUp);
+addEventListener('pointerleave', () => { parX *= 0.5; parY *= 0.5; });
+
+/* ---------- 界面小工具：字幕、提示、进度、按钮 ---------- */
+const ui = {
+  caption: $('#caption'), title: $('#capTitle'), text: $('#capText'), action: $('#action'), demo: $('#demo'), hint: $('#hint'),
+  progress: [...document.querySelectorAll('#progress li')], stamp: $('#stamp'), meter: $('#rowMeter'), tag: $('#strokeTag'),
+};
+const Z = zh => window.haqiHanziUi ? window.haqiHanziUi(zh) : zh;
+function setProgress(n) { ui.progress.forEach((li, i) => { li.classList.toggle('done', i < n); li.classList.toggle('on', i === n); }); }
+function showCaption(title, text) {
+  ui.title.textContent = Z(title);
+  ui.text.replaceChildren(...[...text].map((ch, i) => { const s = document.createElement('span'); s.className = 'ch'; s.style.setProperty('--i', i); s.textContent = ch; return s; }));
+  ui.caption.classList.add('on');
+  window.haqiHanziCaption?.(ui.caption, text);
+}
+function hideCaption() { ui.caption.classList.remove('on'); ui.action.hidden = true; ui.demo.hidden = true; }
+function hint(text) { if (!text) { ui.hint.classList.remove('on'); return; } ui.hint.textContent = Z(text); ui.hint.classList.add('on'); }
+async function say(tk, title, text, ms = 2800) { showCaption(title, text); await wait(ms, tk); }
+function showAction(label, onDown, onUp) {
+  ui.action.textContent = Z(label); ui.action.hidden = false;
+  ui.action.onpointerdown = e => { e.preventDefault(); Sound.init(); ui.action.setPointerCapture?.(e.pointerId); ui.action.classList.add('holding'); onDown?.(); };
+  const end = () => { if (!ui.action.classList.contains('holding')) return; ui.action.classList.remove('holding'); onUp?.(); };
+  ui.action.onpointerup = end; ui.action.onpointercancel = end; ui.action.onpointerleave = end;
+}
+function strokeTag(text) { if (!text) { ui.tag.classList.remove('on'); return; } ui.tag.textContent = Z(text); ui.tag.classList.add('on'); }
+function ripple(x, z) {
+  if (!matWater) return;
+  const u = matWater.uniforms.uRip.value;
+  let slot = 0; for (let i = 1; i < u.length; i++) if (u[i].z < u[slot].z) slot = i;
+  u[slot].set(x, z, matWater.uniforms.uTime.value);
+}
+
+/* ---------- 主循环 ---------- */
+let last = 0, started = false;
+function loop(t) {
+  requestAnimationFrame(loop);
+  const dt = Math.min(50, t - (last || t)); last = t;
+  if (!visible || paused) return;
+  clock += dt; DT = dt;
+  const ws = waiters; waiters = [];
+  for (const w of ws) { if (w.tk.dead) w.rej(new Cancelled()); else w.res(); }
+  if (THREE && !renderer && !threeInited) { threeInited = true; try { init3D(); resize(); } catch (err) { console.warn('WebGL 初始化失败，改用 2D 保底', err); THREE = null; } }
+  if (renderer) updateWorld(dt / 1000);
+  drawInk();
+  if (renderer) { applyCamera(); renderer.render(world, camera); }
+}
+let threeInited = false;
+requestAnimationFrame(loop);
+
+/* ---------- 场景编排：江水 → 轻舟 → 孩子 → 成字 → 写字 → 遨游 ---------- */
+const M = reduceMotion ? 0.5 : 1;
+let demoReq = false, mainTk = token, dropsDone = null, jumpDone = null, traceDone = null;
+const boatX0 = () => (portrait ? -6.4 : -7.9), boatX1 = () => -0.95;
+const childX0 = () => (portrait ? 5.0 : 7.4);
+window.__you = {
+  get scene() { return W.scene; }, written: false, finished: false, strokes, T,
+  get state() { return { scene: W.scene, row: +W.row.toFixed(3), flag: +W.flagOpen.toFixed(3), drops: dropObjs.map(d => d.done), stroke: T.stroke, traced: T.prog.map(v => +v.toFixed(2)), renderer: !!renderer, mood: +W.moodT.toFixed(2) }; },
+  // 验收脚本用的屏幕坐标（无头浏览器里模拟点、按、拖）
+  rings: () => dropObjs.map(d => project(d.ring.x, 0, d.ring.z)),
+  child: () => project(child.position.x, child.position.y + 0.7, child.position.z),
+  strokePts: i => strokes[i].pts.map(p => project(p.x, p.y, 0.3)),
+  setMood: i => { W.moodTarget = W.moodT = i; applyMood(MOODS[i]); },
+  showGlyph: () => { strokes.forEach(st => setStroke(st, 1, 1, 1)); W.glyphBaseYaw = 0.16; W.poolOn = 1; Object.assign(curCam, camPreset('finale')); fish.forEach(f => { f.visible = true; }); },
+};
+const pathLen = st => { let L = 0; for (let i = 1; i < NS; i++) L += Math.hypot(st.pts[i].x - st.pts[i - 1].x, st.pts[i].y - st.pts[i - 1].y); return L; };
+function buildFallbackStrokes() {
+  STROKES.forEach((s, i) => {
+    const pts = [], total = s.m.length - 1;
+    for (let k = 0; k < NS; k++) { const f = k / (NS - 1) * total, a = Math.min(total - 1, Math.floor(f)), u = f - a; pts.push({ x: gx(lerp(s.m[a][0], s.m[a + 1][0], u)), y: gy(lerp(s.m[a][1], s.m[a + 1][1], u)) }); }
+    strokes.push({ i, d: s.d, p: s.p, part: s.part, name: s.name, pts, prog: 0, lit: 0, meshes: [], uProg: { value: 0 }, uLit: { value: 0 } });
+  });
+}
+function resetWorld() {
+  hideCaption(); hint(''); strokeTag(''); setProgress(-1);
+  document.body.classList.remove('moods'); $('#moodBar').classList.remove('on'); ui.stamp.classList.remove('on');
+  ui.meter.classList.remove('on'); ui.meter.firstElementChild.style.width = '0%';
+  gesture.mode = null; gesture.hit = null;
+  Object.assign(W, { orbit: { yaw: 0, pitch: 0 }, glyphYaw: 0, glyphBaseYaw: 0, poolOn: 0, row: 0, flagOpen: 0, rowing: false, dropsHome: false, ringsOn: false, idleSpin: 0, moodTarget: 0 });
+  T.on = false; T.stroke = 0; T.idx = 0; T.prog.fill(0); T.done = false; T.head = null; T.auto = false;
+  dropsDone = jumpDone = traceDone = null;
+  if (!renderer) return;
+  strokes.forEach(st => setStroke(st, 0, 0, 0)); hideBrush();
+  boat.visible = true; boat.scale.setScalar(1); boat.rotation.set(0, 0, 0); boat.position.set(boatX0(), 0, 2.4);
+  boat.userData.mats.forEach(m => { m.opacity = 1; });
+  child.visible = true; child.scale.setScalar(1); child.rotation.set(0, 0, 0); child.userData.jumping = false;
+  child.userData.mats.forEach(m => { m.opacity = 1; });
+  child.position.set(childX0(), 0.62, 2.4);
+  dropObjs.forEach(d => { d.done = false; d.mesh.visible = false; d.mesh.scale.setScalar(1); d.mesh.position.copy(d.ring); d.mesh.material.opacity = 0; d.sp.material.opacity = 0; });
+  rings.forEach(r => { r.material.opacity = 0; });
+  fish.forEach(f => { f.visible = false; });
+  inkData.t = -1; inkPts.visible = false;
+}
+
+async function introPlay(tk) {
+  W.scene = 'introPlay';
+  Object.assign(curCam, camPreset('river'));
+  while (!tk.dead) { W.drift = Math.sin(clock / 1000 * 0.14) * 0.07; await frame(tk); }
+}
+
+async function sDrops(tk) {
+  W.scene = 'sDrops'; W.drift = 0; setProgress(0);
+  bg(camTo('river', 1500, tk));
+  bg(say(tk, '江水', '月亮升起来，江面上跳出三滴水', 3600));
+  hint('点一点发光的水圈');
+  W.ringsOn = true; gesture.mode = 'tap';
+  const all = new Promise(r => { dropsDone = r; });
+  gesture.hit = (x, y) => {
+    for (let i = 0; i < 3; i++) {
+      const d = dropObjs[i]; if (d.done) continue;
+      const p = project(d.ring.x, 0, d.ring.z);
+      if (Math.hypot(p.x - x, p.y - y) <= R2() * 1.3) { hitDrop(i); return; }
+    }
+  };
+  bg((async () => {
+    await wait(2600, tk); if (!dropObjs.some(d => !d.done)) return;
+    ui.demo.hidden = false;
+    while (dropObjs.some(d => !d.done)) { if (demoReq || AUTO) for (let i = 0; i < 3; i++) { if (!dropObjs[i].done) { await wait(700, tk); hitDrop(i); } } await frame(tk); }
+  })());
+  await all;
+  hint(''); ui.demo.hidden = true; demoReq = false; gesture.hit = null; W.ringsOn = false;
+  await wait(700, tk);
+  W.dropsHome = true;
+  await say(tk, '氵 · 三点水', '一点、一点、一提——这就是江水的「水」', 3000);
+}
+function hitDrop(i) {
+  const d = dropObjs[i], tk = mainTk;
+  if (d.done || tk.dead) return;
+  d.done = true; rings[i].material.opacity = 0;
+  ripple(d.ring.x, d.ring.z); Sound.plink(620 + i * 170);
+  d.mesh.visible = true; d.mesh.position.copy(d.ring);
+  bg(tween(1050, t => {
+    d.mesh.position.set(lerp(d.ring.x, d.home.x, t), lerp(0, d.home.y, ease.out(t)) + Math.sin(Math.PI * t) * 2.3, lerp(d.ring.z, d.home.z, t));
+    d.mesh.material.opacity = Math.min(1, t * 3); d.sp.material.opacity = Math.min(0.95, t * 2);
+  }, tk, ease.lin).then(() => Sound.pluck(PENTA[i * 3 + 2], 0.12, 1.8)));
+  if (dropObjs.every(x => x.done)) dropsDone?.();
+}
+
+async function sBoat(tk) {
+  W.scene = 'sBoat'; setProgress(1);
+  bg(camTo('meet', 1700, tk));
+  bg(say(tk, '轻舟 · 方', '一条小船摇过来——「方」就是小船的样子', 3400));
+  hint('按住按钮，帮小船摇橹');
+  ui.meter.classList.add('on');
+  W.rowing = false; W.row = 0;
+  let lastSplash = 0;
+  showAction('按住 · 摇橹', () => { W.rowing = true; Sound.lap(true); }, () => { W.rowing = false; Sound.lap(false); });
+  bg((async () => { await wait(2800, tk); if (W.row >= 1) return; ui.demo.hidden = false; })());
+  while (W.row < 1) {
+    await frame(tk);
+    if (W.rowing || demoReq || AUTO) {
+      W.row = clamp(W.row + DT * 0.00027);
+      boat.position.x = lerp(boatX0(), boatX1(), smooth(W.row));
+      if (clock - lastSplash > 480) { lastSplash = clock; Sound.splash(0.42, 0.09, 850); ripple(boat.position.x - 2.1, 2.6); }
+    }
+    ui.meter.firstElementChild.style.width = (W.row * 100).toFixed(1) + '%';
+  }
+  boat.position.x = boatX1();
+  W.rowing = false; Sound.lap(false);
+  ui.action.hidden = true; ui.demo.hidden = true; demoReq = false; hint(''); ui.meter.classList.remove('on');
+  await wait(500, tk);
+  bg(say(tk, '𠂉 · 小旗', '船头升起一面小旗——就是「游」右上的两笔', 3800));
+  Sound.whoosh(1.4, 0.11);
+  await tween(1400, t => { W.flagOpen = ease.out(t); }, tk, ease.lin);
+  await wait(1900, tk);
+}
+
+async function sChild(tk) {
+  W.scene = 'sChild'; setProgress(2);
+  bg(say(tk, '子 · 孩子', '岸上的孩子等不及了：点一点，让他跳上船', 4600));
+  hint('点一点孩子');
+  gesture.mode = 'tap';
+  const jumped = new Promise(r => { jumpDone = r; });
+  gesture.hit = (x, y) => {
+    if (!child.visible || child.userData.jumping) return;
+    const p = project(child.position.x, child.position.y + 0.7, child.position.z);
+    if (Math.hypot(p.x - x, p.y - y) <= R2() * 1.6) jumpChild();
+  };
+  bg((async () => { await wait(2800, tk); if (child.userData.jumping) return; ui.demo.hidden = false; while (!child.userData.jumping) { if (demoReq || AUTO) { jumpChild(); return; } await frame(tk); } })());
+  await jumped;
+  hint(''); ui.demo.hidden = true; demoReq = false; gesture.hit = null; gesture.mode = null;
+  await wait(1200, tk);
+}
+function jumpChild() {
+  const tk = mainTk, from = child.position.clone(), to = new THREE.Vector3(boatX1() - 0.5, 0.6, 2.3);
+  child.userData.jumping = true;
+  bg((async () => { for (let n = 0; n < 4; n++) { Sound.pluck(PENTA[3 + n * 2], 0.1, 1.1); await wait(180, tk); } })());
+  bg(tween(1000, t => {
+    child.position.set(lerp(from.x, to.x, t), lerp(from.y, to.y, t) + Math.sin(Math.PI * t) * 2.8, lerp(from.z, to.z, t));
+    child.rotation.z = -Math.sin(t * Math.PI) * 0.28;
+  }, tk, ease.lin).then(() => { child.rotation.z = 0; child.userData.jumping = false; Sound.splash(0.55, 0.13, 650); ripple(to.x, to.z); Sound.bell(NOTE.G5, 0.06); jumpDone?.(); }));
+}
+
+function prepareInk() {
+  const { n, from, to, delay } = inkData, r = mulberry32(77), p = new THREE.Vector3();
+  boat.updateMatrixWorld(); child.updateMatrixWorld();
+  for (let i = 0; i < n; i++) {
+    const s = r();
+    if (s < 0.5) p.set((r() - 0.5) * 4.6, r() * 5, (r() - 0.5) * 1.2).applyMatrix4(boat.matrixWorld);
+    else if (s < 0.72) p.set((r() - 0.5) * 0.8, r() * 1.5, (r() - 0.5) * 0.8).applyMatrix4(child.matrixWorld);
+    else { const d = dropObjs[Math.floor(r() * 3)]; p.copy(d.home); p.x += (r() - 0.5) * 0.5; p.y += (r() - 0.5) * 0.5; p.z += (r() - 0.5) * 0.5; }
+    from[i * 3] = p.x; from[i * 3 + 1] = p.y; from[i * 3 + 2] = p.z;
+    const st = strokes[Math.floor(r() * 12)], k = Math.floor(r() * NS);
+    to[i * 3] = st.pts[k].x; to[i * 3 + 1] = st.pts[k].y + (r() - 0.5) * 0.12; to[i * 3 + 2] = (r() - 0.5) * 0.5;
+    delay[i] = r() * 0.55;
+  }
+}
+
+async function sGlyph(tk) {
+  W.scene = 'sGlyph'; setProgress(3); gesture.mode = null;
+  bg(say(tk, '成字', '水滴、小船、小旗、孩子——一起化作一个字', 5200));
+  await camTo('glyph', 2600, tk);
+  if (renderer) {
+    await wait(500, tk);
+    prepareInk(); inkData.t = 0; inkPts.visible = true; Sound.whoosh(1.8, 0.15);
+    const mats = [...boat.userData.mats, ...child.userData.mats, ...dropObjs.map(d => d.mesh.material), ...dropObjs.map(d => d.sp.material)];
+    await tween(1250, t => {
+      boat.scale.setScalar(lerp(1, 0.02, t)); child.scale.setScalar(lerp(1, 0.02, t)); boat.rotation.y = t * 2.6;
+      dropObjs.forEach(d => d.mesh.scale.setScalar(lerp(1, 0.01, t)));
+      mats.forEach(m => { m.opacity = 1 - t; });
+    }, tk);
+    boat.visible = false; child.visible = false; dropObjs.forEach(d => { d.mesh.visible = false; });
+    await wait(650, tk);
+  }
+  bg(say(tk, '游 · 十二笔', '古字「斿」：孩子举着旗，旗穗随风飘；加上三点水，就是在水里自在地游', 11000));
+  W.glyphBaseYaw = 0.16;
+  for (let i = 0; i < 12; i++) {
+    const st = strokes[i];
+    strokeTag(`第 ${i + 1} 笔 · ${st.name}`);
+    Sound.pluck(PENTA[i], 0.13, 1.7);
+    await tween(clamp(pathLen(st) * 210, 380, 980) * M, t => { setStroke(st, t, 1); W.poolOn = (i + t) / 12; }, tk, ease.sine);
+    setStroke(st, 1, 1);
+    W.poolOn = (i + 1) / 12;
+    await wait(110 * M, tk);
+  }
+  hideBrush(); strokeTag('');
+  await wait(1600, tk);
+  if (renderer && !reduceMotion) {
+    W.scene = 'sGlyphOrbit';
+    hint('拖一拖，转一转立体的「游」');
+    gesture.mode = 'orbit';
+    await tween(3400 * M, t => { W.glyphYaw = Math.sin(t * TAU) * 0.6; }, tk, ease.lin);
+    await wait(1800 * M, tk);
+    hint('');
+  }
+}
+
+function nextStroke() {
+  const n = T.stroke + 1;
+  if (n >= 12) { T.done = true; T.on = false; gesture.mode = null; strokeTag(''); traceDone?.(); return; }
+  T.stroke = n; T.idx = 0;
+  strokeTag(`第 ${n + 1} 笔 · ${strokes[n].name}`);
+}
+function strokeTraced(st) {
+  T.prog[st.i] = 1; setStroke(st, 1, 1, 1); Sound.pluck(PENTA[st.i], 0.15, 2.2);
+  nextStroke();
+}
+// 看示范：笔尖沿中线自动走一遍，走完当前这一笔就停，把笔交还给孩子
+async function autoTrace(tk) {
+  T.auto = true;
+  while (!T.done && (demoReq || AUTO)) {
+    const st = strokes[T.stroke];
+    while (T.idx < NS) {
+      const stepN = clamp(Math.ceil(DT / (13 * M * FAST)), 1, NS);   // 低帧率时一次多走几点，示范总时长稳定
+      T.idx = Math.min(NS, T.idx + stepN);
+      T.head = project(st.pts[T.idx - 1].x, st.pts[T.idx - 1].y, 0.3);
+      T.prog[st.i] = (T.idx - 1) / (NS - 1);
+      await frame(tk);
+    }
+    if (!demoReq && !AUTO) break;
+    T.head = null;
+    setStroke(st, 1, 1, 1); T.prog[st.i] = 1; Sound.pluck(PENTA[st.i], 0.15, 2.2);
+    nextStroke();
+    if (T.done) break;
+    await wait(260 * M, tk);
+  }
+  T.auto = false; T.head = null;
+}
+async function sWrite(tk) {
+  W.scene = 'sWrite'; setProgress(4);
+  const o = { ...W.orbit };
+  bg(tween(900, t => { W.orbit.yaw = lerp(o.yaw, 0, t); W.orbit.pitch = lerp(o.pitch, 0, t); W.glyphYaw = lerp(W.glyphYaw, 0, t); W.glyphBaseYaw = lerp(W.glyphBaseYaw, 0, t); }, tk));
+  await camTo('write', 1800, tk);
+  strokes.forEach(st => setStroke(st, 1, 0.3, 0));
+  bg(say(tk, '写字', '用手指沿着笔画，把「游」写一遍', 8000));
+  T.on = true; T.done = false; T.stroke = 0; T.idx = 0; T.prog.fill(0); T.auto = false;
+  gesture.mode = 'trace';
+  strokeTag(`第 1 笔 · ${strokes[0].name}`);
+  const all = new Promise(r => { traceDone = r; });
+  bg((async () => { await wait(4500, tk); if (T.done) return; ui.demo.hidden = false; while (!T.done) { if ((demoReq || AUTO) && !T.auto) await autoTrace(tk); await frame(tk); } })());
+  await all;
+  hint(''); ui.demo.hidden = true; demoReq = false; T.on = false; T.head = null;
+  window.__you.written = true;
+  window.haqiHanziWritten?.();
+  Sound.thud(); ui.stamp.classList.add('on');
+  await say(tk, '写好了', '氵 + 方 + 𠂉 + 子 = 游', 4000);
+}
+async function sFinale(tk) {
+  W.scene = 'sFinale'; setProgress(5);
+  ui.stamp.classList.remove('on');
+  document.body.classList.add('moods');
+  $('#moodBar').classList.add('on');
+  W.idleSpin = 1; gesture.mode = 'orbit'; W.glyphBaseYaw = 0.18;
+  fish.forEach(f => { f.visible = true; });
+  hint('拖一拖，转动立体的「游」');
+  await camTo('finale', 2400, tk);
+  bg(wait(5200, tk).then(() => hint('')));
+  window.__you.finished = true;
+  window.haqiHanziComplete?.();
+  const lines = [
+    ['游泳', '鱼儿在水里游，人在水里也能游'],
+    ['旅游', '坐上小船去看远方，叫「旅游」'],
+    ['上游 · 下游', '江水从上游游到下游，日夜不停'],
+    ['游来游去', '自在、从容，想去哪里就去哪里'],
+  ];
+  for (let i = 0; ; i++) {
+    const [a, b] = lines[i % lines.length];
+    await say(tk, a, b, 4600);
+    if (AUTO && i >= lines.length - 1) break;
+  }
+}
+async function begin() {
+  const tk = mainTk = token = { dead: false };
+  demoReq = false;
+  document.body.classList.add('started');
+  started = true;
+  resize();
+  W.scene = 'loading';
+  const ok = await threeReady;
+  for (let i = 0; i < 3; i++) await frame(tk);
+  if (!renderer) { if (!strokes.length) buildFallbackStrokes(); hideCaption(); }
+  resetWorld();
+  try {
+    if (renderer) { await sDrops(tk); await sBoat(tk); await sChild(tk); }
+    await sGlyph(tk); await sWrite(tk); await sFinale(tk);
+  } catch (e) { if (!(e instanceof Cancelled)) console.error(e); }
+}
+function stopAll() {
+  token = { dead: true };
+  if (W.rowing) { W.rowing = false; Sound.lap(false); }
+  ui.action.classList.remove('holding'); ui.action.hidden = true;
+  document.body.classList.remove('dragging');
+}
+
+/* ---------- 控件与生命周期 ---------- */
+$('#start').addEventListener('click', () => {
+  Sound.init();
+  $('#intro').classList.add('off');
+  intro.tk.dead = true;
+  bg(begin());
+});
+$('#replay').addEventListener('click', () => {
+  Sound.init();
+  stopAll();
+  bg(begin());
+});
+$('#demo').addEventListener('click', () => { Sound.init(); demoReq = true; });
+$('#mute').addEventListener('click', () => {
+  Sound.init();
+  Sound.setMuted(!Sound.muted);
+  const btn = $('#mute');
+  btn.setAttribute('aria-pressed', String(Sound.muted));
+  btn.textContent = Z(Sound.muted ? '声音 关' : '声音 开');
+});
+$('#pause').addEventListener('click', () => {
+  paused = !paused;
+  const btn = $('#pause');
+  btn.setAttribute('aria-pressed', String(paused));
+  btn.textContent = Z(paused ? '继续' : '暂停');
+  if (paused) { if (W.rowing) { W.rowing = false; ui.action.classList.remove('holding'); Sound.lap(false); } }
+  last = 0;
+});
+$('#moodBar').addEventListener('click', e => {
+  const b = e.target.closest('button[data-mood]');
+  if (!b) return;
+  W.moodTarget = +b.dataset.mood;
+  document.querySelectorAll('#moodBar button').forEach(x => x.classList.toggle('active', x === b));
+  Sound.init(); Sound.bell(NOTE.G5, 0.05, 2.2);
+});
+addEventListener('blur', () => { ptr.down = false; T.head = null; if (W.rowing) { W.rowing = false; ui.action.classList.remove('holding'); } });
+document.addEventListener('visibilitychange', () => { visible = !document.hidden; last = 0; });
+addEventListener('pagehide', () => { stopAll(); intro.tk.dead = true; void Sound.ctx?.close().catch(() => {}); }, { once: true });
+
+// 片头：江面缓慢横移，河灯顺流而下；点「开始」才进入正式剧情
+const intro = { tk: { dead: false } };
+resize();
+if (AUTO) bg(threeReady.then(() => { $('#intro').classList.add('off'); intro.tk.dead = true; return begin(); }));
+else bg(introPlay(intro.tk));
+window.haqiHanziPrefetch?.(['江水', '轻舟', '孩子', '成字', '写字', '遨游']);
+</script>
+</body>
+</html>

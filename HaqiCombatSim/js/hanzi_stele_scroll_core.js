@@ -88,6 +88,15 @@ export const HANZI_STELE_SCROLLS = [
         summary: '迈步巡守四方安宁，领会古人止息干戈的本意。',
         animation: 'hanzi/hanzi_wu.html',
     },
+    {
+        id: 'you',
+        solvedKey: 'stele-you',
+        glyph: '游',
+        pinyin: 'yóu',
+        title: '轻舟远游',
+        summary: '月夜江上三滴水跃出水面，孩子摇橹升旗跳上船头，水滴小船旗帜孩子化成立体的「游」。',
+        animation: 'hanzi/hanzi_you.html',
+    },
 ];
 
 export function steleRubbingDone(save, steleOrId) {

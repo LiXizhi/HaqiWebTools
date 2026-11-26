@@ -166,7 +166,13 @@ export function renderCampfireCooking(root, model, cb) {
                 foot.append(el('small', 'campfire-pantry-note', fill('自动使用 {n} 仙豆补齐配料', { n: check.fallbackFairyBeans }).text));
             }
             foot.append(cookBtn);
-            card.append(head, sub, cost, foot);
+            card.append(head, sub, cost);
+            if (recipe.category === 'meal' && activeBuff) {
+                card.append(el('p', 'campfire-pantry-note', tr(recipe.id === save.campfireBuff.id
+                    ? '重新制作会重置剩余场数，材料照常消耗。'
+                    : '制作这道料理会替换当前料理，剩余场数不会保留。')));
+            }
+            card.append(foot);
             grid.append(card);
         }
         host.append(grid);

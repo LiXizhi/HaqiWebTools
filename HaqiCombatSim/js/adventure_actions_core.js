@@ -1,6 +1,7 @@
 // Pure adventure action handler registry. Keeps adventure_core free of the 34-way switch.
 import { mapCoordinateVersion } from './adventure_coordinates_core.js';
 import { applyHuntAction } from './adventure_hunt_core.js';
+import {applyForgeCommission,recordForgeCommissionCooking} from './forge_commission_core.js';
 import { earthNearest } from './adventure_earth_core.js';
 import { purchaseNpcOffer } from './adventure_npc_core.js';
 import { claimMagicStar } from './adventure_magic_star_core.js';
@@ -117,6 +118,10 @@ export function retreatLanding(save, content) {
 
 export const ADVENTURE_ACTION_HANDLERS = {
     'hunt-forge': ({save,content,action}) => ({notice:applyHuntAction(save,content,action)}),
+    'forge-commission': ({save,content,action,access}) => {
+        const result=applyForgeCommission(save,content,action,access);
+        return result.changed===false?{early:result}:{notice:result.message};
+    },
     'companion-wordplay': ({ save, content, action }) => {
         const result = applyCompanionWordplay(save, content, action);
         if (result.accepted) save.revision++;
@@ -158,6 +163,7 @@ export const ADVENTURE_ACTION_HANDLERS = {
     'campfire-cook': ({ save, content, action }) => {
         const result = cookCampfireRecipe(save, content, action.recipeId);
         if (result.changed) {
+            recordForgeCommissionCooking(save,action.recipeId);
             syncEquipmentInstances(save, content);
             if (action.now !== 0) {
                 const now = action.now ?? Date.now();

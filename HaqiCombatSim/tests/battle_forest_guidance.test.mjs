@@ -1,3 +1,4 @@
+import {forgeCommissionAvailable,forgeCommissionPhase} from '../js/forge_commission_core.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -70,7 +71,7 @@ test('reporting keeps an investigation HUD goal until the mystery is solved',()=
 });
 const source=fs.readFileSync(new URL('../js/views/adventure/view_npc_dialogue.js',import.meta.url),'utf8');
 function npcDialogue(save,npcId,{localSecond=false}={}){
- const all=[],calls=[];
+ const all=[],calls=[],options=[];
  function el(tag,cls='',...children){
   const node={tag,className:cls,children,dataset:{},style:{},textContent:typeof children[0]==='string'?children[0]:'',
    append(...items){this.children.push(...items);},replaceChildren(...items){this.children=items;},setAttribute(){},
@@ -78,13 +79,26 @@ function npcDialogue(save,npcId,{localSecond=false}={}){
   node.classList={add(){},toggle(){}};all.push(node);return node;
  }
  const button=(label,click,cls='')=>Object.assign(el('button',cls,label),{click});
- const context=vm.createContext({...forest,tr,fill,setText,el,button,art:()=>el('canvas'),npcCharacter:()=>null,
+ const context=vm.createContext({forgeCommissionAvailable,forgeCommissionPhase,...forest,tr,fill,setText,el,button,art:()=>el('canvas'),npcCharacter:()=>null,
   islandName:()=>'',currentQuest:()=>null,catalogStatSnapshot:()=>({}),catalogQuestsForNpc:()=>({accept:[],claim:[]}),catalogTalksForNpc:()=>[],pendingQuestTalk:()=>null,
   npcPurpose:()=>null,npcServices:()=>[],npcHasActiveQuest:()=>false,createCloseButton:click=>button('close',click),bindDialogue(){},dialogueLearningLines:()=>[]});
  vm.runInContext(source.replace(/^import .*;\r?\n/gm,'').replace('export function','function'),context);
- context.renderDialogue(el('div'),{save,assets:{content},localSecond},{npcId},{close(){},panel:panel=>calls.push(panel)});
- return {all,calls};
+ context.renderDialogue(el('div'),{save,assets:{content},localSecond},{npcId},{close(){},panel:(panel,opts)=>{calls.push(panel);options.push(opts);}});
+ return {all,calls,options};
 }
+test('Moni introduces the preparation letter after level eight and reopens its real hunt tab',()=>{
+ for(const phase of ['offer','challenge','report','done']){
+  const save=completedSave();save.level=8;
+  if(phase!=='offer')save.forgeCommission={version:1,phase,gatherDay:'2026-11-26'};
+  const ui=npcDialogue(save,36201),entry=ui.all.find(n=>n.tag==='button'&&/修复信|修复回信|每日免费草药/.test(n.textContent));
+  assert.ok(entry,phase);entry.click();assert.deepEqual(ui.calls,['equipment']);assert.equal(ui.options.length,1);assert.equal(ui.options[0].tab,'hunt');
+ }
+ for(const opts of [{level:7},{level:8,localSecond:true}]){
+  const save=completedSave();save.level=opts.level;
+  const ui=npcDialogue(save,36201,opts);
+  assert.equal(ui.all.some(n=>n.tag==='button'&&/修复信|修复回信|每日免费草药/.test(n.textContent)),false);
+ }
+});
 test('both forest residents offer investigation after reporting and records after solving',()=>{
  for(const npcId of [forest.FOREST_NPCS.giver,forest.FOREST_NPCS.receiver]){
   for(const status of [undefined,'solved']){

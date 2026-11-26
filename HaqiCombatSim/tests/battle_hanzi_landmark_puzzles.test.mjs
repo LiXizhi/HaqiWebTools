@@ -167,10 +167,11 @@ test('Semantic memory nodes anchor near matching Hanzi Island landmarks and expo
     assert.equal(hanziWordBattleResonance('en:water'), null);
 });
 
-test('Hanzi Stele Scroll activates 9 standalone animations with one-time rubbing rewards and scholar honor', () => {
+test('Hanzi Stele Scroll activates all standalone animations including You with one-time rubbing rewards and scholar honor', () => {
     const { content } = setup();
     const save = A.createAdventure(content, { seed: 42 });
-    assert.equal(HANZI_STELE_SCROLLS.length, 9);
+    assert.equal(HANZI_STELE_SCROLLS.length, 10);
+    assert.ok(HANZI_STELE_SCROLLS.some(stele => stele.id === 'you' && stele.animation === 'hanzi/hanzi_you.html'));
 
     const coinsStart = save.inventory[100] || 0;
 
@@ -192,8 +193,8 @@ test('Hanzi Stele Scroll activates 9 standalone animations with one-time rubbing
         assert.equal(dup.alreadyDone, true);
     }
 
-    assert.equal(steleRubbingCount(save), 9);
-    assert.equal(save.inventory[100], coinsStart + 9 * 40);
+    assert.equal(steleRubbingCount(save), HANZI_STELE_SCROLLS.length);
+    assert.equal(save.inventory[100], coinsStart + HANZI_STELE_SCROLLS.length * 40);
     assert.ok(adventureHonors(save).some(h => h.id === 'hanzi-stele-scholar' && h.earned));
 });
 
@@ -285,7 +286,7 @@ test('Companion guide and HUD surface island puzzles/stele scroll, while catalog
     assert.equal(guideHanzi.track, 'island-puzzle:hanzi-road');
     const vmHanzi = buildHudTrackerViewModel({ assets: { content }, save });
     assert.equal(vmHanzi.islandExplore?.total, 6);
-    assert.equal(vmHanzi.islandExplore?.steleTotal, 9);
+    assert.equal(vmHanzi.islandExplore?.steleTotal, HANZI_STELE_SCROLLS.length);
     assert.equal(vmHanzi.islandExplore?.next?.id, 'hanzi-road');
 
     // Once all 6 Hanzi puzzles are solved, companion guide suggests the Stele Scroll.

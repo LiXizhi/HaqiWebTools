@@ -78,7 +78,7 @@ export function createConversationLearningController({
                     queueCloudSave();paintHud();
                     return;
                 }
-                saveCommitter.commitSave(next,{paint:'hud',setWarning:false});
+                saveCommitter.commitSave(next,{paint:'hud',setWarning:false,economySource:'gift'});
             },
             onClose:options=>{
                 const {setDialog}=getContext();

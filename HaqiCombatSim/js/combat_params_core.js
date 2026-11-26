@@ -181,7 +181,8 @@ export function defaultParams(version = 'teen') {
         hunt: {
             level:8, hp:900, xp:25, coins:35, phaseThreshold:0.5,
             preparationBoost:50, counterBoost:100,
-            marksPerWin:2, directDropChance:0.08, exchangeCost:40, salvageEssence:3,
+            marksPerWin:2, directDropChance:0.08, exchangeCost:40, salvageEssence:3, normalSalvageEssence:1, inheritanceFee:50,
+            commission:{herbs:3,coins:80,essence:2},
             recipes:[
                 {id:'beans',essence:3,coins:150,itemId:17213,count:20},
                 {id:'pearl',essence:6,coins:200,itemId:17487,count:1},

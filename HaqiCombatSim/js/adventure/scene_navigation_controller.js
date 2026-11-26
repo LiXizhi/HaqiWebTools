@@ -96,6 +96,10 @@ export function createSceneNavigationController({
             openPanel('forest-commission');
             return;
         }
+        if(!lp.active&&target.forgeSite){
+            openPanel('equipment',{tab:'hunt'});
+            return;
+        }
         if(lp.interceptNpc(target))return;
         if(!(ctx.save.zone==='camp'&&openingJourneyActive(ctx.save))&&tryLanguageScene(target))return;
         if(ctx.world.isCityDungeon&&target.cityHotspot){

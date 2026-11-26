@@ -2,6 +2,7 @@ import {petTraitParams} from './adventure_pet_traits_core.js';
 import {createRng,hashSeed} from './rng_core.js';
 import {groundDecorations} from './adventure_ground_decorations_core.js';
 import {defaultParams} from './combat_params_core.js';
+import {economySnapshot,recordEconomyChange} from './adventure_economy_ledger_core.js';
 export const gatheringParams=content=>({...defaultParams('kids').adventure,...content.balanceParams?.adventure});
 export function gatheringValue(bag,params){
     let value=0;
@@ -61,10 +62,12 @@ export function smeltGroundDrop(state,roleId,zone,position,params){
         currency:rare?17213:100,amount:rare?params.gatherFairyAmount:params.gatherBeanAmount};
     (next.drops??=[]).push(drop);return {state:next,drop};
 }
-export function applyGroundPickup(save,drop){
+export function applyGroundPickup(save,drop,source='ground-pickup'){
     const next=structuredClone(save);
     if(next.rewardedEncounters.includes(drop.id))return next;
+    const before=economySnapshot(next);
     next.inventory[drop.currency]=(next.inventory[drop.currency]||0)+drop.amount;
+    recordEconomyChange(next,before,source);
     next.rewardedEncounters.push(drop.id);next.revision++;return next;
 }
 export function gatheringPetPower(pet,content){

@@ -90,13 +90,7 @@ export function createLocalGatheringController({
         for (const [id, coins] of Object.entries(tx.allocation)) {
             const row = store.catalog.roles.find(r => r.id === id);
             if (!row) throw Error('冶炼收款角色不存在，材料已保留');
-            const s = structuredClone(row.save);
-            if (!s.rewardedEncounters.includes(tx.id)) {
-                s.inventory[100] = (s.inventory[100] || 0)+ coins;
-                s.rewardedEncounters.push(tx.id);
-                s.revision++;
-            }
-            updates[id] = s;
+            updates[id] = applyGroundPickup(row.save, { id: tx.id, currency: 100, amount: coins }, 'gather-smelt');
         }
         store.commitRoles(updates);
         const session = getSession();

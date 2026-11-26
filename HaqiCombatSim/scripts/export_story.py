@@ -249,7 +249,7 @@ class Exporter:
         self.home_language_stories()
         self.movies()
         self.residents()
-        for file in ['js/learning/language_story.js', 'js/language_encounter_core.js', 'js/adventure_core.js', 'js/adventure_catalog_quests_core.js', 'js/adventure_dungeon_story.js', 'js/combat_params_core.js', 'js/views/adventure/view_red_mushroom.js', 'js/view_adventure.js', 'js/adventure_npc_core.js', 'js/adventure_npc_art_core.js']:
+        for file in ['js/learning/language_story.js', 'js/language_encounter_core.js', 'js/adventure_core.js', 'js/adventure_catalog_quests_core.js', 'js/adventure_dungeon_story.js', 'js/combat_params_core.js', 'js/views/adventure/view_red_mushroom.js', 'js/views/adventure/view_npc_dialogue.js', 'js/adventure_npc_core.js', 'js/adventure_npc_art_core.js']:
             self.sources[file] = hashlib.sha256((ROOT / file).read_bytes()).hexdigest()
         self.title_sources()
         return self

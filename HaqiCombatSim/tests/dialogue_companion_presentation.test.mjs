@@ -1,3 +1,4 @@
+import {forgeCommissionAvailable,forgeCommissionPhase} from '../js/forge_commission_core.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -10,7 +11,7 @@ function setup({quest=null,index=0,sequence=false,purpose=null,tacticsAvailable=
  const find=(node,predicate)=>{for(const child of node.children||[]){if(child&&typeof child==='object'){if(predicate(child))return child;const result=find(child,predicate);if(result)return result;}}return null;};
  function el(tag,cls='',...children){return {tag,className:cls,children,dataset:{},textContent:typeof children[0]==='string'?children[0]:'',style:{setProperty(){}},classList:{toggle(){},add(){}},setAttribute(){},append(...nodes){this.children.push(...nodes);},replaceChildren(...nodes){this.children=nodes;},querySelector(selector){return find(this,n=>selector==='button.primary'?n.tag==='button'&&n.className==='primary':selector==='button'?n.tag==='button':selector==='.dialogue-text'?n.className==='dialogue-text':false);}};}
  const npc={id:10,name:'青龙',zone:'camp',portrait:'qinglong',description:'小家伙在等你。'},calls=[];
- const context=vm.createContext({forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS,el,art:()=>el('canvas'),npcCharacter:()=>null,npcHasActiveQuest:()=>true,fill:()=>({text:'与青龙交谈'}),islandName:()=>'',createCloseButton:()=>el('button'),
+ const context=vm.createContext({forgeCommissionAvailable,forgeCommissionPhase,forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS,el,art:()=>el('canvas'),npcCharacter:()=>null,npcHasActiveQuest:()=>true,fill:()=>({text:'与青龙交谈'}),islandName:()=>'',createCloseButton:()=>el('button'),
   currentQuest:()=>quest,questState:()=>({accepted:false}),questReady:()=>false,catalogStatSnapshot:()=>({}),catalogQuestsForNpc:()=>({accept:[],claim:[]}),catalogTalksForNpc:()=>[],rewardsFor:()=>[],pendingQuestTalk:()=>null,npcPurpose:()=>purpose,guidanceCard:spec=>el('section','adventure-guidance',spec.title,spec.footnote),npcServices:()=>['shop'],setText(node,text){node.textContent=text;},tr:t=>t,
   button:(label,run,cls)=>({...el('button',cls,label),click:run}),dialogueLearningLines:()=>[],bindDialogue(){},
  });

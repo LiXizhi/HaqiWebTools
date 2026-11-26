@@ -32,6 +32,7 @@ import { drawCityHotspot } from '../../views/adventure/view_city_dungeon.js';
 import { drawDungeonEntrance } from '../../views/adventure/view_dungeon_entrance.js';
 import { drawEarthBoatRider } from '../../views/adventure/view_earth_boat.js';
 import { drawForestCommissionSite } from '../../views/adventure/view_forest_scene.js';
+import { drawForgeCommissionSite } from '../../views/adventure/view_forge_scene.js';
 import { drawLaterIslandRestoration } from '../../views/adventure/view_later_islands_scene.js';
 import { drawMemoryNode } from '../../hanzi/view_hanzi_memory.js';
 import { drawHanziSignPlaque, drawHanziLandmarkRestoration } from '../../hanzi/view_hanzi_scene.js';
@@ -164,7 +165,10 @@ export function createActorPass({
             if (world.languageQuestTarget?.kind === 'landmark' && world.languageQuestTarget.id === o.id) {
                 plate(ctx, '语言任务 · ' + o.name, o.x, o.y - 35, { ...PLATE.place, text: '#fff1a3' });
             }
-            if (o.forestSite) {
+            if (o.forgeSite) {
+                drawForgeCommissionSite(ctx, assets, o, save.forgeCommission?.phase, (label, x, y, active) =>
+                    plate(ctx, label, x, y, active ? { ...PLATE.place, text: '#fff1a3', stroke: '#d9bd65' } : PLATE.place));
+            } else if (o.forestSite) {
                 drawForestCommissionSite(ctx, assets, o, forestScene?.sites[o.id], (label, x, y, active) =>
                     plate(ctx, label, x, y, active ? { ...PLATE.place, text: '#fff1a3', stroke: '#d9bd65' } : PLATE.place));
                 if (forestScene?.sites[o.id]?.active) circleRune(ctx, o.x, o.y, 32, reducedMotion.matches ? 0 : t, '#e9d69a');

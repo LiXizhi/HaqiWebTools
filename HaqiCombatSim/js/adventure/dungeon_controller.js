@@ -359,7 +359,7 @@ export function createDungeonController({
     }
 
     function travel(zone) {
-        safely(async () => {
+        return safely(async () => {
             const { save, assets, world } = getContext();
             const status = travelStatus(save, assets.content, zone);
             if (
@@ -383,6 +383,7 @@ export function createDungeonController({
             enterWorld(save);
             showTeleportEffect();
             toast('已抵达{name}。', { name: islandName(zone) });
+            return true;
         });
     }
 

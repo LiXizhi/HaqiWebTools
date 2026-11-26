@@ -1,3 +1,4 @@
+import {forgeCommissionAvailable,forgeCommissionPhase} from '../js/forge_commission_core.js';
 import {npcCharacter} from '../js/adventure_city_people_core.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -25,7 +26,7 @@ test('task dialogue forwards Azure Dragon and each subsequent speaker to SDK syn
  let readAloud;
  const portraitCalls=[],heroCalls=[];
  const view=vm.createContext({tr,npcCharacter,heroPortrait:(...args)=>{heroCalls.push(args);return element();},npcHasActiveQuest,el:element,art:(...args)=>{portraitCalls.push(args);return element();},fill:()=>({text:'NPC'}),islandName:()=>'',createCloseButton:element,button:element,
-  forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS,islandPuzzlesForNpc,islandPuzzleStatus,currentQuest:()=>null,catalogStatSnapshot:()=>({}),catalogQuestsForNpc:()=>({accept:[],claim:[]}),catalogTalksForNpc:()=>[],pendingQuestTalk:()=>null,npcPurpose:()=>null,npcServices:()=>[],
+  forgeCommissionAvailable,forgeCommissionPhase,forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS,islandPuzzlesForNpc,islandPuzzleStatus,currentQuest:()=>null,catalogStatSnapshot:()=>({}),catalogQuestsForNpc:()=>({accept:[],claim:[]}),catalogTalksForNpc:()=>[],pendingQuestTalk:()=>null,npcPurpose:()=>null,npcServices:()=>[],
   dialogueLearningLines:()=>[{text:'I am Azure Dragon.',locale:'en'}],bindDialogue:(_root,_box,_text,_hint,_button,options)=>{readAloud=options.readAloud;}});
  vm.runInContext(renderSource,view);
  const model={assets:{content:chapter},save:{languageLearning:{enabled:true,target:'en'}}};

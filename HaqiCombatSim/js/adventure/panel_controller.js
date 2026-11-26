@@ -43,6 +43,7 @@ export function createPanelController(options) {
         interactNearest,
         track,
         travel,
+        walkTo,
         teleportToLandmark,
         teleportToPosition,
         openHomePanel,
@@ -459,6 +460,22 @@ export function createPanelController(options) {
                     }),
                 track,
                 travel,
+                forgeCommission: draft => {
+                    const site=getContext().world?.landmarks.find(row=>row.forgeSite);
+                    performAction({ ...draft, type:'forge-commission', now:Date.now() }, {
+                        forgeTarget:site?{ ...site, kind:'landmark' }:null,
+                    });
+                },
+                forgeTravel: async () => {
+                    const origin=getContext().save;
+                    if(origin.zone!=='camp'&&!(await travel('camp')))return;
+                    const ctx=getContext();
+                    if(ctx.save!==origin||ctx.save.zone!=='camp'||ctx.save.pendingEncounter)return;
+                    const site=ctx.world?.landmarks.find(row=>row.forgeSite);
+                    if(!site){toast('草圃暂时无法到达，请重新进入营地。');return;}
+                    close();
+                    walkTo({ ...site, kind:'landmark' },true);
+                },
                 refresh: paintPanel,
                 encounter: id => {close();interact({ kind: 'encounter', id });},
                 panel: openPanel,

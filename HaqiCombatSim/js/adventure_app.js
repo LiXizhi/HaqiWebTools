@@ -106,7 +106,7 @@ const petScene=createPetScene({
     isFriend:owner=>islandSocial.isFriend(owner),
     sound:name=>spellSound.play(name),
     getState:()=>({loadPet,save:state.save,world:state.world,content:state.assets?.content,socialActors:islandSocial.actors,team:islandSocial.team.map(p=>p.id),scope:`${state.roleStore?.owner||'guest'}:${state.roleStore?.catalog.activeId}`,locked:state.stage!=='world'||document.hidden||!!state.save?.pendingEncounter}),
-    commit:next=>saveCommitter.commitSave(next,{paint:state.panel?'both':'hud',setWarning:false}),
+    commit:next=>saveCommitter.commitSave(next,{paint:state.panel?'both':'hud',setWarning:false,economySource:'pet-care'}),
     toast:message=>toast(message),
 });
 setInterval(()=>{void autoSave.tick();if(state.stage==='world')islandSocial.tick();},15000);
@@ -326,6 +326,7 @@ const localPlay=createLocalPlay({
 
 const languageTasks=createLanguageQuestJournal({getSave:()=>state.save,onChange:()=>{if(state.stage==='world'){paintHud();if(state.panel==='quests'&&!state.courseView)paintPanel();}}});
 const model=()=>({
+    forgeSite:state.world?.landmarks.find(row=>row.forgeSite),
     assets:state.assets,save:state.save,languageTasks:languageTasks.snapshot(),gameServer:state.gameServerSession?.state,learningForced:state.learningForced,
     timeCity:timeScrollCity(state.world,state.save),localSecond:localPlay.second,
     locationName:state.world?.isEarth||state.world?.isCityDungeon?state.world.layout.name:null,
@@ -443,6 +444,7 @@ const panels=createPanelController({
     interactNearest:()=>interactNearest(),
     track:(questId,options)=>track(questId,options),
     travel:zone=>travel(zone),
+    walkTo:(target,autoInteract)=>walkTo(target,autoInteract),
     teleportToLandmark:id=>teleportToLandmark(id),
     teleportToPosition:(x,y)=>teleportToPosition(x,y),
     openHomePanel:options=>openHomePanel(options),

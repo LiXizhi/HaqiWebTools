@@ -4,6 +4,7 @@ import {currentQuest,questState,questReady,pendingQuestTalk,rewardsFor,catalogSt
 import {npcServices,npcHasActiveQuest,npcPurpose} from '../../adventure_npc_core.js';
 import {islandName} from '../../adventure_world_map_core.js';
 import {forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS} from '../../forest_commission_core.js';
+import {forgeCommissionAvailable,forgeCommissionPhase} from '../../forge_commission_core.js';
 import {islandPuzzlesForNpc,islandPuzzleStatus} from '../../island_puzzles_core.js';
 import {HANZI_FORGE_RECIPES,hanziForgeCount} from '../../hanzi_forge_core.js';
 import {TRILOGY_ISLANDS,trilogyNpcIslandId} from '../../trilogy_curios_core.js';
@@ -88,6 +89,11 @@ export function renderDialogue(root,model,dialog,cb) {
             const phase=forestCommissionPhase(save);
             const label=phase==='offer'?'营地急件：接取寻物委托':phase==='done'?(save.forestCommission?.mystery?.status==='solved'?'查看森林委托记录':'和茜茜调查草屑和脚印'):'继续森林补给委托';
             choices.append(button(label,()=>cb.panel('forest-commission'),'secondary'));
+        }
+        if(npc.id===36201&&!model.localSecond&&forgeCommissionAvailable(save,c)){
+            const phase=forgeCommissionPhase(save);
+            const label=phase==='offer'?'莫尼的修复信：为守卫之战备茶':phase==='report'?'寄出修复回信，领取委托奖励':phase==='done'?'查看回信与每日免费草药':'继续修复信委托';
+            choices.append(button(label,()=>cb.panel('equipment',{tab:'hunt'}),'secondary'));
         }
         if(!model.localSecond&&typeof islandPuzzlesForNpc==='function'&&typeof islandPuzzleStatus==='function'){
             for(const puzzle of islandPuzzlesForNpc(save.zone,npc.id)){

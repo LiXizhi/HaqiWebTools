@@ -1,10 +1,13 @@
 // Bound hunt rewards: fixed difficulty, independent seeded loot and safe duplicate recycling.
 import {createRng,hashSeed} from './rng_core.js';
-import {equipmentInstances} from './adventure_equipment_instances_core.js';
+import {equipmentInstances,isUniqueEquipment,syncEquipmentInstances} from './adventure_equipment_instances_core.js';
+import {upgradeAt} from './adventure_upgrade_core.js';
 
 export const HUNT_ID='hunt:ember';
 export const HUNT_MARK=919804, EQUIPMENT_ESSENCE=919805;
+export const HUNT_COMMON_EQUIPMENT=919806;
 export const HUNT_EQUIPMENT=[919801,919802,919803];
+export const SALVAGE_EQUIPMENT=[HUNT_COMMON_EQUIPMENT,...HUNT_EQUIPMENT];
 const ZONES=new Set(['camp','town','fire','ice','desert','dark','tide','float','sail']);
 const assert=(ok,message)=>{if(!ok)throw Error(message);};
 const count=(save,id)=>save.inventory[id]||0;
@@ -23,9 +26,12 @@ export function installHuntContent(content){
   const group=content.upgradeGroups?.find(row=>row.gsids.includes(base));
   if(group&&!group.gsids.includes(id))group.gsids.push(id);
  }
+ content.items[HUNT_COMMON_EQUIPMENT]={...structuredClone(content.items[1236]),id:HUNT_COMMON_EQUIPMENT,gsid:HUNT_COMMON_EQUIPMENT,
+  name:'巡林备用帽',kind:1,slot:2,maxCount:999999,stats:{101:25,138:8},
+  description:'普通装备 · 绑定。余烬讨伐每次胜利获得一件。保留第一件，重复件可回收为1份装备精华。',huntCommonEquipment:true};
  for(const [id,name,description,base]of [
   [HUNT_MARK,'余烬猎印','绑定讨伐凭证。胜利固定获得2枚；40枚定向兑换一件余烬珍品。进度长期保留。',17487],
-  [EQUIPMENT_ESSENCE,'装备精华','绑定锻造材料。回收未强化、未镶嵌的重复余烬装备获得。',17213],
+  [EQUIPMENT_ESSENCE,'装备精华','绑定锻造材料。回收未强化、未镶嵌的重复巡林备用帽或余烬珍品获得。',17213],
  ])content.items[id]={...structuredClone(content.items[base]),id,gsid:id,name,kind:20,slot:0,stats:{},maxCount:999999,description};
 }
 
@@ -69,7 +75,7 @@ export function previewHuntReward(save,content,pending){
  if(!pending||pending.encounterId!==HUNT_ID)return null;
  const snapshot=pending.huntReward;
  assert(snapshot?.version===1&&HUNT_EQUIPMENT.includes(snapshot.selected),'讨伐奖励快照无效');
- const p=huntParams(content),items=[{itemId:HUNT_MARK,count:p.marksPerWin}];
+ const p=huntParams(content),items=[{itemId:HUNT_MARK,count:p.marksPerWin},{itemId:HUNT_COMMON_EQUIPMENT,count:1}];
  const rng=createRng(hashSeed(`${pending.seed}:hunt-reward:v1`));
  const dropped=rng.float()<p.directDropChance;
  if(dropped)items.push({itemId:snapshot.selected,count:1});
@@ -84,17 +90,47 @@ export function grantHuntReward(save,content,pending){
  h.wins++;
  record(save,'victory',items);
  return {...reward,
-  message:`讨伐胜利！余烬猎印 +${p.marksPerWin}（现有 ${count(save,HUNT_MARK)} / ${p.exchangeCost}）`+(dropped?`，额外获得「${content.items[selected].name}」！`:'。可在装备 → 猎印锻造查看进度。')};
+  message:`讨伐胜利！余烬猎印 +${p.marksPerWin}（现有 ${count(save,HUNT_MARK)} / ${p.exchangeCost}），巡林备用帽 +1`+(dropped?`，额外获得「${content.items[selected].name}」！`:'。可在装备 → 猎印锻造查看进度。')};
 }
 
-export function salvageQuote(save,content,guid){
- const row=equipmentInstances(save,content).rows.find(row=>row.guid===guid);
- if(!row||!HUNT_EQUIPMENT.includes(row.gsid))return {allowed:false,reason:'只回收重复的余烬讨伐装备'};
+function quoteSalvageRow(save,content,row){
+ if(!row||!SALVAGE_EQUIPMENT.includes(row.gsid)||isUniqueEquipment(content.items[row.gsid]))return {allowed:false,reason:'只回收重复的巡林备用帽或余烬珍品'};
  if(count(save,row.gsid)<2)return {allowed:false,reason:'保留最后一件收藏'};
- if(Object.values(save.equipmentGuids||{}).includes(guid))return {allowed:false,reason:'正在穿戴，不能回收'};
+ if(Object.values(save.equipmentGuids||{}).includes(row.guid))return {allowed:false,reason:'正在穿戴，不能回收'};
  if(row.serverdata.addlel>0)return {allowed:false,reason:'已强化的装备受到保护'};
  if(row.serverdata.gem)return {allowed:false,reason:'已开孔或镶嵌的装备受到保护'};
- return {allowed:true,row,essence:huntParams(content).salvageEssence};
+ return {allowed:true,row,essence:row.gsid===HUNT_COMMON_EQUIPMENT?huntParams(content).normalSalvageEssence:huntParams(content).salvageEssence};
+}
+export function salvageQuote(save,content,guid){
+ return quoteSalvageRow(save,content,equipmentInstances(save,content).rows.find(row=>row.guid===guid));
+}
+// One projection per paint; quoted rows are never trusted when applying an action.
+export function duplicateSalvageQuotes(save,content){
+ return equipmentInstances(save,content).rows
+  .filter(row=>SALVAGE_EQUIPMENT.includes(row.gsid)&&count(save,row.gsid)>1)
+  .map(row=>({row,quote:quoteSalvageRow(save,content,row)}));
+}
+
+// Move an investment, never copy it or refund materials. Restrict the first
+// version to the three hunt hats with identical native upgrade costs.
+export function huntInheritanceQuote(save,content,sourceGuid,targetGuid){
+ const fee=huntParams(content).inheritanceFee;
+ const deny=reason=>({allowed:false,reason,fee});
+ if(save.pendingEncounter)return deny('请先完成当前战斗');
+ if(save.level<huntParams(content).level)return deny('达到8级后解锁强化继承');
+ const rows=equipmentInstances(save,content).rows;
+ const source=rows.find(row=>row.guid===sourceGuid),target=rows.find(row=>row.guid===targetGuid);
+ if(!source||!target||!HUNT_EQUIPMENT.includes(source.gsid)||!HUNT_EQUIPMENT.includes(target.gsid)||source.gsid===target.gsid)return deny('请选择两款不同的余烬珍品帽');
+ if(Object.values(save.equipmentGuids||{}).includes(source.guid))return deny('先换上新帽，再转出旧帽的强化');
+ const level=source.serverdata.addlel;
+ if(!level)return deny('旧帽没有可以转移的强化');
+ if(target.serverdata.addlel)return deny('新帽必须尚未强化，避免覆盖已有投入');
+ for(let n=1;n<=level;n++){
+  const from=upgradeAt(content,source.gsid,n),to=upgradeAt(content,target.gsid,n);
+  if(!from||!to||JSON.stringify(from.cost)!==JSON.stringify(to.cost))return deny('两件装备的强化路线不兼容');
+ }
+ if(count(save,100)<fee)return deny(`还缺 ${fee-count(save,100)} 奇豆`);
+ return {allowed:true,source,target,level,fee};
 }
 
 export function applyHuntAction(save,content,action){
@@ -106,6 +142,17 @@ export function applyHuntAction(save,content,action){
   return `讨伐目标已选为「${content.items[action.itemId].name}」`;
  }
  assert(save.level>=p.level,'达到8级后解锁锻造');
+ if(action.op==='inherit'){
+  const q=huntInheritanceQuote(save,content,action.sourceGuid,action.targetGuid);assert(q.allowed,q.reason);
+  const projection=equipmentInstances(save,content);
+  projection.rows.find(row=>row.guid===q.source.guid).serverdata.addlel=0;
+  projection.rows.find(row=>row.guid===q.target.guid).serverdata.addlel=q.level;
+  save.equipmentInstances=projection.rows;save.nextEquipmentGuid=projection.serial;
+  save.inventory[100]-=q.fee;
+  syncEquipmentInstances(save,content);
+  record(save,'inherit',[{itemId:100,count:-q.fee}]);
+  return `强化已转移：「${content.items[q.source.gsid].name}」归零，「${content.items[q.target.gsid].name}」继承 +${q.level}。花费 ${q.fee} 奇豆，不返还强化材料。`;
+ }
  if(action.op==='exchange'){
   assert(HUNT_EQUIPMENT.includes(action.itemId),'兑换装备无效');
   assert(count(save,HUNT_MARK)>=p.exchangeCost,'余烬猎印不足');
@@ -139,7 +186,7 @@ export function validateHunt(save,content){
   assert(h?.version===1&&HUNT_EQUIPMENT.includes(h.selected)&&Number.isSafeInteger(h.wins)&&h.wins>=0&&Array.isArray(h.ledger)&&h.ledger.length<=30,'讨伐记录无效');
   let previous=0;
   for(const row of h.ledger){
-   assert(Number.isSafeInteger(row.serial)&&row.serial>previous&&['victory','exchange','salvage','craft'].includes(row.kind)&&Array.isArray(row.items)&&row.items.length<=3,'讨伐账本无效');
+   assert(Number.isSafeInteger(row.serial)&&row.serial>previous&&['victory','exchange','salvage','craft','inherit'].includes(row.kind)&&Array.isArray(row.items)&&row.items.length<=3,'讨伐账本无效');
    previous=row.serial;
    for(const item of row.items)assert(content.items[item.itemId]&&Number.isSafeInteger(item.count)&&item.count!==0,'讨伐账本物品无效');
   }

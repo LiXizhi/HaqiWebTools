@@ -14,6 +14,7 @@ import { defeatReviewNotes, renderDungeonWatchRetry } from './view_battle_review
 import { tacticalIntentPanel } from './view_tactical_intents.js';
 import { tacticalReview } from '../../tactical_review_core.js';
 import { openingTurnGuidance } from '../../opening_turn_guidance_core.js';
+import { huntTurnGuidance } from '../../adventure_hunt_turn_guidance_core.js';
 import { bindResultSettlement } from './view_battle_result_action.js';
 import { bindBattleTargeting } from './view_battle_targeting.js';
 import { captureCompanionGuide, renderCompanionGuide } from './view_companion_guide.js';
@@ -199,8 +200,9 @@ function renderBattleContent(root, model, cb) {
     const playerHand = model.hand ? model.hand.filter(h => !discarded.includes(h.seq)) : handVm.playerHand;
     const visibleHand = runeCardsOpen ? runeHand.slice(root.runePage * runePageSize, root.runePage * runePageSize + runePageSize) : petCardsOpen ? petHand : playerHand;
     const turnGuidance = model.localDuo ? null : openingTurnGuidance({ battle, hero, selected, visibleHand, discarded, animating });
-    if (turnGuidance && !selected) {
-        setText(status, turnGuidance.text);
+    const huntGuidance = model.localDuo ? null : huntTurnGuidance({ save, battle, hero, selected, visibleHand, discarded, animating });
+    if ((turnGuidance || huntGuidance) && !selected) {
+        setText(status, (turnGuidance || huntGuidance).text);
         status.classList.add('opening-turn-guidance');
     }
     hand.setAttribute('aria-label', petCardsOpen ? '宠物卡牌' : '玩家手牌');
@@ -260,16 +262,18 @@ function renderBattleContent(root, model, cb) {
             node.style.setProperty('--deal-delay', `${hand.children.length * 65}ms`);
         }
         const select = button(spellFace(assets, card, artCard), () => cb.select(h), 'card-select');
+        const suggested = huntGuidance?.seq === h.seq ? huntGuidance : null;
         if (battle.tacticalEncounter) {
             const cost = Number(card.pipcost) < 0 || Number(card.pipcost) === 114 ? 'X' : String(card.pipcost ?? 0);
-            const role = tacticalHandRole(battle, hero, card);
+            const role = suggested?.badge || tacticalHandRole(battle, hero, card);
             if (role) select.append(el('span', 'tactical-hand-role', role));
+            if (suggested) node.classList.add('hunt-suggested-card');
             select.append(el('span', 'tactical-hand-caption', el('span', '', artCard.name), el('b', '', cost)));
         }
         select.disabled = animating || battle.finished;
         const selectionLabel = fill('选择{name}', { name: artCard.name }).text;
         const unavailableReason = unavailable ? fill(unavailable.key, unavailable.vars).text : '';
-        select.setAttribute('aria-label', unavailableReason ? selectionLabel + ' — ' + unavailableReason : selectionLabel);
+        select.setAttribute('aria-label', unavailableReason ? selectionLabel + ' — ' + unavailableReason : selectionLabel + (suggested ? '，' + suggested.badge : ''));
         if (unavailableReason) select.title = unavailableReason;
         select.setAttribute('aria-pressed', String(isSelected));
         const drop = button('弃牌', () => cb.discard(h.seq), 'secondary discard-button');
@@ -616,8 +620,8 @@ function renderBattleContent(root, model, cb) {
         );
         root.append(result);
         if(resultVm.huntFeedback){
-            const {title,body,footnote}=resultVm.huntFeedback;
-            result.insertBefore(guidanceCard({eyebrow:'余烬讨伐',title,body,footnote}),result.lastChild);
+            const {title,body,steps,footnote}=resultVm.huntFeedback;
+            result.insertBefore(guidanceCard({eyebrow:'余烬讨伐',title,body,steps,footnote}),result.lastChild);
         }
         if(resultVm.openingGuidance){
             const {title,body,lesson}=resultVm.openingGuidance;

@@ -35,7 +35,18 @@ test('pickup rewards only the recipient and replaying the durable receipt cannot
         assert.equal(paid.inventory[currency],save.inventory[currency]+5);
         assert.deepEqual(applyGroundPickup(paid,drop),paid);
         assert.equal(save.revision,1);
+        assert.deepEqual(paid.economyLedger.totals[currency],{gained:5,spent:0,firstGained:0});
+        assert.equal(paid.economyLedger.entries[0].source,'ground-pickup');
     }
+});
+test('smelting allocations record repeatable income once per recipient without changing the original save',()=>{
+    const save={inventory:{100:20},rewardedEncounters:[],revision:1};
+    const drop={id:'smelt:allocation',currency:100,amount:45};
+    const paid=applyGroundPickup(save,drop,'gather-smelt');
+    assert.equal(paid.inventory[100],65);assert.equal(paid.economyLedger.entries[0].source,'gather-smelt');
+    assert.deepEqual(paid.economyLedger.totals['100'],{gained:45,spent:0,firstGained:0});
+    assert.deepEqual(applyGroundPickup(paid,drop,'gather-smelt'),paid);
+    assert.equal(save.inventory[100],20);assert.equal(save.economyLedger,undefined);
 });
 test('healthy carried pets help occasionally and gathering traits increase work speed',()=>{
     assert.equal(gatheringPetPower(null,{}),0);

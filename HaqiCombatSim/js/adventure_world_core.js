@@ -1,5 +1,6 @@
 import {earthDecorationIsTree} from './adventure_earth_nature_core.js';
 import {forestCommissionSites} from './forest_commission_core.js';
+import {forgeCommissionAvailable,forgeCommissionSites} from './forge_commission_core.js';
 import {sparkRescueReady} from './spark_rescue_core.js';
 import {createPathQueue} from './path_queue_core.js';
 import {streetWalkable,streetSegmentWalkable} from './adventure_city_street_core.js';
@@ -27,7 +28,8 @@ export function updateEncounterVisibility(world,save,now) {
 // Only an unchanged island session can resume after combat. Dungeon progress
 // removes encounters and changes portals, so its dynamic world must be rebuilt.
 export function canResumeWorld(world,previousSave,nextSave,content){
-    return !!world&&!world.isDungeon&&previousSave===nextSave&&world.zone===nextSave?.zone&&world.layout===content.worldMaps?.[world.zone];
+    return !!world&&!world.isDungeon&&previousSave===nextSave&&world.zone===nextSave?.zone&&world.layout===content.worldMaps?.[world.zone]
+        &&(world.zone!=='camp'||!!world.forgeCommissionEnabled===forgeCommissionAvailable(nextSave,content));
 }
 export function createWorld(zone,content,save=null) {
     if(zone==='earth'){if(!content.earthWorld)throw Error('地球场景尚未加载');return content.earthWorld;}
@@ -131,6 +133,9 @@ export function createWorld(zone,content,save=null) {
         world.trees=world.trees.filter(t=>entrances.every(e=>distance(t,e)>110&&!sceneryCoversActor(t,{...e,label:e.name})));
     }
     if(save)world.landmarks=[...world.landmarks,...forestCommissionSites(world,save,(x,y)=>walkable(world,x,y))];
+    // Save objects mutate during settlement; remember the eligibility used to build this scene.
+    world.forgeCommissionEnabled=!!save&&forgeCommissionAvailable(save,content);
+    if(world.forgeCommissionEnabled)world.landmarks=[...world.landmarks,...forgeCommissionSites(world,save,(x,y)=>walkable(world,x,y))];
     objectIndices.delete(world);
     // A redesigned island keeps valid local positions; stranded old coordinates return to its pier.
     if(zone==='hanzi'&&save?.zone===zone&&save?.position&&!walkable(world,save.position.x,save.position.y))save.position={...layout.spawn};

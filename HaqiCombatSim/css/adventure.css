@@ -1474,6 +1474,8 @@
 .tactical-effect-values{color:#764720;font-size:12px}
 .tactical-counter-ready{margin:4px 0 1px;color:#285b42;font-size:12px;font-weight:700;overflow-wrap:anywhere}
 .tactical-hand-caption,.tactical-hand-role{display:none}
+.tactical-hand .hunt-suggested-card .card-select{position:relative;outline:2px solid #456f53;outline-offset:2px}
+.tactical-hand .hunt-suggested-card .tactical-hand-role{display:block;position:absolute;top:2px;left:2px;border-radius:4px;padding:2px 5px;background:#285140;color:#fff6da;line-height:1.25;font-size:11px;font-weight:600;pointer-events:none}
 @media(max-width:540px) and (orientation:portrait){
  .battle-hand.tactical-hand:not(.hand-focused):not([hidden]){display:grid;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px;width:min(362px,calc(100% - 22px));padding:0;bottom:var(--tactical-hand-bottom,103px)}
  .tactical-hand:not(.hand-focused) .hand-card{width:100%;min-width:0}

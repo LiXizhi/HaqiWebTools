@@ -1,4 +1,5 @@
 import {validateTacticsChallenges} from './tactics_challenge_core.js';
+import {validateEconomyLedger} from './adventure_economy_ledger_core.js';
 import {huntEncounter,validateHunt} from './adventure_hunt_core.js';
 import {validateFieldTactics} from './adventure_field_tactics_core.js';
 // adventure_save_core.js — 冒险存档创建、校验、迁移与角色战力属性派生。
@@ -49,6 +50,7 @@ import { SCHOOLS } from './combat_params_core.js';
 import { normalizeStats, statIdToEntry } from './combat_unit_core.js';
 import { dungeonTacticsProfile, validDungeonTacticsCheckpoint } from './dungeon_tactics_core.js';
 import { validateForestCommission } from './forest_commission_core.js';
+import {validateForgeCommission} from './forge_commission_core.js';
 import { validateIslandPuzzles } from './island_puzzles_core.js';
 import { validateTowerBlessingsSnapshot, validateTowerRunBlessings } from './tower_blessings_core.js';
 import { validateHanziSealSave, validateHanziSealSnapshot } from './hanzi_seal_core.js';
@@ -215,9 +217,11 @@ export function parseSave(raw, content) {
     validateTacticsTraining(s);
     validateTacticsChallenges(s);
     validateHunt(s,content);
+    validateEconomyLedger(s,content);
     validateTacticsRecords(s);
     validateCampDetour(s);
     validateForestCommission(s);
+    validateForgeCommission(s);
     validateIslandPuzzles(s);
     validateSparkRescue(s);
     validateCompanionWordplay(s);

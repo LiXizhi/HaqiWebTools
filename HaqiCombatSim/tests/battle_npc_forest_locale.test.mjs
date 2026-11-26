@@ -1,3 +1,4 @@
+import {forgeCommissionAvailable,forgeCommissionPhase} from '../js/forge_commission_core.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -28,7 +29,7 @@ for(const language of ['en','ja','ko'])test(`forest NPC commission actions rende
  const table=parseLocaleFile(fs.readFileSync(new URL(`../data/adventure/locale/${language}.txt`,import.meta.url),'utf8'));
  setTranslator(text=>lookup(text,language,{[language]:table}),language);
  const context=vm.createContext({tr,fill,setText,el:element,button:(label,run,cls)=>({...element('button',cls,label),click:run}),
-  forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS,npcCharacter:()=>null,art:()=>element('canvas'),createCloseButton:()=>element('button'),islandName:()=>'',
+  forgeCommissionAvailable,forgeCommissionPhase,forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS,npcCharacter:()=>null,art:()=>element('canvas'),createCloseButton:()=>element('button'),islandName:()=>'',
   currentQuest:()=>null,catalogStatSnapshot:()=>({}),catalogQuestsForNpc:()=>({accept:[],claim:[]}),catalogTalksForNpc:()=>[],pendingQuestTalk:()=>null,npcPurpose:()=>null,npcServices:()=>[],dialogueLearningLines:()=>[],bindDialogue(){}});
  vm.runInContext(renderSource,context);
  try{

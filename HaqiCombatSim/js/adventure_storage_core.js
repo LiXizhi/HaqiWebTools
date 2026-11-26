@@ -13,7 +13,7 @@ const localFields = ['hanziMemoryRuntime','positionCoordinateVersion','timeScrol
 const prefFields = ['magicStarFollow','mountHidden','battleSpeed','hanziStoryExplore'];
 const itemFields = ['petMergedIds','petPages','petFileRefs','petWorld','pets','equipmentInstances','nextEquipmentGuid','upgrades','cards','pet'];
 const battleFields = ['inventory','petFoodSlots','equipment','equipmentGuids','mountId','formation','heroSlot','deck'];
-const recordFields = ['languageTreeClaims','timeScrollProgress','hanzi','islandPuzzles','hanziSeal','fishingBounties','gatherPantry','campfireBuff','campfireCookedCount','trilogyExplore','earthTimeClaims','dailyBounties','equippedHonor','earthProgress','earthCityProgress','transactions','rewardedEncounters','fishingRecords','learnerMemory','socialActivity','socialPvpRecords','socialChallenges','relationshipEvents'];
+const recordFields = ['economyLedger','forgeCommission','languageTreeClaims','timeScrollProgress','hanzi','islandPuzzles','hanziSeal','fishingBounties','gatherPantry','campfireBuff','campfireCookedCount','trilogyExplore','earthTimeClaims','dailyBounties','equippedHonor','earthProgress','earthCityProgress','transactions','rewardedEncounters','fishingRecords','learnerMemory','socialActivity','socialPvpRecords','socialChallenges','relationshipEvents'];
 export const storageParts = ['items','battle','records','towers'];
 
 export function stableJson(value) {

@@ -42,7 +42,7 @@ export function socialActivityHubs(world){
     add(world.portal,1,'portal','portal');
     add(world.entrancePortal,1,'portal','entrance');
     for(const landmark of world.landmarks||[]){
-        if(landmark.dungeonId)continue;
+        if(landmark.dungeonId||landmark.socialHub===false)continue;
         if(landmark===plaza)continue;
         add(landmark,2.5,'landmark',landmark.id);
     }

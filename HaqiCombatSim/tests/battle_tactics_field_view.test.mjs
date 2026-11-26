@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 import {createAdventure,beginEncounter} from '../js/adventure_core.js';
 import {createLocalFormation,localParty,localHumanResources} from '../js/adventure_local_coop_core.js';
-import {restorePveBattle} from '../js/combat_pve_core.js';
+import {restorePveBattle,playPveRound} from '../js/combat_pve_core.js';
 import {cardsInHand} from '../js/combat_unit_core.js';
 import {renderBattle} from '../js/views/adventure/view_battle_layer.js';
 import {createTacticsFieldBattle} from '../js/tactics_field_battle_core.js';
@@ -14,14 +14,17 @@ import {installIslandEncounters} from '../js/adventure_island_encounters_core.js
 import {fieldTacticsProfile} from '../js/adventure_field_tactics_core.js';
 import {renderHuntForge} from '../js/views/adventure/view_adventure_hunt.js';
 import {HUNT_EQUIPMENT} from '../js/adventure_hunt_core.js';
+import {syncEquipmentInstances} from '../js/adventure_equipment_instances_core.js';
 import {counterReadyText,tacticalIntentPanel} from '../js/views/adventure/view_tactical_intents.js';
 
 class Element {
     constructor(tag){this.tagName=tag.toUpperCase();this.children=[];this.dataset={};this.attrs={};this.style={setProperty(){},removeProperty(){}};this.offsetHeight=40;this.offsetTop=22;this.className='';this.classList={add:(...names)=>{this.className+=' '+names.join(' ');},remove:(...names)=>{this.className=this.className.split(' ').filter(n=>!names.includes(n)).join(' ');},toggle:(name,on)=>{if(on)this.classList.add(name);else this.classList.remove(name);}};}
     get ownerDocument(){return document;}
+    contains(node){return !!node&&(node===this||this.children.some(child=>child===node||child.contains?.(node)));}
     get firstChild(){return this.children[0];} get lastChild(){return this.children.at(-1);}
     get childNodes(){return this.children;}
     append(...nodes){for(let node of nodes){if(typeof node==='string')node={nodeType:3,textContent:node};node.remove?.();node.parent=this;this.children.push(node);}}
+    prepend(...nodes){for(const node of nodes.reverse())this.insertBefore(node,this.firstChild);}
     insertBefore(node,before){node.remove?.();node.parent=this;const index=this.children.indexOf(before);if(index<0)this.children.push(node);else this.children.splice(index,0,node);}
     replaceChildren(...nodes){for(const node of this.children)node.parent=null;this.children=[];this.append(...nodes);}
     remove(){if(this.parent)this.parent.children=this.parent.children.filter(n=>n!==this);this.parent=null;}
@@ -39,6 +42,30 @@ function fakeDom(t){
  globalThis.document={createElement:tag=>new Element(tag),createElementNS:(_,tag)=>new Element(tag),createTextNode:text=>({nodeType:3,textContent:text}),addEventListener(){},removeEventListener(){},defaultView:{addEventListener(){},removeEventListener(){}}};
  globalThis.matchMedia=()=>({matches:false});globalThis.ResizeObserver=class{observe(){}disconnect(){}};globalThis.getComputedStyle=()=>({bottom:'24px'});
 }
+
+test('hunt hand highlights one playable response and selection keeps native targeting instructions',t=>{
+ fakeDom(t);
+ const read=p=>JSON.parse(fs.readFileSync(new URL('../data/'+p,import.meta.url)));
+ const {content,dataset}=installExpansion(...['adventure/chapter.json','adventure/combat.json','adventure/pets.json','adventure/shop-candidates.json','kids/cards.json','kids/charms.json'].map(read));
+ const save=createAdventure(content,{seed:17});save.xp=content.progression.xpThresholds[7];syncProgression(save,content);
+ const {checkpoint}=beginEncounter(save,content,HUNT_ID),battle=restorePveBattle(dataset,content,checkpoint);
+ playPveRound(battle,{pass:true});
+ const root=new Element('div'),model={assets:{content,dataset,effects:{cards:{}}},save,battle,discarded:[]};
+ const cb={select(){},target(){},swipePlay(){},discard(){},pass(){},retreat(){},finish(){},sound(){}};
+ const text=node=>node.textContent??node.children.map(text).join('');
+ const before=JSON.stringify({save,battle});renderBattle(root,model,cb);
+ const marked=root.querySelectorAll('.hunt-suggested-card');assert.equal(marked.length,1);
+ assert.match(marked[0].querySelector('.card-select').getAttribute('aria-label'),/挡重击/);
+ assert.equal(text(marked[0].querySelector('.tactical-hand-role')),'挡重击');
+ assert.match(text(root.querySelector('.cast-announcement')),/给自己加盾/);
+ assert.equal(JSON.stringify({save,battle}),before);
+ model.selected=cardsInHand(battle.sides.near[0]).find(row=>String(row.seq)===String(marked[0].dataset.seq));
+ assert.ok(model.selected);renderBattle(root,model,cb);
+ assert.equal(root.querySelectorAll('.hunt-suggested-card').length,0);
+ assert.match(text(root.querySelector('.battle-target-instruction')),/点自己或伙伴施法/);
+ model.selected=null;model.discarded=cardsInHand(battle.sides.near[0]).filter(row=>row.key==='Ice_GlobalShield').map(row=>row.seq);
+ renderBattle(root,model,cb);assert.equal(root.querySelectorAll('.hunt-suggested-card').length,0);
+});
 
 test('live hunt intent panel distinguishes an earned counter from automatic retaliation and has no unused clue entry',t=>{
  fakeDom(t);
@@ -88,6 +115,25 @@ test('hunt forge previews native stats, current health and exact action intents 
  assert.deepEqual(panels,[['equipment',{itemId:HUNT_EQUIPMENT[0]}]]);
 });
 
+test('protected equipment cannot hide a recyclable duplicate beyond the first twelve rows',t=>{
+ fakeDom(t);
+ const read=p=>JSON.parse(fs.readFileSync(new URL('../data/'+p,import.meta.url)));
+ const {content,dataset}=installExpansion(...['adventure/chapter.json','adventure/combat.json','adventure/pets.json','adventure/shop-candidates.json','kids/cards.json','kids/charms.json'].map(read));
+ const save=createAdventure(content,{seed:1});save.xp=content.progression.xpThresholds[7];syncProgression(save,content);
+ const id=HUNT_EQUIPMENT[0];save.inventory[id]=14;syncEquipmentInstances(save,content);
+ const rows=save.equipmentInstances.filter(row=>row.gsid===id);
+ for(const row of rows.slice(0,13))row.serverdata.addlel=1;
+ const before=structuredClone(save),actions=[],body=new Element('div');
+ const el=(tag,cls='',...children)=>{const node=new Element(tag);node.className=cls;node.append(...children);return node;};
+ const button=(label,onclick,cls)=>{const node=el('button',cls,label);node.onclick=onclick;return node;};
+ renderHuntForge(body,{save,assets:{content,dataset}},{action:a=>actions.push(a)},{el,button,art:()=>el('img')});
+ const buttons=body.querySelector('.hunt-recycle-list').querySelectorAll('button');
+ assert.equal(buttons.length,12);
+ const available=buttons.filter(button=>!button.disabled);assert.equal(available.length,1);
+ available[0].onclick();assert.deepEqual(actions,[{type:'hunt-forge',op:'salvage',guid:rows[13].guid}]);
+ assert.deepEqual(save,before,'sorting and painting keep equipment untouched');
+});
+
 test('monster practice uses the full battle HUD with normal cards, targeting, retreat and simple results',t=>{
  fakeDom(t);
  const read=p=>JSON.parse(fs.readFileSync(new URL('../data/'+p,import.meta.url)));
@@ -131,7 +177,10 @@ test('hunt and wild elite results render normal settlement instead of dereferenc
   assert.equal(root.querySelectorAll('.battle-hand').length,1);
   assert.deepEqual(save,before,'rendering cannot grant or consume rewards');
   assert.equal(save.inventory[HUNT_MARK]||0,0);
-  if(encounterId===HUNT_ID)assert.equal(root.querySelector('.result-card').querySelectorAll('.adventure-guidance').length,1);
+  if(encounterId===HUNT_ID){
+   assert.equal(root.querySelector('.result-card').querySelectorAll('.adventure-guidance').length,1);
+   assert.equal(root.querySelector('.adventure-guidance-steps').querySelectorAll('li').length,winner==='near'?2:1);
+  }
  }
 });
 

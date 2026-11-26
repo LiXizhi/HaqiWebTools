@@ -26,6 +26,7 @@ test('pocket grants deterministic gifts, persists quota and keeps it when claimi
  const access={keepworkVip:true,now:Date.parse('2026-09-21'),expiresAt:'2026-10-01'},action={type:'magic-star-claim',rewardId:'pocket'};
  const save=A.createAdventure(config),copy=structuredClone(save);
  A.applyAction(save,config,action,access);A.applyAction(copy,config,action,access);assert.deepEqual(save,copy);
+ assert.equal(save.economyLedger.entries.at(-1).firstTime,false);
  A.applyAction(save,config,{type:'magic-star-claim',rewardId:'weekly'},access);assert.equal(save.magicStarClaims.pocket.used,1);
  const restored=A.parseSave(JSON.stringify(save),config);A.applyAction(restored,config,action,access);
  const before=JSON.stringify(restored);assert.throws(()=>A.applyAction(restored,config,action,access),/次数/);assert.equal(JSON.stringify(restored),before);
@@ -79,6 +80,7 @@ test('staff claim requires fresh entitlement and both levels; claims survive sav
  assert.throws(()=>A.applyAction(save,content,{...action,rewardId:'1291'},access),/等级/);
  assert.throws(()=>A.applyAction(save,content,{...action,rewardId:'1297'},{...access,expiresAt:'2026-10-01'}),/等级/);
  A.applyAction(save,content,action,access);assert.equal(save.inventory[1290],1);
+ assert.equal(save.economyLedger.entries.at(-1).firstTime,true);assert.equal(save.economyLedger.totals['1290'].firstGained,1);
  const restored=A.parseSave(JSON.stringify(save),content);assert.deepEqual(restored.magicStarClaims.items,['1290']);
  assert.throws(()=>A.applyAction(restored,content,action,access),/已经/);
  for(const reward of content.magicStar.rewards)assert.ok(content.items[reward.itemId],reward.name);
@@ -86,6 +88,7 @@ test('staff claim requires fresh entitlement and both levels; claims survive sav
 test('weekly beans use original display table, reset Monday in China and block clock rollback',()=>{
  const save=A.createAdventure(content),action={type:'magic-star-claim',rewardId:'weekly'},before=save.inventory[17213]||0;
  A.applyAction(save,content,action,access);assert.equal(save.inventory[17213],before+1200);
+ assert.equal(save.economyLedger.entries.at(-1).firstTime,false);assert.equal(save.economyLedger.totals['17213'].firstGained,0);
  assert.throws(()=>A.applyAction(save,content,action,access),/本周/);
  assert.throws(()=>A.applyAction(save,content,action,{...access,now:now-7*86400000}),/本周/);
  A.applyAction(save,content,action,{...access,now:now+7*86400000});assert.equal(save.inventory[17213],before+2400);

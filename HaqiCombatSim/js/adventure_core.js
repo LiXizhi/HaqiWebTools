@@ -1,3 +1,5 @@
+import {economySnapshot,recordEconomyChange} from './adventure_economy_ledger_core.js';
+import {recordForgeCommissionVictory} from './forge_commission_core.js';
 import {dungeonTacticsProfile,dungeonTacticsVersion,towerFloorTactic,towerFloorNumber} from './dungeon_tactics_core.js';
 import {grantMonsterDrops} from './monster_loot_core.js';
 import {HUNT_ID,huntSnapshot,grantHuntReward} from './adventure_hunt_core.js';
@@ -106,12 +108,19 @@ export { readStamina, ensureDailyStamina, dungeonStaminaHint, parseArenaStaminaC
 const clone = value => JSON.parse(JSON.stringify(value));
 const assert = (ok, message) => { if (!ok) throw new Error(message); };
 export function applyAction(save, content, action, access={}) {
+    const economyBefore=economySnapshot(save);
     const before={...save.inventory};
     const result=dispatchAdventureAction(save,content,action,access,{applyAction,settleRunes});
     if(result.changed){
         grantEggCompanion(save,content);
         if(action.type!=='pet-food-take')Pets.autoStockPetFood(save,content,before);
         syncGoals(save,content);
+    }
+    if(result.changed){
+        const source=action.type==='forge-commission'&&action.step==='gather'?'forge-gather':action.type;
+        const options=action.type==='claim-catalog'?{firstTime:!content.catalogQuests?.byId[Number(action.questId)]?.repeat}
+            :action.type==='magic-star-claim'?{firstTime:!['weekly','pocket'].includes(action.rewardId)}:undefined;
+        recordEconomyChange(save,economyBefore,source,options);
     }
     return result;
 }
@@ -221,6 +230,7 @@ function settleRunes(save,battle) {
     pending.runesSettled=true;
 }
 export function settleEncounter(save,content,battle,{now=0}={}) {
+    const economyBefore=economySnapshot(save);
     const pending = save.pendingEncounter;
     assert(pending && battle.finished && battle.seed === pending.seed,'战斗尚未结束');
     if (save.rewardedEncounters.includes(pending.id)) { save.pendingEncounter = null; return false; }
@@ -257,6 +267,7 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
             if (monster.id === 'water-bubble' && battle.rng.int(1,100) <= 20) save.inventory[17114] = (save.inventory[17114] || 0) + 1;
             droppedItems = grantMonsterDrops(save, content, pending, defeated);
             huntReward=grantHuntReward(save,content,pending);
+            recordForgeCommissionVictory(save,pending);
             if(huntReward)droppedItems.push(...huntReward.items);
         }else if(pending.campfireBuff){
             consumeCampfireBuffOnVictory(save,content,pending,pending.player);
@@ -286,9 +297,14 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
     }
     if(save.coopRun){save.coopRun.battles??=[];save.coopRun.battles.push({checkpoint:clone(pending),winner:battle.winner,turns:battle.turn});}
     const challenge=settleDungeonChallenge(save,dungeonFor(content,save.zone),dungeonProgress(save)[save.zone],pending,battle);
+    recordEconomyChange(save,economyBefore,pending.encounterId===HUNT_ID?'hunt-victory':'battle');
+    const firstRewardBefore=economySnapshot(save);
     const firstReward=grantDungeonFirstReward(save,content,save.zone,{complete:!!challenge,rewarded:battle.winner==='near'&&!insufficientStamina});
+    recordEconomyChange(save,firstRewardBefore,'dungeon-first');
+    const cleanupBefore=economySnapshot(save);
     const tacticsMilestones=settleTacticsRecord(save,pending,battle);
     save.rewardedEncounters.push(pending.id); save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); migrateBagRules(save,content); migrateDefaultPocket(save,content); syncEquipmentInstances(save,content); save.revision++;
+    recordEconomyChange(save,cleanupBefore,'adventure');
     return {settled:true,insufficientStamina,staminaSpent,droppedItems,huntReward,relationshipEvents,tacticsMilestones,challenge,firstReward};
 }
 function settleCapturedPets(save,content,battle){

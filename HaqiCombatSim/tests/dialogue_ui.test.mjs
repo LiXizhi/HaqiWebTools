@@ -1,3 +1,4 @@
+import {forgeCommissionAvailable,forgeCommissionPhase} from '../js/forge_commission_core.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {bindDialogue} from '../js/views/adventure/view_adventure_dialogue.js';
@@ -57,7 +58,7 @@ test('tracked NPC dialogue executes only one available quest choice and consumes
         const callbacks=Object.fromEntries(['startQuest','finishQuest','startCatalog','finishCatalog'].map(name=>[name,value=>calls.push([name,value.id])]));
         let bound=0;
         const context=vm.createContext({
-            forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS,
+            forgeCommissionAvailable,forgeCommissionPhase,forestCommissionAvailable,forestCommissionPhase,FOREST_NPCS,
             el:element,art:()=>element('canvas'),npcCharacter:()=>null,npcHasActiveQuest:()=>false,fill:()=>({text:'NPC'}),islandName:()=>'',createCloseButton:()=>element('button'),
             currentQuest:()=>scenario.chapter,questState:()=>({accepted:!!scenario.accepted}),questReady:()=>!!scenario.ready,
             catalogStatSnapshot:()=>({}),catalogQuestsForNpc:()=>({accept:scenario.accept||[],claim:scenario.claim||[]}),

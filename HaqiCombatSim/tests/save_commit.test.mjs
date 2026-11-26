@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import { installExpansion } from '../js/adventure_expansion_core.js';
 import { createAdventure } from '../js/adventure_core.js';
 import { createSaveCommitter } from '../js/adventure_reward_persistence.js';
+import { economySnapshot, recordEconomyChange, validateEconomyLedger } from '../js/adventure_economy_ledger_core.js';
 
 const read = p => JSON.parse(fs.readFileSync(new URL('../data/' + p, import.meta.url)));
 const { content } = installExpansion(
@@ -128,4 +129,45 @@ test('commitSave syncs updated petFileRefs and petPages from roleStore catalog',
     h.committer.commitSave(draft => { draft.revision++; }, { paint: 'hud' });
     assert.deepEqual(h.ctx.save.petFileRefs, { p1: { path: 'pets/p1.json', group: 'pets' } });
     assert.deepEqual(h.ctx.save.petPages, { pets: 1 });
+});
+
+test('staged object commits record gift spending without mutating the proposal', () => {
+    const h = makeCtx();
+    h.ctx.save.inventory[100] = 200;
+    const proposal = structuredClone(h.ctx.save);
+    proposal.inventory[100] -= 30;
+    const proposed = JSON.stringify(proposal);
+    h.committer.commitSave(proposal, { economySource: 'gift' });
+    assert.equal(h.ctx.save.economyLedger.totals['100'].spent, 30);
+    assert.equal(h.ctx.save.economyLedger.entries[0].source, 'gift');
+    assert.equal(JSON.stringify(proposal), proposed);
+    assert.equal(JSON.parse(h.stored()).economyLedger.totals['100'].spent, 30);
+    validateEconomyLedger(h.ctx.save, content);
+
+    const before = JSON.stringify(h.ctx.save);
+    h.committer.commitSave(h.ctx.save);
+    assert.equal(JSON.stringify(h.ctx.save), before, 'saving the same object adds no duplicate income');
+});
+
+test('a failed staged object commit leaves live stock and both ledgers untouched', () => {
+    const h = makeCtx({ fail: true });
+    h.ctx.save.inventory[100] = 200;
+    const proposal = structuredClone(h.ctx.save);
+    proposal.inventory[100] -= 30;
+    const active = JSON.stringify(h.ctx.save), proposed = JSON.stringify(proposal);
+    assert.throws(() => h.committer.commitSave(proposal), /quota/);
+    assert.equal(JSON.stringify(h.ctx.save), active);
+    assert.equal(JSON.stringify(proposal), proposed);
+    assert.deepEqual(h.counts(), { cloud: 0, hud: 0, panel: 0 });
+});
+
+test('object commits preserve an inner transaction without accounting twice', () => {
+    const h = makeCtx(), proposal = structuredClone(h.ctx.save);
+    const before = economySnapshot(proposal);
+    proposal.inventory[100] = (proposal.inventory[100] || 0) + 35;
+    recordEconomyChange(proposal, before, 'battle');
+    h.committer.commitSave(proposal);
+    assert.equal(h.ctx.save.economyLedger.serial, 1);
+    assert.equal(h.ctx.save.economyLedger.totals['100'].gained, 35);
+    validateEconomyLedger(h.ctx.save, content);
 });

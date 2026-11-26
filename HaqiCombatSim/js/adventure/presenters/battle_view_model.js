@@ -23,6 +23,7 @@ import { isTowerBlessingFloor, TOWER_BLESSING_BY_ID } from '../../tower_blessing
 import { HANZI_SEAL_BY_ID } from '../../hanzi_seal_core.js';
 import { campfireBuffDetail } from '../../campfire_cooking_core.js';
 import { PET_SYNERGY_DEFS } from '../../pet_synergy_core.js';
+import { huntResultFeedback } from '../../adventure_hunt_feedback_core.js';
 
 export function buildBattleHandViewModel({ battle, hero, selected, discarded, assets }) {
     const cardBlockedFeedback = card => {
@@ -140,6 +141,7 @@ export function buildBattleResultViewModel({ save, battle, assets, now = Date.no
 
     return {
         won,
+        huntFeedback: huntResultFeedback(save, assets.content, battle),
         xp,
         coins,
         droppedItems,

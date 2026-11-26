@@ -1,5 +1,6 @@
 // adventure/battle_controller.js — 战斗回合、入场/计时与结算控制器（AI 提示桥接由 battle_advisor_bridge 管理）。
 import { BATTLE_CHAT } from '../battle_chat_core.js';
+import { HUNT_ID } from '../adventure_hunt_core.js';
 import { createBattleIntro } from '../adventure_battle_intro.js';
 import { createArenaClock } from '../adventure_arena_clock.js';
 import { captureBattlePresentation, battleStatusChanges, isTacticalPreparation } from '../views/adventure/view_battle_presentation.js';
@@ -202,9 +203,14 @@ export function createBattleController({
             if (ctx.roleEpoch !== roleEpoch || ctx.save !== save || ctx.stage !== 'world') return;
             if (!bus?.emit('rewards:show', { before })) showRewards?.(before);
             if (settle?.insufficientStamina) toast('你的精力值不足，无法得到这场战斗的战利品。');
+            if (settle?.huntReward) toast(settle.huntReward.message);
             bus?.emit('battle:settled', { settle });
             if (destination) {
                 openPanel(destination);
+                return;
+            }
+            if (encounterId === HUNT_ID) {
+                openPanel('equipment', {tab:'hunt'});
                 return;
             }
             const blessingOffer = towerBlessingPendingOffer(save, save.zone);

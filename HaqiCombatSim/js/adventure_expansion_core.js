@@ -3,6 +3,7 @@ import { statIdToEntry } from './combat_unit_core.js';
 import { isSupportedType } from './combat_cards_core.js';
 import { FOOD_ID,CAPTURE_ID,petParams } from './adventure_pets_core.js';
 import { equipmentRequirements } from './adventure_item_rules_core.js';
+import { installHuntContent } from './adventure_hunt_core.js';
 // Pure merge used by the browser and tests, after validating the original chapter.
 export function installExpansion(content,dataset,catalog,candidates,kidsCards,kidsCharms,cardNames={}){
  content.pets=structuredClone(catalog.pets);content.homeUrl='https://keepwork.com/api/raw/maisi/maisi/webgames/MagicHaqi/MagicHaqi.html';content.balanceParams=defaultParams('kids');content.shop=[];
@@ -58,5 +59,6 @@ export function installExpansion(content,dataset,catalog,candidates,kidsCards,ki
   content.cardLibrary.push({key:card.key,name,school:card.spellSchool,level:Math.max(1,Number(card.requireLevel||lesson?.level||1)),copies:3,supported:isSupportedType(card.type)});
  }
  content.pets.legacy_gululu={id:'legacy_gululu',sourceId:'legacy_gululu',name:content.pet.name,school:'life',traits:{elementalAttribute:'生命'},unlockLevel:1,lessons:content.learn.life.slice(0,7),legacy:true,art:structuredClone(content.pets.pixel_bunny_marshmallow.art)};
+ installHuntContent(content);
  return {content,dataset};
 }

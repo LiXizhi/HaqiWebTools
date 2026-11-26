@@ -49,6 +49,16 @@ export function preparedHitDetail(battle, row) {
     return (hit.anticipated ? '若本轮蓄力成功' : '蓄力已生效') + '，重击命中约 ' + hit.total + ' 点。护盾、虚弱与抗性另计。';
 }
 
+export function counterReadyText(battle) {
+    const rules = battle.resolved?.tacticalEncounter;
+    if (!rules?.counterCharms || !(rules.counterBoost > 0)) return '';
+    const ready = battle.sides.near.filter(unit => unit.hp > 0 &&
+        unit.charms?.includes(rules.counterCharms[unit.school]));
+    if (!ready.length) return '';
+    const names = ready.map(unit => unit === battle.sides.near[0] ? '你' : unit.name).join('、');
+    return names + '的反击机会：下次本系攻击 +' + rules.counterBoost + '%（含持续伤害）';
+}
+
 function spellIcon(assets, key) {
     const base = assets?.effects?.cards?.[key]?.base;
     if (!base || !assets.skillArt) return null;
@@ -106,6 +116,9 @@ export function tacticalIntentPanel(model, cb, memory) {
         return { label, visible, summary };
     });
     const notes = el('div', 'tactical-intent-notes');
+    const counterBoost = battle.resolved?.tacticalEncounter?.counterBoost;
+    if (counterBoost > 0) notes.append(el('p', 'tactical-effect-values',
+        '用护盾或虚弱减轻重击并存活，可获得一次反击加成。反击加成用于下次本系攻击，治疗不会消耗它。'));
     for (const {label, visible} of entries) {
         notes.append(el('strong', '', label));
         for (const row of visible) {
@@ -119,7 +132,8 @@ export function tacticalIntentPanel(model, cb, memory) {
         }
     }
     const phase = state.id === 'boss' ? (state.phase === 2 ? '第二阶段 · ' : '第一阶段 · ') : '';
-    const toggle = el('summary', '', phase + '招式详情与口令');
+    const hasClue = !!cb.answerTacticalClue && !!tacticalClue(battle, save);
+    const toggle = el('summary', '', phase + (hasClue ? '招式详情与口令' : '招式详情'));
     const speed = el('input');
     speed.type = 'checkbox';
     speed.checked = !!model.fastChallengePlayback;
@@ -133,7 +147,7 @@ export function tacticalIntentPanel(model, cb, memory) {
     const panel = el('aside', 'tactical-intent-panel', ...entries.map(({label, visible, summary}) => {
         const critical = visible.some(row => ['重击', '群攻', '全体虚弱'].includes(row.effect));
         return el('div', 'tactical-intent-row' + (critical ? ' imminent-threat' : ''), el('b', '', label), el('span', '', summary));
-    }), details);
+    }), counterReadyText(battle) && el('p', 'tactical-counter-ready', counterReadyText(battle)), details);
     panel.setAttribute('aria-label', '已锁定的敌方行动');
     return panel;
 }

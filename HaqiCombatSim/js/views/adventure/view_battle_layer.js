@@ -550,7 +550,7 @@ function renderBattleContent(root, model, cb) {
     if (battle.finished && !animating) {
         const resultVm = buildBattleResultViewModel({ save, battle, assets });
         const { won } = resultVm;
-        if (battle.tacticalEncounter) {
+        if (battle.tacticalEncounter && battle.tacticsField) {
             const field = battle.tacticsField;
             const cleared = save.tacticsChallenges?.completed?.[field.id];
             root.append(el('div', 'result-card tactical-result',
@@ -596,7 +596,7 @@ function renderBattleContent(root, model, cb) {
                 'primary',
             )
             : null;
-        const finishLabel = battle.redMushroom ? '返回红蘑菇赛场' : won ? (resultVm.rewardExhausted ? '结束战斗' : towerContinueBtn ? '返回塔内地图' : '收下奖励') : save.zone === 'camp' ? '返回营地' : '离开战斗';
+        const finishLabel = resultVm.huntFeedback ? (won ? '收下奖励 · 查看猎印' : '休整后再挑战') : battle.redMushroom ? '返回红蘑菇赛场' : won ? (resultVm.rewardExhausted ? '结束战斗' : towerContinueBtn ? '返回塔内地图' : '收下奖励') : save.zone === 'camp' ? '返回营地' : '离开战斗';
         const finishControl = button(finishLabel, null, towerContinueBtn ? 'secondary' : 'primary');
         const finishError = el('p', 'battle-result-error');
         finishError.setAttribute('role', 'alert');
@@ -615,6 +615,10 @@ function renderBattleContent(root, model, cb) {
             finishControl,
         );
         root.append(result);
+        if(resultVm.huntFeedback){
+            const {title,body,footnote}=resultVm.huntFeedback;
+            result.insertBefore(guidanceCard({eyebrow:'余烬讨伐',title,body,footnote}),result.lastChild);
+        }
         if(resultVm.openingGuidance){
             const {title,body,lesson}=resultVm.openingGuidance;
             result.insertBefore(guidanceCard({eyebrow:'第一次搭档',title,body,footnote:lesson}),result.lastChild);

@@ -1,4 +1,6 @@
 import {validateTacticsChallenges} from './tactics_challenge_core.js';
+import {huntEncounter,validateHunt} from './adventure_hunt_core.js';
+import {validateFieldTactics} from './adventure_field_tactics_core.js';
 // adventure_save_core.js — 冒险存档创建、校验、迁移与角色战力属性派生。
 import { validateCatalogQuests } from './adventure_catalog_quests_core.js';
 import { claimCheckin, validateCheckin } from './adventure_checkin_core.js';
@@ -176,6 +178,7 @@ export function grantEggCompanion(save, content) {
 }
 
 export function specialEncounter(save, content, id) {
+    if(id==='hunt:ember')return huntEncounter(save,content,id);
     if (save.zone === 'earth' && String(id).startsWith('earth:')) return earthEncounter(content, id);
     if (!content.pets || typeof id !== 'string') return null;
     const wild = id.startsWith('wild:') ? content.pets[id.slice(5)] : null;
@@ -211,6 +214,7 @@ export function parseSave(raw, content) {
     validateOpeningJourney(s);
     validateTacticsTraining(s);
     validateTacticsChallenges(s);
+    validateHunt(s,content);
     validateTacticsRecords(s);
     validateCampDetour(s);
     validateForestCommission(s);
@@ -289,6 +293,7 @@ export function parseSave(raw, content) {
     assert(dungeonFor(content, s.zone)?.playable || travelStatus({ ...s, pendingEncounter: null }, content, s.zone).allowed, '存档目的地无效');
     dungeonLanguageBuff(s, content);
     if (s.pendingEncounter) {
+        validateFieldTactics(s.pendingEncounter,content);
         validateTowerBlessingsSnapshot(s.pendingEncounter.towerBlessings);
         validateHanziSealSnapshot(s.pendingEncounter.hanziSeal);
         validateCampfireBuffSnapshot(s.pendingEncounter.campfireBuff);

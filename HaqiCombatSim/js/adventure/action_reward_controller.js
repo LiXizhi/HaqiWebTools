@@ -225,7 +225,7 @@ export function createActionRewardController({
             const before=rewardSnapshot(save);
             const request=value.type==='checkin'?{...value,now:Date.now()}:value;
             let result;
-            if(['forest-commission','camp-detour','opening-journey','buy','npc-purchase','checkin','speech-reward','magic-star-claim','choose-totem','use-totem-item','fish','stamina-potion'].includes(value.type)){
+            if(['hunt-forge','forest-commission','camp-detour','opening-journey','buy','npc-purchase','checkin','speech-reward','magic-star-claim','choose-totem','use-totem-item','fish','stamina-potion'].includes(value.type)){
                 const committed=saveCommitter.commitReward(request,access,{paint:'none',cloud:false});
                 result=committed.result;
             }else{

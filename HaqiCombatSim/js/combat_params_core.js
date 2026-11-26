@@ -177,6 +177,16 @@ export function defaultParams(version = 'teen') {
         perSchool: perSchoolDefaults(),
         cardOverrides: {},
         tacticalEncounter: { preparationBoost:100, counterBoost:100, focusWeight:1, focusFreeAttack:true, preparationShield:true },
+        fieldTactics: { preparationBoost:100, counterBoost:25 },
+        hunt: {
+            level:8, hp:900, xp:25, coins:35, phaseThreshold:0.5,
+            preparationBoost:50, counterBoost:100,
+            marksPerWin:2, directDropChance:0.08, exchangeCost:40, salvageEssence:3,
+            recipes:[
+                {id:'beans',essence:3,coins:150,itemId:17213,count:20},
+                {id:'pearl',essence:6,coins:200,itemId:17487,count:1},
+            ],
+        },
         battleAI: {
             branches: 12, candidateCount: 3, chainCandidates: 3, chainDiscount: 0.65,
             lethalValue: 600, pipValue: 24, reserveValue: 0.25, survivalValue: 1.6,

@@ -1,4 +1,6 @@
 import { SCHOOL_NAMES } from '../../adventure_core.js';
+import { HUNT_MARK, huntParams } from '../../adventure_hunt_core.js';
+import {fieldTacticsProfile} from '../../adventure_field_tactics_core.js';
 import { QUEST_REGIONS } from '../../adventure_quest_journal_core.js';
 import { islandName } from '../../adventure_world_map_core.js';
 import { drawSchoolIcon } from '../../card_renderer.js';
@@ -460,6 +462,14 @@ function renderHudContents(root, model, cb) {
         tracker.append(el('div', 'tracker-tactics-goal', link, el('small', '', '巡夜 ' + (goal.challengeDone||0) + '/3 · 练习 ' + goal.done + '/' + goal.total)));
     }
     appendForestTracker(tracker, vm.forestGoal, cb);
+    const hunt=huntParams(c);
+    if(save.level>=hunt.level){
+        const marks=save.inventory[HUNT_MARK]||0;
+        const link=button('余烬讨伐 · 选择珍品',()=>cb.panel('equipment',{tab:'hunt'}),'tracker-tactics');
+        link.title='读懂蓄力、接住重击，胜利固定获得猎印。';
+        tracker.append(el('div','tracker-tactics-goal hunt-tracker',link,
+            el('small','',`猎印 ${marks}/${hunt.exchangeCost} · ${save.hunt?.wins||0} 次胜利`)));
+    }
     if (vm.islandExplore) {
         const ex = vm.islandExplore;
         const summary = ex.steleTotal
@@ -679,7 +689,7 @@ export function syncInteractPrompt(hud, near, content) {
                 ? ['查看{name}', { name: near.name }]
                 : near.kind === 'portal'
                   ? [near.name, null]
-                  : ['挑战{name}', { name: monster }];
+                  : [fieldTacticsProfile(near,content)?'挑战精英 · {name}':'挑战{name}', { name: monster }];
     const zh = next[1] ? fill(next[0], next[1]).zh : next[0];
     if (btn.dataset.zh !== zh) {
         if (next[1]) setText(btn, next[0], next[1]);

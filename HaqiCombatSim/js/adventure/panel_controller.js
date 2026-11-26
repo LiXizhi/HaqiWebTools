@@ -460,7 +460,7 @@ export function createPanelController(options) {
                 track,
                 travel,
                 refresh: paintPanel,
-                encounter: id => interact({ kind: 'encounter', id }),
+                encounter: id => {close();interact({ kind: 'encounter', id });},
                 panel: openPanel,
                 applyDebug: debugEdit.applyDebug,
                 restoreDebug: debugEdit.restoreDebug,

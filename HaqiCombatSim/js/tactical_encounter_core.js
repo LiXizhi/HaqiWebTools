@@ -48,6 +48,8 @@ export function applyTacticalBalance(resolved,spec,defaults){
  rules.focusFreeAttack=spec.focusFreeAttack??defaults.focusFreeAttack;
  if(typeof rules.focusFreeAttack!=='boolean')throw Error('战术集火参数无效');
  if(typeof rules.preparationShield!=='boolean')throw Error('战术护盾参数无效');
+ rules.loanShields=spec.loanShields??0;
+ if(!Number.isInteger(rules.loanShields)||rules.loanShields<0||rules.loanShields>2)throw Error('讨伐援助护盾无效');
  rules.preparationWard=Number(splitCardList(resolved.cards.Ice_GlobalShield.params.wards)[0]);
  const base=resolved.cards.Fire_FireDamageBlade_Adv,source=splitCardList(base.params.charms??base.params.charm)[0];
  resolved.charms={...resolved.charms,900011:{...resolved.charms[source],id:900011,boost_damage:rules.preparationBoost,desc:`下次火焰攻击+${rules.preparationBoost}%`}};

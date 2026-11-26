@@ -145,6 +145,10 @@ export function createPveBattle({ dataset, player, monsters, monsterSlots = null
         }
     });
     for(const [i,spec] of (party||[player]).entries()){const unit=arena.sides.near[i];U.shuffleDeck(unit,arena.rng);for(const row of [...(spec.fixedCards||[])].reverse())for(let n=0;n<(row.count||1);n++){unit.deckSeq.unshift(row.key);unit.deckMap.unshift(0);}}
+    // Encounter aid uses the native card without changing learned cards or the saved deck.
+    for(let n=0;n<(resolved.tacticalEncounter?.loanShields||0);n++){
+        arena.sides.near[0].deckSeq.unshift('Ice_GlobalShield');arena.sides.near[0].deckMap.unshift(0);
+    }
     for(const [i,spec] of (party||[player]).entries())if(spec.petCards)U.preparePetCards(arena.sides.near[i],spec.petCards,arena.rng);
     if(wordCards){if(localHumans)throw Error('双人战斗暂不支持文字卡');installWordCards(arena.sides.near[0],wordCards,resolved.cards);}
     emit(arena,{type:'combat_start',firstSide,mode:'pve'});

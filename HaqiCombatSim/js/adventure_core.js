@@ -1,5 +1,7 @@
 import {dungeonTacticsProfile,dungeonTacticsVersion,towerFloorTactic,towerFloorNumber} from './dungeon_tactics_core.js';
 import {grantMonsterDrops} from './monster_loot_core.js';
+import {HUNT_ID,huntSnapshot,grantHuntReward} from './adventure_hunt_core.js';
+import {fieldTacticsProfile} from './adventure_field_tactics_core.js';
 import {recordTowerBlessingOffer,towerBlessingsSnapshot} from './tower_blessings_core.js';
 import {hanziSealSnapshot} from './hanzi_seal_core.js';
 import {campfireBuffSnapshot,consumeCampfireBuffOnVictory} from './campfire_cooking_core.js';
@@ -132,6 +134,13 @@ export function beginEncounter(save,content,encounterId,access={}) {
     const serial = ++save.encounterSerial;
     save.pendingEncounter = { id: `${save.seed}:${serial}`, encounterId,
         seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 2, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1, dispelRulesVersion:1, specialCardRulesVersion:1, captureRulesVersion:1, monsterLootVersion:1, wordCardScalingVersion:1 };
+    const fieldTactics=fieldTacticsProfile(encounter,content);
+    if(fieldTactics)Object.assign(save.pendingEncounter,{fieldTacticsVersion:1,tacticalEncounter:fieldTactics});
+    if(encounterId===HUNT_ID){
+        const snapshot=huntSnapshot(save,content);
+        save.pendingEncounter.huntReward={version:snapshot.version,selected:snapshot.selected};
+        save.pendingEncounter.tacticalEncounter=snapshot.tactics;
+    }
     if(save.openingJourney?.version===1&&save.zone==='camp'&&OPENING_TRAINING_IDS.includes(encounterId))save.pendingEncounter.openingTrainingVersion=3;
     if(dungeonTacticsProfile(dungeon))Object.assign(save.pendingEncounter,{dungeonTacticsVersion:dungeonTacticsVersion(dungeon),dungeonTacticsId:dungeon.id});
     else if(towerFloorTactic(dungeon,encounterId))Object.assign(save.pendingEncounter,{dungeonTacticsVersion:3,dungeonTacticsId:dungeon.id});
@@ -146,7 +155,7 @@ export function beginEncounter(save,content,encounterId,access={}) {
         const byMonster=save.petTraitEncounters[encounterId]?.byMonster||{};
         // Scripted training has fixed opponents: rare wild traits must not randomly double its HP.
         // The version belongs to this new checkpoint; existing v1 battle replays keep their traits.
-        checkpoint.monsterTraits=stamped.map((mob,index)=>checkpoint.openingTrainingVersion>=2
+        checkpoint.monsterTraits=stamped.map((mob,index)=>checkpoint.openingTrainingVersion>=2||encounterId===HUNT_ID
             ?(byMonster[`${mob.id}:${index}`]={})
             :(byMonster[`${mob.id}:${index}`]??=monsterPetTraits(seed,mob,index,params,owned.find(p=>p.speciesId===mob.speciesId)?.passiveTraits)));
         save.petTraitEncounters[encounterId]={seed,byMonster:clone(byMonster)};
@@ -218,7 +227,7 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
     const encounter = content.encounters.find(e => e.id === pending.encounterId)||specialEncounter(save,content,pending.encounterId), monster = pending.monster || content.monsters[encounter.monsterId];
     settleRunes(save,battle);
     if(content.pets)settleParty(save,content,battle);
-    let insufficientStamina=false,staminaSpent=0,droppedItems=[];
+    let insufficientStamina=false,staminaSpent=0,droppedItems=[],huntReward=null;
     if (battle.winner === 'near') {
         openingJourneyWon(save,pending);
         if(save.petTraitEncounters)delete save.petTraitEncounters[pending.encounterId];
@@ -229,7 +238,7 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
             const chapter=content.earthWorld?.city?.quests;
             if(event&&chapter)earthChapterEvent(save,chapter,event);
         }
-        if(!dungeonFor(content,save.zone))markEncounterDefeated(save,content,pending.encounterId,now);
+        if(!dungeonFor(content,save.zone)&&pending.encounterId!==HUNT_ID)markEncounterDefeated(save,content,pending.encounterId,now);
         const cost=encounterStaminaCost(content,pending.encounterId);
         const gate=applyCombatStamina(save,content,cost);
         insufficientStamina=gate.insufficient;
@@ -247,6 +256,8 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
             // Original water-bubble loot1 = {[17114,1]=20}; draw remains on the encounter's seeded RNG.
             if (monster.id === 'water-bubble' && battle.rng.int(1,100) <= 20) save.inventory[17114] = (save.inventory[17114] || 0) + 1;
             droppedItems = grantMonsterDrops(save, content, pending, defeated);
+            huntReward=grantHuntReward(save,content,pending);
+            if(huntReward)droppedItems.push(...huntReward.items);
         }else if(pending.campfireBuff){
             consumeCampfireBuffOnVictory(save,content,pending,pending.player);
         }
@@ -260,8 +271,11 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
             if(activeDungeon)recordDailyBountyProgress(save,'dungeon-step',1,now);
             if((pending.petIds||[]).length>0)recordDailyBountyProgress(save,'pet-care',1,now);
         }
-        if (monster.goalId) signal(save,content,'defeat',monster.goalId);
-        noteCatalogKills(save,content,pending.dungeonMonsterIds?pending.dungeonMonsterIds.map(id=>content.monsters[id]):[monster],createRng(hashSeed(`${save.seed}:quest:${pending.id}`)));
+        // Hunt templates reuse native art, but must not grant that creature's story or catalog credit.
+        if(pending.encounterId!==HUNT_ID){
+            if (monster.goalId) signal(save,content,'defeat',monster.goalId);
+            noteCatalogKills(save,content,pending.dungeonMonsterIds?pending.dungeonMonsterIds.map(id=>content.monsters[id]):[monster],createRng(hashSeed(`${save.seed}:quest:${pending.id}`)));
+        }
         syncProgression(save,content);
     }
     // Both outcomes leave the hero beside this encounter, outside contact range.
@@ -275,7 +289,7 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
     const firstReward=grantDungeonFirstReward(save,content,save.zone,{complete:!!challenge,rewarded:battle.winner==='near'&&!insufficientStamina});
     const tacticsMilestones=settleTacticsRecord(save,pending,battle);
     save.rewardedEncounters.push(pending.id); save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); migrateBagRules(save,content); migrateDefaultPocket(save,content); syncEquipmentInstances(save,content); save.revision++;
-    return {settled:true,insufficientStamina,staminaSpent,droppedItems,relationshipEvents,tacticsMilestones,challenge,firstReward};
+    return {settled:true,insufficientStamina,staminaSpent,droppedItems,huntReward,relationshipEvents,tacticsMilestones,challenge,firstReward};
 }
 function settleCapturedPets(save,content,battle){
     const pending=save.pendingEncounter;if(!pending||pending.petCapturesSettled)return;

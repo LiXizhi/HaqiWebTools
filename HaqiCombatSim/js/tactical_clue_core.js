@@ -10,6 +10,7 @@ const clues = {
 };
 
 export function tacticalClue(battle, save) {
+    if (!battle?.tacticsField?.challenge) return null;
     const clue = clues[battle?.tacticalEncounter?.id];
     if (!clue) return null;
     const language = learningLanguage(save);
@@ -23,7 +24,7 @@ export function matchesTacticalClue(clue, answer) {
 
 export function grantTacticalClueWard(battle) {
     const state = battle?.tacticalEncounter;
-    if (!state || state.clueWardUsed || battle.finished) return false;
+    if (!battle?.tacticsField?.challenge || !state || state.clueWardUsed || battle.finished) return false;
     const hero = battle.sides.near[0];
     if (!isAlive(hero)) return false;
     const params = battle.resolved.cards.Ice_GlobalShield?.params;

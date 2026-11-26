@@ -1,4 +1,5 @@
 import {magicStarCombatLevel} from '../../adventure_magic_star_core.js';
+import {renderHuntForge} from './view_adventure_hunt.js';
 import {consumeEquipmentRequest} from '../../adventure_shop_navigation_core.js';
 import {forestCommissionPouch} from '../../forest_commission_core.js';
 import {dungeonFirstRewardSources} from '../../dungeon_first_rewards_core.js';
@@ -34,11 +35,12 @@ export function renderEquipment(body,model,cb,ui) {
     const owned=Object.values(c.items).filter(item=>(save.inventory[item.id]||0)>0&&!['100','113','17213'].includes(String(item.id)));
     const shell=el('div','equipment-layout'),character=el('section','equipment-character'),wardrobe=el('section','equipment-wardrobe');
     const tabs=el('div','equipment-tabs');
-    for(const [id,label] of [['gear','角色装备'],['all','旅行背包'],['upgrade','强化装备'],['gems','镶嵌宝石']]) {
+    for(const [id,label] of [['gear','角色装备'],['all','旅行背包'],['hunt','猎印锻造'],['upgrade','强化装备'],['gems','镶嵌宝石']]) {
         const b=button(label,()=>{if(['upgrade','gems'].includes(id)&&cb.panel){cb.panel(id);return;}state.tab=id;state.slot=0;state.page=0;state.query='';state.item=null;state.guid=null;render();},`secondary ${state.tab===id?'active':''}`);
         b.setAttribute('aria-pressed',String(state.tab===id));tabs.append(b);
     }
     body.append(tabs);
+    if(state.tab==='hunt'){renderHuntForge(body,model,cb,ui);return;}
     if(travel){
         const items=forestCommissionPouch(save);
         if(items.length){

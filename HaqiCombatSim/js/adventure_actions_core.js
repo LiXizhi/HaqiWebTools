@@ -1,5 +1,6 @@
 // Pure adventure action handler registry. Keeps adventure_core free of the 34-way switch.
 import { mapCoordinateVersion } from './adventure_coordinates_core.js';
+import { applyHuntAction } from './adventure_hunt_core.js';
 import { earthNearest } from './adventure_earth_core.js';
 import { purchaseNpcOffer } from './adventure_npc_core.js';
 import { claimMagicStar } from './adventure_magic_star_core.js';
@@ -115,6 +116,7 @@ export function retreatLanding(save, content) {
 }
 
 export const ADVENTURE_ACTION_HANDLERS = {
+    'hunt-forge': ({save,content,action}) => ({notice:applyHuntAction(save,content,action)}),
     'companion-wordplay': ({ save, content, action }) => {
         const result = applyCompanionWordplay(save, content, action);
         if (result.accepted) save.revision++;

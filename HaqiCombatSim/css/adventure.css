@@ -1472,6 +1472,7 @@
 .tactical-intent-row.imminent-threat span{color:#8e301e;font-weight:700}
 .tactical-intent-spell{display:flex;align-items:center;gap:8px}.tactical-intent-icon{width:32px;height:32px;flex:none}
 .tactical-effect-values{color:#764720;font-size:12px}
+.tactical-counter-ready{margin:4px 0 1px;color:#285b42;font-size:12px;font-weight:700;overflow-wrap:anywhere}
 .tactical-hand-caption,.tactical-hand-role{display:none}
 @media(max-width:540px) and (orientation:portrait){
  .battle-hand.tactical-hand:not(.hand-focused):not([hidden]){display:grid;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px;width:min(362px,calc(100% - 22px));padding:0;bottom:var(--tactical-hand-bottom,103px)}

@@ -10,6 +10,7 @@ export function shopNavigationState(current={},options={}){
 
 export function equipmentNavigationState(options={},save={},content={}){
  const state={tab:'gear',slot:0,page:0,query:'',item:null,guid:null,requestedItem:null};
+ if(options.tab==='hunt')return {...state,tab:'hunt'};
  const item=content.items?.[options.itemId];
  if(!item||!(save.inventory?.[item.id]>0)||(item.kind!==1&&item.slot!==24))return state;
  return {...state,slot:item.slot,item:item.id,requestedItem:item.id};

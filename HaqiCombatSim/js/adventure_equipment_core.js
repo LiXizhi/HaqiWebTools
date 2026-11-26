@@ -35,7 +35,7 @@ export function unsupportedEquipmentStats(item) {
     const metadata=new Set([36,41,134,135,136,137,138,139,140,141,167,168,169,170,180]);
     return Object.keys(item.stats||{}).filter(id=>Number(item.stats[id])!==0&&!statIdToEntry(id)&&!metadata.has(Number(id)));
 }
-export function equipmentAttributes(item, save, content, guid) {
+export function equipmentBaseAttributes(item) {
     const rows=[];
     for(const [id,value] of Object.entries(item.stats)) {
         const entry=statIdToEntry(id);
@@ -47,6 +47,10 @@ export function equipmentAttributes(item, save, content, guid) {
         }
         else if(Number(id)===167||Number(id)===170)rows.push({label:Number(id)===167?'卡包容量':'同卡上限',value:Number(value),unit:'张'});
     }
+    return rows;
+}
+export function equipmentAttributes(item, save, content, guid) {
+    const rows=equipmentBaseAttributes(item);
     for(const row of upgradeAttributes(upgradeAt(content,item.id,findEquipmentInstance(save,content,item.id,guid)?.serverdata.addlel||0)))rows.push({...row,label:'强化 · '+row.label});
     for(const id of findEquipmentInstance(save,content,item.id,guid)?.serverdata.gem?.ins||[]){
         const gem=content.items[id];if(!gem)continue;

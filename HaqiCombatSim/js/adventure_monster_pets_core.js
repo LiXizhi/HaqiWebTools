@@ -58,7 +58,7 @@ export function installModelPets(content, art, cards = {}) {
 }
 
 export function stampCaptureMonster(monster, art, pets) {
-    if (!monster || monster.speciesId) return monster;
+    if (!monster || monster.captureDisabled || monster.speciesId) return monster;
     const species = monsterCaptureSpecies(monster, art);
     if (!species || !pets?.[species.id]) return monster;
     return {...monster, speciesId: species.id, unlockLevel: monster.unlockLevel ?? 1};

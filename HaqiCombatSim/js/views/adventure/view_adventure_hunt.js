@@ -17,7 +17,7 @@ export function renderHuntForge(body,model,cb,{el,button,art}){
  renderForgeCommission(root,model,cb,{el,button});
  hero.append(el('p','hunt-eyebrow',`讨伐委托 · 固定${p.level}级挑战`),el('h2','','余烬守卫'),
   el('p','','“守卫借余烬蓄力时，用护盾或虚弱接住重击。等它喘息，就是我们的机会。”'),
-  el('p','hunt-aid','本场援助：开局提供两张全体护盾。仅本场有效，不占用你的牌组。重击前使用，成功接招可获得反击强化。'),
+  el('p','hunt-aid','本场援助：开局提供两张全系护盾卡，可施放给自己或一名伙伴。仅本场有效，不占用你的牌组。重击前使用，成功接招可获得反击强化。'),
   el('p','hunt-route','读懂预告 → 应对重击 → 抓住反击 → 积攒珍品'));
  const status=huntStatus(save,c),start=button('挑战余烬守卫',()=>cb.encounter(HUNT_ID),'primary hunt-start');
  start.disabled=!status.allowed;start.title=status.reason;

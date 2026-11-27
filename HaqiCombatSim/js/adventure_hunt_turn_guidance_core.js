@@ -1,4 +1,5 @@
 // Read-only suggestions from advertised intents and currently playable cards.
+import { heavyProtection } from './battle_protection_advice_core.js';
 import { HUNT_ID } from './adventure_hunt_core.js';
 import { validTargets } from './combat_arena_core.js';
 import { isAttackCard, expectedBaseDamage } from './combat_cards_core.js';
@@ -32,7 +33,9 @@ export function huntTurnGuidance({ save, battle, hero, selected, visibleHand = [
             return Number(effect?.boost_damage) < 0 && matches(effect, school);
         });
         if (shielded || weakened) return { text: '重击将至，匹配的护盾或虚弱已就位。仍会受到伤害，先确认血量再出招。' };
-        for (const [kind, target, badge] of [['ward', hero, '挡重击'], ['charm', enemy, '削弱重击']]) {
+        const protection = heavyProtection(battle, available.map(row => ({ ...row, card: battle.resolved.cards[row.key] })), heavy);
+        if (protection) return recommend(protection, '挡重击', '守卫这回合要重击。先选标记的牌，给自己加盾，减轻这次伤害。');
+        for (const [kind, target, badge] of [['charm', enemy, '削弱重击']]) {
             const entry = available.find(row => {
                 const card = battle.resolved.cards[row.key];
                 return validTargets(battle, hero, card).includes(target) && tacticalEffectDetails(card, battle.resolved, hero).effects.modifiers.some(effect => effect.kind === kind && effect.damagePercent < 0 && matches(effect, school));

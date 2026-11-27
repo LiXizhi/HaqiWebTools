@@ -10,6 +10,7 @@ import {installRuneCatalog} from '../js/adventure_runes_core.js';
 import {validTargets} from '../js/combat_arena_core.js';
 import {HUNT_ID,HUNT_EQUIPMENT} from '../js/adventure_hunt_core.js';
 import {huntResultFeedback} from '../js/adventure_hunt_feedback_core.js';
+import {companionBattleAdvice,companionTacticalHint} from '../js/companion_battle_advice_core.js';
 import {huntTurnGuidance} from '../js/adventure_hunt_turn_guidance_core.js';
 const read=f=>JSON.parse(fs.readFileSync(new URL('../data/'+f,import.meta.url)));
 const {content:c,dataset:d}=installExpansion(...['adventure/chapter.json','adventure/combat.json','adventure/pets.json','adventure/shop-candidates.json','kids/cards.json','kids/charms.json'].map(read));
@@ -42,10 +43,28 @@ test('hunt guidance follows actual preparation, heavy defense and earned counter
   const seq=hero.deckSeq.length;hero.deckSeq.push(key);hero.deckMap.push(1);
   const counter=guidance(ctx,{visibleHand:[{seq,key}]});
   assert.equal(counter.badge,'用反击');assert.equal(counter.seq,seq);
+  const full=guidance(ctx),beforeHint=JSON.stringify(battle);
+  assert.equal(companionBattleAdvice(battle,selectableCards(hero).map(row=>row.seq)).seqs[0],full.seq,'pet and hand badge recommend the same strongest native attack');
+  assert.equal(companionTacticalHint(battle).action.seq,full.seq);
+  assert.equal(JSON.stringify(battle),beforeHint,'counter recommendations remain read-only');
   playPveRound(battle,{seq,key,targetId:mob.id});
   assert.notEqual(guidance(ctx)?.badge,'用反击','spent counter no longer recommended');
  }
 });
+test('hunt hand badge and companion agree on the strongest legal matching heavy shield',()=>{
+ const ctx=setup(),{battle,hero}=ctx;playPveRound(battle,{pass:true});
+ hero.pips={normal:7,power:0};
+ hero.deckSeq=['Ice_IceGreatShield','Ice_GlobalShield','Fire_FireGreatShield'];hero.deckMap=[1,1,1];
+ const before=JSON.stringify(battle),hint=guidance(ctx);
+ assert.equal(hint.badge,'挡重击');assert.equal(hint.seq,2);
+ assert.equal(companionBattleAdvice(battle,[0,1,2]).seqs[0],hint.seq);
+ assert.equal(JSON.stringify(battle),before,'shield comparisons preserve locked intents, wards and RNG');
+ assert.equal(guidance(ctx,{visibleHand:selectableCards(hero).slice(0,2)}).seq,1,'only visible matching protection is recommended');
+ assert.equal(guidance(ctx,{discarded:[2]}).seq,1,'discarded strong protection falls back to the available shield');
+ hero.deckMap[2]=-1;hero.deckMap[1]=-1;
+ assert.equal(guidance(ctx).seq,undefined,'wrong-school shield does not claim to protect against the heavy');
+});
+
 test('hunt recommendations honor visible hand, discard, cooldown, control and selection',()=>{
  const ctx=setup(),{battle,hero}=ctx;playPveRound(battle,{pass:true});
  const shield=selectableCards(hero).find(row=>row.key==='Ice_GlobalShield');

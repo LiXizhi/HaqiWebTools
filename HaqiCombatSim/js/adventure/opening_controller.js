@@ -479,11 +479,14 @@ export function createOpeningController({
         return target ? { ...target, kind: goal.kind, forestCommission: true } : null;
     }
 
+    // Keep the public name for existing callers; both commissions use one
+    // per-role serialized outbox so a role switch cannot credit the next role.
+    const hasCommissionPractice = save => !!(save?.forestCommission?.practice || save?.forestCommission?.notePractice || save?.forestCommission?.labelPractice?.length || save?.forestCommission?.exchangePractice?.length || save?.forgeCommission?.practice?.length);
     async function drainForestPractice() {
         const ctx = getContext();
         const current = ctx.save;
         const role = ctx.roleStore.catalog.activeId;
-        if (!current?.forestCommission?.practice && !current?.forestCommission?.notePractice && !current?.forestCommission?.labelPractice?.length && !current?.forestCommission?.exchangePractice?.length) return;
+        if (!hasCommissionPractice(current)) return;
         if (forestPracticeTask) {
             forestPracticeRequested = true;
             return;
@@ -503,15 +506,20 @@ export function createOpeningController({
                     return !getContext().storageWarning;
                 },
             });
+            const { flushForgeCommissionPractice } = await import('../learning/forge_commission_learning.js');
+            await flushForgeCommissionPractice(current, {
+                record: recordWordPractice, valid,
+                persist: () => { persist(); return !getContext().storageWarning; },
+            });
         } catch {
-            if (valid()) toast('语言练习记录暂未保存，重新打开森林委托时会重试；补给和奖励会保留。');
+            if (valid()) toast('语言练习记录暂未保存，重新打开委托时会重试；补给和奖励会保留。');
         } finally {
             forestPracticeTask = null;
             // Consume an explicit reopen request once; a failed write alone must not loop.
             const requested = forestPracticeRequested;
             forestPracticeRequested = false;
             const nowCtx = getContext();
-            if ((requested || nowCtx.save !== current) && (nowCtx.save?.forestCommission?.practice || nowCtx.save?.forestCommission?.notePractice || nowCtx.save?.forestCommission?.labelPractice?.length || nowCtx.save?.forestCommission?.exchangePractice?.length)) {
+            if ((requested || nowCtx.save !== current) && hasCommissionPractice(nowCtx.save)) {
                 void drainForestPractice();
             }
         }

@@ -18,6 +18,24 @@ content.dungeonJourneys=read('adventure/dungeon-journeys.json');
 installDungeonIndex(content,read('adventure/dungeon-index.json'));
 installDungeons(content,dataset,read('adventure/dungeons.json'),read('kids/cards.json'));
 const fresh=()=>{const save=createAdventure(content);save.openingJourney={version:1,phase:'done'};return save;};
+
+test('forge guidance follows preparation phases and only navigates to an existing herb bed',()=>{
+ const save=fresh();save.level=8;save.openingJourney.wordplay={step:3,language:'en'};
+ const site={id:'camp-ember-herb-bed',x:11,y:12},world={zone:'camp',landmarks:[site],npcs:[],encounters:[]};
+ for(const [phase,panel] of [['offer','equipment'],['gather','equipment'],['cook','campfire-cooking'],['challenge','campfire-cooking'],['report','equipment']]){
+  save.forgeCommission=phase==='offer'?undefined:{version:1,phase};
+  const before=structuredClone(save),guide=companionWorldGuide(save,content);
+  assert.equal(guide.panel,panel);
+  if(panel==='equipment')assert.deepEqual(guide.options,{tab:'hunt'});
+  const target=companionWorldTarget(save,content,world);
+  assert.equal(target?.id,phase==='gather'?site.id:undefined);
+  assert.equal(companionWorldTarget(save,content,{...world,landmarks:[]}),null);
+  assert.deepEqual(save,before);
+ }
+ save.forgeCommission.phase='challenge';save.campfireBuff={id:'herbal-dew-tea',remainingBattles:3};
+ assert.equal(companionWorldGuide(save,content).panel,'equipment');
+ save.forgeCommission.phase='done';assert.notEqual(companionWorldGuide(save,content).options?.tab,'hunt');
+});
 const camp={zone:'camp',npcs:[{id:36200,x:10,y:20},{id:36201,x:30,y:40}],landmarks:[{id:'forest-supplies-tent',x:50,y:60},{id:'forest-route-desk',x:70,y:80},{id:'journey:first-watch',x:90,y:100}],encounters:[]};
 const watched=content.dungeons.find(row=>row.id==='journey:first-watch');
 const spark=content.dungeons.find(row=>row.id==='journey:lost-spark');

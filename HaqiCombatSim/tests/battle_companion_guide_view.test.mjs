@@ -126,3 +126,12 @@ test('the next wordplay instruction renders with the active UI language and a tr
   }
  }finally{setTranslator(key=>key);}
 });
+
+test('forest records remain reachable in camp after the commission is complete',()=>{
+ const f=fixture();f.model.save.zone='camp';f.model.save.forestCommission={};f.render();f.control('toggle').onclick();
+ assert.ok(f.root.querySelector('.companion-guide-more').contains(f.control('forest')));
+ f.control('forest').onclick();assert.deepEqual(f.calls,[['panel','forest-commission']]);assert.equal(f.root.guideOpen,false);
+ f.model.save.zone='firebird';f.render();f.control('toggle').onclick();assert.equal(f.control('forest'),null);
+ f.model.save.zone='camp';delete f.model.save.forestCommission;f.render();assert.equal(f.control('forest'),null);
+ f.model.save.forestCommission={};f.render({battle:true});assert.equal(f.control('forest'),null);
+});

@@ -22,6 +22,27 @@ const target={id:FORGE_SITE,kind:'landmark',forgeSite:true,x:500,y:500};
 function hero(){const s=A.createAdventure(c);s.xp=c.progression.xpThresholds[7];A.syncProgression(s,c);s.position={x:500,y:500};return s;}
 const act=(s,step,props={},access={forgeTarget:target})=>A.applyAction(s,c,{type:'forge-commission',step,now,...props},access);
 const gather=s=>act(s,'gather',{choice:'herb',language:forgeLesson(s).language});
+test('tea labels are optional, persist real attempts and grant neither rewards nor repeat practice',()=>{
+ for(const [language,answer] of [['en',' TEA! '],['ja','おちゃ'],['ko','차'],['zh-CN','茶']]){
+  const s=hero();s.languageLearning={target:language};
+  assert.throws(()=>act(s,'practice-tea',{language,answer}),/先在草圃/);
+  act(s,'accept');gather(s);const inventory=JSON.stringify(s.inventory),pantry=JSON.stringify(s.gatherPantry);
+  act(s,'practice-tea',{language,answer:'wrong'});
+  assert.deepEqual(s.forgeCommission.teaPractice[language],{attempts:1,completed:false});
+  assert.equal(s.forgeCommission.practice,undefined);
+  assert.throws(()=>act(s,'practice-tea',{language:'stale',answer}),/语言已切换/);
+  act(s,'practice-tea',{language,answer});validateForgeCommission(s);
+  assert.equal(s.forgeCommission.practice.length,1);assert.equal(s.forgeCommission.practice[0].attempts,2);
+  assert.equal(s.forgeCommission.practice[0].assisted,true);
+  act(s,'practice-tea',{language,answer});assert.equal(s.forgeCommission.practice.length,1);
+  assert.equal(s.forgeCommission.teaPractice[language].attempts,2);
+  assert.equal(forgeCommissionPhase(s),'cook');assert.equal(JSON.stringify(s.inventory),inventory);assert.equal(JSON.stringify(s.gatherPantry),pantry);
+  const {state,...parts}=splitRoleSave(s),loaded=joinRoleSave(state,parts,c);
+  assert.deepEqual(loaded.forgeCommission,s.forgeCommission);
+  const bad=structuredClone(s);bad.forgeCommission.practice[0].assisted=false;
+  assert.throws(()=>validateForgeCommission(bad),/待存记录无效/);
+ }
+});
 function cook(s){return A.applyAction(s,c,{type:'campfire-cook',recipeId:'herbal-dew-tea',now});}
 function fight(s,won=true){const {checkpoint}=A.beginEncounter(s,c,HUNT_ID),b=restorePveBattle(d,c,checkpoint);b.finished=true;b.winner=won?'near':'far';return A.settleEncounter(s,c,b);}
 

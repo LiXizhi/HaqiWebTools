@@ -1,4 +1,5 @@
 // adventure/battle_advisor_bridge.js — 战斗 AI 提示请求、状态缓存与战后复盘建议桥接。
+import { companionTacticalHint } from '../companion_battle_advice_core.js';
 import { BattleReviewSession } from '../battle_ai/session_core.js';
 import { recommendProgression } from '../battle_ai/review_core.js';
 import { adventureProgressionRoutes } from '../battle_ai/adventure_adapter_core.js';
@@ -100,6 +101,7 @@ export function createBattleAdvisorBridge({ getContext, onHintReady, onAnalyzeFa
     function reviewModel(battle, save, content, discarded = []) {
         const advisor = advisorFor(battle);
         const aiReview = battle.finished && !battle.redMushroom && !battle.tacticsField ? advisor.session.review(battle) : null;
+        const tacticalHint = companionTacticalHint(battle, discarded);
         const aiGrowth = aiReview ? recommendProgression(aiReview, { routes: adventureProgressionRoutes(save, content) }) : [];
         return {
             advisor,
@@ -107,9 +109,9 @@ export function createBattleAdvisorBridge({ getContext, onHintReady, onAnalyzeFa
             aiGrowth,
             aiHintsMuted: advisor.muted,
             aiHint:
-                advisor.dismissedHintState === advisor.hintState
+                advisor.hintState && advisor.dismissedHintState === advisor.hintState
                     ? null
-                    : advisor.hintAnalysis?.candidates.find(row => !discarded.includes(row.action.seq)),
+                    : tacticalHint || (battle.tacticalEncounter ? null : advisor.hintAnalysis?.candidates.find(row => !discarded.includes(row.action.seq))),
         };
     }
 

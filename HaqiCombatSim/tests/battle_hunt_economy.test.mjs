@@ -4,17 +4,51 @@ import fs from 'node:fs';
 import * as A from '../js/adventure_core.js';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 import {restorePveBattle,playPveRound} from '../js/combat_pve_core.js';
-import {HUNT_ID,HUNT_MARK,HUNT_EQUIPMENT,EQUIPMENT_ESSENCE,grantHuntReward,salvageQuote,huntStatus} from '../js/adventure_hunt_core.js';
+import {HUNT_ID,HUNT_MARK,HUNT_EQUIPMENT,EQUIPMENT_ESSENCE,grantHuntReward,salvageQuote,huntStatus,bulkSalvageQuote,HUNT_COMMON_EQUIPMENT} from '../js/adventure_hunt_core.js';
 import {equipmentInstances,syncEquipmentInstances} from '../js/adventure_equipment_instances_core.js';
 import {persistReward} from '../js/adventure_reward_persistence.js';
 import {tacticalEnemyIntents} from '../js/tactical_encounter_core.js';
 import {huntResultFeedback} from '../js/adventure_hunt_feedback_core.js';
 import {upgradeLevels} from '../js/adventure_upgrade_core.js';
+import {checkedRoleProgress,validateRoles,emptyRoles,addRole} from '../js/adventure_roles_core.js';
+import {makeCloudSnapshot,parseCloudSnapshot} from '../js/adventure_cloud_core.js';
+import {splitRoleSave,joinRoleSave} from '../js/adventure_storage_core.js';
 import {equipmentAttributes} from '../js/adventure_equipment_core.js';
 const read=f=>JSON.parse(fs.readFileSync(new URL('../data/'+f,import.meta.url)));
 const {content:c,dataset:d}=installExpansion(...['adventure/chapter.json','adventure/combat.json','adventure/pets.json','adventure/shop-candidates.json','kids/cards.json','kids/charms.json'].map(read));
 function hero(){const s=A.createAdventure(c);s.xp=c.progression.xpThresholds[7];A.syncProgression(s,c);return s;}
 const act=(s,props)=>A.applyAction(s,c,{type:'hunt-forge',...props});
+
+test('bulk recycle reviews exact instances, protects investments and retains a copy per item',()=>{
+ const s=hero(),id=HUNT_EQUIPMENT[0],other=HUNT_EQUIPMENT[1];
+ s.inventory[id]=6;s.inventory[other]=3;s.inventory[HUNT_COMMON_EQUIPMENT]=20;syncEquipmentInstances(s,c);
+ const rows=s.equipmentInstances.filter(row=>row.gsid===id);
+ A.applyAction(s,c,{type:'equip',itemId:id,guid:rows[0].guid});
+ rows[1].serverdata.addlel=1;rows[2].serverdata.gem={holecnt:1,ins:[]};
+ s.equipmentInstances=equipmentInstances(s,c).rows.map(row=>rows.find(candidate=>candidate.guid===row.guid)||row);
+ const before=structuredClone(s),q=bulkSalvageQuote(s,c);
+ assert.deepEqual(s,before);assert.equal(q.guids.length,24);assert.equal(q.essence,34);
+ assert.ok(rows.slice(0,3).every(row=>!q.guids.includes(row.guid)));
+ assert.throws(()=>act(s,{op:'salvage-bulk',guids:q.guids.slice(1)}),/重新核对/);assert.deepEqual(s,before);
+ assert.throws(()=>persistReward(s,c,{type:'hunt-forge',op:'salvage-bulk',guids:q.guids},{},{},()=>{throw Error('disk full');}),/disk full/);
+ assert.deepEqual(s,before);
+ act(s,{op:'salvage-bulk',guids:q.guids});
+ assert.equal(s.inventory[id],3);assert.equal(s.inventory[other],1);assert.equal(s.inventory[HUNT_COMMON_EQUIPMENT],1);
+ assert.equal(s.inventory[EQUIPMENT_ESSENCE],34);assert.equal(bulkSalvageQuote(s,c).guids.length,0);
+ assert.deepEqual(A.parseSave(s,c).equipmentInstances,s.equipmentInstances);
+ assert.equal(s.hunt.ledger.filter(row=>row.kind==='salvage').length,3);
+ assert.throws(()=>act(s,{op:'salvage-bulk',guids:q.guids}),/没有可回收/);
+});
+
+test('bulk recycle refuses a stale review after an instance is equipped or added',()=>{
+ const s=hero(),id=HUNT_EQUIPMENT[0];s.inventory[id]=4;syncEquipmentInstances(s,c);
+ let q=bulkSalvageQuote(s,c);
+ A.applyAction(s,c,{type:'equip',itemId:id,guid:q.guids[0]});
+ let before=structuredClone(s);assert.throws(()=>act(s,{op:'salvage-bulk',guids:q.guids}),/重新核对/);assert.deepEqual(s,before);
+ q=bulkSalvageQuote(s,c);s.inventory[id]++;syncEquipmentInstances(s,c);before=structuredClone(s);
+ assert.throws(()=>act(s,{op:'salvage-bulk',guids:q.guids}),/重新核对/);assert.deepEqual(s,before);
+ s.pendingEncounter={};assert.throws(()=>act(s,{op:'salvage-bulk',guids:bulkSalvageQuote(s,c).guids}),/当前战斗/);
+});
 function victory(s){const {checkpoint}=A.beginEncounter(s,c,HUNT_ID);const b=restorePveBattle(d,c,checkpoint);b.finished=true;b.winner='near';return A.settleEncounter(s,c,b);}
 
 test('hunt result previews exact settlement without mutating or rerolling the reward',()=>{
@@ -45,6 +79,21 @@ test('defeat feedback distinguishes exposed hits, successful defence and unresol
  delete s.pendingEncounter;assert.equal(huntResultFeedback(s,c,b),null);
 });
 
+test('review includes a fallen companion heavy hit and companion counter consumption',()=>{
+ const s=hero(),{checkpoint}=A.beginEncounter(s,c,HUNT_ID),b=restorePveBattle(d,c,checkpoint);
+ const ally={...structuredClone(b.sides.near[0]),id:'fallen-ally',school:'life',hp:0};
+ b.sides.near.push(ally);b.unitsById[ally.id]=ally;b.finished=true;b.winner='far';
+ const statusId=b.resolved.tacticalEncounter.counterCharms.life;
+ b.tacticalEncounter.history=[{effect:'重击',outcome:'resolved',damage:[{target:ally.id,amount:200}]}];
+ b.events=[{type:'tactic_counter_window',targetId:ally.id},{type:'tactic_charge',action:'consumed',targetId:ally.id,statusId}];
+ const before=JSON.stringify(b),{review}=huntResultFeedback(s,c,b);
+ assert.equal(review.exposed,1);assert.equal(review.counters,1);assert.equal(review.used,1);
+ assert.match(review.lesson,/直接命中/);assert.equal(JSON.stringify(b),before);
+ b.events[1].statusId=-1;assert.equal(huntResultFeedback(s,c,b).review.used,0);
+ b.tacticalEncounter.history[0].damage[0].target=b.sides.far[0].id;
+ assert.equal(huntResultFeedback(s,c,b).review.exposed,0);
+});
+
 test('formal hunt is gated, selected before battle, frozen and replayable',()=>{
  const low=A.createAdventure(c);assert.equal(huntStatus(low,c).allowed,false);assert.throws(()=>A.beginEncounter(low,c,HUNT_ID),/解锁/);
  const s=hero();act(s,{op:'select',itemId:HUNT_EQUIPMENT[2]});
@@ -66,6 +115,23 @@ test('victory grants marks once; loss grants none; repeated hunt has no respawn 
  const {checkpoint}=A.beginEncounter(s,c,HUNT_ID),b=restorePveBattle(d,c,checkpoint);b.finished=true;b.winner='far';
  A.settleEncounter(s,c,b);assert.equal(s.inventory[HUNT_MARK],2);assert.equal(s.hunt.wins,1);
  assert.throws(()=>A.settleEncounter(s,c,b),/战斗/);assert.deepEqual(A.parseSave(s,c).hunt,s.hunt);
+});
+
+
+test('hunt victory, selected reward and ledger survive role reload, record storage and cloud roundtrip',()=>{
+ const s=hero();act(s,{op:'select',itemId:HUNT_EQUIPMENT[1]});victory(s);
+ const id='12345678-1234-1234-1234-123456789abc';
+ const catalog=addRole(emptyRoles(),id,s,1),split=splitRoleSave(s);
+ assert.deepEqual(split.records.hunt,s.hunt);assert.equal(split.state.hunt,undefined);
+ const cloud=makeCloudSnapshot(s,c,d,'2026-11-27T04:40:00.000Z',id);
+ const reloads=[checkedRoleProgress(s,c,d).save,validateRoles(catalog,c,d).roles[0].save,
+  joinRoleSave(split.state,split,c),parseCloudSnapshot(JSON.stringify(cloud),c,d).save];
+ for(const save of reloads){
+  assert.deepEqual(save.hunt,s.hunt);assert.deepEqual(save.economyLedger,s.economyLedger);
+  assert.deepEqual(save.inventory,s.inventory);assert.equal(save.hunt.wins,1);
+  act(save,{op:'select',itemId:HUNT_EQUIPMENT[2]});victory(save);
+  assert.equal(save.hunt.wins,2);assert.equal(save.inventory[HUNT_MARK],4);
+ }
 });
 
 test('hunt art reuse never grants native story or catalog kills; native encounter still does',()=>{

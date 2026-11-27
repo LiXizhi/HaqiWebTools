@@ -6,7 +6,9 @@ export function renderForgeCommission(root,model,cb,{el,button:createButton}){
  if(!forgeCommissionAvailable(save,c))return;
  const button=(...args)=>{const node=createButton(...args);node.disabled=!!save.pendingEncounter;return node;};
  const phase=forgeCommissionPhase(save),lesson=forgeLesson(save),p=c.balanceParams.hunt.commission;
+ const practiceState=save.forgeCommission?.teaPractice?.[lesson.language];
  const section=el(phase==='done'?'details':'section','forge-commission');
+ if(phase==='done')section.open=!!practiceState?.attempts&&!practiceState.completed;
  section.append(el(phase==='done'?'summary':'h3','',phase==='done'?'修复回信 · 每日免费草药':'修补守卫的归路'));
  const progress={offer:0,gather:1,cook:2,challenge:3,report:4,done:4};
  if(phase!=='done')section.append(el('p','hunt-eyebrow',`准备委托 ${progress[phase]} / 4 · 莫尼转交的修复信`));
@@ -32,7 +34,7 @@ export function renderForgeCommission(root,model,cb,{el,button:createButton}){
    button('收下修复信',()=>act('accept'),'primary'));
  }else if(phase==='gather'||phase==='done'){
   const available=forgeGatherAvailable(save,model.now);
-  if(phase==='done')section.append(el('p','','回信已经寄出。这一战证明了备茶和接住重击的办法。草圃每天长出一份新材料，留给需要出发的人。'));
+  if(phase==='done')section.append(el('p','','回信已经寄出，备茶后的胜利已经记下。草圃每天长出一份新材料，留给需要出发的人。'));
   if(!available)section.append(el('p','muted','今天已采集。明天可免费再采一次；基础休息仍可随时使用。'));
   else renderGathering();
  }else if(phase==='cook'){
@@ -44,8 +46,24 @@ export function renderForgeCommission(root,model,cb,{el,button:createButton}){
   if(!ready)section.append(button('重新准备轻露茶',()=>cb.panel('campfire-cooking'),'primary'));
   else section.append(el('p','forge-next','准备完成 · 从下方开始挑战'));
  }else if(phase==='report'){
-  section.append(el('p','','这一战，守卫的重击没能阻止你。把备茶和接招的办法写进回信，让下一位冒险者少走些弯路。'),
+  section.append(el('p','','你带着轻露茶的增益取得了胜利。把这次备茶和战斗的经历写进回信，让下一位冒险者少走些弯路。'),
    button(`寄出回信 · 领取 ${p.coins} 奇豆与 ${p.essence} 精华`,()=>act('report'),'primary'));
+ }
+ if(['cook','challenge','report','done'].includes(phase)){
+  const cue=phase==='done'?'report':phase;
+  section.append(el('p','hunt-eyebrow',`一路上的${lesson.name} · 茶`),el('blockquote','forge-clue',lesson[cue]));
+  if(practiceState?.completed){
+   section.append(el('p','muted',`“${lesson.tea}”的标签已写好。去完成下一步吧。`));
+  }else{
+   const practice=el('details','forge-tea-practice',el('summary','','试写一个补给标签（可选）'));
+   practice.open=!!practiceState?.attempts;
+   const label=el('label','','用这段线索里的词，写出“茶”：'),input=el('input','forge-tea-input');
+   input.type='text';input.maxLength=80;input.autocomplete='off';input.disabled=!!save.pendingEncounter;
+   input.setAttribute('aria-label',`用${lesson.name}写出茶`);label.append(input);
+   const submit=button('检查标签',()=>cb.forgeCommission?.({step:'practice-tea',language:lesson.language,answer:input.value||''}),'secondary');
+   practice.append(label,submit,el('p','muted',`可对照线索写“${lesson.tea}”。答错可重试，不影响材料、战斗和回信奖励。`));
+   section.append(practice);
+  }
  }
  if(!['offer','gather','done'].includes(phase)&&forgeGatherAvailable(save,model.now)){
   section.append(el('h4','','新一天的免费补给'));

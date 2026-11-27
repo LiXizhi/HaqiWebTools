@@ -3,14 +3,13 @@ import {HUNT_ID,previewHuntReward} from './adventure_hunt_core.js';
 // Result feedback uses only the recorded fight. Previewing never awards or rerolls loot.
 export function huntResultFeedback(save,content,battle){
  if(save.pendingEncounter?.encounterId!==HUNT_ID)return null;
- const won=battle.winner==='near',hero=battle.sides.near[0];
+ const won=battle.winner==='near',team=new Set(battle.sides.near.map(unit=>unit.id));
  const history=battle.tacticalEncounter?.history||[];
  const heavy=history.filter(row=>row.effect==='重击'&&row.outcome==='resolved');
  const defended=heavy.filter(row=>row.shieldConsumed||row.weakenConsumed).length;
- const exposed=heavy.filter(row=>!row.shieldConsumed&&!row.weakenConsumed&&row.damage?.some(hit=>hit.target===hero.id&&hit.amount>0)).length;
- const counterId=battle.resolved.tacticalEncounter?.counterCharms[hero.school];
- const counters=(battle.events||[]).filter(row=>row.type==='tactic_counter_window'&&row.targetId===hero.id).length;
- const used=(battle.events||[]).filter(row=>row.type==='tactic_charge'&&row.action==='consumed'&&row.targetId===hero.id&&row.statusId===counterId).length;
+ const exposed=heavy.filter(row=>!row.shieldConsumed&&!row.weakenConsumed&&row.damage?.some(hit=>team.has(hit.target)&&hit.amount>0)).length;
+ const counters=(battle.events||[]).filter(row=>row.type==='tactic_counter_window'&&team.has(row.targetId)).length;
+ const used=(battle.events||[]).filter(row=>row.type==='tactic_charge'&&row.action==='consumed'&&team.has(row.targetId)&&row.statusId===battle.resolved.tacticalEncounter?.counterCharms[battle.unitsById[row.targetId]?.school]).length;
  const review={defended,exposed,counters,used,
   summary:`重击应对 ${defended} 次 · 重击直击 ${exposed} 次 · 反击加成使用 ${used} 次`,
   lesson:exposed>0

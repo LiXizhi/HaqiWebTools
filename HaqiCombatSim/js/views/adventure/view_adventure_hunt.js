@@ -1,4 +1,4 @@
-import {HUNT_ID,HUNT_MARK,EQUIPMENT_ESSENCE,HUNT_EQUIPMENT,huntParams,huntStatus,duplicateSalvageQuotes} from '../../adventure_hunt_core.js';
+import {HUNT_ID,HUNT_MARK,EQUIPMENT_ESSENCE,HUNT_EQUIPMENT,huntParams,huntStatus,duplicateSalvageQuotes,bulkSalvageQuote} from '../../adventure_hunt_core.js';
 import {equipmentBaseAttributes,signedAttribute} from '../../adventure_equipment_core.js';
 import {playerSpec} from '../../adventure_core.js';
 import {specMaxHp} from '../../adventure_pets_core.js';
@@ -79,6 +79,14 @@ export function renderHuntForge(body,model,cb,{el,button,art}){
  }
  if(duplicates.length>12)recycleList.append(el('p','muted','优先展示可回收的重复件，每次最多12件；处理后继续展示。受保护装备会保留。'));
  if(duplicates.length)workshop.append(recycleList);
+ const bulk=bulkSalvageQuote(save,c);
+ if(bulk.guids.length){
+  const review=el('details','hunt-recycle-list',el('summary','',`核对批量回收（${bulk.guids.length} 件）`));
+  for(const group of bulk.groups)review.append(el('p','',`${c.items[group.itemId].name} ×${group.count} → ${group.essence} 装备精华`));
+  review.append(el('p','muted',`合计获得 ${bulk.essence} 装备精华。每种至少保留一件，穿戴、强化和开孔装备会保留。`));
+  const confirm=button(`确认回收 ${bulk.guids.length} 件`,()=>cb.action({type:'hunt-forge',op:'salvage-bulk',guids:bulk.guids}),'secondary');
+  confirm.disabled=!!save.pendingEncounter;review.append(confirm);workshop.append(review);
+ }
  const recipes=el('div','hunt-recipes');
  const firstUpgrade=upgradeLevels(c,selected)[0];
  if(firstUpgrade)workshop.append(el('p','hunt-upgrade-hint',`余烬帽首次强化需要 ${firstUpgrade.cost[1]} ${c.items[firstUpgrade.cost[0]].name}。获得珍品后，可从上方装备详情进入强化。祝福魔珠供需要它的其他装备使用。`));
@@ -96,7 +104,7 @@ export function renderHuntForge(body,model,cb,{el,button,art}){
   craft.disabled=missing.length>0||save.level<p.level||!!save.pendingEncounter;
   block.append(craft);recipes.append(block);
  }
- workshop.append(recipes,el('p','muted','锻造必定成功。讨伐失败不扣猎印；回收只处理你点选的那一件。'));
+ workshop.append(recipes,el('p','muted','锻造必定成功。讨伐失败不扣猎印；批量回收前请展开并核对清单。'));
  renderHuntInheritance(workshop,model,cb,{el,button});root.append(workshop);
  const ledger=el('details','hunt-ledger',el('summary','','最近的获得与消耗'));
  const entries=save.hunt?.ledger||[];

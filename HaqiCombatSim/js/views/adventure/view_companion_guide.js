@@ -43,7 +43,7 @@ export function renderCompanionGuide(root,model,cb,{battle=false,state=captureCo
   const text=el('p','',guide.textKey?fill(guide.textKey,guide.vars).text:tr(guide.text));text.setAttribute('role','status');box.append(text);
   if(guide.label){const primary=button(tr(guide.label),()=>navigate(()=>{
    if(battle){guide.help?.();return;}
-   if(guide.panel)cb.panel(guide.panel);else cb.track(guide.track);
+   if(guide.panel){if(guide.options)cb.panel(guide.panel,guide.options);else cb.panel(guide.panel);}else cb.track(guide.track);
   }),'primary');primary.dataset.guideControl='primary';box.append(primary);}
   if(!battle){
    if(campDetourGoal(model.save)){
@@ -53,6 +53,9 @@ export function renderCompanionGuide(root,model,cb,{battle=false,state=captureCo
     more.open=moreOpen;summary.dataset.guideControl='more';more.append(summary);
     if(campDetourAvailable(model.save)&&campDetour(model.save)?.step!==3){
      const detour=button(tr(campDetour(model.save)?'继续寻宝':'营地寻宝'),()=>navigate(()=>cb.track('camp-detour-start')),'secondary');detour.dataset.guideControl='detour';more.append(detour);
+    }
+    if(model.save.zone==='camp'&&model.save.forestCommission){
+     const forest=button(tr('查看森林委托记录'),()=>navigate(()=>cb.panel('forest-commission')),'secondary');forest.dataset.guideControl='forest';more.append(forest);
     }
     const pet=button(tr('我的伙伴'),()=>navigate(()=>cb.panel('pet')),'secondary');pet.dataset.guideControl='pet';more.append(pet);box.append(more);
    }

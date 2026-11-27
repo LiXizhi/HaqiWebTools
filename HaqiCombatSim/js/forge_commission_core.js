@@ -1,6 +1,6 @@
 // D-EMBER-01: one playable preparation loop, with a permanent free supply route.
 import {HUNT_ID,EQUIPMENT_ESSENCE,huntParams} from './adventure_hunt_core.js';
-import {forgeLanguage} from './forge_commission_language_core.js';
+import {FORGE_LANGUAGES,forgeLanguage,forgeTeaAnswer} from './forge_commission_language_core.js';
 import {localDayKey} from './adventure_stamina_core.js';
 
 export const FORGE_SITE='camp-ember-herb-bed';
@@ -14,6 +14,20 @@ export function forgeCommissionAvailable(save,content){
 export function forgeGatherAvailable(save,now=Date.now()){
  const state=save.forgeCommission;
  return state?.phase==='gather'||(PHASES.includes(state?.phase)&&state.gatherDay<localDayKey(now));
+}
+function practiceTea(save,state,phase,action){
+  check(['cook','challenge','report','done'].includes(phase),'先在草圃认出材料，再来写补给标签。');
+  check(action.language===forgeLanguage(save),'学习语言已切换，请按当前语言重新写标签。');
+  check(typeof action.answer==='string'&&action.answer.trim().length>0&&action.answer.length<=80,'请写一个简短的材料名称。');
+  check(Number.isFinite(action.now)&&action.now>0,'练习时间无效，请重新打开委托。');
+  const previous=state.teaPractice?.[action.language];
+  if(previous?.completed)return {changed:false,message:'这个语言的茶标签已经写好了。可以继续冒险。'};
+  const attempts=Math.min(999,(previous?.attempts||0)+1),completed=forgeTeaAnswer(action.language,action.answer);
+  state.teaPractice??={};state.teaPractice[action.language]={attempts,completed};
+  if(!completed)return {message:'这个标签还不太对。对照上面的线索再试试；也可以先继续委托。'};
+  state.practice??=[];
+  state.practice.push({id:`forge:tea:${action.language}`,language:action.language,at:action.now,attempts,assisted:true});
+  return {message:'茶标签写好了！这次带提示的书写练习已记下，可以继续冒险。'};
 }
 export function forgeCommissionSites(world,save,walkable){
  if(world.zone!=='camp'||(save.openingJourney&&save.openingJourney.phase!=='done'))return [];
@@ -37,6 +51,7 @@ export function applyForgeCommission(save,content,action,access={}){
   return {message:'收下修复信：先去营地露水草圃，认出配方里的草药。'};
  }
  const state=save.forgeCommission;
+ if(action.step==='practice-tea')return practiceTea(save,state,phase,action);
  if(action.step==='gather'){
   nearby(save,access);
   check(action.language===forgeLanguage(save),'学习语言已切换，请按当前配方重新辨认。');
@@ -72,4 +87,16 @@ export function validateForgeCommission(save){
   check(date&&!Number.isNaN(date.getTime())&&date.toISOString().slice(0,10)===state.gatherDay,'草圃采集日期无效');
  }
  if(state.phase!=='gather')check(typeof state.gatherDay==='string','修复委托缺少采集记录');
+ if(state.teaPractice!==undefined){
+  check(state.teaPractice&&typeof state.teaPractice==='object'&&!Array.isArray(state.teaPractice),'茶标签记录无效');
+  for(const [language,row] of Object.entries(state.teaPractice))check(FORGE_LANGUAGES.includes(language)&&row&&Object.keys(row).length===2&&Number.isSafeInteger(row.attempts)&&row.attempts>=1&&row.attempts<=999&&typeof row.completed==='boolean','茶标签练习无效');
+ }
+ if(state.practice!==undefined){
+  check(Array.isArray(state.practice)&&state.practice.length<=FORGE_LANGUAGES.length,'茶标签待存记录无效');
+  const languages=new Set();
+  for(const event of state.practice){
+   check(event&&Object.keys(event).length===5&&FORGE_LANGUAGES.includes(event.language)&&event.id===`forge:tea:${event.language}`&&!languages.has(event.language)&&Number.isFinite(event.at)&&event.at>0&&Number.isSafeInteger(event.attempts)&&event.attempts>=1&&event.attempts<=999&&event.assisted===true&&state.teaPractice?.[event.language]?.completed===true&&state.teaPractice[event.language].attempts===event.attempts,'茶标签待存记录无效');
+   languages.add(event.language);
+  }
+ }
 }

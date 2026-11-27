@@ -1,5 +1,7 @@
 import {isAttackCard} from './combat_cards_core.js';
 import {canEquip} from './adventure_deck_core.js';
+import {validTargets} from './combat_arena_core.js';
+import {threatTarget} from './combat_threat_core.js';
 // Authored Web challenge arrangements. Exported monster data and old checkpoints stay intact.
 const PROFILES={
  'journey:first-watch':{version:2,recommendedLevel:5,companionSlots:2,title:'四波巡夜，四种应对',roles:['charger'],waves:[
@@ -169,5 +171,8 @@ export function dungeonEnemyIntentInfo(battle){
  const rows=units.map(u=>({name:u.name,...dungeonTacticPick(u.template,battle.turn,battle.resolved.cards)}));
  const labels=[...new Set(rows.map(r=>r.tacticLabel))];
  const scripted=rows.length===1&&rows[0].tacticNext;
- return {kind:labels.includes('攻击')?'heavy':rows.some(r=>r.tacticNext&&r.tacticLabel==='护盾')?'guard':'charge',label:labels.join(' / '),...(scripted?{cardKey:rows[0].key,nextLabel:rows[0].tacticNext}:{}),detail:rows.map(r=>`${r.name}：${r.tacticLabel}${r.tacticNext?`，下一回合${r.tacticNext}`:''}`).join('；')+'。控制、击倒或状态消耗会改变实际结果。'};
+ const card=rows.length===1&&battle.resolved.cards[rows[0].key];
+ const targets=card&&isAttackCard(card)&&!/^Area|^Arena/.test(card.type)?validTargets(battle,units[0],card):[];
+ const target=battle.threatRulesVersion>=1?threatTarget(units[0],targets):targets[0];
+ return {kind:labels.includes('攻击')?'heavy':rows.some(r=>r.tacticNext&&r.tacticLabel==='护盾')?'guard':'charge',label:labels.join(' / '),...(card?{cardKey:rows[0].key}:{}),...(scripted?{nextLabel:rows[0].tacticNext}:{}),...(target?{targetId:target.id}:{}),detail:rows.map(r=>`${r.name}：${r.tacticLabel}${r.tacticNext?`，下一回合${r.tacticNext}`:''}`).join('；')+(target?`，当前瞄准${target.name}`:'')+'。仇恨、控制、击倒或状态消耗会改变实际结果。'};
 }

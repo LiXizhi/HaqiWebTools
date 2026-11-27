@@ -13,6 +13,16 @@ import {dungeonFor} from './adventure_dungeons_core.js';
 import {dungeonProgress} from './adventure_coop_core.js';
 import {dungeonWatchStory} from './dungeon_watch_story_core.js';
 import {sparkRescueReady} from './spark_rescue_core.js';
+import {FORGE_SITE,forgeCommissionAvailable,forgeCommissionPhase} from './forge_commission_core.js';
+
+function forgeGuide(save,content){
+ if(save.zone!=='camp'||!forgeCommissionAvailable(save,content))return null;
+ const phase=forgeCommissionPhase(save);
+ const text={offer:'8级的新委托到了：先收下修复信，备茶后再挑战守卫。',gather:'到露水草圃认出草药，免费采三份，准备煮茶。',cook:'草药齐了。去营火制作轻露茶，给这一战做准备。',challenge:save.campfireBuff?.id==='herbal-dew-tea'&&save.campfireBuff.remainingBattles>0?'茶备好了。去挑战余烬守卫，先看重击预告，再决定出牌。':'轻露茶的增益还没备好。先回营火，准备后再挑战。',report:'备茶后的胜利已记下，去寄出回信、领取修复奖励。'}[phase];
+ if(!text)return null;
+ const cooking=phase==='cook'||(phase==='challenge'&&!(save.campfireBuff?.id==='herbal-dew-tea'&&save.campfireBuff.remainingBattles>0));
+ return {text,label:'查看下一步',panel:cooking?'campfire-cooking':'equipment',...(cooking?{}:{options:{tab:'hunt'}})};
+}
 
 function forestGuideGoal(save){
  if(save.zone!=='camp'||!forestCommissionAvailable(save)||!save.forestCommission)return null;
@@ -44,6 +54,7 @@ export function companionWorldGuide(save,content,{languageTasks=[]}={}){
   const goal=openingJourneyTarget(save);
   return {text:goal.objective,label:'带我去',track:'opening-journey'};
  }
+ const forge=forgeGuide(save,content);if(forge)return forge;
  const language=recommendedLanguageQuest(save,content,languageTasks);
  if(save.zone!=='camp'&&language)return {text:'这里还有语言挑战。',label:'去看看',track:language.id};
  const q=currentQuest(save,content);
@@ -97,6 +108,11 @@ export function companionWorldTarget(save,content,world){
  }
  // Wordplay opens beside the player; do not send them to an unrelated quest NPC.
  if(campDetourAvailable(save)&&!wordplayGoal(save).done)return null;
+ if(!openingJourneyActive(save)&&forgeGuide(save,content)){
+  if(forgeCommissionPhase(save)!=='gather')return null;
+  const target=world.landmarks?.find(row=>row.id===FORGE_SITE&&!row.hidden);
+  return target?{...target,kind:'landmark',forgeCommission:true}:null;
+ }
  let goal=openingJourneyActive(save)?openingJourneyTarget(save):null;
  if(!goal){
   const q=currentQuest(save,content);if(!q)return null;

@@ -111,6 +111,19 @@ export function duplicateSalvageQuotes(save,content){
   .map(row=>({row,quote:quoteSalvageRow(save,content,row)}));
 }
 
+// Keep one copy of each item even when every instance is otherwise eligible.
+export function bulkSalvageQuote(save,content){
+ const used=new Map(),rows=[],groups=new Map();let essence=0;
+ for(const {row,quote} of duplicateSalvageQuotes(save,content)){
+  const n=used.get(row.gsid)||0;
+  if(!quote.allowed||n>=count(save,row.gsid)-1)continue;
+  used.set(row.gsid,n+1);rows.push(row);essence+=quote.essence;
+  const group=groups.get(row.gsid)||{itemId:row.gsid,count:0,essence:0};
+  group.count++;group.essence+=quote.essence;groups.set(row.gsid,group);
+ }
+ return {guids:rows.map(row=>row.guid),groups:[...groups.values()],essence};
+}
+
 // Move an investment, never copy it or refund materials. Restrict the first
 // version to the three hunt hats with identical native upgrade costs.
 export function huntInheritanceQuote(save,content,sourceGuid,targetGuid){
@@ -159,6 +172,20 @@ export function applyHuntAction(save,content,action){
   save.inventory[HUNT_MARK]-=p.exchangeCost;credit(save,action.itemId,1);
   record(save,'exchange',[{itemId:HUNT_MARK,count:-p.exchangeCost},{itemId:action.itemId,count:1}]);
   return `已兑换「${content.items[action.itemId].name}」`;
+ }
+ if(action.op==='salvage-bulk'){
+  const q=bulkSalvageQuote(save,content);
+  assert(q.guids.length>0,'没有可回收的重复装备');
+  assert(Array.isArray(action.guids)&&action.guids.length===q.guids.length&&action.guids.every((guid,i)=>guid===q.guids[i]),'装备已变化，请重新核对回收清单');
+  const removed=new Set(q.guids),projection=equipmentInstances(save,content);
+  save.equipmentInstances=projection.rows.filter(row=>!removed.has(row.guid));
+  save.nextEquipmentGuid=projection.serial;
+  for(const group of q.groups){
+   save.inventory[group.itemId]-=group.count;
+   record(save,'salvage',[{itemId:group.itemId,count:-group.count},{itemId:EQUIPMENT_ESSENCE,count:group.essence}]);
+  }
+  credit(save,EQUIPMENT_ESSENCE,q.essence);
+  return `已回收 ${q.guids.length} 件重复装备，装备精华 +${q.essence}`;
  }
  if(action.op==='salvage'){
   const q=salvageQuote(save,content,action.guid);assert(q.allowed,q.reason);

@@ -137,6 +137,7 @@ export function createPanelController(options) {
     function paintPanel() {
         const ctx = getContext();
         const panel = ctx.panel;
+        if (['equipment','inventory'].includes(panel) && ctx.equipmentView?.tab === 'hunt') void opening?.drainForestPractice?.();
         if (panel === 'camp-arrival') {
             hud.paintCampArrival();
             return;

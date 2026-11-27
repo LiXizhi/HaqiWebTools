@@ -22,3 +22,14 @@
 .hunt-recycle-list{margin:16px 0}.hunt-recycle-list .hunt-recycle-row>span{min-width:0;overflow-wrap:anywhere}
 @media(max-width:740px){.forge-commission,.economy-ledger{padding:16px}.economy-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.forge-material-choices{grid-template-columns:1fr;gap:10px}.forge-clue{font-size:18px;padding:12px 14px}.forge-commission>.primary{width:100%}}
 .hunt-inheritance{padding:16px;border:1px solid #c4d1bf;border-radius:12px;background:#fffdf5}.hunt-inheritance summary{display:list-item;min-height:48px;align-content:center;cursor:pointer;font-weight:700}.hunt-inheritance-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.hunt-inheritance label{display:grid;gap:8px;min-width:0}.hunt-inheritance select{min-width:0;width:100%;min-height:48px;padding:8px;border:1px solid #809d8b;border-radius:8px;background:#fffdf5;color:#294b48;font:inherit}.hunt-inheritance button{min-height:48px;width:100%}.hunt-inheritance :is(select,button,summary):focus-visible{outline:3px solid #bd8735;outline-offset:3px}.hunt-inheritance-preview{overflow-wrap:anywhere}@media(max-width:740px){.hunt-inheritance-choices{grid-template-columns:1fr}}
+.hunt-equipment-preview{border-top:1px solid #d5b979;padding-top:8px;font-size:13px;min-width:0}
+.hunt-equipment-preview summary{cursor:pointer;min-height:48px;display:flex;align-items:center;gap:8px;font-weight:700;list-style:none}
+.hunt-equipment-preview summary::before{content:'▸';flex:none}
+.hunt-equipment-preview[open] summary::before{content:'▾'}
+.hunt-equipment-preview summary:focus-visible{outline:3px solid #387c54;outline-offset:2px;border-radius:4px}
+.hunt-equipment-preview p{line-height:1.6;overflow-wrap:anywhere}
+.hunt-equipment-changes{margin:8px 0}
+.hunt-equipment-changes>div{padding:7px 0;border-bottom:1px solid #e4d2a6}
+.hunt-equipment-changes dt{font-weight:700}
+.hunt-equipment-changes dd{margin:3px 0 0;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.hunt-exchange-reason{margin:0;font-size:12px;color:#745329}

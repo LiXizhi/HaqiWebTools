@@ -38,7 +38,7 @@
 .strengthening-modal button:focus-visible{outline:2px solid var(--green);outline-offset:3px}
 .strengthening-modal button:disabled{opacity:.45;cursor:default}
 .strengthening-modal .strengthening-slot:disabled{opacity:1}
-.equipment-instance-select{max-width:100%;padding:8px}
+.equipment-instance-select{max-width:100%;min-height:48px;padding:8px}
 @media(max-width:700px){
 .strengthening-layout{grid-template-columns:1fr;gap:12px}
 .strengthening-workbench{display:grid;grid-template-columns:75px minmax(0,1fr);gap:8px;padding:10px}

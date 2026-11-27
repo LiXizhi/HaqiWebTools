@@ -7,6 +7,7 @@ import {upgradeLevels} from '../../adventure_upgrade_core.js';
 import {renderForgeCommission} from './view_forge_commission.js';
 import {renderEconomyLedger} from './view_economy_ledger.js';
 import {renderHuntInheritance} from './view_hunt_inheritance.js';
+import {renderHuntEquipmentPreview} from './view_hunt_equipment_preview.js';
 import {CAMPFIRE_RECIPE_BY_ID,campfireBuffDetail,canCookRecipe} from '../../campfire_cooking_core.js';
 
 // Read-only presentation. Every inventory operation goes through the persisted action controller.
@@ -54,11 +55,12 @@ export function renderHuntForge(body,model,cb,{el,button,art}){
    const source=c.items[item.stats[stat]],spell=assets.dataset.cards[c.cardItems[item.stats[stat]]];
    if(spell)card.append(el('p','hunt-gear-spell',`附加卡 · ${source?.name||spell.name}：${describeCard(spell,{dataset:assets.dataset}).summary}`));
   }
-  card.append(el('p','muted',`已拥有 ${save.inventory[id]||0} 件`));
+  card.append(renderHuntEquipmentPreview(save,c,id,{el}),el('p','muted',`已拥有 ${save.inventory[id]||0} 件`));
   const choose=button(id===selected?'当前讨伐目标':'选择为掉落目标',()=>cb.action({type:'hunt-forge',op:'select',itemId:id}),'secondary');
   choose.disabled=id===selected||!!save.pendingEncounter;choose.setAttribute('aria-pressed',String(id===selected));
   const exchange=button(`${p.exchangeCost} 猎印兑换`,()=>cb.action({type:'hunt-forge',op:'exchange',itemId:id}),'primary');
   exchange.disabled=marks<p.exchangeCost||save.level<p.level||!!save.pendingEncounter;
+  if(exchange.disabled)card.append(el('p','hunt-exchange-reason',save.pendingEncounter?'战斗结束后可兑换':save.level<p.level?`达到 ${p.level} 级后可兑换`:`还差 ${p.exchangeCost-marks} 枚猎印`));
   card.append(choose,exchange);
   if((save.inventory[id]||0)>0){
    const details=button(save.equipment[2]===id?'已穿戴 · 查看与强化':'查看属性对比与穿戴',()=>cb.panel?.('equipment',{itemId:id}),'secondary hunt-owned');

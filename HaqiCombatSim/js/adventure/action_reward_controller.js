@@ -49,6 +49,7 @@ export function createActionRewardController({
     const saveCommitter=commitReward?{commitReward}:createSaveCommitter({getContext,queueCloudSave,paintHud,paintPanel});
     let buyingVip=false;
     let exchangingBeans=false;
+    const needsEquipmentSelection=(reward,save)=>reward.gear&&(save.inventory[reward.id]||0)>1;
 
     const rewardRoot=nodes?.world?.parentElement?el('div','reward-feedback'):null;
     if(rewardRoot)nodes.world.parentElement.append(rewardRoot);
@@ -91,7 +92,10 @@ export function createActionRewardController({
                 name:reward.kind==='card'?(assets.dataset.cards[reward.key]?.name||reward.name):reward.name,
                 label:reward.kind==='card'?'立即配卡':reward.gear?'立即穿上':reward.kind==='pet'?'查看伙伴':'查看背包',
             };
-            if(reward.gear){
+            if(needsEquipmentSelection(reward,save)){
+                info.label='查看并选择';
+                info.hint='已放入背包。同款装备有多件，请选择要穿戴的那件；强化和宝石各自保留。';
+            }else if(reward.gear){
                 info.reason=A.equipmentBlockReason(save,item,assets.content);
                 if(!info.reason){
                     const preview=previewEquipment(save,assets.content,{type:'equip',itemId:reward.id});
@@ -105,10 +109,11 @@ export function createActionRewardController({
             return info;
         },
         activate:reward=>{
-            const {stage,panel,dialog}=getContext();
+            const {stage,panel,dialog,save}=getContext();
             if(stage!=='world'||panel||dialog)return false;
             if(reward.kind==='honor'){openPanel('equipment');return true;}
             if(reward.kind==='dictionary'){void openDictionary('zh',reward.id);return true;}
+            if(needsEquipmentSelection(reward,save)){openPanel('equipment',{itemId:reward.id});return true;}
             if(reward.gear)return action({type:'equip',itemId:reward.id});
             openPanel(reward.kind==='card'?'deck':reward.kind==='pet'?'pet':'inventory');
         },

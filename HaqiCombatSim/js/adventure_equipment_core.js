@@ -1,7 +1,7 @@
-import { findEquipmentInstance } from './adventure_equipment_instances_core.js';
+import { findEquipmentInstance,isUniqueEquipment,syncEquipmentInstances } from './adventure_equipment_instances_core.js';
 import {progressionStatEntry,equipmentSetStats} from './adventure_progression_bonuses_core.js';
 // Equipment presentation data. All values come from the chapter and existing combat rules.
-import { playerSpec, applyAction, SCHOOL_NAMES,canEquip } from './adventure_core.js';
+import { playerSpec, applyAction, SCHOOL_NAMES,canEquip,equipmentBlockReason } from './adventure_core.js';
 import { statIdToEntry } from './combat_unit_core.js';
 import { baseMaxHp, applyHpStats, powerPipChanceByLevel, gearScoreV2 } from './combat_formulas_core.js';
 import { upgradeAt, upgradeAttributes } from './adventure_upgrade_core.js';
@@ -89,4 +89,21 @@ export function previewEquipment(save,content,action) {
     return {rows:after.map(row=>({...row,before:previous.get(row.key)||0,delta:row.value-(previous.get(row.key)||0)})),
         trimmed:save.deck.reduce((n,row)=>n+row.count,0)-next.deck.reduce((n,row)=>n+row.count,0),
         fixedCards:playerSpec(next,content).fixedCards};
+}
+// Forecast a newly received, unmodified copy, even when an upgraded copy is owned.
+// Hydrate legacy GUIDs before granting the simulated copy; never touch the real save.
+export function previewNewEquipment(save,content,itemId) {
+    const item=content.items[itemId];
+    if(save.pendingEncounter)return {reason:'战斗结束后可查看新件穿戴对比'};
+    if(isUniqueEquipment(item)&&(save.inventory[itemId]||0)>0)return {reason:'已拥有这件唯一装备'};
+    const next=JSON.parse(JSON.stringify(save));
+    syncEquipmentInstances(next,content);
+    const known=new Set(next.equipmentInstances.map(row=>row.guid));
+    next.inventory[itemId]=(next.inventory[itemId]||0)+1;
+    const reason=equipmentBlockReason(next,item,content);
+    if(reason)return {reason};
+    syncEquipmentInstances(next,content);
+    const fresh=next.equipmentInstances.find(row=>row.gsid===Number(itemId)&&!known.has(row.guid));
+    if(!fresh)return {reason:'无法预览这件装备'};
+    return {reason:'',...previewEquipment(next,content,{type:'equip',itemId:Number(itemId),guid:fresh.guid})};
 }

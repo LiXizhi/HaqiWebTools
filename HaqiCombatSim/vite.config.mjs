@@ -13,6 +13,19 @@ import { defineConfig } from 'vite';
 const root = path.dirname(fileURLToPath(import.meta.url));
 const entries = ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects', 'HaqiOfficialWebsite', 'HaqiPromo', 'HaqiPromoStage'];
 
+export function stripBundledSourceMappings(html) {
+    return html.replace(/<script\b[^>]*\btype=["']importmap["'][^>]*>[\s\S]*?<\/script\s*>/gi, tag => {
+        const map = JSON.parse(tag.slice(tag.indexOf('>') + 1, tag.lastIndexOf('</')));
+        // These mappings only bust caches for unbundled Live Preview modules.
+        // Vite emits hashed chunks instead of the original js/ source tree.
+        for (const [key, value] of Object.entries(map.imports || {})) {
+            if (key.startsWith('./js/') && value.startsWith('./js/')) delete map.imports[key];
+        }
+        if (!Object.keys(map.imports || {}).length) delete map.imports;
+        return Object.keys(map).length ? `<script type="importmap">${JSON.stringify(map)}</script>` : '';
+    });
+}
+
 export async function resolveSdkUrl(fetchSdk = globalThis.fetch) {
     const base = 'https://cdn.keepwork.com/sdk/keepworkSDK.core.iife.js';
     const response = await fetchSdk(`${base}?v=${randomUUID()}`, {
@@ -53,6 +66,10 @@ export default defineConfig(async ({ command }) => {
             __HAQI_ASSET_MODE__: JSON.stringify(appTarget ? 'local' : ''),
         },
         plugins: [{
+            name: 'remove-bundled-source-mappings',
+            apply: 'build',
+            transformIndexHtml: { order: 'post', handler: stripBundledSourceMappings },
+        }, {
             name: 'persist-sdk-cdn-version',
             apply: 'build',
             writeBundle() {

@@ -6,8 +6,28 @@ import path from 'node:path';
 import vm from 'node:vm';
 import { spawn, execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import viteConfig from '../vite.config.mjs';
+import viteConfig, { stripBundledSourceMappings } from '../vite.config.mjs';
 import { syncMaisiRelease, syncAppsRelease, prepareAppsRelease } from '../scripts/sync_keepwork_apps_release.mjs';
+
+test('bundled HTML removes obsolete source mappings while preserving external imports', async () => {
+    const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+    const source = fs.readFileSync(path.join(root, 'Haqi.html'), 'utf8');
+    assert.match(source, /type="importmap"/); // Live Preview retains cache versions.
+    const config = await viteConfig({ command: 'serve' });
+    const plugin = config.plugins.find(item => item.name === 'remove-bundled-source-mappings');
+    assert.equal(plugin.apply, 'build');
+    assert.equal(plugin.transformIndexHtml.order, 'post');
+    const result = plugin.transformIndexHtml.handler(source);
+    assert.doesNotMatch(result, /type="importmap"/);
+    assert.match(result, /type="module"/);
+    const mixed = '<script type="importmap">' + JSON.stringify({ imports: {
+        './js/skill_art.js': './js/skill_art.js?v=old',
+        external: 'https://example.invalid/module.js',
+    }, scopes: { '/tool/': { external: 'https://example.invalid/tool.js' } } }) + '</script>';
+    const retained = JSON.parse(stripBundledSourceMappings(mixed).match(/>(.*)</)[1]);
+    assert.deepEqual(retained.imports, { external: 'https://example.invalid/module.js' });
+    assert.equal(retained.scopes['/tool/'].external, 'https://example.invalid/tool.js');
+});
 
 test('apps release preparation fast-forwards behind origin and preserves safety boundaries', () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'haqi-apps-git-'));

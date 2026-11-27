@@ -31,6 +31,16 @@ export function canResumeWorld(world,previousSave,nextSave,content){
     return !!world&&!world.isDungeon&&previousSave===nextSave&&world.zone===nextSave?.zone&&world.layout===content.worldMaps?.[world.zone]
         &&(world.zone!=='camp'||!!world.forgeCommissionEnabled===forgeCommissionAvailable(nextSave,content));
 }
+export function refreshForgeCommissionSites(world,save,content){
+    if(world?.zone!=='camp'||save?.zone!=='camp')return false;
+    const enabled=forgeCommissionAvailable(save,content);
+    if(world.forgeCommissionEnabled===enabled)return false;
+    world.landmarks=world.landmarks.filter(row=>!row.forgeSite);
+    if(enabled)world.landmarks=[...world.landmarks,...forgeCommissionSites(world,save,(x,y)=>walkable(world,x,y))];
+    world.forgeCommissionEnabled=enabled;
+    objectIndices.delete(world);
+    return true;
+}
 export function createWorld(zone,content,save=null) {
     if(zone==='earth'){if(!content.earthWorld)throw Error('地球场景尚未加载');return content.earthWorld;}
     if(dungeonFor(content,zone)?.kind==='city')return createCityDungeonWorld(content,save,dungeonFor(content,zone));

@@ -8,7 +8,8 @@ import {FORGE_SITE,forgeCommissionPhase,forgeGatherAvailable,validateForgeCommis
 import {FORGE_LANGUAGES,forgeLesson} from '../js/forge_commission_language_core.js';
 import {HUNT_ID,HUNT_MARK,HUNT_COMMON_EQUIPMENT,EQUIPMENT_ESSENCE,salvageQuote} from '../js/adventure_hunt_core.js';
 import {equipmentInstances,syncEquipmentInstances} from '../js/adventure_equipment_instances_core.js';
-import {createWorld,canResumeWorld,walkable,findPath} from '../js/adventure_world_core.js';
+import {createWorld,canResumeWorld,walkable,findPath,refreshForgeCommissionSites} from '../js/adventure_world_core.js';
+import {createActionRewardController} from '../js/adventure/action_reward_controller.js';
 import {economySnapshot,recordEconomyChange,validateEconomyLedger} from '../js/adventure_economy_ledger_core.js';
 import {persistReward} from '../js/adventure_reward_persistence.js';
 import {splitRoleSave,joinRoleSave} from '../js/adventure_storage_core.js';
@@ -172,6 +173,43 @@ test('level eight and opening completion rebuild the camp before resuming after 
   assert.equal(after.landmarks.some(row=>row.forgeSite),true);
   assert.equal(canResumeWorld(after,s,s,c),true,'ordinary later victories keep their existing scene');
  }
+});
+
+test('claiming a level-eight quest creates the herb bed without leaving camp',()=>{
+ const s=hero();s.xp=c.progression.xpThresholds[7]-1;A.syncProgression(s,c);
+ s.position={...c.worldMaps.camp.spawn};
+ assert.equal(s.level,7);
+ const quest=c.quests.find(q=>q.id===63003);
+ for(const q of c.quests.filter(q=>q.id<=quest.id))s.quests[q.id]={accepted:true,claimed:q.id<quest.id,progress:Object.fromEntries(q.goals.map(g=>[`${g.kind}:${g.id}`,g.count]))};
+ const world=createWorld('camp',c,s),position={...s.position},npcs=world.npcs,encounters=world.encounters;
+ assert.equal(world.landmarks.some(row=>row.forgeSite),false);
+ const ctx={save:s,world,assets:{content:c,dataset:d},stage:'world',storageWarning:false};
+ const controller=createActionRewardController({
+  nodes:{},getContext:()=>ctx,persist:()=>{},queueCloudSave:()=>{},paintHud:()=>{},paintPanel:()=>{},
+  safely:fn=>fn(),toast:()=>{},islandSocial:()=>({activity:()=>{}}),languageAdventure:()=>({emit:()=>{}}),
+  globalReward:{show:()=>{}},firstCompanionRewardFn:()=>null,rewardSoundFn:()=>null,
+ });
+ controller.performAction({type:'claim',questId:quest.id,npcId:quest.endNpc});
+ assert.ok(s.level>=8);
+ const site=world.landmarks.find(row=>row.forgeSite);
+ assert.ok(site);assert.equal(walkable(world,site.x,site.y),true);
+ assert.ok(findPath(world,s.position,site).length);
+ assert.equal(ctx.world,world);assert.equal(world.npcs,npcs);assert.equal(world.encounters,encounters);
+ assert.deepEqual(s.position,position);
+ controller.performAction({type:'claim',questId:quest.id,npcId:quest.endNpc});
+ assert.equal(world.landmarks.filter(row=>row.forgeSite).length,1);
+});
+
+test('finishing the opening also refreshes the herb bed once and preserves other landmarks',()=>{
+ const s=hero();s.openingJourney={phase:'battle'};
+ const world=createWorld('camp',c,s),original=[...world.landmarks];
+ assert.equal(refreshForgeCommissionSites(world,s,c),false);
+ s.openingJourney.phase='done';
+ assert.equal(refreshForgeCommissionSites(world,s,c),true);
+ assert.equal(world.landmarks.filter(row=>row.forgeSite).length,1);
+ assert.ok(original.every(row=>world.landmarks.includes(row)));
+ assert.equal(refreshForgeCommissionSites(world,s,c),false);
+ assert.equal(refreshForgeCommissionSites({...world,zone:'forest'},s,c),false);
 });
 
 test('each commission stage and its accounting survive split storage and cloud restoration',()=>{

@@ -1,4 +1,5 @@
 import * as A from '../adventure_core.js';
+import {refreshForgeCommissionSites} from '../adventure_world_core.js';
 import {el,createArtCanvas} from '../ui/dom.js';
 import {equipmentSummary,previewEquipment} from '../adventure_equipment_core.js';
 import {magicBeanExchangeQuote,exchangeMagicBeans} from '../adventure_magic_bean_exchange_core.js';
@@ -114,7 +115,8 @@ export function createActionRewardController({
     }):{push(){},reset(){},hasPendingItems:false};
 
     function showRewards(before,actionType=''){
-        const {save,assets,storageWarning,roleEpoch,stage,setPanel}=getContext();
+        const {save,world,assets,storageWarning,roleEpoch,stage,setPanel}=getContext();
+        if(stage==='world'&&!storageWarning)refreshForgeCommissionSites(world,save,assets.content);
         const event=rewardChangesFn(before,save,assets.content);
         queueCloudSave();
         for(const item of event.items)if(item.kind==='card')item.name=assets.dataset.cards[item.key]?.name||item.name;
